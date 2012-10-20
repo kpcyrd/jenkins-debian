@@ -14,11 +14,11 @@ About jenkins.debian.net
 * This is pretty much work in progress, (hopefully) doing something useful since October 15th 2012
 * Join #debian-qa on irc.debian.org to report bugs or give other feedback!
 * git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
+* (virtual) hardware sponsored by http://www.profitbricks.com
 
 == General todo
 
-* firewall host
-* use mirror.1und1.d
+* firewall host (with shorewall-lite and shorewall6-lite)
 * mail notifications (to where?)
 * proper backup (=daily), bottom of this document
 * more tests (see below)
@@ -26,11 +26,12 @@ About jenkins.debian.net
 
 === Minor stuff
 
-* mv TODO about.txt
-* use nice stylesheet for about.html
+* split TODO and about.txt?
+** use nice stylesheet for about.html
 * proper git repo url, outside users/holger
 * squid, cache files bigger than 20MB? (maximum_object_size in squid.conf)
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
+* use mirror.1und1.d?
 
 == More tests to be run
 
@@ -42,6 +43,7 @@ About jenkins.debian.net
 ----
 ** http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
 ** http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
+
 
 * use jigdo to download those images
 * start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
@@ -59,6 +61,7 @@ About jenkins.debian.net
 
 == Installed software that makes jenkins.debian.net run
 
+* jenkins.debian.net runs Debian wheezy.
 * FIXME: how jenkins was installed + configured
 * needed packages are listed in update_jdn.sh and which will also make sure they are installed
 ** update_jdn.sh is available in the git repo

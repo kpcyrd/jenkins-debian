@@ -28,6 +28,7 @@ About jenkins.debian.net
 
 * split TODO and about.txt?
 ** use nice stylesheet for about.html
+** use job description to create .txt file to be included in about.txt/TODO?
 * proper git repo url, outside users/holger
 * squid, cache files bigger than 20MB? (maximum_object_size in squid.conf)
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
@@ -37,16 +38,11 @@ About jenkins.debian.net
 
 === Test cd-images:
 
-----
-<h01ger> and i plan to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid daily daily. anything obvious+useful i miss?
-<h01ger> .oO( "other archs" )
-----
+* start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
+* to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid-di daily
 ** http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
 ** http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
-
-
 * use jigdo to download those images
-* start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
 
 === Test tasks:
 

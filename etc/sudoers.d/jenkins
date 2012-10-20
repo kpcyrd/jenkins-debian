@@ -1,0 +1,1 @@
+jenkins ALL= NOPASSWD: /usr/sbin/debootstrap *, NOPASSWD: /usr/sbin/chroot /chroots/*, NOPASSWD: /bin/rm -rf /chroots/*, NOPASSWD: /bin/umount -l /chroots/*

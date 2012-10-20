@@ -1,0 +1,24 @@
+@charset "utf-8";
+
+
+#top-panel {
+    background: url(title.png) 0 0 no-repeat; }
+  #top-panel td#login-field span a {
+    background: none; }
+  #top-panel td #searchform a {
+    background: none;
+    height: auto;
+    width: auto; }
+  #top-panel td > a {
+    background: url(title.png) 0 0 no-repeat;
+    display: block;
+    height: 34px;
+    width: 800px; //
+    margin: 10px 0 0 10px; //
+    } 
+    #top-panel td > a img {
+      display: none; }
+
+#main-table {
+  background-image: url(debian-swirl.png) !important;
+}

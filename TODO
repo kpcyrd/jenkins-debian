@@ -1,0 +1,67 @@
+TODO
+----
+
+== About jenkins.debian.net
+
+* This is pretty much work in progress, (hopefully) doing something useful since October 15th 2012
+* Join #debian-qa on irc.debian.org to report bugs or give other feedback!
+* git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
+
+== general todo
+
+- add copyright notes
+- firewall host
+- switch to /srv/jenkins to be fetch from git
+- mv "welcome to jenkins.d.n"-intro text to "about jenkins.d.n" in navigation (and use the html rendered version of this very file (in asciidoc syntax))
+- use mirror.1und1.d
+- mail notifications (to where?)
+- proper backup (=daily)
+- moar tests (see below)
+- use https://github.com/openstack-ci/jenkins-job-builder to create _all_ job configurations (if possible, else mix with job-dsl-plugin or https://github.com/JoelJ/Templating.git
+- proper git repo, outside ~holger
+
+
+=== minor stuff
+
+- squid, cache files bigger than 20MB? (maximum_object_size in squid.conf)
+- only trigger^wreally run jobs if available+used packages have changed (save packages in db and compare)
+- install desktop-base, plymouth?
+
+== more tests:
+
+=== test images:
+
+<h01ger> and i plan to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid daily daily. anything obvious+useful i miss?
+<h01ger> .oO( "other archs" )
+
+- use jigdo:
+
+http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
+http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
+
+- start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
+
+=== test tasks:
+
+<h01ger> how do i install a task outside d-i?
+<h01ger> what interesting tasks are there?
+<jcristau> tasksel install <task>
+<daemonkeeper> h01ger:  http://packages.debian.org/source/sid/tasksel
+
+
+== to document properly
+
+#missing: how jenkins was installed
+apt-get install mtr-tiny dstat
+apt-get install debootstrap sudo figlet graphviz apache2 python-yaml python-setuptools
+apt-get install build-essential devscripts && apt-get build-dep python-jenkinsapi
+a2enmod proxy
+a2enmod proxy_http
+
+== to backup
+- backup: /etc /srv/jenkins /var/lib/jenkins/job/*/config.xml /var/lib/jenkins/userContent/
+- mkdir /chroots ;  chown jenkins.jenkins /chroots
+- /etc/sudoers.d/jenkins
+- /etc/squid/squid.conf
+- /etc/apt/apt.conf.d/80proxy
+- /etc/apache2/sites-enabled/000-default

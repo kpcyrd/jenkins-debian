@@ -18,7 +18,6 @@ About jenkins.debian.net
 
 == General todo
 
-* firewall host (with shorewall-lite and shorewall6-lite)
 * mail notifications (to where?)
 * proper backup (=daily), bottom of this document
 * more tests (see below)
@@ -27,12 +26,10 @@ About jenkins.debian.net
 === Minor stuff
 
 * split TODO and about.txt?
-** use nice stylesheet for about.html
+** use debian stylesheet for about.html
 ** use job description to create .txt file to be included in about.txt/TODO?
 * proper git repo url, outside users/holger
-* squid, cache files bigger than 20MB? (maximum_object_size in squid.conf)
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
-* use mirror.1und1.d?
 
 == More tests to be run
 

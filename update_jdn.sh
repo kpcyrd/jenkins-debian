@@ -22,7 +22,7 @@ asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scrip
 # install packages we need
 # (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
-sudo apt-get install vim screen less etckeeper mtr-tiny dstat devscripts bash-completion \
+sudo apt-get install vim screen less etckeeper mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges \
 	build-essential python-setuptools \
 	debootstrap sudo figlet graphviz apache2 python-yaml 
 

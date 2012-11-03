@@ -1,0 +1,41 @@
+- publisher:
+    name: parse-output
+    publishers:
+      - logparser:
+         rulespath: '/srv/jenkins/logparse/debian.rules'
+         unstable_on_warning: 'false'
+         fail_on_error: 'false'
+
+- job-template:
+    name: '{name}-sid_install_gnome'
+    description: '{description}{do_not_edit}'
+    publishers:
+      - parse-output
+    builders:
+      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
+
+- job-template:
+    name: '{name}-sid_bootstrap'
+    description: '{description}{do_not_edit}'
+    publishers:
+      - parse-output
+      - trigger:
+         project: '{name}-{trigger}'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
+
+- project:
+    name: testjob_chroot-test
+    do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
+
+    jobs:
+
+      - '{name}-sid_install_gnome':
+         chroot_tester_params: 'sid gnome'
+         description: 'Debootstrap sid, then install gnome.'
+
+      - '{name}-sid_bootstrap':
+         chroot_tester_params: 'sid'
+         description: 'Debootstrap sid.'
+         trigger: 'sid_install_gnome'
+

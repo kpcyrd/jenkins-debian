@@ -14,7 +14,7 @@ done
 #
 # install the heart of jenkins.debian.net
 #
-cp -r bin logparse /srv/jenkins/
+cp -r bin logparse job-cfg /srv/jenkins/
 cp -r userContent/* /var/lib/jenkins/userContent/
 asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -o about.html TODO && cp about.html /var/lib/jenkins/userContent/
 
@@ -24,7 +24,7 @@ asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scrip
 #
 sudo apt-get install vim screen less etckeeper curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml 
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools
 
 #
 # deploy package configuration in /etc
@@ -41,4 +41,11 @@ fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
 sudo service apache2 reload
+
+#
+# run jenkins-job-builder to update jobs if needed
+#     (using sudo because /etc/jenkins_jobs is root:root 700)
+#
+cd /srv/jenkins/job-cfg 
+sudo jenkins-jobs update .
 

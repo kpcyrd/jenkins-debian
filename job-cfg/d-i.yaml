@@ -1,0 +1,52 @@
+- job-template:
+    name: '{name}-manual'
+
+    scm:
+      - svn:
+         url: svn://svn.debian.org/svn/d-i/trunk
+         basedir: .
+         workspaceupdater: update
+    # repositorybrowser missing:
+    # <browser class="hudson.scm.browsers.ViewSVN">
+    #   <url    # http://anonscm.debian.org/viewvc/</url    # 
+    # </browser    # 
+    # <excludedRegions    # </excludedRegions    # 
+    # <includedRegions    # trunk/manual/.*</includedRegions    # 
+    # <excludedUsers    # </excludedUsers    # 
+    # <excludedRevprop    # </excludedRevprop    # 
+    # <excludedCommitMessages    # </excludedCommitMessages    # 
+
+    builders:
+      - shell: 'ls'
+
+    triggers:
+      - pollscm: "*/30 * * * *"
+    # publisher: logparse missing
+    # <publishers>
+    #  <hudson.plugins.logparser.LogParserPublisher>
+    #   <unstableOnWarning>true</unstableOnWarning>
+    #   <failBuildOnError>true</failBuildOnError>
+    #   <parsingRulesPath>/srv/jenkins/logparse/debian.rules</parsingRulesPath>
+    #  </hudson.plugins.logparser.LogParserPublisher>
+    # </publishers>
+
+- job-template:
+    name: '{name}-parse-build-logs'
+
+    builders:
+      - shell: '/srv/jenkins/bin/parse_d-i_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
+
+    triggers:
+      - timed: "0 5 * * *"
+    # publisher: logparse also missing
+    # publisher: build-logs.html "daily d-i build logs"
+
+- project:
+    name: testjob_d-i
+
+    jobs:
+      - '{name}-manual'
+      - '{name}-parse-build-logs'
+ 
+
+

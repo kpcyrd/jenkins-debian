@@ -18,10 +18,10 @@ About jenkins.debian.net
 
 == General todo
 
+* use https://github.com/openstack*ci/jenkins*job*builder to create _all_ job configurations (if possible, else mix with job*dsl*plugin or https://github.com/JoelJ/Templating.git
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
 * more tests (see below)
-* use https://github.com/openstack*ci/jenkins*job*builder to create _all_ job configurations (if possible, else mix with job*dsl*plugin or https://github.com/JoelJ/Templating.git
 
 === Minor stuff
 
@@ -60,7 +60,19 @@ About jenkins.debian.net
 ** update_jdn.sh is available in the git repo
 * package configuration is kept in git and deployed by update_jdn.sh as well
 
+=== installing jenkins-job-builder
+* rebuild python-jenkinsapi from sid for wheezy
+* pip install python-jenkins
+* git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install
+
+=== using jenkins-job-builder
+
+* then run 'cd /srv/jenkins/job-cfg ; jenkins-jobs update .' to update jobs
+
+* testing: 'cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/'
+
 == To backup
+
 * /etc/.git 
 * /var/lib/jenkins/job/*/config.xml
 * /var/lib/jenkins/config.xml as well as its plugins etc

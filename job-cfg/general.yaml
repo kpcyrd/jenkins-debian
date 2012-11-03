@@ -1,0 +1,9 @@
+- defaults:
+    name: global
+    description: 'configured by jenkins-job-builder, do not edit this job through the web UI.'
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 25
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1

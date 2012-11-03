@@ -23,6 +23,10 @@
       - trigger:
          project: '{my_trigger}'
 
+#
+# FIXME: trigger-project needs to accept a list of projects.
+#
+
 - defaults:
     name: chroot-tests+4trigger
     description: '{my_description}{do_not_edit}'
@@ -41,6 +45,23 @@
          project: '{my_3rd_trigger}'
       - trigger:
          project: '{my_4th_trigger}'
+
+- job-template:
+    name: '{name}-housekeeping'
+    description: '{my_description}{do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/housekeeping.sh'
+    publishers:
+      - logparser:
+         rulespath: '/srv/jenkins/logparse/debian.rules'
+         unstable_on_warning: 'true'
+         fail_on_error: 'true'
+      - trigger:
+         project: 'testjob_chroot-test-sid_bootstrap'
+      - trigger:
+         project: 'testjob_chroot-test-wheezy_bootstrap'
+      - trigger:
+         project: 'testjob_chroot-test-squeeze_bootstrap_upgrade_to_wheezy'
 
 - job-template:
     defaults: chroot-tests
@@ -151,4 +172,7 @@
          my_2nd_trigger: 'testjob_chroot-test-wheezy_install_kde'
          my_3rd_trigger: 'testjob_chroot-test-wheezy_install_lxde'
          my_4th_trigger: 'testjob_chroot-test-wheezy_install_xfce'
+
+      - '{name}-housekeeping':
+         my_description: 'Cleanup so that there is a predictable environment.'
 

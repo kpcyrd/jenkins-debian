@@ -1,13 +1,12 @@
 - job-template:
     name: '{name}-manual'
     description: 'Shall build d-i manual one day, does not do that yet.{do_not_edit}'
-
     scm:
       - svn:
          url: svn://svn.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
-    # repositorybrowser missing:
+    # repositorybrowser missing: FIXME
     # <browser class="hudson.scm.browsers.ViewSVN">
     #   <url    # http://anonscm.debian.org/viewvc/</url    # 
     # </browser    # 
@@ -16,37 +15,33 @@
     # <excludedUsers    # </excludedUsers    # 
     # <excludedRevprop    # </excludedRevprop    # 
     # <excludedCommitMessages    # </excludedCommitMessages    # 
-
     builders:
       - shell: 'ls'
-
     triggers:
       - pollscm: "*/30 * * * *"
-    # publisher: logparse missing
-    # <publishers>
-    #  <hudson.plugins.logparser.LogParserPublisher>
-    #   <unstableOnWarning>true</unstableOnWarning>
-    #   <failBuildOnError>true</failBuildOnError>
-    #   <parsingRulesPath>/srv/jenkins/logparse/debian.rules</parsingRulesPath>
-    #  </hudson.plugins.logparser.LogParserPublisher>
-    # </publishers>
+    publishers:
+      - logparser:
+         rulespath: '/srv/jenkins/logparse/debian.rules'
+         unstable_on_warning: 'true'
+         fail_on_error: 'true'
 
 - job-template:
     name: '{name}-parse-build-logs'
     description: 'Parses d-i build logs.{do_not_edit}'
-
     builders:
       - shell: '/srv/jenkins/bin/parse_d-i_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
-
     triggers:
       - timed: "0 5 * * *"
-    # publisher: logparse also missing
-    # publisher: build-logs.html "daily d-i build logs"
+    publishers:
+      - logparser:
+         rulespath: '/srv/jenkins/logparse/debian.rules'
+         unstable_on_warning: 'true'
+         fail_on_error: 'true'
+    # FIXME missing publisher: build-logs.html "daily d-i build logs"
 
 - project:
     name: testjob_d-i
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
-
     jobs:
       - '{name}-manual'
       - '{name}-parse-build-logs'

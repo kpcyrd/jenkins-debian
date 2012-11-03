@@ -26,9 +26,8 @@ grep failed $TMPFILE > /dev/null && {
 	done
 } || figlet ok
 echo
-echo $1
+echo Check $1 yourself
 echo
-cat $TMPFILE
 
 sed -i -s 's#<img src="#<img src="http://d-i.debian.org/daily-images/#g' $TMPFILE
 mv $TMPFILE $(basename $1)

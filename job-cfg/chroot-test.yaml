@@ -13,13 +13,34 @@
 - defaults:
     name: chroot-tests+trigger
     description: '{my_description}{do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
     publishers:
       - logparser:
          rulespath: '/srv/jenkins/logparse/debian.rules'
          unstable_on_warning: 'false'
          fail_on_error: 'false'
       - trigger:
-         project: '{my_triggers}'
+         project: '{my_trigger}'
+
+- defaults:
+    name: chroot-tests+4trigger
+    description: '{my_description}{do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
+    publishers:
+      - logparser:
+         rulespath: '/srv/jenkins/logparse/debian.rules'
+         unstable_on_warning: 'false'
+         fail_on_error: 'false'
+      - trigger:
+         project: '{my_1st_trigger}'
+      - trigger:
+         project: '{my_2nd_trigger}'
+      - trigger:
+         project: '{my_3rd_trigger}'
+      - trigger:
+         project: '{my_4th_trigger}'
 
 - job-template:
     defaults: chroot-tests
@@ -30,38 +51,104 @@
     name: '{name}-sid_bootstrap'
 
 - job-template:
-   defaults: chroot-tests
-   name: '{name}-wheezy_install_gnome'
+    defaults: chroot-tests
+    name: '{name}-squeeze_install_gnome_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-tests
+    name: '{name}-squeeze_install_kde_upgrade_to_wheezy'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}-squeeze_install_lxde_upgrade_to_wheezy'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}-squeeze_install_xfce_upgrade_to_wheezy'
+
+- job-template:
+    defaults: chroot-tests+4trigger
+    name: '{name}-squeeze_bootstrap_upgrade_to_wheezy'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}-wheezy_install_gnome'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}-wheezy_install_kde'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}-wheezy_install_lxde'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}-wheezy_install_xfce'
+
+- job-template:
+    defaults: chroot-tests+4trigger
     name: '{name}-wheezy_bootstrap'
 
 - project:
     name: testjob_chroot-test
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
-    defaults: chroot-tests
     jobs:
 
       - '{name}-sid_install_gnome':
          chroot_tester_params: 'sid gnome'
-         my_defaults: 'chroot-tests'
-         my_description: 'Debootstrap sid, then install gnome.'
+         my_description: 'Debootstrap sid, then install GNOME.'
 
       - '{name}-sid_bootstrap':
          chroot_tester_params: 'sid'
-         my_defaults: 'chroot-tests+trigger'
          my_description: 'Debootstrap sid.'
-         my_triggers: 'testjob_chroot-test-sid_install_gnome'
+         my_trigger: 'testjob_chroot-test-sid_install_gnome'
+
+      - '{name}-squeeze_install_gnome_upgrade_to_wheezy':
+         chroot_tester_params: 'squeeze gnome wheezy'
+         my_description: 'Debootstrap squeeze, install GNOME then upgrade to wheezy.'
+
+      - '{name}-squeeze_install_kde_upgrade_to_wheezy':
+         chroot_tester_params: 'squeeze kde wheezy'
+         my_description: 'Debootstrap squeeze, install KDE then upgrade to wheezy.'
+
+      - '{name}-squeeze_install_lxde_upgrade_to_wheezy':
+         chroot_tester_params: 'squeeze lxde wheezy'
+         my_description: 'Debootstrap squeeze, install LXDE then upgrade to wheezy.'
+
+      - '{name}-squeeze_install_xfce_upgrade_to_wheezy':
+         chroot_tester_params: 'squeeze xfce wheezy'
+         my_description: 'Debootstrap squeeze, install KFCE then upgrade to wheezy.'
+
+      - '{name}-squeeze_bootstrap_upgrade_to_wheezy':
+         chroot_tester_params: 'squeeze none wheezy'
+         my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
+         my_1st_trigger: 'testjob_chroot-test-squeeze_install_gnome_upgrade_to_wheezy'
+         my_2nd_trigger: 'testjob_chroot-test-squeeze_install_kde_upgrade_to_wheezy'
+         my_3rd_trigger: 'testjob_chroot-test-squeeze_install_lxde_upgrade_to_wheezy'
+         my_4th_trigger: 'testjob_chroot-test-squeeze_install_xfce_upgrade_to_wheezy'
 
       - '{name}-wheezy_install_gnome':
          chroot_tester_params: 'wheezy gnome'
-         my_defaults: 'chroot-tests'
-         my_description: 'Debootstrap wheezy, then install gnome.'
+         my_description: 'Debootstrap wheezy, then install GNOME.'
+
+      - '{name}-wheezy_install_kde':
+         chroot_tester_params: 'wheezy kde'
+         my_description: 'Debootstrap wheezy, then install KDE.'
+
+      - '{name}-wheezy_install_xfce':
+         chroot_tester_params: 'wheezy xfce'
+         my_description: 'Debootstrap wheezy, then install XFCE.'
+
+      - '{name}-wheezy_install_lxde':
+         chroot_tester_params: 'wheezy lxde'
+         my_description: 'Debootstrap wheezy, then install LXDE.'
 
       - '{name}-wheezy_bootstrap':
          chroot_tester_params: 'wheezy'
-         my_defaults: 'chroot-tests+trigger'
          my_description: 'Debootstrap wheezy.'
-         my_triggers: 'testjob_chroot-test-wheezy_install_gnome'
+         my_1st_trigger: 'testjob_chroot-test-wheezy_install_gnome'
+         my_2nd_trigger: 'testjob_chroot-test-wheezy_install_kde'
+         my_3rd_trigger: 'testjob_chroot-test-wheezy_install_lxde'
+         my_4th_trigger: 'testjob_chroot-test-wheezy_install_xfce'
 

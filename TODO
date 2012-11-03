@@ -19,7 +19,7 @@ About jenkins.debian.net
 == General todo
 
 * mail notifications (to where?)
-* proper backup (=daily), bottom of this document
+* proper backup (=daily), see bottom of this document for what to backup
 * more tests (see below)
 * use https://github.com/openstack*ci/jenkins*job*builder to create _all_ job configurations (if possible, else mix with job*dsl*plugin or https://github.com/JoelJ/Templating.git
 

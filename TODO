@@ -17,9 +17,47 @@ About jenkins.debian.net
 * (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server, but in future there will be installation and tests clients started on demand as well.
 * some stats are available at http://jenkins.debian.net/munin/jenkins-month.html
 
+== More tests to be run
+
+=== Tests for supporting d-i development:
+
+* build the manual on every svn commit
+** later: notify debian-boot@l.d.o and #debian-boot
+* run scripts/digress/
+* bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
+
+=== Test cd-images:
+
+* start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
+* to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid-di daily
+** http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
+** http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
+* use jigdo to download those images
+
+=== Test tasks:
+
+* test installations with (at least) more language tasks enabled
+
+----
+<h01ger> how do i install a task outside d-i?
+<h01ger> what interesting tasks are there?
+<jcristau> tasksel install <task>
+<daemonkeeper> h01ger:  http://packages.debian.org/source/sid/tasksel
+----
+
+(FIXME: tasksel doesn't work like this)
+
+=== Tests using autopkgtest
+
+* I aware but also lost, after looking at /usr/share/doc/autopkgtest/ - wanna help?
+* https://wiki.ubuntu.com/AutomatedTesting has more information, but help is still welcome to implement this.
+* finding packages with autopkgtests: http://lists.debian.org/debian-qa/2012/11/msg00012.html
+** this only lists a few packages, so a very first test could be to compare this list against this: `wget -q http://http.debian.net/debian/dists/unstable/main/Contents-source.gz -O- | zgrep -m1 -E '^debian/tests/control\s'`, make a job out of it and make it UNSTABLE if the diff is non-zero. And as a second step, run those tests...
+* also see http://dep.debian.net/deps/dep8/
+
 == General ToDo
 
-* get rid of reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
+* get rid of some reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
 * add documentation for jenkins-job-builder:
 ** publisher:logparse
 ** svn:scm
@@ -32,44 +70,6 @@ About jenkins.debian.net
 ** add sidebar links for all jobs
 * proper git repo url, outside users/holger
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
-
-== More tests to be run
-
-=== Test cd-images:
-
-* start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
-* to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid-di daily
-** http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
-** http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
-* use jigdo to download those images
-
-=== Test tasks:
-
-* test installation with (at least) more language tasks enabled
-
-----
-<h01ger> how do i install a task outside d-i?
-<h01ger> what interesting tasks are there?
-<jcristau> tasksel install <task>
-<daemonkeeper> h01ger:  http://packages.debian.org/source/sid/tasksel
-----
-
-(FIXME: tasksel doesn't work like this)
-
-=== Tests for supporting d-i development:
-
-* build the manual on every svn commit
-** later: notify debian-boot@l.d.o and #debian-boot
-* run scripts/digress/
-* bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
-
-=== Tests using autopkgtest
-
-* I aware but also lost, after looking at /usr/share/doc/autopkgtest/ - wanna help?
-* https://wiki.ubuntu.com/AutomatedTesting has more information, but help is still welcome to implement this.
-* finding packages with autopkgtests: http://lists.debian.org/debian-qa/2012/11/msg00012.html
-** this only lists a few packages, so a very first test could be to compare this list against this: `wget -q http://http.debian.net/debian/dists/unstable/main/Contents-source.gz -O- | zgrep -m1 -E '^debian/tests/control\s'`, make a job out of it and make it UNSTABLE if the diff is non-zero. And as a second step, run those tests...
-* also see http://dep.debian.net/deps/dep8/
 
 == Installed software that makes jenkins.debian.net run
 

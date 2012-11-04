@@ -29,7 +29,7 @@ sudo apt-get install vim screen less etckeeper curl mtr-tiny dstat devscripts ba
 #
 # deploy package configuration in /etc
 #
-sudo cp -r etc/* /
+sudo cp -r etc/* /etc
 
 #
 # more configuration than a simple cp can do

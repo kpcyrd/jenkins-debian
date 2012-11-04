@@ -22,3 +22,323 @@
 #main-table {
   background-image: url(debian-swirl.png) !important;
 }
+
+
+
+#main {
+        border: none;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        vertical-align: top;
+        background-color: #ddd;
+}
+
+hr {
+  width: 100%;
+  color:#d70751;
+  background-color:#d70751;
+  height:2px;
+  margin: 0px;
+  padding: 0px;
+}
+
+em {
+  font-weight: bold;
+}
+
+p.note {
+ font-family: sans-serif;
+ color: #900;
+ text-align: center;
+ padding: 5px;
+ font-size: 11px;
+ font-weight: normal;
+}
+
+div.c1 {text-align: center}
+
+p.text {
+ font-family: sans-serif;
+ padding: 5px;
+ font-weight: normal;
+}
+
+body {
+ padding: 0px;
+ margin: 0px;
+ font-family: sans-serif;
+ font-size: 90%;
+ color: #000000;
+ background-color: white;
+}
+
+#obeytoyourfriend
+{
+ color: #000;
+ background-color: white;
+ border: 0px solid #000;
+ border-collapse: collapse;
+ margin-top: 0px;
+ margin-bottom: 5px;
+ padding-top: 0px;
+ padding-left: 15px;
+ font-family: serif;
+ font-variant:small-caps;
+ font-size: 140%;
+}
+
+p.validate {
+ text-align: center;
+}
+
+table
+{
+ color: #000;
+ background-color: #000;
+ border: 0px solid #000;
+ border-collapse: separate;
+ border-spacing: 1px;
+}
+
+h1 {
+ font-size: 140%;
+ text-align: center;
+ color: #000;
+}
+
+h2 {
+ font-size: 120%;
+ text-align: center;
+ color: #000;
+}
+
+h3 {
+ font-size: 110%;
+ text-align: center;
+ color: #000;
+}
+
+
+p {
+ font-size: 100%;
+ text-align: justify;
+}
+
+tr {
+ background-color: #FFF;
+}
+
+tr.odd {
+ background-color: #FFFFFF;
+}
+
+tr.even {
+ background-color: #e8e8e8;
+}
+
+td.sid {
+ color: #000;
+ text-align: left;
+}
+
+tr.experimental {
+ color: #cc0000;
+}
+
+tr.unstable {
+ color: #345677;
+}
+
+tr.sid_odd {
+ color: #000;
+}
+
+td.exp {
+ color: #cc0000;
+ text-align: left;
+}
+
+tr.exp_odd {
+ color: #900;
+}
+
+th {
+ font-size: 120%;
+ text-align: center;
+ font-weight: bold;
+ background-color: #BDF;
+ border: 0px solid #000;
+ padding-top: 10px;
+ padding-bottom: 10px;
+ padding-left: 6px;
+ padding-right: 6px;
+}
+
+th.reject {
+ font-size: 120%;
+ text-align: center;
+ font-weight: bold;
+ background-color: #BDF;
+ border: 0px solid #000;
+ padding-top: 10px;
+ padding-bottom: 10px;
+ padding-left: 6px;
+ padding-right: 6px;
+}
+
+td {
+ font-size: 100%;
+ border: 0px solid #000;
+ padding: 4px;
+ padding-left: 6px;
+ padding-right: 6px;
+}
+
+a.needs-bugging {
+ background-color:#e0c0d0;
+}
+
+#needs-bugging {
+ background-color:#e0c0d0;
+}
+
+a.bugged {
+ background-color:#c0c0f0;
+}
+
+
+a:link {
+ color: #0000FF;
+ text-decoration: none;
+}
+
+a:visited {
+ color: #800080;
+ text-decoration: none;
+}
+
+a:active {
+ color: #FF0000;
+ text-decoration: none;
+}
+
+a:hover {
+ color: #0000FF;
+ text-decoration: underline;
+}
+
+#header {
+ padding: 3px;
+}
+
+h1.header {
+ font-size: 32px;
+ text-align: left;
+ margin-bottom: 0px;
+ margin-top: 0px;
+ padding-top: 0px;
+ padding-bottom: 0px;
+ padding-left: 15px;
+}
+
+#footer {
+ padding: 15px;
+ font-size: 90%;
+ text-align: center;
+}
+
+/* the following layout is taken from the PTS */
+
+/* Tables */
+table.containertable {
+    clear: both;
+    background-color: #ddd;
+    border: none;
+}
+table.lefttable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+}
+table.righttable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+}
+td.containercell {
+    background-color: #ddd;
+}
+td.titlecell {
+    color: white;
+    background-color: #d70751;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.2em 0.2em 0.1em 0.2em;
+    border-top: 3px solid #999;
+    border-bottom: 1px solid #999;
+}
+td.alerttitlecell {
+    color: white;
+    background-color: #0755d7;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.2em 0.2em 0.1em 0.2em;
+    border-top: 3px solid #999;
+    border-bottom: 1px solid #999;
+}
+td.labelcell {
+    vertical-align: top;
+    text-align: left;
+    padding: 0.2em 0.3em 0.2em 0.3em;
+    border-bottom: 1px dotted #999;
+    font-weight: bold;
+}
+td.alertlabelcell {
+    color: white;
+    background-color: #0755d7;
+    vertical-align: top;
+    text-align: left;
+    padding: 0.2em 0.3em 0.2em 0.3em;
+    border-bottom: 1px dotted #999;
+    font-weight: bold;
+}
+td.lightalertlabelcell {
+    color: white;
+    background-color: #90c0ff;
+    vertical-align: top;
+    text-align: left;
+    padding: 0.2em 0.3em 0.2em 0.3em;
+    border-bottom: 1px dotted #999;
+    font-weight: bold;
+}
+td.labelcell2 {
+    padding: 0.2em 0.2em 0.1em 0.2em;
+    border-top: 1px solid black;
+    border-right: 1px dotted black;
+    font-weight: bold;
+}
+td.contentcell {
+    text-align: center;
+    padding: 0.2em 0.3em 0.2em 0.3em;
+    border-bottom: 1px dotted #999;
+}
+td.lastcell {
+    font-size: 80%;
+    text-align: center;
+    padding: 0.2em 0.3em 0.2em 0.3em;
+    border-bottom: 1px dotted #999;
+}
+td.contentcell2 {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.2em 0.3em 0.2em 0.3em;
+    border-bottom: 1px dotted #999;
+    border-right: 1px dotted #999;
+}
+

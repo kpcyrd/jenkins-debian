@@ -6,7 +6,7 @@
          url: svn://svn.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
-         includedRegions: 'manual/.*'
+         includedRegions: '/trunk/manual/.*'
          excludedRegions: ''
          excludedUsers: ''
          excludedRevprop: ''

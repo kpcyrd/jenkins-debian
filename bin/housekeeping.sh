@@ -22,7 +22,7 @@ if [ "$HOUSE" != "" ] ; then
 	echo
 	echo "Probably manual cleanup needed:"
 	echo
-	echo "$ ls -la /chroots/"
+	echo "$ ls -la $CHROOT_PATTERN"
 	echo $HOUSE
 	exit 1
 fi

@@ -21,7 +21,7 @@ About jenkins.debian.net
 
 === Tests for supporting d-i development:
 
-* build the manual on every svn commit
+* build the manual on every commit
 ** later: notify debian-boot@l.d.o and #debian-boot
 * run scripts/digress/
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).

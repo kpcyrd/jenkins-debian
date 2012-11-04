@@ -12,9 +12,9 @@ About jenkins.debian.net
 == About jenkins.debian.net
 
 * This is pretty much work in progress, (hopefully) doing something useful since October 15th 2012
-* Join #debian-qa on irc.debian.org to report bugs or give other feedback!
+* Join #debian-qa on irc.debian.org to report bugs or give other feedback! Use debian-qa@lists.debian.org if you prefer mail.
 * git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
-* (virtual) hardware sponsored by http://www.profitbricks.com
+* (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server, but in future there will be installation and tests clients started on demand as well.
 
 == General ToDo
 
@@ -28,10 +28,12 @@ About jenkins.debian.net
 
 === More minor stuff
 
+* make job configuration visible to un-authenticated users
 * squid has problems with SO_FAIL
 * split TODO and about.txt?
+* setup munin monitoring
 ** use debian stylesheet for about.html
-** use job description to create .txt file to be included in about.txt/TODO?
+** add sidebar links for all jobs
 * proper git repo url, outside users/holger
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 
@@ -47,6 +49,8 @@ About jenkins.debian.net
 
 === Test tasks:
 
+* test installation with (at least) more language tasks enabled
+
 ----
 <h01ger> how do i install a task outside d-i?
 <h01ger> what interesting tasks are there?
@@ -56,6 +60,20 @@ About jenkins.debian.net
 
 (FIXME: tasksel doesn't work like this)
 
+=== Tests for supporting d-i development:
+
+* build the manual on every svn commit
+** later: notify debian-boot@l.d.o and #debian-boot
+* run scripts/digress/
+* bubulle wrote: "Another interesting target would be d-i builds *including non uploaded > packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
+
+=== Tests using autopkgtest
+
+* I aware but also lost, after looking at /usr/share/doc/autopkgtest/ - wanna help?
+* https://wiki.ubuntu.com/AutomatedTesting has more information, but help is still welcome to implement this.
+* finding packages with autopkgtests: http://lists.debian.org/debian-qa/2012/11/msg00012.html
+* also see http://dep.debian.net/deps/dep8/
+
 == Installed software that makes jenkins.debian.net run
 
 * jenkins.debian.net runs Debian wheezy.
@@ -64,12 +82,12 @@ About jenkins.debian.net
 ** update_jdn.sh is available in the git repo
 * package configuration is kept in git and deployed by update_jdn.sh as well
 
-=== installing jenkins-job-builder
+=== Installing jenkins-job-builder
 * rebuild python-jenkinsapi from sid for wheezy
 * pip install python-jenkins
 * git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install
 
-=== using jenkins-job-builder
+=== Using jenkins-job-builder
 
 * then run 'cd /srv/jenkins/job-cfg ; jenkins-jobs update .' to update jobs
 * testing: 'cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/'
@@ -77,4 +95,4 @@ About jenkins.debian.net
 == To backup
 
 * /etc/.git 
-* /var/lib/jenkins/config.xml as well as its plugins etc
+* /var/lib/jenkins/config.xml as well as its plugins

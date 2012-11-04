@@ -22,7 +22,7 @@ asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scrip
 # install packages we need
 # (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
-sudo apt-get install vim screen less etckeeper curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges \
+sudo apt-get install vim screen less etckeeper curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin \
 	build-essential python-setuptools \
 	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat
 
@@ -41,6 +41,7 @@ fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
 sudo service apache2 reload
+cd /etc/munin/plugins ; sudo rm rm postfix_* open_inodes df_inode interrupts diskstats
 
 #
 # run jenkins-job-builder to update jobs if needed

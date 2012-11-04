@@ -3,7 +3,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 25
+      numToKeep: 50
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     

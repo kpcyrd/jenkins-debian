@@ -18,7 +18,7 @@ About jenkins.debian.net
 
 == General todo
 
-* use https://github.com/openstack*ci/jenkins*job*builder to create _all_ job configurations (if possible, else mix with job*dsl*plugin or https://github.com/JoelJ/Templating.git
+* get rid of reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
 * more tests (see below)

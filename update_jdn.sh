@@ -24,7 +24,7 @@ asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scrip
 #
 sudo apt-get install vim screen less etckeeper curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat
 
 #
 # deploy package configuration in /etc

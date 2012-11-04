@@ -8,6 +8,12 @@ uptime
 echo
 df -h
 echo
+for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/lib/jenkins/jobs/ ; do
+	du -sh $DIR
+done
+echo
+vnstat
+echo
 
 HOUSE=$(ls /chroots/)
 if [ "$HOUSE" != "" ] ; then

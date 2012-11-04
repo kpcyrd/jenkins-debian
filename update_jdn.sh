@@ -3,9 +3,11 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+BASEDIR=/root/jenkins.debian.net
+
 explain() {
 	echo
-	echo $@
+	echo $1
 	echo
 }
 
@@ -29,6 +31,7 @@ explain "Packages installed."
 #
 # deploy package configuration in /etc
 #
+cd $BASEDIR
 sudo cp -r etc/* /etc
 
 #
@@ -48,6 +51,7 @@ explain "Packages configured."
 #
 # install the heart of jenkins.debian.net
 #
+cd $BASEDIR
 cp -r bin logparse job-cfg /srv/jenkins/
 cp -r userContent/* /var/lib/jenkins/userContent/
 asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -o about.html TODO && cp about.html /var/lib/jenkins/userContent/ && echo Updated about.html

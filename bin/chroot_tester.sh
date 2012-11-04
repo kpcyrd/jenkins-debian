@@ -32,7 +32,7 @@ export DEBIAN_FRONTEND=noninteractive
 export LANG=C
 export http_proxy=$http_proxy"
 
-export CHROOT_TARGET=$(mktemp -d -p /chroots/ $1.XXXXXXXXX)
+export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-tests-$1.XXXXXXXXX)
 export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 

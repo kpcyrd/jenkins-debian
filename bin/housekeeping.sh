@@ -15,14 +15,15 @@ echo
 vnstat
 echo
 
-HOUSE=$(ls /chroots/)
+CHROOT_PATTERN="/chroots/chroot-tests-*"
+HOUSE=$(ls $CHROOT_PATTERN)
 if [ "$HOUSE" != "" ] ; then
 	figlet "Warning:"
 	echo
 	echo "Probably manual cleanup needed:"
 	echo
 	echo "$ ls -la /chroots/"
-	ls -la /chroots/
+	echo $HOUSE
 	exit 1
 fi
 

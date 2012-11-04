@@ -16,7 +16,7 @@ done
 #
 cp -r bin logparse job-cfg /srv/jenkins/
 cp -r userContent/* /var/lib/jenkins/userContent/
-asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -o about.html TODO && cp about.html /var/lib/jenkins/userContent/
+asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -o about.html TODO && cp about.html /var/lib/jenkins/userContent/ && echo Updated about.html
 
 #
 # install packages we need
@@ -41,7 +41,7 @@ fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
 sudo service apache2 reload
-cd /etc/munin/plugins ; sudo rm rm postfix_* open_inodes df_inode interrupts diskstats
+cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts diskstats 2>/dev/null
 
 #
 # run jenkins-job-builder to update jobs if needed

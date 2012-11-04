@@ -28,8 +28,9 @@
         </Proxy>
         ProxyPreserveHost on
 	# proxy everything but /munin
-	ProxyPass /munin !
-        ProxyPass / http://localhost:8080/
+        ProxyPass /munin !
+       	ProxyPass /server-status !
+	ProxyPass / http://localhost:8080/
 
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log

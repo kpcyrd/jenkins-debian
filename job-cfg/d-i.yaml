@@ -6,6 +6,11 @@
          url: svn://svn.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
+         includedRegions: 'trunk/manual/.*'
+         excludedRegions: ''
+         excludedUsers: ''
+         excludedRevprop: ''
+         excludedCommitMessages: ''
     # repositorybrowser missing: FIXME
     # <browser class="hudson.scm.browsers.ViewSVN">
     #   <url    # http://anonscm.debian.org/viewvc/</url    # 

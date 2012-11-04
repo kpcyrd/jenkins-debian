@@ -9,7 +9,7 @@ echo
 df -h
 echo
 for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/lib/jenkins/jobs/ ; do
-	du -sh $DIR
+	sudo du -sh $DIR
 done
 echo
 vnstat

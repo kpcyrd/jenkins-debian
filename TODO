@@ -16,15 +16,19 @@ About jenkins.debian.net
 * git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
 * (virtual) hardware sponsored by http://www.profitbricks.com
 
-== General todo
+== General ToDo
 
 * get rid of reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
+* add documentation for jenkins-job-builder:
+** publisher:logparse
+** svn:scm
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
 * more tests (see below)
 
-=== Minor stuff
+=== More minor stuff
 
+* squid has problems with SO_FAIL
 * split TODO and about.txt?
 ** use debian stylesheet for about.html
 ** use job description to create .txt file to be included in about.txt/TODO?
@@ -68,12 +72,9 @@ About jenkins.debian.net
 === using jenkins-job-builder
 
 * then run 'cd /srv/jenkins/job-cfg ; jenkins-jobs update .' to update jobs
-
 * testing: 'cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/'
 
 == To backup
 
 * /etc/.git 
-* /var/lib/jenkins/job/*/config.xml
 * /var/lib/jenkins/config.xml as well as its plugins etc
-* /srv/jenkins probably not

@@ -15,6 +15,7 @@ About jenkins.debian.net
 * Join #debian-qa on irc.debian.org to report bugs or give other feedback! Use debian-qa@lists.debian.org if you prefer mail.
 * git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
 * (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server, but in future there will be installation and tests clients started on demand as well.
+* some stats are available at http://jenkins.debian.net/munin/jenkins-month.html
 
 == General ToDo
 
@@ -30,7 +31,6 @@ About jenkins.debian.net
 * make job configuration visible to un-authenticated users
 * squid has problems with SO_FAIL
 * split TODO and about.txt?
-* setup munin monitoring
 ** use debian stylesheet for about.html
 ** add sidebar links for all jobs
 * proper git repo url, outside users/holger

@@ -1,0 +1,51 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+jenkins_jobs - Plugin to measure number of jenknis jobs
+
+=head1 AUTHOR
+
+Contributed by Holger Levsen
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+if [ "$1" = "autoconf" ]; then
+        echo yes
+        exit 0
+fi
+
+if [ "$1" = "config" ]; then
+
+        echo 'graph_title Jenkins Jobs'
+        echo 'graph_args --base 1000 -l 0 '
+        echo 'graph_scale no'
+        echo 'graph_vlabel Jenkins Jobs per category'
+        echo 'graph_category jenkins'
+        for PREFIX in $JOB_PREFIXES ; do
+                echo "jenkins_jobs_$PREFIX.label $PREFIX jobs"
+                echo "jenkins_jobs_$PREFIX.draw AREA"
+                #print_warning jenkins_jobs_$PREFIX
+                #print_critical jenkins_jobs_$PREFIX
+        done
+        exit 0
+fi
+
+for PREFIX in $JOB_PREFIXES ; do
+        NR=$(find /var/lib/jenkins/jobs/ -name "$PREFIX*" -type d | wc -l)
+        echo "jenkins_jobs_$PREFIX.value $NR"
+done

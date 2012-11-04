@@ -1,0 +1,51 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+jenkins_builds - Plugin to measure number of jenknis builds
+
+=head1 AUTHOR
+
+Contributed by Holger Levsen
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+if [ "$1" = "autoconf" ]; then
+        echo yes
+        exit 0
+fi
+
+if [ "$1" = "config" ]; then
+
+        echo 'graph_title Jenkins Builds'
+        echo 'graph_args --base 1000 -l 0 '
+        echo 'graph_scale no'
+        echo 'graph_vlabel Jenkins Builds per category in the last 24h'
+        echo 'graph_category jenkins'
+        for PREFIX in $JOB_PREFIXES ; do
+                echo "jenkins_builds_$PREFIX.label $PREFIX builds"
+                echo "jenkins_builds_$PREFIX.draw AREA"
+                #print_warning jenkins_builds_$PREFIX
+                #print_critical jenkins_builds_$PREFIX
+        done
+        exit 0
+fi
+
+for PREFIX in $JOB_PREFIXES ; do
+        NR=$(find /var/lib/jenkins/jobs/$PREFIX*/builds/* -type d -mtime -1 | wc -l)
+        echo "jenkins_builds_$PREFIX.value $NR"
+done

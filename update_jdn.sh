@@ -41,7 +41,8 @@ fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
 sudo service apache2 reload
-cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts diskstats 2>/dev/null
+cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts diskstats irqstats threads proc_pri vmstat 2>/dev/null
+[ -L apache_accesses ] || for i in apache_accesses apache_processes apache_volume ; do ln -s /usr/share/munin/plugins/cpu/$i $i ; done
 
 #
 # run jenkins-job-builder to update jobs if needed

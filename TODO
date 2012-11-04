@@ -11,7 +11,7 @@ About jenkins.debian.net
 
 == About jenkins.debian.net
 
-* This is pretty much work in progress, (hopefully) doing something useful since October 15th 2012
+* http://jenkins.debian.net is pretty much work in progress, (hopefully) doing something useful since October 15th 2012
 * Join #debian-qa on irc.debian.org to report bugs or give other feedback! Use debian-qa@lists.debian.org if you prefer mail.
 * git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
 * (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server, but in future there will be installation and tests clients started on demand as well.
@@ -25,9 +25,6 @@ About jenkins.debian.net
 ** svn:scm
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
-
-=== More minor stuff
-
 * make job configuration visible to un-authenticated users
 * squid has problems with SO_FAIL
 * split TODO and about.txt?

@@ -38,7 +38,7 @@
 #
 
 - defaults:
-    name: chroot-tests+4trigger
+    name: chroot-tests+four-trigger
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -103,7 +103,7 @@
     name: '{name}-squeeze_install_xfce_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests+4trigger
+    defaults: chroot-tests+four-trigger
     name: '{name}-squeeze_bootstrap_upgrade_to_wheezy'
 
 - job-template:
@@ -123,7 +123,7 @@
     name: '{name}-wheezy_install_xfce'
 
 - job-template:
-    defaults: chroot-tests+4trigger
+    defaults: chroot-tests+four-trigger
     name: '{name}-wheezy_bootstrap'
 
 - project:

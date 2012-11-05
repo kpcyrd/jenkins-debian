@@ -61,6 +61,7 @@ $SCRIPT_HEADER
 mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
+echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
 EOF
 }
 

@@ -64,6 +64,8 @@
 - job-template:
     name: '{name}-housekeeping'
     description: '{my_description}{do_not_edit}'
+    triggers:
+      - timed: "0 5 * * *"
     builders:
       - shell: '/srv/jenkins/bin/housekeeping.sh'
     publishers:

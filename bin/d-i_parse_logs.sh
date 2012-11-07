@@ -18,13 +18,15 @@ export http_proxy="http://localhost:3128"
 
 TMPFILE=$(mktemp)
 curl $1 > $TMPFILE
-grep failed $TMPFILE > /dev/null && { 
+if [ $(grep -c failed $TMPFILE >/dev/null 2>&1) -gt 1 ] ; then 
 	figlet Warning:
 	figlet failed builds:
 	for FILE in $(grep failed $TMPFILE | awk '{print $2}' FS=href= | cut -d '"' -f2) ; do
 		echo Warning: $FILE failed
 	done
-} || figlet ok
+else
+	figlet ok
+fi
 echo
 echo Check $1 yourself
 echo

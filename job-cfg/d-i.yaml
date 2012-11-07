@@ -11,15 +11,8 @@
          excludedUsers: ''
          excludedRevprop: ''
          excludedCommitMessages: ''
-    # repositorybrowser missing: FIXME
-    # <browser class="hudson.scm.browsers.ViewSVN">
-    #   <url    # http://anonscm.debian.org/viewvc/</url    # 
-    # </browser    # 
-    # <excludedRegions    # </excludedRegions    # 
-    # <includedRegions    # trunk/manual/.*</includedRegions    # 
-    # <excludedUsers    # </excludedUsers    # 
-    # <excludedRevprop    # </excludedRevprop    # 
-    # <excludedCommitMessages    # </excludedCommitMessages    # 
+         viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
+
     builders:
       - shell: 'ls'
     triggers:

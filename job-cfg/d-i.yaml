@@ -34,7 +34,7 @@
     name: '{name}-parse_build_logs'
     description: 'Parses d-i build logs.{do_not_edit}'
     builders:
-      - shell: '/srv/jenkins/bin/parse_d-i_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
+      - shell: '/srv/jenkins/bin/d-i_parse_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
     triggers:
       - timed: "0 5 * * *"
     publishers:

@@ -14,6 +14,15 @@
          rulespath: '/srv/jenkins/logparse/debian.rules'
          unstable_on_warning: 'false'
          fail_on_error: 'false'
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
 
 - defaults:
     name: chroot-tests+trigger
@@ -32,6 +41,15 @@
          fail_on_error: 'false'
       - trigger:
          project: '{my_trigger}'
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
 
 #
 # FIXME: trigger-project needs to accept a list of projects.
@@ -60,6 +78,15 @@
          project: '{my_3rd_trigger}'
       - trigger:
          project: '{my_4th_trigger}'
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
 
 - job-template:
     name: '{name}-housekeeping'

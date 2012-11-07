@@ -61,13 +61,13 @@ About jenkins.debian.net
 * add documentation for jenkins-job-builder:
 ** publisher:logparse
 ** svn:scm
+** properties: sidebar
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
 * make job configuration visible to un-authenticated users
 * squid has problems with SO_FAIL
 * split TODO and about.txt?
 ** use debian stylesheet for about.html
-** add sidebar links for all jobs
 * proper git repo url, outside users/holger
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 

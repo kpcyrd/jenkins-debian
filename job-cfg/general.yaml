@@ -6,4 +6,9 @@
       numToKeep: 50
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
-    
+    properties:
+      - sidebar:
+        url: http://jenkins.debian.net/userContent/about.html
+        text: About jenkins.debian.net
+        icon: /userContent/images/debian-swirl-24x24.png
+   

@@ -68,7 +68,7 @@ explain "Jenkins jobs updated."
 #
 # crappy tests for checking that jenkins-job-builder works correctly
 #
-DEFINED_TRIGGERS=$(grep -c _trigger: *.yaml)
+DEFINED_TRIGGERS=$(grep _trigger: *.yaml|wc -l)
 CONFIGURED_TRIGGERS=$(grep -C 1 \<hudson.tasks.BuildTrigger /var/lib/jenkins/jobs/*/config.xml|grep child|wc -l)
 if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
 	figlet Warning

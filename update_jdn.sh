@@ -68,8 +68,8 @@ explain "Jenkins jobs updated."
 #
 # crappy tests for checking that jenkins-job-builder works correctly
 #
-DEFINED_TRIGGERS=$(grep -c _trigger: job-cfg/*)
-CONFIGURED_TRIGGERS=$(grep -C 1 \<hudson.tasks.BuildTrigger /var/lib/jenkins/jobs/*/config.xml|grep child|wc)
+DEFINED_TRIGGERS=$(grep -c _trigger: *)
+CONFIGURED_TRIGGERS=$(grep -C 1 \<hudson.tasks.BuildTrigger /var/lib/jenkins/jobs/*/config.xml|grep child|wc -l)
 if [ $DEFINED_TRIGGERS -ne $CONFIGURED_TRIGGERS ] ; then
 	figlet Warning
 	echo "Number of defined triggers ($DEFINED_TRIGGERS) differs from configured triggers ($CONFIGURED_TRIGGERS), please investigate."

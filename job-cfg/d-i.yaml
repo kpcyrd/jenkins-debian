@@ -35,7 +35,19 @@
          rulespath: '/srv/jenkins/logparse/debian.rules'
          unstable_on_warning: 'true'
          fail_on_error: 'true'
-    # FIXME missing publisher: build-logs.html "daily d-i build logs"
+# FIXME:
+#    <htmlpublisher.HtmlPublisher>
+#      <reportTargets>
+#        <htmlpublisher.HtmlPublisherTarget>
+#          <reportName>daily d-i build logs</reportName>
+#          <reportDir>.</reportDir>
+#          <reportFiles>build-logs.html</reportFiles>
+#          <keepAll>true</keepAll>
+#          <wrapperName>htmlpublisher-wrapper.html</wrapperName>
+#        </htmlpublisher.HtmlPublisherTarget>
+#      </reportTargets>
+#    </htmlpublisher.HtmlPublisher>
+
 
 - project:
     name: d-i

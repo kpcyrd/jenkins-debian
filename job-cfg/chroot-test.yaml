@@ -101,11 +101,11 @@
          unstable_on_warning: 'true'
          fail_on_error: 'true'
       - trigger:
-         project: 'chroot-test-sid_bootstrap'
+         project: '{my_1st_trigger}'
       - trigger:
-         project: 'chroot-test-wheezy_bootstrap'
+         project: '{my_2nd_trigger}'
       - trigger:
-         project: 'chroot-test-squeeze_bootstrap_upgrade_to_wheezy'
+         project: '{my_3rd_trigger}'
 
 - job-template:
     defaults: chroot-tests
@@ -219,4 +219,7 @@
 
       - '{name}-housekeeping':
          my_description: 'Cleanup so that there is a predictable environment.'
+         my_1st_trigger: 'chroot-test-sid_bootstrap'
+         my_2nd_trigger: 'chroot-test-wheezy_bootstrap'
+         my_3rd_trigger: 'chroot-test-squeeze_bootstrap_upgrade_to_wheezy'
 

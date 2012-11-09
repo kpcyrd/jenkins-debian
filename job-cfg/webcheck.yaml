@@ -29,7 +29,7 @@
       - sidebar:
           url: http://jenkins.debian.net/view/webcheck/
           text: All webcheck jobs
-          icon: /userContent/images/debian-swirl-24x24.png
+          icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks

@@ -75,33 +75,6 @@ body {
  background-color: white;
 }
 
-#obeytoyourfriend
-{
- color: #000;
- background-color: white;
- border: 0px solid #000;
- border-collapse: collapse;
- margin-top: 0px;
- margin-bottom: 5px;
- padding-top: 0px;
- padding-left: 15px;
- font-family: serif;
- font-variant:small-caps;
- font-size: 140%;
-}
-
-p.validate {
- text-align: center;
-}
-
-table
-{
- color: #000;
- background-color: #000;
- border: 0px solid #000;
- border-collapse: separate;
- border-spacing: 1px;
-}
 
 h1 {
  font-size: 140%;
@@ -130,74 +103,6 @@ p {
 tr {
  background-color: #FFF;
 }
-
-tr.odd {
- background-color: #FFFFFF;
-}
-
-tr.even {
- background-color: #e8e8e8;
-}
-
-td.sid {
- color: #000;
- text-align: left;
-}
-
-tr.experimental {
- color: #cc0000;
-}
-
-tr.unstable {
- color: #345677;
-}
-
-tr.sid_odd {
- color: #000;
-}
-
-td.exp {
- color: #cc0000;
- text-align: left;
-}
-
-tr.exp_odd {
- color: #900;
-}
-
-th {
- font-size: 120%;
- text-align: center;
- font-weight: bold;
- background-color: #BDF;
- border: 0px solid #000;
- padding-top: 10px;
- padding-bottom: 10px;
- padding-left: 6px;
- padding-right: 6px;
-}
-
-th.reject {
- font-size: 120%;
- text-align: center;
- font-weight: bold;
- background-color: #BDF;
- border: 0px solid #000;
- padding-top: 10px;
- padding-bottom: 10px;
- padding-left: 6px;
- padding-right: 6px;
-}
-
-td {
- font-size: 100%;
- border: 0px solid #000;
- padding: 4px;
- padding-left: 6px;
- padding-right: 6px;
-}
-
-
 
 a:link {
  color: #0000FF;

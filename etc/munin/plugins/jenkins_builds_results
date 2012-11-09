@@ -29,7 +29,7 @@ if [ "$1" = "autoconf" ]; then
         exit 0
 fi
 
-JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "-" -f1-2|sort -u)
+JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "-" -f1|sort -u)
 if [ "$1" = "config" ]; then
 
         echo 'graph_title Jenkins Build results'

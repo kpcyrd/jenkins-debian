@@ -1,7 +1,7 @@
 
 - defaults:
     name: webcheck
-    description: 'Run <a href="http://arthurdejong.org/webcheck/">webcheck</a> on {webcheck_url} once a week while ignore these patters: <pre>{webcheck_ignore_patterns</pre>.{do_not_edit}'
+    description: 'Run <a href="http://arthurdejong.org/webcheck/">webcheck</a> on {webcheck_url} once a week while ignore these patters: <pre>{webcheck_ignore_patterns}</pre>.{do_not_edit}'
     logrotate:
       daysToKeep: 90
       numToKeep: 50

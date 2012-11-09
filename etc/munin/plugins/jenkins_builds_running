@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-jenkins_builds_running - Plugin to measure number of jenknis builds which are currently running
+jenkins_builds_running - Plugin to measure number of jenkins builds which are currently running
 
 =head1 AUTHOR
 
@@ -29,6 +29,7 @@ if [ "$1" = "autoconf" ]; then
         exit 0
 fi
 
+JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "-" -f1-2|sort -u)
 if [ "$1" = "config" ]; then
 
         echo 'graph_title Jenkins Builds running'
@@ -38,8 +39,6 @@ if [ "$1" = "config" ]; then
         echo 'graph_category jenkins'
         echo "jenkins_builds_running.label $PREFIX builds_running"
         echo "jenkins_builds_running.draw AREA"
-        #print_warning jenkins_builds_running
-        #print_critical jenkins_builds_running
         exit 0
 fi
 

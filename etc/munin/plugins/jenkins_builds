@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-jenkins_builds - Plugin to measure number of jenknis builds
+jenkins_builds - Plugin to measure number of jenkins builds
 
 =head1 AUTHOR
 
@@ -29,6 +29,7 @@ if [ "$1" = "autoconf" ]; then
         exit 0
 fi
 
+JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "-" -f1-2|sort -u)
 if [ "$1" = "config" ]; then
 
         echo 'graph_title Jenkins Builds in the last 24h'
@@ -37,11 +38,11 @@ if [ "$1" = "config" ]; then
         echo 'graph_total total'
         echo 'graph_vlabel Jenkins Builds per category in the last 24h'
         echo 'graph_category jenkins'
+        draw=AREA
         for PREFIX in $JOB_PREFIXES ; do
                 echo "jenkins_builds_$PREFIX.label $PREFIX builds"
-                echo "jenkins_builds_$PREFIX.draw STACK"
-                #print_warning jenkins_builds_$PREFIX
-                #print_critical jenkins_builds_$PREFIX
+                echo "jenkins_builds_$PREFIX.draw $draw"
+		if [ "$draw" = "AREA" ] ; then draw=STACK ; fi
         done
         exit 0
 fi

@@ -35,19 +35,11 @@
          rulespath: '/srv/jenkins/logparse/debian.rules'
          unstable_on_warning: 'true'
          fail_on_error: 'true'
-# FIXME:
-#    <htmlpublisher.HtmlPublisher>
-#      <reportTargets>
-#        <htmlpublisher.HtmlPublisherTarget>
-#          <reportName>daily d-i build logs</reportName>
-#          <reportDir>.</reportDir>
-#          <reportFiles>build-logs.html</reportFiles>
-#          <keepAll>true</keepAll>
-#          <wrapperName>htmlpublisher-wrapper.html</wrapperName>
-#        </htmlpublisher.HtmlPublisherTarget>
-#      </reportTargets>
-#    </htmlpublisher.HtmlPublisher>
-
+      - htmlpublisher:
+         name: 'Daily d-i build logs'
+         directory: '.'
+         indexfiles: 'build-logs.html'
+         keepall: True
 
 - project:
     name: d-i

@@ -26,12 +26,22 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
 
+- job-template:
+    defaults: webcheck
+    name: '{name}_www_debconf_org'
+
+- job-template:
+    defaults: webcheck
+    name: '{name}_debconf13_debconf_org'
+
 - project:
     name: webcheck
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
     jobs:
-
-      - '{name}-www.debconf.org':
+      - '{name}_www_debconf_org':
          webcheck_url: 'http://www.debconf.org'
+         webcheck_ignore_patterns: '^mailto:'
+      - '{name}_debconf13_debconf_org':
+         webcheck_url: 'http://debconf13.debconf.org'
          webcheck_ignore_patterns: '^mailto:'
 

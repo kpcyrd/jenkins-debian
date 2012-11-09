@@ -1,5 +1,5 @@
 - job-template:
-    name: '{name}-manual'
+    name: '{name}_manual'
     description: 'Shall build d-i manual one day, does not do that yet.{do_not_edit}'
     scm:
       - svn:
@@ -24,7 +24,7 @@
          fail_on_error: 'true'
 
 - job-template:
-    name: '{name}-parse_build_logs'
+    name: '{name}_parse_build_logs'
     description: 'Parses d-i build logs.{do_not_edit}'
     builders:
       - shell: '/srv/jenkins/bin/d-i_parse_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
@@ -53,8 +53,8 @@
     name: d-i
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
     jobs:
-      - '{name}-manual'
-      - '{name}-parse_build_logs'
+      - '{name}_manual'
+      - '{name}_parse_build_logs'
  
 
 

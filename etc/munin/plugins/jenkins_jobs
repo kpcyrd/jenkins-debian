@@ -48,6 +48,6 @@ if [ "$1" = "config" ]; then
 fi
 
 for PREFIX in $JOB_PREFIXES ; do
-        NR=$(find /var/lib/jenkins/jobs/ -name "$PREFIX*" -type d | wc -l)
+        NR=$(find /var/lib/jenkins/jobs/ -maxdepth 1 -name "$PREFIX*" -type d | wc -l)
         echo "jenkins_jobs_$PREFIX.value $NR"
 done

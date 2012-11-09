@@ -58,14 +58,15 @@ About jenkins.debian.net
 == General ToDo
 
 * get rid of some reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
-* add documentation for jenkins-job-builder:
+* add documentation for jenkins-job-builder and send pull requests on github:
 ** publisher:logparse
+** publisher:htmlpublisher
 ** svn:scm
 ** properties: sidebar
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
 * split TODO and about.txt?
-** use debian stylesheet for about.html
+** use debian stylesheet
 * proper git repo url, outside users/holger
 ** http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)

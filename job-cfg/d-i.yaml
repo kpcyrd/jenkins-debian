@@ -1,4 +1,27 @@
+- defaults:
+    name: d-i
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 50
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/debian-installer/
+          text: All debian-installer jobs
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+
 - job-template:
+    defaults: d-i
     name: '{name}_manual'
     description: 'Shall build d-i manual one day, does not do that yet.{do_not_edit}'
     scm:
@@ -12,7 +35,6 @@
          excludedRevprop: ''
          excludedCommitMessages: ''
          viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
-
     builders:
       - shell: 'ls'
     triggers:
@@ -24,6 +46,7 @@
          fail_on_error: 'true'
 
 - job-template:
+    defaults: d-i
     name: '{name}_parse_build_logs'
     description: 'Parses d-i build logs.{do_not_edit}'
     builders:

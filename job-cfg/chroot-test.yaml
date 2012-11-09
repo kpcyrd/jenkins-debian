@@ -59,10 +59,6 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
 
-#
-# FIXME: trigger-project needs to accept a list of projects.
-#
-
 - defaults:
     name: chroot-tests+four-trigger
     description: '{my_description}{do_not_edit}'
@@ -101,6 +97,7 @@
           icon: /userContent/images/profitbricks-24x24.png
 
 - job-template:
+    defaults: chroot-tests
     name: '{name}_housekeeping'
     description: '{my_description}{do_not_edit}'
     triggers:

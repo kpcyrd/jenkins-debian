@@ -16,12 +16,8 @@ set -e
 export LANG=C
 export http_proxy="http://localhost:3128"
 
-TMPFILE=$(mktemp -d)
-cd $TMPFILE
 PARAMS=""
 if [ "$2" != "" ] ; then
 	PARAMS=$(for i in $2 ; do echo -n "-y $i " ; done)
 fi
 webcheck $1 $PARAMS
-cd ..
-mv $TMPFILE $(basename $1)

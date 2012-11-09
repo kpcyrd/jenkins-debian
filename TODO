@@ -68,7 +68,6 @@ About jenkins.debian.net
 ** use debian stylesheet for about.html
 * proper git repo url, outside users/holger
 ** http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git
-* weekly runs of webcheck? but then, when to fail and become unstable?
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 
 == Installed software that makes jenkins.debian.net run

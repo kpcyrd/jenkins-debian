@@ -16,8 +16,8 @@ set -e
 export LANG=C
 export http_proxy="http://localhost:3128"
 
-PARAMS=""
+PARAMS="-c -f"
 if [ "$2" != "" ] ; then
-	PARAMS=$(for i in $2 ; do echo -n "-y $i " ; done)
+	PARAMS=$(for i in $2 ; do echo -n " -y $i" ; done)
 fi
 webcheck $1 $PARAMS

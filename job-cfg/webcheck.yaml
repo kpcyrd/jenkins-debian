@@ -8,7 +8,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     triggers:
-      - timed: {timed}
+      - timed: "{timed}"
     builders:
       - shell: '/srv/jenkins/bin/webcheck_url.sh {webcheck_url} {webcheck_ignore_patterns}'
     publishers:

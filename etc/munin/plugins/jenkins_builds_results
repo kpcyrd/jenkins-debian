@@ -52,7 +52,7 @@ fi
 for PREFIX in $JOB_PREFIXES ; do
         for STATE in success unstable failed ; do
 		NR=0
-		NR=$( (for i in /var/lib/jenkins/jobs/${PREFIX}*/builds/*/log ; do tail -1 $i 2>/dev/null; done ) | grep -i -c $STATE)
+		NR=$( (for i in /var/lib/jenkins/jobs/${PREFIX}*/builds/*_*/log ; do tail -1 $i 2>/dev/null; done ) | grep -i -c $STATE)
 		NR=$(echo "$NR/2"|bc)
         	echo "jenkins_builds_results_${PREFIX}_${STATE}.value $NR"
 	done

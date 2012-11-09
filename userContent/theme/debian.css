@@ -25,17 +25,6 @@
 
 
 
-
-#main {
-        border: none;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
-        vertical-align: top;
-        background-color: #ddd;
-}
-
 hr {
   width: 100%;
   color:#d70751;
@@ -78,19 +67,16 @@ body {
 
 h1 {
  font-size: 140%;
- text-align: center;
  color: #000;
 }
 
 h2 {
  font-size: 120%;
- text-align: center;
  color: #000;
 }
 
 h3 {
  font-size: 110%;
- text-align: center;
  color: #000;
 }
 
@@ -124,22 +110,3 @@ a:hover {
  text-decoration: underline;
 }
 
-#header {
- padding: 3px;
-}
-
-h1.header {
- font-size: 32px;
- text-align: left;
- margin-bottom: 0px;
- margin-top: 0px;
- padding-top: 0px;
- padding-bottom: 0px;
- padding-left: 15px;
-}
-
-#footer {
- padding: 15px;
- font-size: 90%;
- text-align: center;
-}

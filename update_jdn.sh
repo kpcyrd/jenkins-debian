@@ -56,7 +56,7 @@ cp -r bin logparse job-cfg /srv/jenkins/
 explain "Jenkins updated."
 cp -r TODO userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/
-asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=themes/debian.css -o about.html TODO
+asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=/var/lib/jenkins/userContent/theme/debian.css -o about.html TODO
 rm TODO 
 explain "Updated about.html"
 

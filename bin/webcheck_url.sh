@@ -11,7 +11,7 @@ if [ "$1" == "" ] ; then
 	exit 1
 fi
 
-#set -x
+set -x
 set -e
 export LANG=C
 export http_proxy="http://localhost:3128"

@@ -1,0 +1,37 @@
+
+- defaults:
+    name: webcheck
+    description: 'Run <a href="http://arthurdejong.org/webcheck/">webcheck</a> on {webcheck_url} once a week.{do_not_edit}'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 50
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    triggers:
+      - timed: "0 1 * * 0"
+    builders:
+      - shell: '/srv/jenkins/bin/webcheck_url.sh {webcheck_url} {webcheck_ignore_patterns}'
+    publishers:
+      - logparser:
+         rulespath: '/srv/jenkins/logparse/debian.rules'
+         unstable_on_warning: 'false'
+         fail_on_error: 'false'
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+
+- project:
+    name: webcheck
+    do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
+    jobs:
+
+      - '{name}-www.debconf.org':
+         webcheck_url: 'http://www.debconf.org'
+         webcheck_ignore_patterns: '^mailto:'
+

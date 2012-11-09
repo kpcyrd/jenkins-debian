@@ -10,7 +10,7 @@
     triggers:
       - timed: "{timed}"
     builders:
-      - shell: '/srv/jenkins/bin/webcheck_url.sh {webcheck_url} \'{webcheck_ignore_patterns}\''
+      - shell: "/srv/jenkins/bin/webcheck_url.sh {webcheck_url} '{webcheck_ignore_patterns}'"
     publishers:
       - logparser:
          rulespath: '/srv/jenkins/logparse/debian.rules'

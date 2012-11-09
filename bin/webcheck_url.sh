@@ -16,8 +16,22 @@ set -e
 export LANG=C
 export http_proxy="http://localhost:3128"
 
-PARAMS="-c -f"
+#
+# Don't use --continue on first run
+#
+if [ ! -e webcheck.dat ] ; then
+	PARAMS=""
+else
+	PARAMS="-c -f"
+fi
+
+#
+# $2 can only by used to ignore pattern atm
+#
 if [ "$2" != "" ] ; then
 	PARAMS="$PARAMS $(for i in $2 ; do echo -n " -y $i" ; done)"
 fi
+#
+# actually run webcheck
+#
 webcheck $1 $PARAMS

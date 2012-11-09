@@ -25,7 +25,7 @@ done
 #
 sudo apt-get install vim screen less etckeeper curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck
 explain "Packages installed."
 
 #

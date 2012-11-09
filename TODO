@@ -8,16 +8,16 @@ About jenkins.debian.net
 :Doctype:          article
 :Licence:	   GPLv2
 
-
 == About jenkins.debian.net
 
-* http://jenkins.debian.net is pretty much work in progress, (hopefully) doing something useful since October 15th 2012
+* http://jenkins.debian.net is pretty much work in progress, (hopefully) doing something useful since October 15th 2012.
 * Join #debian-qa on irc.debian.org to report bugs or give other feedback! Use debian-qa@lists.debian.org if you prefer mail.
-* git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
+* 'git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git'
 * (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server, but in future there will be installation and tests clients started on demand as well.
 * some stats are available at http://jenkins.debian.net/munin/jenkins-month.html
 
 == More tests to be run
+
 
 === Tests for supporting d-i development:
 
@@ -64,32 +64,33 @@ About jenkins.debian.net
 ** properties: sidebar
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
-* make job configuration visible to un-authenticated users
-* squid has problems with SO_FAIL
 * split TODO and about.txt?
 ** use debian stylesheet for about.html
 * proper git repo url, outside users/holger
+** http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git
+* weekly runs of webcheck? but then, when to fail and become unstable?
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 
 == Installed software that makes jenkins.debian.net run
 
 * jenkins.debian.net runs Debian wheezy.
-* FIXME: how jenkins was installed + configured
-* needed packages are listed in update_jdn.sh and which will also make sure they are installed
-** update_jdn.sh is available in the git repo
-* package configuration is kept in git and deployed by update_jdn.sh as well
+* FIXME: describe how jenkins is installed + configured, basically put 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update`
+* needed packages are listed in 'update_jdn.sh' and which will also make sure they are installed
+** 'update_jdn.sh' is available in the git repo
+* package configuration is kept in that git repo and deployed by 'update_jdn.sh' as well.
 
 === Installing jenkins-job-builder
-* rebuild python-jenkinsapi from sid for wheezy
-* pip install python-jenkins
-* git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install
+* rebuild python-jenkinsapi from sid for wheezy:
+* `pip install python-jenkins`
+* `git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install`
+** actually https://github.com/h01ger/jenkins-job-builder is used atm.
 
 === Using jenkins-job-builder
 
-* then run 'cd /srv/jenkins/job-cfg ; jenkins-jobs update .' to update jobs
-* testing: 'cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/'
+* then run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
+* testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`
 
 == To backup
 
-* /etc/.git 
-* /var/lib/jenkins/config.xml as well as its plugins
+* '/etc/.git'
+* '/var/lib/jenkins/config.xml' as well as its plugins

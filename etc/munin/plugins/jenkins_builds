@@ -34,11 +34,12 @@ if [ "$1" = "config" ]; then
         echo 'graph_title Jenkins Builds in the last 24h'
         echo 'graph_args --base 1000 -l 0 '
         echo 'graph_scale no'
+        echo 'graph_total total'
         echo 'graph_vlabel Jenkins Builds per category in the last 24h'
         echo 'graph_category jenkins'
         for PREFIX in $JOB_PREFIXES ; do
                 echo "jenkins_builds_$PREFIX.label $PREFIX builds"
-                echo "jenkins_builds_$PREFIX.draw AREA"
+                echo "jenkins_builds_$PREFIX.draw STACK"
                 #print_warning jenkins_builds_$PREFIX
                 #print_critical jenkins_builds_$PREFIX
         done

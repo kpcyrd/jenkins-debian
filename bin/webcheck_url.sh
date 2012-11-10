@@ -13,7 +13,7 @@ fi
 
 set -x
 set -e
-export LANG=C
+export LC_ALL=C
 export http_proxy="http://localhost:3128"
 
 #

@@ -5,7 +5,7 @@
 
 set -x
 set -e
-export LANG=C
+export LC_ALL=C
 export MIRROR=http://ftp.de.debian.org/debian
 export http_proxy="http://localhost:3128"
 

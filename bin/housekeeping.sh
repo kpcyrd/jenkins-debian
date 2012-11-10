@@ -3,6 +3,7 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+export LC_ALL=C
 echo 
 uptime
 echo

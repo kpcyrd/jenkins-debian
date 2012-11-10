@@ -21,7 +21,7 @@ sleep $SLEEP
 
 set -x
 set -e
-export LANG=C
+export LC_ALL=C
 export MIRROR=http://ftp.de.debian.org/debian
 export http_proxy="http://localhost:3128"
 
@@ -29,7 +29,7 @@ export SCRIPT_HEADER="#!/bin/bash
 set -x
 set -e
 export DEBIAN_FRONTEND=noninteractive
-export LANG=C
+export LC_ALL=C
 export http_proxy=$http_proxy"
 
 export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-tests-$1.XXXXXXXXX)

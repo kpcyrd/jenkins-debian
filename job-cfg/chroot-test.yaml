@@ -176,7 +176,7 @@
       - '{name}_sid_bootstrap':
          chroot_tester_params: 'sid'
          my_description: 'Debootstrap sid.'
-         my_trigger: 'chroot-test-sid_install_gnome'
+         my_trigger: 'chroot-test_sid_install_gnome'
 
       - '{name}_squeeze_install_gnome_upgrade_to_wheezy':
          chroot_tester_params: 'squeeze gnome wheezy'
@@ -197,10 +197,10 @@
       - '{name}_squeeze_bootstrap_upgrade_to_wheezy':
          chroot_tester_params: 'squeeze none wheezy'
          my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
-         my_1st_trigger: 'chroot-test-squeeze_install_gnome_upgrade_to_wheezy'
-         my_2nd_trigger: 'chroot-test-squeeze_install_kde_upgrade_to_wheezy'
-         my_3rd_trigger: 'chroot-test-squeeze_install_lxde_upgrade_to_wheezy'
-         my_4th_trigger: 'chroot-test-squeeze_install_xfce_upgrade_to_wheezy'
+         my_1st_trigger: 'chroot-test_squeeze_install_gnome_upgrade_to_wheezy'
+         my_2nd_trigger: 'chroot-test_squeeze_install_kde_upgrade_to_wheezy'
+         my_3rd_trigger: 'chroot-test_squeeze_install_lxde_upgrade_to_wheezy'
+         my_4th_trigger: 'chroot-test_squeeze_install_xfce_upgrade_to_wheezy'
 
       - '{name}_wheezy_install_gnome':
          chroot_tester_params: 'wheezy gnome'
@@ -221,14 +221,14 @@
       - '{name}_wheezy_bootstrap':
          chroot_tester_params: 'wheezy'
          my_description: 'Debootstrap wheezy.'
-         my_1st_trigger: 'chroot-test-wheezy_install_gnome'
-         my_2nd_trigger: 'chroot-test-wheezy_install_kde'
-         my_3rd_trigger: 'chroot-test-wheezy_install_lxde'
-         my_4th_trigger: 'chroot-test-wheezy_install_xfce'
+         my_1st_trigger: 'chroot-test_wheezy_install_gnome'
+         my_2nd_trigger: 'chroot-test_wheezy_install_kde'
+         my_3rd_trigger: 'chroot-test_wheezy_install_lxde'
+         my_4th_trigger: 'chroot-test_wheezy_install_xfce'
 
       - '{name}_housekeeping':
          my_description: 'Cleanup so that there is a predictable environment.'
-         my_1st_trigger: 'chroot-test-sid_bootstrap'
-         my_2nd_trigger: 'chroot-test-wheezy_bootstrap'
-         my_3rd_trigger: 'chroot-test-squeeze_bootstrap_upgrade_to_wheezy'
+         my_1st_trigger: 'chroot-test_sid_bootstrap'
+         my_2nd_trigger: 'chroot-test_wheezy_bootstrap'
+         my_3rd_trigger: 'chroot-test_squeeze_bootstrap_upgrade_to_wheezy'
 

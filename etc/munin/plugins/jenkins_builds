@@ -29,7 +29,7 @@ if [ "$1" = "autoconf" ]; then
         exit 0
 fi
 
-JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -u)
+JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -f -u)
 if [ "$1" = "config" ]; then
 
         echo 'graph_title Jenkins Builds in the last 24h'

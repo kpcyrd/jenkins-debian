@@ -29,7 +29,7 @@
          url: svn://svn.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
-         includedRegions: {include}
+         includedRegions: '{include}'
          excludedRegions: ''
          excludedUsers: ''
          excludedRevprop: ''
@@ -49,7 +49,7 @@
          url: svn://svn.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
-         includedRegions: {include}
+         includedRegions: '{include}'
          excludedRegions: ''
          excludedUsers: ''
          excludedRevprop: ''

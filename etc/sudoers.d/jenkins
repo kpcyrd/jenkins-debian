@@ -1,4 +1,4 @@
-jenkins ALL= NOPASSWD: /usr/sbin/debootstrap *, NOPASSWD: /usr/sbin/chroot /chroots/*, NOPASSWD: /bin/rm -rf /chroots/*, NOPASSWD: /bin/umount -l /chroots/*, NOPASSWD: /usr/bin/du *
+jenkins ALL= NOPASSWD: /usr/sbin/debootstrap *, NOPASSWD: /usr/sbin/chroot /chroots/*, NOPASSWD: /bin/rm -rf /chroots/*, NOPASSWD: /bin/umount -l /chroots/*, NOPASSWD: /usr/bin/du *, NOPASSWD: /usr/sbin/pbuilder *
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

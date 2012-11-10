@@ -8,7 +8,8 @@ uptime
 echo
 df -h
 echo
-for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/lib/jenkins/jobs/ ; do
+# FIXME: make this a general and a specific housekeeping job:
+for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/lib/jenkins/jobs/ /var/cache/pbuilder/build/ ; do
 	sudo du -sh $DIR
 done
 echo

@@ -109,7 +109,7 @@
     jobs:
       - '{name}_www_debian_org':
          webcheck_url: 'http://www.debian.org'
-         webcheck_ignore_patterns: '^mailto: action/edit action/history Special: oldid= printable=yes limit= redirect=no qa.debian.org/developer.php security.debian.org/pool packages.debian.org/src: i18n.debian.org/material cve.mitre.org/cgi-bin bugs.debian.org/\d\d\d'
+         webcheck_ignore_patterns: '^mailto: action/edit action/history Special: oldid= printable=yes limit= redirect=no qa.debian.org/developer.php security.debian.org/pool packages.debian.org/src: i18n.debian.org/material cve.mitre.org/cgi-bin online.securityfocus.com/bid bugs.debian.org/\d\d\d bugs.debian.org/cgi-bin/???report.cgi \.dsc \.diff.gz \.tar.gz \.deb'
          timed: "0 1 * * 0"
       - '{name}_www_debconf_org':
          webcheck_url: 'http://www.debconf.org'

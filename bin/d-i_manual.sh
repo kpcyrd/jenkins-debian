@@ -17,8 +17,6 @@ rm -fv *.deb *.dsc *_*.build *_*.changes *_*.tar.gz
 #
 # prepare build
 #
-cd manual
-pdebuild
 if [ -f /var/base.tgz ] ; then
 	sudo pbuilder --create
 else
@@ -28,6 +26,5 @@ fi
 #
 # build
 #
-cd ..
-sudo pbuilder --build *dsc
-
+cd manual
+pdebuild

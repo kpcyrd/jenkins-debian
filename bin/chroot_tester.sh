@@ -37,8 +37,8 @@ export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 
 cleanup_all() {
-	# FIXME: test if it starts with /chroots/
-	if [ "$CHROOT_TARGET" = "" ] ; then
+	# test if $CHROOT_TARGET starts with /chroots/
+	if [ "${CHROOT_TARGET:0:9}" != "/chroots/" ] ; then
 		echo "HALP. CHROOT_TARGET = $CHROOT_TARGET"
 		exit 1
 	fi

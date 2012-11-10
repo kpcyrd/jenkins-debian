@@ -41,6 +41,10 @@ pdebuild_package() {
 
 build_language() {
 	FORMAT=$2
+	# if $FORMAT is a directoy and it's string length greater or equal then 3 (so not "." or "..")
+	if [ -d "$FORMAT" ] && [ ${#FORMAT} -ge 3 ]; then
+		rm -rf $FORMAT
+	fi
 	mkdir $FORMAT
 	cd manual/build
 	ARCHS=$(ls arch-options)

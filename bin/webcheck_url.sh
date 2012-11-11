@@ -33,20 +33,20 @@ if [ "${1: -1}" = "/" ] ; then
 fi
 
 #
-# $2 can only by used to ignore patterns atm
+# ignore some extra patterns (=all translations) when checking www.debian.org
 #
-if [ "$2" != "" ] ; then
-	PARAMS="$PARAMS $(for i in $2 ; do echo -n " -y $i" ; done)"
-fi
-
-#
-# ignore a a lot more patterns (=all translations) when checking www.debian.org
-#
-if [ "${2:0-21}" = "http://www.debian.org" ] ; then
+if [ "${1:0-21}" = "http://www.debian.org" ] ; then
 	TRANSLATIONS=$(curl www.debian.org 2>/dev/null|grep index|grep lang=|cut -d "." -f2)
 	for LANG in $TRANSLATIONS ; do
 		PARAMS="$PARAMS -y $LANG.html"
 	done
+fi
+
+#
+# $2 can only by used to ignore patterns atm
+#
+if [ "$2" != "" ] ; then
+	PARAMS="$PARAMS $(for i in $2 ; do echo -n " -y $i" ; done)"
 fi
 
 #

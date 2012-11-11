@@ -169,7 +169,7 @@
          lang: 'po'
          languagename: 'Polish'
       - '{name}_manual_pt_BR':
-         lang: 'pr_BR'
+         lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'
       # FIXME: a housekeeping job, ie to check for new languages
       - '{name}_parse_build_logs'

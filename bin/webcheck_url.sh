@@ -26,6 +26,13 @@ else
 fi
 
 #
+# if $1 ends with / then run webcheck with -b
+#
+if [ "${1: -1}" = "/" ] ; then
+	PARAMS="$PARAMS -b"
+fi
+
+#
 # $2 can only by used to ignore pattern atm
 #
 if [ "$2" != "" ] ; then

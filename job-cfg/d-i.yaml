@@ -20,29 +20,27 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
 
-- job-template:
-    defaults: d-i
-    name: '{name}_manual'
-    description: 'Builds the installation-guide packages.{do_not_edit}'
-    scm:
-      - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
-         basedir: .
-         workspaceupdater: update
-         includedRegions: '{include}'
-         excludedRegions: ''
-         excludedUsers: ''
-         excludedRevprop: ''
-         excludedCommitMessages: ''
-         viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
-    builders:
-      - shell: '/srv/jenkins/bin/d-i_manual.sh'
-    triggers:
-      - pollscm: "*/30 * * * *"
-
-- job-template:
-    defaults: d-i
-    name: '{name}_manual_{lang}'
+- defaults:
+    name: d-i-manual
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 50
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/debian-installer/
+          text: All debian-installer jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
     description: 'Builds the {languagename} html version of the installation-guide for all architectures.{do_not_edit}'
     scm:
       - svn:
@@ -69,6 +67,73 @@
          directory: 'html'
          indexfiles: ''
          keepall: False
+
+
+- job-template:
+    defaults: d-i
+    name: '{name}_manual'
+    description: 'Builds the installation-guide packages.{do_not_edit}'
+    scm:
+      - svn:
+         url: svn://svn.debian.org/svn/d-i/trunk
+         basedir: .
+         workspaceupdater: update
+         includedRegions: '{include}'
+         excludedRegions: ''
+         excludedUsers: ''
+         excludedRevprop: ''
+         excludedCommitMessages: ''
+         viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_manual.sh'
+    triggers:
+      - pollscm: "*/30 * * * *"
+
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_ca'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_de'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_es'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_fi'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_fr'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_hu'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_it'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_ja'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_ko'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_nl'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_pt'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_pt_BR'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_sv'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_vi'
+- job-template:
+    defaults: d-i-manual
+    name: '{name}_manual_zh_CN'
 
 - job-template:
     defaults: d-i

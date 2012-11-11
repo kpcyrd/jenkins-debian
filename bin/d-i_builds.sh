@@ -4,20 +4,16 @@
 # released under the GPLv=2
 
 # $1 = base distro
-# $2 = extra component
-# $3 = upgrade distro
+# $2 = action (create, update, install_builddeps, use)
+# $3 = type of action
 
 if [ "$1" == "" ] ; then
 	echo "need at least one distribution to act on"
 	echo '# $1 = base distro'
-	echo '# $2 = extra component (gnome, kde, xfce, lxce)'
-	echo '# $3 = upgrade distro'
+	echo '# $2 = action (create, update, install_builddeps, use)'
+	echo '# $3 = type of action'
 	exit 1
 fi
-
-SLEEP=$(shuf -i 1-10 -n 1)
-echo "Sleeping $SLEEP seconds to randomize start times and parallel runs."
-sleep $SLEEP
 
 #
 # default settings
@@ -35,7 +31,7 @@ export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=C
 export http_proxy=$http_proxy"
 
-export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-tests-$1.XXXXXXXXX)
+export CHROOT_TARGET=/chroots/d-i-$1
 export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 

@@ -11,6 +11,9 @@ if [ "$1" == "" ] ; then
 	exit 1
 fi
 
+#
+# default settings
+#
 #set -x
 set -e
 export LC_ALL=C

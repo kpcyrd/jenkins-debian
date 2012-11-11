@@ -3,6 +3,9 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+#
+# default settings
+#
 set -x
 set -e
 export LC_ALL=C

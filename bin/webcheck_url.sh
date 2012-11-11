@@ -3,14 +3,21 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-# $1 = URL
-
 if [ "$1" == "" ] ; then
 	echo "need at least one URL to act on"
 	echo '# $1 = URL'
 	exit 1
 fi
 
+#
+# convert params to variables
+#
+URL=$1
+PATTERNS=$2
+
+#
+# default settings
+#
 set -x
 set -e
 export LC_ALL=C
@@ -26,16 +33,16 @@ else
 fi
 
 #
-# if $1 ends with / then run webcheck with -b
+# if $URL ends with / then run webcheck with -b
 #
-if [ "${1: -1}" = "/" ] ; then
+if [ "${URL: -1}" = "/" ] ; then
 	PARAMS="$PARAMS -b"
 fi
 
 #
 # ignore some extra patterns (=all translations) when checking www.debian.org
 #
-if [ "${1:0-21}" = "http://www.debian.org" ] ; then
+if [ "${URL:0-21}" = "http://www.debian.org" ] ; then
 	TRANSLATIONS=$(curl www.debian.org 2>/dev/null|grep index|grep lang=|cut -d "." -f2)
 	for LANG in $TRANSLATIONS ; do
 		PARAMS="$PARAMS -y $LANG.html"
@@ -43,13 +50,13 @@ if [ "${1:0-21}" = "http://www.debian.org" ] ; then
 fi
 
 #
-# $2 can only by used to ignore patterns atm
+# $PATTERNS can only be used to ignore patterns atm
 #
-if [ "$2" != "" ] ; then
-	PARAMS="$PARAMS $(for i in $2 ; do echo -n " -y $i" ; done)"
+if [ "$PATTERNS" != "" ] ; then
+	PARAMS="$PARAMS $(for i in $PATTERNS ; do echo -n " -y $i" ; done)"
 fi
 
 #
 # actually run webcheck
 #
-webcheck $1 $PARAMS
+webcheck $URL $PARAMS

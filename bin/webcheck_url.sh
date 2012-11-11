@@ -45,7 +45,7 @@ fi
 if [ "${URL:0:21}" = "http://www.debian.org" ] ; then
 	TRANSLATIONS=$(curl www.debian.org 2>/dev/null|grep index|grep lang=|cut -d "." -f2)
 	for LANG in $TRANSLATIONS ; do
-		PARAMS="$PARAMS -y $LANG.html"
+		PARAMS="$PARAMS -y \.${LANG}\.html -y html\.${LANG}"
 	done
 fi
 

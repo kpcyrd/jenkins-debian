@@ -42,21 +42,21 @@
 
 - job-template:
     defaults: d-i
-    name: '{name}_manual_de'
-    description: 'Builds the german html version of the installation-guide for all architectures.{do_not_edit}'
+    name: '{name}_manual_{lang}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures.{do_not_edit}'
     scm:
       - svn:
          url: svn://svn.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
-         includedRegions: '{include}'
+         includedRegions: '/trunk/manual/{lang}/.*'
          excludedRegions: ''
          excludedUsers: ''
          excludedRevprop: ''
          excludedCommitMessages: ''
          viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
     builders:
-      - shell: '/srv/jenkins/bin/d-i_manual.sh de'
+      - shell: '/srv/jenkins/bin/d-i_manual.sh {lang}'
     triggers:
       - pollscm: "*/30 * * * *"
     publishers:
@@ -65,7 +65,7 @@
          unstable_on_warning: 'true'
          fail_on_error: 'true'
       - htmlpublisher:
-         name: 'Installation guides with LANG=de'
+         name: 'Installation guides with LANG={lang}'
          directory: 'html'
          indexfiles: ''
          keepall: False
@@ -96,9 +96,51 @@
       - '{name}_manual':
          include: '/trunk/manual/debian/.*'
          # FIXME: misses: scripts doc build
+      - '{name}_manual_ca':
+         lang: 'ca'
+         languagename: 'Catalan'
       - '{name}_manual_de':
-         include: '/trunk/manual/de/.*'
+         lang: 'de'
+         languagename: 'German'
+      - '{name}_manual_es':
+         lang: 'es'
+         languagename: 'Spanish'
+      - '{name}_manual_fi':
+         lang: 'fi'
+         languagename: 'Finnish'
+      - '{name}_manual_fr':
+         lang: 'fr'
+         languagename: 'French'
+      - '{name}_manual_hu':
+         lang: 'hu'
+         languagename: 'Hungarian'
+      - '{name}_manual_it':
+         lang: 'it'
+         languagename: 'Italian'
+      - '{name}_manual_ja':
+         lang: 'ja'
+         languagename: 'Japanese'
+      - '{name}_manual_ko':
+         lang: 'ko'
+         languagename: 'Korean'
+      - '{name}_manual_nl':
+         lang: 'nl'
+         languagename: 'Dutch'
+      - '{name}_manual_pt':
+         lang: 'pt'
+         languagename: 'Portuguese'
+      - '{name}_manual_pt_BR':
+         lang: 'pr_BR'
+         languagename: 'Brazilian Portuguese'
+      - '{name}_manual_sv':
+         lang: 'sv'
+         languagename: 'Swedish'
+      - '{name}_manual_vi':
+         lang: 'vi'
+         languagename: 'Vietnamese'
+      - '{name}_manual_zh_CN':
+         lang: 'zh_CN'
+         languagename: 'Chinese'
+      # FIXME: a housekeeping job, ie to check for new languages
       - '{name}_parse_build_logs'
- 
-
 

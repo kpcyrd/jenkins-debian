@@ -91,15 +91,15 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Builds debian packages from and triggered by pushes to <pre>{git_repo}</pre> {do_not_edit}'
+    description: 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}'
     scm:
       - git:
-         url: {git_repo}
-         branches:
+        url: {gitrepo}
+        branches:
            - master
-         #FIXME viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
+        #FIXME viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
     builders:
-      - shell: '/srv/jenkins/bin/d-i_manual.sh'
+      - shell: '/srv/jenkins/bin/d-i_build.sh'
     triggers:
       - pollscm: "*/6 * * * *"
     publishers:
@@ -203,6 +203,9 @@
 - job-template:
     defaults: d-i-build
     name: '{name}_build_aboot-installer'
+- job-template:
+    defaults: d-i-build
+    name: '{name}_build_anna'
 
 - project:
     name: d-i
@@ -241,6 +244,7 @@
          lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'
       # FIXME: a housekeeping job, ie to check for new languages
-      - '{name}_build_aboot-installer'
-         git_repo: 'git://git.debian.org/git/d-i/aboot-installer'
-       
+      - '{name}_build_aboot-installer':
+         gitrepo: 'git://git.debian.org/git/d-i/aboot-installer'
+      - '{name}_build_anna':
+         gitrepo: 'git://git.debian.org/git/d-i/anna'

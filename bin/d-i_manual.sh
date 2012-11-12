@@ -29,7 +29,7 @@ pdebuild_package() {
 	#
 	# prepare build
 	#
-	if [ -f /var/base.tgz ] ; then
+	if [ -f /var/cache/pbuilder/base.tgz ] ; then
 		sudo pbuilder --create
 	else
 		sudo pbuilder --update

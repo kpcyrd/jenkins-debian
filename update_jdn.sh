@@ -83,6 +83,6 @@ fi
 #
 # FIXME: this should also only be run once
 #
-sudo su - jenkins -c git config --global user.email jenkins@jenkins.debian.net
-sudo su - jenkins -c git config --global user.name "Jenkins"
+sudo su - jenkins -c "git config --global user.email jenkins@jenkins.debian.net"
+sudo su - jenkins -c "git config --global user.name Jenkins"
 

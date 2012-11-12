@@ -40,7 +40,7 @@ pdebuild_package() {
 	# build
 	#
 	ARCH=$(dpkg --print-architecture)
-	EGREP_APPTERN="'( all| any| $ARCH)'"
+	EGREP_PATTERN="'( all| any| $ARCH)'"
 	if [ $(grep Architecture: debian/control | egrep -q $EGREP_PATTERN) ] ; then
 		pdebuild
 	else

@@ -13,14 +13,16 @@
       - shell: "/srv/jenkins/bin/webcheck_url.sh {webcheck_url} '{webcheck_ignore_patterns}'"
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'false'
-         fail_on_error: 'false'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'false'
+          fail_on_error: 'false'
       - htmlpublisher:
-         name: 'Webcheck report'
-         directory: '.'
-         indexfiles: 'index.html'
-         keepall: True
+          name: 'Webcheck report'
+          directory: '.'
+          indexfiles: 'index.html'
+          keepall: True
+      - email:
+          recipients: holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html

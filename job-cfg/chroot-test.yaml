@@ -11,9 +11,11 @@
       - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'false'
-         fail_on_error: 'false'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'false'
+          fail_on_error: 'false'
+      - email:
+          recipients: holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -40,11 +42,13 @@
       - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'false'
-         fail_on_error: 'false'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'false'
+          fail_on_error: 'false'
       - trigger:
-         project: '{my_trigger}'
+          project: '{my_trigger}'
+      - email:
+          recipients: holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -71,17 +75,19 @@
       - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'false'
-         fail_on_error: 'false'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'false'
+          fail_on_error: 'false'
       - trigger:
-         project: '{my_1st_trigger}'
+          project: '{my_1st_trigger}'
       - trigger:
-         project: '{my_2nd_trigger}'
+          project: '{my_2nd_trigger}'
       - trigger:
-         project: '{my_3rd_trigger}'
+          project: '{my_3rd_trigger}'
       - trigger:
-         project: '{my_4th_trigger}'
+          project: '{my_4th_trigger}'
+      - email:
+          recipients: holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -106,15 +112,17 @@
       - shell: '/srv/jenkins/bin/housekeeping.sh'
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'true'
-         fail_on_error: 'true'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
       - trigger:
-         project: '{my_1st_trigger}'
+          project: '{my_1st_trigger}'
       - trigger:
-         project: '{my_2nd_trigger}'
+          project: '{my_2nd_trigger}'
       - trigger:
-         project: '{my_3rd_trigger}'
+          project: '{my_3rd_trigger}'
+      - email:
+          recipients: holger@layer-acht.org
 
 - job-template:
     defaults: chroot-tests

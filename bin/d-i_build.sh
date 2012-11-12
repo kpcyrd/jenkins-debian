@@ -6,7 +6,7 @@
 #
 # default settings
 #
-set -x
+#set -x
 set -e
 export LC_ALL=C
 export MIRROR=http://ftp.de.debian.org/debian
@@ -30,9 +30,13 @@ pdebuild_package() {
 	#
 	# check if we need to do anything
 	#
+	if [ ! -f debian/control ] ; then
+		echo "Oh, a source package without debian/control..."
+		exit 1
+	fi
 	ARCH=$(dpkg --print-architecture)
 	EGREP_PATTERN="( all| any| $ARCH)"
-	if [ ! $(grep "Architecture:" debian/control | egrep -q '$EGREP_PATTERN') ] ; then
+	if [ ! $(grep "Architecture:" debian/control | egrep "$EGREP_PATTERN" | wc -l ) -gt 0 ] ; then
 		echo "This package is not to be supposed to be build on $ARCH:"
 		grep "Architecture:" debian/control
 		return

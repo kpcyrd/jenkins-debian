@@ -29,7 +29,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .article {
-  background-image: url("./theme/debian-swirl.png");
+  background-image: url("debian-swirl.png");
   padding: 30px 30px;
   background-position: right top;
   background-repeat: no-repeat;

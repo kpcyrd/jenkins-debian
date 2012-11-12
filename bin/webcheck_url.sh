@@ -52,6 +52,36 @@ if [ "${URL:0:21}" = "http://www.debian.org" ] ; then
 fi
 
 #
+# ignore some extra patterns (=the installation manual for all releases and all archs) when checking www.debian.org
+#
+if [ "${URL:0:21}" = "http://www.debian.org" ] && [ "${URL: -1}" != "/" ] ; then
+	RELEASES="slink potato woody sarge etch lenny squeeze wheezy stable"
+	SLINK="i386 m68k alpha sparc"
+	POTATO="$SLINK powerpc arm"
+	WOODY="$POTATO hppa ia64 mips mipsel s390"
+	SARGE=$WOODY
+	ETCH="$SARGE amd64"
+	LENNY="$ETCH armel"
+	SQUEEZE="amd64 i386 alpha sparc powerpc hppa ia64 mips mipsel s390 kfreebsd-amd64 kfreebsd-i386"
+	STABLE=$SQUEEZE
+	WHEEZY=$SQUEEZE
+	#JESSIE=$WHEEZY		# also needs to be added to RELEASES above
+	for RELEASE in $RELEASES ; do
+		RELEASEVAR=$(echo $RELEASE | tr  "[:lower:]" "[:upper:]")
+		for ARCH in ${!RELEASEVAR} ; do
+			PARAMS="$PARAMS -y www\.debian\.org/releases/$RELEASE/$ARCH/"
+		done
+	done
+	#
+	# Remind, that this needs to be updated manually
+	#
+	if [ $(date +%Y) -gt 2013 ] ; then
+		echo "next Warning: It's not 2013 anymore, check which architectures Jessie has for real."
+	fi
+fi
+
+
+#
 # $PATTERNS can only be used to ignore patterns atm
 #
 if [ "$PATTERNS" != "" ] ; then

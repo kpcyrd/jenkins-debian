@@ -28,6 +28,17 @@ init_workspace() {
 
 pdebuild_package() {
 	#
+	# check if we need to do anything
+	#
+	ARCH=$(dpkg --print-architecture)
+	EGREP_PATTERN="'( all| any| $ARCH)'"
+	if [ ! $(grep Architecture: debian/control | egrep -q $EGREP_PATTERN) ] ; then
+		echo "This package is not to be supposed to be build on $ARCH."
+		grep Architecture: debian/control
+		return
+	fi
+
+	#
 	# prepare build
 	#
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
@@ -39,14 +50,7 @@ pdebuild_package() {
 	#
 	# build
 	#
-	ARCH=$(dpkg --print-architecture)
-	EGREP_PATTERN="'( all| any| $ARCH)'"
-	if [ $(grep Architecture: debian/control | egrep -q $EGREP_PATTERN) ] ; then
-		pdebuild
-	else
-		echo "This package is not to be supposed to be build on $ARCH."
-		grep Architecture: debian/control
-	fi
+	pdebuild
 }
 
 init_workspace

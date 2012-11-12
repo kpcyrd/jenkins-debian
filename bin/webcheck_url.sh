@@ -59,7 +59,7 @@ fi
 if [ "${URL:0:21}" = "http://www.debian.org" ] && [ "${URL: -1}" != "/" ] ; then
 	echo "URL is http://www.debian.org - so better ignore all those manuals for all releases (and the architecture permutations). (Checking these manuals is out of scope for this test.)"
 	RELEASES="slink potato woody sarge etch lenny squeeze wheezy stable"
-	SLINK="i386 m68k alpha sparc"
+	SLINK="i386 m68k alpha sparc source"
 	POTATO="$SLINK powerpc arm"
 	WOODY="$POTATO hppa ia64 mips mipsel s390"
 	SARGE=$WOODY
@@ -72,7 +72,7 @@ if [ "${URL:0:21}" = "http://www.debian.org" ] && [ "${URL: -1}" != "/" ] ; then
 	for RELEASE in $RELEASES ; do
 		RELEASEVAR=$(echo $RELEASE | tr  "[:lower:]" "[:upper:]")
 		for ARCH in ${!RELEASEVAR} ; do
-			PARAMS="$PARAMS -y www\.debian\.org/releases/$RELEASE/$ARCH/"
+			PARAMS="$PARAMS -y www\.debian\.org/releases/$RELEASE/+$ARCH/"
 		done
 	done
 	#

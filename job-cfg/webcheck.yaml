@@ -121,11 +121,11 @@
          timed: "0 1 * * 0"
       - '{name}_www_debian_org_security':
          webcheck_url: 'http://www.debian.org/security/'
-         webcheck_ignore_patterns: '^mailto: action/edit action/history Special: oldid= printable=yes limit= redirect=no qa.debian.org/developer.php security.debian.org/pool packages.debian.org i18n.debian.org/material cve.mitre.org/cgi-bin online.securityfocus.com/bid bugs.debian.org/\d\d\d bugs.debian.org/cgi-bin/ \.dsc$ \.diff.gz$ \.tar.gz \.deb$ www.debian.org/News'
+         webcheck_ignore_patterns: '^mailto: action/edit action/history Special: oldid= printable=yes limit= redirect=no qa.debian.org/developer.php security.debian.org/pool packages.debian.org i18n.debian.org/material cve.mitre.org/cgi-bin online.securityfocus.com/bid bugs.debian.org/\d\d\d bugs.debian.org/cgi-bin/ \.dsc$ \.diff.gz$ \.tar.gz \.deb$ www.debian.org/News lists.debian.org'
          timed: "30 1 * * 0"
       - '{name}_www_debian_org_news':
          webcheck_url: 'http://www.debian.org/News/'
-         webcheck_ignore_patterns: '^mailto: action/edit action/history Special: oldid= printable=yes limit= redirect=no qa.debian.org/developer.php security.debian.org/pool packages.debian.org i18n.debian.org/material cve.mitre.org/cgi-bin online.securityfocus.com/bid bugs.debian.org/\d\d\d bugs.debian.org/cgi-bin/ \.dsc$ \.diff.gz$ \.tar.gz \.deb$ www.debian.org/security'
+         webcheck_ignore_patterns: '^mailto: action/edit action/history Special: oldid= printable=yes limit= redirect=no qa.debian.org/developer.php security.debian.org/pool packages.debian.org i18n.debian.org/material cve.mitre.org/cgi-bin online.securityfocus.com/bid bugs.debian.org/\d\d\d bugs.debian.org/cgi-bin/ \.dsc$ \.diff.gz$ \.tar.gz \.deb$ www.debian.org/security lists.debian.org'
          timed: "35 1 * * 0"
       - '{name}_www_debconf_org':
          webcheck_url: 'http://www.debconf.org'

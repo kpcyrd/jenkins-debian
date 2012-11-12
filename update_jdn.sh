@@ -54,11 +54,13 @@ explain "Packages configured."
 cd $BASEDIR
 cp -r bin logparse job-cfg /srv/jenkins/
 explain "Jenkins updated."
-cp -r TODO userContent/* /var/lib/jenkins/userContent/
+cp -r TODO README userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/
-asciidoc -a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=/var/lib/jenkins/userContent/theme/debian.css -o about.html TODO
-rm TODO 
-explain "Updated about.html"
+ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=./  -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(pwd)/theme/debian.css"
+asciidoc $ASCIIDOC_PARAMS -o about.html README
+asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
+rm TODO README
+explain "Updated about.html and todo.html"
 
 #
 # run jenkins-job-builder to update jobs if needed

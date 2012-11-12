@@ -1,0 +1,61 @@
+@import url(./asciidoc.css); 
+
+/* ---------------------------------------------------------------------------
+ *    FreeBSD AsciiDoc Theme
+ *       Ryan Tomayko <r@tomayko.com>
+ *
+ *          Based on The FreeBSD Handbook and various other FreeBSD documenration.
+ *          --------------------------------------------------------------------------- 
+ *
+ *
+ * modified 2012 by Holger Levsen <holger@layer-acht.org>
+ *
+ *          */
+
+body {
+  font-family:liberationsans,helvetica,verdana,sans-serif;
+  font-size:100%;
+  color:#000;
+}
+
+tt { color:#7a7171 }
+pre tt { color:#000 }
+
+dt { color:#000 }
+
+h1, h2, h3, h4, h5 {
+  color:#d70751;
+  font-weight:bold;
+}
+
+.article {
+  background-image: url("./debian-swirl.png");
+  padding: 30px 30px;
+  background-position: right top;
+  background-repeat: no-repeat;
+}
+
+#header {
+  text-align:left;
+}
+#header h1 { margin-bottom:40px }
+
+h1 {
+  font-size:36px;
+  line-height:1;
+  margin:40px 0;
+}
+
+h2 {
+  font-size:28px;
+  line-height:1;
+  margin:30px 0 20px 0;
+}
+
+.sectionbody {
+  margin-left:30px;
+}
+
+pre {
+  background:#EEE;
+}

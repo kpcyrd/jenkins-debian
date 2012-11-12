@@ -19,9 +19,6 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    publishers:
-      - email:
-          recipients: holger@layer-acht.org
 
 - defaults:
     name: d-i-manual
@@ -93,6 +90,9 @@
       - shell: '/srv/jenkins/bin/d-i_manual.sh'
     triggers:
       - pollscm: "*/30 * * * *"
+    publishers:
+      - email:
+          recipients: holger@layer-acht.org
 
 - job-template:
     defaults: d-i
@@ -104,14 +104,16 @@
       - timed: "0 5 * * *"
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'true'
-         fail_on_error: 'true'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
       - htmlpublisher:
-         name: 'Daily d-i build logs'
-         directory: '.'
-         indexfiles: 'build-logs.html'
-         keepall: True
+          name: 'Daily d-i build logs'
+          directory: '.'
+          indexfiles: 'build-logs.html'
+          keepall: True
+      - email:
+          recipients: holger@layer-acht.org
 
 - job-template:
     defaults: d-i
@@ -123,9 +125,11 @@
       - pollscm: "23 0 * * *"
     publishers:
       - logparser:
-         rulespath: '/srv/jenkins/logparse/debian.rules'
-         unstable_on_warning: 'true'
-         fail_on_error: 'true'
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
+      - email:
+          recipients: holger@layer-acht.org
 
 - job-template:
     defaults: d-i-manual

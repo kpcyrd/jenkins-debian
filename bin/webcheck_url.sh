@@ -43,7 +43,9 @@ fi
 # ignore some extra patterns (=all translations) when checking www.debian.org
 #
 if [ "${URL:0:21}" = "http://www.debian.org" ] ; then
-	TRANSLATIONS=$(curl www.debian.org 2>/dev/null|grep index|grep lang=|cut -d "." -f2)
+	# originly was TRANSLATIONS=$(curl www.debian.org 2>/dev/null|grep index|grep lang=|cut -d "." -f2)
+	# but then I had to add some and then some more... so I reached to the conclusion to hardcode them all
+	TRANSLATIONS="ar bg ca cs da de el es eo fa fr ko hy hr id it he lt hu nl ja nb pl pt ro ru sk fi sv ta tr uk zh-cn zh-hk zh-tw ml vi"
 	for LANG in $TRANSLATIONS pt_BR zh_CN zh_HK zh_TW ; do
 		PARAMS="$PARAMS -y \.${LANG}\.html -y html\.${LANG} -y \.${LANG}\.txt -y \.txt\.${LANG} -y \.${LANG}\.pdf -y \.pdf\.${LANG}"
 	done

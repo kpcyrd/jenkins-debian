@@ -1,0 +1,8 @@
+# welcome to the machine. 
+#
+# we don't want robots to click "build" links or plain index everything...
+User-agent: *
+Disallow: /view/
+Disallow: /job/
+Allow: /userContent/about.html
+Allow: /userContent/todo.html

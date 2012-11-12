@@ -30,6 +30,7 @@
 	# proxy everything but /munin
         ProxyPass /munin !
        	ProxyPass /server-status !
+	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt
 	ProxyPass / http://localhost:8080/
 
 

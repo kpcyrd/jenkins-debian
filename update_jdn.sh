@@ -80,3 +80,9 @@ if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
 	explain "Number of defined triggers ($DEFINED_TRIGGERS) differs from configured triggers ($CONFIGURED_TRIGGERS), please investigate."
 fi
 
+#
+# FIXME: this should also only be run once
+#
+sudo su - jenkins -c git config --global user.email jenkins@jenkins.debian.net
+sudo su - jenkins -c git config --global user.name "Jenkins"
+

@@ -27,6 +27,8 @@ TMPFILE=$(mktemp)
 echo "Scanning $URL for reffered git repos which have no jenkins job associated."
 curl $URL > $TMPFILE 2>/dev/null
 PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-)
+JOB_TEMPLATES=$(mktemp)
+PROJECT_JOBS=$(mktemp)
 #
 # check for each git repo if a jenkins job exists
 #
@@ -34,6 +36,14 @@ for PACKAGE in $PACKAGES ; do
 	if [ ! -d ~jenkins/jobs/${DI_JOBPATTERN}${PACKAGE} ] ; then
 		echo "Warning: No build job '${DI_JOBPATTERN}${PACKAGE}'."
 		FAIL=true
+		#
+		# prepare yaml bits
+		#
+		echo "      - '{name}_build_$PACKAGE':" >> $PROJECT_JOBS
+		echo "         gitrepo: 'git://git.debian.org/git/d-i/$PACKAGE'" >> $PROJECT_JOBS
+		echo "- job-template:" >> $JOB_TEMPLATES
+		echo "    defaults: d-i-build" >> $JOB_TEMPLATES
+		echo "    name: '{name}_build_anna'" >> $JOB_TEMPLATES
 	else
 		echo "Ok: Job '${DI_JOBPATTERN}${PACKAGE}' exists."
 	fi
@@ -60,6 +70,15 @@ echo "Warning: check for missing d-i manual build jobs not implemented"
 echo
 if $FAIL ; then 
 	figlet "Missing jobs!"
+	echo
+	echo "Add these job templates to job-cfg/d-i.yaml:"
+	cat $JOB_TEMPLATES
+	echo
+	echo
+	echo "Append this to the project definition in job-cfg/d-i.yaml:"
+	cat $PROJECT_JOBS
+	echo
+	rm $JOB_TEMPLATES $PROJECT_JOBS
 	exit 1
 else
 	figlet ok

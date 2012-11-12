@@ -39,7 +39,7 @@ pdebuild_package() {
 	# build
 	#
 	cd manual
-	pdebuild
+	pdebuild --use-pdebuild-internal
 }
 
 build_language() {

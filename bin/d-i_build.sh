@@ -54,7 +54,7 @@ pdebuild_package() {
 	#
 	# build
 	#
-	pdebuild
+	pdebuild --use-pdebuild-internal
 }
 
 init_workspace

@@ -6,7 +6,7 @@
 #
 # default settings
 #
-set -x
+#set -x
 set -e
 export LC_ALL=C
 export http_proxy="http://localhost:3128"
@@ -31,19 +31,20 @@ for PACKAGE in $( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-) ; do
 	# check if a jenkins job exists
 	#
 	if [ ! -d ~jenkins/jobs/${DI_JOBPATTERN}${PACKAGE} ] ; then
-		echo "Warning: No build job \'${DI_JOBPATTERN}${PACKAGE}\'."
+		echo "Warning: No build job '${DI_JOBPATTERN}${PACKAGE}'."
 		FAIL=true
 	else
-		echo "Ok: Job \'${DI_JOBPATTERN}${PACKAGE}\' exists."
+		echo "Ok: Job '${DI_JOBPATTERN}${PACKAGE}' exists."
 	fi
 done
 echo
 rm $TMPFILE
 
 #
-# check for missing d-i manual lanague build jobs
+# check for missing d-i manual language build jobs
 #
 # FIXME: implement this check ;-)
+echo "Warning: check for missing d-i manual build jobs not implemented"
 
 #
 # fail this job if missing d-i jobs are detected

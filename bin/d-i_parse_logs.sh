@@ -3,13 +3,16 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-# $1 = URL
-
 if [ "$1" == "" ] ; then
 	echo "need at least one URL to act on"
 	echo '# $1 = URL'
 	exit 1
 fi
+
+#
+# convert params to variables
+#
+URL=$1
 
 #
 # default settings
@@ -20,7 +23,7 @@ export LC_ALL=C
 export http_proxy="http://localhost:3128"
 
 TMPFILE=$(mktemp)
-curl $1 > $TMPFILE
+curl $URL > $TMPFILE
 if [ $(grep -c failed $TMPFILE >/dev/null 2>&1) -gt 1 ] ; then 
 	figlet Warning:
 	figlet failed builds:
@@ -35,4 +38,4 @@ echo Check $1 yourself
 echo
 
 sed -i -s 's#<img src="#<img src="http://d-i.debian.org/daily-images/#g' $TMPFILE
-mv $TMPFILE $(basename $1)
+mv $TMPFILE $(basename $URL)

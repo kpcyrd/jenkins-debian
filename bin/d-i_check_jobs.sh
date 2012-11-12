@@ -43,7 +43,7 @@ for PACKAGE in $PACKAGES ; do
 		echo "         gitrepo: 'git://git.debian.org/git/d-i/$PACKAGE'" >> $PROJECT_JOBS
 		echo "- job-template:" >> $JOB_TEMPLATES
 		echo "    defaults: d-i-build" >> $JOB_TEMPLATES
-		echo "    name: '{name}_build_anna'" >> $JOB_TEMPLATES
+		echo "    name: '{name}_build_$PACKAGE'" >> $JOB_TEMPLATES
 	else
 		echo "Ok: Job '${DI_JOBPATTERN}${PACKAGE}' exists."
 	fi

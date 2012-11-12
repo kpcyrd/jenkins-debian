@@ -56,7 +56,7 @@ cp -r bin logparse job-cfg /srv/jenkins/
 explain "Jenkins updated."
 cp -r TODO README userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/
-ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=$(pwd)/theme  -b html5 -a toc -a toclevels=4 -a icons -a images -a stylesheet=$(pwd)/theme/debian-asciidoc.css"
+ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -a imagesdir=$(pwd)/..  -b html5 -a toc -a toclevels=4 -a icons -a images -a stylesheet=$(pwd)/theme/debian-asciidoc.css"
 asciidoc $ASCIIDOC_PARAMS -o about.html README
 asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
 rm TODO README

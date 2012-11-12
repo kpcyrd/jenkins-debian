@@ -62,9 +62,9 @@ if [ "${URL:0:21}" = "http://www.debian.org" ] && [ "${URL: -1}" != "/" ] ; then
 	SARGE=$WOODY
 	ETCH="$SARGE amd64"
 	LENNY="$ETCH armel"
-	SQUEEZE="amd64 i386 alpha sparc powerpc hppa ia64 mips mipsel s390 kfreebsd-amd64 kfreebsd-i386"
+	SQUEEZE="amd64 i386 armel sparc powerpc ia64 mips mipsel s390 kfreebsd-amd64 kfreebsd-i386"  # yes there is mips
 	STABLE=$SQUEEZE
-	WHEEZY=$SQUEEZE
+	WHEEZY="$SQUEEZE armhf s390x"
 	#JESSIE=$WHEEZY		# also needs to be added to RELEASES above
 	for RELEASE in $RELEASES ; do
 		RELEASEVAR=$(echo $RELEASE | tr  "[:lower:]" "[:upper:]")

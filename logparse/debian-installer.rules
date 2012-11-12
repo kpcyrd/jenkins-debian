@@ -3,6 +3,7 @@
 ok /not really/
 ok /^dpkg-source: warning/
 ok /^dpkg-gencontrol: warning/
+ok /^dpkg-buildpackage: warning/
 
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /

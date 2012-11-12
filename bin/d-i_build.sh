@@ -20,9 +20,10 @@ init_workspace() {
 	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz
 
 	#
-	# svn checkout and update is done by jenkins job
+	# git clone and pull is done by jenkins job
 	#
-	svn status
+	git config -l
+	git status
 }
 
 pdebuild_package() {

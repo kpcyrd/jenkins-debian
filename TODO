@@ -14,6 +14,7 @@ ToDo for jenkins.debian.net
 
 == General ToDo
 
+* support for gitweb in jobs
 * get rid of some reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
 * add documentation for jenkins-job-builder and send pull requests on github:
 ** publisher:logparse
@@ -33,6 +34,7 @@ ToDo for jenkins.debian.net
 * notify debian-boot@l.d.o and #debian-boot about jenkins jobs results
 * run scripts/digress/
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
+* check if there are new languages for the manual and remind to create jobs
 
 === Test cd-images:
 

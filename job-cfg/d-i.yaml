@@ -103,7 +103,7 @@
       - pollscm: "*/6 * * * *"
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - email:

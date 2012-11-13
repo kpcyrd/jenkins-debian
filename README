@@ -25,14 +25,18 @@ About jenkins.debian.net
 === debian-installer jobs
 
 * FIXME: describe them
+** d-i_manual:
+** d-i_build:
 
 === webcheck jobs
 
 * FIXME: describe them
+** webcheck debian.org websites
+** webcheck debconf.org websites
 
 == ToDo
 
-* There is still of work left, check the current link:http://jenkins.debian.net/userContent/todo.html[ToDo list].
+* There is still a lot of work left, check the current link:http://jenkins.debian.net/userContent/todo.html[ToDo list].
 
 == Setup
 

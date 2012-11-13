@@ -13,6 +13,9 @@ ok /^WARNING: U\+????: no glyph defined/
 ok /^WARNING: U\+????: .+ broken pixel/
 ok /^WARNING: Unknown X keysymm/
 
+# tryingto get http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
+ok /^WARNING: ??: spurious newline removed/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 

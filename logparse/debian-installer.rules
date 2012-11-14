@@ -14,6 +14,9 @@ ok /^WARNING: U.{5}: .+ broken pixel/
 ok /^WARNING: Unknown X keysymm/
 ok /^WARNING: Can not find/
 
+# trying to get http://jenkins.debian.net/job/d-i_build_debian-installer to build nicely
+ok /^Gdpkg: warning: overriding problem because --force enabled:/
+
 # making http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
 ok /^WARNING: .+: spurious newline removed/
 

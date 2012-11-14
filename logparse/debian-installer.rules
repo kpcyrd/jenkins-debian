@@ -8,12 +8,13 @@ ok /^dpkg-gencontrol: warning/
 ok /^dpkg-buildpackage: warning/
 
 # trying to get http://jenkins.debian.net/job/d-i_build_console-setup/ build nicely
-ok /^WARNING: U+?{4}: can not be positioned properly/
-ok /^WARNING: U+?{4}: no glyph defined/
-ok /^WARNING: U+?{4}: .+ broken pixel/
+ok /^WARNING: U.{5}: can not be positioned properly/
+ok /^WARNING: U.{5}: no glyph defined/
+ok /^WARNING: U.{5}: .+ broken pixel/
 ok /^WARNING: Unknown X keysymm/
+ok /^WARNING: Can not find/
 
-# tryingto get http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
+# making http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
 ok /^WARNING: .+: spurious newline removed/
 
 # match line starting with 'error ', case-insensitive

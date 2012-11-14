@@ -11,8 +11,9 @@ ok /^dpkg-buildpackage: warning/
 ok /^WARNING: U.{5}: can not be positioned properly/
 ok /^WARNING: U.{5}: no glyph defined/
 ok /^WARNING: U.{5}: .+ broken pixel/
-ok /^WARNING: Unknown X keysymm/
+ok /^WARNING: Unknown X keysym/
 ok /^WARNING: Can not find/
+ok /^WARNING: Skipping too long sequence:/
 
 # trying to get http://jenkins.debian.net/job/d-i_build_debian-installer to build nicely
 ok /^dpkg: warning: overriding problem because --force enabled:/

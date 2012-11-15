@@ -194,9 +194,6 @@
     name: '{name}_manual_it'
 - job-template:
     defaults: d-i-manual
-    name: '{name}_manual_po'
-- job-template:
-    defaults: d-i-manual
     name: '{name}_manual_pt_BR'
 
 - job-template:
@@ -550,7 +547,7 @@
       - '{name}_check_jenkins_jobs'
       - '{name}_manual':
          include: '/trunk/manual/debian/.*'
-         # FIXME: misses: scripts doc build
+         # FIXME: misses: scripts doc build po
       - '{name}_manual_ca':
          lang: 'ca'
          languagename: 'Catalan'
@@ -572,9 +569,6 @@
       - '{name}_manual_it':
          lang: 'it'
          languagename: 'Italian'
-      - '{name}_manual_po':
-         lang: 'po'
-         languagename: 'Polish'
       - '{name}_manual_pt_BR':
          lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'

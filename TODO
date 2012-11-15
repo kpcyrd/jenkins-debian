@@ -15,7 +15,7 @@ ToDo for jenkins.debian.net
 == General ToDo
 
 * support for gitweb in jobs
-* get rid of some reduncacy in job-cfg/*.yaml and also fix the FIXMEs there
+* get rid of some reduncacy in job-cfg/*.yaml 
 * add documentation for jenkins-job-builder and send pull requests on github:
 ** publisher:logparse
 ** publisher:htmlpublisher

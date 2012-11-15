@@ -109,12 +109,10 @@
       - email:
           recipients: holger@layer-acht.org
 
-
 - job-template:
     defaults: d-i
     name: '{name}_manual'
-    description: 'Builds the installation-guide package. Triggered by SVN commits to <pre>svn://svn.debian.org/svn/d-i/trunk/manual/debian/</pre> {do_not_edit}'
-    # FIXME see below, other directories should trigger too
+    description: 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
     scm:
       - svn:
          url: svn://svn.debian.org/svn/d-i/trunk
@@ -546,8 +544,13 @@
       - '{name}_parse_build_logs'
       - '{name}_check_jenkins_jobs'
       - '{name}_manual':
-         include: '/trunk/manual/debian/.*'
-         # FIXME: misses: scripts doc build po
+         include: '/trunk/manual/debian/.*
+
+/trunk/manual/po/.*
+
+/trunk/manual/doc/.*
+
+/trunk/manual/scripts/.*'
       - '{name}_manual_ca':
          lang: 'ca'
          languagename: 'Catalan'

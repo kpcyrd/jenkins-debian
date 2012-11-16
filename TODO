@@ -10,11 +10,13 @@ ToDo for jenkins.debian.net
 
 == About jenkins.debian.net
 
-* see link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"]
+See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"].
 
 == General ToDo
 
-* support for gitweb in jobs
+* describe jobs in README
+* support for gitweb in jobs 
+** needs clean merge of my patches to jenkins-job-builder first...
 * get rid of some reduncacy in job-cfg/*.yaml 
 * add documentation for jenkins-job-builder and send pull requests on github:
 ** publisher:logparse
@@ -26,6 +28,7 @@ ToDo for jenkins.debian.net
 * proper backup (=daily), see bottom of this document for what to backup
 * proper git repo url, outside users/holger
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
+* update jdk
 
 == More tests to be run
 

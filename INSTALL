@@ -1,0 +1,34 @@
+Setup of jenkins.debian.net
+===========================
+:Author:           Holger Levsen
+:Authorinitials:   holger
+:EMail:            holger@layer-acht.org
+:Status:           in progress
+:lang:             en
+:Doctype:          article
+:Licence:	   GPLv2
+
+== About jenkins.debian.net
+
+See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"].
+
+== Setup
+
+=== Installed software that makes jenkins.debian.net run
+
+* jenkins.debian.net runs Debian wheezy.
+* FIXME: describe how jenkins is installed + configured, basically put 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update`
+* needed packages are listed in 'update_jdn.sh' and which will also make sure they are installed
+** 'update_jdn.sh' is available in the git repo
+* package configuration is kept in that git repo and deployed by 'update_jdn.sh' as well.
+
+=== Installing jenkins-job-builder
+* rebuild python-jenkinsapi from sid for wheezy:
+* `pip install python-jenkins`
+* `git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install`
+** actually https://github.com/h01ger/jenkins-job-builder is used atm.
+
+=== Using jenkins-job-builder
+
+* then run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
+* testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`

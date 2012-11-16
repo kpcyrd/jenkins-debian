@@ -54,13 +54,14 @@ explain "Packages configured."
 cd $BASEDIR
 cp -r bin logparse job-cfg /srv/jenkins/
 explain "Jenkins updated."
-cp -r TODO README userContent/* /var/lib/jenkins/userContent/
+cp -r README INSTALL TODO userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/
 ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(pwd)/theme/debian-asciidoc.css"
 asciidoc $ASCIIDOC_PARAMS -o about.html README
 asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
-rm TODO README
-explain "Updated about.html and todo.html"
+asciidoc $ASCIIDOC_PARAMS -o setup.html INSTALL
+rm TODO README INSTALL
+explain "Updated about.html, setup.html and todo.html."
 
 #
 # run jenkins-job-builder to update jobs if needed
@@ -94,3 +95,10 @@ sudo su - jenkins -c "git config --global user.name Jenkins"
 #	despites the jenkins user cam run "sudo pbuilder" without it just fine...??!
 #
 sudo chown jenkins /var/cache/pbuilder/result
+
+#
+# There's always some work left...
+#
+echo
+rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME"
+

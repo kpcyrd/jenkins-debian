@@ -62,12 +62,17 @@ cd jenkins.debian.net
 
 === Installing jenkins-job-builder
 
-This is the only softwhich which needs manual installation and is not covered by 'update_jdn.sh'
+This is the only software which needs manual installation and is not covered by 'update_jdn.sh'
 
-* rebuild python-jenkinsapi from sid for wheezy:
-* `pip install python-jenkins`
-* `git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install`
-** actually https://github.com/h01ger/jenkins-job-builder is used atm.
+----
+pip install python-jenkins
+
+git clone https://github.com/openstack-ci/jenkins-job-builder
+cd jenkins-job-builder 
+python setup.py install
+----
+
+Though actually https://github.com/h01ger/jenkins-job-builder is used atm.
 
 === Using jenkins-job-builder
 

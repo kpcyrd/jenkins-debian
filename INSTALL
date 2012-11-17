@@ -48,7 +48,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === updating jenkins.debian.net with 'update_jdn.sh'
 
-'update_jdn.sh' is small hackish script which will install all needed packages and copy their configuration in place.
+'update_jdn.sh' is a small hackish script which will install all needed packages, copy their configuration in place, generate the documentation webpages and update all jenkins jobs if needed.
 
 As 'root' run:
 ----

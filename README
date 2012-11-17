@@ -11,21 +11,52 @@ About jenkins.debian.net
 == About jenkins.debian.net
 
 * http://jenkins.debian.net is pretty much work in progress, (hopefully) doing something useful since October 15th 2012.
-* Join #debian-qa on irc.debian.org to report bugs or give other feedback! Use debian-qa@lists.debian.org if you prefer mail.
-* 'git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git'
-* (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server (a nice one, with 4 cores and 6 GB memory, thanks a lot!), but in future there will be installation and tests clients started on demand as well.
+* `git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`
+* (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server (a nice one, with 4 cores and 6 GB memory, thanks a lot!), but in future there will be installation tests on "real" (virtual) hardware and thus more VMs will started on demand as well.
 * some stats are available at http://jenkins.debian.net/munin/jenkins-month.html
+
+=== Feedback
+
+I love to get feedback on this! Please join #debian-qa on irc.debian.org to report bugs or give other feedback! Or send an email to debian-qa@lists.debian.org if you prefer mail.
 
 == Jobs being run
 
+Remember, this is still pretty much work in progress. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
+
 === chroot-tests jobs
 
-* FIXME: describe chroot-tests jobs
+* chroot-test_housekeeping:
+** make sure chroots have been cleaned up properly
+* chroot-test_sid_bootstrap
+** debootstrap a sid chroot
+* chroot-test_sid_install_gnome
+** debootstrap a sid chroot and install gnome
+* chroot-test_sid_install_kde, chroot-test_sid_install_xfce and chroot-test_sid_install_lxce _do not exit yet_.
+* chroot-test_squeeze_bootstrap_upgrade_to_wheezy
+** debootstrap a squeeze chroot and upgrade it to wheezy
+* chroot-test_squeeze_install_gnome_upgrade_to_wheezy
+** debootstrap a squeeze chroot, install gnome and upgrade it to wheezy
+* chroot-test_squeeze_install_kde_upgrade_to_wheezy
+** debootstrap a squeeze chroot, install kde and upgrade it to wheezy
+* chroot-test_squeeze_install_lxde_upgrade_to_wheezy
+** debootstrap a squeeze chroot, install lxde and upgrade it to wheezy
+* chroot-test_squeeze_install_xfce_upgrade_to_wheezy
+** debootstrap a squeeze chroot, install xfce and upgrade it to wheezy
+* chroot-test_wheezy_bootstrap
+** debootstrap a wheezy chroot
+* chroot-test_wheezy_install_gnome
+** debootstrap a wheezy chroot and install gnome
+* chroot-test_wheezy_install_kde
+** debootstrap a wheezy chroot and install kde
+* chroot-test_wheezy_install_lxde
+** debootstrap a wheezy chroot and install lxde
+* chroot-test_wheezy_install_xfce
+** debootstrap a wheezy chroot and install xfce
 
 === debian-installer jobs
 
 * d_i_build_* - there is one job for each git repo referred to in http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co
-Each job pdebuilds the master branch of its git repo on every git push in a sid environment.
+Each job pdebuilds the master branch of its git repo on every git push in a sid environment. (If the architecture(s) specified in debian/control are not amd64,all or any the build exits cleanly.)
 * d_i_manual - builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching these patterns: 
 '/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*' and '/trunk/manual/scripts/.*'
 * d_i_manual_* - builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with "make languages=$LANG architectures=amd64 formats=html"

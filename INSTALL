@@ -63,3 +63,14 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 === munin
 
 link://munin-monitoring[Munin] is installed, running with link:http://jenkins.debian.net/munin/[jenkins plugins] not yet published elsewhere.
+
+=== Backup
+
+Currently only the configuration is backed up, but neither the jenkins results nor system logs. But it's at least sufficient to re-setup the system if needed.
+
+* The _etckeeper_ package is installed and automatically keeps '/etc' in '/etc/.git'.
+* The _SCM Sync Configuration Plugin_ is installed in Jenkins, putting all Jenkins configuration into '/srv/jenkins.debian.net-scm-sync.git'.
+** (This is not ideal yet, because it also puts the generated job configuration there...)
+
+I've cloned these two git repos on my desktop and manually run `git pull`, though in future I'll
+FIXME: use a dedicated ssh pubkey and run it via cron.

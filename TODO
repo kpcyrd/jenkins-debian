@@ -35,6 +35,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 ** same for /srv/jenkins.debian.net-scm-sync.git
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 * update jdk
+* fully automate backup and full backup /var/lib/jenkins/jobs and /var/lib/munin and /var/log too
 
 == More tests to be run
 
@@ -77,8 +78,3 @@ Help explaining how to test tasks (ie all the language tasks) very much welcome!
 * finding packages with autopkgtests: http://lists.debian.org/debian-qa/2012/11/msg00012.html
 ** this only lists a few packages, so a very first test could be to compare this list against this: `wget -q http://http.debian.net/debian/dists/unstable/main/Contents-source.gz -O- | zgrep -m1 -E '^debian/tests/control\s'`, make a job out of it and make it UNSTABLE if the diff is non-zero. And as a second step, run those tests...
 * also see http://dep.debian.net/deps/dep8/
-
-== To backup
-
-* '/etc/.git'
-* '/var/lib/jenkins/config.xml' as well as its plugins

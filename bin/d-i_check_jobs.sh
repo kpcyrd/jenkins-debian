@@ -26,7 +26,7 @@ TMPFILE=$(mktemp)
 #
 echo "Scanning $URL for reffered git repos which have no jenkins job associated."
 curl $URL > $TMPFILE 2>/dev/null
-PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-)
+PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
 JOB_TEMPLATES=$(mktemp)
 PROJECT_JOBS=$(mktemp)
 #

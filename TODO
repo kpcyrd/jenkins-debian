@@ -38,18 +38,31 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 == More tests to be run
 
-=== Tests for supporting d-i development:
+=== d-i_manual*
 
-* try http://www.os-autoinst.org/
 * html_publisher doesn't make the results of d-i_manual_* available
 * svn:trunk:packages/po/* triggers nothing
-* notify debian-boot@l.d.o and #debian-boot about jenkins jobs results
+* notify #debian-boot about jenkins jobs results
+* check if there are new languages for the manual and remind to create jobs
+
+=== d-i_build*
+
 * run scripts/digress/
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
-* check if there are new languages for the manual and remind to create jobs
+* notify #debian-boot about jenkins jobs results
+* run scripts/digress/
+
+=== chroot-test_*
+
+* inform debian-devel@
+
+=== webchecks*
+
+* inform debian-www@
 
 === Test cd-images:
 
+* try http://www.os-autoinst.org/
 * start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
 ** or probably just run kvm...
 * to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid-di daily

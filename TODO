@@ -14,6 +14,11 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 == General ToDo
 
+* general housekeeping job:
+** run calamaris, visitors etc
+** check for stale processes
+** check for apt-upgrades
+** check for jobs forgetting their triggers
 * describe jobs in README
 * support for gitweb in jobs 
 ** needs clean merge of my patches to jenkins-job-builder first...
@@ -27,6 +32,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * mail notifications (to where?)
 * proper backup (=daily), see bottom of this document for what to backup
 * proper git repo url, outside users/holger
+** same for /srv/jenkins.debian.net-scm-sync.git
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 * update jdk
 
@@ -34,6 +40,9 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === Tests for supporting d-i development:
 
+* try http://www.os-autoinst.org/
+* html_publisher doesn't make the results of d-i_manual_* available
+* svn:trunk:packages/po/* triggers nothing
 * notify debian-boot@l.d.o and #debian-boot about jenkins jobs results
 * run scripts/digress/
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
@@ -42,6 +51,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 === Test cd-images:
 
 * start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
+** or probably just run kvm...
 * to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid-di daily
 ** http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
 ** http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
@@ -49,7 +59,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === Test tasks:
 
-* test installations with (at least) more language tasks enabled
+* test installations with (at least) more language tasks enabled, though tasksel doesn't work like this:
 
 ----
 <h01ger> how do i install a task outside d-i?
@@ -58,7 +68,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 <daemonkeeper> h01ger:  http://packages.debian.org/source/sid/tasksel
 ----
 
-(FIXME: tasksel doesn't work like this)
+Help explaining how to test tasks (ie all the language tasks) very much welcome!
 
 === Tests using autopkgtest
 

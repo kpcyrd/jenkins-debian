@@ -17,7 +17,34 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 === Installed software that makes jenkins.debian.net run
 
 * jenkins.debian.net runs Debian wheezy.
-* FIXME: describe how jenkins is installed + configured, basically put 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update`
+
+=== Jenkins
+
+* Currently running the long term support .deb from jenkins-ci.org.
+* Jenkins is installed using 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update && apt-get install jenkins`.
+* I would prefer to run a jenkins package from wheezy-backports.
+
+==== Jenkins plugins
+
+* Jenkins Subversion Plug-in
+* SCM Sync Configuration Plugin
+* Static Analysis Utilities
+* Dependency Graph Viewer Plugin
+* Nested View Plugin
+* Locale plugin
+* HTML Publisher plugin
+* Jenkins GIT plugin
+* View Job Filters
+* Read-only configurations
+* Sidebar Link
+* Green Balls
+* Log Parser Plugin
+* Jenkins Translation Assistance plugin
+* Compact Columns
+* Simple Theme Plugin
+
+=== updating jenkins.debian.net with update_jdn.sh
+
 * needed packages are listed in 'update_jdn.sh' and which will also make sure they are installed
 ** 'update_jdn.sh' is available in the git repo
 * package configuration is kept in that git repo and deployed by 'update_jdn.sh' as well.
@@ -32,3 +59,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 * then run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
 * testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`
+
+=== munin
+
+link://munin-monitoring[Munin] is installed, running with link:http://jenkins.debian.net/munin/[jenkins plugins] not yet published elsewhere.

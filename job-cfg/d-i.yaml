@@ -12,7 +12,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/debian-installer/
+          url: http://jenkins.debian.net/view/d-i_misc/
           text: All debian-installer jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -34,7 +34,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/debian-installer/
+          url: http://jenkins.debian.net/view/d-i_manual/
           text: All debian-installer jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -84,7 +84,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/debian-installer/
+          url: http://jenkins.debian.net/view/d-i_packages/
           text: All debian-installer jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -135,7 +135,7 @@
 - job-template:
     defaults: d-i
     name: '{name}_parse_build_logs'
-    description: 'Parses d-i build logs daily. {do_not_edit}'
+    description: 'Parses d-i build logs from <code>http://d-i.debian.org/daily-images/build-logs.html</code>daily. {do_not_edit}'
     builders:
       - shell: '/srv/jenkins/bin/d-i_parse_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
     triggers:

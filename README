@@ -13,24 +13,27 @@ About jenkins.debian.net
 * http://jenkins.debian.net is pretty much work in progress, (hopefully) doing something useful since October 15th 2012.
 * Join #debian-qa on irc.debian.org to report bugs or give other feedback! Use debian-qa@lists.debian.org if you prefer mail.
 * 'git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git'
-* (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server, but in future there will be installation and tests clients started on demand as well.
+* (virtual) hardware sponsored by http://www.profitbricks.com - currently it's just a server (a nice one, with 4 cores and 6 GB memory, thanks a lot!), but in future there will be installation and tests clients started on demand as well.
 * some stats are available at http://jenkins.debian.net/munin/jenkins-month.html
 
 == Jobs being run
 
 === chroot-tests jobs
 
-* FIXME: describe them
+* FIXME: describe chroot-tests jobs
 
 === debian-installer jobs
 
-* FIXME: describe them
-** d-i_manual:
-** d-i_build:
+* d_i_build_* - there is one job for each git repo referred to in http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co
+Each job pdebuilds the master branch of its git repo on every git push in a sid environment.
+* d_i_manual - builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching these patterns: 
+'/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*' and '/trunk/manual/scripts/.*'
+* d_i_manual_* - builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with "make languages=$LANG architectures=amd64 formats=html"
+* d_i_parse_build_logs - parses logs from http://d-i.debian.org/daily-images/build-logs.html daily, to give them a bit more exposure.
 
 === webcheck jobs
 
-* FIXME: describe them
+* FIXME: describe webcheck jobs 
 ** webcheck debian.org websites
 ** webcheck debconf.org websites
 

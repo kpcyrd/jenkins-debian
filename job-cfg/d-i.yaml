@@ -160,7 +160,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_check_jobs.sh'
     triggers:
-      - pollscm: "23 0 * * *"
+      - timed: "23 0 * * *"
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
@@ -263,9 +263,6 @@
 - job-template:
     defaults: d-i-build
     name: '{name}_build_debian-installer'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_installer'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_debootstrap'
@@ -621,8 +618,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/debian-installer-utils'
       - '{name}_build_debian-installer':
          gitrepo: 'git://git.debian.org/git/d-i/debian-installer'
-      - '{name}_build_installer':
-         gitrepo: 'git://git.debian.org/git/d-i/installer'
       - '{name}_build_debootstrap':
          gitrepo: 'git://git.debian.org/git/d-i/debootstrap'
       - '{name}_build_devicetype-detect':

@@ -16,13 +16,15 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === Installed software that makes jenkins.debian.net run
 
-* jenkins.debian.net runs Debian wheezy.
+link:http://jenkins.debian.net[jenkins.debian.net] runs Debian wheezy.
 
 === Jenkins
 
-* Currently running the long term support .deb from jenkins-ci.org.
-* Jenkins is installed using 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update && apt-get install jenkins`.
-* I would prefer to run a jenkins package from wheezy-backports.
+Currently running the long term support .deb from jenkins-ci.org.
+
+Jenkins is installed using 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update && apt-get install jenkins`.
+
+I would prefer to run a jenkins package from wheezy-backports.
 
 ==== Jenkins plugins
 

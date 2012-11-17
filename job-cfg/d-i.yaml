@@ -13,7 +13,7 @@
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
           url: http://jenkins.debian.net/view/d-i_misc/
-          text: All debian-installer jobs
+          text: Misc debian-installer jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
@@ -35,7 +35,7 @@
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
           url: http://jenkins.debian.net/view/d-i_manual/
-          text: All debian-installer jobs
+          text: debian-installer manual jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
@@ -85,7 +85,7 @@
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
           url: http://jenkins.debian.net/view/d-i_packages/
-          text: All debian-installer jobs
+          text: debian-installer packages jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com

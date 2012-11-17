@@ -27,13 +27,16 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 
 * chroot-test_housekeeping:
 ** make sure chroots have been cleaned up properly
+** runs at 05:00 UTC and triggers the bootstrap jobs on success
 * chroot-test_sid_bootstrap
 ** debootstrap a sid chroot
+** triggers the install_gnome job on success
 * chroot-test_sid_install_gnome
 ** debootstrap a sid chroot and install gnome
 * chroot-test_sid_install_kde, chroot-test_sid_install_xfce and chroot-test_sid_install_lxce _do not exit yet_.
 * chroot-test_squeeze_bootstrap_upgrade_to_wheezy
 ** debootstrap a squeeze chroot and upgrade it to wheezy
+** triggers the upgrade_(gnome|kde|lxde|xfce) jobs on success
 * chroot-test_squeeze_install_gnome_upgrade_to_wheezy
 ** debootstrap a squeeze chroot, install gnome and upgrade it to wheezy
 * chroot-test_squeeze_install_kde_upgrade_to_wheezy
@@ -42,6 +45,7 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 ** debootstrap a squeeze chroot, install lxde and upgrade it to wheezy
 * chroot-test_squeeze_install_xfce_upgrade_to_wheezy
 ** debootstrap a squeeze chroot, install xfce and upgrade it to wheezy
+** triggers the install_(gnome|kde|lxde|xfce) jobs on success
 * chroot-test_wheezy_bootstrap
 ** debootstrap a wheezy chroot
 * chroot-test_wheezy_install_gnome
@@ -57,16 +61,21 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 
 * d_i_build_* - there is one job for each git repo referred to in http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co
 Each job pdebuilds the master branch of its git repo on every git push in a sid environment. (If the architecture(s) specified in debian/control are not amd64,all or any the build exits cleanly.)
+** while these jobs are triggered on commits, the SCM is only polled every 6min to see if there are new commits.
 * d_i_manual - builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching these patterns: 
 '/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*' and '/trunk/manual/scripts/.*'
+** while this job are triggered on commits, the SCM is only polled every 30min to see if there are new commits.
 * d_i_manual_* - builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with "make languages=$LANG architectures=amd64 formats=html"
+** while these jobs are triggered on commits, the SCM is only polled every 30min to see if there are new commits.
 * d_i_parse_build_logs - parses logs from http://d-i.debian.org/daily-images/build-logs.html daily, to give them a bit more exposure.
+** this job is run daily.
 
 === webcheck jobs
 
-* FIXME: describe webcheck jobs 
-** webcheck debian.org websites
-** webcheck debconf.org websites
+* thre jobs for running webcheck against www.debian.org, www.debian.org/News and www.debian.org/security
+* several webcheck jobs for running again various debconf.org websites
+
+These jobs are only run on the first day of each month.
 
 == ToDo
 

@@ -36,6 +36,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 * update jdk
 * fully automate backup and full backup /var/lib/jenkins/jobs and /var/lib/munin and /var/log too
+* try awstats
 
 == More tests to be run
 

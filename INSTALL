@@ -26,30 +26,44 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 ==== Jenkins plugins
 
+* Jenkins GIT plugin
 * Jenkins Subversion Plug-in
-* SCM Sync Configuration Plugin
+
+* Log Parser Plugin
+* HTML Publisher plugin
 * Static Analysis Utilities
+
+* Read-only configurations
+* SCM Sync Configuration Plugin
 * Dependency Graph Viewer Plugin
 * Nested View Plugin
-* Locale plugin
-* HTML Publisher plugin
-* Jenkins GIT plugin
 * View Job Filters
-* Read-only configurations
+
 * Sidebar Link
 * Green Balls
-* Log Parser Plugin
-* Jenkins Translation Assistance plugin
 * Compact Columns
 * Simple Theme Plugin
+* Locale plugin
+* Jenkins Translation Assistance plugin
 
-=== updating jenkins.debian.net with update_jdn.sh
+=== updating jenkins.debian.net with 'update_jdn.sh'
 
-* needed packages are listed in 'update_jdn.sh' and which will also make sure they are installed
-** 'update_jdn.sh' is available in the git repo
-* package configuration is kept in that git repo and deployed by 'update_jdn.sh' as well.
+'update_jdn.sh' is small hackish script which will install all needed packages and copy their configuration in place.
+
+As 'root' run:
+----
+cd
+git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
+cd jenkins.debian.net
+./update_jdn.sh
+----
+
+'jenkins-job-builder' is the only software which is not covered by this script.
 
 === Installing jenkins-job-builder
+
+This is the only softwhich which needs manual installation and is not covered by 'update_jdn.sh'
+
 * rebuild python-jenkinsapi from sid for wheezy:
 * `pip install python-jenkins`
 * `git clone https://github.com/openstack-ci/jenkins-job-builder ; cd jenkins-job-builder ; python setup.py install`
@@ -57,8 +71,10 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === Using jenkins-job-builder
 
-* then run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
-* testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`
+'update_jdn.sh' takes care of this too, so this is just for quick documentation. The real documentation is at link:http://ci.openstack.org/jenkins-job-builder/
+
+* run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
+* for testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`
 
 === munin
 
@@ -66,7 +82,7 @@ link://munin-monitoring[Munin] is installed, running with link:http://jenkins.de
 
 === Backup
 
-Currently only the configuration is backed up, but neither the jenkins results nor system logs. But it's at least sufficient to re-setup the system if needed.
+Currently only the configuration is backed up, but neither the jenkins results nor system logs. But that's at least sufficient to re-setup the system if needed.
 
 * The _etckeeper_ package is installed and automatically keeps '/etc' in '/etc/.git'.
 * The _SCM Sync Configuration Plugin_ is installed in Jenkins, putting all Jenkins configuration into '/srv/jenkins.debian.net-scm-sync.git'.

@@ -59,10 +59,14 @@ build_language() {
 init_workspace
 #
 # if $1 is not given, build the whole manual,
-# else just the language $1 as html
+# else just the language $1 in format $2
 #
 if [ "$1" = "" ] ; then
 	pdebuild_package
 else
-	build_language $1 html
+	if [ "$2" = "" ] ; then
+		echo "Error: need format too."
+		exit 1
+	fi
+	build_language $1 $2
 fi

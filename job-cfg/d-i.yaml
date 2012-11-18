@@ -21,7 +21,7 @@
           icon: /userContent/images/profitbricks-24x24.png
 
 - defaults:
-    name: d-i-manual
+    name: d-i-manual-html
     project-type: freestyle
     logrotate:
       daysToKeep: 90
@@ -41,7 +41,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <pre>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<pre> {do_not_edit}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
          url: svn://svn.debian.org/svn/d-i/trunk
@@ -54,10 +54,12 @@
          excludedCommitMessages: ''
          viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
     builders:
-      - shell: '/srv/jenkins/bin/d-i_manual.sh {lang}'
+      - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} html'
     triggers:
       - pollscm: "*/30 * * * *"
     publishers:
+      - trigger:
+          project: 'd-i_manual_{lang}_pdf'
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable_on_warning: 'true'
@@ -65,6 +67,54 @@
       - htmlpublisher:
           name: 'Installation guides with LANG={lang}'
           directory: 'html'
+          indexfiles: ''
+          keepall: False
+      - email:
+          recipients: holger@layer-acht.org
+
+- defaults:
+    name: d-i-manual-pdf
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 50
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/d-i_manual/
+          text: debian-installer manual jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
+    scm:
+      - svn:
+         url: svn://svn.debian.org/svn/d-i/trunk
+         basedir: .
+         workspaceupdater: update
+         includedRegions: '/trunk/manual/{lang}/.*'
+         excludedRegions: ''
+         excludedUsers: ''
+         excludedRevprop: ''
+         excludedCommitMessages: ''
+         viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} pdf'
+    publishers:
+      - logparser:
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
+      - htmlpublisher:
+          name: 'Installation guides with LANG={lang}'
+          directory: 'pdf'
           indexfiles: ''
           keepall: False
       - email:
@@ -170,29 +220,53 @@
           recipients: holger@layer-acht.org
 
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_ca'
+    defaults: d-i-manual-html
+    name: '{name}_manual_ca_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_cs'
+    defaults: d-i-manual-html
+    name: '{name}_manual_cs_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_de'
+    defaults: d-i-manual-html
+    name: '{name}_manual_de_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_en'
+    defaults: d-i-manual-html
+    name: '{name}_manual_en_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_eu'
+    defaults: d-i-manual-html
+    name: '{name}_manual_eu_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_fr'
+    defaults: d-i-manual-html
+    name: '{name}_manual_fr_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_it'
+    defaults: d-i-manual-html
+    name: '{name}_manual_it_html'
 - job-template:
-    defaults: d-i-manual
-    name: '{name}_manual_pt_BR'
+    defaults: d-i-manual-html
+    name: '{name}_manual_pt_BR_html'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_ca_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_cs_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_de_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_en_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_eu_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_fr_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_it_pdf'
+- job-template:
+    defaults: d-i-manual-pdf
+    name: '{name}_manual_pt_BR_pdf'
 
 - job-template:
     defaults: d-i-build
@@ -548,28 +622,52 @@
 /trunk/manual/doc/.*
 
 /trunk/manual/scripts/.*'
-      - '{name}_manual_ca':
+      - '{name}_manual_ca_html':
          lang: 'ca'
          languagename: 'Catalan'
-      - '{name}_manual_cs':
+      - '{name}_manual_cs_html':
          lang: 'cs'
          languagename: 'Czech'
-      - '{name}_manual_de':
+      - '{name}_manual_de_html':
          lang: 'de'
          languagename: 'German'
-      - '{name}_manual_en':
+      - '{name}_manual_en_html':
          lang: 'en'
          languagename: 'English'
-      - '{name}_manual_eu':
+      - '{name}_manual_eu_html':
          lang: 'eu'
          languagename: 'Basque'
-      - '{name}_manual_fr':
+      - '{name}_manual_fr_html':
          lang: 'fr'
          languagename: 'French'
-      - '{name}_manual_it':
+      - '{name}_manual_it_html':
          lang: 'it'
          languagename: 'Italian'
-      - '{name}_manual_pt_BR':
+      - '{name}_manual_pt_BR_html':
+         lang: 'pt_BR'
+         languagename: 'Brazilian Portuguese'
+      - '{name}_manual_ca_pdf':
+         lang: 'ca'
+         languagename: 'Catalan'
+      - '{name}_manual_cs_pdf':
+         lang: 'cs'
+         languagename: 'Czech'
+      - '{name}_manual_de_pdf':
+         lang: 'de'
+         languagename: 'German'
+      - '{name}_manual_en_pdf':
+         lang: 'en'
+         languagename: 'English'
+      - '{name}_manual_eu_pdf':
+         lang: 'eu'
+         languagename: 'Basque'
+      - '{name}_manual_fr_pdf':
+         lang: 'fr'
+         languagename: 'French'
+      - '{name}_manual_it_pdf':
+         lang: 'it'
+         languagename: 'Italian'
+      - '{name}_manual_pt_BR_pdf':
          lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'
       - '{name}_build_aboot-installer':

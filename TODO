@@ -43,7 +43,6 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * html_publisher doesn't make the results of d-i_manual_* available
 * svn:trunk:packages/po/* triggers nothing
 * notify #debian-boot about jenkins jobs results
-* check if there are new languages for the manual and remind to create jobs
 
 === d-i_build*
 

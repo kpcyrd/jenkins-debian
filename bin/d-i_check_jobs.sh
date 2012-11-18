@@ -59,9 +59,8 @@ done
 rm $TMPFILE
 
 #
-# check for missing d-i manual language build jobs
+# FIXME: implement check for missing d-i manual language build jobs
 #
-# FIXME: implement this check ;-)
 echo "Warning: check for missing d-i manual build jobs not implemented"
 
 #

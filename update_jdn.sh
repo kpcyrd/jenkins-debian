@@ -25,7 +25,7 @@ done
 #
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin calamaris visitors \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck procmail
 explain "Packages installed."
 
 #
@@ -53,6 +53,7 @@ explain "Packages configured."
 #
 cd $BASEDIR
 cp -r bin logparse job-cfg /srv/jenkins/
+cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
 cp -r README INSTALL TODO userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/

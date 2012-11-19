@@ -15,7 +15,7 @@
           unstable_on_warning: 'false'
           fail_on_error: 'false'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-qa holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -48,7 +48,7 @@
       - trigger:
           project: '{my_trigger}'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-qa holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -87,7 +87,7 @@
       - trigger:
           project: '{my_4th_trigger}'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-qa holger@layer-acht.org
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -122,7 +122,7 @@
       - trigger:
           project: '{my_3rd_trigger}'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-qa holger@layer-acht.org
 
 - job-template:
     defaults: chroot-tests

@@ -70,7 +70,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
     name: d-i-manual-pdf
@@ -118,7 +118,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
     name: d-i-build
@@ -157,7 +157,7 @@
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - job-template:
     defaults: d-i
@@ -180,7 +180,7 @@
       - pollscm: "*/30 * * * *"
     publishers:
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - job-template:
     defaults: d-i
@@ -201,7 +201,7 @@
           indexfiles: 'build-logs.html'
           keepall: True
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - job-template:
     defaults: d-i

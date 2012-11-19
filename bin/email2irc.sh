@@ -22,7 +22,6 @@ while read line ; do
 			echo $line >> /var/lib/jenkins/email_log
 			CHANNEL=$(echo $line | cut -d "+" -f2| cut -d "@" -f1)
 			echo "CHANNEL = $CHANNEL" >> /var/lib/jenkins/email_log
-			echo >> /var/lib/jenkins/email_log
 		fi
 		if [[ $line =~ ^(X-Jenkins-Job: .*) ]] ; then
 			JENKINS_JOB=${line:15}
@@ -45,7 +44,8 @@ if [ "$VALID_MAIL" == "true" ] ; then
 	echo $FIRST_LINE >> /var/lib/jenkins/email_log
 	if [ ! -z $CHANNEL ] ; then
 		echo "#$CHANNEL: $SUBJECT. $FIRST_LINE" >> /var/lib/jenkins/email_log
-		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$SUBJECT. $FIRST_LINE"
+		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$SUBJECT. $FIRST_LINE" && echo "kgb informed successfully." >> /var/lib/jenkins/email_log
+		echo >> /var/lib/jenkins/email_log
 	else
 		echo "But no irc channel detected." >> /var/lib/jenkins/email_log
 	fi

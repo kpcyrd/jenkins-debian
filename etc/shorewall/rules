@@ -26,7 +26,7 @@ Ping(DROP)	net		$FW
 
 ACCEPT		$FW		net		icmp
 
-# http and ssh are allowed
+# incoming http and ssh are allowed
 ACCEPT    net       $FW             tcp          80
 ACCEPT    net       $FW             tcp          22
 

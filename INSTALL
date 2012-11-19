@@ -60,7 +60,7 @@ cd jenkins.debian.net
 ./update_jdn.sh
 ----
 
-'jenkins-job-builder' is the only software which is not covered by this script.
+'jenkins-job-builder' and (currently) 'kgb-client' is the only software which is not covered by this script.
 
 === Installing jenkins-job-builder
 
@@ -76,12 +76,22 @@ python setup.py install
 
 Though actually https://github.com/h01ger/jenkins-job-builder is used atm.
 
-=== Using jenkins-job-builder
+==== Using jenkins-job-builder
 
-'update_jdn.sh' takes care of this too, so this is just for quick documentation. The real documentation is at link:http://ci.openstack.org/jenkins-job-builder/
+'update_jdn.sh' takes care of this too, so this is just for quick documentation. The real documentation is at http://ci.openstack.org/jenkins-job-builder/
 
 * run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
 * for testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`
+
+=== Installing kgb-client
+
+Rebuild the 'kgb-bot' source package from sid on whezzy and then install the 'kbg-client' package. Configuration is done through 'update_jdn.sh'.
+
+==== IRC notification configuration
+
+The jenkins jobs are configured to send email to 'jenkins+$IRC_CHANNEL' (like 'jenkins+debian-qa'), this is parsed by a script ('/srv/jenkins/bin/email2irc.sh') run through 'procmail' which then in turn notifies 'kgb-client', which notfies 'kgb-server'(s) on the internet, which are the bots notifying the IRC channels. 'kbg-client' needs to be '>= 1.24'.
+
+The Jenkins EMail notification plugin is used as its state tracking is best (and the Jenkins IRC plugin is way too powerful).
 
 === munin
 

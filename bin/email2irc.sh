@@ -53,4 +53,4 @@ else
 	echo -e "----------\nbad luck\n-----------" >> /var/lib/jenkins/email_log
 fi
 
-
+# FIXME /var/lib/jenkins/email_log will grow and grow

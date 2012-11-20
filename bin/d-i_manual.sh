@@ -40,6 +40,17 @@ pdebuild_package() {
 	#
 	cd manual
 	pdebuild --use-pdebuild-internal
+	cd ..
+}
+
+po2xml() {
+	cd manual
+	./scripts/merge_xml $1
+	./scripts/update_pot
+	./scripts/update_po $1
+	./scripts/revert_pot
+	./scripts/create_xml $1
+	cd ..
 }
 
 build_language() {
@@ -57,6 +68,13 @@ build_language() {
 			make languages=$1 architectures=$ARCH destination=../../$FORMAT/ formats=$FORMAT
 		fi
 	done
+	cd ../..
+	svn revert manual -R
+}
+
+po_cleanup() {
+	echo "Cleanup generated files:"
+	rm -rv manual/$1 manual/integrated
 }
 
 init_workspace
@@ -64,6 +82,7 @@ init_workspace
 # if $1 is not given, build the whole manual,
 # else just the language $1 in format $2
 #
+# FIXME: use variable names
 if [ "$1" = "" ] ; then
 	pdebuild_package
 else
@@ -71,5 +90,11 @@ else
 		echo "Error: need format too."
 		exit 1
 	fi
-	build_language $1 $2
+	if [ "$3" = "" ] ; then
+		build_language $1 $2
+	else
+		po2xml $1
+		build_language $1 $2
+		po_cleanup $1
+	fi
 fi

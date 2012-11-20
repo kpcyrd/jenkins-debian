@@ -73,6 +73,55 @@
           recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
+    name: d-i-manual-html-po2xml
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 50
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/d-i_manual/
+          text: debian-installer manual jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    scm:
+      - svn:
+         url: svn://svn.debian.org/svn/d-i/trunk
+         basedir: .
+         workspaceupdater: update
+         includedRegions: '/trunk/manual/po/{lang}/.*'
+         excludedRegions: ''
+         excludedUsers: ''
+         excludedRevprop: ''
+         excludedCommitMessages: ''
+         viewvc-url: http://anonscm.debian.org/viewvc/d-i/trunk
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} html po2xml'
+    triggers:
+      - pollscm: "*/30 * * * *"
+      - logparser:
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
+      - htmlpublisher:
+          name: 'd-i_manual_{lang}.html'
+          directory: 'html'
+          indexfiles: ''
+          keepall: False
+      - email:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+
+- defaults:
     name: d-i-manual-pdf
     project-type: freestyle
     logrotate:
@@ -243,6 +292,9 @@
 - job-template:
     defaults: d-i-manual-html
     name: '{name}_manual_pt_BR_html'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_pt_html'
 - job-template:
     defaults: d-i-manual-pdf
     name: '{name}_manual_ca_pdf'
@@ -646,6 +698,9 @@
       - '{name}_manual_pt_BR_html':
          lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'
+      - '{name}_manual_pt_html':
+         lang: 'pt'
+         languagename: 'Portuguese'
       - '{name}_manual_ca_pdf':
          lang: 'ca'
          languagename: 'Catalan'

@@ -45,7 +45,7 @@ pdebuild_package() {
 
 po2xml() {
 	cd manual
-	./scripts/merge_xml $1
+	./scripts/merge_xml en
 	./scripts/update_pot
 	./scripts/update_po $1
 	./scripts/revert_pot

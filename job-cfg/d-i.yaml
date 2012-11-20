@@ -109,6 +109,7 @@
       - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} html po2xml'
     triggers:
       - pollscm: "*/30 * * * *"
+    publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable_on_warning: 'true'

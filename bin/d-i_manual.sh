@@ -51,8 +51,11 @@ build_language() {
 	mkdir $FORMAT
 	cd manual/build
 	ARCHS=$(ls arch-options)
-	for ARCH in $ARCHS ; do 
-		make languages=$1 architectures=$ARCH destination=../../$FORMAT/ formats=$FORMAT
+	for ARCH in $ARCHS ; do
+		# ignore kernel architectures
+		if [ "$ARCH" != "hurd" ] && [ "$ARCH" != "kfreebsd" ] && [ "$ARCH" != "linux" ] ; then
+			make languages=$1 architectures=$ARCH destination=../../$FORMAT/ formats=$FORMAT
+		fi
 	done
 }
 

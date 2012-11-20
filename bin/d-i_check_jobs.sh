@@ -6,7 +6,7 @@
 #
 # default settings
 #
-#set -x
+set -x
 set -e
 export LC_ALL=C
 export http_proxy="http://localhost:3128"
@@ -65,7 +65,7 @@ rm $TMPFILE
 # first the xml translations...
 #
 cd ~jenkins/jobs/d-i_manual/workspace/manual
-IGNORE="build debian doc README scripts"
+IGNORE="build debian doc README scripts build-stamp doc-base-stamp"
 for DIRECTORY in * ; do
 	for i in $IGNORE ; do
 		if [ "$DIRECTORY" == "$i" ] ; then

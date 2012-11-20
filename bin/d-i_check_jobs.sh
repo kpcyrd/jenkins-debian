@@ -74,7 +74,7 @@ for DIRECTORY in * ; do
 		fi
 	done
 	if [ "$DIRECTORY" == "" ] ; then
-		break
+		continue
 	else
 		#
 		# html build job
@@ -123,7 +123,7 @@ for DIRECTORY in * ; do
 		fi
 	done
 	if [ "$DIRECTORY" == "" ] ; then
-		break
+		continue
 	else
 		#
 		# html build job

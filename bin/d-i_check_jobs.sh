@@ -16,8 +16,11 @@ export http_proxy="http://localhost:3128"
 #
 URL="http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co"
 FAIL=false
-DI_JOBPATTERN=d-i_build_
+DI_BUILD_JOB_PATTERN=d-i_build_
+DI_MANUAL_JOB_PATTERN=d-i_manual_
 TMPFILE=$(mktemp)
+JOB_TEMPLATES=$(mktemp)
+PROJECT_JOBS=$(mktemp)
 
 #
 # check for missing d-i package build jobs
@@ -27,14 +30,12 @@ TMPFILE=$(mktemp)
 echo "Scanning $URL for reffered git repos which have no jenkins job associated."
 curl $URL > $TMPFILE 2>/dev/null
 PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
-JOB_TEMPLATES=$(mktemp)
-PROJECT_JOBS=$(mktemp)
 #
 # check for each git repo if a jenkins job exists
 #
 for PACKAGE in $PACKAGES ; do
-	if [ ! -d ~jenkins/jobs/${DI_JOBPATTERN}${PACKAGE} ] ; then
-		echo "Warning: No build job '${DI_JOBPATTERN}${PACKAGE}'."
+	if [ ! -d ~jenkins/jobs/${DI_BUILD_JOB_PATTERN}${PACKAGE} ] ; then
+		echo "Warning: No build job '${DI_BUILD_JOB_PATTERN}${PACKAGE}'."
 		FAIL=true
 		#
 		# prepare yaml bits
@@ -45,13 +46,13 @@ for PACKAGE in $PACKAGES ; do
 		echo "    defaults: d-i-build" >> $JOB_TEMPLATES
 		echo "    name: '{name}_build_$PACKAGE'" >> $JOB_TEMPLATES
 	else
-		echo "Ok: Job '${DI_JOBPATTERN}${PACKAGE}' exists."
+		echo "Ok: Job '${DI_BUILD_JOB_PATTERN}${PACKAGE}' exists."
 	fi
 done
 #
 # check for each job if there still is a git repo
 #
-for JOB in $(ls -1 ~jenkins/jobs/ | grep ${DI_JOBPATTERN}) ; do
+for JOB in $(ls -1 ~jenkins/jobs/ | grep ${DI_BUILD_JOB_PATTERN}) ; do
 	REPONAME=${JOB:10}
 	grep -q git+ssh://git.debian.org/git/d-i/$REPONAME $TMPFILE || echo "Warning: Git repo $REPONAME not found in $URL, but job $JOB exists."
 done 
@@ -59,9 +60,106 @@ done
 rm $TMPFILE
 
 #
-# FIXME: implement check for missing d-i manual language build jobs
+# check for missing d-i manual language build jobs
 #
-echo "Warning: check for missing d-i manual build jobs not implemented"
+# first the xml translations...
+#
+cd ~jenkins/jobs/d-i_manual/workspace/manual
+IGNORE="build debian doc README scripts"
+for DIRECTORY in * ; do
+	for i in $IGNORE ; do
+		if [ "$DIRECTORY" == "$i" ] ; then
+			DIRECTORY=""
+			break
+		fi
+	done
+	if [ "$DIRECTORY" == "" ] ; then
+		break
+	else
+		#
+		# html build job
+		#
+		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html ] ; then
+			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_html'."
+			FAIL=true
+			#
+			# prepare yaml bits
+			#
+			echo "      - '{name}_manual_${DIRECTORY}_html':" >> $PROJECT_JOBS
+			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
+			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
+			echo "- job-template:" >> $JOB_TEMPLATES
+			echo "    defaults: d-i-manual-html" >> $JOB_TEMPLATES
+			echo "    name: '{name}_manual_${DIRECTORY}_html'" >> $JOB_TEMPLATES
+		fi
+		#
+		# pdf build job
+		#
+		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf ] ; then
+			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_pdf'."
+			FAIL=true
+			#
+			# prepare yaml bits
+			#
+			echo "      - '{name}_manual_${DIRECTORY}_pdf':" >> $PROJECT_JOBS
+			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
+			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
+			echo "- job-template:" >> $JOB_TEMPLATES
+			echo "    defaults: d-i-manual-pdf" >> $JOB_TEMPLATES
+			echo "    name: '{name}_manual_${DIRECTORY}_pdf'" >> $JOB_TEMPLATES
+		fi
+	fi
+done
+# FIXME: check for removed manuals (but with existing jobs) missing
+#
+# ...and now the translations kept in po files....
+cd po
+IGNORE="pot README"
+for DIRECTORY in * ; do
+	for i in $IGNORE ; do
+		if [ "$DIRECTORY" == "$i" ] ; then
+			DIRECTORY=""
+			break
+		fi
+	done
+	if [ "$DIRECTORY" == "" ] ; then
+		break
+	else
+		#
+		# html build job
+		#
+		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html_po2xml ] ; then
+			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_html_po2xml'."
+			FAIL=true
+			#
+			# prepare yaml bits
+			#
+			echo "      - '{name}_manual_${DIRECTORY}_html_po2xml':" >> $PROJECT_JOBS
+			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
+			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
+			echo "- job-template:" >> $JOB_TEMPLATES
+			echo "    defaults: d-i-manual-html" >> $JOB_TEMPLATES
+			echo "    name: '{name}_manual_${DIRECTORY}_html_po2xml'" >> $JOB_TEMPLATES
+		fi
+		#
+		# pdf build job
+		#
+		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf_po2xml ] ; then
+			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_pdf_po2xml'."
+			FAIL=true
+			#
+			# prepare yaml bits
+			#
+			echo "      - '{name}_manual_${DIRECTORY}_pdf_po2xml':" >> $PROJECT_JOBS
+			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
+			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
+			echo "- job-template:" >> $JOB_TEMPLATES
+			echo "    defaults: d-i-manual-pdf" >> $JOB_TEMPLATES
+			echo "    name: '{name}_manual_${DIRECTORY}_pdf_po2xml'" >> $JOB_TEMPLATES
+		fi
+	fi
+done
+# FIXME: check for removed manuals (but with existing jobs) missing
 
 #
 # fail this job if missing d-i jobs are detected

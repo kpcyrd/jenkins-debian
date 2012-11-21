@@ -902,10 +902,10 @@
          languagename: 'Dutch'
       - '{name}_manual_nn_pdf':
          lang: 'nn'
-         languagename: 'FIXME: nn'
+         languagename: 'Norwegian Nynorsk'
       - '{name}_manual_nn_html':
          lang: 'nn'
-         languagename: 'FIXME: nn'
+         languagename: 'Norwegian Nynorsk'
       - '{name}_manual_pt_pdf':
          lang: 'pt'
          languagename: 'Portuguese'
@@ -914,46 +914,46 @@
          languagename: 'Portuguese'
       - '{name}_manual_ro_pdf':
          lang: 'ro'
-         languagename: 'FIXME: ro'
+         languagename: 'Romanian'
       - '{name}_manual_ro_html':
          lang: 'ro'
-         languagename: 'FIXME: ro'
+         languagename: 'Romanian'
       - '{name}_manual_ru_pdf':
          lang: 'ru'
-         languagename: 'FIXME: ru'
+         languagename: 'Russian'
       - '{name}_manual_ru_html':
          lang: 'ru'
-         languagename: 'FIXME: ru'
+         languagename: 'Russian'
       - '{name}_manual_sv_pdf':
          lang: 'sv'
-         languagename: 'FIXME: sv'
+         languagename: 'Swedish'
       - '{name}_manual_sv_html':
          lang: 'sv'
-         languagename: 'FIXME: sv'
+         languagename: 'Swedish'
       - '{name}_manual_tl_pdf':
          lang: 'tl'
-         languagename: 'FIXME: tl'
+         languagename: 'Tagalog'
       - '{name}_manual_tl_html':
          lang: 'tl'
-         languagename: 'FIXME: tl'
+         languagename: 'Tagalog'
       - '{name}_manual_vi_pdf':
          lang: 'vi'
-         languagename: 'FIXME: vi'
+         languagename: 'Vietnamese'
       - '{name}_manual_vi_html':
          lang: 'vi'
-         languagename: 'FIXME: vi'
+         languagename: 'Vietnamese'
       - '{name}_manual_zh_CN_pdf':
          lang: 'zh_CN'
-         languagename: 'FIXME: zh_CN'
+         languagename: 'Chinese (zh_CN)'
       - '{name}_manual_zh_CN_html':
          lang: 'zh_CN'
-         languagename: 'FIXME: zh_CN'
+         languagename: 'Chinese (zh_CN)'
       - '{name}_manual_zh_TW_pdf':
          lang: 'zh_TW'
-         languagename: 'FIXME: zh_TW'
+         languagename: 'Chinese (zh_TW)'
       - '{name}_manual_zh_TW_html':
          lang: 'zh_TW'
-         languagename: 'FIXME: zh_TW'
+         languagename: 'Chinese (zh_TW)'
       - '{name}_manual_ca_pdf':
          lang: 'ca'
          languagename: 'Catalan'

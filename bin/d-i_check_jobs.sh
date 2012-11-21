@@ -76,7 +76,7 @@ for DIRECTORY in * ; do
 	if [ "$DIRECTORY" == "" ] ; then
 		continue
 	else
-		for FORMAT in "pdf html" ; do
+		for FORMAT in pdf html ; do
 			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT} ] ; then
 				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
 				FAIL=true
@@ -108,7 +108,7 @@ for DIRECTORY in * ; do
 	if [ "$DIRECTORY" == "" ] ; then
 		continue
 	else
-		for FORMAT in "pdf html" ; do
+		for FORMAT in pdf html ; do
 			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml ] ; then
 				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml'."
 				FAIL=true

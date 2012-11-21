@@ -812,6 +812,8 @@
     defaults: d-i-build
     name: '{name}_build_zipl-installer'
 
+# http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes to the rescue!
+
 - project:
     name: d-i
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
@@ -858,10 +860,10 @@
          languagename: 'Danish'
       - '{name}_manual_el_pdf':
          lang: 'el'
-         languagename: 'FIXME: el'
+         languagename: 'Greek'
       - '{name}_manual_el_html':
          lang: 'el'
-         languagename: 'FIXME: el'
+         languagename: 'Greek'
       - '{name}_manual_es_pdf':
          lang: 'es'
          languagename: 'Spanish'
@@ -876,28 +878,28 @@
          languagename: 'Finnish'
       - '{name}_manual_hu_pdf':
          lang: 'hu'
-         languagename: 'FIXME: hu'
+         languagename: 'Hungarian'
       - '{name}_manual_hu_html':
          lang: 'hu'
-         languagename: 'FIXME: hu'
+         languagename: 'Hungarian'
       - '{name}_manual_ja_pdf':
          lang: 'ja'
-         languagename: 'FIXME: ja'
+         languagename: 'Japanese'
       - '{name}_manual_ja_html':
          lang: 'ja'
-         languagename: 'FIXME: ja'
+         languagename: 'Japanese'
       - '{name}_manual_ko_pdf':
          lang: 'ko'
-         languagename: 'FIXME: ko'
+         languagename: 'Korean'
       - '{name}_manual_ko_html':
          lang: 'ko'
-         languagename: 'FIXME: ko'
+         languagename: 'Korean'
       - '{name}_manual_nl_pdf':
          lang: 'nl'
-         languagename: 'FIXME: nl'
+         languagename: 'Dutch'
       - '{name}_manual_nl_html':
          lang: 'nl'
-         languagename: 'FIXME: nl'
+         languagename: 'Dutch'
       - '{name}_manual_nn_pdf':
          lang: 'nn'
          languagename: 'FIXME: nn'

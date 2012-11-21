@@ -101,7 +101,8 @@ sudo chown jenkins /var/cache/pbuilder/result
 
 #
 # There's always some work left...
+#	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
 echo
-rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME"
+rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 

@@ -76,6 +76,7 @@ for DIRECTORY in * ; do
 	if [ "$DIRECTORY" == "" ] ; then
 		continue
 	else
+		# FIXME: turn this into a loop: pdf html
 		#
 		# html build job
 		#
@@ -135,12 +136,12 @@ for DIRECTORY in * ; do
 			#
 			# prepare yaml bits
 			#
-			echo "      - '{name}_manual_${DIRECTORY}_html_po2xml':" >> $PROJECT_JOBS
+			echo "      - '{name}_manual_${DIRECTORY}_html':" >> $PROJECT_JOBS
 			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
 			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
 			echo "- job-template:" >> $JOB_TEMPLATES
 			echo "    defaults: d-i-manual-html-po2xml" >> $JOB_TEMPLATES
-			echo "    name: '{name}_manual_${DIRECTORY}_html_po2xml'" >> $JOB_TEMPLATES
+			echo "    name: '{name}_manual_${DIRECTORY}_html'" >> $JOB_TEMPLATES
 		fi
 		#
 		# pdf build job
@@ -151,12 +152,12 @@ for DIRECTORY in * ; do
 			#
 			# prepare yaml bits
 			#
-			echo "      - '{name}_manual_${DIRECTORY}_pdf_po2xml':" >> $PROJECT_JOBS
+			echo "      - '{name}_manual_${DIRECTORY}_pdf':" >> $PROJECT_JOBS
 			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
 			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
 			echo "- job-template:" >> $JOB_TEMPLATES
 			echo "    defaults: d-i-manual-pdf-po2ml" >> $JOB_TEMPLATES
-			echo "    name: '{name}_manual_${DIRECTORY}_pdf_po2xml'" >> $JOB_TEMPLATES
+			echo "    name: '{name}_manual_${DIRECTORY}_pdf'" >> $JOB_TEMPLATES
 		fi
 	fi
 done

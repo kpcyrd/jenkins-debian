@@ -65,7 +65,7 @@ rm $TMPFILE
 # first the xml translations...
 #
 cd ~jenkins/jobs/d-i_manual/workspace/manual
-IGNORE="build debian doc README scripts build-stamp doc-base-stamp"
+IGNORE="build debian doc README scripts build-stamp doc-base-stamp po"
 for DIRECTORY in * ; do
 	for i in $IGNORE ; do
 		if [ "$DIRECTORY" == "$i" ] ; then
@@ -125,6 +125,7 @@ for DIRECTORY in * ; do
 	if [ "$DIRECTORY" == "" ] ; then
 		continue
 	else
+		# FIXME: turn this into a loop: pdf html
 		#
 		# html build job
 		#
@@ -138,7 +139,7 @@ for DIRECTORY in * ; do
 			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
 			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
 			echo "- job-template:" >> $JOB_TEMPLATES
-			echo "    defaults: d-i-manual-html" >> $JOB_TEMPLATES
+			echo "    defaults: d-i-manual-html-po2xml" >> $JOB_TEMPLATES
 			echo "    name: '{name}_manual_${DIRECTORY}_html_po2xml'" >> $JOB_TEMPLATES
 		fi
 		#
@@ -154,7 +155,7 @@ for DIRECTORY in * ; do
 			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
 			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
 			echo "- job-template:" >> $JOB_TEMPLATES
-			echo "    defaults: d-i-manual-pdf" >> $JOB_TEMPLATES
+			echo "    defaults: d-i-manual-pdf-po2ml" >> $JOB_TEMPLATES
 			echo "    name: '{name}_manual_${DIRECTORY}_pdf_po2xml'" >> $JOB_TEMPLATES
 		fi
 	fi

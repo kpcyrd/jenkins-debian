@@ -82,7 +82,9 @@ init_workspace
 # if $1 is not given, build the whole manual,
 # else just the language $1 in format $2
 #
-# FIXME: use variable names
+# $1 = LANG
+# $2 = FORMAT
+# $3 if set, manual is translated using po files (else xml files are the default)
 if [ "$1" = "" ] ; then
 	pdebuild_package
 else

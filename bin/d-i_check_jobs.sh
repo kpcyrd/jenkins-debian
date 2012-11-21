@@ -76,39 +76,21 @@ for DIRECTORY in * ; do
 	if [ "$DIRECTORY" == "" ] ; then
 		continue
 	else
-		# FIXME: turn this into a loop: pdf html
-		#
-		# html build job
-		#
-		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html ] ; then
-			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html'."
-			FAIL=true
-			#
-			# prepare yaml bits
-			#
-			echo "      - '{name}_manual_${DIRECTORY}_html':" >> $PROJECT_JOBS
-			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
-			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
-			echo "- job-template:" >> $JOB_TEMPLATES
-			echo "    defaults: d-i-manual-html" >> $JOB_TEMPLATES
-			echo "    name: '{name}_manual_${DIRECTORY}_html'" >> $JOB_TEMPLATES
-		fi
-		#
-		# pdf build job
-		#
-		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf ] ; then
-			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf'."
-			FAIL=true
-			#
-			# prepare yaml bits
-			#
-			echo "      - '{name}_manual_${DIRECTORY}_pdf':" >> $PROJECT_JOBS
-			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
-			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
-			echo "- job-template:" >> $JOB_TEMPLATES
-			echo "    defaults: d-i-manual-pdf" >> $JOB_TEMPLATES
-			echo "    name: '{name}_manual_${DIRECTORY}_pdf'" >> $JOB_TEMPLATES
-		fi
+		for FORMAT in "pdf html" ; do
+			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT} ] ; then
+				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
+				FAIL=true
+				#
+				# prepare yaml bits
+				#
+				echo "      - '{name}_manual_${DIRECTORY}_${FORMAT}':" >> $PROJECT_JOBS
+				echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
+				echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
+				echo "- job-template:" >> $JOB_TEMPLATES
+				echo "    defaults: d-i-manual-${FORMAT}" >> $JOB_TEMPLATES
+				echo "    name: '{name}_manual_${DIRECTORY}_${FORMAT}'" >> $JOB_TEMPLATES
+			fi
+		done
 	fi
 done
 # FIXME: check for removed manuals (but with existing jobs) missing
@@ -126,39 +108,21 @@ for DIRECTORY in * ; do
 	if [ "$DIRECTORY" == "" ] ; then
 		continue
 	else
-		# FIXME: turn this into a loop: pdf html
-		#
-		# html build job
-		#
-		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html_po2xml ] ; then
-			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html_po2xml'."
-			FAIL=true
-			#
-			# prepare yaml bits
-			#
-			echo "      - '{name}_manual_${DIRECTORY}_html':" >> $PROJECT_JOBS
-			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
-			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
-			echo "- job-template:" >> $JOB_TEMPLATES
-			echo "    defaults: d-i-manual-html-po2xml" >> $JOB_TEMPLATES
-			echo "    name: '{name}_manual_${DIRECTORY}_html'" >> $JOB_TEMPLATES
-		fi
-		#
-		# pdf build job
-		#
-		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf_po2xml ] ; then
-			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf_po2xml'."
-			FAIL=true
-			#
-			# prepare yaml bits
-			#
-			echo "      - '{name}_manual_${DIRECTORY}_pdf':" >> $PROJECT_JOBS
-			echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
-			echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
-			echo "- job-template:" >> $JOB_TEMPLATES
-			echo "    defaults: d-i-manual-pdf-po2ml" >> $JOB_TEMPLATES
-			echo "    name: '{name}_manual_${DIRECTORY}_pdf'" >> $JOB_TEMPLATES
-		fi
+		for FORMAT in "pdf html" ; do
+			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml ] ; then
+				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml'."
+				FAIL=true
+				#
+				# prepare yaml bits
+				#
+				echo "      - '{name}_manual_${DIRECTORY}_${FORMAT}':" >> $PROJECT_JOBS
+				echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS
+				echo "         languagename: 'FIXME: $DIRECTORY'" >> $PROJECT_JOBS
+				echo "- job-template:" >> $JOB_TEMPLATES
+				echo "    defaults: d-i-manual-${FORMAT}-po2xml" >> $JOB_TEMPLATES
+				echo "    name: '{name}_manual_${DIRECTORY}_${FORMAT}'" >> $JOB_TEMPLATES
+			fi
+		done
 	fi
 done
 # FIXME: check for removed manuals (but with existing jobs) missing

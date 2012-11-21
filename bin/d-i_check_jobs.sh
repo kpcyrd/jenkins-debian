@@ -80,7 +80,7 @@ for DIRECTORY in * ; do
 		# html build job
 		#
 		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html ] ; then
-			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_html'."
+			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html'."
 			FAIL=true
 			#
 			# prepare yaml bits
@@ -96,7 +96,7 @@ for DIRECTORY in * ; do
 		# pdf build job
 		#
 		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf ] ; then
-			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_pdf'."
+			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf'."
 			FAIL=true
 			#
 			# prepare yaml bits
@@ -129,7 +129,7 @@ for DIRECTORY in * ; do
 		# html build job
 		#
 		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html_po2xml ] ; then
-			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_html_po2xml'."
+			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_html_po2xml'."
 			FAIL=true
 			#
 			# prepare yaml bits
@@ -145,7 +145,7 @@ for DIRECTORY in * ; do
 		# pdf build job
 		#
 		if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf_po2xml ] ; then
-			echo "Warning: No build job '${DI_MANUALJOB_PATTERN}${DIRECTORY}_pdf_po2xml'."
+			echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_pdf_po2xml'."
 			FAIL=true
 			#
 			# prepare yaml bits

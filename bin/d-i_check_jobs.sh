@@ -110,10 +110,10 @@ for DIRECTORY in * ; do
 	else
 		for FORMAT in pdf html ; do
 			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml ] ; then
-				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml'."
+				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
 				FAIL=true
 				#
-				# prepare yaml bits
+				# prepare yaml bits - po2xml jobs just use different defaults
 				#
 				echo "      - '{name}_manual_${DIRECTORY}_${FORMAT}':" >> $PROJECT_JOBS
 				echo "         lang: '$DIRECTORY'" >> $PROJECT_JOBS

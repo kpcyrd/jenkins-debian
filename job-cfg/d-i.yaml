@@ -294,9 +294,6 @@
     defaults: d-i-manual-html
     name: '{name}_manual_pt_BR_html'
 - job-template:
-    defaults: d-i-manual-html-po2xml
-    name: '{name}_manual_pt_html'
-- job-template:
     defaults: d-i-manual-pdf
     name: '{name}_manual_ca_pdf'
 - job-template:
@@ -320,6 +317,109 @@
 - job-template:
     defaults: d-i-manual-pdf
     name: '{name}_manual_pt_BR_pdf'
+
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_da_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_da_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_el_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_el_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_es_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_es_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_fi_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_fi_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_hu_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_hu_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_ja_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_ja_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_ko_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_ko_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_nl_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_nl_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_nn_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_nn_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_pt_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_pt_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_ro_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_ro_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_ru_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_ru_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_sv_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_sv_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_tl_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_tl_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_vi_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_vi_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_zh_CN_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_zh_CN_html'
+- job-template:
+    defaults: d-i-manual-pdf-po2xml
+    name: '{name}_manual_zh_TW_pdf'
+- job-template:
+    defaults: d-i-manual-html-po2xml
+    name: '{name}_manual_zh_TW_html'
 
 - job-template:
     defaults: d-i-build
@@ -699,9 +799,108 @@
       - '{name}_manual_pt_BR_html':
          lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'
+      - '{name}_manual_da_pdf':
+         lang: 'da'
+         languagename: 'Danish'
+      - '{name}_manual_da_html':
+         lang: 'da'
+         languagename: 'Danish'
+      - '{name}_manual_el_pdf':
+         lang: 'el'
+         languagename: 'FIXME: el'
+      - '{name}_manual_el_html':
+         lang: 'el'
+         languagename: 'FIXME: el'
+      - '{name}_manual_es_pdf':
+         lang: 'es'
+         languagename: 'Spanish'
+      - '{name}_manual_es_html':
+         lang: 'es'
+         languagename: 'Spanish'
+      - '{name}_manual_fi_pdf':
+         lang: 'fi'
+         languagename: 'Finnish'
+      - '{name}_manual_fi_html':
+         lang: 'fi'
+         languagename: 'Finnish'
+      - '{name}_manual_hu_pdf':
+         lang: 'hu'
+         languagename: 'FIXME: hu'
+      - '{name}_manual_hu_html':
+         lang: 'hu'
+         languagename: 'FIXME: hu'
+      - '{name}_manual_ja_pdf':
+         lang: 'ja'
+         languagename: 'FIXME: ja'
+      - '{name}_manual_ja_html':
+         lang: 'ja'
+         languagename: 'FIXME: ja'
+      - '{name}_manual_ko_pdf':
+         lang: 'ko'
+         languagename: 'FIXME: ko'
+      - '{name}_manual_ko_html':
+         lang: 'ko'
+         languagename: 'FIXME: ko'
+      - '{name}_manual_nl_pdf':
+         lang: 'nl'
+         languagename: 'FIXME: nl'
+      - '{name}_manual_nl_html':
+         lang: 'nl'
+         languagename: 'FIXME: nl'
+      - '{name}_manual_nn_pdf':
+         lang: 'nn'
+         languagename: 'FIXME: nn'
+      - '{name}_manual_nn_html':
+         lang: 'nn'
+         languagename: 'FIXME: nn'
+      - '{name}_manual_pt_pdf':
+         lang: 'pt'
+         languagename: 'Portuguese'
       - '{name}_manual_pt_html':
          lang: 'pt'
          languagename: 'Portuguese'
+      - '{name}_manual_ro_pdf':
+         lang: 'ro'
+         languagename: 'FIXME: ro'
+      - '{name}_manual_ro_html':
+         lang: 'ro'
+         languagename: 'FIXME: ro'
+      - '{name}_manual_ru_pdf':
+         lang: 'ru'
+         languagename: 'FIXME: ru'
+      - '{name}_manual_ru_html':
+         lang: 'ru'
+         languagename: 'FIXME: ru'
+      - '{name}_manual_sv_pdf':
+         lang: 'sv'
+         languagename: 'FIXME: sv'
+      - '{name}_manual_sv_html':
+         lang: 'sv'
+         languagename: 'FIXME: sv'
+      - '{name}_manual_tl_pdf':
+         lang: 'tl'
+         languagename: 'FIXME: tl'
+      - '{name}_manual_tl_html':
+         lang: 'tl'
+         languagename: 'FIXME: tl'
+      - '{name}_manual_vi_pdf':
+         lang: 'vi'
+         languagename: 'FIXME: vi'
+      - '{name}_manual_vi_html':
+         lang: 'vi'
+         languagename: 'FIXME: vi'
+      - '{name}_manual_zh_CN_pdf':
+         lang: 'zh_CN'
+         languagename: 'FIXME: zh_CN'
+      - '{name}_manual_zh_CN_html':
+         lang: 'zh_CN'
+         languagename: 'FIXME: zh_CN'
+      - '{name}_manual_zh_TW_pdf':
+         lang: 'zh_TW'
+         languagename: 'FIXME: zh_TW'
+      - '{name}_manual_zh_TW_html':
+         lang: 'zh_TW'
+         languagename: 'FIXME: zh_TW'
       - '{name}_manual_ca_pdf':
          lang: 'ca'
          languagename: 'Catalan'

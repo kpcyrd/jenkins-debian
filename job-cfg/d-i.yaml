@@ -41,10 +41,10 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>http://anonscm.debian.org/svn/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: http://anonscm.debian.org/svn/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/{lang}/.*'
@@ -56,7 +56,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} html'
     triggers:
-      - pollscm: "*/30 * * * *"
+      - pollscm: "*/15 * * * *"
     publishers:
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
@@ -70,7 +70,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: holger@layer-acht.org
 
 - defaults:
     name: d-i-manual-html-po2xml
@@ -93,10 +93,10 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>http://anonscm.debian.org/svn/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: http://anonscm.debian.org/svn/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/po/{lang}/.*'
@@ -148,7 +148,7 @@
     description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: http://anonscm.debian.org/svn/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/{lang}/.*'
@@ -170,7 +170,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: holger@layer-acht.org
 
 - defaults:
     name: d-i-manual-pdf-po2xml
@@ -196,7 +196,7 @@
     description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: http://anonscm.debian.org/svn/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/{lang}/.*'
@@ -263,10 +263,10 @@
 - job-template:
     defaults: d-i
     name: '{name}_manual'
-    description: 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
+    description: 'Builds the installation-guide package. Triggered by SVN commits to <code>http://anonscm.debian.org/svn/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: http://anonscm.debian.org/svn/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '{include}'
@@ -278,10 +278,10 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_manual.sh'
     triggers:
-      - pollscm: "*/30 * * * *"
+      - pollscm: "*/15 * * * *"
     publishers:
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: holger@layer-acht.org
 
 - job-template:
     defaults: d-i

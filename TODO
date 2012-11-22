@@ -14,7 +14,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 == General ToDo
 
-* switch git:// and svn:// urls to http:// and thus use proxy. increase polling frequency to 2min.
+* switch git:// urls to http:// and thus use proxy. increase polling frequency to 2min.
 * general housekeeping job:
 ** run calamaris, visitors etc
 ** check for stale processes

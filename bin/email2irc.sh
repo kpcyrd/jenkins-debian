@@ -48,7 +48,8 @@ if [ "$VALID_MAIL" == "true" ] ; then
 	echo $FIRST_LINE >> $LOGFILE
 	if [ ! -z $CHANNEL ] ; then
 		echo "#$CHANNEL: $SUBJECT. $FIRST_LINE" >> $LOGFILE
-		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$SUBJECT. $FIRST_LINE" && echo "kgb informed successfully." >> $LOGFILE
+		MESSAGE=$(echo "$SUBJECT. $FIRST_LINE" | colorit -c /etc/colorit.conf )
+		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" && echo "kgb informed successfully." >> $LOGFILE
 		echo >> $LOGFILE
 	else
 		echo "But no irc channel detected." >> $LOGFILE

@@ -23,9 +23,9 @@ done
 # install packages we need
 # (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
-sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin calamaris visitors \
+sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin calamaris visitors procmail libjson-rpc-perl dict \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck procmail libjson-rpc-perl poxml
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml
 explain "Packages installed."
 
 #

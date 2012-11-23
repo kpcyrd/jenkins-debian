@@ -70,7 +70,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
     name: d-i-manual-html-po2xml
@@ -122,7 +122,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
     name: d-i-manual-pdf
@@ -170,7 +170,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
     name: d-i-manual-pdf-po2xml
@@ -218,8 +218,7 @@
           indexfiles: ''
           keepall: False
       - email:
-          recipients: holger@layer-acht.org
-# FIXME add debian-boot later again, also for html po2xml
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - defaults:
     name: d-i-build
@@ -281,7 +280,7 @@
       - pollscm: "*/15 * * * *"
     publishers:
       - email:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
 
 - job-template:
     defaults: d-i

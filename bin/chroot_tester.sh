@@ -59,29 +59,28 @@ execute_ctmpfile() {
 }
 
 prepare_bootstrap() {
-cat >> $CTMPFILE <<-EOF
+	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
 mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
+apt-get update
 EOF
 }
 
 prepare_install_packages() {
-cat >> $CTMPFILE <<-EOF
+	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
-apt-get update
 apt-get -y install $1
 EOF
 }
 
 prepare_upgrade2() {
-cat >> $CTMPFILE <<-EOF
+	cat >> $CTMPFILE <<-EOF
 echo "deb $MIRROR $1 main contrib non-free" > /etc/apt/sources.list
 $SCRIPT_HEADER
 apt-get update
-#apt-get -y install apt
 apt-get -y upgrade
 apt-get -y dist-upgrade
 apt-get -y dist-upgrade
@@ -100,6 +99,8 @@ install_packages() {
 	echo "Installing extra packages for $1 now."
 	prepare_install_packages $2
 	execute_ctmpfile 
+	prepare_install_packages desktop-base
+	execute_ctmpfile
 }
 
 upgrade2() {

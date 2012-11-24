@@ -48,7 +48,8 @@ if [ "$VALID_MAIL" == "true" ] ; then
 	echo $FIRST_LINE >> $LOGFILE
 	if [ ! -z $CHANNEL ] ; then
 		echo "#$CHANNEL: $SUBJECT. $FIRST_LINE" >> $LOGFILE
-		MESSAGE=$(echo "$SUBJECT. $FIRST_LINE" | colorit -c /etc/colorit.conf )
+		#MESSAGE=$(echo "$SUBJECT. $FIRST_LINE" | colorit -c /etc/colorit.conf )
+		MESSAGE="$SUBJECT. $FIRST_LINE"
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" && echo "kgb informed successfully." >> $LOGFILE
 		echo >> $LOGFILE
 	else

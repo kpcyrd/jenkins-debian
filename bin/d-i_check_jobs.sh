@@ -109,7 +109,7 @@ for DIRECTORY in * ; do
 		continue
 	else
 		for FORMAT in pdf html ; do
-			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}_po2xml ] ; then
+			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT} ] ; then
 				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
 				FAIL=true
 				#

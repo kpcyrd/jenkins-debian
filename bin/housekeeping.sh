@@ -24,7 +24,7 @@ echo
 vnstat
 
 CHROOT_PATTERN="/chroots/chroot-tests-*"
-HOUSE=$(ls $CHROOT_PATTERN)
+HOUSE=$(ls $CHROOT_PATTERN 2>/dev/null)
 if [ "$HOUSE" != "" ] ; then
 	figlet "Warning:"
 	echo

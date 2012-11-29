@@ -61,7 +61,7 @@
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - htmlpublisher:
@@ -113,7 +113,7 @@
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - htmlpublisher:
@@ -161,7 +161,7 @@
       - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} pdf'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - htmlpublisher:
@@ -209,7 +209,7 @@
       - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} pdf po2xml'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - htmlpublisher:
@@ -292,7 +292,7 @@
       - timed: "0 5 * * *"
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - htmlpublisher:

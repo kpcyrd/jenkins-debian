@@ -70,6 +70,7 @@ build_language() {
 	done
 	cd ../..
 	svn revert manual -R
+	rmdir $FORMAT || true
 }
 
 po_cleanup() {

@@ -38,8 +38,8 @@ I would prefer to run a jenkins package from wheezy-backports.
 * Read-only configurations
 * SCM Sync Configuration Plugin
 * Dependency Graph Viewer Plugin
-* Nested View Plugin
 * View Job Filters
+* Console Column Plugin
 
 * Sidebar Link
 * Green Balls

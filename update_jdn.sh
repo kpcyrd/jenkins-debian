@@ -29,6 +29,11 @@ sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat dev
 explain "Packages installed."
 
 #
+# as long as d-i_manual_*_(html|pdf) is build on the host system...
+#
+sudo apt-get build-dep installation-guide
+
+#
 # deploy package configuration in /etc
 #
 cd $BASEDIR

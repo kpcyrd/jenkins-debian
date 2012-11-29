@@ -71,7 +71,7 @@ As documented in manual/doc/translations_po.txt:
 * inform debian-devel@
 
 ----
-<h01ger> for "bloated" squeeze-wheezy (or whatever) upgrade tests: debootstrap + apt-get install openoffice.org gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox
+<h01ger> for "bloated" squeeze-wheezy (or whatever) upgrade tests: debootstrap + apt-get install openoffice.org gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox texlive-full asciidoc
 <h01ger> anything else for that list?
 <algernon> build deps for all of those?
 <h01ger> i'll try that, thanks

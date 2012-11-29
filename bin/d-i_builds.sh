@@ -45,7 +45,7 @@ cleanup_all() {
 	sudo umount -l $CHROOT_TARGET/run/lock || true
 	sudo umount -l $CHROOT_TARGET/run/shm || true
 	sudo umount -l $CHROOT_TARGET/run || true
-	sudo rm -rf $CHROOT_TARGET
+	sudo rm -rf --one-file-system $CHROOT_TARGET
 }
 
 execute_ctmpfile() {

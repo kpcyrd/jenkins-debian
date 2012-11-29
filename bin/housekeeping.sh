@@ -33,5 +33,7 @@ if [ "$HOUSE" != "" ] ; then
 	exit 1
 fi
 
+df |grep tmpfs > /dev/null || echo "Warning: no tmpfs mounts in use. Please investigate the host system."
+
 echo "No problems found, all seems good."
 figlet "Ok."

@@ -39,7 +39,8 @@ pdebuild_package() {
 	# build
 	#
 	cd manual
-	pdebuild --use-pdebuild-internal
+	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU"
 	cd ..
 }
 

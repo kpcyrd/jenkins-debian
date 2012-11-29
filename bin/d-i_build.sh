@@ -54,7 +54,8 @@ pdebuild_package() {
 	#
 	# build
 	#
-	pdebuild --use-pdebuild-internal
+	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU"
 }
 
 init_workspace

@@ -60,6 +60,7 @@
     publishers:
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
+          treshold: 'UNSTABLE'
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
@@ -110,6 +111,7 @@
     publishers:
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
+          treshold: 'UNSTABLE'
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'

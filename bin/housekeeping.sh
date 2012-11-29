@@ -14,7 +14,8 @@ echo
 df -h
 echo
 # FIXME: make this a general and a specific housekeeping job:
-for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/lib/jenkins/jobs/* /var/cache/pbuilder/build/ ; do
+JOB_PREFIXES=$(ls /var/lib/jenkins/jobs/* -d | cut -d "_" -f1|sort -u)
+for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ $JOB_PREFIXES ; do
 	sudo du -sh $DIR
 done
 echo

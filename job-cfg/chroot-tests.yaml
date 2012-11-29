@@ -63,45 +63,6 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
 
-- defaults:
-    name: chroot-tests+four-trigger
-    description: '{my_description}{do_not_edit}'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
-    builders:
-      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
-    publishers:
-      - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'false'
-          fail_on_error: 'false'
-      - trigger:
-          project: '{my_1st_trigger}'
-      - trigger:
-          project: '{my_2nd_trigger}'
-      - trigger:
-          project: '{my_3rd_trigger}'
-      - trigger:
-          project: '{my_4th_trigger}'
-      - email:
-          recipients: jenkins+debian-qa holger@layer-acht.org
-    properties:
-      - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: http://jenkins.debian.net/view/chroot-tests/
-          text: All chroot-test jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.com
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
-
 - job-template:
     defaults: chroot-tests
     name: '{name}_housekeeping'
@@ -116,7 +77,7 @@
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - trigger:
-          project: '{my_1st_trigger}, {my_2nd_trigger}, {my_3rd_trigger}'
+          project: '{my_trigger}'
           threshold: 'UNSTABLE'
       - email:
           recipients: jenkins+debian-qa holger@layer-acht.org
@@ -146,7 +107,7 @@
     name: '{name}_squeeze_install_xfce_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests+four-trigger
+    defaults: chroot-tests+trigger
     name: '{name}_squeeze_bootstrap_upgrade_to_wheezy'
 
 - job-template:
@@ -166,7 +127,7 @@
     name: '{name}_wheezy_install_xfce'
 
 - job-template:
-    defaults: chroot-tests+four-trigger
+    defaults: chroot-tests+trigger
     name: '{name}_wheezy_bootstrap'
 
 - project:
@@ -202,10 +163,7 @@
       - '{name}_squeeze_bootstrap_upgrade_to_wheezy':
          chroot_tester_params: 'squeeze none wheezy'
          my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
-         my_1st_trigger: 'chroot-test_squeeze_install_gnome_upgrade_to_wheezy'
-         my_2nd_trigger: 'chroot-test_squeeze_install_kde_upgrade_to_wheezy'
-         my_3rd_trigger: 'chroot-test_squeeze_install_lxde_upgrade_to_wheezy'
-         my_4th_trigger: 'chroot-test_squeeze_install_xfce_upgrade_to_wheezy'
+         my_trigger: 'chroot-test_squeeze_install_gnome_upgrade_to_wheezy, chroot-test_squeeze_install_kde_upgrade_to_wheezy, chroot-test_squeeze_install_lxde_upgrade_to_wheezy, chroot-test_squeeze_install_xfce_upgrade_to_wheezy'
 
       - '{name}_wheezy_install_gnome':
          chroot_tester_params: 'wheezy gnome'
@@ -226,14 +184,9 @@
       - '{name}_wheezy_bootstrap':
          chroot_tester_params: 'wheezy'
          my_description: 'Debootstrap wheezy.'
-         my_1st_trigger: 'chroot-test_wheezy_install_gnome'
-         my_2nd_trigger: 'chroot-test_wheezy_install_kde'
-         my_3rd_trigger: 'chroot-test_wheezy_install_lxde'
-         my_4th_trigger: 'chroot-test_wheezy_install_xfce'
+         my_trigger: 'chroot-test_wheezy_install_gnome, chroot-test_wheezy_install_kde, chroot-test_wheezy_install_lxde, chroot-test_wheezy_install_xfce'
 
       - '{name}_housekeeping':
          my_description: 'Cleanup so that there is a predictable environment.'
-         my_1st_trigger: 'chroot-test_sid_bootstrap'
-         my_2nd_trigger: 'chroot-test_wheezy_bootstrap'
-         my_3rd_trigger: 'chroot-test_squeeze_bootstrap_upgrade_to_wheezy'
+         my_trigger: 'chroot-test_sid_bootstrap, chroot-test_wheezy_bootstrap, chroot-test_squeeze_bootstrap_upgrade_to_wheezy'
 

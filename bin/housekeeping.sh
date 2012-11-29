@@ -1,4 +1,5 @@
 #/bin/bash
+# FIXME: make this a general and a specific housekeeping job:
 
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
@@ -10,17 +11,17 @@ export LC_ALL=C
 
 echo 
 uptime
+
 echo
 df -h
+
 echo
-# FIXME: make this a general and a specific housekeeping job:
-JOB_PREFIXES=$(ls /var/lib/jenkins/jobs/* -d | cut -d "_" -f1|sort -u)
-for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ $JOB_PREFIXES ; do
-	sudo du -sh $DIR
+for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ ; do
+	sudo du -sh $DIR 2>/dev/null
 done
+
 echo
 vnstat
-echo
 
 CHROOT_PATTERN="/chroots/chroot-tests-*"
 HOUSE=$(ls $CHROOT_PATTERN)
@@ -34,7 +35,9 @@ if [ "$HOUSE" != "" ] ; then
 	exit 1
 fi
 
-df |grep tmpfs > /dev/null || echo "Warning: no tmpfs mounts in use. Please investigate the host system."
+# FIXME: no tmpfs should really mean exit 1 not 0
+df |grep tmpfs > /dev/null || ( echo "Warning: no tmpfs mounts in use. Please investigate the host system." ; exit 0 )
 
+echo
 echo "No problems found, all seems good."
 figlet "Ok."

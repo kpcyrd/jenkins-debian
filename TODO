@@ -77,7 +77,8 @@ As documented in manual/doc/translations_po.txt:
 <h01ger> i'll try that, thanks
 <pabs> h01ger: how about all of the blends?
 <h01ger> pabs, if you could give me concrete (meta-)package names to install, that would be great+very helpful
-<h01ger> for ^education* i can find them myself
+<h01ger> for ^education* and ^debian-edu* i can find them myself
+<pabs> h01ger: hmm, doesn't seem to be easy to find that list, but here are a few: ezgo-* med-* science-* junior-* gis-*
 ----
 
 === webchecks*

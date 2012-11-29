@@ -116,13 +116,7 @@
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - trigger:
-          project: '{my_1st_trigger}'
-          threshold: 'UNSTABLE'
-      - trigger:
-          project: '{my_2nd_trigger}'
-          threshold: 'UNSTABLE'
-      - trigger:
-          project: '{my_3rd_trigger}'
+          project: '{my_1st_trigger} {my_2nd_trigger} {my_3rd_trigger}'
           threshold: 'UNSTABLE'
       - email:
           recipients: jenkins+debian-qa holger@layer-acht.org

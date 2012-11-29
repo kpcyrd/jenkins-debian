@@ -20,6 +20,9 @@ ok /^dpkg: warning: overriding problem because --force enabled:/
 ok /^dpkg-distaddfile: warning: File::FcntlLock not available; using flock which is not NFS-safe/
 ok /^WARNING: If you have created or modified any DOS 6/
 
+# make these d-i_manual_$lang_pdf job builds "succeed" even though the build then basically is a no-op
+ok /^Warning: pdf and ps formats are currently not supported for Chinese, Greek, Japanese and Vietnamese/
+
 # making http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
 ok /^WARNING: .+: spurious newline removed/
 

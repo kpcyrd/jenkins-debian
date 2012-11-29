@@ -81,7 +81,7 @@ let DEFINED_TRIGGERS=DEFINED_CHROOT_TRIGGERS+DEFINED_DI_TRIGGERS
 CONFIGURED_TRIGGERS=$(grep -C 1 \<hudson.tasks.BuildTrigger /var/lib/jenkins/jobs/*/config.xml|grep child|wc -l)
 if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
 	figlet Warning
-	explain "Number of defined triggers ($DEFINED_TRIGGERS) differs from configured triggers ($CONFIGURED_TRIGGERS), please investigate."
+	explain "Number of defined triggers ($DEFINED_TRIGGERS) differs from currently configured triggers ($CONFIGURED_TRIGGERS), please investigate."
 fi
 
 #

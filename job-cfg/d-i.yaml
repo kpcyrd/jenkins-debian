@@ -64,13 +64,11 @@
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
-      - htmlpublisher:
-          name: 'd-i_manual_{lang}.html'
-          directory: 'html'
-          indexfiles: ''
-          keepall: False
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - archive:
+          artifacts: html/**/*.*
+          latest_only: true
 
 - defaults:
     name: d-i-manual-html-po2xml
@@ -116,13 +114,11 @@
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
-      - htmlpublisher:
-          name: 'd-i_manual_{lang}.html'
-          directory: 'html'
-          indexfiles: ''
-          keepall: False
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - archive:
+          artifacts: html/**/*.*
+          latest_only: true
 
 - defaults:
     name: d-i-manual-pdf
@@ -164,13 +160,11 @@
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
-      - htmlpublisher:
-          name: 'd-i_manual_{lang}.pdf'
-          directory: 'pdf'
-          indexfiles: ''
-          keepall: False
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - archive:
+          artifacts: pdf/**/*.*
+          latest_only: true
 
 - defaults:
     name: d-i-manual-pdf-po2xml
@@ -212,13 +206,11 @@
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable_on_warning: 'true'
           fail_on_error: 'true'
-      - htmlpublisher:
-          name: 'd-i_manual_{lang}.pdf'
-          directory: 'pdf'
-          indexfiles: ''
-          keepall: False
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - archive:
+          artifacts: pdf/**/*.*
+          latest_only: true
 
 - defaults:
     name: d-i-build
@@ -258,6 +250,9 @@
           fail_on_error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - archive:
+          artifacts: *_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes
+          latest_only: true
 
 - job-template:
     defaults: d-i
@@ -281,6 +276,9 @@
     publishers:
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - archive:
+          artifacts: *_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes
+          latest_only: true
 
 - job-template:
     defaults: d-i

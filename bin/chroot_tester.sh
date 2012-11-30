@@ -72,7 +72,7 @@ EOF
 prepare_install_packages() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
-apt-get -y install $1
+apt-get -y install $@
 EOF
 }
 
@@ -97,7 +97,8 @@ bootstrap() {
 
 install_packages() {
 	echo "Installing extra packages for $1 now."
-	prepare_install_packages $2
+	shift
+	prepare_install_packages $@
 	execute_ctmpfile 
 	prepare_install_packages desktop-base
 	execute_ctmpfile

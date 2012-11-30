@@ -100,8 +100,6 @@ install_packages() {
 	shift
 	prepare_install_packages $@
 	execute_ctmpfile 
-	prepare_install_packages desktop-base
-	execute_ctmpfile
 }
 
 upgrade2() {
@@ -113,19 +111,27 @@ upgrade2() {
 trap cleanup_all INT TERM EXIT
 
 case $1 in
-	squeeze)bootstrap squeeze;;
-	wheezy)	bootstrap wheezy;;
-	sid)	bootstrap sid;;
+	squeeze)	DISTRO="squeeze"
+			OFFICE="openoffice.org"
+			;;
+	wheezy)		DISTRO="wheezy"
+			OFFICE="libreoffice"
+			;;
+	sid)		DISTRO="sid"
+			OFFICE="libreoffice"
+			;;
 	*)	echo "unsupported distro." ; exit 1 ;;
 esac
+bootstrap $DISTRO
 
 if [ "$2" != "" ] ; then
 	case $2 in
 		none)	;;
-		gnome)	install_packages gnome gnome ;;
-		kde)	install_packages kde kde-plasma-desktop ;;
-		xfce)	install_packages xfce xfce4 ;;
-		lxde)	install_packages lxde lxde ;;
+		gnome)	install_packages gnome gnome desktop-base ;;
+		kde)	install_packages kde kde-plasma-desktop desktop-base ;;
+		xfce)	install_packages xfce xfce4 desktop-base;;
+		lxde)	install_packages lxde lxde desktop-base ;;
+		full_desktop)	install_packages full_desktop $OFFICE desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox texlive-full asciidoc ;;
 		*)	echo "unsupported component." ; exit 1 ;;
 	esac
 fi

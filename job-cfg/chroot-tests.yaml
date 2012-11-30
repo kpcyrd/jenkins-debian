@@ -87,6 +87,22 @@
     name: '{name}_sid_install_gnome'
 
 - job-template:
+    defaults: chroot-tests
+    name: '{name}_sid_install_kde'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}_sid_install_lxde'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}_sid_install_xfce'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}_sid_install_full_desktop'
+
+- job-template:
     defaults: chroot-tests+trigger
     name: '{name}_sid_bootstrap'
 
@@ -105,6 +121,10 @@
 - job-template:
     defaults: chroot-tests
     name: '{name}_squeeze_install_xfce_upgrade_to_wheezy'
+
+- job-template:
+    defaults: chroot-tests
+    name: '{name}_squeeze_install_full_desktop_upgrade_to_wheezy'
 
 - job-template:
     defaults: chroot-tests+trigger
@@ -127,6 +147,10 @@
     name: '{name}_wheezy_install_xfce'
 
 - job-template:
+    defaults: chroot-tests
+    name: '{name}_wheezy_install_full_desktop'
+
+- job-template:
     defaults: chroot-tests+trigger
     name: '{name}_wheezy_bootstrap'
 
@@ -139,10 +163,26 @@
          chroot_tester_params: 'sid gnome'
          my_description: 'Debootstrap sid, then install GNOME.'
 
+      - '{name}_sid_install_kde':
+         chroot_tester_params: 'sid kde'
+         my_description: 'Debootstrap sid, then install KDE.'
+
+      - '{name}_sid_install_lxde':
+         chroot_tester_params: 'sid lxde'
+         my_description: 'Debootstrap sid, then install LXDE.'
+
+      - '{name}_sid_install_xfce':
+         chroot_tester_params: 'sid xfce'
+         my_description: 'Debootstrap sid, then install XFCE.'
+
+      - '{name}_sid_install_full_desktop':
+         chroot_tester_params: 'sid full_desktop'
+         my_description: 'Debootstrap sid, then install four desktop environments and the most commonly used applications and packages.'
+
       - '{name}_sid_bootstrap':
          chroot_tester_params: 'sid'
          my_description: 'Debootstrap sid.'
-         my_trigger: 'chroot-test_sid_install_gnome'
+         my_trigger: 'chroot-test_sid_install_gnome, chroot-test_sid_install_kde, chroot-test_sid_install_lxde, chroot-test_sid_install_xfce, chroot-test_sid_install_full_desktop'
 
       - '{name}_squeeze_install_gnome_upgrade_to_wheezy':
          chroot_tester_params: 'squeeze gnome wheezy'
@@ -160,10 +200,14 @@
          chroot_tester_params: 'squeeze xfce wheezy'
          my_description: 'Debootstrap squeeze, install KFCE then upgrade to wheezy.'
 
+      - '{name}_squeeze_install_full_desktop_upgrade_to_wheezy':
+         chroot_tester_params: 'sid full_desktop wheezy'
+         my_description: 'Debootstrap squeeze, then install four desktop environments and the most commonly used applications and packages, then upgrade to wheezy.'
+
       - '{name}_squeeze_bootstrap_upgrade_to_wheezy':
          chroot_tester_params: 'squeeze none wheezy'
          my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
-         my_trigger: 'chroot-test_squeeze_install_gnome_upgrade_to_wheezy, chroot-test_squeeze_install_kde_upgrade_to_wheezy, chroot-test_squeeze_install_lxde_upgrade_to_wheezy, chroot-test_squeeze_install_xfce_upgrade_to_wheezy'
+         my_trigger: 'chroot-test_squeeze_install_gnome_upgrade_to_wheezy, chroot-test_squeeze_install_kde_upgrade_to_wheezy, chroot-test_squeeze_install_lxde_upgrade_to_wheezy, chroot-test_squeeze_install_xfce_upgrade_to_wheezy, chroot-test_squeeze_install_full_desktop_upgrade_to_wheezy'
 
       - '{name}_wheezy_install_gnome':
          chroot_tester_params: 'wheezy gnome'
@@ -181,10 +225,14 @@
          chroot_tester_params: 'wheezy lxde'
          my_description: 'Debootstrap wheezy, then install LXDE.'
 
+      - '{name}_wheezy_install_full_desktop':
+         chroot_tester_params: 'wheezy full_desktop'
+         my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages.'
+
       - '{name}_wheezy_bootstrap':
          chroot_tester_params: 'wheezy'
          my_description: 'Debootstrap wheezy.'
-         my_trigger: 'chroot-test_wheezy_install_gnome, chroot-test_wheezy_install_kde, chroot-test_wheezy_install_lxde, chroot-test_wheezy_install_xfce'
+         my_trigger: 'chroot-test_wheezy_install_gnome, chroot-test_wheezy_install_kde, chroot-test_wheezy_install_lxde, chroot-test_wheezy_install_xfce, chroot-test_wheezy_install_full_desktop'
 
       - '{name}_housekeeping':
          my_description: 'Cleanup so that there is a predictable environment.'

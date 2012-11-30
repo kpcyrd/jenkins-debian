@@ -36,7 +36,12 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 ** triggers the install_gnome job on success
 * chroot-test_sid_install_gnome
 ** debootstrap a sid chroot and install gnome
-* chroot-test_sid_install_kde, chroot-test_sid_install_xfce and chroot-test_sid_install_lxce _do not exit yet_.
+* chroot-test_sid_install_kde
+** debootstrap a sid chroot and install kde
+* chroot-test_sid_install_lxde
+** debootstrap a sid chroot and install lxde
+* chroot-test_sid_install_xfce
+** debootstrap a sid chroot and install xfce
 * chroot-test_squeeze_bootstrap_upgrade_to_wheezy
 ** debootstrap a squeeze chroot and upgrade it to wheezy
 ** triggers the upgrade_(gnome|kde|lxde|xfce) jobs on success
@@ -59,6 +64,7 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 ** debootstrap a wheezy chroot and install lxde
 * chroot-test_wheezy_install_xfce
 ** debootstrap a wheezy chroot and install xfce
+#FIXME: explain full_desktop here
 
 === debian-installer jobs
 

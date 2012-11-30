@@ -76,6 +76,13 @@ apt-get -y install $@
 EOF
 }
 
+prepare_install_build_depends() {
+	cat >> $CTMPFILE <<-EOF
+$SCRIPT_HEADER
+apt-get -y build-dep $@
+EOF
+}
+
 prepare_upgrade2() {
 	cat >> $CTMPFILE <<-EOF
 echo "deb $MIRROR $1 main contrib non-free" > /etc/apt/sources.list
@@ -102,6 +109,13 @@ install_packages() {
 	execute_ctmpfile 
 }
 
+install_build_depends() {
+	echo "Installing build depends for $1 now."
+	shift
+	prepare_install_build_depends $@
+	execute_ctmpfile
+}
+
 upgrade2() {
 	echo "Upgrading to $1 now."
 	prepare_upgrade2 $1
@@ -123,15 +137,24 @@ case $1 in
 	*)	echo "unsupported distro." ; exit 1 ;;
 esac
 bootstrap $DISTRO
+FULL_DESKTOP="$OFFICE desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox texlive-full asciidoc vim emacs"
 
 if [ "$2" != "" ] ; then
 	case $2 in
-		none)	;;
-		gnome)	install_packages gnome gnome desktop-base ;;
-		kde)	install_packages kde kde-plasma-desktop desktop-base ;;
-		xfce)	install_packages xfce xfce4 desktop-base;;
-		lxde)	install_packages lxde lxde desktop-base ;;
-		full_desktop)	install_packages full_desktop $OFFICE desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox texlive-full asciidoc ;;
+		none)		;;
+		gnome)		install_packages gnome gnome desktop-base
+				;;
+		kde)		install_packages kde kde-plasma-desktop desktop-base
+				;;
+		xfce)		install_packages xfce xfce4 desktop-base
+				;;
+		lxde)		install_packages lxde lxde desktop-base
+				;;
+		full_desktop)	install_packages full_desktop $FULL_DESKTOP
+				;;
+		developer)	install_packages developer $FULL_DESKTOP
+				install_build_depends developer $FULL_DESKTOP
+				;;
 		*)	echo "unsupported component." ; exit 1 ;;
 	esac
 fi

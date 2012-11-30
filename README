@@ -64,7 +64,7 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 ** debootstrap a wheezy chroot and install lxde
 * chroot-test_wheezy_install_xfce
 ** debootstrap a wheezy chroot and install xfce
-#FIXME: explain full_desktop here
+#FIXME: explain full_desktop and developer here
 
 === debian-installer jobs
 

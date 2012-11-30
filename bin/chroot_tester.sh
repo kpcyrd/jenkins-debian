@@ -134,7 +134,9 @@ case $1 in
 	sid)		DISTRO="sid"
 			OFFICE="libreoffice"
 			;;
-	*)	echo "unsupported distro." ; exit 1 ;;
+	*)		echo "unsupported distro."
+			exit 1
+			;;
 esac
 bootstrap $DISTRO
 FULL_DESKTOP="$OFFICE desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox texlive-full asciidoc vim emacs"
@@ -155,7 +157,9 @@ if [ "$2" != "" ] ; then
 		developer)	install_packages developer $FULL_DESKTOP
 				install_build_depends developer $FULL_DESKTOP
 				;;
-		*)	echo "unsupported component." ; exit 1 ;;
+		*)		echo "unsupported component."
+				exit 1
+				;;
 	esac
 fi
 

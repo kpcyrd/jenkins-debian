@@ -55,6 +55,9 @@ po2xml() {
 }
 
 build_language() {
+	#
+	# this needs apt-get build-dep installation guide installed
+	#
 	FORMAT=$2
 	# if $FORMAT is a directoy and it's string length greater or equal then 3 (so not "." or "..")
 	if [ -d "$FORMAT" ] && [ ${#FORMAT} -ge 3 ]; then

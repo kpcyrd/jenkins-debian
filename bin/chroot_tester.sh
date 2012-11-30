@@ -46,9 +46,9 @@ cleanup_all() {
 		exit 1
 	fi
 	sudo umount -l $CHROOT_TARGET/proc || true
-	sudo umount -l $CHROOT_TARGET/run/lock || true
-	sudo umount -l $CHROOT_TARGET/run/shm || true
-	sudo umount -l $CHROOT_TARGET/run || true
+	#sudo umount -l $CHROOT_TARGET/run/lock || true
+	#sudo umount -l $CHROOT_TARGET/run/shm || true
+	#sudo umount -l $CHROOT_TARGET/run || true
 	sudo rm -rf --one-file-system $CHROOT_TARGET
 }
 
@@ -65,6 +65,7 @@ mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
+echo "deb-src $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
 apt-get update
 EOF
 }
@@ -98,7 +99,7 @@ EOF
 bootstrap() {
 	echo "Bootstraping $1 into $CHROOT_TARGET now."
 	sudo debootstrap $1 $CHROOT_TARGET $MIRROR
-	prepare_bootstrap
+	prepare_bootstrap $1
 	execute_ctmpfile 
 }
 

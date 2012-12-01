@@ -35,8 +35,8 @@ if [ -f $STATEFILE ] && [ "$1" = "" ] ; then
 	exit 0
 fi
 
-# delete statefile if it's older than 30min
-if test `find $STATEFILE -mmin +30`
+# delete statefile if it's older than $update_interval set in /etc/munin/plugin-conf.d/jenkins
+if test $(find $STATEFILE -mmin +$update_interval) ; then
 	rm -f $STATEFILE
 fi
 

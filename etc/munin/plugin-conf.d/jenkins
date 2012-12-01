@@ -1,0 +1,2 @@
+[jenkins_*]
+env.update_interval 45

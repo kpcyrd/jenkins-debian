@@ -29,10 +29,20 @@ if [ "$1" = "autoconf" ]; then
         exit 0
 fi
 
+STATEFILE=$MUNIN_PLUGSTATE/$(basename $0)
+if [ -f $STATEFILE ] && [ "$1" = "" ] ; then
+	cat $STATEFILE
+	exit 0
+fi
+
+if [ "$1" = "update" ] ; then
+	rm -f $STATEFILE
+fi
+
 JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -f -u)
 if [ "$1" = "config" ]; then
 
-        echo 'graph_title Jenkins Build results'
+        echo 'graph_title Jenkins Builds results'
         echo 'graph_args --base 1000 -l 0 '
         echo 'graph_scale no'
         echo 'graph_total total'
@@ -59,6 +69,6 @@ for PREFIX in $JOB_PREFIXES ; do
 		else
 			NR=$(echo -e "$PREFIX_RESULTS" | grep -i -c $STATE)
 		fi
-		echo "jenkins_builds_results_${PREFIX}_${STATE}.value $NR"
+		echo "jenkins_builds_results_${PREFIX}_${STATE}.value $NR" | tee -a $STATEFILE
 	done
 done

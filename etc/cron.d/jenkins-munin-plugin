@@ -1,8 +1,0 @@
-#
-# cron-jobs for jenkins munin plugins
-#
-
-MAILTO=root
-
-5,35 * * * *	root   cd /etc/munin/plugins/ ; for plugin in jenkins* ; do /usr/sbin/munin-run $plugin update ; done
-

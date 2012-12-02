@@ -27,14 +27,14 @@ export http_proxy="http://localhost:3128"
 #
 # init
 #
-rm -f results
-mkdir -p results
-cd results
 DISPLAY=$1
 NAME=$2
 IMAGE_URL=$3
-IMAGE=$(basename $IMAGE_URL)
+IMAGE=$(pwd)./$(basename $IMAGE_URL)
 IMAGE_MNT="/media/cd-$IMAGE.iso"
+rm -rf results
+mkdir -p results
+cd results
 
 cleanup_all() {
 	#
@@ -44,7 +44,7 @@ cleanup_all() {
 	#
 	# cleanup
 	#
-	umount $IMAGE_MNT
+	sudo umount $IMAGE_MNT
 	sudo rm $NAME.qcow
 	#
 	# create video
@@ -90,13 +90,13 @@ monitor_installation() {
 
 trap cleanup_all INT TERM EXIT
 
-# only wget if $IMAGE is older than a week (60*24*7=10080)
+# only download if $IMAGE is older than a week (60*24*7=10080)
 if test $(find $IMAGE -mmin +10080) ; then
 	rm $IMAGE
-	wget $IMAGE_URL
+	curl $IMAGE_URL > $IMAGE
 fi
 sudo mkdir -p $IMAGE_MNT
-mount -o loop $IMAGE $IMAGE_MNT
+sudo mount -o loop $IMAGE $IMAGE_MNT
 bootstrap 
 monitor_installation
 

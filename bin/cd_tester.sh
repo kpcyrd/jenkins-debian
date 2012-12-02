@@ -116,6 +116,14 @@ monitor_installation() {
 		if [ $(($NR % 150)) -eq 0 ] ; then
 			vncdo -s localhost:$DISPLAY key ctrl
 		fi
+		# if this screenshot is the same as the one 400 screenshots ago, let stop this
+		if [ $(($NR % 100)) -eq 0 ] ; then
+			let OLD=nr-400
+			if test $(diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm 1>/dev/null) ; then
+				break
+			fi
+		fi
+
 	done
 	set -x
 	if [ $NR -eq 9000 ] ; then
@@ -130,7 +138,7 @@ trap cleanup_all INT TERM EXIT
 #
 if [ ! -z $IMAGE ] ; then
 	# only download if $IMAGE is older than a week (60*24*7=10080) (+9500 is a bit less than a week)
-	if test $(find $IMAGE -mmin +9500) || ! test -f $IMAGE ; then
+	if test $(find $IMAGE ! -mmin +9500) || ! test -f $IMAGE ; then
 		curl $URL > $IMAGE
 	fi
 	sudo mkdir -p $IMAGE_MNT
@@ -140,7 +148,7 @@ else
 	# else netboot gtk
 	#
 	# only download if $KERNEL is older than a week...
-	if test $(find $KERNEL -mmin +9500) || ! test -f $KERNEL ; then
+	if test $(find $KERNEL ! -mmin +9500) || ! test -f $KERNEL ; then
 		curl $URL/$KERNEL > $KERNEL
 		curl $URL/$INITRD > $INITRD
 	fi

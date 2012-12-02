@@ -37,12 +37,18 @@ else
 	KERNEL=linux
 	INITRD=initrd.gz
 fi
+
+#
+# define workspace + results
+#
 rm -rf results
 mkdir -p results
-cd results
+WORKSPACE=$(pwd)
+RESULTS=$WORKSPACE/results
 
 cleanup_all() {
 	set -x
+	cd $RESULTS
 	#
 	# create video
 	#
@@ -55,7 +61,7 @@ cleanup_all() {
 	#
 	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d " " -f1)
 	sleep 0.3s
-	rm $NAME.qcow
+	rm $WORKSPACE/$NAME.qcow
 	#
 	# cleanup
 	#
@@ -63,6 +69,7 @@ cleanup_all() {
 }
 
 bootstrap() {
+	cd $WORKSPACE
 	echo "Doing cd tests for $NAME now."
 	qemu-img create -f qcow $NAME.qcow 20g
 	case $NAME in
@@ -84,6 +91,7 @@ bootstrap() {
 }
 
 monitor_installation() {
+	cd $RESULTS
 	sleep 2
 	echo "Taking screenshots every 2secs now, until the installation is finished or 5h have passed"
 	NR=0

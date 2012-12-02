@@ -1,6 +1,6 @@
 
 - defaults:
-    name: cd-tests
+    name: cd-test
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -8,9 +8,9 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     triggers:
-      - timed: 'my_time'
+      - timed: "{my_timed}"
     builders:
-      - shell: '/srv/jenkins/bin/cd_tester.sh {cd_tester_params}'
+      - shell: "'{my_shell}'"
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
@@ -19,7 +19,7 @@
       - email:
           recipients: holger@layer-acht.org
       - archive:
-          artifacts: 'results/**/*.*'
+          artifacts: 'results/*.*'
           latest_only: false
     properties:
       - sidebar:
@@ -36,15 +36,15 @@
           icon: /userContent/images/profitbricks-24x24.png
 
 - job-template:
-    defaults: cd-tests
-    name: '{name}_debian-edu-wheezy'
+    defaults: cd-test
+    name: '{name}_debian_edu_wheezy'
 
 - project:
     name: cd-test
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
     jobs:
-      - '{name}_debian-edu-wheezy':
-         cd_tester_params: '1 debian-edu-wheezy http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+      - '{name}_debian_edu_wheezy':
+         my_shell: '/srv/jenkins/bin/cd_tester.sh 1 debian-edu-wheezy http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of Debian Edu Wheezy standalone - via d-i preseeding.'
-         my_time: '23 42 * * *'
+         my_timed: '42 23 * * *'
 

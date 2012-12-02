@@ -92,7 +92,7 @@ bootstrap() {
 
 monitor_installation() {
 	cd $RESULTS
-	sleep 2
+	sleep 4
 	echo "Taking screenshots every 2secs now, until the installation is finished or 5h have passed"
 	NR=0
 	while [ $NR -lt 9000 ] ; do

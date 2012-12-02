@@ -41,7 +41,7 @@ cleanup_all() {
 	#
 	# create video
 	#
-	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o video.ogv
+	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o cd-test-$NAME.ogv
 	rm snapshot_??????.ppm
 	#
 	# kill qemu

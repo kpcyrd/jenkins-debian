@@ -40,6 +40,8 @@ export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 
 cleanup_all() {
+	# List the processes using the partition
+	fuser -mv $CHROOT_TARGET
 	# test if $CHROOT_TARGET starts with /chroots/
 	if [ "${CHROOT_TARGET:0:9}" != "/chroots/" ] ; then
 		echo "HALP. CHROOT_TARGET = $CHROOT_TARGET"

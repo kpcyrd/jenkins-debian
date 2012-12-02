@@ -52,7 +52,7 @@
          my_description: 'Do a fully automated installation of Debian Edu Wheezy standalone - via d-i preseeding using the netinst CD image.'
          my_timed: '42 23 * * *'
       - '{name}_lxde_wheezy':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 2 lxde http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/cd_tester.sh 2 lxde-wheezy http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding using netboot gtk.'
          my_timed: '42 17 * * *'
 

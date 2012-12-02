@@ -28,10 +28,6 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 
-=== Bugs
-
-* html_publisher doesn't make the results of d-i_manual_* available
-
 === jenkins-job-builder related
 
 * support for gitweb in jobs 
@@ -49,21 +45,13 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 === d-i_manual*
 
 * svn:trunk/manual/po triggers the full build, should trigger language specific builds.
-----
-As documented in manual/doc/translations_po.txt:
-        Use the following commands:
-          1. ./scripts/merge_xml en
-          2. ./scripts/update_pot
-          3. ./scripts/update_po <your language>
-          4. ./scripts/revert_pot
-          5. ./scripts/create_xml <your language>
-----
 * inform translators (and debian-boot for the package)
 
 === d-i_build*
 
 * run scripts/digress/
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
+* build branches? (which?)
 * inform debian-boot@ ?
 
 === chroot-test_*
@@ -83,6 +71,15 @@ As documented in manual/doc/translations_po.txt:
 
 === Test cd-images:
 
+* NIH:
+** weekly edu
+** script $4 qcow image size=
+** edu-wheezy-preseed.base -> sed .cfg (LANG)
+*** pick LANG from predefined list at random
+** wheezy-preseed.base for normal d-i
+** scp -r vm:/var/log/ results/log
+** ssh root@vm shutdown
+** d-i weekly sid: cat /mnt/isolinux/lxde/gtk.cfg
 * try http://www.os-autoinst.org/
 * start client VMs using the profitbricks API: https://www.profitbricks.com/us/media/docs/PB_PublicAPI_EN.pdf (and dhcp)
 ** or probably just run kvm...

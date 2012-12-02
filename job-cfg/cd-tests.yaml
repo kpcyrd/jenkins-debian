@@ -1,0 +1,51 @@
+
+- defaults:
+    name: cd-tests
+    description: '{my_description}{do_not_edit}'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 25
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    triggers:
+      - timed: 'my_time'
+    builders:
+      - shell: '/srv/jenkins/bin/cd_tester.sh {cd_tester_params}'
+    publishers:
+      - logparser:
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
+      - email:
+          recipients: holger@layer-acht.org
+      - archive:
+          artifacts: 'results/**/*.*'
+          latest_only: 'false'
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/cd-tests/
+          text: All cd-test jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+
+- job-template:
+    defaults: cd-tests
+    name: '{name}_debian-edu-wheezy'
+
+- project:
+    name: cd-test
+    do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
+    jobs:
+
+      - '{name}_debian-edu-wheezy':
+         chroot_tester_params: '1 debian-edu-wheezy http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of Debian Edu Wheezy standalone - via d-i preseeding.'
+         my_time: '23 42 * * *'
+

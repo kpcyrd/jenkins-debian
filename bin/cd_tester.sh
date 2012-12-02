@@ -46,7 +46,7 @@ cleanup_all() {
 	#
 	# kill qemu
 	#
-	sudo kill -9 $(ps fax | grep -v grep | grep qemu-system | grep $IMAGE 2>/dev/null | cut -d " " -f1)
+	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep $IMAGE 2>/dev/null | cut -d " " -f1)
 	#
 	# cleanup
 	#

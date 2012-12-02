@@ -87,7 +87,11 @@ monitor_installation() {
 		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
 		rm snapshot_$(printf "%06d" $NR).jpg 
 		let NR=NR+1
-		sleep 2 
+		sleep 2
+		# give signal we are still running
+		if [ $(($NR % 15)) -eq 0 ] ; then
+			date
+		fi
 	done
 	set -x
 }

@@ -49,10 +49,10 @@
     jobs:
       - '{name}_debian_edu_wheezy':
          my_shell: '/srv/jenkins/bin/cd_tester.sh 1 debian-edu-wheezy http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of Debian Edu Wheezy standalone - via d-i preseeding using the netinst CD image.'
+         my_description: 'Do a fully automated installation of Debian Edu Wheezy standalone - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/debian-edu-wheezy-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 23 * * *'
       - '{name}_lxde_wheezy':
          my_shell: '/srv/jenkins/bin/cd_tester.sh 2 lxde-wheezy http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/lxde-wheezy-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 17 * * *'
 

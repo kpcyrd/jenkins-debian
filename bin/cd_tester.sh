@@ -42,16 +42,19 @@ cleanup_all() {
 	# create video
 	#
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o cd-test-$NAME.ogv
+	set +x
 	rm snapshot_??????.ppm
+	set -x
 	#
-	# kill qemu
+	# kill qemu and image
 	#
 	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep $IMAGE 2>/dev/null | cut -d " " -f1)
+	sleep 0.3s
+	rm $NAME.qcow
 	#
 	# cleanup
 	#
 	sudo umount $IMAGE_MNT
-	rm $NAME.qcow
 }
 
 bootstrap() {
@@ -94,6 +97,9 @@ monitor_installation() {
 		fi
 	done
 	set -x
+	if [ $NR -eq 9000 ] ; then
+		echo Warning: running for 5h, forceing termination.
+	fi
 }
 
 trap cleanup_all INT TERM EXIT
@@ -104,7 +110,7 @@ if test $(find $IMAGE -mmin +10080) || ! test -f $IMAGE ; then
 	curl $IMAGE_URL > $IMAGE
 fi
 sudo mkdir -p $IMAGE_MNT
-sudo mount -o loop $IMAGE $IMAGE_MNT
+sudo mount -o loop,ro $IMAGE $IMAGE_MNT
 bootstrap 
 monitor_installation
 

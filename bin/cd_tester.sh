@@ -51,7 +51,7 @@ cleanup_all() {
 	# cleanup
 	#
 	sudo umount $IMAGE_MNT
-	sudo rm $NAME.qcow
+	rm $NAME.qcow
 }
 
 bootstrap() {

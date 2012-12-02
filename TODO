@@ -73,6 +73,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 * NIH:
 ** weekly edu
+** $IMAGE is in results
 ** script $4 qcow image size=
 ** edu-wheezy-preseed.base -> sed .cfg (LANG)
 *** pick LANG from predefined list at random

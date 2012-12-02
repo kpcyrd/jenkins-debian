@@ -10,7 +10,7 @@
     triggers:
       - timed: "{my_timed}"
     builders:
-      - shell: "'{my_shell}'"
+      - shell: "{my_shell}"
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'

@@ -142,6 +142,8 @@ if [ ! -z $IMAGE ] ; then
 		curl $URL > $IMAGE
 	fi
 	sudo mkdir -p $IMAGE_MNT
+	mount | grep -v grep | grep $IMAGE_MNT && sudo umount -l $IMAGE_MNT
+	sleep 1
 	sudo mount -o loop,ro $IMAGE $IMAGE_MNT
 else
 	#

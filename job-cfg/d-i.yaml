@@ -287,7 +287,7 @@
 - job-template:
     defaults: d-i
     name: '{name}_parse_build_logs'
-    description: 'Parses d-i build logs from <code>http://d-i.debian.org/daily-images/build-logs.html</code>daily. {do_not_edit}'
+    description: 'Parses d-i build logs from <code>http://d-i.debian.org/daily-images/build-logs.html</code> daily. {do_not_edit}'
     builders:
       - shell: '/srv/jenkins/bin/d-i_parse_logs.sh http://d-i.debian.org/daily-images/build-logs.html'
     triggers:

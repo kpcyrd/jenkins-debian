@@ -53,7 +53,7 @@ cleanup_all() {
 	#
 	# kill qemu and image
 	#
-	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep $IMAGE 2>/dev/null | cut -d " " -f1)
+	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d " " -f1)
 	sleep 0.3s
 	rm $NAME.qcow
 	#
@@ -68,11 +68,11 @@ bootstrap() {
 	case $NAME in
 		debian-edu-wheezy)
 				echo "fire up qemu now..."
-				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/$NAME-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		lxde-wheezy)
 				echo "fire up qemu now..."
-				sudo qemu-system-x86_64 -hda $NAME.qcow -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde url=http://10.0.2.2/userContent/$NAME-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
+				sudo qemu-system-x86_64 -hda $NAME.qcow -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				# wheezy: qemu-system-x86_64 -cdrom debian-6.0.6-amd64-businesscard.iso -hda debian.qcow -boot d -m 2048 -display vnc=localhost:1 --kernel /mnt/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/preseed.cfg vga=788 initrd=/install.amd/initrd.gz" --initrd /mnt/install.amd/initrd.gz
 				# kernel /install.amd/vmlinuz
 				# append desktop=lxde video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet
@@ -92,7 +92,7 @@ monitor_installation() {
 		#
 		# break if qemu-system has finished
 		#
-		if [ $(ps fax | grep -v grep | grep qemu-system | grep $IMAGE 2>/dev/null | wc -l) -eq 0 ] ; then
+		if [ $(ps fax | grep -v grep | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | wc -l) -eq 0 ] ; then
 			break
 		fi
 		vncsnapshot -quiet -allowblank localhost:$DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null

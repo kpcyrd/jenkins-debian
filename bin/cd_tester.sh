@@ -91,8 +91,8 @@ monitor_installation() {
 trap cleanup_all INT TERM EXIT
 
 # only download if $IMAGE is older than a week (60*24*7=10080)
-if test $(find $IMAGE -mmin +10080) ; then
-	rm $IMAGE
+if test $(find $IMAGE -mmin +10080) || ! test -f $IMAGE ; then
+	rm -f $IMAGE
 	curl $IMAGE_URL > $IMAGE
 fi
 sudo mkdir -p $IMAGE_MNT

@@ -31,7 +31,7 @@ DISPLAY=$1
 NAME=$2
 IMAGE_URL=$3
 IMAGE=$(pwd)/$(basename $IMAGE_URL)
-IMAGE_MNT="/media/cd-$IMAGE.iso"
+IMAGE_MNT="/media/cd-$NAME.iso"
 rm -rf results
 mkdir -p results
 cd results

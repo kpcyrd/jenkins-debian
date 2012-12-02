@@ -30,7 +30,7 @@ export http_proxy="http://localhost:3128"
 DISPLAY=$1
 NAME=$2
 IMAGE_URL=$3
-IMAGE=$(pwd)./$(basename $IMAGE_URL)
+IMAGE=$(pwd)/$(basename $IMAGE_URL)
 IMAGE_MNT="/media/cd-$IMAGE.iso"
 rm -rf results
 mkdir -p results

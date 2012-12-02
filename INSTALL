@@ -60,11 +60,9 @@ cd jenkins.debian.net
 ./update_jdn.sh
 ----
 
-'jenkins-job-builder' and (currently) 'kgb-client' is the only software which is not covered by this script.
+'jenkins-job-builder', 'vncdotool' and (currently) 'kgb-client' are the only software which is not covered by this script.
 
 === Installing jenkins-job-builder
-
-This is the only software which needs manual installation and is not covered by 'update_jdn.sh'
 
 ----
 pip install python-jenkins
@@ -92,6 +90,15 @@ Rebuild the 'kgb-bot' source package from sid on whezzy and then install the 'kb
 The jenkins jobs are configured to send email to 'jenkins+$IRC_CHANNEL' (like 'jenkins+debian-qa'), this is parsed by a script ('/srv/jenkins/bin/email2irc.sh') run through 'procmail' which then in turn notifies 'kgb-client', which notfies 'kgb-server'(s) on the internet, which are the bots notifying the IRC channels. 'kbg-client' needs to be '>= 1.24'.
 
 The Jenkins EMail notification plugin is used as its state tracking is best (and the Jenkins IRC plugin is way too powerful).
+
+=== Installing vncdotool
+
+----
+apt-get install python-twisted python-imaging
+git clone https://github.com/sibson/vncdotool
+cd vncdotool/
+python setup.py
+----
 
 === munin
 

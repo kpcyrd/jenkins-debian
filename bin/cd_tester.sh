@@ -63,7 +63,7 @@ bootstrap() {
 	case $NAME in
 		debian-edu-wheezy)
 				echo "fire up qemu now..."
-				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/$NAME-preseed.cfg video=vesa:ywrap,mtrr vga=788 acpi=off initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/$NAME-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		*)		echo "unsupported distro."
 				exit 1
@@ -94,6 +94,10 @@ monitor_installation() {
 		# give signal we are still running
 		if [ $(($NR % 15)) -eq 0 ] ; then
 			date
+		fi
+		# press ctrl-key to avoid screensaver kicking in
+		if [ $(($NR % 150)) -eq 0 ] ; then
+			vncdo -s localhost:$DISPLAY key ctrl
 		fi
 	done
 	set -x

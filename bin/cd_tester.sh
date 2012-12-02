@@ -29,9 +29,14 @@ export http_proxy="http://localhost:3128"
 #
 DISPLAY=$1
 NAME=$2
-IMAGE_URL=$3
-IMAGE=$(pwd)/$(basename $IMAGE_URL)
-IMAGE_MNT="/media/cd-$NAME.iso"
+URL=$3
+if [ "$(basename $URL)" != "amd64" ] ; then
+	IMAGE=$(pwd)/$(basename $URL)
+	IMAGE_MNT="/media/cd-$NAME.iso"
+else
+	KERNEL=linux
+	INITRD=initrd.gz
+fi
 rm -rf results
 mkdir -p results
 cd results
@@ -65,11 +70,15 @@ bootstrap() {
 				echo "fire up qemu now..."
 				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/$NAME-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
-		*)		echo "unsupported distro."
-				exit 1
+		lxde-wheezy)
+				echo "fire up qemu now..."
+				sudo qemu-system-x86_64 -hda $NAME.qcow -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde url=http://10.0.2.2/userContent/$NAME-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				# wheezy: qemu-system-x86_64 -cdrom debian-6.0.6-amd64-businesscard.iso -hda debian.qcow -boot d -m 2048 -display vnc=localhost:1 --kernel /mnt/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/preseed.cfg vga=788 initrd=/install.amd/initrd.gz" --initrd /mnt/install.amd/initrd.gz
 				# kernel /install.amd/vmlinuz
 				# append desktop=lxde video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet
+				;;
+		*)		echo "unsupported distro."
+				exit 1
 				;;
 	esac
 }
@@ -108,13 +117,27 @@ monitor_installation() {
 
 trap cleanup_all INT TERM EXIT
 
-# only download if $IMAGE is older than a week (60*24*7=10080)
-if test $(find $IMAGE -mmin +10080) || ! test -f $IMAGE ; then
-	rm -f $IMAGE
-	curl $IMAGE_URL > $IMAGE
+#
+# if there is a CD image...
+#
+if [ ! -z $IMAGE ] ; then
+	# only download if $IMAGE is older than a week (60*24*7=10080) (+9500 is a bit less than a week)
+	if test $(find $IMAGE -mmin +9500) || ! test -f $IMAGE ; then
+		curl $URL > $IMAGE
+	fi
+	sudo mkdir -p $IMAGE_MNT
+	sudo mount -o loop,ro $IMAGE $IMAGE_MNT
+else
+	#
+	# else netboot gtk
+	#
+	# only download if $KERNEL is older than a week...
+	if test $(find $KERNEL -mmin +9500) || ! test -f $KERNEL ; then
+		curl $URL/$KERNEL > $KERNEL
+		curl $URL/$INITRD > $INITRD
+	fi
+
 fi
-sudo mkdir -p $IMAGE_MNT
-sudo mount -o loop,ro $IMAGE $IMAGE_MNT
 bootstrap 
 monitor_installation
 

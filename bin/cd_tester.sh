@@ -118,7 +118,7 @@ monitor_installation() {
 		fi
 		# if this screenshot is the same as the one 400 screenshots ago, let stop this
 		if [ $(($NR % 100)) -eq 0 ] ; then
-			let OLD=nr-400
+			let OLD=NR-400
 			if test $(diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm 1>/dev/null) ; then
 				break
 			fi

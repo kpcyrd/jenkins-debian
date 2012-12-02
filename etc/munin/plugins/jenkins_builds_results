@@ -29,12 +29,13 @@ if [ "$1" = "autoconf" ]; then
         exit 0
 fi
 
+STATEFILE=$MUNIN_PLUGSTATE/$(basename $0)
+
 # delete statefile if it's older than $update_interval set in /etc/munin/plugin-conf.d/jenkins
 if test $(find $STATEFILE -mmin +$update_interval) ; then
 	rm -f $STATEFILE
 fi
 
-STATEFILE=$MUNIN_PLUGSTATE/$(basename $0)
 if [ -f $STATEFILE ] && [ "$1" = "" ] ; then
 	cat $STATEFILE
 	exit 0

@@ -50,7 +50,7 @@ cleanup_all() {
 	set +x
 	cd $RESULTS
 	echo -n "Last screenshot: "
-	ls -t1 *.ppm | head -1
+	(ls -t1 snapshot* | head -1) || true
 	#
 	# create video
 	#
@@ -94,10 +94,11 @@ bootstrap() {
 monitor_installation() {
 	cd $RESULTS
 	sleep 4
-	echo "Taking screenshots every 2 secondss now, until the installation is finished (or qemu ends for other reasons) or 5h have passed or if the installation seems to hang."
+	echo "Taking screenshots every 2 seconds now, until the installation is finished (or qemu ends for other reasons) or 6h have passed or if the installation seems to hang."
 	echo
 	NR=0
-	while [ $NR -lt 9000 ] ; do
+	MAX_RUNS=10800
+	while [ $NR -lt $MAX_RUNS ] ; do
 		set +x
 		#
 		# break if qemu-system has finished
@@ -122,10 +123,11 @@ monitor_installation() {
 			let OLD=NR-400
 			set -x
 			if diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
-				echo Warning: snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
+				echo ERROR snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
 				cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
 				cp snapshot_$(printf "%06d" $OLD).ppm snapshot_$(printf "%06d" $OLD).ppm.bak
 				ls -la snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
+				figlet "Installation hangs."
 				break
 			fi
 			set +x
@@ -134,8 +136,8 @@ monitor_installation() {
 		sleep 2
 	done
 	set -x
-	if [ $NR -eq 9000 ] ; then
-		echo Warning: running for 5h, forceing termination.
+	if [ $NR -eq $MAX_RUNS ] ; then
+		echo Warning: running for 6h, forceing termination.
 	fi
 }
 

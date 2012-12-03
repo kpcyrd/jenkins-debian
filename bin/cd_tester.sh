@@ -48,6 +48,7 @@ RESULTS=$WORKSPACE/results
 
 cleanup_all() {
 	set +x
+	set +e
 	cd $RESULTS
 	echo -n "Last screenshot: "
 	(ls -t1 snapshot* | head -1) || true
@@ -60,7 +61,7 @@ cleanup_all() {
 	#
 	# kill qemu and image
 	#
-	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d " " -f1)
+	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d " " -f1) || true
 	sleep 0.3s
 	rm $WORKSPACE/$NAME.qcow
 	#

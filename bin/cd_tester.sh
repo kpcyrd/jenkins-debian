@@ -106,8 +106,6 @@ monitor_installation() {
 		vncsnapshot -quiet -allowblank localhost:$DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null
 		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
 		rm snapshot_$(printf "%06d" $NR).jpg 
-		let NR=NR+1
-		sleep 2
 		# give signal we are still running
 		if [ $(($NR % 15)) -eq 0 ] ; then
 			date
@@ -119,11 +117,12 @@ monitor_installation() {
 		# if this screenshot is the same as the one 400 screenshots ago, let stop this
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			let OLD=NR-400
-			if test $(diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm 1>/dev/null) ; then
+			if diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm /dev/null 2>&1 ; then
 				break
 			fi
 		fi
-
+		let NR=NR+1
+		sleep 2
 	done
 	set -x
 	if [ $NR -eq 9000 ] ; then
@@ -138,7 +137,7 @@ trap cleanup_all INT TERM EXIT
 #
 if [ ! -z $IMAGE ] ; then
 	# only download if $IMAGE is older than a week (60*24*7=10080) (+9500 is a bit less than a week)
-	if test $(find $IMAGE ! -mmin +9500) || ! test -f $IMAGE ; then
+	if test $(find $IMAGE -mmin +9500) || ! test -f $IMAGE ; then
 		curl $URL > $IMAGE
 	fi
 	sudo mkdir -p $IMAGE_MNT
@@ -150,7 +149,7 @@ else
 	# else netboot gtk
 	#
 	# only download if $KERNEL is older than a week...
-	if test $(find $KERNEL ! -mmin +9500) || ! test -f $KERNEL ; then
+	if test $(find $KERNEL -mmin +9500) || ! test -f $KERNEL ; then
 		curl $URL/$KERNEL > $KERNEL
 		curl $URL/$INITRD > $INITRD
 	fi

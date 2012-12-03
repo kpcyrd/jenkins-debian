@@ -49,6 +49,8 @@ RESULTS=$WORKSPACE/results
 cleanup_all() {
 	set -x
 	cd $RESULTS
+	echo -n "Last screenshot: "
+	ls -t1 *.ppm | head -1
 	#
 	# create video
 	#
@@ -93,7 +95,8 @@ bootstrap() {
 monitor_installation() {
 	cd $RESULTS
 	sleep 4
-	echo "Taking screenshots every 2secs now, until the installation is finished or 5h have passed"
+	echo "Taking screenshots every 2 secondss now, until the installation is finished (or qemu ends for other reasons) or 5h have passed or if the installation seems to hang."
+	echo
 	NR=0
 	while [ $NR -lt 9000 ] ; do
 		set +x

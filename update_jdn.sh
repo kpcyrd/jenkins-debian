@@ -84,8 +84,8 @@ explain "Jenkins jobs updated."
 #
 DEFINED_CHROOT_TRIGGERS=$(grep _trigger: chroot-tests.yaml|wc -l)
 DEFINED_DI_TRIGGERS=$(grep "defaults: d-i-manual-html" d-i.yaml|wc -l)
-let DEFINED_TRIGGERS=DEFINED_CHROOT_TRIGGERS+DEFINED_DI_TRIGGERS
-CONFIGURED_TRIGGERS=$(grep -C 1 \<hudson.tasks.BuildTrigger /var/lib/jenkins/jobs/*/config.xml|grep child|wc -l)
+let DEFINED_TRIGGERS=DEFINED_CHROOT_TRIGGERS+DEFINED_DI_TRIGGERS+1 # add 1 as "wc -m" also counts one extra...
+let CONFIGURED_TRIGGERS=$(grep \<childProjects /var/lib/jenkins/jobs/*/config.xml|wc -l)+$(grep  \<childProjects /var/lib/jenkins/jobs/*/config.xml |grep , |xargs echo | sed 's/[^,]//g'| wc -m)
 if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
 	figlet Warning
 	explain "Number of defined triggers ($DEFINED_TRIGGERS) differs from currently configured triggers ($CONFIGURED_TRIGGERS), please investigate."

@@ -115,9 +115,11 @@ monitor_installation() {
 			vncdo -s localhost:$DISPLAY key ctrl
 		fi
 		# if this screenshot is the same as the one 400 screenshots ago, let stop this
-		if [ $(($NR % 100)) -eq 0 ] ; then
+		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
+			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
-			if diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm /dev/null 2>&1 ; then
+			if ! diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
+				echo Warning: snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
 				break
 			fi
 		fi

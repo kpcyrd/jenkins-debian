@@ -73,8 +73,10 @@ explain "Updated about.html, setup.html and todo.html."
 # run jenkins-job-builder to update jobs if needed
 #     (using sudo because /etc/jenkins_jobs is root:root 700)
 #
-cd /srv/jenkins/job-cfg 
-sudo jenkins-jobs update .
+cd /srv/jenkins/job-cfg
+for config in *.yaml ; do
+	sudo jenkins-jobs update $config
+done
 explain "Jenkins jobs updated."
 
 #

@@ -1,2 +1,2 @@
 [jenkins_*]
-env.update_interval 45
+env.jenkins_update_interval 45

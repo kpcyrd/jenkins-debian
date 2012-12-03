@@ -121,11 +121,11 @@ monitor_installation() {
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
 			set -x
-			if ! diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
+			if diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
 				echo Warning: snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
 				cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
 				cp snapshot_$(printf "%06d" $OLD).ppm snapshot_$(printf "%06d" $OLD).ppm.bak
-				ls -la napshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
+				ls -la snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
 				break
 			fi
 			set +x

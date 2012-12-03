@@ -47,7 +47,7 @@ WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
 
 cleanup_all() {
-	set -x
+	set +x
 	cd $RESULTS
 	echo -n "Last screenshot: "
 	ls -t1 *.ppm | head -1
@@ -55,7 +55,6 @@ cleanup_all() {
 	# create video
 	#
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o cd-test-$NAME.ogv
-	set +x
 	rm snapshot_??????.ppm
 	set -x
 	#
@@ -121,10 +120,15 @@ monitor_installation() {
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
-			if ! diff snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
+			set -x
+			if ! diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
 				echo Warning: snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
+				cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
+				cp snapshot_$(printf "%06d" $OLD).ppm snapshot_$(printf "%06d" $OLD).ppm.bak
+				ls -la napshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
 				break
 			fi
+			set +x
 		fi
 		let NR=NR+1
 		sleep 2

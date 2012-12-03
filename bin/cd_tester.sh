@@ -61,7 +61,7 @@ cleanup_all() {
 	#
 	# kill qemu and image
 	#
-	sudo kill -9 $(ps fax | grep -v grep | grep -v sudo | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d " " -f1) || true
+	sudo kill -9 $(ps fax | grep -v grep | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d "?" -f1) || true
 	sleep 0.3s
 	rm $WORKSPACE/$NAME.qcow
 	#

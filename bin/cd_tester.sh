@@ -3,13 +3,13 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-# $1 = vnc-display
+# $1 = vnc-display, each job should have a unique one, so jobs can run in parallel
 # $2 = name
 # $3 = wget url/jigdo url
 
 if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] ; then
 	echo "need three params"
-	echo '# $1 = vnc-display'
+	echo '# $1 = vnc-display, each job should have a unique one, so jobs can run in parallel'
 	echo '# $2 = name'
 	echo '# $3 = wget url/jigdo url'
 	exit 1
@@ -86,9 +86,6 @@ bootstrap() {
 		lxde-wheezy)
 				echo "fire up qemu now..."
 				sudo qemu-system-x86_64 -hda $NAME.qcow -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
-				# wheezy: qemu-system-x86_64 -cdrom debian-6.0.6-amd64-businesscard.iso -hda debian.qcow -boot d -m 2048 -display vnc=localhost:1 --kernel /mnt/install.amd/vmlinuz --append "auto=true priority=critical url=http://10.0.2.2/userContent/preseed.cfg vga=788 initrd=/install.amd/initrd.gz" --initrd /mnt/install.amd/initrd.gz
-				# kernel /install.amd/vmlinuz
-				# append desktop=lxde video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet
 				;;
 		*)		echo "unsupported distro."
 				exit 1

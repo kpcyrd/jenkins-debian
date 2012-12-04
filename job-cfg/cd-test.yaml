@@ -41,6 +41,10 @@
 
 - job-template:
     defaults: cd-test
+    name: '{name}_debian_edu_squeeze_test_standalone'
+
+- job-template:
+    defaults: cd-test
     name: '{name}_lxde_wheezy'
 
 - project:
@@ -50,6 +54,10 @@
       - '{name}_debian_edu_wheezy':
          my_shell: '/srv/jenkins/bin/cd_tester.sh 1 debian-edu-wheezy http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of Debian Edu Wheezy standalone - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/debian-edu-wheezy-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 23 * * *'
+      - '{name}_debian_edu_squeeze_test_standalone':
+         my_shell: '/srv/jenkins/bin/cd_tester.sh 1 debian-edu-squeeze-test-standalone http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of Debian Edu Squeeze (test) standalone - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/debian-edu-squeeze-test-standalone-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 23 * * *'
       - '{name}_lxde_wheezy':
          my_shell: '/srv/jenkins/bin/cd_tester.sh 2 lxde-wheezy http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'

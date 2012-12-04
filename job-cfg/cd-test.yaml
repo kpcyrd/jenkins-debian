@@ -41,7 +41,7 @@
 
 - job-template:
     defaults: cd-test
-    name: '{name}_debian_edu_standalone_squeeze_test
+    name: '{name}_debian_edu_standalone_squeeze_test'
 
 - job-template:
     defaults: cd-test

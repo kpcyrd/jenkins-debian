@@ -106,7 +106,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -hda -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
+				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				;;
 		*)		echo "unsupported distro."
 				exit 1

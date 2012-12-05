@@ -170,10 +170,14 @@ trap cleanup_all INT TERM EXIT
 # if there is a CD image...
 #
 if [ ! -z $IMAGE ] ; then
-	# only download if $IMAGE is older than a week (60*24*7=10080) (+9500 is a bit less than a week)
-	if test $(find $IMAGE -mmin +9500) || ! test -f $IMAGE ; then
-		curl $URL > $IMAGE
+
+	# Only download if newer image is avaiable
+	CURLOPTS=""
+	if [ -f $IMAGE ] ; then
+	    CURLOPTS="-z $IMAGE"
 	fi
+	curl $CURLOPTS -o $IMAGE $URL
+
 	sudo mkdir -p $IMAGE_MNT
 	mount | grep -v grep | grep $IMAGE_MNT && sudo umount -l $IMAGE_MNT
 	sleep 1

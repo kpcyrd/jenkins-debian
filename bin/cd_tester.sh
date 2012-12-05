@@ -78,6 +78,13 @@ cleanup_all() {
 	sudo umount $IMAGE_MNT
 }
 
+show_preseed() {
+	url="$1"
+	echo "Preseeding from $url:"
+	echo
+	curl -s "$url" | grep -v ^# | grep -v "^$"
+}
+
 bootstrap() {
 	cd $WORKSPACE
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
@@ -85,26 +92,19 @@ bootstrap() {
 	echo "Doing cd tests for $NAME now."
 	case $NAME in
 		wheezy-debian-edu-workstation)
-				# FIXME: this obviously needs to be moved to a function
-				echo "Preseeding used:"
-				echo
-				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
+				show_preseed http://localhost/userContent/${NAME}-preseed.cfg
 				echo
 				echo "Starting QEMU now:"
 				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		squeeze-test-debian-edu-standalone)
-				echo "Preseeding used:"
-				echo
-				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
+				show_preseed http://localhost/userContent/${NAME}-preseed.cfg
 				echo
 				echo "Starting QEMU now:"
 				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		wheezy-lxde)
-				echo "Preseeding used:"
-				echo
-				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
+				show_preseed http://localhost/userContent/${NAME}-preseed.cfg
 				echo
 				echo "Starting QEMU now:"
 				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m $RAMSIZE -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &

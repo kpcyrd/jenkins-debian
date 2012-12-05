@@ -69,7 +69,7 @@ cleanup_all() {
 	#
 	# kill qemu and image
 	#
-	sudo kill -9 $(ps fax | grep -v grep | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | cut -d "?" -f1) || true
+	sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}-preseed.cfg 2>/dev/null | awk '{print $1}') || true
 	sleep 0.3s
 	rm $WORKSPACE/$NAME.raw
 	#
@@ -180,7 +180,7 @@ if [ ! -z $IMAGE ] ; then
 	curl $CURLOPTS -o $IMAGE $URL
 
 	sudo mkdir -p $IMAGE_MNT
-	mount | grep -v grep | grep $IMAGE_MNT && sudo umount -l $IMAGE_MNT
+	grep -q $IMAGE_MNT /proc/mounts && sudo umount -l $IMAGE_MNT
 	sleep 1
 	sudo mount -o loop,ro $IMAGE $IMAGE_MNT
 else

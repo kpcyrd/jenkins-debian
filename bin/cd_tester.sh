@@ -29,7 +29,7 @@ export http_proxy="http://localhost:3128"
 #
 # init
 #
-DISPLAY=$1
+DISPLAY=localhost:$1
 NAME=$2
 DISKSIZE_IN_GB=$3
 URL=$4
@@ -90,7 +90,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m 1024 -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		squeeze-test-debian-edu-standalone)
 				echo "Preseeding used:"
@@ -98,7 +98,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m 1024 -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		wheezy-lxde)
 				echo "Preseeding used:"
@@ -106,7 +106,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
+				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m 1024 -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				;;
 		*)		echo "unsupported distro."
 				exit 1
@@ -129,7 +129,7 @@ monitor_installation() {
 		if [ $(ps fax | grep -v grep | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | wc -l) -eq 0 ] ; then
 			break
 		fi
-		vncsnapshot -quiet -allowblank localhost:$DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null
+		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null
 		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
 		rm snapshot_$(printf "%06d" $NR).jpg 
 		# give signal we are still running
@@ -138,7 +138,7 @@ monitor_installation() {
 		fi
 		# press ctrl-key to avoid screensaver kicking in
 		if [ $(($NR % 150)) -eq 0 ] ; then
-			vncdo -s localhost:$DISPLAY key ctrl
+			vncdo -s $DISPLAY key ctrl
 		fi
 		# if this screenshot is the same as the one 400 screenshots ago, let stop this
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then

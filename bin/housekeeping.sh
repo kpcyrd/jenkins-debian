@@ -23,6 +23,7 @@ done
 echo
 vnstat
 
+
 CHROOT_PATTERN="/chroots/chroot-tests-*"
 HOUSE=$(ls $CHROOT_PATTERN 2>/dev/null)
 if [ "$HOUSE" != "" ] ; then
@@ -31,6 +32,9 @@ if [ "$HOUSE" != "" ] ; then
 	echo "Probably manual cleanup needed:"
 	echo
 	echo "$ ls -la $CHROOT_PATTERN"
+	# List the processes using the partition
+	echo
+	fuser -mv $CHROOT_TARGET
 	echo $HOUSE
 	exit 1
 fi

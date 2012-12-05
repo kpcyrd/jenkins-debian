@@ -5,13 +5,15 @@
 
 # $1 = vnc-display, each job should have a unique one, so jobs can run in parallel
 # $2 = name
-# $3 = wget url/jigdo url
+# $3 = disksize in GB
+# $4 = wget url/jigdo url
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] ; then
+if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] ; then
 	echo "need three params"
 	echo '# $1 = vnc-display, each job should have a unique one, so jobs can run in parallel'
 	echo '# $2 = name'
-	echo '# $3 = wget url/jigdo url'
+	echo '# $3 = disksize in GB'
+	echo '# $4 = wget url/jigdo url'
 	exit 1
 fi
 
@@ -29,7 +31,8 @@ export http_proxy="http://localhost:3128"
 #
 DISPLAY=$1
 NAME=$2
-URL=$3
+DISKSIZE_IN_GB=$3
+URL=$4
 if [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
 	IMAGE_MNT="/media/cd-$NAME.iso"
@@ -72,8 +75,9 @@ cleanup_all() {
 
 bootstrap() {
 	cd $WORKSPACE
+	echo "Creating qcow disk image with ${DISKSIZE_IN_GB}g now."
+	qemu-img create -f qcow $NAME.qcow ${DISKSIZE_IN_GB}g
 	echo "Doing cd tests for $NAME now."
-	qemu-img create -f qcow $NAME.qcow 20g
 	case $NAME in
 		wheezy-debian-edu-workstation)
 				# FIXME: this obviously needs to be moved to a function

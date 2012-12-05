@@ -17,7 +17,7 @@
           unstable_on_warning: 'true'
           fail_on_error: 'true'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: '{my_recipients}'
       - archive:
           artifacts: 'results/*.*'
           latest_only: false
@@ -52,15 +52,18 @@
     do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
     jobs:
       - '{name}_wheezy_debian_edu_workstation':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 1 wheezy-debian-edu-workstation http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/cd_tester.sh 1 wheezy-debian-edu-workstation 25 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy workstation installation - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/wheezy-debian-edu-workstation-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 23 * * *'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_squeeze-test_debian_edu_standalone':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) standalone installation - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/squeeze-test-debian-edu-standalone-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 3 * * *'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_wheezy_lxde':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 3 wheezy-lxde  http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/cd_tester.sh 3 wheezy-lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/wheezy-lxde-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 17 * * *'
+         my_recipients: 'jenkins+debian-boot holger@layer-acht.org'
 

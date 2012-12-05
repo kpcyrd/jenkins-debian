@@ -33,6 +33,7 @@ DISPLAY=localhost:$1
 NAME=$2
 DISKSIZE_IN_GB=$3
 URL=$4
+RAMSIZE=1024
 if [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
 	IMAGE_MNT="/media/cd-$NAME.iso"
@@ -90,7 +91,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m 1024 -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		squeeze-test-debian-edu-standalone)
 				echo "Preseeding used:"
@@ -98,7 +99,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m 1024 -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		wheezy-lxde)
 				echo "Preseeding used:"
@@ -106,7 +107,7 @@ bootstrap() {
 				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m 1024 -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
+				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m $RAMSIZE -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				;;
 		*)		echo "unsupported distro."
 				exit 1

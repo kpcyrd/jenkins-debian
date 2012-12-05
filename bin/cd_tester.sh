@@ -80,8 +80,8 @@ cleanup_all() {
 
 bootstrap() {
 	cd $WORKSPACE
-	echo "Creating raw disk image with ${DISKSIZE_IN_GB}g now."
-	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}g
+	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
+	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing cd tests for $NAME now."
 	case $NAME in
 		wheezy-debian-edu-workstation)

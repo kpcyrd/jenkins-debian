@@ -75,16 +75,29 @@ bootstrap() {
 	echo "Doing cd tests for $NAME now."
 	qemu-img create -f qcow $NAME.qcow 20g
 	case $NAME in
-		debian-edu-wheezy)
-				echo "fire up qemu now..."
+		wheezy-debian-edu-workstation)
+				# FIXME: this obviously needs to be moved to a function
+				echo "Preseeding used:"
+				echo
+				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
+				echo
+				echo "Starting QEMU now:"
 				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
-		debian-edu-squeeze-test-standalone)
-				echo "fire up qemu now..."
+		squeeze-test-debian-edu-standalone)
+				echo "Preseeding used:"
+				echo
+				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
+				echo
+				echo "Starting QEMU now:"
 				sudo qemu-system-x86_64 -cdrom $IMAGE -hda $NAME.qcow -boot d -m 1024 -display vnc=localhost:$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
-		lxde-wheezy)
-				echo "fire up qemu now..."
+		wheezy-lxde)
+				echo "Preseeding used:"
+				echo
+				curl -s http://localhost/userContent/${NAME}-preseed.cfg | grep -v ^# |grep -v "^$"
+				echo
+				echo "Starting QEMU now:"
 				sudo qemu-system-x86_64 -hda $NAME.qcow -boot c -m 1024 -display vnc=localhost:$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				;;
 		*)		echo "unsupported distro."

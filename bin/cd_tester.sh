@@ -42,6 +42,10 @@ else
 	INITRD=initrd.gz
 fi
 
+# Where to find data files.  Perhaps these should be the same URL?
+ucurl=http://localhost/userContent
+gucurl=http://10.0.2.2/userContent
+
 #
 # define workspace + results
 #
@@ -103,22 +107,22 @@ bootstrap() {
 	echo "Doing cd tests for $NAME now."
 	case $NAME in
 		wheezy-debian-edu-workstation)
-				show_preseed http://localhost/userContent/${NAME}-preseed.cfg
+				show_preseed $ucurl/${NAME}-preseed.cfg
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=$gucurl/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		squeeze-test-debian-edu-standalone)
-				show_preseed http://localhost/userContent/${NAME}-preseed.cfg
+				show_preseed $ucurl/${NAME}-preseed.cfg
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
+				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=$gucurl/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
 				;;
 		wheezy-lxde)
-				show_preseed http://localhost/userContent/${NAME}-preseed.cfg
+				show_preseed $ucurl/${NAME}-preseed.cfg
 				echo
 				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m $RAMSIZE -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=http://10.0.2.2/userContent/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
+				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m $RAMSIZE -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=$gucurl/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
 				;;
 		*)		echo "unsupported distro."
 				exit 1

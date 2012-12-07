@@ -50,6 +50,17 @@ mkdir -p results
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
 
+fetch_if_newer() {
+	url="$2"
+	file="$1"
+
+	curlopts=""
+	if [ -f $file ] ; then
+	    curlopts="-z $file"
+	fi
+	curl $curlopts -o $file $url
+}
+
 cleanup_all() {
 	set +x
 	set +e
@@ -172,13 +183,7 @@ trap cleanup_all INT TERM EXIT
 # if there is a CD image...
 #
 if [ ! -z $IMAGE ] ; then
-
-	# Only download if newer image is avaiable
-	CURLOPTS=""
-	if [ -f $IMAGE ] ; then
-	    CURLOPTS="-z $IMAGE"
-	fi
-	curl $CURLOPTS -o $IMAGE $URL
+	fetch_if_newer "$IMAGE" "$URL"
 
 	sudo mkdir -p $IMAGE_MNT
 	grep -q $IMAGE_MNT /proc/mounts && sudo umount -l $IMAGE_MNT
@@ -188,12 +193,8 @@ else
 	#
 	# else netboot gtk
 	#
-	# only download if $KERNEL is older than a week...
-	if test $(find $KERNEL -mmin +9500) || ! test -f $KERNEL ; then
-		curl $URL/$KERNEL > $KERNEL
-		curl $URL/$INITRD > $INITRD
-	fi
-
+	fetch_if_newer "$KERNEL" "$URL/$KERNEL"
+	fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
 bootstrap 
 monitor_installation

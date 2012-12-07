@@ -105,29 +105,39 @@ bootstrap() {
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing cd tests for $NAME now."
+	QEMUOPTS="-cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
+	QEMUOPTS="$QEMUOPTS -display vnc=$DISPLAY"
+	QEMUKERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+	QEMUBOOT="-boot d"
+	INSTLOCALE="locale=en_US"
+	INSTKEYMAP="keymap=us"
+	INSTVIDEO="video=vesa:ywrap,mtrr vga=788"
+	PRESEEDURL="url=$gucurl/${NAME}-preseed.cfg"
 	case $NAME in
 		wheezy-debian-edu-workstation)
-				show_preseed $ucurl/${NAME}-preseed.cfg
-				echo
-				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US keymap=us url=$gucurl/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
-				;;
+			APPEND="auto=true priority=critical $INSTLOCALE $INSTKEYMAP $PRESEEDURL $INSTVIDEO -- quiet"
+			;;
 		squeeze-test-debian-edu-standalone)
-				show_preseed $ucurl/${NAME}-preseed.cfg
-				echo
-				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot d -m $RAMSIZE -display vnc=$DISPLAY --kernel $IMAGE_MNT/install.amd/vmlinuz --append "auto=true priority=critical locale=en_US console-keymaps-at/keymap=us url=$gucurl/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 initrd=/install.amd/gtk/initrd.gz -- quiet" --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz &
-				;;
+			INSTKEYMAP="console-keymaps-at/$INSTKEYMAP"
+			APPEND="auto=true priority=critical $INSTLOCALE $INSTKEYMAP $PRESEEDURL $INSTVIDEO -- quiet"
+			;;
 		wheezy-lxde)
-				show_preseed $ucurl/${NAME}-preseed.cfg
-				echo
-				echo "Starting QEMU now:"
-				sudo qemu-system-x86_64 -drive file=$NAME.raw,index=0,media=disk,cache=writeback -boot c -m $RAMSIZE -display vnc=$DISPLAY --kernel $KERNEL --append "auto=true priority=critical desktop=lxde locale=en_US keymap=us url=$gucurl/${NAME}-preseed.cfg video=vesa:ywrap,mtrr vga=788 --" --initrd $INITRD &
-				;;
+			QEMUBOOT="-boot c"
+			QEMUKERNEL="--kernel $KERNEL --initrd $INITRD"
+			APPEND="auto=true priority=critical desktop=lxde $INSTLOCALE $INSTKEYMAP $PRESEEDURL $INSTVIDEO"
+			;;
 		*)		echo "unsupported distro."
 				exit 1
 				;;
 	esac
+	show_preseed $ucurl/${NAME}-preseed.cfg
+	echo
+	echo "Starting QEMU now:"
+	sudo qemu-system-x86_64 \
+	    $QEMUOPTS \
+	    $QEMUBOOT \
+	    $QEMUKERNEL \
+	    --append "$APPEND" &
 }
 
 monitor_installation() {

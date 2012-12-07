@@ -55,7 +55,7 @@ cleanup_all() {
 	set +e
 	cd $RESULTS
 	echo -n "Last screenshot: "
-	(ls -t1 snapshot* | head -1) || true
+	(ls -t1 | head -1) || true
 	#
 	# create video
 	#
@@ -163,6 +163,7 @@ monitor_installation() {
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo Warning: running for 6h, forceing termination.
 	fi
+	cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
 }
 
 trap cleanup_all INT TERM EXIT

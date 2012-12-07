@@ -63,7 +63,7 @@ cleanup_all() {
 	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
 	for i in *.bak ; do
-		mv $i ${i%.bak}.ppm
+		mv $i ${i%.bak}
 	done
 	set -x
 	#

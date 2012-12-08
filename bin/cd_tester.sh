@@ -102,10 +102,14 @@ bootstrap() {
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing cd tests for $NAME now."
 	# qemu related variables (incl kernel+initrd)
-	QEMU_OPTS="-cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
+	if [ -n "IMAGE" ] ; then
+		QEMU_OPTS="-cdrom $IMAGE -boot d"
+		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+	else
+		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
+	fi
+	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
 	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY"
-	QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
-	QEMU_BOOT="-boot d"
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -115,27 +119,25 @@ bootstrap() {
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
 	case $NAME in
 		wheezy-debian-edu-workstation)
-			APPEND="auto=true priority=critical $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
+			EXTRA_APPEND=""
 			;;
 		squeeze-test-debian-edu-standalone)
 			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
-			APPEND="auto=true priority=critical $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
+			EXTRA_APPEND=""
 			;;
 		wheezy-lxde)
-			QEMU_BOOT="-boot c"
-			QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
-			APPEND="auto=true priority=critical desktop=lxde $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO"
+			EXTRA_APPEND="desktop=lxde"
 			;;
 		*)		echo "unsupported distro."
 				exit 1
 				;;
 	esac
+	APPEND="auto=true priority=critical $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}-preseed.cfg
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \
 	    $QEMU_OPTS \
-	    $QEMU_BOOT \
 	    $QEMU_KERNEL \
 	    --append "$APPEND" && touch $RESULTS/qemu_exit_0 ) &
 }

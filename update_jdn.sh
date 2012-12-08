@@ -61,7 +61,7 @@ cd $BASEDIR
 cp -r bin logparse job-cfg /srv/jenkins/
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
-cp -r README INSTALL TODO userContent/* /var/lib/jenkins/userContent/
+cp -r README INSTALL TODO d-i-preseed-cfgs userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/
 ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(pwd)/theme/debian-asciidoc.css"
 asciidoc $ASCIIDOC_PARAMS -o about.html README

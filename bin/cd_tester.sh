@@ -108,7 +108,7 @@ bootstrap() {
 	QEMU_BOOT="-boot d"
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
-	PRESEED_PATH=userContent
+	PRESEED_PATH=d-i-preseed-cfgs
 	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}-preseed.cfg"
 	INST_LOCALE="locale=en_US"
 	INST_KEYMAP="keymap=us"

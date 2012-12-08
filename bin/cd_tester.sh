@@ -42,10 +42,6 @@ else
 	INITRD=initrd.gz
 fi
 
-# Where to find data files.  Perhaps these should be the same URL?
-ucurl=http://localhost/userContent
-gucurl=http://10.0.2.2/userContent
-
 #
 # define workspace + results
 #
@@ -105,38 +101,42 @@ bootstrap() {
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing cd tests for $NAME now."
-	QEMUOPTS="-cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMUOPTS="$QEMUOPTS -display vnc=$DISPLAY"
-	QEMUKERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
-	QEMUBOOT="-boot d"
-	INSTLOCALE="locale=en_US"
-	INSTKEYMAP="keymap=us"
-	INSTVIDEO="video=vesa:ywrap,mtrr vga=788"
-	PRESEEDURL="url=$gucurl/${NAME}-preseed.cfg"
+	# qemu related variables (incl kernel+initrd)
+	QEMU_OPTS="-cdrom $IMAGE -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY"
+	QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+	QEMU_BOOT="-boot d"
+	QEMU_WEBSERVER=http://10.0.2.2/
+	# preseeding related variables
+	PRESEED_PATH=userContent
+	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}-preseed.cfg"
+	INST_LOCALE="locale=en_US"
+	INST_KEYMAP="keymap=us"
+	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
 	case $NAME in
 		wheezy-debian-edu-workstation)
-			APPEND="auto=true priority=critical $INSTLOCALE $INSTKEYMAP $PRESEEDURL $INSTVIDEO -- quiet"
+			APPEND="auto=true priority=critical $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 			;;
 		squeeze-test-debian-edu-standalone)
-			INSTKEYMAP="console-keymaps-at/$INSTKEYMAP"
-			APPEND="auto=true priority=critical $INSTLOCALE $INSTKEYMAP $PRESEEDURL $INSTVIDEO -- quiet"
+			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
+			APPEND="auto=true priority=critical $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 			;;
 		wheezy-lxde)
-			QEMUBOOT="-boot c"
-			QEMUKERNEL="--kernel $KERNEL --initrd $INITRD"
-			APPEND="auto=true priority=critical desktop=lxde $INSTLOCALE $INSTKEYMAP $PRESEEDURL $INSTVIDEO"
+			QEMU_BOOT="-boot c"
+			QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
+			APPEND="auto=true priority=critical desktop=lxde $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO"
 			;;
 		*)		echo "unsupported distro."
 				exit 1
 				;;
 	esac
-	show_preseed $ucurl/${NAME}-preseed.cfg
+	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}-preseed.cfg
 	echo
-	echo "Starting QEMU now:"
+	echo "Starting QEMU_ now:"
 	sudo qemu-system-x86_64 \
-	    $QEMUOPTS \
-	    $QEMUBOOT \
-	    $QEMUKERNEL \
+	    $QEMU_OPTS \
+	    $QEMU_BOOT \
+	    $QEMU_KERNEL \
 	    --append "$APPEND" &
 }
 

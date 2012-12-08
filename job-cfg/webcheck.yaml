@@ -115,7 +115,7 @@
 
 - project:
     name: webcheck
-    do_not_edit: '<br><br>Configured by <a href="http://jenkins.debian.net/userContent/about.html">jenkins-job-builder</a>, do not edit this job through the web UI.'
+    do_not_edit: '<br><br>Configured through <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/{name}.yaml">{name}.yaml</a>'
     jobs:
       - '{name}_www_debian_org':
          webcheck_url: 'http://www.debian.org'

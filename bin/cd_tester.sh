@@ -133,11 +133,11 @@ bootstrap() {
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}-preseed.cfg
 	echo
 	echo "Starting QEMU_ now:"
-	sudo qemu-system-x86_64 \
+	(sudo qemu-system-x86_64 \
 	    $QEMU_OPTS \
 	    $QEMU_BOOT \
 	    $QEMU_KERNEL \
-	    --append "$APPEND" &
+	    --append "$APPEND" && touch $RESULTS/qemu_exit_0 ) &
 }
 
 monitor_installation() {
@@ -155,11 +155,11 @@ monitor_installation() {
 		if [ $(ps fax | grep -v grep | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | wc -l) -eq 0 ] ; then
 			break
 		fi
-		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null
+		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null || ( echo "could not take vncsnapshot." ; if [ -f $RESULTS/qemu_exit_0 ] ; then break ; fi )
 		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
 		rm snapshot_$(printf "%06d" $NR).jpg 
 		# give signal we are still running
-		if [ $(($NR % 15)) -eq 0 ] ; then
+		if [ $(($NR % 14)) -eq 0 ] ; then
 			date
 		fi
 		# press ctrl-key to avoid screensaver kicking in
@@ -188,7 +188,12 @@ monitor_installation() {
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo Warning: running for 6h, forceing termination.
 	fi
-	let NR=NR-1
+	if [ -f $RESULTS/qemu_exit_0 ] ; then
+		let NR=NR-2
+		rm $RESULTS/qemu_exit_0
+	else
+		let NR=NR-1
+	fi
 	cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
 }
 

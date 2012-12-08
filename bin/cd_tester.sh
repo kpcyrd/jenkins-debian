@@ -188,6 +188,7 @@ monitor_installation() {
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo Warning: running for 6h, forceing termination.
 	fi
+	let NR=NR-1
 	cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
 }
 

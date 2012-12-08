@@ -10,7 +10,7 @@ About jenkins.debian.net
 
 == About jenkins.debian.net
 
-http://jenkins.debian.net is pretty much work in progress, (hopefully) doing something useful since October 15th 2012.
+http://jenkins.debian.net is pretty much *work in progress*, (hopefully) doing something useful since October 15th 2012.
 
 `git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`
 
@@ -25,6 +25,10 @@ I love to get feedback on this! Please join #debian-qa on irc.debian.org to repo
 == Jobs being run
 
 Remember, this is still pretty much work in progress. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
+
+=== cd-tests jobs
+
+FIXME: cd-tests should really get renamed to d-i-installation
 
 === chroot-tests jobs
 
@@ -64,7 +68,9 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 ** debootstrap a wheezy chroot and install lxde
 * chroot-test_wheezy_install_xfce
 ** debootstrap a wheezy chroot and install xfce
-#FIXME: explain full_desktop and developer here
+#FIXME: explain full_desktop and developer here, also make this more useful/interesting
+
+FIXME: chroot-tests should really get renamed to chroot-installation
 
 === debian-installer jobs
 

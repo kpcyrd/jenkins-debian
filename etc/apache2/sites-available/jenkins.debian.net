@@ -21,13 +21,20 @@
 		Allow from all
 	</Directory>
 
+	# allow certain params only from alioth (token is used to trigger builds)
+	RewriteEngine on
+	RewriteCond %{REMOTE_ADDR} !217\.196\.43\.140
+	#RewriteCond %{REMOTE_HOST} !.*.debian.org
+	RewriteCond %{QUERY_STRING} token
+	RewriteRule ^ - [F]
+
         ProxyRequests Off
         <Proxy *>
                 Order deny,allow
                 Allow from all
         </Proxy>
         ProxyPreserveHost on
-	# proxy everything but /munin
+	# proxy everything but a few urls
         ProxyPass /munin !
        	ProxyPass /server-status !
        	ProxyPass /visitors-report.html !

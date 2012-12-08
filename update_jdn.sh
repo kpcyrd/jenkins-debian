@@ -45,6 +45,7 @@ sudo cp -r etc/* /etc
 if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 	sudo a2enmod proxy
 	sudo a2enmod proxy_http
+	sudo a2enmod rewrite
 fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default

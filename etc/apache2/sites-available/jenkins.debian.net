@@ -24,7 +24,9 @@
 	# allow certain params only from alioth (token is used to trigger builds)
 	RewriteEngine on
 	RewriteCond %{REMOTE_ADDR} !217\.196\.43\.140
+	# git.d.o is really vasks.d.o, so just allowing this trigger from any debian host should be fine. Anyone can run curl on alioth anyway
 	#RewriteCond %{REMOTE_HOST} !.*.debian.org
+	# FIXME: REMOTE_HOST surely must work somehow? Also see etc/cron.daily/jenkins
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 

@@ -40,18 +40,13 @@ export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 
 cleanup_all() {
-	# List the processes using the partition
-	fuser -mv $CHROOT_TARGET
 	# test if $CHROOT_TARGET starts with /chroots/
 	if [ "${CHROOT_TARGET:0:9}" != "/chroots/" ] ; then
 		echo "HALP. CHROOT_TARGET = $CHROOT_TARGET"
 		exit 1
 	fi
-	sudo umount -l $CHROOT_TARGET/proc || true
-	#sudo umount -l $CHROOT_TARGET/run/lock || true
-	#sudo umount -l $CHROOT_TARGET/run/shm || true
-	#sudo umount -l $CHROOT_TARGET/run || true
-	sudo rm -rf --one-file-system $CHROOT_TARGET
+	sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
+	sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 }
 
 execute_ctmpfile() {

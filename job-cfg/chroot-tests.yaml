@@ -218,7 +218,7 @@
          my_description: 'Debootstrap squeeze, install KFCE then upgrade to wheezy.'
 
       - '{name}_squeeze_install_full_desktop_upgrade_to_wheezy':
-         chroot_tester_params: 'sid full_desktop wheezy'
+         chroot_tester_params: 'squeeze full_desktop wheezy'
          my_description: 'Debootstrap squeeze, then install four desktop environments and the most commonly used applications and packages, then upgrade to wheezy.'
          my_trigger: 'chroot-test_squeeze_install_developer_upgrade_to_wheezy'
 

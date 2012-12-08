@@ -73,8 +73,8 @@ cleanup_all() {
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o cd-test-$NAME.ogv
 	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
-	for i in *.bak ; do
-		mv $i ${i%.bak}
+	for i in *.ppm.bak ; do
+		mv $i ${i%.bak.ppm}.ppm
 	done
 	set -x
 	#

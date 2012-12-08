@@ -31,7 +31,7 @@
 	RewriteRule ^ - [F]
 
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
-	RewriteRule   ^/etc/apache2/sites-available/jenkins.debian.net/.*$  /userContent/d-i-preseed-cfgs/$2  [R]
+	RewriteRule   ^/d-i-preseed-cfgs/.*$  /userContent/d-i-preseed-cfgs/$2  [R]
 
         ProxyRequests Off
         <Proxy *>

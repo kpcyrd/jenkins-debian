@@ -102,7 +102,7 @@ bootstrap() {
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing cd tests for $NAME now."
 	# qemu related variables (incl kernel+initrd)
-	if [ -n "IMAGE" ] ; then
+	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="-cdrom $IMAGE -boot d"
 		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
 	else

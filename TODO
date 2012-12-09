@@ -15,16 +15,10 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 == General ToDo
 
 * keep git+svn urls, and use commit hooks. also better for test setups of this install :)
-* general housekeeping job:
-** run calamaris, visitors etc
-** check for stale processes
-** check for apt-upgrades
-** check for jobs forgetting their triggers
+* run calamaris, visitors etc
 * proper git repo url, outside users/holger
 ** same for /srv/jenkins.debian.net-scm-sync.git
-* chroot-tests: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
-* update jdk
-* fully automate backup and full backup /var/lib/jenkins/jobs and /var/lib/munin and /var/log too
+* fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
 * try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 
@@ -40,7 +34,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 ** properties: sidebar
 * file a bug about jenkins/jenkins-job-builder sometimes "forgetting" about triggers
 
-== More tests to be run
+== Improve existing tests
 
 === d-i_manual*
 
@@ -58,6 +52,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 === chroot-test_*
 
 * inform debian-devel@
+* chroot-tests: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 
 ----
 <pabs> h01ger: how about all of the blends?
@@ -70,22 +65,24 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 * inform debian-www@
 
-=== Test cd-images:
+=== cd-test_*:
 
-* NIH:
-** weekly edu
-** $IMAGE is in results
-** script $4 qcow image size=
-** edu-wheezy-preseed.base -> sed .cfg (LANG)
-*** pick LANG from predefined list at random
-** wheezy-preseed.base for normal d-i
+* $name-preseed.base -> sed .cfg (LANG)
+** pick LANG from predefined list at random
+* boot system
 ** scp -r vm:/var/log/ results/log
 ** ssh root@vm shutdown
-* try http://www.os-autoinst.org/
-* to test (at first) weekly images of amd64 std,kde,lxde+xfce weekly and the first sid-di daily
-** http://cdimage.debian.org/cdimage/weekly-builds/amd64/jigdo-cd/
-** http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/20121020-1/amd64/
-* use jigdo to download those images
+* use jigdo to download images - but no edu jigdo images.
+* still havent got http://www.os-autoinst.org/ out of my mind
+
+== Add more tests
+
+=== Test more Debian Edu related things
+
+* manual - by language and full
+* build a cd-image from all edu packages (even (and especially) UNRELEASED ones and do a g-i-installation test with it
+** this probably better is done after the edu packages has been switched to git and when edu cd are (also?) build on pettersson.d.o
+** also because it's probably better to do this with unmodified d-i first :-)
 
 === Test tasks:
 

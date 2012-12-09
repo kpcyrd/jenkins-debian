@@ -26,9 +26,11 @@ I love to get feedback on this! Please join #debian-qa on irc.debian.org to repo
 
 Remember, this is still pretty much work in progress. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
 
-=== cd-tests jobs
+=== g-i-installation jobs
 
-FIXME: cd-tests should really get renamed to d-i-installation
+Installation tests with g-i, the graphical version of d-i, the debian-installer.
+
+FIXME: Describe g-i-installation jobs here
 
 === chroot-tests jobs
 

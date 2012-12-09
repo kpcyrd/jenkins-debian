@@ -65,7 +65,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 * inform debian-www@
 
-=== cd-test_*:
+=== g-i-installation_*:
 
 * $name-preseed.base -> sed .cfg (LANG)
 ** pick LANG from predefined list at random

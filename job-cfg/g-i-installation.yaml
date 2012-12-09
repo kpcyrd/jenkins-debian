@@ -1,6 +1,6 @@
 
 - defaults:
-    name: cd-test
+    name: g-i-installation
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -27,8 +27,8 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/cd-tests/
-          text: All cd-test jobs
+          url: http://jenkins.debian.net/view/g-i-installation/
+          text: All g-i-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
@@ -36,33 +36,33 @@
           icon: /userContent/images/profitbricks-24x24.png
 
 - job-template:
-    defaults: cd-test
+    defaults: g-i-installation
     name: '{name}_wheezy_debian_edu_workstation'
 
 - job-template:
-    defaults: cd-test
+    defaults: g-i-installation
     name: '{name}_squeeze-test_debian_edu_standalone'
 
 - job-template:
-    defaults: cd-test
+    defaults: g-i-installation
     name: '{name}_wheezy_lxde'
 
 - project:
-    name: cd-test
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/cd-test.yaml">cd-test.yaml</a>.'
+    name: g-i-installation
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
       - '{name}_wheezy_debian_edu_workstation':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 1 wheezy-debian-edu-workstation 25 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 wheezy-debian-edu-workstation 25 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy workstation installation - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/wheezy-debian-edu-workstation-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 23 * * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_squeeze-test_debian_edu_standalone':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) standalone installation - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/squeeze-test-debian-edu-standalone-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 3 * * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_wheezy_lxde':
-         my_shell: '/srv/jenkins/bin/cd_tester.sh 3 wheezy-lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 3 wheezy-lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/wheezy-lxde-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 17 * * *'
          my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot once we made this more stable

@@ -70,7 +70,7 @@ cleanup_all() {
 	#
 	# create video
 	#
-	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o cd-test-$NAME.ogv
+	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv
 	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
 	for i in *.ppm.bak ; do

@@ -73,6 +73,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 ** scp -r vm:/var/log/ results/log
 ** ssh root@vm shutdown
 * use jigdo to download images - but no edu jigdo images.
+* use https://wiki.jenkins-ci.org/display/JENKINS/Image+Gallery+Plugin
 * still havent got http://www.os-autoinst.org/ out of my mind
 
 == Add more tests

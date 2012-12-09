@@ -75,7 +75,7 @@ cleanup_all() {
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv
 	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
-	if [ -f *.ppm.bak ] ; then
+	if find . -name "*.ppm.bak" ; then
 		for i in *.ppm.bak ; do
 			echo mv -v $i ${i%.bak.ppm}.ppm
 			mv -v $i ${i%.bak.ppm}.ppm

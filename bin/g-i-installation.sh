@@ -77,8 +77,8 @@ cleanup_all() {
 	# rename .bak files back to .ppm
 	if find . -name "*.ppm.bak" ; then
 		for i in *.ppm.bak ; do
-			echo mv -v $i ${i%.bak.ppm}.ppm
-			mv -v $i ${i%.bak.ppm}.ppm
+			echo "mv -v $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')"
+			mv -v $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
 		done
 	fi
 	set -x
@@ -162,10 +162,14 @@ monitor_installation() {
 		#
 		# break if qemu-system has finished
 		#
-		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null \
-			|| ( echo "could not take vncsnapshot, no qemu running on $DISPLAY" ; touch $RESULTS/qemu_quit ; break )
-		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
-		rm snapshot_$(printf "%06d" $NR).jpg 
+		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null || touch $RESULTS/qemu_quit
+		if [ ! -f touch $RESULTS/qemu_quit ] ; then
+			convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm
+			rm snapshot_$(printf "%06d" $NR).jpg
+		else
+			echo "could not take vncsnapshot, no qemu running on $DISPLAY"
+			break
+		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
 			date

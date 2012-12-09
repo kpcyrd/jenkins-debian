@@ -124,20 +124,20 @@ trap cleanup_all INT TERM EXIT
 
 case $1 in
 	squeeze)	DISTRO="squeeze"
-			OFFICE="openoffice.org"
+			SPECIFIC="openoffice.org virtualbox-ose"
 			;;
 	wheezy)		DISTRO="wheezy"
-			OFFICE="libreoffice"
+			SPECIFIC="libreoffice virtualbox"
 			;;
 	sid)		DISTRO="sid"
-			OFFICE="libreoffice"
+			SPECIFIC="libreoffice virtualbox"
 			;;
 	*)		echo "unsupported distro."
 			exit 1
 			;;
 esac
 bootstrap $DISTRO
-FULL_DESKTOP="$OFFICE desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine virtualbox texlive-full asciidoc vim emacs"
+FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs"
 
 if [ "$2" != "" ] ; then
 	case $2 in

@@ -49,10 +49,10 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * build branches? (which?)
 * inform debian-boot@ ?
 
-=== chroot-test_*
+=== chroot-installation_*
 
 * inform debian-devel@
-* chroot-tests: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
+* chroot-installation: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 
 ----
 <pabs> h01ger: how about all of the blends?

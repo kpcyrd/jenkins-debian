@@ -32,47 +32,47 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
 FIXME: Describe g-i-installation jobs here
 
-=== chroot-tests jobs
+=== chroot-installation jobs
 
-* chroot-test_housekeeping:
+Installation tests inside chroot environments.
+
+* chroot-installation_housekeeping:
 ** make sure chroots have been cleaned up properly
 ** runs at 05:00 UTC and triggers the bootstrap jobs on success
-* chroot-test_sid_bootstrap
+* chroot-installation_sid_bootstrap
 ** debootstrap a sid chroot
 ** triggers the install_gnome job on success
-* chroot-test_sid_install_gnome
+* chroot-installation_sid_install_gnome
 ** debootstrap a sid chroot and install gnome
-* chroot-test_sid_install_kde
+* chroot-installation_sid_install_kde
 ** debootstrap a sid chroot and install kde
-* chroot-test_sid_install_lxde
+* chroot-installation_sid_install_lxde
 ** debootstrap a sid chroot and install lxde
-* chroot-test_sid_install_xfce
+* chroot-installation_sid_install_xfce
 ** debootstrap a sid chroot and install xfce
-* chroot-test_squeeze_bootstrap_upgrade_to_wheezy
+* chroot-installation_squeeze_bootstrap_upgrade_to_wheezy
 ** debootstrap a squeeze chroot and upgrade it to wheezy
 ** triggers the upgrade_(gnome|kde|lxde|xfce) jobs on success
-* chroot-test_squeeze_install_gnome_upgrade_to_wheezy
+* chroot-installation_squeeze_install_gnome_upgrade_to_wheezy
 ** debootstrap a squeeze chroot, install gnome and upgrade it to wheezy
-* chroot-test_squeeze_install_kde_upgrade_to_wheezy
+* chroot-installation_squeeze_install_kde_upgrade_to_wheezy
 ** debootstrap a squeeze chroot, install kde and upgrade it to wheezy
-* chroot-test_squeeze_install_lxde_upgrade_to_wheezy
+* chroot-installation_squeeze_install_lxde_upgrade_to_wheezy
 ** debootstrap a squeeze chroot, install lxde and upgrade it to wheezy
-* chroot-test_squeeze_install_xfce_upgrade_to_wheezy
+* chroot-installation_squeeze_install_xfce_upgrade_to_wheezy
 ** debootstrap a squeeze chroot, install xfce and upgrade it to wheezy
 ** triggers the install_(gnome|kde|lxde|xfce) jobs on success
-* chroot-test_wheezy_bootstrap
+* chroot-installation_wheezy_bootstrap
 ** debootstrap a wheezy chroot
-* chroot-test_wheezy_install_gnome
+* chroot-installation_wheezy_install_gnome
 ** debootstrap a wheezy chroot and install gnome
-* chroot-test_wheezy_install_kde
+* chroot-installation_wheezy_install_kde
 ** debootstrap a wheezy chroot and install kde
-* chroot-test_wheezy_install_lxde
+* chroot-installation_wheezy_install_lxde
 ** debootstrap a wheezy chroot and install lxde
-* chroot-test_wheezy_install_xfce
+* chroot-installation_wheezy_install_xfce
 ** debootstrap a wheezy chroot and install xfce
 #FIXME: explain full_desktop and developer here, also make this more useful/interesting
-
-FIXME: chroot-tests should really get renamed to chroot-installation
 
 === debian-installer jobs
 

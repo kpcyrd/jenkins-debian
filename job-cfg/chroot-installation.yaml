@@ -1,6 +1,6 @@
 
 - defaults:
-    name: chroot-tests
+    name: chroot-installation
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -8,7 +8,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
+      - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
@@ -22,8 +22,8 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/chroot-tests/
-          text: All chroot-test jobs
+          url: http://jenkins.debian.net/view/chroot-installation/
+          text: All chroot-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
@@ -31,7 +31,7 @@
           icon: /userContent/images/profitbricks-24x24.png
 
 - defaults:
-    name: chroot-tests+trigger
+    name: chroot-installation+trigger
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -39,7 +39,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '/srv/jenkins/bin/chroot_tester.sh {chroot_tester_params}'
+      - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
@@ -55,8 +55,8 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/chroot-tests/
-          text: All chroot-test jobs
+          url: http://jenkins.debian.net/view/chroot-installation/
+          text: All chroot-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
@@ -64,7 +64,7 @@
           icon: /userContent/images/profitbricks-24x24.png
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_housekeeping'
     description: '{my_description}{do_not_edit}'
     triggers:
@@ -83,184 +83,181 @@
           recipients: jenkins+debian-qa holger@layer-acht.org
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_sid_install_gnome'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_sid_install_kde'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_sid_install_lxde'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_sid_install_xfce'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-installation
     name: '{name}_sid_install_full_desktop'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_sid_install_developer'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-installation+trigger
     name: '{name}_sid_bootstrap'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_squeeze_install_gnome_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_squeeze_install_kde_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_squeeze_install_lxde_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_squeeze_install_xfce_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-installation
     name: '{name}_squeeze_install_full_desktop_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_squeeze_install_developer_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-installation+trigger
     name: '{name}_squeeze_bootstrap_upgrade_to_wheezy'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_wheezy_install_gnome'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_wheezy_install_kde'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_wheezy_install_lxde'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_wheezy_install_xfce'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-installation
     name: '{name}_wheezy_install_full_desktop'
 
 - job-template:
-    defaults: chroot-tests
+    defaults: chroot-installation
     name: '{name}_wheezy_install_developer'
 
 - job-template:
-    defaults: chroot-tests+trigger
+    defaults: chroot-installation+trigger
     name: '{name}_wheezy_bootstrap'
 
 - project:
-    name: chroot-test
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/chroot-tests.yaml">chroot-tests.yaml</a>.'
+    name: chroot-installation
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/chroot-installation.yaml">chroot-installation.yaml</a>.'
     jobs:
       - '{name}_sid_install_gnome':
-         chroot_tester_params: 'sid gnome'
+         installation_params: 'sid gnome'
          my_description: 'Debootstrap sid, then install GNOME.'
 
       - '{name}_sid_install_kde':
-         chroot_tester_params: 'sid kde'
+         installation_params: 'sid kde'
          my_description: 'Debootstrap sid, then install KDE.'
 
       - '{name}_sid_install_lxde':
-         chroot_tester_params: 'sid lxde'
+         installation_params: 'sid lxde'
          my_description: 'Debootstrap sid, then install LXDE.'
 
       - '{name}_sid_install_xfce':
-         chroot_tester_params: 'sid xfce'
+         installation_params: 'sid xfce'
          my_description: 'Debootstrap sid, then install XFCE.'
 
       - '{name}_sid_install_full_desktop':
-         chroot_tester_params: 'sid full_desktop'
+         installation_params: 'sid full_desktop'
          my_description: 'Debootstrap sid, then install four desktop environments and the most commonly used applications and packages.'
-         my_trigger: 'chroot-test_sid_install_developer'
 
       - '{name}_sid_install_developer':
-         chroot_tester_params: 'sid developer'
+         installation_params: 'sid developer'
          my_description: 'Debootstrap sid, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
 
       - '{name}_sid_bootstrap':
-         chroot_tester_params: 'sid'
+         installation_params: 'sid'
          my_description: 'Debootstrap sid.'
-         my_trigger: 'chroot-test_sid_install_gnome, chroot-test_sid_install_kde, chroot-test_sid_install_lxde, chroot-test_sid_install_xfce, chroot-test_sid_install_full_desktop'
+         my_trigger: 'chroot-installation_sid_install_gnome, chroot-installation_sid_install_kde, chroot-installation_sid_install_lxde, chroot-installation_sid_install_xfce, chroot-installation_sid_install_full_desktop, chroot-installation_sid_install_developer'
 
       - '{name}_squeeze_install_gnome_upgrade_to_wheezy':
-         chroot_tester_params: 'squeeze gnome wheezy'
+         installation_params: 'squeeze gnome wheezy'
          my_description: 'Debootstrap squeeze, install GNOME then upgrade to wheezy.'
 
       - '{name}_squeeze_install_kde_upgrade_to_wheezy':
-         chroot_tester_params: 'squeeze kde wheezy'
+         installation_params: 'squeeze kde wheezy'
          my_description: 'Debootstrap squeeze, install KDE then upgrade to wheezy.'
 
       - '{name}_squeeze_install_lxde_upgrade_to_wheezy':
-         chroot_tester_params: 'squeeze lxde wheezy'
+         installation_params: 'squeeze lxde wheezy'
          my_description: 'Debootstrap squeeze, install LXDE then upgrade to wheezy.'
 
       - '{name}_squeeze_install_xfce_upgrade_to_wheezy':
-         chroot_tester_params: 'squeeze xfce wheezy'
+         installation_params: 'squeeze xfce wheezy'
          my_description: 'Debootstrap squeeze, install KFCE then upgrade to wheezy.'
 
       - '{name}_squeeze_install_full_desktop_upgrade_to_wheezy':
-         chroot_tester_params: 'squeeze full_desktop wheezy'
+         installation_params: 'squeeze full_desktop wheezy'
          my_description: 'Debootstrap squeeze, then install four desktop environments and the most commonly used applications and packages, then upgrade to wheezy.'
-         my_trigger: 'chroot-test_squeeze_install_developer_upgrade_to_wheezy'
 
       - '{name}_squeeze_install_developer_upgrade_to_wheezy':
-         chroot_tester_params: 'sid developer wheezy'
+         installation_params: 'squeeze developer wheezy'
          my_description: 'Debootstrap squeeze, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these, then upgrade to wheezy.'
 
       - '{name}_squeeze_bootstrap_upgrade_to_wheezy':
-         chroot_tester_params: 'squeeze none wheezy'
+         installation_params: 'squeeze none wheezy'
          my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
-         my_trigger: 'chroot-test_squeeze_install_gnome_upgrade_to_wheezy, chroot-test_squeeze_install_kde_upgrade_to_wheezy, chroot-test_squeeze_install_lxde_upgrade_to_wheezy, chroot-test_squeeze_install_xfce_upgrade_to_wheezy, chroot-test_squeeze_install_full_desktop_upgrade_to_wheezy'
+         my_trigger: 'chroot-installation_squeeze_install_gnome_upgrade_to_wheezy, chroot-installation_squeeze_install_kde_upgrade_to_wheezy, chroot-installation_squeeze_install_lxde_upgrade_to_wheezy, chroot-installation_squeeze_install_xfce_upgrade_to_wheezy, chroot-installation_squeeze_install_full_desktop_upgrade_to_wheezy, chroot-installation_squeeze_install_developer_upgrade_to_wheezy'
 
       - '{name}_wheezy_install_gnome':
-         chroot_tester_params: 'wheezy gnome'
+         installation_params: 'wheezy gnome'
          my_description: 'Debootstrap wheezy, then install GNOME.'
 
       - '{name}_wheezy_install_kde':
-         chroot_tester_params: 'wheezy kde'
+         installation_params: 'wheezy kde'
          my_description: 'Debootstrap wheezy, then install KDE.'
 
       - '{name}_wheezy_install_xfce':
-         chroot_tester_params: 'wheezy xfce'
+         installation_params: 'wheezy xfce'
          my_description: 'Debootstrap wheezy, then install XFCE.'
 
       - '{name}_wheezy_install_lxde':
-         chroot_tester_params: 'wheezy lxde'
+         installation_params: 'wheezy lxde'
          my_description: 'Debootstrap wheezy, then install LXDE.'
 
       - '{name}_wheezy_install_full_desktop':
-         chroot_tester_params: 'wheezy full_desktop'
+         installation_params: 'wheezy full_desktop'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages.'
-         my_trigger: 'chroot-test_wheezy_install_developer'
 
       - '{name}_wheezy_install_developer':
-         chroot_tester_params: 'wheezy developer'
+         installation_params: 'wheezy developer'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
 
       - '{name}_wheezy_bootstrap':
-         chroot_tester_params: 'wheezy'
+         installation_params: 'wheezy'
          my_description: 'Debootstrap wheezy.'
-         my_trigger: 'chroot-test_wheezy_install_gnome, chroot-test_wheezy_install_kde, chroot-test_wheezy_install_lxde, chroot-test_wheezy_install_xfce, chroot-test_wheezy_install_full_desktop'
+         my_trigger: 'chroot-installation_wheezy_install_gnome, chroot-installation_wheezy_install_kde, chroot-installation_wheezy_install_lxde, chroot-installation_wheezy_install_xfce, chroot-installation_wheezy_install_full_desktop, chroot-installation_wheezy_install_developer'
 
       - '{name}_housekeeping':
          my_description: 'Cleanup so that there is a predictable environment.'
-         my_trigger: 'chroot-test_sid_bootstrap, chroot-test_wheezy_bootstrap, chroot-test_squeeze_bootstrap_upgrade_to_wheezy'
+         my_trigger: 'chroot-installation_sid_bootstrap, chroot-installation_wheezy_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
 

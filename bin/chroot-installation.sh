@@ -35,7 +35,7 @@ export DEBIAN_FRONTEND=noninteractive
 export LC_ALL=C
 export http_proxy=$http_proxy"
 
-export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-tests-$1.XXXXXXXXX)
+export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-installation-$1.XXXXXXXXX)
 export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 
@@ -77,6 +77,7 @@ EOF
 prepare_install_build_depends() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
+apt-get -y install build-essential
 apt-get -y build-dep $@
 EOF
 }
@@ -152,8 +153,7 @@ if [ "$2" != "" ] ; then
 				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;
-		developer)	install_packages developer $FULL_DESKTOP
-				install_build_depends developer $FULL_DESKTOP
+		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
 		*)		echo "unsupported component."
 				exit 1

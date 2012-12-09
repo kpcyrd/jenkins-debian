@@ -163,7 +163,7 @@ monitor_installation() {
 		# break if qemu-system has finished
 		#
 		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null || touch $RESULTS/qemu_quit
-		if [ ! -f touch $RESULTS/qemu_quit ] ; then
+		if [ ! -f $RESULTS/qemu_quit ] ; then
 			convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm
 			rm snapshot_$(printf "%06d" $NR).jpg
 		else

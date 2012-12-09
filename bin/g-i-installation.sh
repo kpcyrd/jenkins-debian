@@ -133,6 +133,9 @@ bootstrap() {
 		wheezy-lxde)
 			EXTRA_APPEND="desktop=lxde"
 			;;
+		sid-daily-lxde)
+			EXTRA_APPEND="desktop=lxde suite-mirror=sid"
+			;;
 		*)		echo "unsupported distro."
 				exit 1
 				;;

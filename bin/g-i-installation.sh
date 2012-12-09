@@ -66,16 +66,21 @@ cleanup_all() {
 	set +e
 	cd $RESULTS
 	echo -n "Last screenshot: "
-	(ls -t1 | head -1) || true
+	if [ -f snapshot_000000.ppm ] ; then
+		ls -t1 snapshot_??????.ppm | tail -1
+	fi
 	#
 	# create video
 	#
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv
 	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
-	for i in *.ppm.bak ; do
-		mv $i ${i%.bak.ppm}.ppm
-	done
+	if [ -f *.ppm.bak ] ; then
+		for i in *.ppm.bak ; do
+			echo mv -v $i ${i%.bak.ppm}.ppm
+			mv -v $i ${i%.bak.ppm}.ppm
+		done
+	fi
 	set -x
 	#
 	# kill qemu and image
@@ -139,7 +144,7 @@ bootstrap() {
 	(sudo qemu-system-x86_64 \
 	    $QEMU_OPTS \
 	    $QEMU_KERNEL \
-	    --append "$APPEND" && touch $RESULTS/qemu_exit ) &
+	    --append "$APPEND" && touch $RESULTS/qemu_quit ) &
 }
 
 monitor_installation() {
@@ -155,7 +160,7 @@ monitor_installation() {
 		# break if qemu-system has finished
 		#
 		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null \
-			|| ( echo "could not take vncsnapshot, no qemu running on $DISPLAY" ; touch $RESULTS/qemu_exited ; break )
+			|| ( echo "could not take vncsnapshot, no qemu running on $DISPLAY" ; touch $RESULTS/qemu_quit ; break )
 		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
 		rm snapshot_$(printf "%06d" $NR).jpg 
 		# give signal we are still running
@@ -188,9 +193,9 @@ monitor_installation() {
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo Warning: running for 6h, forceing termination.
 	fi
-	if [ -f $RESULTS/qemu_exit ] ; then
+	if [ -f $RESULTS/qemu_quit ] ; then
 		let NR=NR-2
-		rm $RESULTS/qemu_exit
+		rm $RESULTS/qemu_quit
 	else
 		let NR=NR-1
 	fi

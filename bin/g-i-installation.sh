@@ -56,7 +56,7 @@ fetch_if_newer() {
 
 	curlopts="-L"
 	if [ -f $file ] ; then
-	    curlopts="-z $file"
+	    curlopts="$curlopts -z $file"
 	fi
 	curl $curlopts -o $file $url
 }

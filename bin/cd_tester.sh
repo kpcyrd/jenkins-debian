@@ -139,7 +139,7 @@ bootstrap() {
 	(sudo qemu-system-x86_64 \
 	    $QEMU_OPTS \
 	    $QEMU_KERNEL \
-	    --append "$APPEND" && touch $RESULTS/qemu_exit_0 ) &
+	    --append "$APPEND" && touch $RESULTS/qemu_exit ) &
 }
 
 monitor_installation() {
@@ -154,10 +154,8 @@ monitor_installation() {
 		#
 		# break if qemu-system has finished
 		#
-		if [ $(ps fax | grep -v grep | grep qemu-system | grep ${NAME}-preseed.cfg 2>/dev/null | wc -l) -eq 0 ] ; then
-			break
-		fi
-		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null || ( echo "could not take vncsnapshot." ; if [ -f $RESULTS/qemu_exit_0 ] ; then break ; fi )
+		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null \
+			|| ( echo "could not take vncsnapshot, no qemu running on $DISPLAY" ; touch $RESULTS/qemu_exited ; break )
 		convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm 
 		rm snapshot_$(printf "%06d" $NR).jpg 
 		# give signal we are still running
@@ -190,9 +188,9 @@ monitor_installation() {
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo Warning: running for 6h, forceing termination.
 	fi
-	if [ -f $RESULTS/qemu_exit_0 ] ; then
+	if [ -f $RESULTS/qemu_exit ] ; then
 		let NR=NR-2
-		rm $RESULTS/qemu_exit_0
+		rm $RESULTS/qemu_exit
 	else
 		let NR=NR-1
 	fi

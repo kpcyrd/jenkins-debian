@@ -75,10 +75,9 @@ cleanup_all() {
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv
 	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
-	if find . -name "*.ppm.bak" ; then
+	if find . -name "*.ppm.bak" > /dev/null ; then
 		for i in *.ppm.bak ; do
-			echo "mv -v $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')"
-			mv -v $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
+			mv $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
 		done
 	fi
 	set -x
@@ -180,21 +179,20 @@ monitor_installation() {
 			vncdo -s $DISPLAY key ctrl
 		fi
 		# take a screenshot for later publishing
-		if [ $(($NR % 100)) -eq 0 ] ; then
-			set -x
+		if [ $(($NR % 200)) -eq 0 ] ; then
 			cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
-			# if this screenshot is the same as the one 400 screenshots ago, let stop this
-			if [ $NR -gt 400 ] ; then
-				# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
-				let OLD=NR-400
-				PRINTF_OLD=$(printf "%06d" $OLD)
-				if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
-					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
-					cp snapshot_${PRINTF_OLD}.ppm snapshot_${PRINTF_OLD}.ppm.bak
-					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
-					figlet "Installation hangs."
-					break
-				fi
+		fi
+		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
+			# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
+			set -x
+			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
+			let OLD=NR-400
+			PRINTF_OLD=$(printf "%06d" $OLD)
+			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
+				echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
+				ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
+				figlet "Installation hangs."
+				break
 			fi
 			set +x
 		fi

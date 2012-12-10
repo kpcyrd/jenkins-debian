@@ -38,47 +38,47 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 
 Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
-* g-i-installation_sid_daily_lxde
+* 'g-i-installation_sid_daily_lxde'
 ** sid installation of LXDE desktop with daily build sid image
 
-* g-i-installation_wheezy_lxde
+* 'g-i-installation_wheezy_lxde'
 ** wheezy installation of LXDE desktop with weekly build wheezy image
 
 * Debian Edu installation tests of specific profiles and suites:
-** g-i-installation_squeeze-test_debian_edu_standalone
-** g-i-installation_wheezy_debian_edu_workstation
+** 'g-i-installation_squeeze-test_debian_edu_standalone'
+** 'g-i-installation_wheezy_debian_edu_workstation'
 
 === debian-installer jobs
 
-* d_i_build_$source_package
+* 'd_i_build_$source_package'
 ** there is one job for each git repo referred to in http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co
 ** each job pdebuilds the master branch of its git repo on every git push in a sid environment. (If the architecture(s) specified in debian/control are not amd64,all or any the build exits cleanly.)
 ** while these jobs are triggered on commits, the SCM is only polled every 6min to see if there are new commits.
 
-* d_i_manual
-** builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching these patterns: '/trunk/manual/debian/.\*', '/trunk/manual/po/.\*', '/trunk/manual/doc/.\*' and '/trunk/manual/scripts/.\*'
+* 'd_i_manual'
+** builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching suitable patterns.
 ** while this job is triggered on commits, the SCM is only polled every 15min to see if there are new commits.
 
-* d_i_manual_$language_html
+* 'd_i_manual_$language_html'
 ** builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with `make languages=$LANG architectures=amd64 formats=html`.
 ** while these jobs are triggered on commits, the SCM is only polled every 15min to see if there are new commits.
-** on successful build, d_i_manual_$lang_pdf is triggered.
+** on successful build, 'd_i_manual_$lang_pdf' is triggered.
 
-* d_i_parse_build_logs - parses logs from http://d-i.debian.org/daily-images/build-logs.html daily, to give them a bit more exposure.
+* 'd_i_parse_build_logs' - parses logs from http://d-i.debian.org/daily-images/build-logs.html daily, to give them a bit more exposure.
 ** this job is run daily.
 
 === chroot-installation jobs
 
 Installation tests inside chroot environments.
 
-* chroot-installation_housekeeping:
+* 'chroot-installation_housekeeping':
 ** make sure chroots have been cleaned up properly
 ** runs at 05:00 UTC and triggers the bootstrap jobs on success
 
 * $distro-bootstrap jobs:
 ** just `debootstrap $distro` (install a base Debian distribution $distro)
-** there is one job for *sid* and one for *wheezy*: chroot-installation_sid_bootstrap and chroot-installation_wheezy_bootstrap
-** plus there is chroot-installation_squeeze_bootstrap_upgrade_to_wheezy, which bootstraps *squeeze* and upgrades that to *wheezy*
+** there is one job for *sid* and one for *wheezy*: 'chroot-installation_sid_bootstrap' and 'chroot-installation_wheezy_bootstrap'
+** plus there is 'chroot-installation_squeeze_bootstrap_upgrade_to_wheezy', which bootstraps *squeeze* and upgrades that to *wheezy*
 ** on successful run of the bootstrap job, six $distro-install(+upgrade) jobs are triggered.
 
 * $distro-install jobs (and $distro-install+upgrade jobs):

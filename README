@@ -83,7 +83,7 @@ Installation tests inside chroot environments.
 
 * $distro-install jobs (and $distro-install+upgrade jobs):
 ** `debootstrap $distro`, install a *$set_of_packages* (and upgrade to *$2nd_distro*)
-** these $set_of_packages exist: 'gnome', 'kde', 'lxde', 'xfc', 'full_desktop' (all four desktops plus vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs) and 'develop'
+** these $set_of_packages exist: 'gnome', 'kde', 'lxde', 'xfc', 'full_desktop' (all four desktops plus `vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs`) and 'develop'
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
 
 === webcheck jobs

@@ -31,8 +31,9 @@ pdebuild_package() {
 	# check if we need to do anything
 	#
 	if [ ! -f debian/control ] ; then
-		echo "Oh, a source package without debian/control..."
-		exit 1
+		# the Warning: will make the build end in status "unstable" but not "failed"
+		echo "Warning: A source package without debian/control, so no build will be tried."
+		return
 	fi
 	ARCH=$(dpkg --print-architecture)
 	EGREP_PATTERN="( all| any| $ARCH)"

@@ -44,7 +44,7 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 * g-i-installation_wheezy_lxde
 ** wheezy installation of LXDE desktop with weekly build wheezy image
 
-* Debian Edu instllation of specific profiles and suites
+* Debian Edu installation tests of specific profiles and suites:
 ** g-i-installation_squeeze-test_debian_edu_standalone
 ** g-i-installation_wheezy_debian_edu_workstation
 

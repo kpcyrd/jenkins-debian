@@ -39,8 +39,7 @@ if [ "$HOUSE" != "" ] ; then
 	exit 1
 fi
 
-# FIXME: no tmpfs should really mean exit 1 not 0
-df |grep tmpfs > /dev/null || ( echo "Warning: no tmpfs mounts in use. Please investigate the host system." ; exit 0 )
+df |grep tmpfs > /dev/null || ( echo "Warning: no tmpfs mounts in use. Please investigate the host system." ; exit 1 )
 
 echo
 echo "No problems found, all seems good."

@@ -134,7 +134,7 @@ bootstrap() {
 			EXTRA_APPEND="desktop=lxde"
 			;;
 		sid-daily-lxde)
-			EXTRA_APPEND="desktop=lxde suite-mirror=sid"
+			EXTRA_APPEND="desktop=lxde mirror/suite=sid"
 			;;
 		*)		echo "unsupported distro."
 				exit 1

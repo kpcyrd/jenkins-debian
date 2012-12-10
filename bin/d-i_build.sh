@@ -17,8 +17,9 @@ init_workspace() {
 	#
 	# clean
 	#
-	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz
-
+	cd ..
+	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz
+	cd workspace
 	#
 	# git clone and pull is done by jenkins job
 	#
@@ -42,7 +43,6 @@ pdebuild_package() {
 		grep "Architecture:" debian/control
 		return
 	fi
-
 	#
 	# prepare build
 	#
@@ -51,7 +51,13 @@ pdebuild_package() {
 	else
 		sudo pbuilder --update
 	fi
-
+	#
+	# 3.0 quilt is not happy without an upstream tarball
+	#
+	if [ "$(cat debian/source/format)" = "3.0 (quilt)" ] ; then
+		uscan --download-current-version
+	fi
+	#
 	#
 	# build
 	#

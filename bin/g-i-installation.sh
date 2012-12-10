@@ -178,18 +178,21 @@ monitor_installation() {
 		if [ $(($NR % 150)) -eq 0 ] ; then
 			vncdo -s $DISPLAY key ctrl
 		fi
-		# if this screenshot is the same as the one 400 screenshots ago, let stop this
-		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
-			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
-			let OLD=NR-400
+		# take a screenshot for later publishing
+		if [ $(($NR % 100)) -eq 0 ] ; then
 			set -x
-			if diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
-				echo ERROR snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
-				cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
-				cp snapshot_$(printf "%06d" $OLD).ppm snapshot_$(printf "%06d" $OLD).ppm.bak
-				ls -la snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
-				figlet "Installation hangs."
-				break
+			cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
+			# if this screenshot is the same as the one 400 screenshots ago, let stop this
+			if [ $NR -gt 400 ] ; then
+				# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
+				let OLD=NR-400
+				if diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
+					echo ERROR snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
+					cp snapshot_$(printf "%06d" $OLD).ppm snapshot_$(printf "%06d" $OLD).ppm.bak
+					ls -la snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
+					figlet "Installation hangs."
+					break
+				fi
 			fi
 			set +x
 		fi

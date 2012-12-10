@@ -94,11 +94,12 @@ if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
 fi
 
 #
-# FIXME: this should also only be run once
+# configure git for jenkins
 #
-sudo su - jenkins -c "git config --global user.email jenkins@jenkins.debian.net"
-sudo su - jenkins -c "git config --global user.name Jenkins"
-
+if [ "$(sudo su - jenkins -c 'git config --get user.email')" != "jenkins@jenkins.debian.net" ] ; then
+	sudo su - jenkins -c "git config --global user.email jenkins@jenkins.debian.net"
+	sudo su - jenkins -c "git config --global user.name Jenkins"
+fi
 #
 # FIXME: file a bug against pbuilder
 #	else you have http://jenkins.debian.net/view/debian-installer/job/d-i_build_partman-ext3/4/console

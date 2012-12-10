@@ -61,14 +61,14 @@ cd $BASEDIR
 cp -r bin logparse job-cfg /srv/jenkins/
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
-cp -r README INSTALL TODO d-i-preseed-cfgs userContent/* /var/lib/jenkins/userContent/
+cp -pr README INSTALL TODO d-i-preseed-cfgs userContent/* /var/lib/jenkins/userContent/
 cd /var/lib/jenkins/userContent/
 ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(pwd)/theme/debian-asciidoc.css"
-asciidoc $ASCIIDOC_PARAMS -o about.html README
-asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
-asciidoc $ASCIIDOC_PARAMS -o setup.html INSTALL
+[ about.html -nt README ] || asciidoc $ASCIIDOC_PARAMS -o about.html README
+[ todo.html -nt TODO ] || asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
+[ setup.html -nt INSTALL ] || asciidoc $ASCIIDOC_PARAMS -o setup.html INSTALL
 rm TODO README INSTALL
-explain "Updated about.html, setup.html and todo.html."
+explain "Updated user content for Jenkins."
 
 #
 # run jenkins-job-builder to update jobs if needed

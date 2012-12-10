@@ -93,7 +93,7 @@ for DIRECTORY in * ; do
 		done
 	fi
 done
-# FIXME: check for removed manuals (but with existing jobs) missing
+# FIXME: check for removed manuals (but with existing jobs) missing - for all types of manuals and build jobs
 #
 # ...and now the translations kept in po files....
 cd po
@@ -125,7 +125,6 @@ for DIRECTORY in * ; do
 		done
 	fi
 done
-# FIXME: check for removed manuals (but with existing jobs) missing
 
 #
 # fail this job if missing d-i jobs are detected

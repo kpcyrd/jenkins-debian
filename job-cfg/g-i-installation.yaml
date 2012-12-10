@@ -51,6 +51,10 @@
     defaults: g-i-installation
     name: '{name}_sid_daily_lxde'
 
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_sid_daily_rescue'
+
 - project:
     name: g-i-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
@@ -63,7 +67,7 @@
       - '{name}_squeeze-test_debian_edu_standalone':
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) standalone installation - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/squeeze-test-debian-edu-standalone-preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 3 * * *'
+         my_timed: '42 21 * * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_wheezy_lxde':
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 3 wheezy-lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
@@ -73,6 +77,11 @@
       - '{name}_sid_daily_lxde':
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 4 sid-daily-lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/sid-daily-lxde-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 17 * * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_sid_daily_rescue':
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 5 sid-daily-rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/sid-daily-rescue-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 * * *'
          my_recipients: 'holger@layer-acht.org'
 

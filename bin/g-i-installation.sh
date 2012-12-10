@@ -162,10 +162,11 @@ monitor_installation() {
 		#
 		# break if qemu-system has finished
 		#
-		vncsnapshot -quiet -allowblank $DISPLAY snapshot_$(printf "%06d" $NR).jpg 2>/dev/null || touch $RESULTS/qemu_quit
+		PRINTF_NR=$(printf "%06d" $NR)
+		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || touch $RESULTS/qemu_quit
 		if [ ! -f $RESULTS/qemu_quit ] ; then
-			convert snapshot_$(printf "%06d" $NR).jpg snapshot_$(printf "%06d" $NR).ppm
-			rm snapshot_$(printf "%06d" $NR).jpg
+			convert snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
+			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot, no qemu running on $DISPLAY"
 			break
@@ -181,15 +182,16 @@ monitor_installation() {
 		# take a screenshot for later publishing
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			set -x
-			cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
+			cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
 			# if this screenshot is the same as the one 400 screenshots ago, let stop this
 			if [ $NR -gt 400 ] ; then
 				# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 				let OLD=NR-400
-				if diff -q snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm ; then
-					echo ERROR snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm match, ending installation.
-					cp snapshot_$(printf "%06d" $OLD).ppm snapshot_$(printf "%06d" $OLD).ppm.bak
-					ls -la snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $OLD).ppm
+				PRINTF_OLD=$(printf "%06d" $OLD)
+				if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
+					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
+					cp snapshot_${PRINTF_OLD}.ppm snapshot_${PRINTF_OLD}.ppm.bak
+					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 					figlet "Installation hangs."
 					break
 				fi
@@ -209,7 +211,8 @@ monitor_installation() {
 	else
 		let NR=NR-1
 	fi
-	cp snapshot_$(printf "%06d" $NR).ppm snapshot_$(printf "%06d" $NR).ppm.bak
+	PRINTF_NR=$(printf "%06d" $NR)
+	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
 }
 
 trap cleanup_all INT TERM EXIT

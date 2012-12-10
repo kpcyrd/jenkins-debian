@@ -50,14 +50,20 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
 === debian-installer jobs
 
-* d_i_build_* - there is one job for each git repo referred to in http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co
-Each job pdebuilds the master branch of its git repo on every git push in a sid environment. (If the architecture(s) specified in debian/control are not amd64,all or any the build exits cleanly.)
+* d_i_build_$source_package
+** there is one job for each git repo referred to in http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co
+** each job pdebuilds the master branch of its git repo on every git push in a sid environment. (If the architecture(s) specified in debian/control are not amd64,all or any the build exits cleanly.)
 ** while these jobs are triggered on commits, the SCM is only polled every 6min to see if there are new commits.
-* d_i_manual - builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching these patterns: 
-'/trunk/manual/debian/.\*', '/trunk/manual/po/.\*', '/trunk/manual/doc/.\*' and '/trunk/manual/scripts/.\*'
+
+* d_i_manual
+** builds the full installation-guide package with pdebuild in sid on every commit to svn://svn.debian.org/svn/d-i/ matching these patterns: '/trunk/manual/debian/.\*', '/trunk/manual/po/.\*', '/trunk/manual/doc/.\*' and '/trunk/manual/scripts/.\*'
 ** while this job is triggered on commits, the SCM is only polled every 15min to see if there are new commits.
-* d_i_manual_*_html - builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with "make languages=$LANG architectures=amd64 formats=html". On successful build, d_i_manual_$lang_pdf is triggered.
+
+* d_i_manual_$language_html
+** builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with `make languages=$LANG architectures=amd64 formats=html`.
 ** while these jobs are triggered on commits, the SCM is only polled every 15min to see if there are new commits.
+** on successful build, d_i_manual_$lang_pdf is triggered.
+
 * d_i_parse_build_logs - parses logs from http://d-i.debian.org/daily-images/build-logs.html daily, to give them a bit more exposure.
 ** this job is run daily.
 

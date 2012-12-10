@@ -22,6 +22,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
 * try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
+* push jenkins munin plugins upstream
 
 === jenkins-job-builder related
 

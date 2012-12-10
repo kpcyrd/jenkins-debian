@@ -115,19 +115,9 @@ general
 
 Help explaining how to test tasks (ie all the language tasks) very much welcome!
 
-=== Test co-installability
-
-----
-<jwilk> Install everything with priority >= optional? These packages are not supposed to conflict with each other. </wishful-thinking>
-<h01ger> jwilk, there are tools to detect these package sets just based on debian/control information. no need to test this every day by installing them :)
-<h01ger> running these tools daily OTOH...
-<h01ger> http://coinst.irill.org/
-----
-
 === Tests using autopkgtest
 
-* I aware but also lost, after looking at /usr/share/doc/autopkgtest/ - wanna help?
-* https://wiki.ubuntu.com/AutomatedTesting has more information, but help is still welcome to implement this.
+* see https://wiki.ubuntu.com/AutomatedTesting and http://developer.ubuntu.com/packaging/html/auto-pkg-test.html 
 * finding packages with autopkgtests: http://lists.debian.org/debian-qa/2012/11/msg00012.html
 ** this only lists a few packages, so a very first test could be to compare this list against this: `wget -q http://http.debian.net/debian/dists/unstable/main/Contents-source.gz -O- | zgrep -m1 -E '^debian/tests/control\s'`, make a job out of it and make it UNSTABLE if the diff is non-zero. And as a second step, run those tests...
 * also see http://dep.debian.net/deps/dep8/
@@ -169,3 +159,13 @@ Martin
 [2] https://bugs.launchpad.net/ubuntu/+bugs?field.status%3Alist=TRIAGED&field.status%3Alist=INPROGRESS&field.status%3Alist=FIXCOMMITTED&field.status%3Alist=FIXRELEASED&field.status%3Alist=INCOMPLETE_WITH_RESPONSE&field.status%3Alist=INCOMPLETE_WITHOUT_RESPONSE&field.tag=udstestcompetition
 [3] http://bazaar.launchpad.net/~auto-package-testing-dev/auto-package-testing/trunk
 ----
+
+=== Test co-installability
+
+----
+<jwilk> Install everything with priority >= optional? These packages are not supposed to conflict with each other. </wishful-thinking>
+<h01ger> jwilk, there are tools to detect these package sets just based on debian/control information. no need to test this every day by installing them :)
+<h01ger> running these tools daily OTOH...
+<h01ger> http://coinst.irill.org/
+----
+

@@ -69,10 +69,10 @@
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 3 wheezy-lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/wheezy-lxde-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 15 * * *'
-         my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot once we made this more stable
+         my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot here and for other jobs - once we made this more stable
       - '{name}_sid_daily_lxde':
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 4 sid-daily-lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian installing the LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/userContent/sid-daily-lxde-preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 * * *'
-         my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot once we made this more stable
+         my_recipients: 'holger@layer-acht.org'
 

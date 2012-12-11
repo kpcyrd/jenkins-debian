@@ -199,6 +199,6 @@
          timed: "32 1 1 * *"
       - '{name}_debian_edu_squeeze_manual':
          webcheck_url: 'http://maintainer.skolelinux.org/debian-edu-doc/en/debian-edu-squeeze-manual.html'
-         webcheck_ignore_patterns: '^mailto:'
+         webcheck_ignore_patterns: '^mailto: \?C= http://maintainer.skolelinux.org/debian-edu-doc/$'
          timed: "34 1 1,8,15,22 * *"
 

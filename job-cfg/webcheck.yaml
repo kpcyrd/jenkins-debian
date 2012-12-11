@@ -113,6 +113,10 @@
     defaults: webcheck
     name: '{name}_media_debconf_org'
 
+- job-template:
+    defaults: webcheck
+    name: '{name}_debian_edu_squeeze_manual'
+
 - project:
     name: webcheck
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/webcheck.yaml">webcheck.yaml</a>.'
@@ -193,4 +197,8 @@
          webcheck_url: 'http://media.debconf.org'
          webcheck_ignore_patterns: '^mailto:'
          timed: "32 1 1 * *"
+      - '{name}_debian_edu_squeeze_manual':
+         webcheck_url: 'http://maintainer.skolelinux.org/debian-edu-doc/en/debian-edu-squeeze-manual.html'
+         webcheck_ignore_patterns: '^mailto:'
+         timed: "34 1 1,8,15,22 * *"
 

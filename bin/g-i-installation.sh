@@ -104,7 +104,7 @@ bootstrap() {
 	cd $WORKSPACE
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
-	echo "Doing cd tests for $NAME now."
+	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd)
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="-cdrom $IMAGE -boot d"
@@ -183,10 +183,10 @@ monitor_installation() {
 		fi
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
 			# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
-			set -x
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
+			set -x
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
 				echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
 				ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm

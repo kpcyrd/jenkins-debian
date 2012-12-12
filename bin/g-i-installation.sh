@@ -121,26 +121,22 @@ bootstrap() {
 	INST_LOCALE="locale=en_US"
 	INST_KEYMAP="keymap=us"
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
+	EXTRA_APPEND=""
 	case $JOB_NAME in
-		*debian-edu_wheezy-test_workstation)
-			EXTRA_APPEND=""
-			;;
-		*debian-edu_squeeze-test_standalone)
+		*debian-edu_squeeze-test*)
 			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
-			EXTRA_APPEND=""
 			;;
-		*debian_wheezy_lxde)
-			EXTRA_APPEND="desktop=lxde"
+		*_sid_daily*)
+			EXTRA_APPEND="mirror/suite=sid"
 			;;
-		*debian_sid_daily-lxde)
-			EXTRA_APPEND="desktop=lxde mirror/suite=sid"
+	esac
+	case $JOB_NAME in
+		*debian_*lxde)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=lxde"
 			;;
-		*debian_sid_daily-rescue)
-			EXTRA_APPEND="rescue/enable=true mirror/suite=sid"
+		*debian_*rescue)
+			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
-		*)		echo "unsupported distro."
-				exit 1
-				;;
 	esac
 	APPEND="auto=true priority=critical $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}-preseed.cfg

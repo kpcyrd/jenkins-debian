@@ -46,7 +46,12 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
 * Debian Edu installation tests of specific profiles and suites:
 ** 'g-i-installation_debian-edu_squeeze-test_standalone'
+** 'g-i-installation_debian-edu_squeeze-test_workstation'
+** 'g-i-installation_debian-edu_squeeze-test_combi-server'
+** 'g-i-installation_debian-edu_wheezy-test_standalone'
 ** 'g-i-installation_debian-edu_wheezy-test_workstation'
+** 'g-i-installation_debian-edu_wheezy-test_combi-server'
+** 'g-i-installation_debian-edu_wheezy-test_sugar'
 
 === debian-installer jobs
 

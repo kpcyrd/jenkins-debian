@@ -38,15 +38,15 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 
 Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
-* 'g-i-installation_sid_daily_lxde'
+* 'g-i-installation_debian_sid_daily-lxde'
 ** sid installation of LXDE desktop with daily build sid image
 
-* 'g-i-installation_wheezy_lxde'
+* 'g-i-installation_debian_wheezy_lxde'
 ** wheezy installation of LXDE desktop with weekly build wheezy image
 
 * Debian Edu installation tests of specific profiles and suites:
-** 'g-i-installation_squeeze-test_debian_edu_standalone'
-** 'g-i-installation_wheezy_debian_edu_workstation'
+** 'g-i-installation_debian-edu_squeeze-test_standalone'
+** 'g-i-installation_debian-edu_wheezy-test_workstation'
 
 === debian-installer jobs
 

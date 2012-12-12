@@ -30,7 +30,7 @@ export http_proxy="http://localhost:3128"
 # init
 #
 DISPLAY=localhost:$1
-NAME=$2
+NAME=$2			# it should be possible to derive $NAME from $JOB_NAME
 DISKSIZE_IN_GB=$3
 URL=$4
 RAMSIZE=1024
@@ -121,21 +121,21 @@ bootstrap() {
 	INST_LOCALE="locale=en_US"
 	INST_KEYMAP="keymap=us"
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
-	case $NAME in
-		wheezy-debian-edu-workstation)
+	case $JOB_NAME in
+		*debian-edu_wheezy-test_workstation)
 			EXTRA_APPEND=""
 			;;
-		squeeze-test-debian-edu-standalone)
+		*debian-edu_squeeze-test_standalone)
 			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
 			EXTRA_APPEND=""
 			;;
-		wheezy-lxde)
+		*debian_wheezy_lxde)
 			EXTRA_APPEND="desktop=lxde"
 			;;
-		sid-daily-lxde)
+		*debian_sid_daily-lxde)
 			EXTRA_APPEND="desktop=lxde mirror/suite=sid"
 			;;
-		sid-daily-rescue)
+		*debian_sid_daily-rescue)
 			EXTRA_APPEND="rescue/enable=true mirror/suite=sid"
 			;;
 		*)		echo "unsupported distro."

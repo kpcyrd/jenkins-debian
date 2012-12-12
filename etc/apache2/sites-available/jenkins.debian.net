@@ -43,7 +43,7 @@
        	ProxyPass /calamaris !
 	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
-	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080//userContent/d-i-preseed-cfgs/
+	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 	ProxyPass / http://localhost:8080/
 
 

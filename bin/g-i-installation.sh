@@ -84,7 +84,7 @@ cleanup_all() {
 	#
 	# kill qemu and image
 	#
-	sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}-preseed.cfg 2>/dev/null | awk '{print $1}') || true
+	sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
 	sleep 0.3s
 	rm $WORKSPACE/$NAME.raw
 	#
@@ -117,7 +117,7 @@ bootstrap() {
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
-	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}-preseed.cfg"
+	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_preseed.cfg"
 	INST_LOCALE="locale=en_US"
 	INST_KEYMAP="keymap=us"
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
@@ -139,7 +139,7 @@ bootstrap() {
 			;;
 	esac
 	APPEND="auto=true priority=critical $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
-	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}-preseed.cfg
+	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_preseed.cfg
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \

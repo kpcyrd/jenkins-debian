@@ -134,6 +134,9 @@ bootstrap() {
 		*debian_*lxde)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=lxde"
 			;;
+		*debian_*kde)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=kde"
+			;;
 		*debian_*rescue)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;

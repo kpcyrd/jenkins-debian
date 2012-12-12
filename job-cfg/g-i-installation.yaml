@@ -69,6 +69,10 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian_wheezy_kde'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_sid_daily-lxde'
 
 - job-template:
@@ -129,4 +133,9 @@
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily-rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * *'
          my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_wheezy_kde':
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 11 debian_wheezy_kde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_description: 'Do a fully automated installation of Debian installing the KDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 15 2,9,16,23 * *'
+         my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot here and for other jobs - once we made this more stable
 

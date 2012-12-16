@@ -11,8 +11,8 @@ set -e
 
 check_for_mounted_chroots() {
 	CHROOT_PATTERN="/chroots/${1}-*"
-	OUTPUT=$(ls $CHROOT_PATTERN 2>/dev/null)
-	if [ "$OUTPUT" != "" ] ; then
+	OUTPUT=$(ls $CHROOT_PATTERN 2>/dev/null) || true
+	if [ ! -z $OUTPUT ] ; then
 		figlet "Warning:"
 		echo
 		echo "Probably manual cleanup needed:"

@@ -84,6 +84,7 @@ else
 						report_filetype_usage $1 png
 						;;
 		squid)				report_squid_usage
+						;;
 		*)				;;
 	esac
 fi

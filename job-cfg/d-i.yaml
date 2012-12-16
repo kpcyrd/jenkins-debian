@@ -322,6 +322,22 @@
           recipients: holger@layer-acht.org
 
 - job-template:
+    defaults: d-i
+    name: '{name}_housekeeping'
+    description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
+    triggers:
+      - timed: "30 5 * * *"
+    builders:
+      - shell: '/srv/jenkins/bin/housekeeping.sh {name}'
+    publishers:
+      - logparser:
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
+      - email:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+
+- job-template:
     defaults: d-i-manual-html
     name: '{name}_manual_ca_html'
 - job-template:
@@ -819,6 +835,7 @@
     name: d-i
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/d-i.yaml">d-i.yaml</a>.'
     jobs:
+      - '{name}_housekeeping'
       - '{name}_parse_build_logs'
       - '{name}_check_jenkins_jobs'
       - '{name}_manual':

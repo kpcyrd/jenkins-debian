@@ -70,7 +70,7 @@
     triggers:
       - timed: "0 5 * * *"
     builders:
-      - shell: '/srv/jenkins/bin/housekeeping.sh'
+      - shell: '/srv/jenkins/bin/housekeeping.sh {name}'
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
@@ -258,6 +258,6 @@
          my_trigger: 'chroot-installation_wheezy_install_gnome, chroot-installation_wheezy_install_kde, chroot-installation_wheezy_install_lxde, chroot-installation_wheezy_install_xfce, chroot-installation_wheezy_install_full_desktop, chroot-installation_wheezy_install_developer'
 
       - '{name}_housekeeping':
-         my_description: 'Cleanup so that there is a predictable environment.'
+         my_description: 'Cleanup and monitor so that there is a predictable environment.'
          my_trigger: 'chroot-installation_sid_bootstrap, chroot-installation_wheezy_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
 

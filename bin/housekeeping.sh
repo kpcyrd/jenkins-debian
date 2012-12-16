@@ -10,7 +10,7 @@ export LC_ALL=C
 set -e
 
 check_for_mounted_chroots() {
-	CHROOT_PATTERN="/chroots/$1-*"
+	CHROOT_PATTERN="/chroots/${1}-*"
 	OUTPUT=$(ls $CHROOT_PATTERN 2>/dev/null)
 	if [ "$OUTPUT" != "" ] ; then
 		figlet "Warning:"
@@ -27,7 +27,7 @@ check_for_mounted_chroots() {
 }
 
 report_disk_usage() {
-	du -schx /var/lib/jenkins/jobs/${1}_* |grep total |sed -s "s#total#$1 jobs#"
+	du -schx /var/lib/jenkins/jobs/${1}_* |grep total |sed -s "s#total#${1} jobs#"
 	# FIXME: if $2 is given check, that disk usage is below $2 GB - same for report_filetype_usage()
 }
 

@@ -31,6 +31,10 @@ report_disk_usage() {
 	# FIXME: if $2 is given check, that disk usage is below $2 GB
 }
 
+report_squid_usage() {
+	cat /var/www/calamaris/calamaris.txt
+}
+
 general_housekeeping() {
 	echo
 	uptime
@@ -63,6 +67,7 @@ if [ -n $1 ] ; then
 	fi
 else
 	general_housekeeping
+	report_squid_usage
 fi
 
 echo

@@ -25,8 +25,8 @@ GPLv2
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
-        echo yes
-        exit 0
+	echo yes
+	exit 0
 fi
 
 STATEFILE=$MUNIN_PLUGSTATE/$(basename $0)
@@ -43,23 +43,22 @@ fi
 
 JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -f -u)
 if [ "$1" = "config" ]; then
-
-        echo 'graph_title Jenkins Builds in the last 24h'
-        echo 'graph_args --base 1000 -l 0 '
-        echo 'graph_scale no'
-        echo 'graph_total total'
-        echo 'graph_vlabel Jenkins Builds per category in the last 24h'
-        echo 'graph_category jenkins'
-        draw=AREA
-        for PREFIX in $JOB_PREFIXES ; do
-                echo "jenkins_builds_$PREFIX.label $PREFIX builds"
-                echo "jenkins_builds_$PREFIX.draw $draw"
+	echo 'graph_title Jenkins Builds in the last 24h'
+	echo 'graph_args --base 1000 -l 0 '
+	echo 'graph_scale no'
+	echo 'graph_total total'
+	echo 'graph_vlabel Jenkins Builds per category in the last 24h'
+	echo 'graph_category jenkins'
+	draw=AREA
+	for PREFIX in $JOB_PREFIXES ; do
+		echo "jenkins_builds_$PREFIX.label $PREFIX builds"
+		echo "jenkins_builds_$PREFIX.draw $draw"
 		if [ "$draw" = "AREA" ] ; then draw=STACK ; fi
-        done
-        exit 0
+	done
+	exit 0
 fi
 
 for PREFIX in $JOB_PREFIXES ; do
-        NR=$(find /var/lib/jenkins/jobs/$PREFIX*/builds/ -type d -mtime -1 -name "*_*"| wc -l)
+	NR=$(find /var/lib/jenkins/jobs/$PREFIX*/builds/ -type d -mtime -1 -name "*_*"| wc -l)
 	echo "jenkins_builds_$PREFIX.value $NR" | tee -a $STATEFILE
 done

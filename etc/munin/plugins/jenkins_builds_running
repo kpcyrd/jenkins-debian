@@ -25,20 +25,19 @@ GPLv2
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 if [ "$1" = "autoconf" ]; then
-        echo yes
-        exit 0
+	echo yes
+	exit 0
 fi
 
 if [ "$1" = "config" ]; then
-
-        echo 'graph_title Jenkins Builds running'
-        echo 'graph_args --base 1000 -l 0 '
-        echo 'graph_scale no'
-        echo 'graph_vlabel Jenkins Builds currently running'
-        echo 'graph_category jenkins'
-        echo "jenkins_builds_running.label $PREFIX builds_running"
-        echo "jenkins_builds_running.draw AREA"
-        exit 0
+	echo 'graph_title Jenkins Builds running'
+	echo 'graph_args --base 1000 -l 0 '
+	echo 'graph_scale no'
+	echo 'graph_vlabel Jenkins Builds currently running'
+	echo 'graph_category jenkins'
+	echo "jenkins_builds_running.label $PREFIX builds_running"
+	echo "jenkins_builds_running.draw AREA"
+	exit 0
 fi
 
 echo "jenkins_builds_running.value $(ps fax|grep /tmp/hudson|grep -v grep|wc -l)"

@@ -28,8 +28,13 @@ check_for_mounted_chroots() {
 
 report_disk_usage() {
 	du -schx /var/lib/jenkins/jobs/${1}_* |grep total |sed -s "s#total#$1 jobs#"
-	# FIXME: if $2 is given check, that disk usage is below $2 GB
+	# FIXME: if $2 is given check, that disk usage is below $2 GB - same for report_filetype_usage()
 }
+
+report_filetype_usage() {
+	find ${1}_* -type f -name "*.${2}"|xargs du -sch |grep total |sed -s "s#total#$1 .$2 files#"
+}
+
 
 report_squid_usage() {
 	cat /var/www/calamaris/calamaris.txt
@@ -65,9 +70,15 @@ if [ -z $1 ] ; then
 	report_squid_usage
 else
 	report_disk_usage $1
-	if [ "$1" = "chroot-installation" ] ; then
-		check_for_mounted_chroots $1
-	fi
+	case $1 in
+		chroot-installation)		check_for_mounted_chroots $1
+						;;
+		g-i-installation)		report_filetype_usage $1 raw
+						report_filetype_usage $1 iso
+						report_filetype_usage $1 png
+						;;
+		*)				;;
+	esac
 fi
 
 echo

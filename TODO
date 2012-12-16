@@ -14,9 +14,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 == General ToDo
 
-* create general and job specific housekeeping jobs
 * keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
-* run calamaris properly
 * proper git repo url, outside users/holger
 ** same for /srv/jenkins.debian.net-scm-sync.git
 * fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too

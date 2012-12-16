@@ -27,7 +27,7 @@ check_for_mounted_chroots() {
 }
 
 report_disk_usage() {
-	du -schx /var/lib/jenkins/jobs/$1_* |grep total |sed -s "s#total#$1 jobs#"
+	du -schx /var/lib/jenkins/jobs/${1}_* |grep total |sed -s "s#total#$1 jobs#"
 	# FIXME: if $2 is given check, that disk usage is below $2 GB
 }
 
@@ -58,16 +58,16 @@ general_housekeeping() {
 }
 
 #
-# if $1 is set, we do housekeeping for a group of jobs, else general
+# if $1 is empty, we do general housekeeping, else for some subgroup of all jobs
 #
-if [ -n $1 ] ; then
+if [ -z $1 ] ; then
+	general_housekeeping
+	report_squid_usage
+else
 	report_disk_usage $1
 	if [ "$1" = "chroot-installation" ] ; then
 		check_for_mounted_chroots $1
 	fi
-else
-	general_housekeeping
-	report_squid_usage
 fi
 
 echo

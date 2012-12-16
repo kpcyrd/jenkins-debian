@@ -11,10 +11,6 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'true'
-          fail_on_error: 'true'
       - email:
           recipients: holger@layer-acht.org
     properties:
@@ -34,6 +30,11 @@
 - job-template:
     defaults: self-housekeeping
     name: '{name}_housekeeping'
+    publishers:
+      - logparser:
+          rulespath: '/srv/jenkins/logparse/debian.rules'
+          unstable_on_warning: 'true'
+          fail_on_error: 'true'
 
 - job-template:
     defaults: self-housekeeping

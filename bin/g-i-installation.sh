@@ -66,18 +66,18 @@ cleanup_all() {
 	set +e
 	cd $RESULTS
 	echo -n "Last screenshot: "
-	if [ -f snapshot_000000.ppm ] ; then
-		ls -t1 snapshot_??????.ppm | tail -1
+	if [ -f snapshot_000000.png ] ; then
+		ls -t1 snapshot_??????.png | tail -1
 	fi
 	#
 	# create video
 	#
-	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv
-	rm snapshot_??????.ppm
-	# rename .bak files back to .ppm
-	if find . -name "*.ppm.bak" > /dev/null ; then
-		for i in *.ppm.bak ; do
-			mv $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
+	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.png --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv
+	rm snapshot_??????.png
+	# rename .bak files back to .png
+	if find . -name "*.png.bak" > /dev/null ; then
+		for i in *.png.bak ; do
+			mv $i $(echo $i | sed -s 's#.png.bak#.png#')
 		done
 	fi
 	set -x
@@ -166,7 +166,7 @@ monitor_installation() {
 		PRINTF_NR=$(printf "%06d" $NR)
 		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || touch $RESULTS/qemu_quit
 		if [ ! -f $RESULTS/qemu_quit ] ; then
-			convert snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
+			convert snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.png
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot, no qemu running on $DISPLAY"
@@ -182,7 +182,7 @@ monitor_installation() {
 		fi
 		# take a screenshot for later publishing
 		if [ $(($NR % 200)) -eq 0 ] ; then
-			cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+			cp snapshot_${PRINTF_NR}.png snapshot_${PRINTF_NR}.png.bak
 		fi
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
 			# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
@@ -190,9 +190,9 @@ monitor_installation() {
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			set -x
-			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
-				echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
-				ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
+			if diff -q snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png ; then
+				echo ERROR snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png match, ending installation.
+				ls -la snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png
 				figlet "Installation hangs."
 				break
 			fi
@@ -212,7 +212,7 @@ monitor_installation() {
 		let NR=NR-1
 	fi
 	PRINTF_NR=$(printf "%06d" $NR)
-	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+	cp snapshot_${PRINTF_NR}.png snapshot_${PRINTF_NR}.png.bak
 }
 
 trap cleanup_all INT TERM EXIT

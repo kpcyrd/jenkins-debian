@@ -1,4 +1,4 @@
-- default:
+- defaults:
     name: self-housekeeping
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     logrotate:

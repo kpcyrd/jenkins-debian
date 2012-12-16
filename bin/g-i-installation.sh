@@ -82,6 +82,7 @@ cleanup_all() {
 		# convert to png (less space and better supported in browsers)
 		for i in *.ppm ; do
 			convert $i ${i%.ppm}.png
+			rm $i
 		done
 
 	fi

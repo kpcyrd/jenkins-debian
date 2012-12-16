@@ -32,12 +32,17 @@ report_disk_usage() {
 }
 
 report_filetype_usage() {
-	find ${1}_* -type f -name "*.${2}"|xargs du -sch |grep total |sed -s "s#total#$1 .$2 files#"
+	find /var/lib/jenkins/jobs/${1}_* -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$1 .$2 files#"
 }
 
 
 report_squid_usage() {
-	cat /var/www/calamaris/calamaris.txt
+	REPORT=/var/www/calamaris/calamaris.txt
+	if [ -z $1 ] ; then
+		cat $REPORT
+	else
+		head -31 $REPORT
+	fi
 }
 
 general_housekeeping() {
@@ -67,16 +72,18 @@ general_housekeeping() {
 #
 if [ -z $1 ] ; then
 	general_housekeeping
-	report_squid_usage
+	report_squid_usage brief
 else
-	report_disk_usage $1
 	case $1 in
-		chroot-installation)		check_for_mounted_chroots $1
+		chroot-installation)		report_disk_usage $1
+						check_for_mounted_chroots $1
 						;;
-		g-i-installation)		report_filetype_usage $1 raw
+		g-i-installation)		report_disk_usage $1
+						report_filetype_usage $1 raw
 						report_filetype_usage $1 iso
 						report_filetype_usage $1 png
 						;;
+		squid)				report_squid_usage
 		*)				;;
 	esac
 fi

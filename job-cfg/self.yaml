@@ -9,7 +9,7 @@
     triggers:
       - timed: "30 6 * * *"
     builders:
-      - shell: '/srv/jenkins/bin/housekeeping.sh'
+      - shell: '{my_shell}'
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
@@ -31,14 +31,20 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
 
-
 - job-template:
     defaults: self-housekeeping
     name: '{name}_housekeeping'
+
+- job-template:
+    defaults: self-housekeeping
+    name: '{name}_sub-housekeeping-squid'
 
 - project:
     name: self
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/self.yaml">self.yaml</a>.'
     jobs:
-      - '{name}_housekeeping'
+      - '{name}_housekeeping':
+         my_shell: '/srv/jenkins/bin/housekeeping.sh'
+      - '{name}_sub-housekeeping-squid':
+         my_shell: '/srv/jenkins/bin/housekeeping.sh squid'
 

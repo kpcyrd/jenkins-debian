@@ -119,7 +119,7 @@ bootstrap() {
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -D $RESULTS/qemu.log -no-shutdown"
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs

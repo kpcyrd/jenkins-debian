@@ -1,0 +1,3 @@
+jenkins.debian.net-bin binary: new-package-should-close-itp-bug
+jenkins.debian.net-bin binary: dir-or-file-in-srv srv/jenkins/*
+jenkins.debian.net-bin binary: wrong-bug-number-in-closes l4:#nnnn

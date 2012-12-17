@@ -1,0 +1,6 @@
+etc	/srv/jenkins/
+job-cfg	/srv/jenkins/
+logparse	/srv/jenkins/
+procmailrc	/var/lib/jenkins/
+update_jdn.sh	/srv/jenkins/bin
+userContent	/var/lib/jenkins/

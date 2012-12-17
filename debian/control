@@ -1,0 +1,30 @@
+Source: jenkins.debian.net
+Section: devel
+Priority: extra
+Maintainer: Holger Levsen <holger@debian.org>
+Build-Depends: debhelper (>= 9.20120419~)
+Standards-Version: 3.8.4
+Homepage: http://jenkins.debian.net/userContent/about.html
+#Vcs-Git: git://git.debian.org/collab-maint/jenkins.debian.net.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/jenkins.debian.net.git;a=summary
+
+Package: jenkins.debian.net-setup
+Architecture: all
+Depends: ${misc:Depends}, jenkins.debian.net-bin, 
+ vim, screen, less, etckeeper, moreutils, curl, mtr-tiny, dstat, devscripts, bash-completion, shorewall, shorewall6, cron-apt, apt-listchanges, munin, calamaris, visitors, procmail, libjson-rpc-perl, libfile-touch-perl, zutils, ip2host,
+ build-essential, python-setuptools
+Recommends: jenkins-job-builder
+Description: Stuff to setup a jenkins.debian.net instance
+ Scripts and configuration files for running jenkins.debian.net, including
+ the ability to turn any machine into jenkins.$localdomain. 
+ .
+ On installation of the package no adminstrative changes will be made the
+ system. To do so, run jenkins.debian.net-setup as root.
+
+Package: jenkins.debian.net-bin
+Architecture: all
+Depends:, ${misc:Depends},, debootstrap, sudo, figlet, graphviz, apache2, python-yaml, python-pip, mr, subversion, subversion-tools, vnstat, webcheck, poxml, qemu, vncsnapshot, imagemagick, ffmpeg2theora, python-twisted, python-imaging
+Description: Stuff to make jenkins.debian.net run and debug
+ Scripts and configuration files for running and debugging jobs run on 
+ jenkins.debian.net.
+

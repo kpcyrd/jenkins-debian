@@ -22,6 +22,11 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * push jenkins munin plugins upstream
 
+== Debian Packaging related
+
+* /usr/sbin/jenkins.debian.net-setup needs to be written
+* what update-j.d.n.sh does, needs to be put elsewhere...
+
 === jenkins-job-builder related
 
 * support for gitweb in jobs 

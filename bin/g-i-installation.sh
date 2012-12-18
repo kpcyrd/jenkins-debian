@@ -119,7 +119,7 @@ bootstrap_system() {
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -D $RESULTS/qemu.log -no-shutdown"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -d -D $RESULTS/qemu.log -no-shutdown"
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -162,7 +162,7 @@ boot_system() {
 	echo "Booting system installed with g-i installation test for $NAME."
 	# qemu related variables (incl kernel+initrd)
 	QEMU_OPTS="-drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -D $RESULTS/qemu.log -no-shutdown"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -d -D $RESULTS/qemu.log -no-shutdown"
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \
@@ -170,7 +170,23 @@ boot_system() {
 }
 
 
+backup_screensho() {
+	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+}
+
+rescue_action() {
+	case $NR in
+		700)	vncdo -s $DISPLAY key tab
+			backup_screenshot
+			;;
+		710)	vncdo -s $DISPLAY key enter
+			backup_screenshot
+			;;
+	esac
+}
+
 monitor_system() {
+	MODE=$1
 	cd $RESULTS
 	sleep 4
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or 6h have passed or if the test seems to hang."
@@ -200,19 +216,29 @@ monitor_system() {
 		fi
 		# take a screenshot for later publishing
 		if [ $(($NR % 150)) -eq 0 ] ; then
-			cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+			backup_screenshot
 		fi
+		# let's drive this further
+		case $TYPE in
+			rescue)	;;	rescue_action $NR
+		esac
+		# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
-			# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			set -x
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
-				echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
-				ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
-				figlet "Installation hangs."
-				break
+				LAST_LINE_=$(gocr results/snapshot_003600.png|tail -1|cut -d "]" -f2- || true) 
+				if [ "$LAST_LINE" = " Power down." ] ; then
+					echo "QEMU was powered down, continuing."
+					backup_screenshot
+				else
+					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
+					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
+					figlet "Installation hangs."
+					break
+				fi
 			fi
 			set +x
 		fi
@@ -252,9 +278,21 @@ else
 	fetch_if_newer "$KERNEL" "$URL/$KERNEL"
 	fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
+
+#
+# run g-i
+#
 NR=0
 bootstrap_system
-monitor_system
+case $JOB_NAME in
+	*rescue) 	monitor_system rescue
+			;;
+	*)		monitor_system install
+			;;
+esac
+#
+# boot up installed system
+#
 case $JOB_NAME in
 	*rescue) 	;;
 	*)		#
@@ -263,7 +301,7 @@ case $JOB_NAME in
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
 			if [ ! -z $IMAGE ] ; then sudo umount -l $IMAGE ; fi
 			boot_system
-			monitor_system
+			monitor_system normal
 			;;
 esac
 

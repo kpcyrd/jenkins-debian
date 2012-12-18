@@ -23,7 +23,7 @@ Description: Stuff to setup a jenkins.debian.net instance
 
 Package: jenkins.debian.net-bin
 Architecture: all
-Depends:, ${misc:Depends},, debootstrap, sudo, figlet, graphviz, apache2, python-yaml, python-pip, mr, subversion, subversion-tools, vnstat, webcheck, poxml, qemu, vncsnapshot, imagemagick, ffmpeg2theora, python-twisted, python-imaging
+Depends:, ${misc:Depends},, debootstrap, sudo, figlet, graphviz, apache2, python-yaml, python-pip, mr, subversion, subversion-tools, vnstat, webcheck, poxml, qemu, vncsnapshot, imagemagick, ffmpeg2theora, python-twisted, python-imaging, gocr
 Description: Stuff to make jenkins.debian.net run and debug
  Scripts and configuration files for running and debugging jobs run on 
  jenkins.debian.net.

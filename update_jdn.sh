@@ -25,7 +25,7 @@ done
 #
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml qemu vncsnapshot imagemagick ffmpeg2theora python-twisted python-imaging
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml qemu vncsnapshot imagemagick ffmpeg2theora python-twisted python-imaging gocr
 explain "Packages installed."
 
 #

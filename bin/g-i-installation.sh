@@ -174,13 +174,17 @@ backup_screenshot() {
 	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
 }
 
+do_and_report() {
+	vncdo -s $DISPLAY $1 $2
+	echo "Sending $1 $2"
+	backup_screenshot
+}
+
 rescue_action() {
 	case $NR in
-		700)	vncdo -s $DISPLAY key tab
-			backup_screenshot
+		700)	do_and_report key tab
 			;;
-		710)	vncdo -s $DISPLAY key enter
-			backup_screenshot
+		710)	do_and_report key enter
 			;;
 	esac
 }
@@ -219,7 +223,7 @@ monitor_system() {
 			backup_screenshot
 		fi
 		# let's drive this further
-		case $TYPE in
+		case $MODE in
 			rescue)	rescue_action
 				;;
 			*)	;;

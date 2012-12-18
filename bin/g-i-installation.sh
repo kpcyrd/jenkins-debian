@@ -170,7 +170,7 @@ boot_system() {
 }
 
 
-backup_screensho() {
+backup_screenshot() {
 	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
 }
 

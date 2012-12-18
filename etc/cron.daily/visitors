@@ -3,6 +3,14 @@
 # Copyright 2012 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+[ -x /usr/bin/visitors ] || exit 0
+[ -x /usr/bin/ip2host ] || exit 0
+
+if [ ! -f /usr/share/doc/zutils/copyright ] ; then
+	echo package zutils needs to be installed too
+	exit 1
+fi
+
 LOGS=$(mktemp)
 DOT=$(mktemp)
 # FIXME: provide monthly stats and don't run this daily

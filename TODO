@@ -26,6 +26,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 * /usr/sbin/jenkins.debian.net-setup needs to be written
 * what update-j.d.n.sh does, needs to be put elsewhere...
+* debian/copyright is incorrect about some licenses, ie the profitbricks+debian logos... and the preseeding files as well.
 
 === jenkins-job-builder related
 

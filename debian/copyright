@@ -1,37 +1,33 @@
-This work was packaged for Debian by:
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: jenkins.debian.net
+Upstream-Contact: Holger Levsen <holger@debian.org>
+Source: git://git.debian.org/git/users/holger/jenkins.debian.net.git
+Copyright: 2012 Holger Levsen
+Comment: Original author is Holger Levsen <holger@layer-acht.org>
+ Upstream is bunch of lunatics who don't make release tarballs publicly
+ available. The Debian .orig.tar.gz is what would be released, though.
 
-    Holger Levsen <holger@debian.org> on Tue, 27 Nov 2012 23:54:51 +0100
+Files: *
+Copyright: 2012 Holger Levsen <holger@debian.org>
+License: GPL-2+
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later
+ version.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ '/usr/share/common-licenses/GPL-2'.
 
-It was downloaded from:
-
-    <url://example.com>
-
-Upstream Author(s):
-
-    <put author's name and email here>
-    <likewise for another author>
-
-Copyright:
-
-    <Copyright (C) YYYY Firstname Lastname>
-    <likewise for another author>
-
-License:
-
-    <Put the license of the package here indented by 4 spaces>
-
-The Debian packaging is:
-
-    Copyright (C) 2012 Holger Levsen <holger@debian.org>
-
-# Please chose a license for your packaging work. If the program you package
-# uses a mainstream license, using the same license is the safest choice.
-# Please avoid to pick license terms that are more restrictive than the
-# packaged work, as it may make Debian's contributions unacceptable upstream.
-# If you just want it to be GPL version 3, leave the following lines in.
-
-and is licensed under the GPL version 3,
-see "/usr/share/common-licenses/GPL-3".
-
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.

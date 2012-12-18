@@ -181,13 +181,45 @@ do_and_report() {
 }
 
 rescue_action() {
+	# boot in rescure mode
 	case $NR in
-		700)	do_and_report key tab
+		660)	do_and_report key tab
 			;;
-		710)	do_and_report key enter
+		670)	do_and_report key enter
+			;;
+		710)	do_and_report key tab
+			;;
+		720)	do_and_report key enter
+			;;
+		770)	do_and_report type df
+			;;
+		780)	do_and_report key enter
+			;;
+		810)	do_and_report type exit
+			;;
+		820)	do_and_report key enter
+			;;
+		910)	do_and_report key down
+			;;
+		920)	do_and_report key enter
 			;;
 	esac
 }
+
+normal_action() {
+	# normal boot after installation
+	case $NR in
+		710)	do_and_report type jenkins
+			;;
+		720)	do_and_report key enter
+			;;
+		730)	do_and_report type insecure
+			;;
+		740)	do_and_report key enter
+			;;
+	esac
+}
+
 
 monitor_system() {
 	MODE=$1
@@ -225,6 +257,8 @@ monitor_system() {
 		# let's drive this further
 		case $MODE in
 			rescue)	rescue_action
+				;;
+			normal)	normal_action
 				;;
 			*)	;;
 		esac

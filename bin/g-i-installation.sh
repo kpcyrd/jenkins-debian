@@ -293,7 +293,7 @@ monitor_system() {
 					break
 				else
 					TRIGGERED="true"
-					let TRIGGER_NR=NR+1
+					let TRIGGER_NR=NR+2
 					echo $TRIGGER_NR
 				fi
 			fi

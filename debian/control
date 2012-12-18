@@ -3,7 +3,7 @@ Section: devel
 Priority: extra
 Maintainer: Holger Levsen <holger@debian.org>
 Build-Depends: debhelper (>= 9.20120419~)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.1
 Homepage: http://jenkins.debian.net/userContent/about.html
 Vcs-Git: git://git.debian.org/git/users/holger/jenkins.debian.net.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git

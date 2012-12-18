@@ -3,5 +3,19 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
+ASCIIDOC_PARAMS = "-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(shell pwd)/theme/debian-asciidoc.css"
+
 %:
-	dh $@ 
+	dh $@
+
+override_dh_auto_build:
+	asciidoc $(ASCIIDOC_PARAMS) -o about.html README
+	asciidoc $(ASCIIDOC_PARAMS) -o todo.html TODO
+	asciidoc $(ASCIIDOC_PARAMS) -o setup.html INSTALL
+	mv *html userContent/
+	dh_auto_build
+
+override_dh_auto_clean:
+	rm -vf userContent/*.html
+	dh_auto_clean
+

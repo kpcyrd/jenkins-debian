@@ -182,47 +182,57 @@ do_and_report() {
 
 rescue_action() {
 	# boot in rescure mode
-	case $NR in
-		660)	do_and_report key tab
-			;;
-		670)	do_and_report key enter
-			;;
-		710)	do_and_report key tab
-			;;
-		720)	do_and_report key enter
-			;;
-		770)	do_and_report type df
-			;;
-		780)	do_and_report key enter
-			;;
-		810)	do_and_report type exit
-			;;
-		820)	do_and_report key enter
-			;;
-		910)	do_and_report key down
-			;;
-		920)	do_and_report key enter
-			;;
-	esac
+	if [ $TRIGGER_NR -ne 0 ] ; then
+		let MY_NR=TRIGGER_NR-NR
+		case $MY_NR in
+			10)	do_and_report key tab
+				;;
+			20)	do_and_report key enter
+				;;
+			110)	do_and_report key tab
+				;;
+			120)	do_and_report key enter
+				;;
+			170)	do_and_report type df
+				;;
+			180)	do_and_report key enter
+				;;
+			190)	do_and_report type exit
+				;;
+			230)	do_and_report key enter
+				;;
+			240)	do_and_report key down
+				;;
+			250)	do_and_report key enter
+				;;
+			*)	;;
+		esac
+	fi
 }
 
 normal_action() {
 	# normal boot after installation
-	case $NR in
-		710)	do_and_report type jenkins
-			;;
-		720)	do_and_report key enter
-			;;
-		730)	do_and_report type insecure
-			;;
-		740)	do_and_report key enter
-			;;
-	esac
+	if [ $TRIGGER_NR -ne 0 ] ; then
+		let MY_NR=TRIGGER_NR-NR
+		case $MY_NR in
+			10)	do_and_report type jenkins
+				;;
+			20)	do_and_report key enter
+				;;
+			30)	do_and_report type insecure
+				;;
+			40)	do_and_report key enter
+				;;
+			*)	;;
+		esac
+	fi
 }
 
 
 monitor_system() {
 	MODE=$1
+	TRIGGERED=$2
+	TRIGGER_NR=0
 	cd $RESULTS
 	sleep 4
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or 6h have passed or if the test seems to hang."
@@ -273,11 +283,15 @@ monitor_system() {
 				if [ "$LAST_LINE" = " Power down." ] ; then
 					echo "QEMU was powered down, continuing."
 					backup_screenshot
-				else
+					break
+				elif [ ! -z $TRIGGERED ] ; then
 					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
 					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 					figlet "Installation hangs."
 					break
+				else
+					TRIGGERED="true"
+					let TRIGGER_NR=NR+1
 				fi
 			fi
 			set +x
@@ -327,7 +341,7 @@ bootstrap_system
 case $JOB_NAME in
 	*rescue) 	monitor_system rescue
 			;;
-	*)		monitor_system install
+	*)		monitor_system install true
 			;;
 esac
 #

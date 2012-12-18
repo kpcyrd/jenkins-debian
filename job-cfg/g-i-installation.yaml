@@ -14,7 +14,7 @@
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'true'
+          unstable-on-warning: 'true'
           fail_on_error: 'true'
       - email:
           recipients: '{my_recipients}'
@@ -50,7 +50,7 @@
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'true'
+          unstable-on-warning: 'true'
           fail_on_error: 'true'
       - email:
           recipients: holger@layer-acht.org

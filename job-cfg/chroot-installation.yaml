@@ -12,7 +12,7 @@
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'false'
+          unstable-on-warning: 'false'
           fail_on_error: 'false'
       - email:
           recipients: jenkins+debian-qa holger@layer-acht.org
@@ -43,7 +43,7 @@
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'false'
+          unstable-on-warning: 'false'
           fail_on_error: 'false'
       - trigger:
           project: '{my_trigger}'
@@ -74,7 +74,7 @@
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'true'
+          unstable-on-warning: 'true'
           fail_on_error: 'true'
       - trigger:
           project: '{my_trigger}'

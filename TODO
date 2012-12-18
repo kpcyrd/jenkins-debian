@@ -39,7 +39,6 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 ** publisher:htmlpublisher
 ** svn:scm
 ** properties: sidebar
-* file a bug about jenkins/jenkins-job-builder sometimes "forgetting" about triggers
 
 == Improve existing tests
 

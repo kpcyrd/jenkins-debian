@@ -33,7 +33,7 @@
     publishers:
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
-          unstable_on_warning: 'true'
+          unstable-on-warning: 'true'
           fail_on_error: 'true'
 
 - job-template:

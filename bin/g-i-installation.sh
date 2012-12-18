@@ -181,13 +181,15 @@ do_and_report() {
 }
 
 rescue_action() {
-	# boot in rescure mode
+	# boot in rescue mode
 	if [ $TRIGGER_NR -ne 0 ] ; then
+		set -x
 		let MY_NR=TRIGGER_NR-NR
+		TOKEN=$(printf "%03d" $MY_NR)
 		case $MY_NR in
-			10)	do_and_report key tab
+			010)	do_and_report key tab
 				;;
-			20)	do_and_report key enter
+			020)	do_and_report key enter
 				;;
 			110)	do_and_report key tab
 				;;
@@ -207,6 +209,7 @@ rescue_action() {
 				;;
 			*)	;;
 		esac
+		set +x
 	fi
 }
 
@@ -214,14 +217,15 @@ normal_action() {
 	# normal boot after installation
 	if [ $TRIGGER_NR -ne 0 ] ; then
 		let MY_NR=TRIGGER_NR-NR
-		case $MY_NR in
-			10)	do_and_report type jenkins
+		TOKEN=$(printf "%03d" $MY_NR)
+		case $TOKEN in
+			010)	do_and_report type jenkins
 				;;
-			20)	do_and_report key enter
+			020)	do_and_report key enter
 				;;
-			30)	do_and_report type insecure
+			030)	do_and_report type insecure
 				;;
-			40)	do_and_report key enter
+			040)	do_and_report key enter
 				;;
 			*)	;;
 		esac
@@ -256,12 +260,10 @@ monitor_system() {
 		if [ $(($NR % 14)) -eq 0 ] ; then
 			date
 		fi
-		# press ctrl-key to avoid screensaver kicking in
-		if [ $(($NR % 150)) -eq 0 ] ; then
+		if [ $(($NR % 100)) -eq 0 ] ; then
+			# press ctrl-key to avoid screensaver kicking in
 			vncdo -s $DISPLAY key ctrl
-		fi
-		# take a screenshot for later publishing
-		if [ $(($NR % 150)) -eq 0 ] ; then
+			# take a screenshot for later publishing
 			backup_screenshot
 		fi
 		# let's drive this further
@@ -272,7 +274,7 @@ monitor_system() {
 				;;
 			*)	;;
 		esac
-		# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
+		# test if this screenshot is the same as the one 400 screenshots ago, and if so, probably stop this...
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
@@ -292,6 +294,7 @@ monitor_system() {
 				else
 					TRIGGERED="true"
 					let TRIGGER_NR=NR+1
+					echo $TRIGGER_NR
 				fi
 			fi
 			set +x

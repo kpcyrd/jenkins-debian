@@ -279,7 +279,7 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			set -x
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
-				LAST_LINE_=$(gocr results/snapshot_003600.png|tail -1|cut -d "]" -f2- || true) 
+				LAST_LINE_=$(gocr snapshot_${PRINTF_NR}.ppm|tail -1|cut -d "]" -f2- || true)
 				if [ "$LAST_LINE" = " Power down." ] ; then
 					echo "QEMU was powered down, continuing."
 					backup_screenshot

@@ -56,7 +56,7 @@ fetch_if_newer() {
 
 	curlopts="-L"
 	if [ -f $file ] ; then
-	    curlopts="$curlopts -z $file"
+		curlopts="$curlopts -z $file"
 	fi
 	curl $curlopts -o $file $url
 }
@@ -152,9 +152,9 @@ bootstrap_system() {
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \
-	    $QEMU_OPTS \
-	    $QEMU_KERNEL \
-	    --append "$APPEND" && touch $RESULTS/qemu_quit ) &
+		$QEMU_OPTS \
+		$QEMU_KERNEL \
+		--append "$APPEND" && touch $RESULTS/qemu_quit ) &
 }
 
 boot_system() {
@@ -166,7 +166,7 @@ boot_system() {
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \
-	    $QEMU_OPTS && touch $RESULTS/qemu_quit ) &
+		$QEMU_OPTS && touch $RESULTS/qemu_quit ) &
 }
 
 
@@ -175,8 +175,7 @@ monitor_system() {
 	sleep 4
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or 6h have passed or if the test seems to hang."
 	echo
-	NR=0
-	MAX_RUNS=10800
+	let MAX_RUNS=NR+10800
 	while [ $NR -lt $MAX_RUNS ] ; do
 		set +x
 		#
@@ -200,7 +199,7 @@ monitor_system() {
 			vncdo -s $DISPLAY key ctrl
 		fi
 		# take a screenshot for later publishing
-		if [ $(($NR % 200)) -eq 0 ] ; then
+		if [ $(($NR % 150)) -eq 0 ] ; then
 			cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
 		fi
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
@@ -253,6 +252,7 @@ else
 	fetch_if_newer "$KERNEL" "$URL/$KERNEL"
 	fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
+NR=0
 bootstrap_system
 monitor_system
 case $JOB_NAME in

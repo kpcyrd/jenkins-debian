@@ -119,7 +119,7 @@ bootstrap_system() {
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -d -D $RESULTS/qemu.log -no-shutdown"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -no-shutdown"
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -162,7 +162,7 @@ boot_system() {
 	echo "Booting system installed with g-i installation test for $NAME."
 	# qemu related variables (incl kernel+initrd)
 	QEMU_OPTS="-drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -d -D $RESULTS/qemu.log -no-shutdown"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -no-shutdown"
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \

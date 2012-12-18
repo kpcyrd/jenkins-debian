@@ -184,9 +184,9 @@ rescue_action() {
 	# boot in rescue mode
 	if [ $TRIGGER_NR -ne 0 ] ; then
 		set -x
-		let MY_NR=TRIGGER_NR-NR
+		let MY_NR=NR-TRIGGER_NR
 		TOKEN=$(printf "%03d" $MY_NR)
-		case $MY_NR in
+		case $TOKEN in
 			010)	do_and_report key tab
 				;;
 			020)	do_and_report key enter
@@ -216,7 +216,7 @@ rescue_action() {
 normal_action() {
 	# normal boot after installation
 	if [ $TRIGGER_NR -ne 0 ] ; then
-		let MY_NR=TRIGGER_NR-NR
+		let MY_NR=NR-TRIGGER_NR
 		TOKEN=$(printf "%03d" $MY_NR)
 		case $TOKEN in
 			010)	do_and_report type jenkins

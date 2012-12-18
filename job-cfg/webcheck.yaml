@@ -15,7 +15,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
-          fail_on_error: 'false'
+          fail-on-error: 'false'
 #      - htmlpublisher:
 #          name: 'Webcheck report'
 #          directory: '.'

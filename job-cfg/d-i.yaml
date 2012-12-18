@@ -64,7 +64,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
       - archive:
@@ -115,7 +115,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
       - archive:
@@ -161,7 +161,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
       - archive:
@@ -207,7 +207,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
       - archive:
@@ -249,7 +249,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
 ## doesnt work, the artifacts reside outside the workspace
@@ -296,7 +296,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
 #      - htmlpublisher:
@@ -317,7 +317,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: holger@layer-acht.org
 
@@ -333,7 +333,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
 

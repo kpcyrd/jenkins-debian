@@ -13,7 +13,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
-          fail_on_error: 'false'
+          fail-on-error: 'false'
       - email:
           recipients: jenkins+debian-qa holger@layer-acht.org
     properties:
@@ -44,7 +44,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
-          fail_on_error: 'false'
+          fail-on-error: 'false'
       - trigger:
           project: '{my_trigger}'
       - email:
@@ -75,7 +75,7 @@
       - logparser:
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
-          fail_on_error: 'true'
+          fail-on-error: 'true'
       - trigger:
           project: '{my_trigger}'
           threshold: 'UNSTABLE'

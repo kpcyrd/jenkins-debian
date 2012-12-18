@@ -220,7 +220,7 @@ monitor_system() {
 		fi
 		# let's drive this further
 		case $TYPE in
-			rescue)	;;	rescue_action $NR
+			rescue)	;;	rescue_action
 		esac
 		# test if this screenshot is the same as the one 400 screenshots ago, and if so, let stop this
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then

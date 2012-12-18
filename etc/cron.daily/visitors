@@ -8,7 +8,7 @@ DOT=$(mktemp)
 # FIXME: provide monthly stats and don't run this daily
 zcat /var/log/apache2/access.log* | grep -v 127.0.0.1 | sort | ip2host > $LOGS
 
-visitors --debug -AKMY -m 30 $LOGS > /var/www/visitors-report.html 1> /dev/null
+visitors --debug -AKMY -m 30 $LOGS > /var/www/visitors-report.html 2> /dev/null
 #visitors --debug -VT -m 30 --prefix http://jenkins.debian.net $LOGS > $DOT
 # dot -Tpng -o/var/lib/www/visitors-report-graph.png $DOT
 

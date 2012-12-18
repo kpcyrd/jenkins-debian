@@ -106,7 +106,7 @@ show_preseed() {
 	curl -s "$url" | grep -v ^# | grep -v "^$"
 }
 
-bootstrap() {
+bootstrap_system() {
 	cd $WORKSPACE
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
@@ -157,10 +157,23 @@ bootstrap() {
 	    --append "$APPEND" && touch $RESULTS/qemu_quit ) &
 }
 
-monitor_installation() {
+boot_system() {
+	cd $WORKSPACE
+	echo "Booting system installed with g-i installation test for $NAME."
+	# qemu related variables (incl kernel+initrd)
+	QEMU_OPTS="-drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
+	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -D $RESULTS/qemu.log -no-shutdown"
+	echo
+	echo "Starting QEMU_ now:"
+	(sudo qemu-system-x86_64 \
+	    $QEMU_OPTS && touch $RESULTS/qemu_quit ) &
+}
+
+
+monitor_system() {
 	cd $RESULTS
 	sleep 4
-	echo "Taking screenshots every 2 seconds now, until the installation is finished (or qemu ends for other reasons) or 6h have passed or if the installation seems to hang."
+	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or 6h have passed or if the test seems to hang."
 	echo
 	NR=0
 	MAX_RUNS=10800
@@ -240,8 +253,19 @@ else
 	fetch_if_newer "$KERNEL" "$URL/$KERNEL"
 	fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
-bootstrap 
-monitor_installation
+bootstrap_system
+monitor_system
+case $JOB_NAME in
+	*rescue) 	;;
+	*)		#
+			# kill qemu and image
+			#
+			sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
+			if [ ! -z $IMAGE ] ; then sudo umount -l $IMAGE ; fi
+			boot_system
+			monitor_system
+			;;
+esac
 
 cleanup_all
 trap - INT TERM EXIT

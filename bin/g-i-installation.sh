@@ -55,7 +55,7 @@ fetch_if_newer() {
 	file="$1"
 
 	curlopts="-L"
-	if [ -f $file ] ; then
+	if [ -f "$file" ] ; then
 		curlopts="$curlopts -z $file"
 	fi
 	curl $curlopts -o $file $url
@@ -247,7 +247,7 @@ monitor_system() {
 		#
 		PRINTF_NR=$(printf "%06d" $NR)
 		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || touch $RESULTS/qemu_quit
-		if [ ! -f $RESULTS/qemu_quit ] ; then
+		if [ ! -f "$RESULTS/qemu_quit" ] ; then
 			convert snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
 			rm snapshot_${PRINTF_NR}.jpg
 		else
@@ -288,11 +288,11 @@ monitor_system() {
 					echo "QEMU was powered down, continuing."
 					backup_screenshot
 					break
-				elif [ ! -z $STACK_LINE ] ; then
+				elif [ ! -z "$STACK_LINE" ] ; then
 					echo "WARNING: got a stack-trace, probably on power-down."
 					backup_screenshot
 					break
-				elif [ ! -z $TRIGGERED ] ; then
+				elif [ ! -z "$TRIGGERED" ] ; then
 					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
 					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 					figlet "Installation hangs."
@@ -312,7 +312,7 @@ monitor_system() {
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo Warning: running for 6h, forceing termination.
 	fi
-	if [ -f $RESULTS/qemu_quit ] ; then
+	if [ -f "$RESULTS/qemu_quit" ] ; then
 		let NR=NR-2
 		rm $RESULTS/qemu_quit
 	else
@@ -327,7 +327,7 @@ trap cleanup_all INT TERM EXIT
 #
 # if there is a CD image...
 #
-if [ ! -z $IMAGE ] ; then
+if [ ! -z "$IMAGE" ] ; then
 	fetch_if_newer "$IMAGE" "$URL"
 
 	sudo mkdir -p $IMAGE_MNT
@@ -362,7 +362,7 @@ case $JOB_NAME in
 			# kill qemu and image
 			#
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
-			if [ ! -z $IMAGE ] ; then
+			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true
 			fi
 			boot_system

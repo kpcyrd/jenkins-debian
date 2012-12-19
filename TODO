@@ -37,6 +37,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * add documentation for jenkins-job-builder and send pull requests on github:
 ** publisher:logparse
 ** publisher:htmlpublisher
+** publisher:imagegallery
 ** svn:scm
 ** properties: sidebar
 

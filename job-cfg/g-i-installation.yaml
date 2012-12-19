@@ -171,19 +171,19 @@
       - '{name}_debian_wheezy_kde':
          my_title: 'Debian (wheezy) KDE desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 8 debian_wheezy_kde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian  KDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian KDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 15 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot here and for other jobs - once we made this more stable
       - '{name}_debian_wheezy_lxde':
          my_title: 'Debian (wheezy) LXDE desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 9 debian_wheezy_lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian  LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 17 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily-lxde':
          my_title: 'Debian (sid daily build CD) LXDE desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 debian_sid_daily-lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian  LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily-lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily-lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 8 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily-rescue':

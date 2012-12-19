@@ -96,7 +96,7 @@ cleanup_all() {
 	#
 	# cleanup
 	#
-	sudo umount $IMAGE_MNT
+	sudo umount -l $IMAGE_MNT
 }
 
 show_preseed() {
@@ -362,7 +362,9 @@ case $JOB_NAME in
 			# kill qemu and image
 			#
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
-			if [ ! -z $IMAGE ] ; then sudo umount -l $IMAGE ; fi
+			if [ ! -z $IMAGE ] ; then
+				sudo umount -l $IMAGE_MNT || true
+			fi
 			boot_system
 			monitor_system normal
 			;;

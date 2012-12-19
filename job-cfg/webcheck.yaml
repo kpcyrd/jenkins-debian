@@ -16,11 +16,11 @@
           rulespath: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
-#      - htmlpublisher:
-#          name: 'Webcheck report'
-#          directory: '.'
-#          indexfiles: 'index.html'
-#          keepall: True
+      - htmlpublisher:
+          name: 'Webcheck report'
+          directory: '.'
+          indexfiles: 'index.html'
+          keepall: True
       - email:
           recipients: holger@layer-acht.org
     properties:

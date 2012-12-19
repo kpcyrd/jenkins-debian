@@ -299,11 +299,11 @@
           fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
-#      - htmlpublisher:
-#          name: 'Daily d-i build logs'
-#          directory: '.'
-#          indexfiles: 'build-logs.html'
-#          keepall: True
+      - htmlpublisher:
+          name: 'Daily d-i build logs'
+          directory: '.'
+          indexfiles: 'build-logs.html'
+          keepall: True
 
 - job-template:
     defaults: d-i

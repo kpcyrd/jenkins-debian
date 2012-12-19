@@ -183,7 +183,6 @@ do_and_report() {
 rescue_action() {
 	# boot in rescue mode
 	if [ $TRIGGER_NR -ne 0 ] ; then
-		set -x
 		let MY_NR=NR-TRIGGER_NR
 		TOKEN=$(printf "%03d" $MY_NR)
 		case $TOKEN in
@@ -209,7 +208,6 @@ rescue_action() {
 				;;
 			*)	;;
 		esac
-		set +x
 	fi
 }
 

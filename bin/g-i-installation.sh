@@ -279,9 +279,17 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			set -x
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
-				LAST_LINE=$(gocr snapshot_${PRINTF_NR}.ppm|tail -1|cut -d "]" -f2- || true)
+				GOCR=$(mktemp)
+				gocr snapshot_${PRINTF_NR}.ppm > $GOCR
+				LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
+				STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
+				rm $GOCR
 				if [ "$LAST_LINE" = " Power down." ] ; then
 					echo "QEMU was powered down, continuing."
+					backup_screenshot
+					break
+				elif [ ! -z $STACK_LINE ] ; then
+					echo "WARNING: got a stack-trace, probably on power-down."
 					backup_screenshot
 					break
 				elif [ ! -z $TRIGGERED ] ; then

@@ -79,7 +79,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === g-i-installation_*:
 
-more lanages
+more languages
 
 * babelbox.git has a nice langlist
 * $name-preseed.base -> sed .cfg (LANG)
@@ -90,16 +90,17 @@ more lanages
 post-install
 
 * boot system
-** scp -r vm:/var/log/ results/log
+** scp -r vm:/var/log/ results/log  || mount .img and copy logs from there
 ** login graphically
 ** run vim in xterm
 ** run emacs in xterm
 ** run iceweasel www.debian.org / www.skolelinux.org
-** shutdown as user
+** su -c poweroff
 
 general
 
 * use jigdo to download images - but no edu jigdo images.
+* test live images from http://live.debian.net/cdimage/release/current-next and .../current
 * use https://wiki.jenkins-ci.org/display/JENKINS/Image+Gallery+Plugin
 * still havent got http://www.os-autoinst.org/ out of my mind
 

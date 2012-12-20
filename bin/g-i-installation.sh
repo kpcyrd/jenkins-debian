@@ -275,8 +275,8 @@ monitor_system() {
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
-			set -x
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
+				set -x
 				GOCR=$(mktemp)
 				gocr snapshot_${PRINTF_NR}.ppm > $GOCR
 				LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
@@ -301,7 +301,6 @@ monitor_system() {
 					echo $TRIGGER_NR
 				fi
 			fi
-			set +x
 		fi
 		let NR=NR+1
 		sleep 2

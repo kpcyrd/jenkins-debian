@@ -180,52 +180,48 @@ do_and_report() {
 
 rescue_action() {
 	# boot in rescue mode
-	if [ $TRIGGER_NR -ne 0 ] ; then
-		let MY_NR=NR-TRIGGER_NR
-		TOKEN=$(printf "%03d" $MY_NR)
-		case $TOKEN in
-			010)	do_and_report key tab
-				;;
-			020)	do_and_report key enter
-				;;
-			110)	do_and_report key tab
-				;;
-			120)	do_and_report key enter
-				;;
-			170)	do_and_report type df
-				;;
-			180)	do_and_report key enter
-				;;
-			190)	do_and_report type exit
-				;;
-			230)	do_and_report key enter
-				;;
-			240)	do_and_report key down
-				;;
-			250)	do_and_report key enter
-				;;
-			*)	;;
-		esac
-	fi
+	let MY_NR=NR-TRIGGER_NR
+	TOKEN=$(printf "%03d" $MY_NR)
+	case $TOKEN in
+		010)	do_and_report key tab
+			;;
+		020)	do_and_report key enter
+			;;
+		100)	do_and_report key tab
+			;;
+		110)	do_and_report key enter
+			;;
+		150)	do_and_report type df
+			;;
+		160)	do_and_report key enter
+			;;
+		170)	do_and_report type exit
+			;;
+		200)	do_and_report key enter
+			;;
+		210)	do_and_report key down
+			;;
+		220)	do_and_report key enter
+			;;
+		*)	;;
+	esac
 }
 
 normal_action() {
 	# normal boot after installation
-	if [ $TRIGGER_NR -ne 0 ] ; then
-		let MY_NR=NR-TRIGGER_NR
-		TOKEN=$(printf "%03d" $MY_NR)
-		case $TOKEN in
-			010)	do_and_report type jenkins
-				;;
-			020)	do_and_report key enter
-				;;
-			030)	do_and_report type insecure
-				;;
-			040)	do_and_report key enter
-				;;
-			*)	;;
-		esac
-	fi
+	let MY_NR=NR-TRIGGER_NR
+	TOKEN=$(printf "%03d" $MY_NR)
+	case $TOKEN in
+		010)	do_and_report type jenkins
+			;;
+		020)	do_and_report key enter
+			;;
+		030)	do_and_report type insecure
+			;;
+		040)	do_and_report key enter
+			;;
+		*)	;;
+	esac
 }
 
 
@@ -280,13 +276,15 @@ monitor_system() {
 			fi
 		fi
 		# let's drive this further (once/if triggered)
-		case $MODE in
-			rescue)	rescue_action
-				;;
-			normal)	normal_action
-				;;
-			*)	;;
-		esac
+		if [ $TRIGGER_NR -ne 0 ] && [ $TRIGGER_NR -ne $NR ] ; then
+			case $MODE in
+				rescue)	rescue_action
+					;;
+				normal)	normal_action
+					;;
+				*)	;;
+			esac
+		fi
 		# every 100 screenshots, starting from the 400ths one...
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
@@ -305,8 +303,7 @@ monitor_system() {
 					# fail next time screenshot matchs
 					TRIGGERED="true"
 					# really kick off trigger:
-					let TRIGGER_NR=NR-1
-					echo $TRIGGER_NR
+					let TRIGGER_NR=NR
 				fi
 			fi
 		fi

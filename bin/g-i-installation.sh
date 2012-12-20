@@ -64,6 +64,16 @@ fetch_if_newer() {
 cleanup_all() {
 	set +x
 	set +e
+	#
+	# kill qemu
+	#
+	sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}') || true
+	sleep 0.3s
+	rm $WORKSPACE/$NAME.raw
+	#
+	# cleanup image mount
+	#
+	sudo umount -l $IMAGE_MNT &
 	cd $RESULTS
 	echo -n "Last screenshot: "
 	if [ -f snapshot_000000.ppm ] ; then
@@ -84,19 +94,7 @@ cleanup_all() {
 			convert $i ${i%.ppm}.png
 			rm $i
 		done
-
 	fi
-	set -x
-	#
-	# kill qemu and image
-	#
-	sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
-	sleep 0.3s
-	rm $WORKSPACE/$NAME.raw
-	#
-	# cleanup
-	#
-	sudo umount -l $IMAGE_MNT
 }
 
 show_preseed() {
@@ -111,15 +109,15 @@ bootstrap_system() {
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
-	# qemu related variables (incl kernel+initrd)
+	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
+	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
 	if [ -n "$IMAGE" ] ; then
-		QEMU_OPTS="-cdrom $IMAGE -boot d"
+		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -no-shutdown"
 	QEMU_WEBSERVER=http://10.0.2.2/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -160,9 +158,9 @@ bootstrap_system() {
 boot_system() {
 	cd $WORKSPACE
 	echo "Booting system installed with g-i installation test for $NAME."
-	# qemu related variables (incl kernel+initrd)
-	QEMU_OPTS="-drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -display vnc=$DISPLAY -no-shutdown"
+	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
+	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
+	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
 	echo
 	echo "Starting QEMU_ now:"
 	(sudo qemu-system-x86_64 \
@@ -361,7 +359,7 @@ case $JOB_NAME in
 	*)		#
 			# kill qemu and image
 			#
-			sudo kill -9 $(ps fax | grep [q]emu-system | grep ${NAME}_preseed.cfg 2>/dev/null | awk '{print $1}') || true
+			sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}') || true
 			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true
 			fi
@@ -369,7 +367,8 @@ case $JOB_NAME in
 			monitor_system normal
 			;;
 esac
-
 cleanup_all
+
+# don't cleanup twice
 trap - INT TERM EXIT
 

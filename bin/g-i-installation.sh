@@ -231,6 +231,8 @@ normal_action() {
 
 monitor_system() {
 	MODE=$1
+	# FIXME: this is kind of wicked / badly named:
+	# if called with $2=something, TRIGGER_NR will be 0, thus there will never be any keys pressed....
 	TRIGGERED=$2
 	TRIGGER_NR=0
 	cd $RESULTS
@@ -261,8 +263,23 @@ monitor_system() {
 			vncdo -s $DISPLAY key ctrl
 			# take a screenshot for later publishing
 			backup_screenshot
+			#
+			# search for known text ocr of screenshot and break out of this loop if certain content is found
+			#
+			GOCR=$(mktemp)
+			gocr snapshot_${PRINTF_NR}.ppm > $GOCR
+			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
+			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
+			rm $GOCR
+			if [ "$LAST_LINE" = " Power down." ] ; then
+				echo "QEMU was powered down, continuing."
+				break
+			elif [ ! -z "$STACK_LINE" ] ; then
+				echo "WARNING: got a stack-trace, probably on power-down."
+				break
+			fi
 		fi
-		# let's drive this further
+		# let's drive this further (once/if triggered)
 		case $MODE in
 			rescue)	rescue_action
 				;;
@@ -270,33 +287,24 @@ monitor_system() {
 				;;
 			*)	;;
 		esac
-		# test if this screenshot is the same as the one 400 screenshots ago, and if so, probably stop this...
+		# every 100 screenshots, starting from the 400ths one...
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
+			# test if this screenshot is the same as the one 400 screenshots ago
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
 				set -x
-				GOCR=$(mktemp)
-				gocr snapshot_${PRINTF_NR}.ppm > $GOCR
-				LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
-				STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
-				rm $GOCR
-				if [ "$LAST_LINE" = " Power down." ] ; then
-					echo "QEMU was powered down, continuing."
-					backup_screenshot
-					break
-				elif [ ! -z "$STACK_LINE" ] ; then
-					echo "WARNING: got a stack-trace, probably on power-down."
-					backup_screenshot
-					break
-				elif [ ! -z "$TRIGGERED" ] ; then
+				# if so and if TRIGGERED != ""
+				if [ ! -z "$TRIGGERED" ] ; then
 					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
 					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 					figlet "Installation hangs."
 					break
 				else
+					# fail next time screenshot matchs
 					TRIGGERED="true"
+					# really kick off trigger:
 					let TRIGGER_NR=NR-1
 					echo $TRIGGER_NR
 				fi

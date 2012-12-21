@@ -13,7 +13,7 @@
       - shell: "{my_shell}"
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
@@ -53,7 +53,7 @@
       - shell: '/srv/jenkins/bin/housekeeping.sh {name}'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:

@@ -11,7 +11,7 @@
       - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
       - email:
@@ -42,7 +42,7 @@
       - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
       - trigger:
@@ -73,7 +73,7 @@
       - shell: '/srv/jenkins/bin/housekeeping.sh {name}'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - trigger:

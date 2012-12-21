@@ -32,7 +32,7 @@
     name: '{name}_housekeeping'
     publishers:
       - logparser:
-          rulespath: '/srv/jenkins/logparse/debian.rules'
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
 

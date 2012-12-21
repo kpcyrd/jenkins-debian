@@ -271,7 +271,7 @@ monitor_system() {
 				echo "QEMU was powered down, continuing."
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
-				echo "WARNING: got a stack-trace, probably on power-down."
+				echo "Info: got a stack-trace, probably on power-down."
 				break
 			fi
 		fi
@@ -295,7 +295,7 @@ monitor_system() {
 				set -x
 				# if so and if TRIGGERED != ""
 				if [ ! -z "$TRIGGERED" ] ; then
-					echo ERROR snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation.
+					echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
 					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 					figlet "Installation hangs."
 					break

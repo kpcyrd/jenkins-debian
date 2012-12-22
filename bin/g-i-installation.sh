@@ -126,8 +126,8 @@ bootstrap_system() {
 	INST_KEYMAP="keymap=us"
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
 	EXTRA_APPEND=""
-	case $JOB_NAME in
-		*debian-edu_squeeze-test*)
+	case $NAME in
+		debian-edu_squeeze-test*)
 			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
 			;;
 		*_sid_daily*)
@@ -135,17 +135,17 @@ bootstrap_system() {
 			;;
 		*)	;;
 	esac
-	case $JOB_NAME in
-		*debian_*xfce)
+	case $NAME in
+		debian_*xfce)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=xfce"
 			;;
-		*debian_*lxde)
+		debian_*lxde)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=lxde"
 			;;
-		*debian_*kde)
+		debian_*kde)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=kde"
 			;;
-		*debian_*rescue)
+		debian_*rescue)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		*)	;;
@@ -422,7 +422,13 @@ save_logs() {
 	cd $WORKSPACE
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
-	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
+	case $NAME in
+		debian-edu_*)	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || true
+				sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || true
+				;;
+		*)		sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
+				;;
+	esac
 	ls
 	ls $NAME.raw -la
 	ls $SYSTEM_MNT
@@ -440,6 +446,11 @@ save_logs() {
 		echo "Warning: cannot mount installed system to copy the logs..."
 		cp $NAME.raw $NAME.raw.bak
 	fi
+	case $NAME in
+		debian-edu_*)	sudo umount -l $SYSTEM_MNT/var || true
+				;;
+		*)		;;
+	esac
 	sudo umount -l $SYSTEM_MNT || true
 }
 
@@ -468,7 +479,7 @@ fi
 #
 NR=0
 bootstrap_system
-case $JOB_NAME in
+case $NAME in
 	*rescue) 	monitor_system rescue
 			;;
 	*)		monitor_system install true
@@ -477,7 +488,7 @@ esac
 #
 # boot up installed system
 #
-case $JOB_NAME in
+case $NAME in
 	*rescue) 	;;
 	*)		#
 			# kill qemu and image

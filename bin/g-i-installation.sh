@@ -211,6 +211,9 @@ normal_action() {
 	# normal boot after installation
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%03d" $MY_NR)
+	#
+	# common for all types of install
+	#
 	case $TOKEN in
 		050)	do_and_report type jenkins
 			;;
@@ -220,13 +223,33 @@ normal_action() {
 			;;
 		080)	do_and_report key enter
 			;;
-		100)	case $NAME in
-				*lxde*)		do_and_report key enter
-						;;
-				*)		;;
-			esac
-			;;
 		*)	;;
+	esac
+	#
+	# actions depending on the type of installation
+	#
+	case $NAME in
+		*lxde*)		case $TOKEN in
+						100)	do_and_report key enter
+							;;
+						120)	do_and_report key alt-f2
+							;;
+						130)	do_and_report type lxterminal
+							;;
+						140)	do_and_report key enter
+							;;
+						150)	do_and_report type "su -c poweroff"
+							;;
+						160)	do_and_report key enter
+							;;
+						170)	do_and_report type r00tme
+							;;
+						180)	do_and_report key enter
+							;;
+						*)	;;
+				esac
+				;;
+		*)		;;
 	esac
 }
 

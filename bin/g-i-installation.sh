@@ -387,6 +387,9 @@ save_logs() {
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
 	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
+	ls
+	ls $NAME.raw -la
+	ls $SYSTEM_MNT
 	if [ -d $SYSTEM_MNT/var/log ] ; then
 		#
 		# copy logs
@@ -399,6 +402,7 @@ save_logs() {
 		chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l
 	else
 		echo "Warning: cannot mount installed system to copy the logs..."
+		cp $NAME.raw $NAME.raw.bak
 	fi
 	sudo umount -l $SYSTEM_MNT || true
 }

@@ -153,7 +153,7 @@ bootstrap_system() {
 	APPEND="auto=true priority=critical $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_preseed.cfg
 	echo
-	echo "Starting QEMU_ now:"
+	echo "Starting QEMU now:"
 	(sudo qemu-system-x86_64 \
 		$QEMU_OPTS \
 		$QEMU_KERNEL \
@@ -315,9 +315,8 @@ normal_action() {
 
 monitor_system() {
 	MODE=$1
-	# FIXME: this is kind of wicked / badly named:
-	# if called with $2=something, TRIGGER_NR will be 0, thus there will never be any keys pressed....
-	TRIGGERED=$2
+	# if TRIGGER_MODE is set to a number, triggered mode will be entered in that many steps - else an image match needs to happen
+	TRIGGER_MODE=$2
 	TRIGGER_NR=0
 	cd $RESULTS
 	sleep 4
@@ -381,19 +380,23 @@ monitor_system() {
 			# test if this screenshot is the same as the one 400 screenshots ago
 			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
 				set -x
-				# if so and if TRIGGERED != ""
-				if [ ! -z "$TRIGGERED" ] ; then
+				# unless TRIGGER_MODE is empty, matching images means its over
+				if [ ! -z "$TRIGGER_MODE" ] ; then
 					echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
 					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 					figlet "Installation hangs."
 					break
 				else
 					# fail next time screenshot matchs
-					TRIGGERED="true"
+					TRIGGER_MODE="already_matched"
 					# really kick off trigger:
 					let TRIGGER_NR=NR
 				fi
 			fi
+		fi
+		# if TRIGGER_MODE matches NR, we are triggered too
+		if [ ! -z "$TRIGGER_MODE" ] && [ "$TRIGGER_MODE" = "$NR" ] ; then
+			let TRIGGER_NR=NR
 		fi
 		let NR=NR+1
 		sleep 2
@@ -482,7 +485,7 @@ bootstrap_system
 case $NAME in
 	*rescue) 	monitor_system rescue
 			;;
-	*)		monitor_system install true
+	*)		monitor_system install wait4match
 			;;
 esac
 #
@@ -498,7 +501,7 @@ case $NAME in
 				sudo umount -l $IMAGE_MNT || true
 			fi
 			boot_system
-			monitor_system normal
+			monitor_system normal 500
 			save_logs
 			;;
 esac

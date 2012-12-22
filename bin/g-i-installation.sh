@@ -355,7 +355,7 @@ monitor_system() {
 
 save_logs() {
 	#
-	# get logs from the installed system
+	# get logs and other files from the installed system
 	#
 	# remove set +e once the code has proven its good
 	set +e
@@ -363,8 +363,15 @@ save_logs() {
 	sudo mkdir -p $SYSTEM_MNT
 	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
 	if [ -d $SYSTEM_MNT/var/log ] ; then
+		#
+		# copy logs
+		#
 		mkdir -p $RESULTS/log
 		cp -r $SYSTEM_MNT/var/log/installer $RESULTS/log/
+		#
+		# get list of installed packages
+		#
+		chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l
 	else
 		echo "Warning: cannot mount installed system to copy the logs..."
 	fi

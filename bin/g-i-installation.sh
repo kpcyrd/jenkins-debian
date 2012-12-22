@@ -173,8 +173,8 @@ backup_screenshot() {
 }
 
 do_and_report() {
-	vncdo -s $DISPLAY $1 $2
-	echo "Sending $1 $2"
+	vncdo -s $DISPLAY $1 "$2"
+	echo "At $NR sending $1 $2"
 	backup_screenshot
 }
 
@@ -230,21 +230,21 @@ normal_action() {
 	#
 	case $NAME in
 		*lxde)		case $TOKEN in
-						100)	do_and_report key enter
-							;;
-						120)	do_and_report key alt-f2
-							;;
-						130)	do_and_report type lxterminal
-							;;
-						140)	do_and_report key enter
-							;;
-						150)	do_and_report type "su -c poweroff"
-							;;
 						160)	do_and_report key enter
 							;;
-						170)	do_and_report type r00tme
+						200)	do_and_report key alt-f2
 							;;
-						180)	do_and_report key enter
+						230)	do_and_report type lxterminal
+							;;
+						240)	do_and_report key enter
+							;;
+						250)	do_and_report type "su -c poweroff"
+							;;
+						270)	do_and_report key enter
+							;;
+						280)	do_and_report type r00tme
+							;;
+						300)	do_and_report key enter
 							;;
 						*)	;;
 				esac

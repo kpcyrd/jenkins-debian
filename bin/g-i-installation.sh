@@ -229,7 +229,7 @@ normal_action() {
 	# actions depending on the type of installation
 	#
 	case $NAME in
-		*lxde*)		case $TOKEN in
+		*lxde)		case $TOKEN in
 						100)	do_and_report key enter
 							;;
 						120)	do_and_report key alt-f2
@@ -245,6 +245,30 @@ normal_action() {
 						170)	do_and_report type r00tme
 							;;
 						180)	do_and_report key enter
+							;;
+						*)	;;
+				esac
+				;;
+		*kde)		case $TOKEN in
+						200)	do_and_report key alt-f2
+							;;
+						210)	do_and_report type "konqueror http://www.debian.org"
+							;;
+						220)	do_and_report key enter
+							;;
+						300)	do_and_report key alt-f2
+							;;
+						310)	do_and_report type konsole
+							;;
+						320)	do_and_report key enter
+							;;
+						350)	do_and_report type "su -c poweroff"
+							;;
+						360)	do_and_report key enter
+							;;
+						370)	do_and_report type r00tme
+							;;
+						380)	do_and_report key enter
 							;;
 						*)	;;
 				esac

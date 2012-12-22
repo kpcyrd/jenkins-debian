@@ -383,6 +383,7 @@ save_logs() {
 	#
 	# remove set +e once the code has proven its good
 	set +e
+	cd $WORKSPACE
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
 	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true

@@ -54,7 +54,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === d-i_build*
 
-* run scripts/digress/
+* run scripts/digress/ ?
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
 * build branches? (which?)
 * inform debian-boot@ ?
@@ -87,21 +87,10 @@ more languages
 * for d-i: create jobs for something like Tamil, Traditional Chinese, Japanese, Hebrew, some Arabic and maybe some more Indian languages would be sufficient
 ** these jobs would not need to do an install, just booting them in rescue mode is probably enough
 
-post-install
-
-* boot system
-** scp -r vm:/var/log/ results/log  || mount .img and copy logs from there
-** login graphically
-** run vim in xterm
-** run emacs in xterm
-** run iceweasel www.debian.org / www.skolelinux.org
-** su -c poweroff
-
 general
 
 * use jigdo to download images - but no edu jigdo images.
 * test live images from http://live.debian.net/cdimage/release/current-next and .../current
-* use https://wiki.jenkins-ci.org/display/JENKINS/Image+Gallery+Plugin
 * still havent got http://www.os-autoinst.org/ out of my mind
 
 == Add more tests

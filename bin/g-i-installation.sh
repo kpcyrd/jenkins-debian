@@ -212,13 +212,19 @@ normal_action() {
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%03d" $MY_NR)
 	case $TOKEN in
-		010)	do_and_report type jenkins
+		050)	do_and_report type jenkins
 			;;
-		020)	do_and_report key enter
+		060)	do_and_report key enter
 			;;
-		030)	do_and_report type insecure
+		070)	do_and_report type insecure
 			;;
-		040)	do_and_report key enter
+		080)	do_and_report key enter
+			;;
+		100)	case $NAME in
+				*lxde*)		do_and_report key enter
+						;;
+				*)		;;
+			esac
 			;;
 		*)	;;
 	esac

@@ -133,8 +133,12 @@ bootstrap_system() {
 		*_sid_daily*)
 			EXTRA_APPEND="mirror/suite=sid"
 			;;
+		*)	;;
 	esac
 	case $JOB_NAME in
+		*debian_*xfce)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=xfce"
+			;;
 		*debian_*lxde)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=lxde"
 			;;
@@ -144,6 +148,7 @@ bootstrap_system() {
 		*debian_*rescue)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
+		*)	;;
 	esac
 	APPEND="auto=true priority=critical $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_preseed.cfg
@@ -229,22 +234,52 @@ normal_action() {
 	# actions depending on the type of installation
 	#
 	case $NAME in
-		*lxde)		case $TOKEN in
-						160)	do_and_report key enter
+		*xfce)		case $TOKEN in
+						200)	do_and_report key enter
 							;;
+						210)	do_and_report key alt-f2
+							;;
+						220)	do_and_report type "iceweasel http://www.debian.org"
+							;;
+						230)	do_and_report key enter
+							;;
+						300)	do_and_report key alt-f2
+							;;
+						230)	do_and_report type xterm
+							;;
+						320)	do_and_report key enter
+							;;
+						350)	do_and_report type "su -c poweroff"
+							;;
+						370)	do_and_report key enter
+							;;
+						380)	do_and_report type r00tme
+							;;
+						400)	do_and_report key enter
+							;;
+						*)	;;
+				esac
+				;;
+		*lxde)		case $TOKEN in
 						200)	do_and_report key alt-f2
 							;;
-						230)	do_and_report type lxterminal
+						210)	do_and_report type "iceweasel http://www.debian.org"
 							;;
-						240)	do_and_report key enter
+						220)	do_and_report key enter
 							;;
-						250)	do_and_report type "su -c poweroff"
+						300)	do_and_report key alt-f2
 							;;
-						270)	do_and_report key enter
+						310)	do_and_report type lxterminal
 							;;
-						280)	do_and_report type r00tme
+						320)	do_and_report key enter
 							;;
-						300)	do_and_report key enter
+						350)	do_and_report type "su -c poweroff"
+							;;
+						370)	do_and_report key enter
+							;;
+						380)	do_and_report type r00tme
+							;;
+						400)	do_and_report key enter
 							;;
 						*)	;;
 				esac
@@ -381,8 +416,9 @@ save_logs() {
 	#
 	# get logs and other files from the installed system
 	#
-	# remove set +e once the code has proven its good
+	# remove set +e & -x once the code has proven its good
 	set +e
+	set -x
 	cd $WORKSPACE
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT

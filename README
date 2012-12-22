@@ -38,11 +38,11 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 
 Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
-* 'g-i-installation_debian_sid_daily-lxde'
-** sid installation of LXDE desktop with daily build sid image
+* 'g-i-installation_debian_sid_daily-lxde', '-xfce' and '-kde'
+** sid installation of XFCE/LXDE/KDE desktop with daily build sid image
 
-* 'g-i-installation_debian_wheezy_lxde'
-** wheezy installation of LXDE desktop with weekly build wheezy image
+* 'g-i-installation_debian_wheezy_lxde','-xfce' and '-kde'
+** wheezy installation of XFCE/LXDE/KDE desktop with weekly build wheezy image
 
 * Debian Edu installation tests of specific profiles and suites:
 ** 'g-i-installation_debian-edu_squeeze-test_standalone'
@@ -97,6 +97,10 @@ Installation tests inside chroot environments.
 * several webcheck jobs for running again various debconf.org websites
 
 These jobs are only run on the first day of each month.
+
+=== self jobs
+
+These are jobs for making sure jenkins.debian.net is running smoothly.
 
 == License
 

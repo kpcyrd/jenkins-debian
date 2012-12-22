@@ -420,35 +420,28 @@ save_logs() {
 	# get logs and other files from the installed system
 	#
 	# remove set +e & -x once the code has proven its good
-	set +e
 	set -x
 	cd $WORKSPACE
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
+	# FIXME: bugreport guestmount: -o uid doesnt work:
+	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, bt it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	case $NAME in
-		debian-edu_*)	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || true
-				sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || true
+		debian-edu_*)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || true
+				sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || true
 				;;
-		*)		sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
+		*)		sudo guestmount -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
 				;;
 	esac
-	ls
-	ls $NAME.raw -la
-	ls $SYSTEM_MNT
-	if [ -d $SYSTEM_MNT/var/log ] ; then
-		#
-		# copy logs
-		#
-		mkdir -p $RESULTS/log
-		cp -r $SYSTEM_MNT/var/log/installer $RESULTS/log/
-		#
-		# get list of installed packages
-		#
-		chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l
-	else
-		echo "Warning: cannot mount installed system to copy the logs..."
-		cp $NAME.raw $NAME.raw.bak
-	fi
+	#
+	# copy logs
+	#
+	mkdir -p $RESULTS/log
+	sudo cp -r $SYSTEM_MNT/var/log/installer $RESULTS/log/
+	#
+	# get list of installed packages
+	#
+	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l
 	case $NAME in
 		debian-edu_*)	sudo umount -l $SYSTEM_MNT/var || true
 				;;

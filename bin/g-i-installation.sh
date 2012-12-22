@@ -277,7 +277,7 @@ monitor_system() {
 				echo "QEMU was powered down, continuing."
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
-				echo "Info: got a stack-trace, probably on power-down."
+				echo "INFO: got a stack-trace, probably on power-down."
 				break
 			fi
 		fi
@@ -318,7 +318,7 @@ monitor_system() {
 	done
 	set -x
 	if [ $NR -eq $MAX_RUNS ] ; then
-		echo Warning: running for 6h, forceing termination.
+		echo "Warning: running for 6h, forceing termination."
 	fi
 	if [ -f "$RESULTS/qemu_quit" ] ; then
 		let NR=NR-2
@@ -328,6 +328,24 @@ monitor_system() {
 	fi
 	PRINTF_NR=$(printf "%06d" $NR)
 	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+}
+
+save_logs() {
+	#
+	# get logs from the installed system
+	#
+	# remove set +e once the code has proven its good
+	set +e
+	SYSTEM_MNT=/media/$NAME
+	sudo mkdir -p $SYSTEM_MNT
+	sudo guestmount -o uid=$(id -u) -o gid=$(id -g) -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || true
+	if [ -d $SYSTEM_MNT/var/log ] ; then
+		mkdir -p $RESULTS/log
+		cp -r $SYSTEM_MNT/var/log/installer $RESULTS/log/
+	else
+		echo "Warning: cannot mount installed system to copy the logs..."
+	fi
+	sudo umount -l $SYSTEM_MNT || true
 }
 
 trap cleanup_all INT TERM EXIT
@@ -375,6 +393,7 @@ case $JOB_NAME in
 			fi
 			boot_system
 			monitor_system normal
+			save_logs
 			;;
 esac
 cleanup_all

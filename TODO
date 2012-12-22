@@ -90,8 +90,12 @@ more languages
 general
 
 * use jigdo to download images - but no edu jigdo images.
-* test live images from http://live.debian.net/cdimage/release/current-next and .../current
 * still havent got http://www.os-autoinst.org/ out of my mind
+
+=== Test Debian live
+
+* daily build from sid
+* test live images from http://live.debian.net/cdimage/release/current-next and .../current
 
 == Add more tests
 

@@ -250,6 +250,7 @@ normal_action() {
 						320)	do_and_report key enter
 							;;
 						350)	do_and_report type "su -c poweroff"
+							# "alt-f4 right right enter" should also work
 							;;
 						370)	do_and_report key enter
 							;;

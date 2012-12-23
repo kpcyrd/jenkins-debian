@@ -438,7 +438,7 @@ save_logs() {
 	#
 	mkdir -p $RESULTS/log
 	sudo cp -r $SYSTEM_MNT/var/log/installer $RESULTS/log/
-	sudo chown -R jenkins.jenkins $RESULTS/log/
+	sudo chown -R jenkins:jenkins $RESULTS/log/
 	#
 	# get list of installed packages
 	#

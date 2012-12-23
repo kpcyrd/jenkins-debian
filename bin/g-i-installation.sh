@@ -487,7 +487,10 @@ esac
 # boot up installed system
 #
 case $NAME in
-	*rescue) 	;;
+	*rescue)	# so there are some artifacts to publish
+			mkdir -p $RESULTS/log/dummy
+			touch $RESULTS/log/dummy.log $RESULTS/log/dummy/dummy
+			;;
 	*)		#
 			# kill qemu and image
 			#

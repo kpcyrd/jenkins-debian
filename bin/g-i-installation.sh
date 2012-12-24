@@ -444,6 +444,10 @@ save_logs() {
 	# get list of installed packages
 	#
 	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l
+	#
+	# umount guests
+	#
+	sync
 	case $NAME in
 		debian-edu_*)	sudo umount -l $SYSTEM_MNT/var || true
 				;;

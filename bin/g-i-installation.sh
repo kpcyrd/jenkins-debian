@@ -492,8 +492,8 @@ esac
 #
 case $NAME in
 	*rescue)	# so there are some artifacts to publish
-			mkdir -p $RESULTS/log/dummy
-			touch $RESULTS/log/dummy.log $RESULTS/log/dummy/dummy
+			mkdir -p $RESULTS/log/installer
+			touch $RESULTS/log/dummy $RESULTS/log/installer/dummy
 			;;
 	*)		#
 			# kill qemu and image

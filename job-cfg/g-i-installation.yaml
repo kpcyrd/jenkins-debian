@@ -19,7 +19,7 @@
       - email:
           recipients: '{my_recipients}'
       - archive:
-          artifacts: 'results/* results/*/* results/*/*/*'
+          artifacts: 'results/*.*, results/log/*, results/log/installer/*'
           latest_only: false
       - imagegallery:
           title: '{my_title}'

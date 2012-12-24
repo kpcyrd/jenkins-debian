@@ -499,7 +499,8 @@ case $NAME in
 				sudo umount -l $IMAGE_MNT || true
 			fi
 			boot_system
-			monitor_system normal 500
+			let START_TRIGGER=NR+500
+			monitor_system normal $START_TRIGGER
 			save_logs
 			;;
 esac

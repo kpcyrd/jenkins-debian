@@ -18,6 +18,8 @@ Virtual hardware sponsored by http://www.profitbricks.com - currently it's just 
 
 Some stats are available using link:http://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
 
+If you notice some jobs has problems and you want to find out why, read <<debug,debug certain jobs>> to learn how to do this locally.
+
 === Feedback
 
 I love to get feedback on this! Please join #debian-qa on irc.debian.org to report bugs or give other feedback! Or send an email to debian-qa@lists.debian.org if you prefer mail.
@@ -101,6 +103,29 @@ These jobs are only run on the first day of each month.
 === self jobs
 
 These are jobs for making sure jenkins.debian.net is running smoothly.
+
+[[debug]]
+== Debugging certain jobs
+
+*FIXME*: To debug certain jobs, a jenkins setup is actually not needed. Make this easy and describe here.
+
+*This is work in progress too and is not full done yet!*
+
+Build this source as a debian package and install the jenkins.d.n-debug package and all it's recommends.
+
+=== Debugging g-i-installation jobs
+
+as user run:
+
+----
+mkdir workspace ; cd workspace # test-script should check if they are in a directory called workspace and if not, mkdir it and cd into it.
+/srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
+
+----
+See the *fourth line* on *any* log to find out how to debug any job. Point this out at the end of any log.
+
+
+TODO: Currently as easy: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.
 
 == License
 

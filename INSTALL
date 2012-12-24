@@ -114,26 +114,3 @@ Currently only the configuration is backed up, but neither the jenkins results n
 
 I've cloned these two git repos on my desktop and manually run `git pull`. This is certainly not ideal but good enough to re-setup the system anytime, which is something.
 
-== Debugging jobs without jenkins
-
-*FIXME*: To debug certain jobs, a jenkins setup is actually not needed. Make this easy and describe here.
-
-*This is work in progress too and is not done yet!*
-
-FIXME: Describe which packages need to be installed, too. No, don't. Package it properly. update_jdn.sh is a hack and needs to die.
-FIXME: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.
-
-=== Debugging g-i-installation jobs
-
-as user run:
-
-----
-mkdir workspace ; cd workspace # test-script should check if they are in a directory called workspace and if not, mkdir it and cd into it.
-/srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
-
-----
-See the *fourth line* on *any* log to find out how to debug any job. Point this out at the end of any log.
-
-When packaging this, two packages should be created:
-- jenkins.debian.net - turn a machine into jenkins.$localdomain (not policy complient package), probably jenkins.d.n-seteup or such is a better package name
-- jenkins.d.n-debug - or such to set an environment to run specific jobs easily

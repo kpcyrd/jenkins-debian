@@ -11,8 +11,9 @@ set -e
 
 check_for_mounted_chroots() {
 	CHROOT_PATTERN="/chroots/${1}-*"
-	OUTPUT=$(ls $CHROOT_PATTERN 2>/dev/null) || true
-	if [ ! -z $OUTPUT ] ; then
+	OUTPUT=$(mktemp)
+	ls $CHROOT_PATTERN 2>/dev/null) > $OUTPUT || true
+	if [ -s $OUTPUT ] ; then
 		figlet "Warning:"
 		echo
 		echo "Probably manual cleanup needed:"
@@ -21,9 +22,11 @@ check_for_mounted_chroots() {
 		# List the processes using the partition
 		echo
 		fuser -mv $CHROOT_TARGET
-		echo $OUTPUT
+		cat $OUTPUT
+		rm $OUTPUT
 		exit 1
 	fi
+	rm $OUTPUT
 }
 
 report_disk_usage() {
@@ -32,7 +35,17 @@ report_disk_usage() {
 }
 
 report_filetype_usage() {
-	find /var/lib/jenkins/jobs/${1}_* -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$1 .$2 files#"
+	OUTPUT=$(mktemp)
+	find /var/lib/jenkins/jobs/${1}_* -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$1 .$2 files#" > $OUTPUT
+	if [ "$3" = "warn" ] &&  [ -s $OUTPUT ] ; then
+		echo "Warning: there are $2 files and there should not be any."
+		cat $OUTPUT
+		echo "Checking for running QEMU processes:"
+		ps fax | grep [q]emu-system || true
+	else
+		cat $OUTPUT
+	fi
+	rm $OUTPUT
 }
 
 
@@ -79,9 +92,11 @@ else
 						check_for_mounted_chroots $1
 						;;
 		g-i-installation)		report_disk_usage $1
-						report_filetype_usage $1 raw
+						report_filetype_usage $1 raw warn
 						report_filetype_usage $1 iso
 						report_filetype_usage $1 png
+						report_filetype_usage $1 ppm warn
+						report_filetype_usage $1 bak warn
 						;;
 		squid)				report_squid_usage
 						;;

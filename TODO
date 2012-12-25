@@ -79,13 +79,6 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 === g-i-installation_*:
 
-<h01ger> $ compare -metric AE snapshot_012700.png snapshot_012800.png foo.png
-<h01ger> 109
-<h01ger> = 109 pixel are different \o/
-<h01ger> (thats lxde desktop clock changing)
-<h01ger> kdm login clock changing results in 126 pixel changing
-<h01ger> yay. while d-i progress bar change means 1190 pixel change
-
 more languages
 
 * babelbox.git has a nice langlist

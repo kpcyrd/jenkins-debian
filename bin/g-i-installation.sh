@@ -398,8 +398,10 @@ monitor_system() {
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
-			# test if this screenshot is the same as the one 400 screenshots ago
-			if diff -q snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm ; then
+			# test if this screenshot is basically the same as the one 400 screenshots ago
+			# 200 pixels difference between to images is tolerated, to ignore updating clocks
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null)
+			if [ $PIXEL -lt 200 ] ; then
 				set -x
 				# unless TRIGGER_MODE is empty, matching images means its over
 				if [ ! -z "$TRIGGER_MODE" ] ; then

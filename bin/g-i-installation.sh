@@ -463,7 +463,7 @@ save_logs() {
 	#
 	# get list of installed packages
 	#
-	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l
+	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l
 	#
 	# umount guests
 	#

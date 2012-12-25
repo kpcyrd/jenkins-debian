@@ -239,24 +239,28 @@ normal_action() {
 							;;
 						210)	do_and_report key alt-f2
 							;;
-						220)	do_and_report type "iceweasel http://www.debian.org"
+						220)	do_and_report type "iceweasel"
 							;;
-						230)	do_and_report key enter
+						230)	do_and_report key space
+							;;
+						240)	do_and_report type "http://www.debian.org"
+							;;
+						250)	do_and_report key enter
 							;;
 						300)	do_and_report key alt-f2
 							;;
-						230)	do_and_report type xterm
+						310)	do_and_report type xterm
 							;;
 						320)	do_and_report key enter
 							;;
-						350)	do_and_report type "su -c poweroff"
-							# "alt-f4 right right enter" should also work
+						350)	# leave XFCE and shutdown
+							do_and_report key alt-f4
 							;;
-						370)	do_and_report key enter
+						360)	do_and_report key right
 							;;
-						380)	do_and_report type r00tme
+						370)	do_and_report key right
 							;;
-						400)	do_and_report key enter
+						380)	do_and_report key enter
 							;;
 						*)	;;
 				esac
@@ -264,9 +268,13 @@ normal_action() {
 		*lxde)		case $TOKEN in
 						200)	do_and_report key alt-f2
 							;;
-						210)	do_and_report type "iceweasel http://www.debian.org"
+						210)	do_and_report type "iceweasel"
 							;;
-						220)	do_and_report key enter
+						230)	do_and_report key space
+							;;
+						240)	do_and_report type "http://www.debian.org"
+							;;
+						250)	do_and_report key enter
 							;;
 						300)	do_and_report key alt-f2
 							;;
@@ -274,13 +282,17 @@ normal_action() {
 							;;
 						320)	do_and_report key enter
 							;;
-						350)	do_and_report type "su -c poweroff"
+						330)	do_and_report type "su"
 							;;
-						370)	do_and_report key enter
+						340)	do_and_report key enter
 							;;
-						380)	do_and_report type r00tme
+						350)	do_and_report type r00tme
 							;;
-						400)	do_and_report key enter
+						360)	do_and_report key enter
+							;;
+						370)	do_and_report type "poweroff"
+							;;
+						380)	do_and_report key enter
 							;;
 						*)	;;
 				esac
@@ -288,9 +300,13 @@ normal_action() {
 		*kde)		case $TOKEN in
 						200)	do_and_report key alt-f2
 							;;
-						210)	do_and_report type "konqueror http://www.debian.org"
+						210)	do_and_report type "konqueror"
 							;;
-						220)	do_and_report key enter
+						230)	do_and_report key space
+							;;
+						240)	do_and_report type "http://www.debian.org"
+							;;
+						250)	do_and_report key enter
 							;;
 						300)	do_and_report key alt-f2
 							;;
@@ -298,11 +314,15 @@ normal_action() {
 							;;
 						320)	do_and_report key enter
 							;;
-						350)	do_and_report type "su -c poweroff"
+						330)	do_and_report type "su"
+							;;
+						340)	do_and_report key enter
+							;;
+						350)	do_and_report type r00tme
 							;;
 						360)	do_and_report key enter
 							;;
-						370)	do_and_report type r00tme
+						370)	do_and_report type "poweroff"
 							;;
 						380)	do_and_report key enter
 							;;

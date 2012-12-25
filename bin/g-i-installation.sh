@@ -400,7 +400,7 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one 400 screenshots ago
 			# 200 pixels difference between to images is tolerated, to ignore updating clocks
-			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null)
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1)
 			if [ $PIXEL -lt 200 ] ; then
 				set -x
 				# unless TRIGGER_MODE is empty, matching images means its over
@@ -410,7 +410,8 @@ monitor_system() {
 					figlet "Installation hangs."
 					break
 				else
-					# fail next time screenshot matchs
+					# this is only reached once in rescue mode
+					# and the next matching screenshots will cause a failure...
 					TRIGGER_MODE="already_matched"
 					# really kick off trigger:
 					let TRIGGER_NR=NR

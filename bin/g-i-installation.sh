@@ -36,7 +36,7 @@ DISKSIZE_IN_GB=$3
 URL=$4
 # $5 and $6 are used below for language setting
 RAMSIZE=1024
-if [ "${$URL: -4}" = ".iso" ] ; then
+if [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
 	IMAGE_MNT="/media/cd-$NAME.iso"
 else

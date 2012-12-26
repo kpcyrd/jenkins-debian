@@ -25,6 +25,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * push jenkins munin plugins upstream
+* rgrep for ftp.de and put this into a config file. and then put other stuff in that config file, like webserver for d-i preseeding. etc.
 
 == Debian Packaging related
 

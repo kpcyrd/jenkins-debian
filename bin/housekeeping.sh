@@ -12,7 +12,7 @@ set -e
 check_for_mounted_chroots() {
 	CHROOT_PATTERN="/chroots/${1}-*"
 	OUTPUT=$(mktemp)
-	ls $CHROOT_PATTERN 2>/dev/null) > $OUTPUT || true
+	ls $CHROOT_PATTERN 2>/dev/null > $OUTPUT || true
 	if [ -s $OUTPUT ] ; then
 		figlet "Warning:"
 		echo

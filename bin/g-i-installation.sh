@@ -414,6 +414,7 @@ monitor_system() {
 			# test if this screenshot is basically the same as the one 400 screenshots ago
 			# 200 pixels difference between to images is tolerated, to ignore updating clocks
 			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1)
+			echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
 			if [ $PIXEL -lt 200 ] ; then
 				set -x
 				# unless TRIGGER_MODE is empty, matching images means its over
@@ -538,6 +539,7 @@ case $NAME in
 			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true
 			fi
+			sleep 5
 			boot_system
 			let START_TRIGGER=NR+500
 			monitor_system normal $START_TRIGGER

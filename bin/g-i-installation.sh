@@ -25,6 +25,7 @@ set -e
 export LC_ALL=C
 export MIRROR=http://ftp.de.debian.org/debian
 export http_proxy="http://localhost:3128"
+export
 
 #
 # init
@@ -33,6 +34,7 @@ DISPLAY=localhost:$1
 NAME=$2			# it should be possible to derive $NAME from $JOB_NAME
 DISKSIZE_IN_GB=$3
 URL=$4
+# $5 and $6 are used below for language setting
 RAMSIZE=1024
 if [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
@@ -49,6 +51,17 @@ rm -rf results
 mkdir -p results
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
+
+#
+# language
+#
+if [ -z "$5" ] || [ -z "$6" ] ; then
+	DI_LANG="en"
+	DI_LOCALE="en_US"
+else
+	DI_LANG=$5
+	DI_LOCALE=$6
+fi
 
 fetch_if_newer() {
 	url="$2"
@@ -122,8 +135,8 @@ bootstrap_system() {
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
 	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_preseed.cfg"
-	INST_LOCALE="locale=en_US"
-	INST_KEYMAP="keymap=us"
+	INST_LOCALE="locale=$DI_LOCALE"
+	INST_KEYMAP="keymap=us"	# always us!
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
 	EXTRA_APPEND=""
 	case $NAME in

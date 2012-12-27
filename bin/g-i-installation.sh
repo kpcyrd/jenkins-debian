@@ -412,7 +412,7 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one 400 screenshots ago
 			# 200 pixels difference between to images is tolerated, to ignore updating clocks
-			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1)
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || echo 100000)
 			echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
 			if [ $PIXEL -lt 200 ] ; then
 				set -x
@@ -532,8 +532,7 @@ case $NAME in
 			mkdir -p $RESULTS/log/installer
 			touch $RESULTS/log/dummy $RESULTS/log/installer/dummy
 			;;
-	*)		set -x
-			#
+	*)		#
 			# kill qemu and image
 			#
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}') || true

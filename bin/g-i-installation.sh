@@ -358,7 +358,6 @@ monitor_system() {
 	echo
 	let MAX_RUNS=NR+10800
 	while [ $NR -lt $MAX_RUNS ] ; do
-		set +x
 		#
 		# break if qemu-system has finished
 		#
@@ -518,6 +517,7 @@ fi
 #
 NR=0
 bootstrap_system
+set +x
 case $NAME in
 	*rescue) 	monitor_system rescue
 			;;
@@ -532,7 +532,8 @@ case $NAME in
 			mkdir -p $RESULTS/log/installer
 			touch $RESULTS/log/dummy $RESULTS/log/installer/dummy
 			;;
-	*)		#
+	*)		set -x
+			#
 			# kill qemu and image
 			#
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}') || true

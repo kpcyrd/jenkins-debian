@@ -256,9 +256,17 @@ normal_action() {
 							;;
 						230)	do_and_report key space
 							;;
-						240)	do_and_report type "www.debian.org"
+						240)	do_and_report type "www"
 							;;
-						250)	do_and_report key enter
+						250)	do_and_report type "."
+							;;
+						260)	do_and_report type "debian"
+							;;
+						270)	do_and_report type "."
+							;;
+						280)	do_and_report type "org"
+							;;
+						290)	do_and_report key enter
 							;;
 						300)	do_and_report key alt-f2
 							;;
@@ -306,6 +314,14 @@ normal_action() {
 						300)	do_and_report key alt-f2
 							;;
 						310)	do_and_report type lxterminal
+							;;
+						320)	do_and_report key enter
+							;;
+						330)	do_and_report type apt-get
+							;;
+						340)	do_and_report key space
+							;;
+						350)	do_and_report type moo
 							;;
 						320)	do_and_report key enter
 							;;

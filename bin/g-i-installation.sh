@@ -438,7 +438,6 @@ monitor_system() {
 		let NR=NR+1
 		sleep 2
 	done
-	set -x
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo "Warning: running for 6h, forceing termination."
 	fi

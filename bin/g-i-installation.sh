@@ -256,7 +256,7 @@ normal_action() {
 							;;
 						230)	do_and_report key space
 							;;
-						240)	do_and_report type "http://www.debian.org"
+						240)	do_and_report type "www.debian.org"
 							;;
 						250)	do_and_report key enter
 							;;
@@ -266,14 +266,28 @@ normal_action() {
 							;;
 						320)	do_and_report key enter
 							;;
-						350)	# leave XFCE and shutdown
+						330)	do_and_report type apt-get
+							;;
+						340)	do_and_report key space
+							;;
+						350)	do_and_report type moo
+							;;
+						400)	do_and_report key enter
+							;;
+						410)	# leave XFCE and shutdown: close xterm
 							do_and_report key alt-f4
 							;;
-						360)	do_and_report key right
+						420)	# leave XFCE and shutodwn: close iceweasel
+							do_and_report key alt-f4
 							;;
-						370)	do_and_report key right
+						430)	# leave XFCE and shutdown:
+							do_and_report key alt-f4
 							;;
-						380)	do_and_report key enter
+						440)	do_and_report key right
+							;;
+						450)	do_and_report key right
+							;;
+						460)	do_and_report key enter
 							;;
 						*)	;;
 				esac
@@ -285,7 +299,7 @@ normal_action() {
 							;;
 						230)	do_and_report key space
 							;;
-						240)	do_and_report type "http://www.debian.org"
+						240)	do_and_report type "www.debian.org"
 							;;
 						250)	do_and_report key enter
 							;;
@@ -387,7 +401,7 @@ monitor_system() {
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
 			rm $GOCR
-			if [ "$LAST_LINE" = " Power down." ] ; then
+			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then

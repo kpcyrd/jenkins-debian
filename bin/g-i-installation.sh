@@ -268,31 +268,31 @@ normal_action() {
 							;;
 						290)	do_and_report key enter
 							;;
-						300)	do_and_report key alt-f2
+						400)	do_and_report key alt-f2
 							;;
-						310)	do_and_report type xterm
-							;;
-						320)	do_and_report key enter
-							;;
-						330)	do_and_report type apt-get
-							;;
-						340)	do_and_report key space
-							;;
-						350)	do_and_report type moo
-							;;
-						400)	do_and_report key enter
-							;;
-						410)	do_and_report type "su"
+						410)	do_and_report type xterm
 							;;
 						420)	do_and_report key enter
 							;;
-						430)	do_and_report type r00tme
+						430)	do_and_report type apt-get
 							;;
-						440)	do_and_report key enter
+						440)	do_and_report key space
 							;;
-						450)	do_and_report type "poweroff"
+						450)	do_and_report type moo
 							;;
-						460)	do_and_report key enter
+						500)	do_and_report key enter
+							;;
+						510)	do_and_report type "su"
+							;;
+						520)	do_and_report key enter
+							;;
+						530)	do_and_report type r00tme
+							;;
+						540)	do_and_report key enter
+							;;
+						550)	do_and_report type "poweroff"
+							;;
+						560)	do_and_report key enter
 							;;
 						*)	;;
 				esac
@@ -316,31 +316,31 @@ normal_action() {
 							;;
 						290)	do_and_report key enter
 							;;
-						300)	do_and_report key alt-f2
+						400)	do_and_report key alt-f2
 							;;
-						310)	do_and_report type lxterminal
+						410)	do_and_report type lxterminal
 							;;
-						320)	do_and_report key enter
+						420)	do_and_report key enter
 							;;
-						330)	do_and_report type apt-get
+						430)	do_and_report type apt-get
 							;;
-						340)	do_and_report key space
+						440)	do_and_report key space
 							;;
-						350)	do_and_report type moo
+						450)	do_and_report type moo
 							;;
-						320)	do_and_report key enter
+						520)	do_and_report key enter
 							;;
-						330)	do_and_report type "su"
+						530)	do_and_report type "su"
 							;;
-						340)	do_and_report key enter
+						540)	do_and_report key enter
 							;;
-						350)	do_and_report type r00tme
+						550)	do_and_report type r00tme
 							;;
-						360)	do_and_report key enter
+						560)	do_and_report key enter
 							;;
-						370)	do_and_report type "poweroff"
+						570)	do_and_report type "poweroff"
 							;;
-						380)	do_and_report key enter
+						580)	do_and_report key enter
 							;;
 						*)	;;
 				esac
@@ -404,31 +404,31 @@ normal_action() {
 							;;
 						290)	do_and_report key enter
 							;;
-						300)	do_and_report key alt-f2
+						400)	do_and_report key alt-f2
 							;;
-						310)	do_and_report type gnome-terminal
+						410)	do_and_report type gnome-terminal
 							;;
-						320)	do_and_report key enter
+						420)	do_and_report key enter
 							;;
-						330)	do_and_report type apt-get
+						430)	do_and_report type apt-get
 							;;
-						340)	do_and_report key space
+						440)	do_and_report key space
 							;;
-						350)	do_and_report type moo
+						450)	do_and_report type moo
 							;;
-						320)	do_and_report key enter
+						520)	do_and_report key enter
 							;;
-						330)	do_and_report type "su"
+						530)	do_and_report type "su"
 							;;
-						340)	do_and_report key enter
+						540)	do_and_report key enter
 							;;
-						350)	do_and_report type r00tme
+						550)	do_and_report type r00tme
 							;;
-						360)	do_and_report key enter
+						560)	do_and_report key enter
 							;;
-						370)	do_and_report type "poweroff"
+						570)	do_and_report type "poweroff"
 							;;
-						380)	do_and_report key enter
+						580)	do_and_report key enter
 							;;
 						*)	;;
 				esac

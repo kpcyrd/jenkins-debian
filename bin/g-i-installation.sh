@@ -282,18 +282,15 @@ normal_action() {
 							;;
 						400)	do_and_report key enter
 							;;
-						410)	# leave XFCE and shutdown: close xterm
-							do_and_report key alt-f4
+						410)	do_and_report type "su"
 							;;
-						420)	# leave XFCE and shutodwn: close iceweasel
-							do_and_report key alt-f4
+						420)	do_and_report key enter
 							;;
-						430)	# leave XFCE and shutdown:
-							do_and_report key alt-f4
+						430)	do_and_report type r00tme
 							;;
-						440)	do_and_report key right
+						440)	do_and_report key enter
 							;;
-						450)	do_and_report key right
+						450)	do_and_report type "poweroff"
 							;;
 						460)	do_and_report key enter
 							;;
@@ -307,9 +304,17 @@ normal_action() {
 							;;
 						230)	do_and_report key space
 							;;
-						240)	do_and_report type "www.debian.org"
+						240)	do_and_report type "www"
 							;;
-						250)	do_and_report key enter
+						250)	do_and_report type "."
+							;;
+						260)	do_and_report type "debian"
+							;;
+						270)	do_and_report type "."
+							;;
+						280)	do_and_report type "org"
+							;;
+						290)	do_and_report key enter
 							;;
 						300)	do_and_report key alt-f2
 							;;
@@ -345,15 +350,71 @@ normal_action() {
 							;;
 						210)	do_and_report type "konqueror"
 							;;
+						220)	do_and_report key space
+							;;
+						230)	do_and_report type "www"
+							;;
+						240)	do_and_report type "."
+							;;
+						250)	do_and_report type "debian"
+							;;
+						260)	do_and_report type "."
+							;;
+						270)	do_and_report type "org"
+							;;
+						280)	do_and_report key enter
+							;;
+						400)	do_and_report key alt-f2
+							;;
+						410)	do_and_report type konsole
+							;;
+						420)	do_and_report key enter
+							;;
+						430)	do_and_report type "su"
+							;;
+						440)	do_and_report key enter
+							;;
+						450)	do_and_report type r00tme
+							;;
+						460)	do_and_report key enter
+							;;
+						470)	do_and_report type "poweroff"
+							;;
+						480)	do_and_report key enter
+							;;
+						*)	;;
+				esac
+				;;
+		*gnome)		case $TOKEN in
+						200)	do_and_report key alt-f2
+							;;
+						210)	do_and_report type "iceweasel"
+							;;
 						230)	do_and_report key space
 							;;
-						240)	do_and_report type "http://www.debian.org"
+						240)	do_and_report type "www"
 							;;
-						250)	do_and_report key enter
+						250)	do_and_report type "."
+							;;
+						260)	do_and_report type "debian"
+							;;
+						270)	do_and_report type "."
+							;;
+						280)	do_and_report type "org"
+							;;
+						290)	do_and_report key enter
 							;;
 						300)	do_and_report key alt-f2
 							;;
-						310)	do_and_report type konsole
+						310)	do_and_report type gnome-terminal
+							;;
+						320)	do_and_report key enter
+							;;
+						330)	do_and_report type apt-get
+							;;
+						340)	do_and_report key space
+							;;
+						350)	do_and_report type moo
 							;;
 						320)	do_and_report key enter
 							;;

@@ -346,41 +346,45 @@ normal_action() {
 				esac
 				;;
 		*kde)		case $TOKEN in
-						200)	do_and_report key alt-f2
+						300)	do_and_report key tab
 							;;
-						210)	do_and_report type "konqueror"
-							;;
-						220)	do_and_report key space
-							;;
-						230)	do_and_report type "www"
-							;;
-						240)	do_and_report type "."
-							;;
-						250)	do_and_report type "debian"
-							;;
-						260)	do_and_report type "."
-							;;
-						270)	do_and_report type "org"
-							;;
-						280)	do_and_report key enter
+						310)	do_and_report key enter
 							;;
 						400)	do_and_report key alt-f2
 							;;
-						410)	do_and_report type konsole
+						410)	do_and_report type "konqueror"
 							;;
-						420)	do_and_report key enter
+						420)	do_and_report key space
 							;;
-						430)	do_and_report type "su"
+						430)	do_and_report type "www"
 							;;
-						440)	do_and_report key enter
+						440)	do_and_report type "."
 							;;
-						450)	do_and_report type r00tme
+						450)	do_and_report type "debian"
 							;;
-						460)	do_and_report key enter
+						460)	do_and_report type "."
 							;;
-						470)	do_and_report type "poweroff"
+						470)	do_and_report type "org"
 							;;
 						480)	do_and_report key enter
+							;;
+						600)	do_and_report key alt-f2
+							;;
+						610)	do_and_report type konsole
+							;;
+						620)	do_and_report key enter
+							;;
+						630)	do_and_report type "su"
+							;;
+						640)	do_and_report key enter
+							;;
+						650)	do_and_report type r00tme
+							;;
+						660)	do_and_report key enter
+							;;
+						670)	do_and_report type "poweroff"
+							;;
+						680)	do_and_report key enter
 							;;
 						*)	;;
 				esac

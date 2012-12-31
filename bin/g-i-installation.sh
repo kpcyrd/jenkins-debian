@@ -406,15 +406,19 @@ normal_action() {
 							;;
 						400)	do_and_report key alt-f2
 							;;
-						410)	do_and_report type gnome-terminal
+						410)	do_and_report type gnome
 							;;
-						420)	do_and_report key enter
+						420)	do_and_report type "-"
 							;;
-						430)	do_and_report type apt-get
+						430)	do_and_report type terminal
 							;;
-						440)	do_and_report key space
+						440)	do_and_report key enter
 							;;
-						450)	do_and_report type moo
+						450)	do_and_report type apt-get
+							;;
+						460)	do_and_report key space
+							;;
+						470)	do_and_report type moo
 							;;
 						520)	do_and_report key enter
 							;;

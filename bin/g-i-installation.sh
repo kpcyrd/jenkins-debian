@@ -502,10 +502,10 @@ monitor_system() {
 			let OLD=NR-400
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one 400 screenshots ago
-			# 200 pixels difference between to images is tolerated, to ignore updating clocks
-			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || echo 100000)
+			# 400 pixels difference between to images is tolerated, to ignore updating clocks
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || echo 100000) # FIXME: this is a broken workaround
 			echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
-			if [ $PIXEL -lt 200 ] ; then
+			if [ $PIXEL -lt 400 ] ; then
 				set -x
 				# unless TRIGGER_MODE is empty, matching images means its over
 				if [ ! -z "$TRIGGER_MODE" ] ; then

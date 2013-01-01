@@ -180,7 +180,7 @@
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze-test_combi-server':
          my_title: 'Debian Edu (squeeze-test) combi-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 7 debian-edu_squeeze-test_combi-server 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 7 debian-edu_squeeze-test_combi-server 30 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) combi-server profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 10 1,15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'

@@ -63,7 +63,8 @@ general_housekeeping() {
 	uptime
 
 	echo
-	df -h
+	# ignore unreadable /media fuse mountpoints from guestmount
+	df -h 2>/dev/null || true
 
 	echo
 	for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ ; do
@@ -77,7 +78,7 @@ general_housekeeping() {
 	echo
 	vnstat
 
-	df |grep tmpfs > /dev/null || ( echo ; echo "Warning: no tmpfs mounts in use. Please investigate the host system." ; exit 1 )
+	(df 2>/dev/null || true ) | grep tmpfs > /dev/null || ( echo ; echo "Warning: no tmpfs mounts in use. Please investigate the host system." ; exit 1 )
 }
 
 #

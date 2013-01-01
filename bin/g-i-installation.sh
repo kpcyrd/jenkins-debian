@@ -569,8 +569,9 @@ save_logs() {
 				;;
 	esac
 	#
-	# copy logs
+	# copy logs (and continue if some logs cannot be copied)
 	#
+	set -e
 	mkdir -p $RESULTS/log
 	sudo cp -r $SYSTEM_MNT/var/log/installer $RESULTS/log/
 	sudo chown -R jenkins:jenkins $RESULTS/log/

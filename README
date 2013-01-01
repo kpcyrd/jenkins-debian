@@ -40,11 +40,17 @@ Remember, this is still pretty much work in progress. If you can think of ways t
 
 Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
-* 'g-i-installation_debian_sid_daily-lxde', '-xfce' and '-kde'
-** sid installation of XFCE/LXDE/KDE desktop with daily build sid image
+* 'g-i-installation_debian_sid_daily-rescue'
+** boot of rescue system with daily build sid image
 
-* 'g-i-installation_debian_wheezy_lxde','-xfce' and '-kde'
+* 'g-i-installation_debian_sid_daily-lxde' and '-xfce'
+** sid installation of XFCE/LXDE desktop with daily build sid image
+
+* 'g-i-installation_debian_wheezy_lxde','-xfce','-kde' and '-gnome'
 ** wheezy installation of XFCE/LXDE/KDE desktop with weekly build wheezy image
+
+* 'g-i-installation_debian_squeeze_xfce'
+** wheezy installation of XFCE desktop with squeeze image
 
 * Debian Edu installation tests of specific profiles and suites:
 ** 'g-i-installation_debian-edu_squeeze-test_standalone'
@@ -53,7 +59,6 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 ** 'g-i-installation_debian-edu_wheezy-test_standalone'
 ** 'g-i-installation_debian-edu_wheezy-test_workstation'
 ** 'g-i-installation_debian-edu_wheezy-test_combi-server'
-** 'g-i-installation_debian-edu_wheezy-test_sugar'
 
 === debian-installer jobs
 

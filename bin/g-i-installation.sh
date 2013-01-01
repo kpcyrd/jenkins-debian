@@ -374,17 +374,25 @@ normal_action() {
 							;;
 						620)	do_and_report key enter
 							;;
-						650)	do_and_report type "su"
+						630)	do_and_report type apt-get
+							;;
+						640)	do_and_report key space
+							;;
+						650)	do_and_report type moo
 							;;
 						660)	do_and_report key enter
 							;;
-						670)	do_and_report type r00tme
+						670)	do_and_report type "su"
 							;;
 						680)	do_and_report key enter
 							;;
-						690)	do_and_report type "poweroff"
+						690)	do_and_report type r00tme
 							;;
 						700)	do_and_report key enter
+							;;
+						710)	do_and_report type "poweroff"
+							;;
+						720)	do_and_report key enter
 							;;
 						*)	;;
 				esac

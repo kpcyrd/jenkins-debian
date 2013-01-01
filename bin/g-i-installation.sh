@@ -140,7 +140,7 @@ bootstrap_system() {
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
 	EXTRA_APPEND=""
 	case $NAME in
-		debian-edu_squeeze-test*)
+		debian*_squeeze*)
 			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
 			;;
 		*_sid_daily*)

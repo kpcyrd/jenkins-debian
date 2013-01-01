@@ -44,6 +44,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 ** publisher:imagegallery
 ** svn:scm
 ** properties: sidebar
+* d-i and chroot housekeeping jobs should be kept 365 days
 
 == Improve existing tests
 

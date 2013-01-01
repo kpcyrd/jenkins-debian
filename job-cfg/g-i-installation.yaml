@@ -43,8 +43,8 @@
     name: g-i-installation-housekeeping
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     logrotate:
-      daysToKeep: 90
-      numToKeep: 25
+      daysToKeep: 365
+      numToKeep: 365
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     triggers:

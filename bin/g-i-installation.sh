@@ -374,17 +374,17 @@ normal_action() {
 							;;
 						620)	do_and_report key enter
 							;;
-						630)	do_and_report type "su"
-							;;
-						640)	do_and_report key enter
-							;;
-						650)	do_and_report type r00tme
+						650)	do_and_report type "su"
 							;;
 						660)	do_and_report key enter
 							;;
-						670)	do_and_report type "poweroff"
+						670)	do_and_report type r00tme
 							;;
 						680)	do_and_report key enter
+							;;
+						690)	do_and_report type "poweroff"
+							;;
+						700)	do_and_report key enter
 							;;
 						*)	;;
 				esac

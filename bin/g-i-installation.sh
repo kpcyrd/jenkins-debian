@@ -522,7 +522,6 @@ monitor_system() {
 			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || echo 100000) # FIXME: this is a broken workaround
 			echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
 			if [ $PIXEL -lt 400 ] ; then
-				set -x
 				# unless TRIGGER_MODE is empty, matching images means its over
 				if [ ! -z "$TRIGGER_MODE" ] ; then
 					echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."

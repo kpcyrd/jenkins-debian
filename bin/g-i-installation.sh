@@ -570,12 +570,12 @@ save_logs() {
 	# FIXME: bugreport guestmount: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, bt it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	case $NAME in
-		debian-edu_*_workstation)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail"
+		debian-edu_*_workstation)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
 						;;
-		debian-edu_*)			sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail"
-						sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail"
+		debian-edu_*)			sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
+						sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
 						;;
-		*)				sudo guestmount -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || echo "Warning: cannot mount /dev/debian/root" ; figlet "fail"
+		*)				sudo guestmount -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; figlet "fail" ) 
 						;;
 	esac
 	#
@@ -595,11 +595,11 @@ save_logs() {
 	sync
 	case $NAME in
 		debian-edu_*_workstation)	;;
-		debian-edu_*)			sudo umount -l $SYSTEM_MNT/var || echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail"
+		debian-edu_*)			sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
 						;;
 		*)				;;
 	esac
-	sudo umount -l $SYSTEM_MNT || echo "Warning: cannot un-mount $SYSTEM_MNT" ; figlet "fail"
+	sudo umount -l $SYSTEM_MNT || ( echo "Warning: cannot un-mount $SYSTEM_MNT" ; figlet "fail" )
 }
 
 trap cleanup_all INT TERM EXIT

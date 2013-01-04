@@ -149,16 +149,16 @@ bootstrap_system() {
 		*)	;;
 	esac
 	case $NAME in
-		debian_*xfce)
+		debian_*_xfce)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=xfce"
 			;;
-		debian_*lxde)
+		debian_*_lxde)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=lxde"
 			;;
-		debian_*kde)
+		debian_*_kde)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=kde"
 			;;
-		debian_*rescue)
+		debian_*_rescue*)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		*)	;;
@@ -628,7 +628,7 @@ NR=0
 bootstrap_system
 set +x
 case $NAME in
-	*rescue) 	monitor_system rescue
+	*_rescue*) 	monitor_system rescue
 			;;
 	*)		monitor_system install wait4match
 			;;

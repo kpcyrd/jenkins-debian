@@ -146,6 +146,9 @@ bootstrap_system() {
 		*_sid_daily*)
 			EXTRA_APPEND="mirror/suite=sid"
 			;;
+		*_dark_theme)
+			EXTRA_APPEND="theme=dark"
+			;;
 		*)	;;
 	esac
 	case $NAME in

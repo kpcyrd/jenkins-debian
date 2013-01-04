@@ -525,22 +525,27 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one 400 screenshots ago
 			# 400 pixels difference between to images is tolerated, to ignore updating clocks
-			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || echo 100000) # FIXME: this is a broken workaround
-			echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
-			if [ $PIXEL -lt 400 ] ; then
-				# unless TRIGGER_MODE is empty, matching images means its over
-				if [ ! -z "$TRIGGER_MODE" ] ; then
-					echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
-					ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
-					figlet "Installation hangs."
-					break
-				else
-					# this is only reached once in rescue mode
-					# and the next matching screenshots will cause a failure...
-					TRIGGER_MODE="already_matched"
-					# really kick off trigger:
-					let TRIGGER_NR=NR
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 )
+			# usually this returns an integer, but not always....
+			if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
+				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
+				if [ $PIXEL -lt 400 ] ; then
+					# unless TRIGGER_MODE is empty, matching images means its over
+					if [ ! -z "$TRIGGER_MODE" ] ; then
+						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
+						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
+						figlet "Installation hangs."
+						break
+					else
+						# this is only reached once in rescue mode
+						# and the next matching screenshots will cause a failure...
+						TRIGGER_MODE="already_matched"
+						# really kick off trigger:
+						let TRIGGER_NR=NR
+					fi
 				fi
+			else
+				echo "snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm have different sizes."
 			fi
 		fi
 		# if TRIGGER_MODE matches NR, we are triggered too

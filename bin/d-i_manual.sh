@@ -77,7 +77,7 @@ build_language() {
 	# remove directories if they are empty and in the case of pdf, leave a empty pdf
 	# maybe it is indeed better not to create these jobs in the first place...
 	# this is due to "Warning: pdf and ps formats are currently not supported for Chinese, Greek, Japanese and Vietnamese"
-	(rmdir $FORMAT/* && rmdir $FORMAT ) || true
+	(rmdir $FORMAT/* 2>/dev/null && rmdir $FORMAT 2>/dev/null ) || true
 	if [ "$FORMAT" = "pdf" ] && [ ! -d $FORMAT ] ; then
 		mkdir -p pdf/dummy
 		touch pdf/dummy/dummy.pdf

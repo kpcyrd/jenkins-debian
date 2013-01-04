@@ -146,9 +146,6 @@ bootstrap_system() {
 		*_sid_daily*)
 			EXTRA_APPEND="mirror/suite=sid"
 			;;
-		*_dark_theme)
-			EXTRA_APPEND="theme=dark"
-			;;
 		*)	;;
 	esac
 	case $NAME in
@@ -163,6 +160,12 @@ bootstrap_system() {
 			;;
 		debian_*_rescue*)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
+			;;
+		*)	;;
+	esac
+	case $NAME in
+		*_dark_theme)
+			EXTRA_APPEND="$EXTRA_APPEND theme=dark"
 			;;
 		*)	;;
 	esac
@@ -640,7 +643,7 @@ esac
 # boot up installed system
 #
 case $NAME in
-	*rescue)	# so there are some artifacts to publish
+	*_rescue*)	# so there are some artifacts to publish
 			mkdir -p $RESULTS/log/installer
 			touch $RESULTS/log/dummy $RESULTS/log/installer/dummy
 			;;

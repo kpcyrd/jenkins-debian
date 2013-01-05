@@ -173,10 +173,12 @@ bootstrap_system() {
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_preseed.cfg
 	echo
 	echo "Starting QEMU now:"
+	set -x
 	(sudo qemu-system-x86_64 \
 		$QEMU_OPTS \
 		$QEMU_KERNEL \
 		--append "$APPEND" && touch $RESULTS/qemu_quit ) &
+	set +x
 }
 
 boot_system() {
@@ -187,8 +189,10 @@ boot_system() {
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
 	echo
 	echo "Starting QEMU_ now:"
+	set -x
 	(sudo qemu-system-x86_64 \
 		$QEMU_OPTS && touch $RESULTS/qemu_quit ) &
+	set +x
 }
 
 
@@ -659,7 +663,8 @@ case $NAME in
 			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true
 			fi
-			sleep 5
+			echo "Sleeping 15 seconds."
+			sleep 15
 			boot_system
 			let START_TRIGGER=NR+500
 			monitor_system normal $START_TRIGGER

@@ -473,6 +473,7 @@ monitor_system() {
 	sleep 4
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or 6h have passed or if the test seems to hang."
 	echo
+	set -x
 	let MAX_RUNS=NR+10800
 	while [ $NR -lt $MAX_RUNS ] ; do
 		#

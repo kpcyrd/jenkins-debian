@@ -161,6 +161,9 @@ bootstrap_system() {
 		debian_*_rescue*)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
+		debian-edu*_combi-server)
+			QEMU_OPTS="$QEMU_OPTS -netdev user,id=7 -net nic -net user  -net nic,model=e1000"
+			;;
 		*)	;;
 	esac
 	case $NAME in
@@ -190,6 +193,12 @@ boot_system() {
 	echo "Checking $NAME.raw:"
 	file $NAME.raw
 	# FIXME: exit here if image is not bootable
+	case $NAME in
+		debian-edu*_combi-server)
+			QEMU_OPTS="$QEMU_OPTS -netdev user,id=7 -net nic -net user  -net nic,model=e1000"
+			;;
+		*)	;;
+	esac
 	echo
 	echo "Starting QEMU_ now:"
 	set -x

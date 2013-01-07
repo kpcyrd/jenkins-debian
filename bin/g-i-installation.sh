@@ -187,6 +187,9 @@ boot_system() {
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
+	echo "Checking $NAME.raw:"
+	file $NAME.raw
+	# FIXME: exit here if image is not bootable
 	echo
 	echo "Starting QEMU_ now:"
 	set -x

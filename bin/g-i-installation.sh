@@ -162,7 +162,7 @@ bootstrap_system() {
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		debian-edu*_combi-server)
-			QEMU_OPTS="$QEMU_OPTS -netdev user,id=7 -net nic -net user  -net nic,model=e1000"
+			QEMU_OPTS="$QEMU_OPTS -net nic -net user  -net nic,model=e1000"
 			;;
 		*)	;;
 	esac
@@ -195,7 +195,7 @@ boot_system() {
 	# FIXME: exit here if image is not bootable
 	case $NAME in
 		debian-edu*_combi-server)
-			QEMU_OPTS="$QEMU_OPTS -netdev user,id=7 -net nic -net user  -net nic,model=e1000"
+			QEMU_OPTS="$QEMU_OPTS -net nic -net user  -net nic,model=e1000"
 			;;
 		*)	;;
 	esac

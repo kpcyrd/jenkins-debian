@@ -162,7 +162,7 @@ bootstrap_system() {
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		debian-edu*_combi-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic -net user  -net nic,model=e1000"
+			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0 -net nic,vlan=1 -net user,vlan=1"
 			EXTRA_APPEND="$EXTRA_APPEND interface=eth0"
 			;;
 		*)	;;
@@ -199,7 +199,7 @@ boot_system() {
 	fi
 	case $NAME in
 		debian-edu*_combi-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic -net user  -net nic,model=e1000"
+			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0 -net nic,vlan=1 -net user,vlan=1"
 			;;
 		*)	;;
 	esac

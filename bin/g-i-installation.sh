@@ -163,6 +163,7 @@ bootstrap_system() {
 			;;
 		debian-edu*_combi-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic -net user  -net nic,model=e1000"
+			EXTRA_APPEND="$EXTRA_APPEND interface=eth0"
 			;;
 		*)	;;
 	esac

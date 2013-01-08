@@ -396,25 +396,25 @@ normal_action() {
 							;;
 						620)	do_and_report key enter
 							;;
-						630)	do_and_report type apt-get
+						700)	do_and_report type apt-get
 							;;
-						640)	do_and_report key space
+						710)	do_and_report key space
 							;;
-						650)	do_and_report type moo
+						720)	do_and_report type moo
 							;;
-						660)	do_and_report key enter
+						730)	do_and_report key enter
 							;;
-						670)	do_and_report type "su"
+						740)	do_and_report type "su"
 							;;
-						680)	do_and_report key enter
+						750)	do_and_report key enter
 							;;
-						690)	do_and_report type r00tme
+						760)	do_and_report type r00tme
 							;;
-						700)	do_and_report key enter
+						770)	do_and_report key enter
 							;;
-						710)	do_and_report type "poweroff"
+						780)	do_and_report type "poweroff"
 							;;
-						720)	do_and_report key enter
+						790)	do_and_report key enter
 							;;
 						*)	;;
 				esac

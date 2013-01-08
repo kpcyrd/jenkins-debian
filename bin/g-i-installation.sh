@@ -191,8 +191,11 @@ boot_system() {
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE"
 	echo "Checking $NAME.raw:"
-	file $NAME.raw
-	# FIXME: exit here if image is not bootable
+	FILE=$(file $NAME.raw)
+	if [ $(echo $FILE | grep "x86 boot sector" | wc -l) -eq 0 ] ; then
+		echo "ERROR: no x86 boot sector found in $NAME.raw - it's filetype is $FILE."
+		exit 1
+	fi
 	case $NAME in
 		debian-edu*_combi-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic -net user  -net nic,model=e1000"

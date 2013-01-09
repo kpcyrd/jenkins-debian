@@ -162,7 +162,7 @@ bootstrap_system() {
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		debian-edu*_combi-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254 -net user,vlan=0 -net nic,vlan=1 -net user,vlan=1"
+			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254 -net nic,vlan=1 -net user,vlan=1"
 			QEMU_WEBSERVER=http://10.0.2.1/
 			EXTRA_APPEND="$EXTRA_APPEND interface=eth0"
 			;;
@@ -200,7 +200,7 @@ boot_system() {
 	fi
 	case $NAME in
 		debian-edu*_combi-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254 -net user,vlan=0 -net nic,vlan=1 -net user,vlan=1"
+			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254 -net nic,vlan=1 -net user,vlan=1"
 			;;
 		*)	;;
 	esac

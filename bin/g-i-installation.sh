@@ -501,7 +501,6 @@ monitor_system() {
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot, no qemu running on $DISPLAY"
-			let NR=NR+1
 			break
 		fi
 		# give signal we are still running
@@ -523,30 +522,18 @@ monitor_system() {
 			rm $GOCR
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
-				let NR=NR+1
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
 				echo "INFO: got a stack-trace, probably on power-down."
-				let NR=NR+1
 				break
 			fi
 		fi
-		# let's drive this further (once/if triggered)
-		if [ $TRIGGER_NR -ne 0 ] && [ $TRIGGER_NR -ne $NR ] ; then
-			case $MODE in
-				rescue)	rescue_action
-					;;
-				normal)	normal_action
-					;;
-				*)	;;
-			esac
-		fi
-		# every 100 screenshots, starting from the 300ths one...
-		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 300 ] ; then
+		# every 100 screenshots, starting from the 600ths one...
+		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 600 ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
-			let OLD=NR-300
+			let OLD=NR-600
 			PRINTF_OLD=$(printf "%06d" $OLD)
-			# test if this screenshot is basically the same as the one 300 screenshots ago
+			# test if this screenshot is basically the same as the one 600 screenshots ago
 			# 400 pixels difference between to images is tolerated, to ignore updating clocks
 			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || true )
 			# usually this returns an integer, but not always....
@@ -558,7 +545,6 @@ monitor_system() {
 						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
 						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 						figlet "Mode $MODE hangs."
-						let NR=NR+1
 						break
 					else
 						# this is only reached once in rescue mode
@@ -572,6 +558,16 @@ monitor_system() {
 				echo "snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm have different sizes."
 			fi
 		fi
+		# let's drive this further (once/if triggered)
+		if [ $TRIGGER_NR -ne 0 ] && [ $TRIGGER_NR -ne $NR ] ; then
+			case $MODE in
+				rescue)	rescue_action
+					;;
+				normal)	normal_action
+					;;
+				*)	;;
+			esac
+		fi
 		# if TRIGGER_MODE matches NR, we are triggered too
 		if [ ! -z "$TRIGGER_MODE" ] && [ "$TRIGGER_MODE" = "$NR" ] ; then
 			let TRIGGER_NR=NR
@@ -580,15 +576,15 @@ monitor_system() {
 		sleep 2
 	done
 	if [ $NR -eq $MAX_RUNS ] ; then
-		echo "Warning: running for 6h, forceing termination."
+		echo "Warning: running for 6h, forcing termination."
 	fi
 	if [ -f "$RESULTS/qemu_quit" ] ; then
-		let NR=NR-2
 		rm $RESULTS/qemu_quit
-	else
-		let NR=NR-1
 	fi
-	PRINTF_NR=$(printf "%06d" $NR)
+	if [ ! -f snapshot_${PRINTF_NR}.ppm ] ; then
+		let NR=NR-1
+		PRINTF_NR=$(printf "%06d" $NR)
+	fi
 	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
 }
 
@@ -626,7 +622,7 @@ save_logs() {
 	#
 	# get list of installed packages
 	#
-	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Error: cannot run dpkg inside the installed system." ; sudo ls -la $SYSTEM_MNT ; figlet "fail" )
+	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system." ; sudo ls -la $SYSTEM_MNT ; figlet "fail" )
 	#
 	# umount guests
 	#
@@ -678,6 +674,7 @@ esac
 #
 # boot up installed system
 #
+let NR=NR+1
 case $NAME in
 	*_rescue*)	# so there are some artifacts to publish
 			mkdir -p $RESULTS/log/installer

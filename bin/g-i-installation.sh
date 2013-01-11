@@ -538,12 +538,12 @@ monitor_system() {
 				*)	;;
 			esac
 		fi
-		# every 100 screenshots, starting from the 400ths one...
-		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 400 ] ; then
+		# every 100 screenshots, starting from the 300ths one...
+		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 300 ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
-			let OLD=NR-400
+			let OLD=NR-300
 			PRINTF_OLD=$(printf "%06d" $OLD)
-			# test if this screenshot is basically the same as the one 400 screenshots ago
+			# test if this screenshot is basically the same as the one 300 screenshots ago
 			# 400 pixels difference between to images is tolerated, to ignore updating clocks
 			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || true )
 			# usually this returns an integer, but not always....

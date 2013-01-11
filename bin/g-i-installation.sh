@@ -555,6 +555,7 @@ monitor_system() {
 						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
 						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
 						figlet "Installation hangs."
+						let NR=NR+1
 						break
 					else
 						# this is only reached once in rescue mode
@@ -618,7 +619,7 @@ save_logs() {
 	#
 	# get list of installed packages
 	#
-	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Error: cannot run dpkg inside the installed system." ; ls -la $SYSTEM_MNT ; figlet "fail" )
+	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Error: cannot run dpkg inside the installed system." ; sudo ls -la $SYSTEM_MNT ; figlet "fail" )
 	#
 	# umount guests
 	#

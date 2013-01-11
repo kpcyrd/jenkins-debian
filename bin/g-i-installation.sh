@@ -143,6 +143,9 @@ bootstrap_system() {
 		debian*_squeeze*)
 			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
 			;;
+		debian-edu_wheezy*)
+			EXTRA_APPEND="DEBCONF_DEBUG=developer"  # FIXME: this shall become more conditional...
+			;;
 		*_sid_daily*)
 			EXTRA_APPEND="mirror/suite=sid"
 			;;

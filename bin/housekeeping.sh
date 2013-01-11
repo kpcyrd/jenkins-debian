@@ -58,6 +58,14 @@ report_squid_usage() {
 	fi
 }
 
+wait4idle() {
+	echo "Waiting until no $1.sh process runs.... $(date)"
+	while [ $(ps fax | grep -c $1.sh) -gt 1 ] ; do
+		sleep 30
+	done
+	echo "Done waiting: $(date)"
+}
+
 general_housekeeping() {
 	echo
 	uptime
@@ -89,10 +97,12 @@ if [ -z $1 ] ; then
 	report_squid_usage brief
 else
 	case $1 in
-		chroot-installation)		report_disk_usage $1
+		chroot-installation)		wait4idle $1
+						report_disk_usage $1
 						check_for_mounted_chroots $1
 						;;
-		g-i-installation)		report_disk_usage $1
+		g-i-installation)		wait4idle $1
+						report_disk_usage $1
 						report_filetype_usage $1 raw warn
 						report_filetype_usage $1 iso
 						report_filetype_usage $1 png

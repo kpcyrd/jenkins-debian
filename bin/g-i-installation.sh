@@ -501,11 +501,12 @@ monitor_system() {
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot, no qemu running on $DISPLAY"
+			let NR=NR+1
 			break
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
-			date
+			echo "$PRINTF_NR: $(date)"
 		fi
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			# press ctrl-key to avoid screensaver kicking in
@@ -522,9 +523,11 @@ monitor_system() {
 			rm $GOCR
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
+				let NR=NR+1
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
 				echo "INFO: got a stack-trace, probably on power-down."
+				let NR=NR+1
 				break
 			fi
 		fi
@@ -554,7 +557,7 @@ monitor_system() {
 					if [ ! -z "$TRIGGER_MODE" ] ; then
 						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
 						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
-						figlet "Installation hangs."
+						figlet "Mode $MODE hangs."
 						let NR=NR+1
 						break
 					else

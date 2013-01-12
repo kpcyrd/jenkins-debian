@@ -14,7 +14,7 @@ http://jenkins.debian.net is pretty much *work in progress*, (hopefully) doing s
 
 `git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`
 
-Virtual hardware sponsored by http://www.profitbricks.com - currently it's just a server (a nice one, with 4 cores and 6 GB memory, thanks a lot!), but in future there will be installation tests on "real" (virtual) hardware and thus more VMs will started on demand as well.
+The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 4 cores and 6 GB memory, thanks a lot!
 
 Some stats are available using link:http://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
 

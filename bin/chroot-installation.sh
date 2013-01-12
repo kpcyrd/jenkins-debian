@@ -78,10 +78,10 @@ prepare_install_build_depends() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
 apt-get -y install build-essential
-for PACKAGE in $@ 
-	do apt-get -y build-dep $PACKAGE
-done
 EOF
+for PACKAGE in $@ ; do
+	echo apt-get -y build-dep $PACKAGE >> $CTMPFILE
+done
 }
 
 prepare_upgrade2() {

@@ -649,11 +649,24 @@ trap cleanup_all INT TERM EXIT
 #
 if [ ! -z "$IMAGE" ] ; then
 	fetch_if_newer "$IMAGE" "$URL"
-
-	sudo mkdir -p $IMAGE_MNT
-	grep -q $IMAGE_MNT /proc/mounts && sudo umount -l $IMAGE_MNT
-	sleep 1
-	sudo mount -o loop,ro $IMAGE $IMAGE_MNT
+	# is this really an .iso?
+	if [ $(file "$IMAGE" | grep -c "ISO 9660") -eq 1 ] ; then
+		# yes, so let's mount it
+		sudo mkdir -p $IMAGE_MNT
+		grep -q $IMAGE_MNT /proc/mounts && sudo umount -l $IMAGE_MNT
+		sleep 1
+		sudo mount -o loop,ro $IMAGE $IMAGE_MNT
+	else
+		# something went wrong
+		figlet "no .iso"
+		echo "ERROR: no valid .iso found"
+		if [ $(file "$IMAGE" | grep -c "HTML document") -eq 1 ] ; then
+			mv "$IMAGE" "$IMAGE.html"
+			lynx --dump "$IMAGE.html"
+			rm "$IMAGE.html"
+		fi
+		exit 1
+	fi
 else
 	#
 	# else netboot gtk

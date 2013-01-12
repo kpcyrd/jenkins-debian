@@ -78,7 +78,9 @@ prepare_install_build_depends() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
 apt-get -y install build-essential
-apt-get -y build-dep $@
+for PACKAGE in $@ ; do
+	apt-get -y build-dep $PACKAGE
+done
 EOF
 }
 

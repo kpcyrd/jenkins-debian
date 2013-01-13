@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012, 2013 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 if [ "$1" == "" ] ; then
@@ -24,7 +24,7 @@ export http_proxy="http://localhost:3128"
 
 TMPFILE=$(mktemp)
 curl $URL > $TMPFILE
-if [ $(grep -c failed $TMPFILE >/dev/null 2>&1) -gt 1 ] ; then 
+if [ $(grep -c failed $TMPFILE 2>/dev/null ) -gt 1 ] ; then 
 	figlet Warning:
 	figlet failed builds:
 	for FILE in $(grep failed $TMPFILE | awk '{print $2}' FS=href= | cut -d '"' -f2) ; do

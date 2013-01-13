@@ -2,7 +2,7 @@ Source: jenkins.debian.net
 Section: devel
 Priority: extra
 Maintainer: Holger Levsen <holger@debian.org>
-Build-Depends: debhelper (>= 9.20120419~)
+Build-Depends: debhelper (>= 9.20120419~), asciidoc
 Standards-Version: 3.9.1
 Homepage: http://jenkins.debian.net/userContent/about.html
 Vcs-Git: git://git.debian.org/git/users/holger/jenkins.debian.net.git

@@ -172,7 +172,7 @@ bootstrap_system() {
 			EXTRA_APPEND="$EXTRA_APPEND theme=dark"
 			;;
 		debian-edu_*)
-			EXTRA_APPEND="DEBCONF_DEBUG=developer"  # FIXME: this shall become more conditional...
+			EXTRA_APPEND="DESKTOP=kde DEBCONF_DEBUG=developer"  # FIXME: this shall become more conditional...
 			;;
 		*)	;;
 	esac

@@ -176,7 +176,16 @@ bootstrap_system() {
 			;;
 		*)	;;
 	esac
-	APPEND="auto=true priority=critical $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
+	case $NAME in
+	    debian-edu_*)
+		# Debian Edu and tasksel do not work the expected way
+		# with priority=critical, so do not set it.
+		;;
+	    *)
+		EXTRA_APPEND="$EXTRA_APPEND priority=critical"
+		;;
+	esac
+	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_preseed.cfg
 	echo
 	echo "Starting QEMU now:"

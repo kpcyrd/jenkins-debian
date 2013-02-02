@@ -7,6 +7,8 @@
 # $2 = name
 # $3 = disksize in GB
 # $4 = wget url/jigdo url
+# $5 = d-i lang setting (default is 'en')
+# $6 = d-i locale setting (default is 'en_us')
 
 if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] ; then
 	echo "need three params"

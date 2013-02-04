@@ -288,212 +288,212 @@ normal_action() {
 	#
 	case $NAME in
 		*xfce)		case $TOKEN in
-						200)	do_and_report key enter
-							;;
-						210)	do_and_report key alt-f2
-							;;
-						220)	do_and_report type "iceweasel"
-							;;
-						230)	do_and_report key space
-							;;
-						240)	do_and_report type "www"
-							;;
-						250)	do_and_report type "."
-							;;
-						260)	do_and_report type "debian"
-							;;
-						270)	do_and_report type "."
-							;;
-						280)	do_and_report type "org"
-							;;
-						290)	do_and_report key enter
-							;;
-						400)	do_and_report key alt-f2
-							;;
-						410)	do_and_report type xterm
-							;;
-						420)	do_and_report key enter
-							;;
-						430)	do_and_report type apt-get
-							;;
-						440)	do_and_report key space
-							;;
-						450)	do_and_report type moo
-							;;
-						500)	do_and_report key enter
-							;;
-						510)	do_and_report type "su"
-							;;
-						520)	do_and_report key enter
-							;;
-						530)	do_and_report type r00tme
-							;;
-						540)	do_and_report key enter
-							;;
-						550)	do_and_report type "poweroff"
-							;;
-						560)	do_and_report key enter
-							;;
-						*)	;;
+					200)	do_and_report key enter
+						;;
+					210)	do_and_report key alt-f2
+						;;
+					220)	do_and_report type "iceweasel"
+						;;
+					230)	do_and_report key space
+						;;
+					240)	do_and_report type "www"
+						;;
+					250)	do_and_report type "."
+						;;
+					260)	do_and_report type "debian"
+						;;
+					270)	do_and_report type "."
+						;;
+					280)	do_and_report type "org"
+						;;
+					290)	do_and_report key enter
+						;;
+					400)	do_and_report key alt-f2
+						;;
+					410)	do_and_report type xterm
+						;;
+					420)	do_and_report key enter
+						;;
+					430)	do_and_report type apt-get
+						;;
+					440)	do_and_report key space
+						;;
+					450)	do_and_report type moo
+						;;
+					500)	do_and_report key enter
+						;;
+					510)	do_and_report type "su"
+						;;
+					520)	do_and_report key enter
+						;;
+					530)	do_and_report type r00tme
+						;;
+					540)	do_and_report key enter
+						;;
+					550)	do_and_report type "poweroff"
+						;;
+					560)	do_and_report key enter
+						;;
+					*)	;;
 				esac
 				;;
 		*lxde)		case $TOKEN in
-						200)	do_and_report key alt-f2
-							;;
-						210)	do_and_report type "iceweasel"
-							;;
-						230)	do_and_report key space
-							;;
-						240)	do_and_report type "www"
-							;;
-						250)	do_and_report type "."
-							;;
-						260)	do_and_report type "debian"
-							;;
-						270)	do_and_report type "."
-							;;
-						280)	do_and_report type "org"
-							;;
-						290)	do_and_report key enter
-							;;
-						400)	do_and_report key alt-f2
-							;;
-						410)	do_and_report type lxterminal
-							;;
-						420)	do_and_report key enter
-							;;
-						430)	do_and_report type apt-get
-							;;
-						440)	do_and_report key space
-							;;
-						450)	do_and_report type moo
-							;;
-						520)	do_and_report key enter
-							;;
-						530)	do_and_report type "su"
-							;;
-						540)	do_and_report key enter
-							;;
-						550)	do_and_report type r00tme
-							;;
-						560)	do_and_report key enter
-							;;
-						570)	do_and_report type "poweroff"
-							;;
-						580)	do_and_report key enter
-							;;
-						*)	;;
+					200)	do_and_report key alt-f2
+						;;
+					210)	do_and_report type "iceweasel"
+						;;
+					230)	do_and_report key space
+						;;
+					240)	do_and_report type "www"
+						;;
+					250)	do_and_report type "."
+						;;
+					260)	do_and_report type "debian"
+						;;
+					270)	do_and_report type "."
+						;;
+					280)	do_and_report type "org"
+						;;
+					290)	do_and_report key enter
+						;;
+					400)	do_and_report key alt-f2
+						;;
+					410)	do_and_report type lxterminal
+						;;
+					420)	do_and_report key enter
+						;;
+					430)	do_and_report type apt-get
+						;;
+					440)	do_and_report key space
+						;;
+					450)	do_and_report type moo
+						;;
+					520)	do_and_report key enter
+						;;
+					530)	do_and_report type "su"
+						;;
+					540)	do_and_report key enter
+						;;
+					550)	do_and_report type r00tme
+						;;
+					560)	do_and_report key enter
+						;;
+					570)	do_and_report type "poweroff"
+						;;
+					580)	do_and_report key enter
+						;;
+					*)	;;
 				esac
 				;;
 		*kde)		case $TOKEN in
-						300)	do_and_report key tab
-							;;
-						310)	do_and_report key enter
-							;;
-						400)	do_and_report key alt-f2
-							;;
-						410)	do_and_report type "konqueror"
-							;;
-						420)	do_and_report key space
-							;;
-						430)	do_and_report type "www"
-							;;
-						440)	do_and_report type "."
-							;;
-						450)	do_and_report type "debian"
-							;;
-						460)	do_and_report type "."
-							;;
-						470)	do_and_report type "org"
-							;;
-						480)	do_and_report key enter
-							;;
-						600)	do_and_report key alt-f2
-							;;
-						610)	do_and_report type konsole
-							;;
-						620)	do_and_report key enter
-							;;
-						700)	do_and_report type apt-get
-							;;
-						710)	do_and_report key space
-							;;
-						720)	do_and_report type moo
-							;;
-						730)	do_and_report key enter
-							;;
-						740)	do_and_report type "su"
-							;;
-						750)	do_and_report key enter
-							;;
-						760)	do_and_report type r00tme
-							;;
-						770)	do_and_report key enter
-							;;
-						780)	do_and_report type "poweroff"
-							;;
-						790)	do_and_report key enter
-							;;
-						*)	;;
+					300)	do_and_report key tab
+						;;
+					310)	do_and_report key enter
+						;;
+					400)	do_and_report key alt-f2
+						;;
+					410)	do_and_report type "konqueror"
+						;;
+					420)	do_and_report key space
+						;;
+					430)	do_and_report type "www"
+						;;
+					440)	do_and_report type "."
+						;;
+					450)	do_and_report type "debian"
+						;;
+					460)	do_and_report type "."
+						;;
+					470)	do_and_report type "org"
+						;;
+					480)	do_and_report key enter
+						;;
+					600)	do_and_report key alt-f2
+						;;
+					610)	do_and_report type konsole
+						;;
+					620)	do_and_report key enter
+						;;
+					700)	do_and_report type apt-get
+						;;
+					710)	do_and_report key space
+						;;
+					720)	do_and_report type moo
+						;;
+					730)	do_and_report key enter
+						;;
+					740)	do_and_report type "su"
+						;;
+					750)	do_and_report key enter
+						;;
+					760)	do_and_report type r00tme
+						;;
+					770)	do_and_report key enter
+						;;
+					780)	do_and_report type "poweroff"
+						;;
+					790)	do_and_report key enter
+						;;
+					*)	;;
 				esac
 				;;
 		*gnome)		case $TOKEN in
-						200)	do_and_report key alt-f2
-							;;
-						210)	do_and_report type "iceweasel"
-							;;
-						230)	do_and_report key space
-							;;
-						240)	do_and_report type "www"
-							;;
-						250)	do_and_report type "."
-							;;
-						260)	do_and_report type "debian"
-							;;
-						270)	do_and_report type "."
-							;;
-						280)	do_and_report type "org"
-							;;
-						290)	do_and_report key enter
-							;;
-						400)	do_and_report key alt-f2
-							;;
-						410)	do_and_report type gnome
-							;;
-						420)	do_and_report type "-"
-							;;
-						430)	do_and_report type terminal
-							;;
-						440)	do_and_report key enter
-							;;
-						450)	do_and_report type apt-get
-							;;
-						460)	do_and_report key space
-							;;
-						470)	do_and_report type moo
-							;;
-						520)	do_and_report key enter
-							;;
-						530)	do_and_report type "su"
-							;;
-						540)	do_and_report key enter
-							;;
-						550)	do_and_report type r00tme
-							;;
-						560)	do_and_report key enter
-							;;
-						570)	do_and_report type "poweroff"
-							;;
-						580)	do_and_report key enter
-							;;
-						*)	;;
+					200)	do_and_report key alt-f2
+						;;
+					210)	do_and_report type "iceweasel"
+						;;
+					230)	do_and_report key space
+						;;
+					240)	do_and_report type "www"
+						;;
+					250)	do_and_report type "."
+						;;
+					260)	do_and_report type "debian"
+						;;
+					270)	do_and_report type "."
+						;;
+					280)	do_and_report type "org"
+						;;
+					290)	do_and_report key enter
+						;;
+					400)	do_and_report key alt-f2
+						;;
+					410)	do_and_report type gnome
+						;;
+					420)	do_and_report type "-"
+						;;
+					430)	do_and_report type terminal
+						;;
+					440)	do_and_report key enter
+						;;
+					450)	do_and_report type apt-get
+						;;
+					460)	do_and_report key space
+						;;
+					470)	do_and_report type moo
+						;;
+					520)	do_and_report key enter
+						;;
+					530)	do_and_report type "su"
+						;;
+					540)	do_and_report key enter
+						;;
+					550)	do_and_report type r00tme
+						;;
+					560)	do_and_report key enter
+						;;
+					570)	do_and_report type "poweroff"
+						;;
+					580)	do_and_report key enter
+						;;
+					*)	;;
 				esac
 				;;
 		debian-edu*)	case $TOKEN in
-						# debian-edu installations report error found during installation, go forward
-						40)	do_and_report key enter
-							;;
-						*)	;;
+					# debian-edu installations report error found during installation, go forward
+					40)	do_and_report key enter
+						;;
+					*)	;;
 				esac
 				;;
 		*)		;;

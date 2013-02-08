@@ -95,6 +95,7 @@ more languages
 
 general
 
+* test kfreebsd
 * test moar images: debian wheezy+sid cd and dvd images too and use lxde cd for installing lxde + etc
 * use jigdo to download images - but no edu jigdo images.
 * still havent got http://www.os-autoinst.org/ out of my mind

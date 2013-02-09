@@ -270,17 +270,33 @@ normal_action() {
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%03d" $MY_NR)
 	#
-	# common for all types of install
+	# login as jenkins or root
 	#
-	case $TOKEN in
-		050)	do_and_report type jenkins
-			;;
-		060)	do_and_report key enter
-			;;
-		070)	do_and_report type insecure
-			;;
-		080)	do_and_report key enter
-			;;
+	case $NAME in
+		debian_*)	case $TOKEN in
+			050)	do_and_report type jenkins
+				;;
+			060)	do_and_report key enter
+				;;
+			070)	do_and_report type insecure
+				;;
+			080)	do_and_report key enter
+				;;
+			*)	;;
+		esac
+		;;
+		debian-edu_*minimal)	case $TOKEN in
+			050)	do_and_report type root
+				;;
+			060)	do_and_report key enter
+				;;
+			070)	do_and_report type r00tme
+				;;
+			080)	do_and_report key enter
+				;;
+			*)	;;
+		esac
+		;;
 		*)	;;
 	esac
 	#
@@ -492,6 +508,8 @@ normal_action() {
 		debian-edu*minimal)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
 						030)	do_and_report key tab
+							;;
+						040)	do_and_report key enter
 							;;
 						*)	;;
 					esac

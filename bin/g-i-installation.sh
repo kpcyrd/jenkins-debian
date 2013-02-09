@@ -133,6 +133,7 @@ bootstrap_system() {
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+	# FIXME: benchmark cache=none and =writeback
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -285,7 +286,7 @@ normal_action() {
 			*)	;;
 		esac
 		;;
-		debian-edu_*minimal|debian-edu_*-server)	case $TOKEN in
+		debian-edu_*minimal)	case $TOKEN in
 			050)	do_and_report type root
 				;;
 			060)	do_and_report key enter
@@ -293,6 +294,20 @@ normal_action() {
 			070)	do_and_report type r00tme
 				;;
 			080)	do_and_report key enter
+				;;
+			*)	;;
+		esac
+		;;
+		debian-edu_*-server)	case $TOKEN in
+			400)	do_and_report key enter
+				;;
+			800)	do_and_report type root
+				;;
+			810)	do_and_report key enter
+				;;
+			820)	do_and_report type r00tme
+				;;
+			830)	do_and_report key enter
 				;;
 			*)	;;
 		esac
@@ -510,6 +525,63 @@ normal_action() {
 						030)	do_and_report key tab
 							;;
 						040)	do_and_report key enter
+							;;
+						100)	do_and_report type ps
+							;;
+						110)	do_and_report key space
+							;;
+						120)	do_and_report type fax
+							;;
+						130)	do_and_report key enter
+							;;
+						140)	do_and_report type df
+							;;
+						150)	do_and_report key enter
+							;;
+						160)	do_and_report type apt-get
+							;;
+						170)	do_and_report key space
+							;;
+						180)	do_and_report type moo
+							;;
+						200)	do_and_report key enter
+							;;
+						300)	do_and_report type poweroff
+							;;
+						400)	do_and_report key enter
+							;;
+						*)	;;
+					esac
+					;;
+		debian-edu*-server)	case $TOKEN in
+						# debian-edu*minimal installations result in text mode, thus needing an extra tab
+						730)	do_and_report key tab
+							;;
+						740)	do_and_report key enter
+							;;
+						850)	do_and_report type ps
+							;;
+						860)	do_and_report key space
+							;;
+						870)	do_and_report type fax
+							;;
+						880)	do_and_report key enter
+							;;
+						890)	do_and_report type df
+							;;
+						900)	do_and_report key enter
+							;;
+						910)	do_and_report type apt-get
+							;;
+						920)	do_and_report key space
+							;;
+						930)	do_and_report type moo
+							;;
+						940)	do_and_report key enter
+							;;
+						950)	do_and_report type poweroff
+							;;
+						990)	do_and_report key enter
 							;;
 						*)	;;
 					esac

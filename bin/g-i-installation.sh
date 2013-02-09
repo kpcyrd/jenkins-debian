@@ -163,7 +163,7 @@ bootstrap_system() {
 		debian_*_rescue*)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
-		debian-edu*_combi-server)
+		debian-edu*-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
 			EXTRA_APPEND="$EXTRA_APPEND interface=eth0"
 			;;
@@ -212,7 +212,7 @@ boot_system() {
 		exit 1
 	fi
 	case $NAME in
-		debian-edu*_combi-server)
+		debian-edu*-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
 			;;
 		*)	;;
@@ -650,7 +650,7 @@ save_logs() {
 	case $NAME in
 		debian-edu_*_workstation)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
 						;;
-		debian-edu_*_combi-server)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
+		debian-edu_*-server)		sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
 						sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
 						sudo guestmount -a $NAME.raw -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || ( echo "Warning: cannot mount /dev/vg_system/usr" ; figlet "fail" )
 						;;
@@ -677,7 +677,7 @@ save_logs() {
 	sync
 	case $NAME in
 		debian-edu_*_workstation)	;;
-		debian-edu_*_combi-server)	sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
+		debian-edu_*-server)		sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
 						sudo umount -l $SYSTEM_MNT/usr || ( echo "Warning: cannot un-mount $SYSTEM_MNT/usr" ; figlet "fail" )
 						;;
 		debian-edu_*)			sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )

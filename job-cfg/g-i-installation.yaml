@@ -93,6 +93,10 @@
     defaults: g-i-installation
     name: '{name}_debian-edu_wheezy-test_combi-server'
 
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_main-server'
+
 #- job-template:
 #    defaults: g-i-installation
 #    name: '{name}_debian-edu_wheezy-test_sugar'
@@ -112,6 +116,10 @@
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian-edu_squeeze-test_combi-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_squeeze-test_main-server'
 
 - job-template:
     defaults: g-i-installation
@@ -158,7 +166,7 @@
          my_title: 'Debian Edu (wheezy-test) minimal'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 debian-edu_wheezy-test_minimal 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy minimal profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 20 * * 1,3,5,7'
+         my_timed: '23 20 * * 1,3,5,7'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_wheezy-test_standalone':
          my_title: 'Debian Edu (wheezy-test) standalone'
@@ -178,6 +186,12 @@
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy combi-server profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 0 * * 1,3,5,7'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+      - '{name}_debian-edu_wheezy-test_main-server':
+         my_title: 'Debian Edu (wheezy-test) main-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 5 debian-edu_wheezy-test_main-server 30 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy main-server profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 2 * * 1,3,5,7'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
 #      - '{name}_debian-edu_wheezy-test_sugar':
 #         my_title: 'Debian Edu (wheezy-test) sugar'
 #         my_shell: '/srv/jenkins/bin/g-i-installation.sh 99 debian-edu_wheezy-test_sugar 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
@@ -186,79 +200,85 @@
 #         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze-test_minimal':
          my_title: 'Debian Edu (squeeze-test) minimal'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 5 debian-edu_squeeze-test_minimal 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 6 debian-edu_squeeze-test_minimal 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) minimal profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 12 1,15 * *'
+         my_timed: '42 4 1,15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze-test_standalone':
          my_title: 'Debian Edu (squeeze-test) standalone'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 6 debian-edu_squeeze-test_standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 7 debian-edu_squeeze-test_standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 12 1,15 * *'
+         my_timed: '42 4 1,15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze-test_workstation':
          my_title: 'Debian Edu (squeeze-test) workstation'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 7 debian-edu_squeeze-test_workstation 30 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 8 debian-edu_squeeze-test_workstation 30 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) workstation profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_workstation_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 14 1,15 * *'
+         my_timed: '42 7 1,15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze-test_combi-server':
          my_title: 'Debian Edu (squeeze-test) combi-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 8 debian-edu_squeeze-test_combi-server 30 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 9 debian-edu_squeeze-test_combi-server 30 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) combi-server profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 10 1,15 * *'
+         my_timed: '42 8 1,15 * *'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+      - '{name}_debian-edu_squeeze-test_main-server':
+         my_title: 'Debian Edu (squeeze-test) main-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 debian-edu_squeeze-test_main-server 30 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) main-server profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 16 1,15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian_wheezy_kde':
          my_title: 'Debian (wheezy) KDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 9 debian_wheezy_kde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 11 debian_wheezy_kde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian KDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 15 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot here and for other jobs - once we made this more stable
       - '{name}_debian_wheezy_xfce':
          my_title: 'Debian (wheezy) XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 debian_wheezy_xfce 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 12 debian_wheezy_xfce 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_timed: '42 17 2,9,16,23 * *'
+         my_timed: '42 16 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_wheezy_lxde':
          my_title: 'Debian (wheezy) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 11 debian_wheezy_lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 13 debian_wheezy_lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_wheezy_gnome':
          my_title: 'Debian (wheezy) GNOME desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 12 debian_wheezy_gnome 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 14 debian_wheezy_gnome 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_squeeze_xfce':
          my_title: 'Debian (squeeze) XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 13 debian_squeeze_xfce 10 http://ftp.de.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 15 debian_squeeze_xfce 10 http://ftp.de.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_squeeze_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '# debian squeeze jobs are only build on request. squeeze is stable.'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_xfce':
          my_title: 'Debian (sid daily build CD) XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 14 debian_sid_daily_xfce 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 16 debian_sid_daily_xfce 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 8 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_lxde':
          my_title: 'Debian (sid daily build CD) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 15 debian_sid_daily_lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 17 debian_sid_daily_lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 10 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue':
          my_title: 'Debian (sid daily build CD) rescue mode'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 16 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 18 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue_dark_theme':
          my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 17 debian_sid_daily_rescue_dark_theme 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 19 debian_sid_daily_rescue_dark_theme 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Just go into rescue mode (coming in more languages soon), using theme=dark, via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_dark_theme_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * 7'
          my_recipients: 'holger@layer-acht.org'

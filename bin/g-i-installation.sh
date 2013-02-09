@@ -285,7 +285,7 @@ normal_action() {
 			*)	;;
 		esac
 		;;
-		debian-edu_*minimal)	case $TOKEN in
+		debian-edu_*minimal|debian-edu_*-server)	case $TOKEN in
 			050)	do_and_report type root
 				;;
 			060)	do_and_report key enter
@@ -666,11 +666,29 @@ save_logs() {
 	set +e
 	mkdir -p $RESULTS/log
 	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/
-	sudo chown -R jenkins:jenkins $RESULTS/log/
 	#
 	# get list of installed packages
 	#
 	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system." ; sudo ls -la $SYSTEM_MNT ; figlet "fail" )
+	#
+	# only on combi-servers:
+	#	mount /opt
+	#	copy LTSP logs and package list
+	#	unmount /opt
+	#
+	case $NAME in
+		debian-edu_*combi-server)	sudo guestmount -a $NAME.raw -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; figlet "fail" )
+						mkdir -p $RESULTS/log/opt
+						sudo cp -r $SYSTEM_MNT/opt/ltsp/amd64/var/log $RESULTS/log/opt/
+						sudo chroot $SYSTEM_MNT/opt/ltsp/amd64 dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/amd64 ; figlet "fail" )
+						sudo umount -l $SYSTEM_MNT/opt || ( echo "Warning: cannot un-mount $SYSTEM_MNT/opt" ; figlet "fail" )
+						;;
+		*)				;;
+	esac
+	#
+	# make sure we can read everything after installation
+	#
+	sudo chown -R jenkins:jenkins $RESULTS/log/
 	#
 	# umount guests
 	#

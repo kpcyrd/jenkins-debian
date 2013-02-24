@@ -582,7 +582,23 @@ normal_action() {
 							;;
 						940)	do_and_report key enter
 							;;
-						950)	do_and_report type poweroff
+						942)	do_and_report type w3m
+							;;
+						944)	do_and_report key space
+							;;
+						946)	do_and_report type http
+							;;
+						948)	do_and_report type ://www
+							;;
+						950)	do_and_report type nagios
+							;;
+						952)	do_and_report key enter
+							;;
+						970)	do_and_report type q
+							;;
+						972)	do_and_report key enter
+							;;
+						980)	do_and_report type poweroff
 							;;
 						990)	do_and_report key enter
 							;;

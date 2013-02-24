@@ -127,6 +127,10 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian_wheezy_kfreebsd'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_wheezy_lxde'
 
 - job-template:
@@ -144,6 +148,10 @@
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian_sid_daily_xfce'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_sid_daily_kfreebsd'
 
 - job-template:
     defaults: g-i-installation
@@ -240,45 +248,57 @@
          my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 16 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_wheezy_kfreebsd':
+         my_title: 'Debian (wheezy) kfreebsd desktop install'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 13 debian_wheezy_kfreebsd 10 http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot/mini.iso'
+         my_description: 'Do a fully automated installation of Debian kfreebsd desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kfreebsd_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 16 2,9,16,23 * *'
+         my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_wheezy_lxde':
          my_title: 'Debian (wheezy) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 13 debian_wheezy_lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 14 debian_wheezy_lxde 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_wheezy_gnome':
          my_title: 'Debian (wheezy) GNOME desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 14 debian_wheezy_gnome 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 15 debian_wheezy_gnome 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_squeeze_xfce':
          my_title: 'Debian (squeeze) XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 15 debian_squeeze_xfce 10 http://ftp.de.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 16 debian_squeeze_xfce 10 http://ftp.de.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_squeeze_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '# debian squeeze jobs are only build on request. squeeze is stable.'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_xfce':
          my_title: 'Debian (sid daily build CD) XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 16 debian_sid_daily_xfce 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 17 debian_sid_daily_xfce 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 8 * * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_kfreebsd':
+         my_title: 'Debian (sid daily build CD) kfreebsd desktop install'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 18 debian_sid_daily_kfreebsd 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/kfreebsd-amd64/iso-cd/debian-testing-kfreebsd-amd64-netinst.iso'
+         my_description: 'Do a fully automated installation of Debian kfreebsd desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_kfreebsd_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 8 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_lxde':
          my_title: 'Debian (sid daily build CD) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 17 debian_sid_daily_lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 19 debian_sid_daily_lxde 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 10 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue':
          my_title: 'Debian (sid daily build CD) rescue mode'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 18 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 20 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue_dark_theme':
          my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 19 debian_sid_daily_rescue_dark_theme 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 21 debian_sid_daily_rescue_dark_theme 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Just go into rescue mode (coming in more languages soon), using theme=dark, via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_dark_theme_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * 7'
          my_recipients: 'holger@layer-acht.org'

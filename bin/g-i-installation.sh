@@ -128,7 +128,10 @@ bootstrap_system() {
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
-		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+	        case $NAME in
+			*_kfreebsd)	;;
+			*)		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+		esac
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi

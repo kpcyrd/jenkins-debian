@@ -582,25 +582,41 @@ normal_action() {
 							;;
 						0940)	do_and_report key enter
 							;;
-						0942)	do_and_report type w3m
+						0950)	do_and_report type w3m
 							;;
-						0944)	do_and_report key space
+						0960)	do_and_report key space
 							;;
-						0946)	do_and_report type http
+						0970)	do_and_report type http
 							;;
-						0948)	do_and_report type ://www
+						0980)	do_and_report type ://www
 							;;
-						0950)	do_and_report type nagios
+						0990)	do_and_report type nagios
 							;;
-						0952)	do_and_report key enter
+						1000)	do_and_report key enter
 							;;
-						0970)	do_and_report type q
+						1100)	do_and_report type q
 							;;
-						0972)	do_and_report key enter
+						1120)	do_and_report key enter
 							;;
-						0980)	do_and_report type poweroff
+						1150)	do_and_report type w3m
 							;;
-						0990)	do_and_report key enter
+						1160)	do_and_report key space
+							;;
+						1170)	do_and_report type http
+							;;
+						1180)	do_and_report type ://www
+							;;
+						1190)	do_and_report type :631
+							;;
+						1200)	do_and_report key enter
+							;;
+						1300)	do_and_report type q
+							;;
+						1320)	do_and_report key enter
+							;;
+						1400)	do_and_report type poweroff
+							;;
+						1410)	do_and_report key enter
 							;;
 						*)	;;
 					esac

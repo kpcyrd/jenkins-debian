@@ -558,45 +558,29 @@ normal_action() {
 					;;
 		debian-edu*-server)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0730)	do_and_report key tab
-							;;
-						0740)	do_and_report key enter
-							;;
-						0850)	do_and_report type ps
-							;;
-						0860)	do_and_report key space
-							;;
-						0870)	do_and_report type fax
-							;;
-						0880)	do_and_report key enter
-							;;
-						0890)	do_and_report type df
-							;;
-						0900)	do_and_report key enter
-							;;
-						0910)	do_and_report type apt-get
-							;;
-						0920)	do_and_report key space
-							;;
-						0930)	do_and_report type moo
+						0930)	do_and_report key tab
 							;;
 						0940)	do_and_report key enter
 							;;
-						0950)	do_and_report type w3m
+						1050)	do_and_report type ps
 							;;
-						0960)	do_and_report key space
+						1060)	do_and_report key space
 							;;
-						0970)	do_and_report type http
+						1070)	do_and_report type fax
 							;;
-						0980)	do_and_report type ://www
+						1080)	do_and_report key enter
 							;;
-						0990)	do_and_report type nagios
+						1090)	do_and_report type df
 							;;
-						1000)	do_and_report key enter
+						1100)	do_and_report key enter
 							;;
-						1100)	do_and_report type q
+						1110)	do_and_report type apt-get
 							;;
-						1120)	do_and_report key enter
+						1120)	do_and_report key space
+							;;
+						1130)	do_and_report type moo
+							;;
+						1140)	do_and_report key enter
 							;;
 						1150)	do_and_report type w3m
 							;;
@@ -606,7 +590,7 @@ normal_action() {
 							;;
 						1180)	do_and_report type ://www
 							;;
-						1190)	do_and_report type :631
+						1190)	do_and_report type nagios
 							;;
 						1200)	do_and_report key enter
 							;;
@@ -614,9 +598,25 @@ normal_action() {
 							;;
 						1320)	do_and_report key enter
 							;;
-						1400)	do_and_report type poweroff
+						1350)	do_and_report type w3m
 							;;
-						1410)	do_and_report key enter
+						1360)	do_and_report key space
+							;;
+						1370)	do_and_report type http
+							;;
+						1380)	do_and_report type ://www
+							;;
+						1390)	do_and_report type :631
+							;;
+						1400)	do_and_report key enter
+							;;
+						1500)	do_and_report type q
+							;;
+						1520)	do_and_report key enter
+							;;
+						1600)	do_and_report type poweroff
+							;;
+						1610)	do_and_report key enter
 							;;
 						*)	;;
 					esac

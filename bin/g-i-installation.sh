@@ -586,7 +586,7 @@ normal_action() {
 							;;
 						1160)	do_and_report key space
 							;;
-						1170)	do_and_report type http
+						1170)	do_and_report type https
 							;;
 						1180)	do_and_report type ://www
 							;;
@@ -602,7 +602,7 @@ normal_action() {
 							;;
 						1360)	do_and_report key space
 							;;
-						1370)	do_and_report type http
+						1370)	do_and_report type https
 							;;
 						1380)	do_and_report type ://www
 							;;

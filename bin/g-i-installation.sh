@@ -302,15 +302,13 @@ normal_action() {
 		esac
 		;;
 		debian-edu_*-server)	case $TOKEN in
-			0400)	do_and_report key enter
+			1200)	do_and_report type root
 				;;
-			0800)	do_and_report type root
+			1210)	do_and_report key enter
 				;;
-			0810)	do_and_report key enter
+			1220)	do_and_report type r00tme
 				;;
-			0820)	do_and_report type r00tme
-				;;
-			0830)	do_and_report key enter
+			1230)	do_and_report key enter
 				;;
 			*)	;;
 		esac
@@ -558,47 +556,35 @@ normal_action() {
 					;;
 		debian-edu*-server)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0930)	do_and_report key tab
+						0600)	do_and_report key enter	# dummy keypress
 							;;
-						0940)	do_and_report key enter
+						0900)	do_and_report key enter	# dummy keypress
 							;;
-						1050)	do_and_report type ps
-							;;
-						1060)	do_and_report key space
-							;;
-						1070)	do_and_report type fax
-							;;
-						1080)	do_and_report key enter
-							;;
-						1090)	do_and_report type df
-							;;
-						1100)	do_and_report key enter
-							;;
-						1110)	do_and_report type apt-get
-							;;
-						1120)	do_and_report key space
-							;;
-						1130)	do_and_report type moo
+						1130)	do_and_report key tab
 							;;
 						1140)	do_and_report key enter
 							;;
-						1150)	do_and_report type w3m
+						1250)	do_and_report type ps
 							;;
-						1160)	do_and_report key space
+						1260)	do_and_report key space
 							;;
-						1170)	do_and_report type https
+						1270)	do_and_report type fax
 							;;
-						1180)	do_and_report type ://www
+						1280)	do_and_report key enter
 							;;
-						1190)	do_and_report type nagios
+						1290)	do_and_report type df
 							;;
-						1200)	do_and_report key enter
+						1300)	do_and_report key enter
 							;;
-						1300)	do_and_report type q
+						1310)	do_and_report type apt-get # 	apt-get moo
 							;;
-						1320)	do_and_report key enter
+						1320)	do_and_report key space
 							;;
-						1350)	do_and_report type w3m
+						1330)	do_and_report type moo
+							;;
+						1340)	do_and_report key enter
+							;;
+						1350)	do_and_report type w3m 		# check nagios
 							;;
 						1360)	do_and_report key space
 							;;
@@ -606,7 +592,7 @@ normal_action() {
 							;;
 						1380)	do_and_report type ://www
 							;;
-						1390)	do_and_report type :631
+						1390)	do_and_report type nagios
 							;;
 						1400)	do_and_report key enter
 							;;
@@ -614,9 +600,25 @@ normal_action() {
 							;;
 						1520)	do_and_report key enter
 							;;
-						1600)	do_and_report type poweroff
+						1550)	do_and_report type w3m		# check cups
 							;;
-						1610)	do_and_report key enter
+						1560)	do_and_report key space
+							;;
+						1570)	do_and_report type https
+							;;
+						1580)	do_and_report type ://www
+							;;
+						1590)	do_and_report type :631
+							;;
+						1600)	do_and_report key enter
+							;;
+						1700)	do_and_report type q
+							;;
+						1720)	do_and_report key enter
+							;;
+						1800)	do_and_report type poweroff	# poweroff
+							;;
+						1810)	do_and_report key enter
 							;;
 						*)	;;
 					esac

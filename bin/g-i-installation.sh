@@ -556,9 +556,9 @@ normal_action() {
 					;;
 		debian-edu*-server)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0600)	do_and_report key enter	# dummy keypress
+						0600)	do_and_report key enter		# dummy keypress
 							;;
-						0900)	do_and_report key enter	# dummy keypress
+						0900)	do_and_report key enter		# dummy keypress
 							;;
 						1130)	do_and_report key tab
 							;;
@@ -576,7 +576,7 @@ normal_action() {
 							;;
 						1300)	do_and_report key enter
 							;;
-						1310)	do_and_report type apt-get # 	apt-get moo
+						1310)	do_and_report type apt-get 	# apt-get moo
 							;;
 						1320)	do_and_report key space
 							;;
@@ -584,15 +584,15 @@ normal_action() {
 							;;
 						1340)	do_and_report key enter
 							;;
-						1350)	do_and_report type w3m 		# check nagios
+						1350)	do_and_report type lynx 	# check nagios
 							;;
 						1360)	do_and_report key space
 							;;
 						1370)	do_and_report type https
 							;;
-						1380)	do_and_report type ://www
+						1380)	do_and_report type "://www"
 							;;
-						1390)	do_and_report type nagios
+						1390)	do_and_report type "/nagios"
 							;;
 						1400)	do_and_report key enter
 							;;
@@ -600,15 +600,15 @@ normal_action() {
 							;;
 						1520)	do_and_report key enter
 							;;
-						1550)	do_and_report type w3m		# check cups
+						1550)	do_and_report type lynx		# check cups
 							;;
 						1560)	do_and_report key space
 							;;
 						1570)	do_and_report type https
 							;;
-						1580)	do_and_report type ://www
+						1580)	do_and_report type "://www"
 							;;
-						1590)	do_and_report type :631
+						1590)	do_and_report type ":631"
 							;;
 						1600)	do_and_report key enter
 							;;

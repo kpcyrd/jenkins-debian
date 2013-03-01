@@ -584,23 +584,33 @@ normal_action() {
 							;;
 						1340)	do_and_report key enter
 							;;
-						1350)	do_and_report type lynx 	# check nagios
+						1350)	do_and_report type apt-get 	# apt-get install w3m
 							;;
-						1360)	do_and_report key space
+						1360)	do_and_report type "-y"
 							;;
-						1370)	do_and_report type https
+						1370)	do_and_report type install
 							;;
-						1380)	do_and_report type "://www"
+						1380)	do_and_report type w3m
 							;;
-						1390)	do_and_report type "/nagios"
+						1390)	do_and_report key enter
 							;;
-						1400)	do_and_report key enter
+						1400)	do_and_report type w3m 		# check nagios
+							;;
+						1410)	do_and_report key space
+							;;
+						1420)	do_and_report type https
+							;;
+						1430)	do_and_report type "://www"
+							;;
+						1440)	do_and_report type "/nagios"
+							;;
+						1450)	do_and_report key enter
 							;;
 						1500)	do_and_report type q
 							;;
 						1520)	do_and_report key enter
 							;;
-						1550)	do_and_report type lynx		# check cups
+						1550)	do_and_report type w3m		# check cups
 							;;
 						1560)	do_and_report key space
 							;;

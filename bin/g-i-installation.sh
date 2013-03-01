@@ -633,9 +633,16 @@ normal_action() {
 						*)	;;
 					esac
 					;;
-		debian-edu*)	case $TOKEN in
+		debian-edu*workstation)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0040)	do_and_report key enter
+					0400)	do_and_report key enter
+						;;
+					*)	;;
+				esac
+				;;
+		debian-edu*standalone)	case $TOKEN in
+					# debian-edu installations report error found during installation, go forward
+					0400)	do_and_report key enter
 						;;
 					*)	;;
 				esac

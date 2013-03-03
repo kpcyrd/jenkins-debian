@@ -586,49 +586,61 @@ normal_action() {
 							;;
 						1350)	do_and_report type apt-get 	# apt-get install w3m
 							;;
-						1360)	do_and_report type "-y"
+						1360)	do_and_report key space
 							;;
-						1370)	do_and_report type install
+						1370)	do_and_report type "-y"
 							;;
-						1380)	do_and_report type w3m
+						1380)	do_and_report key space
 							;;
-						1390)	do_and_report key enter
+						1390)	do_and_report type install
 							;;
-						1400)	do_and_report type w3m 		# check nagios
+						1400)	do_and_report key space
 							;;
-						1410)	do_and_report key space
+						1410)	do_and_report type w3m
 							;;
-						1420)	do_and_report type https
+						1420)	do_and_report key enter
 							;;
-						1430)	do_and_report type "://www"
+						1500)	do_and_report type w3m 		# check nagios
 							;;
-						1440)	do_and_report type "/nagios"
+						1510)	do_and_report key space
 							;;
-						1450)	do_and_report key enter
+						1520)	do_and_report type https
 							;;
-						1500)	do_and_report type q
+						1525)	do_and_report key ":"
 							;;
-						1520)	do_and_report key enter
+						1530)	do_and_report type "//www"
 							;;
-						1550)	do_and_report type w3m		# check cups
+						1540)	do_and_report type "/nagios"
 							;;
-						1560)	do_and_report key space
+						1550)	do_and_report key enter
 							;;
-						1570)	do_and_report type https
+						1600)	do_and_report type q
 							;;
-						1580)	do_and_report type "://www"
+						1620)	do_and_report key enter
 							;;
-						1590)	do_and_report type ":631"
+						1750)	do_and_report type w3m		# check cups
 							;;
-						1600)	do_and_report key enter
+						1760)	do_and_report key space
 							;;
-						1700)	do_and_report type q
+						1770)	do_and_report type https
 							;;
-						1720)	do_and_report key enter
+						1775)	do_and_report key ":"
 							;;
-						1800)	do_and_report type poweroff	# poweroff
+						1780)	do_and_report type "//www"
 							;;
-						1810)	do_and_report key enter
+						1785)	do_and_report key ":"
+							;;
+						1790)	do_and_report type "631"
+							;;
+						1800)	do_and_report key enter
+							;;
+						1900)	do_and_report type q
+							;;
+						1920)	do_and_report key enter
+							;;
+						2000)	do_and_report type poweroff	# poweroff
+							;;
+						2010)	do_and_report key enter
 							;;
 						*)	;;
 					esac

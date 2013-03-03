@@ -671,7 +671,7 @@ monitor_system() {
 	TRIGGER_NR=0
 	cd $RESULTS
 	sleep 4
-	hourlimit=8 # hours
+	hourlimit=12 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo
 	timelimit=$(( $hourlimit * 60 * 60 / 2 ))
@@ -762,7 +762,7 @@ monitor_system() {
 		sleep 2
 	done
 	if [ $NR -eq $MAX_RUNS ] ; then
-		echo "Warning: running for 6h, forcing termination."
+		echo "Warning: running for ${hourlimit}h, forcing termination."
 	fi
 	if [ -f "$RESULTS/qemu_quit" ] ; then
 		rm $RESULTS/qemu_quit

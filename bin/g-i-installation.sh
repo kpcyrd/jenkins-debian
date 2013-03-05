@@ -289,30 +289,7 @@ normal_action() {
 			*)	;;
 		esac
 		;;
-		debian-edu_*minimal)	case $TOKEN in
-			0050)	do_and_report type root
-				;;
-			0060)	do_and_report key enter
-				;;
-			0070)	do_and_report type r00tme
-				;;
-			0080)	do_and_report key enter
-				;;
-			*)	;;
-		esac
-		;;
-		debian-edu_*-server)	case $TOKEN in
-			1200)	do_and_report type root
-				;;
-			1210)	do_and_report key enter
-				;;
-			1220)	do_and_report type r00tme
-				;;
-			1230)	do_and_report key enter
-				;;
-			*)	;;
-		esac
-		;;
+		# debian-edu installations differ too much, login individually
 		*)	;;
 	esac
 	#
@@ -527,6 +504,14 @@ normal_action() {
 							;;
 						0040)	do_and_report key enter
 							;;
+						0050)	do_and_report type root
+							;;
+						0060)	do_and_report key enter
+							;;
+						0070)	do_and_report type r00tme
+							;;
+						0080)	do_and_report key enter
+							;;
 						0100)	do_and_report type ps
 							;;
 						0110)	do_and_report key space
@@ -556,13 +541,21 @@ normal_action() {
 					;;
 		debian-edu*-server)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0600)	do_and_report key enter		# dummy keypress
+						0500)	do_and_report key enter		# dummy keypress
 							;;
 						0900)	do_and_report key enter		# dummy keypress
 							;;
-						1130)	do_and_report key tab
+						1100)	do_and_report key tab
 							;;
-						1140)	do_and_report key enter
+						1150)	do_and_report key enter
+							;;
+						1170)	do_and_report type root
+							;;
+						1180)	do_and_report key enter
+							;;
+						1190)	do_and_report type r00tme
+							;;
+						1200)	do_and_report key enter
 							;;
 						1250)	do_and_report type ps
 							;;
@@ -647,14 +640,30 @@ normal_action() {
 					;;
 		debian-edu*workstation)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0400)	do_and_report key tab
+					0100)	do_and_report key enter
+						;;
+					0110)	do_and_report type root
+						;;
+					0120)	do_and_report key enter
+						;;
+					0130)	do_and_report type r00tme
+						;;
+					0140)	do_and_report key enter
 						;;
 					*)	;;
 				esac
 				;;
 		debian-edu*standalone)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0400)	do_and_report key tab
+					0100)	do_and_report key enter
+						;;
+					0110)	do_and_report type root
+						;;
+					0120)	do_and_report key enter
+						;;
+					0130)	do_and_report type r00tme
+						;;
+					0140)	do_and_report key enter
 						;;
 					*)	;;
 				esac

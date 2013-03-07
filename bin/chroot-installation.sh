@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012,2013 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # $1 = base distro
@@ -140,7 +140,7 @@ case $1 in
 			;;
 esac
 bootstrap $DISTRO
-FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs"
+FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs"
 
 if [ "$2" != "" ] ; then
 	case $2 in
@@ -148,6 +148,8 @@ if [ "$2" != "" ] ; then
 		gnome)		install_packages gnome gnome desktop-base
 				;;
 		kde)		install_packages kde kde-plasma-desktop desktop-base
+				;;
+		kde-full)	install_packages kde kde-full kde-standard desktop-base
 				;;
 		xfce)		install_packages xfce xfce4 desktop-base
 				;;

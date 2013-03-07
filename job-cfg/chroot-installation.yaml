@@ -92,6 +92,10 @@
 
 - job-template:
     defaults: chroot-installation
+    name: '{name}_sid_install_kde-full'
+
+- job-template:
+    defaults: chroot-installation
     name: '{name}_sid_install_lxde'
 
 - job-template:
@@ -117,6 +121,10 @@
 - job-template:
     defaults: chroot-installation
     name: '{name}_squeeze_install_kde_upgrade_to_wheezy'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_squeeze_install_kde-full_upgrade_to_wheezy'
 
 - job-template:
     defaults: chroot-installation
@@ -148,6 +156,10 @@
 
 - job-template:
     defaults: chroot-installation
+    name: '{name}_wheezy_install_kde-full'
+
+- job-template:
+    defaults: chroot-installation
     name: '{name}_wheezy_install_lxde'
 
 - job-template:
@@ -176,7 +188,11 @@
 
       - '{name}_sid_install_kde':
          installation_params: 'sid kde'
-         my_description: 'Debootstrap sid, then install KDE.'
+         my_description: 'Debootstrap sid, then install KDE plasma desktop.'
+
+      - '{name}_sid_install_kde-full':
+         installation_params: 'sid kde-full'
+         my_description: 'Debootstrap sid, then install complete KDE desktop.'
 
       - '{name}_sid_install_lxde':
          installation_params: 'sid lxde'
@@ -197,15 +213,19 @@
       - '{name}_sid_bootstrap':
          installation_params: 'sid'
          my_description: 'Debootstrap sid.'
-         my_trigger: 'chroot-installation_sid_install_gnome, chroot-installation_sid_install_kde, chroot-installation_sid_install_lxde, chroot-installation_sid_install_xfce, chroot-installation_sid_install_full_desktop, chroot-installation_sid_install_developer'
+         my_trigger: 'chroot-installation_sid_install_gnome, chroot-installation_sid_install_kde, chroot-installation_sid_install_kde-full, chroot-installation_sid_install_lxde, chroot-installation_sid_install_xfce, chroot-installation_sid_install_full_desktop, chroot-installation_sid_install_developer'
 
       - '{name}_squeeze_install_gnome_upgrade_to_wheezy':
          installation_params: 'squeeze gnome wheezy'
-         my_description: 'Debootstrap squeeze, install GNOME then upgrade to wheezy.'
+         my_description: 'Debootstrap squeeze, install GNOME, then upgrade to wheezy.'
 
       - '{name}_squeeze_install_kde_upgrade_to_wheezy':
          installation_params: 'squeeze kde wheezy'
-         my_description: 'Debootstrap squeeze, install KDE then upgrade to wheezy.'
+         my_description: 'Debootstrap squeeze, install KDE plasma desktop, then upgrade to wheezy.'
+
+      - '{name}_squeeze_install_kde-full_upgrade_to_wheezy':
+         installation_params: 'squeeze kde-full wheezy'
+         my_description: 'Debootstrap squeeze, install complete KDE desktop, then upgrade to wheezy.'
 
       - '{name}_squeeze_install_lxde_upgrade_to_wheezy':
          installation_params: 'squeeze lxde wheezy'
@@ -226,7 +246,7 @@
       - '{name}_squeeze_bootstrap_upgrade_to_wheezy':
          installation_params: 'squeeze none wheezy'
          my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
-         my_trigger: 'chroot-installation_squeeze_install_gnome_upgrade_to_wheezy, chroot-installation_squeeze_install_kde_upgrade_to_wheezy, chroot-installation_squeeze_install_lxde_upgrade_to_wheezy, chroot-installation_squeeze_install_xfce_upgrade_to_wheezy, chroot-installation_squeeze_install_full_desktop_upgrade_to_wheezy, chroot-installation_squeeze_install_developer_upgrade_to_wheezy'
+         my_trigger: 'chroot-installation_squeeze_install_gnome_upgrade_to_wheezy, chroot-installation_squeeze_install_kde_upgrade_to_wheezy, chroot-installation_squeeze_install_kde-full_upgrade_to_wheezy, chroot-installation_squeeze_install_lxde_upgrade_to_wheezy, chroot-installation_squeeze_install_xfce_upgrade_to_wheezy, chroot-installation_squeeze_install_full_desktop_upgrade_to_wheezy, chroot-installation_squeeze_install_developer_upgrade_to_wheezy'
 
       - '{name}_wheezy_install_gnome':
          installation_params: 'wheezy gnome'
@@ -234,7 +254,11 @@
 
       - '{name}_wheezy_install_kde':
          installation_params: 'wheezy kde'
-         my_description: 'Debootstrap wheezy, then install KDE.'
+         my_description: 'Debootstrap wheezy, then install KDE plasma desktop.'
+
+      - '{name}_wheezy_install_kde-full':
+         installation_params: 'wheezy kde-full'
+         my_description: 'Debootstrap wheezy, then install complete KDE desktop.'
 
       - '{name}_wheezy_install_xfce':
          installation_params: 'wheezy xfce'
@@ -255,7 +279,7 @@
       - '{name}_wheezy_bootstrap':
          installation_params: 'wheezy'
          my_description: 'Debootstrap wheezy.'
-         my_trigger: 'chroot-installation_wheezy_install_gnome, chroot-installation_wheezy_install_kde, chroot-installation_wheezy_install_lxde, chroot-installation_wheezy_install_xfce, chroot-installation_wheezy_install_full_desktop, chroot-installation_wheezy_install_developer'
+         my_trigger: 'chroot-installation_wheezy_install_gnome, chroot-installation_wheezy_install_kde, chroot-installation_wheezy_install_kde-full, chroot-installation_wheezy_install_lxde, chroot-installation_wheezy_install_xfce, chroot-installation_wheezy_install_full_desktop, chroot-installation_wheezy_install_developer'
 
       - '{name}_housekeeping':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'

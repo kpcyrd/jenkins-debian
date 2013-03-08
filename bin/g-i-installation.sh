@@ -642,11 +642,11 @@ normal_action() {
 					# debian-edu installations report error found during installation, go forward
 					0100)	do_and_report key enter
 						;;
-					0110)	do_and_report type root
+					0110)	do_and_report type jenkins
 						;;
 					0120)	do_and_report key enter
 						;;
-					0130)	do_and_report type r00tme
+					0130)	do_and_report type insecure
 						;;
 					0140)	do_and_report key enter
 						;;
@@ -657,13 +657,61 @@ normal_action() {
 					# debian-edu installations report error found during installation, go forward
 					0100)	do_and_report key enter
 						;;
-					0110)	do_and_report type root
+					0110)	do_and_report type jenkins
 						;;
 					0120)	do_and_report key enter
 						;;
-					0130)	do_and_report type r00tme
+					0130)	do_and_report type insecure
 						;;
 					0140)	do_and_report key enter
+						;;
+					0300)	do_and_report key tab
+						;;
+					0310)	do_and_report key enter
+						;;
+					0400)	do_and_report key alt-f2
+						;;
+					0410)	do_and_report type "konqueror"
+						;;
+					0420)	do_and_report key space
+						;;
+					0430)	do_and_report type "www"
+						;;
+					0440)	do_and_report type "."
+						;;
+					0450)	do_and_report type "debian"
+						;;
+					0460)	do_and_report type "."
+						;;
+					0470)	do_and_report type "org"
+						;;
+					0480)	do_and_report key enter
+						;;
+					0600)	do_and_report key alt-f2
+						;;
+					0610)	do_and_report type konsole
+						;;
+					0620)	do_and_report key enter
+						;;
+					0700)	do_and_report type apt-get
+						;;
+					0710)	do_and_report key space
+						;;
+					0720)	do_and_report type moo
+						;;
+					0730)	do_and_report key enter
+						;;
+					0740)	do_and_report type "su"
+						;;
+					0750)	do_and_report key enter
+						;;
+					0760)	do_and_report type r00tme
+						;;
+					0770)	do_and_report key enter
+						;;
+					0780)	do_and_report type "poweroff"
+						;;
+					0790)	do_and_report key enter
 						;;
 					*)	;;
 				esac

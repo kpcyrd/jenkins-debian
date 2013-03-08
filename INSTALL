@@ -115,3 +115,4 @@ Currently only the configuration is backed up, but neither the jenkins results n
 
 I've cloned these two git repos on my desktop and manually run `git pull`. This is certainly not ideal but good enough to re-setup the system anytime, which is something.
 
+// vim: set filetype=asciidoc:

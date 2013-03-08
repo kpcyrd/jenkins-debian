@@ -136,3 +136,4 @@ TODO: Currently as easy: svn/git using test-scripts need to learn checkout out -
 
 * See link:http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=LICENSE[LICENSE].
 
+// vim: set filetype=asciidoc:

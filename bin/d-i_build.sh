@@ -6,7 +6,7 @@
 #
 # default settings
 #
-#set -x
+set -x
 set -e
 export LC_ALL=C
 export MIRROR=http://ftp.de.debian.org/debian

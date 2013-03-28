@@ -10,9 +10,9 @@ About jenkins.debian.net
 
 == About jenkins.debian.net
 
-http://jenkins.debian.net is pretty much *work in progress*, (hopefully) doing something useful since October 15th 2012.
+http://jenkins.debian.net is *work in progress* and is in it's infancy as a tool for the automated quality monitoring of Debian. in existence since October 15th 2012.
 
-`git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`
+Get the source by running `git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository.
 
 The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 4 cores and 6 GB memory, thanks a lot!
 
@@ -90,7 +90,7 @@ Installation tests inside chroot environments.
 * $distro-bootstrap jobs:
 ** just `debootstrap $distro` (install a base Debian distribution $distro)
 ** there is one job for *sid* and one for *wheezy*: 'chroot-installation_sid_bootstrap' and 'chroot-installation_wheezy_bootstrap'
-** plus there is 'chroot-installation_squeeze_bootstrap_upgrade_to_wheezy', which bootstraps *squeeze* and upgrades that to *wheezy*
+* plus there is 'chroot-installation_squeeze_bootstrap_upgrade_to_wheezy', which bootstraps *squeeze* and upgrades that to *wheezy*
 ** on successful run of the bootstrap job, six $distro-install(+upgrade) jobs are triggered.
 
 * $distro-install jobs (and $distro-install+upgrade jobs):

@@ -99,6 +99,7 @@ general
 * test moar images: debian wheezy+sid cd and dvd images too and use lxde cd for installing lxde + etc
 * use jigdo to download images - but no edu jigdo images.
 * still havent got http://www.os-autoinst.org/ out of my mind
+* new job type: build complete image on every commit and test it with g-i 
 
 === Test Debian live
 
@@ -181,5 +182,10 @@ Martin
 <h01ger> running these tools daily OTOH...
 <h01ger> http://coinst.irill.org/
 ----
+
+=== Test them all
+
+* build packages from all team repos on alioth with jenkins-debian-glue on team request (eg, via a .txt file in a git.repo) for specific branches (which shall also be automated, eg. to be able to only have squeeze+sid branches build, but not all other branches.)
+
 
 // vim: set filetype=asciidoc:

@@ -30,10 +30,10 @@ if [ $(grep -c failed $TMPFILE 2>/dev/null ) -gt 1 ] ; then
 	for FILE in $(grep failed $TMPFILE | awk '{print $2}' FS=href= | cut -d '"' -f2) ; do
 		echo Warning: $FILE failed
 	done
-elif [ $(grep buildd $TMPFILE 2>/dev/null|grep -v "$(date +'%b %d')"|grep -v "See also"|wc -l ) -gt 0 ] ; then
+elif [ $(grep buildd $TMPFILE 2>/dev/null|grep -v "$(date +'%b %d')"|grep -v "$(date --date yesterday +'%b %d')"|grep -v "See also"|wc -l ) -gt 0 ] ; then
 	echo "Warning: outdated builds:"
 	figlet outdated builds
-	grep buildd $TMPFILE 2>/dev/null|grep -v "$(date +'%b %d')"|grep -v "See also"
+	grep buildd $TMPFILE 2>/dev/null|grep -v "$(date +'%b %d')"| grep -v "$(date --date yesterday +'%b %d')" |grep -v "See also"
 else
 	figlet ok
 fi

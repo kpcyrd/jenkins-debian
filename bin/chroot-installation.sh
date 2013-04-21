@@ -63,8 +63,6 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
 echo "deb-src $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
-# work around #703146
-rm /var/lib/apt/lists/*Release
 apt-get update
 EOF
 }
@@ -92,7 +90,7 @@ echo "deb $MIRROR $1 main contrib non-free" > /etc/apt/sources.list
 $SCRIPT_HEADER
 apt-get update
 # workaround #705452
-(dpkg -l docbook-xml && apt-get -y install docbook-xml) || true
+(dpkg -l xml-core && apt-get -y install xml-core docbook-xml) || true
 apt-get -y upgrade
 apt-get -y dist-upgrade
 apt-get -y dist-upgrade

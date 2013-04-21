@@ -90,9 +90,9 @@ prepare_upgrade2() {
 	cat >> $CTMPFILE <<-EOF
 echo "deb $MIRROR $1 main contrib non-free" > /etc/apt/sources.list
 $SCRIPT_HEADER
-# work around #703146
-rm /var/lib/apt/lists/*Release
 apt-get update
+# workaround #705452
+(dpkg -l docbook-xml && apt-get -y install docbook-xml) || true
 apt-get -y upgrade
 apt-get -y dist-upgrade
 apt-get -y dist-upgrade

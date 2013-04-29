@@ -89,8 +89,6 @@ prepare_upgrade2() {
 echo "deb $MIRROR $1 main contrib non-free" > /etc/apt/sources.list
 $SCRIPT_HEADER
 apt-get update
-# workaround #705452
-(dpkg -l xml-core && apt-get -y install xml-core) || true
 apt-get -y upgrade
 apt-get -y dist-upgrade
 apt-get -y dist-upgrade

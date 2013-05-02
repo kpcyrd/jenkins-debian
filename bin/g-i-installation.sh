@@ -728,7 +728,7 @@ monitor_system() {
 	TRIGGER_NR=0
 	cd $RESULTS
 	sleep 4
-	hourlimit=12 # hours
+	hourlimit=16 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo
 	timelimit=$(( $hourlimit * 60 * 60 / 2 ))

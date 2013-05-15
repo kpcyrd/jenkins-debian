@@ -41,6 +41,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '120'
     description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
@@ -70,8 +72,6 @@
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
-      - priority:
-          job-prio: '120'
 
 - defaults:
     name: d-i-manual-html-po2xml
@@ -94,6 +94,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '120'
     description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
@@ -123,8 +125,6 @@
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
-      - priority:
-          job-prio: '120'
 
 - defaults:
     name: d-i-manual-pdf
@@ -147,6 +147,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '120'
     description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
     scm:
       - svn:
@@ -171,8 +173,6 @@
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
-      - priority:
-          job-prio: '120'
 
 - defaults:
     name: d-i-manual-pdf-po2xml
@@ -195,6 +195,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '120'
     description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
     scm:
       - svn:
@@ -219,8 +221,6 @@
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
-      - priority:
-          job-prio: '120'
 
 - defaults:
     name: d-i-build
@@ -243,6 +243,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '130'
     description: 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}'
     scm:
       - git:
@@ -260,8 +262,6 @@
           fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
-      - priority:
-          job-prio: '130'
 ## doesnt work, the artifacts reside outside the workspace
 #      - archive:
 #          artifacts: '*_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes'
@@ -289,6 +289,7 @@
     publishers:
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+    properties:
       - priority:
           job-prio: '110'
 ## doesnt work, the artifacts reside outside the workspace

@@ -243,6 +243,38 @@
     defaults: chroot-installation+trigger
     name: '{name}_jessie_bootstrap'
 
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_gnome_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_kde_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_kde-full_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_lxde_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_xfce_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_full_desktop_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_developer_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation+trigger
+    name: '{name}_wheezy_bootstrap_upgrade_to_jessie'
+
 - project:
     name: chroot-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/chroot-installation.yaml">chroot-installation.yaml</a>.'
@@ -379,9 +411,42 @@
          my_description: 'Debootstrap jessie.'
          my_trigger: 'chroot-installation_jessie_install_gnome, chroot-installation_jessie_install_kde, chroot-installation_jessie_install_kde-full, chroot-installation_jessie_install_lxde, chroot-installation_jessie_install_xfce, chroot-installation_jessie_install_full_desktop, chroot-installation_jessie_install_developer'
 
+      - '{name}_wheezy_install_gnome_upgrade_to_jessie':
+         installation_params: 'wheezy gnome jessie'
+         my_description: 'Debootstrap wheezy, install GNOME, then upgrade to jessie.'
+
+      - '{name}_wheezy_install_kde_upgrade_to_jessie':
+         installation_params: 'wheezy kde jessie'
+         my_description: 'Debootstrap wheezy, install KDE plasma desktop, then upgrade to jessie.'
+
+      - '{name}_wheezy_install_kde-full_upgrade_to_jessie':
+         installation_params: 'wheezy kde-full jessie'
+         my_description: 'Debootstrap wheezy, install complete KDE desktop, then upgrade to jessie.'
+
+      - '{name}_wheezy_install_lxde_upgrade_to_jessie':
+         installation_params: 'wheezy lxde jessie'
+         my_description: 'Debootstrap wheezy, install LXDE then upgrade to jessie.'
+
+      - '{name}_wheezy_install_xfce_upgrade_to_jessie':
+         installation_params: 'wheezy xfce jessie'
+         my_description: 'Debootstrap wheezy, install KFCE then upgrade to jessie.'
+
+      - '{name}_wheezy_install_full_desktop_upgrade_to_jessie':
+         installation_params: 'wheezy full_desktop jessie'
+         my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages, then upgrade to jessie.'
+
+      - '{name}_wheezy_install_developer_upgrade_to_jessie':
+         installation_params: 'wheezy developer jessie'
+         my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these, then upgrade to jessie.'
+
+      - '{name}_wheezy_bootstrap_upgrade_to_jessie':
+         installation_params: 'wheezy none jessie'
+         my_description: 'Debootstrap wheezy, then upgrade to jessie.'
+         my_trigger: 'chroot-installation_wheezy_install_gnome_upgrade_to_jessie, chroot-installation_wheezy_install_kde_upgrade_to_jessie, chroot-installation_wheezy_install_kde-full_upgrade_to_jessie, chroot-installation_wheezy_install_lxde_upgrade_to_jessie, chroot-installation_wheezy_install_xfce_upgrade_to_jessie, chroot-installation_wheezy_install_full_desktop_upgrade_to_jessie, chroot-installation_wheezy_install_developer_upgrade_to_jessie'
+
       - '{name}_housekeeping_squeeze':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
-         my_trigger: 'chroot-installation_squeeze_bootstrap'
+         my_trigger: 'chroot-installation_squeeze_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
          my_time: '0 5 25 * *'
 
       - '{name}_housekeeping_wheezy':
@@ -391,7 +456,7 @@
 
       - '{name}_housekeeping_jessie':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
-         my_trigger: 'chroot-installation_jessie_bootstrap'
+         my_trigger: 'chroot-installation_jessie_bootstrap, chroot-installation_wheezy_bootstrap_upgrade_to_jessie'
          my_time: '0 10 * * *'
 
       - '{name}_housekeeping_sid':

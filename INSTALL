@@ -40,6 +40,7 @@ I would prefer to run a jenkins package from wheezy-backports.
 * Dependency Graph Viewer Plugin
 * View Job Filters
 * Console Column Plugin
+* Priority Sorter Plugin
 * Next Executions Plugin
 
 * Sidebar Link

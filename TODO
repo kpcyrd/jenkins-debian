@@ -27,7 +27,6 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * push jenkins munin plugins upstream
 * rgrep for ftp.de and put this into a config file. and then put other stuff in that config file, like webserver for d-i preseeding. etc.
 * use these plugins to make sure jenkins is never blocked too badly:
-** https://wiki.jenkins-ci.org/display/JENKINS/Priority+Sorter+Plugin
 ** https://wiki.jenkins-ci.org/display/JENKINS/Locks+and+Latches+plugin or https://wiki.jenkins-ci.org/display/JENKINS/Throttle+Concurrent+Builds+Plugin
 ** https://wiki.jenkins-ci.org/display/JENKINS/Heavy+Job+Plugin
 

@@ -63,12 +63,16 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
 
-- job-template:
-    defaults: chroot-installation
-    name: '{name}_housekeeping'
+- defaults:
+    name: chroot-housekeeping
     description: '{my_description}{do_not_edit}'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 50
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     triggers:
-      - timed: "0 5 * * *"
+      - timed: '{my_time}'
     builders:
       - shell: '/srv/jenkins/bin/housekeeping.sh {name}'
     publishers:
@@ -81,6 +85,35 @@
           threshold: 'UNSTABLE'
       - email:
           recipients: jenkins+debian-qa holger@layer-acht.org
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/chroot-installation/
+          text: All chroot-installation jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+
+- job-template:
+    defaults: chroot-housekeeping
+    name: '{name}_housekeeping_sid'
+
+- job-template:
+    defaults: chroot-housekeeping
+    name: '{name}_housekeeping_squeeze'
+
+- job-template:
+    defaults: chroot-housekeeping
+    name: '{name}_housekeeping_wheezy'
+
+- job-template:
+    defaults: chroot-housekeeping
+    name: '{name}_housekeeping_jessie'
 
 - job-template:
     defaults: chroot-installation
@@ -346,7 +379,23 @@
          my_description: 'Debootstrap jessie.'
          my_trigger: 'chroot-installation_jessie_install_gnome, chroot-installation_jessie_install_kde, chroot-installation_jessie_install_kde-full, chroot-installation_jessie_install_lxde, chroot-installation_jessie_install_xfce, chroot-installation_jessie_install_full_desktop, chroot-installation_jessie_install_developer'
 
-      - '{name}_housekeeping':
+      - '{name}_housekeeping_squeeze':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
-         my_trigger: 'chroot-installation_sid_bootstrap, chroot-installation_wheezy_bootstrap, chroot-installation_jessie_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
+         my_trigger: 'chroot-installation_squeeze_bootstrap'
+         my_time: '0 5 25 * *'
+
+      - '{name}_housekeeping_wheezy':
+         my_description: 'Cleanup and monitor so that there is a predictable environment.'
+         my_trigger: 'chroot-installation_wheezy_bootstrap'
+         my_time: '0 5 4,18 * *'
+
+      - '{name}_housekeeping_jessie':
+         my_description: 'Cleanup and monitor so that there is a predictable environment.'
+         my_trigger: 'chroot-installation_jessie_bootstrap'
+         my_time: '0 10 * * *'
+
+      - '{name}_housekeeping_sid':
+         my_description: 'Cleanup and monitor so that there is a predictable environment.'
+         my_trigger: 'chroot-installation_sid_bootstrap'
+         my_time: '0 5 * * *'
 

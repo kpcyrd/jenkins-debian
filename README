@@ -83,10 +83,11 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
 Installation tests inside chroot environments.
 
-* 'chroot-installation_housekeeping':
+* 'chroot-installation_housekeeping_$distro':
 ** make sure chroots have been cleaned up properly
-** runs at 05:00 UTC and triggers the bootstrap jobs on success
-
+** runs daily at 05:00 UTC and triggers the $distro specific bootstrap job on success
+** wheezy is only triggered on the 4th day and 18th of each month (as it was released on the 4th)
+** squeeze only on the 25th of each month
 * $distro-bootstrap jobs:
 ** just `debootstrap $distro` (install a base Debian distribution $distro)
 ** there is one job for *sid*, one for *wheezy* and one for *jessie*: 'chroot-installation_sid_bootstrap', 'chroot-installation_wheezy_bootstrap' and 'chroot-installation_jessie_bootstrap'

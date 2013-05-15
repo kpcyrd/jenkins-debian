@@ -21,6 +21,7 @@
 
 #main-table {
   background-image: url(debian-swirl.png) !important;
+  background-position: bottom right !important;
 }
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2013 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # $1 = vnc-display, each job should have a unique one, so jobs can run in parallel
@@ -240,7 +240,7 @@ do_and_report() {
 	backup_screenshot
 }
 
-rescue_action() {
+rescue_boot() {
 	# boot in rescue mode
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%04d" $MY_NR)
@@ -269,7 +269,7 @@ rescue_action() {
 	esac
 }
 
-normal_action() {
+post_install_boot() {
 	# normal boot after installation
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%04d" $MY_NR)
@@ -804,9 +804,9 @@ monitor_system() {
 		# let's drive this further (once/if triggered)
 		if [ $TRIGGER_NR -ne 0 ] && [ $TRIGGER_NR -ne $NR ] ; then
 			case $MODE in
-				rescue)	rescue_action
+				rescue)	rescue_boot
 					;;
-				normal)	normal_action
+				post_install)	post_install_boot
 					;;
 				*)	;;
 			esac
@@ -967,7 +967,7 @@ case $NAME in
 			sleep 15
 			boot_system
 			let START_TRIGGER=NR+500
-			monitor_system normal $START_TRIGGER
+			monitor_system post_install $START_TRIGGER
 			save_logs
 			;;
 esac

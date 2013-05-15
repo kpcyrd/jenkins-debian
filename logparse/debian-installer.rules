@@ -26,6 +26,9 @@ ok /^Warning: pdf and ps formats are currently not supported for Chinese, Greek,
 # making http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
 ok /^WARNING: .+: spurious newline removed/
 
+# making http://jenkins.debian.net/view/d-i_packages/job/d-i_build_rootskel-gtk/ build nicely
+ok /^install -m644 warning_icon.png.+/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 

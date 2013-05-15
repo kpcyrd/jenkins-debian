@@ -726,6 +726,12 @@ monitor_system() {
 	# if TRIGGER_MODE is set to a number, triggered mode will be entered in that many steps - else an image match needs to happen
 	TRIGGER_MODE=$2
 	TRIGGER_NR=0
+	# use default valule for timeout if none given
+	if [ -z "$3" ] ; then
+		TIMEOUT=600
+	else
+		TIMEOUT=$3
+	fi
 	cd $RESULTS
 	sleep 4
 	hourlimit=16 # hours
@@ -771,12 +777,12 @@ monitor_system() {
 				break
 			fi
 		fi
-		# every 100 screenshots, starting from the 600ths one...
-		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt 600 ] ; then
+		# every 100 screenshots, starting from the $TIMEOUTth one...
+		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt $TIMEOUT ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
-			let OLD=NR-600
+			let OLD=NR-$TIMEOUT
 			PRINTF_OLD=$(printf "%06d" $OLD)
-			# test if this screenshot is basically the same as the one 600 screenshots ago
+			# test if this screenshot is basically the same as the one $TIMEOUT screenshots ago
 			# 400 pixels difference between to images is tolerated, to ignore updating clocks
 			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || true )
 			# usually this returns an integer, but not always....
@@ -943,6 +949,8 @@ bootstrap_system
 set +x
 case $NAME in
 	*_rescue*) 	monitor_system rescue
+			;;
+	debian-edu_*combi-server)		monitor_system install wait4match 3000
 			;;
 	*)		monitor_system install wait4match
 			;;

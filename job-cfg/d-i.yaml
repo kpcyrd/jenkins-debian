@@ -70,6 +70,8 @@
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
+      - priority:
+          job-prio: '120'
 
 - defaults:
     name: d-i-manual-html-po2xml
@@ -121,6 +123,8 @@
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
+      - priority:
+          job-prio: '120'
 
 - defaults:
     name: d-i-manual-pdf
@@ -167,6 +171,8 @@
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
+      - priority:
+          job-prio: '120'
 
 - defaults:
     name: d-i-manual-pdf-po2xml
@@ -213,6 +219,8 @@
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
+      - priority:
+          job-prio: '120'
 
 - defaults:
     name: d-i-build
@@ -252,6 +260,8 @@
           fail-on-error: 'true'
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - priority:
+          job-prio: '130'
 ## doesnt work, the artifacts reside outside the workspace
 #      - archive:
 #          artifacts: '*_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes'
@@ -279,6 +289,8 @@
     publishers:
       - email:
           recipients: jenkins+debian-boot holger@layer-acht.org
+      - priority:
+          job-prio: '110'
 ## doesnt work, the artifacts reside outside the workspace
 #      - archive:
 #          artifacts: '*_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes'

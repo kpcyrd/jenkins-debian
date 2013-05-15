@@ -30,7 +30,7 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
-          job-prio: '110'
+          job-prio: '100'
 
 - defaults:
     name: chroot-installation+trigger
@@ -64,6 +64,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '101'
 
 - defaults:
     name: chroot-housekeeping
@@ -100,6 +102,8 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '105'
 
 - job-template:
     defaults: chroot-housekeeping

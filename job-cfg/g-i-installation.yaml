@@ -40,7 +40,10 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '80'
-
+      - throttle:
+          max-total: 3
+          categories:
+            - g-i-installation
 - defaults:
     name: g-i-installation-housekeeping
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'

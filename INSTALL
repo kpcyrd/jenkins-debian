@@ -41,6 +41,7 @@ I would prefer to run a jenkins package from wheezy-backports.
 * View Job Filters
 * Console Column Plugin
 * Priority Sorter Plugin
+* Throttle Concurrent Builds Plugin
 * Next Executions Plugin
 
 * Sidebar Link

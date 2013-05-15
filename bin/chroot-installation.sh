@@ -132,6 +132,9 @@ case $1 in
 	wheezy)		DISTRO="wheezy"
 			SPECIFIC="libreoffice virtualbox"
 			;;
+	jessie)		DISTRO="jessie"
+			SPECIFIC="libreoffice virtualbox"
+			;;
 	sid)		DISTRO="sid"
 			SPECIFIC="libreoffice virtualbox"
 			;;
@@ -169,6 +172,7 @@ if [ "$3" != "" ] ; then
 	case $3 in
 		squeeze)upgrade2 squeeze;;
 		wheezy)	upgrade2 wheezy;;
+		jessie)	upgrade2 jessie;;
 		sid)	upgrade2 sid;;
 		*)	echo "unsupported distro." ; exit 1 ;;
 	esac

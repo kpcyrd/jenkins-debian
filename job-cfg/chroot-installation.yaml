@@ -178,6 +178,38 @@
     defaults: chroot-installation+trigger
     name: '{name}_wheezy_bootstrap'
 
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_gnome'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_kde'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_kde-full'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_lxde'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_xfce'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_full_desktop'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_jessie_install_developer'
+
+- job-template:
+    defaults: chroot-installation+trigger
+    name: '{name}_jessie_bootstrap'
+
 - project:
     name: chroot-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/chroot-installation.yaml">chroot-installation.yaml</a>.'
@@ -281,7 +313,40 @@
          my_description: 'Debootstrap wheezy.'
          my_trigger: 'chroot-installation_wheezy_install_gnome, chroot-installation_wheezy_install_kde, chroot-installation_wheezy_install_kde-full, chroot-installation_wheezy_install_lxde, chroot-installation_wheezy_install_xfce, chroot-installation_wheezy_install_full_desktop, chroot-installation_wheezy_install_developer'
 
+      - '{name}_jessie_install_gnome':
+         installation_params: 'jessie gnome'
+         my_description: 'Debootstrap jessie, then install GNOME.'
+
+      - '{name}_jessie_install_kde':
+         installation_params: 'jessie kde'
+         my_description: 'Debootstrap jessie, then install KDE plasma desktop.'
+
+      - '{name}_jessie_install_kde-full':
+         installation_params: 'jessie kde-full'
+         my_description: 'Debootstrap jessie, then install complete KDE desktop.'
+
+      - '{name}_jessie_install_xfce':
+         installation_params: 'jessie xfce'
+         my_description: 'Debootstrap jessie, then install XFCE.'
+
+      - '{name}_jessie_install_lxde':
+         installation_params: 'jessie lxde'
+         my_description: 'Debootstrap jessie, then install LXDE.'
+
+      - '{name}_jessie_install_full_desktop':
+         installation_params: 'jessie full_desktop'
+         my_description: 'Debootstrap jessie, then install four desktop environments and the most commonly used applications and packages.'
+
+      - '{name}_jessie_install_developer':
+         installation_params: 'jessie developer'
+         my_description: 'Debootstrap jessie, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
+
+      - '{name}_jessie_bootstrap':
+         installation_params: 'jessie'
+         my_description: 'Debootstrap jessie.'
+         my_trigger: 'chroot-installation_jessie_install_gnome, chroot-installation_jessie_install_kde, chroot-installation_jessie_install_kde-full, chroot-installation_jessie_install_lxde, chroot-installation_jessie_install_xfce, chroot-installation_jessie_install_full_desktop, chroot-installation_jessie_install_developer'
+
       - '{name}_housekeeping':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
-         my_trigger: 'chroot-installation_sid_bootstrap, chroot-installation_wheezy_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
+         my_trigger: 'chroot-installation_sid_bootstrap, chroot-installation_wheezy_bootstrap, chroot-installation_jessie_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
 

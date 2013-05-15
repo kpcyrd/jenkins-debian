@@ -143,9 +143,9 @@ case $1 in
 			;;
 esac
 bootstrap $DISTRO
-FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs"
 
 if [ "$2" != "" ] ; then
+	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts mplayer wine texlive-full asciidoc vim emacs"
 	case $2 in
 		none)		;;
 		gnome)		install_packages gnome gnome desktop-base

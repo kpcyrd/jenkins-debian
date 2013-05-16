@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2013 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 #
@@ -21,7 +21,7 @@ check_for_mounted_chroots() {
 		echo "$ ls -la $CHROOT_PATTERN"
 		# List the processes using the partition
 		echo
-		fuser -mv $CHROOT_TARGET
+		fuser -mv $CHROOT_PATTERN
 		cat $OUTPUT
 		rm $OUTPUT
 		exit 1
@@ -97,7 +97,7 @@ if [ -z $1 ] ; then
 	report_squid_usage brief
 else
 	case $1 in
-		chroot-installation)		wait4idle $1
+		chroot-installation*)		wait4idle $1
 						report_disk_usage $1
 						check_for_mounted_chroots $1
 						;;

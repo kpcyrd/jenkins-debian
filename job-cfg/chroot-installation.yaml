@@ -78,7 +78,7 @@
     triggers:
       - timed: '{my_time}'
     builders:
-      - shell: '/srv/jenkins/bin/housekeeping.sh {name}'
+      - shell: '/srv/jenkins/bin/housekeeping.sh {my_prefix}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
@@ -454,19 +454,23 @@
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
          my_trigger: 'chroot-installation_squeeze_bootstrap, chroot-installation_squeeze_bootstrap_upgrade_to_wheezy'
          my_time: '0 5 25 * *'
+         my_prefix: '{name}_housekeeping_squeeze'
 
       - '{name}_housekeeping_wheezy':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
          my_trigger: 'chroot-installation_wheezy_bootstrap'
          my_time: '0 5 4,18 * *'
+         my_prefix: '{name}_housekeeping_wheezy'
 
       - '{name}_housekeeping_jessie':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
          my_trigger: 'chroot-installation_jessie_bootstrap, chroot-installation_wheezy_bootstrap_upgrade_to_jessie'
          my_time: '0 10 * * *'
+         my_prefix: '{name}_housekeeping_jessie'
 
       - '{name}_housekeeping_sid':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'
          my_trigger: 'chroot-installation_sid_bootstrap'
          my_time: '0 5 * * *'
+         my_prefix: '{name}_housekeeping_sid'
 

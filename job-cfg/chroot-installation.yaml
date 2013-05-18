@@ -147,6 +147,10 @@
 
 - job-template:
     defaults: chroot-installation
+    name: '{name}_sid_install_haskell'
+
+- job-template:
+    defaults: chroot-installation
     name: '{name}_sid_install_developer'
 
 - job-template:
@@ -243,6 +247,10 @@
 
 - job-template:
     defaults: chroot-installation
+    name: '{name}_jessie_install_haskell'
+
+- job-template:
+    defaults: chroot-installation
     name: '{name}_jessie_install_developer'
 
 - job-template:
@@ -272,6 +280,10 @@
 - job-template:
     defaults: chroot-installation
     name: '{name}_wheezy_install_full_desktop_upgrade_to_jessie'
+
+- job-template:
+    defaults: chroot-installation
+    name: '{name}_wheezy_install_haskell_upgrade_to_jessie'
 
 - job-template:
     defaults: chroot-installation
@@ -308,6 +320,10 @@
       - '{name}_sid_install_full_desktop':
          installation_params: 'sid full_desktop'
          my_description: 'Debootstrap sid, then install four desktop environments and the most commonly used applications and packages.'
+
+      - '{name}_sid_install_haskell':
+         installation_params: 'sid haskell'
+         my_description: 'Debootstrap sid, then install all Haskell related packages.'
 
       - '{name}_sid_install_developer':
          installation_params: 'sid developer'
@@ -408,6 +424,10 @@
          installation_params: 'jessie full_desktop'
          my_description: 'Debootstrap jessie, then install four desktop environments and the most commonly used applications and packages.'
 
+      - '{name}_jessie_install_haskell':
+         installation_params: 'jessie haskell'
+         my_description: 'Debootstrap jessie, then install all Haskell related packages.'
+
       - '{name}_jessie_install_developer':
          installation_params: 'jessie developer'
          my_description: 'Debootstrap jessie, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
@@ -440,6 +460,10 @@
       - '{name}_wheezy_install_full_desktop_upgrade_to_jessie':
          installation_params: 'wheezy full_desktop jessie'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages, then upgrade to jessie.'
+
+      - '{name}_wheezy_install_haskell_upgrade_to_jessie':
+         installation_params: 'wheezy haskell jessie'
+         my_description: 'Debootstrap wheezy, then install all Haskell related packages, then upgrade to jessie.'
 
       - '{name}_wheezy_install_developer_upgrade_to_jessie':
          installation_params: 'wheezy developer jessie'

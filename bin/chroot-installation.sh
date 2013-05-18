@@ -160,6 +160,8 @@ if [ "$2" != "" ] ; then
 				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;
+		haskell)	install_packages 'haskell-platform.*' 'libghc-.*' hoogle
+				;;
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
 		*)		echo "unsupported component."

@@ -136,7 +136,7 @@ case $1 in
 			SPECIFIC="libreoffice virtualbox"
 			;;
 	sid)		DISTRO="sid"
-			SPECIFIC="libreoffice virtualbox"
+			SPECIFIC="libreoffice virt-manager"
 			;;
 	*)		echo "unsupported distro."
 			exit 1

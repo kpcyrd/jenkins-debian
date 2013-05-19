@@ -20,18 +20,6 @@ Some stats are available using link:http://jenkins.debian.net/munin/jenkins-mont
 
 If you notice some jobs has problems and you want to find out why, read <<debug,debug certain jobs>> to learn how to do this locally.
 
-=== Feedback
-
-I love to get feedback on this! Please send an email to debian-qa@lists.debian.org or just join #debian-qa on irc.debian.org to report bugs or give other feedback there! 
-
-=== Setup
-
-See link:http://jenkins.debian.net/userContent/setup.html[INSTALL].
-
-=== ToDo
-
-There is still a lot of work left, check the current link:http://jenkins.debian.net/userContent/todo.html[ToDo list].
-
 == Jobs being run
 
 Remember, this is still pretty much work in progress. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
@@ -134,6 +122,19 @@ See the *fourth line* on *any* log to find out how to debug any job. Point this 
 
 
 TODO: Currently as easy: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.
+
+=== Feedback
+
+I love to get feedback on this! Please send an email to debian-qa@lists.debian.org or just join #debian-qa on irc.debian.org to report bugs or give other feedback there! 
+
+=== Setup
+
+See link:http://jenkins.debian.net/userContent/setup.html[INSTALL].
+
+=== ToDo
+
+There is still a lot of work left, check the current link:http://jenkins.debian.net/userContent/todo.html[ToDo list].
+
 
 == License
 

@@ -332,7 +332,7 @@
       - '{name}_sid_bootstrap':
          installation_params: 'sid'
          my_description: 'Debootstrap sid.'
-         my_trigger: 'chroot-installation_sid_install_gnome, chroot-installation_sid_install_kde, chroot-installation_sid_install_kde-full, chroot-installation_sid_install_lxde, chroot-installation_sid_install_xfce, chroot-installation_sid_install_full_desktop, chroot-installation_sid_install_developer'
+         my_trigger: 'chroot-installation_sid_install_gnome, chroot-installation_sid_install_kde, chroot-installation_sid_install_kde-full, chroot-installation_sid_install_lxde, chroot-installation_sid_install_xfce, chroot-installation_sid_install_full_desktop, chroot-installation_sid_install_developer, chroot-installation_sid_install_haskell'
 
       - '{name}_squeeze_install_gnome_upgrade_to_wheezy':
          installation_params: 'squeeze gnome wheezy'
@@ -435,7 +435,7 @@
       - '{name}_jessie_bootstrap':
          installation_params: 'jessie'
          my_description: 'Debootstrap jessie.'
-         my_trigger: 'chroot-installation_jessie_install_gnome, chroot-installation_jessie_install_kde, chroot-installation_jessie_install_kde-full, chroot-installation_jessie_install_lxde, chroot-installation_jessie_install_xfce, chroot-installation_jessie_install_full_desktop, chroot-installation_jessie_install_developer'
+         my_trigger: 'chroot-installation_jessie_install_gnome, chroot-installation_jessie_install_kde, chroot-installation_jessie_install_kde-full, chroot-installation_jessie_install_lxde, chroot-installation_jessie_install_xfce, chroot-installation_jessie_install_full_desktop, chroot-installation_jessie_install_developer, chroot-installation_jessie_install_haskell'
 
       - '{name}_wheezy_install_gnome_upgrade_to_jessie':
          installation_params: 'wheezy gnome jessie'
@@ -472,7 +472,7 @@
       - '{name}_wheezy_bootstrap_upgrade_to_jessie':
          installation_params: 'wheezy none jessie'
          my_description: 'Debootstrap wheezy, then upgrade to jessie.'
-         my_trigger: 'chroot-installation_wheezy_install_gnome_upgrade_to_jessie, chroot-installation_wheezy_install_kde_upgrade_to_jessie, chroot-installation_wheezy_install_kde-full_upgrade_to_jessie, chroot-installation_wheezy_install_lxde_upgrade_to_jessie, chroot-installation_wheezy_install_xfce_upgrade_to_jessie, chroot-installation_wheezy_install_full_desktop_upgrade_to_jessie, chroot-installation_wheezy_install_developer_upgrade_to_jessie'
+         my_trigger: 'chroot-installation_wheezy_install_gnome_upgrade_to_jessie, chroot-installation_wheezy_install_kde_upgrade_to_jessie, chroot-installation_wheezy_install_kde-full_upgrade_to_jessie, chroot-installation_wheezy_install_lxde_upgrade_to_jessie, chroot-installation_wheezy_install_xfce_upgrade_to_jessie, chroot-installation_wheezy_install_full_desktop_upgrade_to_jessie, chroot-installation_wheezy_install_developer_upgrade_to_jessie, chroot-installation_wheezy_install_haskell_upgrade_to_jessie'
 
       - '{name}_housekeeping_squeeze':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'

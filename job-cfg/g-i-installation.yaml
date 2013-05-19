@@ -169,6 +169,14 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_spanish'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_arabic'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue_dark_theme'
 
 - project:
@@ -302,9 +310,21 @@
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * *'
          my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_spanish':
+         my_title: 'Debian (sid daily build CD) rescue mode in Spanish'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 21 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso es es_ES'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '23 7 * * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_arabic':
+         my_title: 'Debian (sid daily build CD) rescue mode in Arabic'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ar ar_AR'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '23 7 * * *'
+         my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue_dark_theme':
          my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 21 debian_sid_daily_rescue_dark_theme 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 23 debian_sid_daily_rescue_dark_theme 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Just go into rescue mode (coming in more languages soon), using theme=dark, via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_dark_theme_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * 7'
          my_recipients: 'holger@layer-acht.org'

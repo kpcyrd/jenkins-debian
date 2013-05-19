@@ -160,7 +160,7 @@ if [ "$2" != "" ] ; then
 				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;
-		haskell)	install_packages 'haskell-platform.*' 'libghc-.*' hoogle
+		haskell)	install_packages haskell 'haskell-platform.*' 'libghc-.*'
 				;;
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;

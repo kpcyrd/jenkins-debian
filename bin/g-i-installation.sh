@@ -60,9 +60,11 @@ RESULTS=$WORKSPACE/results
 if [ -z "$5" ] || [ -z "$6" ] ; then
 	DI_LANG="en"
 	DI_LOCALE="en_US"
+	PRESEEDCFG="preseed.cfg"
 else
 	DI_LANG=$5
 	DI_LOCALE=$6
+	PRESEEDCFG="${DI_LANG}_preseed.cfg"
 fi
 
 fetch_if_newer() {
@@ -140,7 +142,7 @@ bootstrap_system() {
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
-	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_preseed.cfg"
+	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
 	INST_LOCALE="locale=$DI_LOCALE"
 	INST_KEYMAP="keymap=us"	# always us!
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
@@ -192,7 +194,7 @@ bootstrap_system() {
 		;;
 	esac
 	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
-	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_preseed.cfg
+	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"
 	set -x

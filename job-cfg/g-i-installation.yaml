@@ -318,7 +318,7 @@
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue_japanese':
          my_title: 'Debian (sid daily build CD) rescue mode in Japanese'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso jp jp_JP'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ja ja_JA'
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '23 7 * * *'
          my_recipients: 'holger@layer-acht.org'

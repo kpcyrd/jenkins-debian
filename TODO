@@ -86,7 +86,7 @@ more languages
 * babelbox.git has a nice langlist
 * $name-preseed.base -> sed .cfg (LANG)
 * for edu: pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
-* for d-i: create jobs for something like Tamil, Hebrew, some Arabic and maybe some more Indian languages would be sufficient
+* for d-i: create jobs for something like some Arabic and maybe some more Indian languages would be sufficient
 ** these jobs would not need to do an install, just booting them in rescue mode is probably enough
 
 general

@@ -177,6 +177,26 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_chinese'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_korean'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_russian'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_greek'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_sid_daily_rescue_vietnamese'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue_dark_theme'
 
 - project:
@@ -314,13 +334,43 @@
          my_title: 'Debian (sid daily build CD) rescue mode in Spanish'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 21 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso es es_ES'
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_timed: '23 7 * * *'
+         my_timed: '23 7 18 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue_japanese':
          my_title: 'Debian (sid daily build CD) rescue mode in Japanese'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ja ja_JA'
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_timed: '23 7 * * *'
+         my_timed: '42 7 18 * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_chinese':
+         my_title: 'Debian (sid daily build CD) rescue mode in Chinese (China)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso zh zh_CN'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '23 8 18 * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_korean':
+         my_title: 'Debian (sid daily build CD) rescue mode in Korean'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ko ko_KR'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 8 18 * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_russian':
+         my_title: 'Debian (sid daily build CD) rescue mode in Russian'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ru ru_RU'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 9 18 * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_greek':
+         my_title: 'Debian (sid daily build CD) rescue mode in Greek'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso el el_GR'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 9 18 * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_rescue_vietnamese':
+         my_title: 'Debian (sid daily build CD) rescue mode in Vietnamese'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 22 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso vi vi_VI'
+         my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 9 18 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_rescue_dark_theme':
          my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'

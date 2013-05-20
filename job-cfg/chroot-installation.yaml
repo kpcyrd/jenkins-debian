@@ -15,7 +15,7 @@
           unstable-on-warning: 'false'
           fail-on-error: 'false'
       - email:
-          recipients: jenkins+debian-qa holger@layer-acht.org '{my_extra_recipients}'
+          recipients: '{my_recipients}'
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -50,7 +50,7 @@
       - trigger:
           project: '{my_trigger}'
       - email:
-          recipients: jenkins+debian-qa holger@layer-acht.org
+          recipients: '{my_recipients}'
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -300,182 +300,222 @@
       - '{name}_sid_install_gnome':
          installation_params: 'sid gnome'
          my_description: 'Debootstrap sid, then install GNOME.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_kde':
          installation_params: 'sid kde'
          my_description: 'Debootstrap sid, then install KDE plasma desktop.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_kde-full':
          installation_params: 'sid kde-full'
          my_description: 'Debootstrap sid, then install complete KDE desktop.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_lxde':
          installation_params: 'sid lxde'
          my_description: 'Debootstrap sid, then install LXDE.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_xfce':
          installation_params: 'sid xfce'
          my_description: 'Debootstrap sid, then install XFCE.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_full_desktop':
          installation_params: 'sid full_desktop'
          my_description: 'Debootstrap sid, then install four desktop environments and the most commonly used applications and packages.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_haskell':
          installation_params: 'sid haskell'
          my_description: 'Debootstrap sid, then install all Haskell related packages.'
-         my_extra_recipients: 'pkg-haskell-maintainers@lists.alioth.debian.org'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
 
       - '{name}_sid_install_developer':
          installation_params: 'sid developer'
          my_description: 'Debootstrap sid, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_bootstrap':
          installation_params: 'sid'
          my_description: 'Debootstrap sid.'
          my_trigger: 'chroot-installation_sid_install_gnome, chroot-installation_sid_install_kde, chroot-installation_sid_install_kde-full, chroot-installation_sid_install_lxde, chroot-installation_sid_install_xfce, chroot-installation_sid_install_full_desktop, chroot-installation_sid_install_developer, chroot-installation_sid_install_haskell'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_gnome_upgrade_to_wheezy':
          installation_params: 'squeeze gnome wheezy'
          my_description: 'Debootstrap squeeze, install GNOME, then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_kde_upgrade_to_wheezy':
          installation_params: 'squeeze kde wheezy'
          my_description: 'Debootstrap squeeze, install KDE plasma desktop, then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_kde-full_upgrade_to_wheezy':
          installation_params: 'squeeze kde-full wheezy'
          my_description: 'Debootstrap squeeze, install complete KDE desktop, then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_lxde_upgrade_to_wheezy':
          installation_params: 'squeeze lxde wheezy'
          my_description: 'Debootstrap squeeze, install LXDE then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_xfce_upgrade_to_wheezy':
          installation_params: 'squeeze xfce wheezy'
          my_description: 'Debootstrap squeeze, install KFCE then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_full_desktop_upgrade_to_wheezy':
          installation_params: 'squeeze full_desktop wheezy'
          my_description: 'Debootstrap squeeze, then install four desktop environments and the most commonly used applications and packages, then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_install_developer_upgrade_to_wheezy':
          installation_params: 'squeeze developer wheezy'
          my_description: 'Debootstrap squeeze, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these, then upgrade to wheezy.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_squeeze_bootstrap_upgrade_to_wheezy':
          installation_params: 'squeeze none wheezy'
          my_description: 'Debootstrap squeeze, then upgrade to wheezy.'
          my_trigger: 'chroot-installation_squeeze_install_gnome_upgrade_to_wheezy, chroot-installation_squeeze_install_kde_upgrade_to_wheezy, chroot-installation_squeeze_install_kde-full_upgrade_to_wheezy, chroot-installation_squeeze_install_lxde_upgrade_to_wheezy, chroot-installation_squeeze_install_xfce_upgrade_to_wheezy, chroot-installation_squeeze_install_full_desktop_upgrade_to_wheezy, chroot-installation_squeeze_install_developer_upgrade_to_wheezy'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_gnome':
          installation_params: 'wheezy gnome'
          my_description: 'Debootstrap wheezy, then install GNOME.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_kde':
          installation_params: 'wheezy kde'
          my_description: 'Debootstrap wheezy, then install KDE plasma desktop.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_kde-full':
          installation_params: 'wheezy kde-full'
          my_description: 'Debootstrap wheezy, then install complete KDE desktop.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_xfce':
          installation_params: 'wheezy xfce'
          my_description: 'Debootstrap wheezy, then install XFCE.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_lxde':
          installation_params: 'wheezy lxde'
          my_description: 'Debootstrap wheezy, then install LXDE.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_full_desktop':
          installation_params: 'wheezy full_desktop'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_developer':
          installation_params: 'wheezy developer'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_bootstrap':
          installation_params: 'wheezy'
          my_description: 'Debootstrap wheezy.'
          my_trigger: 'chroot-installation_wheezy_install_gnome, chroot-installation_wheezy_install_kde, chroot-installation_wheezy_install_kde-full, chroot-installation_wheezy_install_lxde, chroot-installation_wheezy_install_xfce, chroot-installation_wheezy_install_full_desktop, chroot-installation_wheezy_install_developer'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_gnome':
          installation_params: 'jessie gnome'
          my_description: 'Debootstrap jessie, then install GNOME.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_kde':
          installation_params: 'jessie kde'
          my_description: 'Debootstrap jessie, then install KDE plasma desktop.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_kde-full':
          installation_params: 'jessie kde-full'
          my_description: 'Debootstrap jessie, then install complete KDE desktop.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_xfce':
          installation_params: 'jessie xfce'
          my_description: 'Debootstrap jessie, then install XFCE.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_lxde':
          installation_params: 'jessie lxde'
          my_description: 'Debootstrap jessie, then install LXDE.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_full_desktop':
          installation_params: 'jessie full_desktop'
          my_description: 'Debootstrap jessie, then install four desktop environments and the most commonly used applications and packages.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_haskell':
          installation_params: 'jessie haskell'
          my_description: 'Debootstrap jessie, then install all Haskell related packages.'
-         my_extra_recipients: 'pkg-haskell-maintainers@lists.alioth.debian.org'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
 
       - '{name}_jessie_install_developer':
          installation_params: 'jessie developer'
          my_description: 'Debootstrap jessie, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_bootstrap':
          installation_params: 'jessie'
          my_description: 'Debootstrap jessie.'
          my_trigger: 'chroot-installation_jessie_install_gnome, chroot-installation_jessie_install_kde, chroot-installation_jessie_install_kde-full, chroot-installation_jessie_install_lxde, chroot-installation_jessie_install_xfce, chroot-installation_jessie_install_full_desktop, chroot-installation_jessie_install_developer, chroot-installation_jessie_install_haskell'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_gnome_upgrade_to_jessie':
          installation_params: 'wheezy gnome jessie'
          my_description: 'Debootstrap wheezy, install GNOME, then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_kde_upgrade_to_jessie':
          installation_params: 'wheezy kde jessie'
          my_description: 'Debootstrap wheezy, install KDE plasma desktop, then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_kde-full_upgrade_to_jessie':
          installation_params: 'wheezy kde-full jessie'
          my_description: 'Debootstrap wheezy, install complete KDE desktop, then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_lxde_upgrade_to_jessie':
          installation_params: 'wheezy lxde jessie'
          my_description: 'Debootstrap wheezy, install LXDE then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_xfce_upgrade_to_jessie':
          installation_params: 'wheezy xfce jessie'
          my_description: 'Debootstrap wheezy, install KFCE then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_full_desktop_upgrade_to_jessie':
          installation_params: 'wheezy full_desktop jessie'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages, then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_haskell_upgrade_to_jessie':
          installation_params: 'wheezy haskell jessie'
          my_description: 'Debootstrap wheezy, then install all Haskell related packages, then upgrade to jessie.'
-         my_extra_recipients: 'pkg-haskell-maintainers@lists.alioth.debian.org'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
 
       - '{name}_wheezy_install_developer_upgrade_to_jessie':
          installation_params: 'wheezy developer jessie'
          my_description: 'Debootstrap wheezy, then install four desktop environments and the most commonly used applications and packages - and the build depends for all of these, then upgrade to jessie.'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_bootstrap_upgrade_to_jessie':
          installation_params: 'wheezy none jessie'
          my_description: 'Debootstrap wheezy, then upgrade to jessie.'
          my_trigger: 'chroot-installation_wheezy_install_gnome_upgrade_to_jessie, chroot-installation_wheezy_install_kde_upgrade_to_jessie, chroot-installation_wheezy_install_kde-full_upgrade_to_jessie, chroot-installation_wheezy_install_lxde_upgrade_to_jessie, chroot-installation_wheezy_install_xfce_upgrade_to_jessie, chroot-installation_wheezy_install_full_desktop_upgrade_to_jessie, chroot-installation_wheezy_install_developer_upgrade_to_jessie, chroot-installation_wheezy_install_haskell_upgrade_to_jessie'
+         my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_housekeeping_squeeze':
          my_description: 'Cleanup and monitor so that there is a predictable environment.'

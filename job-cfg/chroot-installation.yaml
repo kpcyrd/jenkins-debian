@@ -15,7 +15,7 @@
           unstable-on-warning: 'false'
           fail-on-error: 'false'
       - email:
-          recipients: jenkins+debian-qa holger@layer-acht.org
+          recipients: jenkins+debian-qa holger@layer-acht.org '{my_extra_recipients}'
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -324,6 +324,7 @@
       - '{name}_sid_install_haskell':
          installation_params: 'sid haskell'
          my_description: 'Debootstrap sid, then install all Haskell related packages.'
+         my_extra_recipients: 'pkg-haskell-maintainers@lists.alioth.debian.org'
 
       - '{name}_sid_install_developer':
          installation_params: 'sid developer'
@@ -427,6 +428,7 @@
       - '{name}_jessie_install_haskell':
          installation_params: 'jessie haskell'
          my_description: 'Debootstrap jessie, then install all Haskell related packages.'
+         my_extra_recipients: 'pkg-haskell-maintainers@lists.alioth.debian.org'
 
       - '{name}_jessie_install_developer':
          installation_params: 'jessie developer'
@@ -464,6 +466,7 @@
       - '{name}_wheezy_install_haskell_upgrade_to_jessie':
          installation_params: 'wheezy haskell jessie'
          my_description: 'Debootstrap wheezy, then install all Haskell related packages, then upgrade to jessie.'
+         my_extra_recipients: 'pkg-haskell-maintainers@lists.alioth.debian.org'
 
       - '{name}_wheezy_install_developer_upgrade_to_jessie':
          installation_params: 'wheezy developer jessie'

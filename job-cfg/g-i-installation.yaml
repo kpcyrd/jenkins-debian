@@ -376,7 +376,7 @@
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 9 18 * *'
          my_recipients: 'holger@layer-acht.org'
-      - '{name}_debian_sid_daily_rescue_vietnamese':
+      - '{name}_debian_sid_daily_rescue_hebrew':
          my_title: 'Debian (sid daily build CD) rescue mode in Hebrew'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 28 debian_sid_daily_rescue 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso he he_IL'
          my_description: 'Just go into rescue mode (coming in more languages soon) via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'

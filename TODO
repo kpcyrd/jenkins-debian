@@ -108,6 +108,7 @@ general
 ** this probably better is done after the edu packages has been switched to git and when edu cd are (also?) build on pettersson.d.o
 ** also because it's probably better to do this with unmodified d-i first :-)
 * test minimal and sugar profile, as well as gnome and lxde
+* test dvd. test amd64 +i386 chroot setup.
 
 === Test tasks:
 

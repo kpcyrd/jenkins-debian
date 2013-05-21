@@ -883,8 +883,17 @@ save_logs() {
 	case $NAME in
 		debian-edu_*combi-server)	sudo guestmount -a $NAME.raw -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; figlet "fail" )
 						mkdir -p $RESULTS/log/opt
-						sudo cp -r $SYSTEM_MNT/opt/ltsp/amd64/var/log $RESULTS/log/opt/
-						sudo chroot $SYSTEM_MNT/opt/ltsp/amd64 dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/amd64 ; figlet "fail" )
+						if [ -d $SYSTEM_MNT/opt/ltsp/amd64 ] ; then
+							LTSPARCH="amd64"
+						elif [ -d $SYSTEM_MNT/opt/ltsp/i386 ] ; then
+							LTSPARCH="i386"
+						else
+							echo "Warning: no LTSP chroot found."
+						fi
+						if [ ! -z "$LTSPARCH" ] ; then
+							sudo cp -r $SYSTEM_MNT/opt/ltsp/$LTSPARCH/var/log $RESULTS/log/opt/
+							sudo chroot $SYSTEM_MNT/opt/ltsp/$LTSPARCH dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/$LTSPARCH ; figlet "fail" )
+						fi
 						sudo umount -l $SYSTEM_MNT/opt || ( echo "Warning: cannot un-mount $SYSTEM_MNT/opt" ; figlet "fail" )
 						;;
 		*)				;;

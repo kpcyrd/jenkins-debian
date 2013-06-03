@@ -321,9 +321,9 @@
          my_timed: '42 15 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot here and for other jobs - once we made this more stable
       - '{name}_debian_wheezy_xfce':
-         my_title: 'Debian (wheezy) XFCE desktop install'
+         my_title: 'Debian (wheezy) Xfce desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 12 debian_wheezy_xfce 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian Xfce desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 16 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_wheezy_kfreebsd':
@@ -345,15 +345,15 @@
          my_timed: '42 19 2,9,16,23 * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_squeeze_xfce':
-         my_title: 'Debian (squeeze) XFCE desktop install'
+         my_title: 'Debian (squeeze) Xfce desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 16 debian_squeeze_xfce 10 http://ftp.de.debian.org/debian/dists/squeeze/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_squeeze_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian Xfce desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_squeeze_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '# debian squeeze jobs are only build on request. squeeze is stable.'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_xfce':
-         my_title: 'Debian (sid daily build CD) XFCE desktop install'
+         my_title: 'Debian (sid daily build CD) Xfce desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 17 debian_sid_daily_xfce 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian XFCE desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian Xfce desktop - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 8 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_kfreebsd':

@@ -319,7 +319,7 @@
 
       - '{name}_sid_install_xfce':
          installation_params: 'sid xfce'
-         my_description: 'Debootstrap sid, then install XFCE.'
+         my_description: 'Debootstrap sid, then install Xfce.'
          my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_sid_install_full_desktop':
@@ -401,7 +401,7 @@
 
       - '{name}_wheezy_install_xfce':
          installation_params: 'wheezy xfce'
-         my_description: 'Debootstrap wheezy, then install XFCE.'
+         my_description: 'Debootstrap wheezy, then install Xfce.'
          my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_wheezy_install_lxde':
@@ -442,7 +442,7 @@
 
       - '{name}_jessie_install_xfce':
          installation_params: 'jessie xfce'
-         my_description: 'Debootstrap jessie, then install XFCE.'
+         my_description: 'Debootstrap jessie, then install Xfce.'
          my_recipients: 'jenkins+debian-qa holger@layer-acht.org'
 
       - '{name}_jessie_install_lxde':

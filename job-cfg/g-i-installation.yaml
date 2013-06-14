@@ -85,27 +85,11 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_jessie_standalone'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian-edu_wheezy-test_minimal'
 
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian-edu_wheezy-test_standalone'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone_gnome'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone_lxde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone_xfce'
 
 - job-template:
     defaults: g-i-installation
@@ -258,6 +242,22 @@
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue_dark_theme'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_standalone_gnome'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_standalone_lxde'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_standalone_xfce'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie_standalone'
 
 - project:
     name: g-i-installation
@@ -526,5 +526,6 @@
          my_title: 'Debian Edu (jessie) standalone'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 43 debian-edu_jessie_standalone 25 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 0 * * 1,11,21'
+         my_timed: '42 1 * * 1'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+

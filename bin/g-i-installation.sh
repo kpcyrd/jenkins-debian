@@ -179,10 +179,28 @@ bootstrap_system() {
 		*_dark_theme)
 			EXTRA_APPEND="$EXTRA_APPEND theme=dark"
 			;;
+		debian-edu_*_gnome)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=gnome"
+			GUITERMINAL=xterm
+			;;
+		debian-edu_*_lxde)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=lxde"
+			GUITERMINAL=xterm
+			;;
+		debian-edu_*_xfce)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=xfce"
+			GUITERMINAL=xterm
+			;;
 		debian-edu_*)
-			EXTRA_APPEND="$EXTRA_APPEND desktop=kde DEBCONF_DEBUG=developer"  # FIXME: this shall become more conditional...
+			EXTRA_APPEND="$EXTRA_APPEND desktop=kde"
+			GUITERMINAL=konsole
 			;;
 		*)	;;
+	esac
+	case $NAME in
+		debian-edu_*)
+			EXTRA_APPEND="$EXTRA_APPEND DEBCONF_DEBUG=developer"  # FIXME: this shall become more conditional...
+			;;
 	esac
 	case $NAME in
 	    debian-edu_*)
@@ -655,7 +673,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		debian-edu*standalone)	case $TOKEN in
+		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
 					0100)	do_and_report key enter
 						;;
@@ -673,7 +691,7 @@ post_install_boot() {
 						;;
 					0400)	do_and_report key alt-f2
 						;;
-					0410)	do_and_report type "konqueror"
+					0410)	do_and_report type "iceweasel"
 						;;
 					0420)	do_and_report key space
 						;;
@@ -691,7 +709,7 @@ post_install_boot() {
 						;;
 					0600)	do_and_report key alt-f2
 						;;
-					0610)	do_and_report type konsole
+					0610)	do_and_report type $GUITERMINAL
 						;;
 					0620)	do_and_report key enter
 						;;

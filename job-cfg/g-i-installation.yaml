@@ -93,6 +93,18 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_standalone_gnome'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_standalone_lxde'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_wheezy-test_standalone_xfce'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian-edu_wheezy-test_workstation'
 
 - job-template:
@@ -488,4 +500,21 @@
          my_description: 'Just go into rescue mode, using theme=dark, via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_dark_theme_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 6 * * 7'
          my_recipients: 'holger@layer-acht.org'
-
+      - '{name}_debian-edu_wheezy-test_standalone_gnome':
+         my_title: 'Debian Edu (wheezy-test) standalone (gnome)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 debian-edu_wheezy-test_standalone_gnome 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 20 * * 1,3,5,7'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+      - '{name}_debian-edu_wheezy-test_standalone_lxde':
+         my_title: 'Debian Edu (wheezy-test) standalone (lxde)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 41 debian-edu_wheezy-test_standalone_lxde 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 20 * * 1,3,5,7'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+      - '{name}_debian-edu_wheezy-test_standalone_xfce':
+         my_title: 'Debian Edu (wheezy-test) standalone (xfce)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 42 debian-edu_wheezy-test_standalone_xfce 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 20 * * 1,3,5,7'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'

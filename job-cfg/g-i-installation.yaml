@@ -85,6 +85,10 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian-edu_testing_standalone'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian-edu_wheezy-test_minimal'
 
 - job-template:
@@ -504,7 +508,7 @@
          my_title: 'Debian Edu (wheezy-test) standalone (gnome)'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 debian-edu_wheezy-test_standalone_gnome 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 20 * * 1,3,5,7'
+         my_timed: '42 18 * * 1,3,5,7'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_wheezy-test_standalone_lxde':
          my_title: 'Debian Edu (wheezy-test) standalone (lxde)'
@@ -516,5 +520,11 @@
          my_title: 'Debian Edu (wheezy-test) standalone (xfce)'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 42 debian-edu_wheezy-test_standalone_xfce 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 20 * * 1,3,5,7'
+         my_timed: '42 22 * * 1,3,5,7'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+      - '{name}_debian-edu_testing_standalone':
+         my_title: 'Debian Edu (testing) standalone'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 43 debian-edu_testing_standalone 25 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Testing standalone profile - via d-i preseeding (with <a href="http://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_testing_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 0 * * 1,11,21'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'

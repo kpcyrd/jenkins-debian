@@ -133,7 +133,7 @@ case $1 in
 			SPECIFIC="libreoffice virtualbox"
 			;;
 	jessie)		DISTRO="jessie"
-			SPECIFIC="libreoffice virtualbox"
+			SPECIFIC="libreoffice virt-manager"
 			;;
 	sid)		DISTRO="sid"
 			SPECIFIC="libreoffice virt-manager"

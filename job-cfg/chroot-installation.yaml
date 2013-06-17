@@ -31,6 +31,10 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '100'
+      - throttle:
+          max-total: 4
+          categories:
+            - chroot-installation
 
 - defaults:
     name: chroot-installation+trigger

@@ -43,6 +43,8 @@
       - throttle:
           max-total: 3
           max-per-node: 3
+          enabled: True
+          option: category
           categories:
             - g-i-installation
 - defaults:

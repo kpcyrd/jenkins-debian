@@ -34,6 +34,8 @@
       - throttle:
           max-total: 4
           max-per-node: 4
+          enabled: True
+          option: category
           categories:
             - chroot-installation
 

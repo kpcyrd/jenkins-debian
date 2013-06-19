@@ -33,6 +33,7 @@
           job-prio: '100'
       - throttle:
           max-total: 4
+          max-per-node: 4
           categories:
             - chroot-installation
 

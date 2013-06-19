@@ -42,6 +42,7 @@
           job-prio: '80'
       - throttle:
           max-total: 3
+          max-per-node: 3
           categories:
             - g-i-installation
 - defaults:

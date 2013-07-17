@@ -73,6 +73,13 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '101'
+      - throttle:
+          max-total: 4
+          max-per-node: 4
+          enabled: True
+          option: category
+          categories:
+            - chroot-installation
 
 - defaults:
     name: chroot-housekeeping
@@ -111,6 +118,13 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '105'
+      - throttle:
+          max-total: 4
+          max-per-node: 4
+          enabled: True
+          option: category
+          categories:
+            - chroot-installation
 
 - job-template:
     defaults: chroot-housekeeping

@@ -81,6 +81,13 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '50'
+      - throttle:
+          max-total: 3
+          max-per-node: 3
+          enabled: True
+          option: category
+          categories:
+            - g-i-installation
 
 - job-template:
     defaults: g-i-installation-housekeeping

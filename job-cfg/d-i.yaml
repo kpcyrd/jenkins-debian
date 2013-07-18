@@ -841,6 +841,9 @@
 - job-template:
     defaults: d-i-build
     name: '{name}_build_zipl-installer'
+- job-template:
+    defaults: d-i-build
+    name: '{name}_build_desktop-chooser'
 
 # http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes to the rescue!
 
@@ -1057,6 +1060,8 @@
          gitrepo: 'git://git.debian.org/git/d-i/debian-installer'
       - '{name}_build_debootstrap':
          gitrepo: 'git://git.debian.org/git/d-i/debootstrap'
+      - '{name}_build_desktop-chooser.git':
+         gitrepo: 'git://git.debian.org/git/d-i/desktop-chooser'
       - '{name}_build_devicetype-detect':
          gitrepo: 'git://git.debian.org/git/d-i/devicetype-detect'
       - '{name}_build_dh-di':

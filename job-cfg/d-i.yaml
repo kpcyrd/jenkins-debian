@@ -1060,7 +1060,7 @@
          gitrepo: 'git://git.debian.org/git/d-i/debian-installer'
       - '{name}_build_debootstrap':
          gitrepo: 'git://git.debian.org/git/d-i/debootstrap'
-      - '{name}_build_desktop-chooser.git':
+      - '{name}_build_desktop-chooser':
          gitrepo: 'git://git.debian.org/git/d-i/desktop-chooser'
       - '{name}_build_devicetype-detect':
          gitrepo: 'git://git.debian.org/git/d-i/devicetype-detect'

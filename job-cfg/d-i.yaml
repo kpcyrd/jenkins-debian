@@ -43,10 +43,10 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '120'
-    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: svn://anonscm.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/{lang}/.*'
@@ -96,10 +96,10 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '120'
-    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: svn://anonscm.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/po/{lang}/.*'
@@ -152,7 +152,7 @@
     description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: svn://anonscm.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/{lang}/.*'
@@ -200,7 +200,7 @@
     description: 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="http://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: svn://anonscm.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '/trunk/manual/{lang}/.*'
@@ -270,10 +270,10 @@
 - job-template:
     defaults: d-i
     name: '{name}_manual'
-    description: 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://svn.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
+    description: 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
     scm:
       - svn:
-         url: svn://svn.debian.org/svn/d-i/trunk
+         url: svn://anonscm.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
          includedRegions: '{include}'

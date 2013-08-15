@@ -2,10 +2,10 @@
     name: ruby-qa
     description: 'Debian/Ruby QA checks.{do_not_edit}'
     logrotate:
-        daysToKeep: 365
-    numToKeep: 365
-    artifactDaysToKeep: -1
-    artifactNumToKeep: -1
+      daysToKeep: 365
+      numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     scm:
       - git:
           url: '{gitrepo}'

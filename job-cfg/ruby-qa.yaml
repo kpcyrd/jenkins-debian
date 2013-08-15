@@ -7,9 +7,9 @@
     artifactDaysToKeep: -1
     artifactNumToKeep: -1
     scm:
-        - git:
-            url: '{gitrepo}'
-        branches:
+      - git:
+          url: '{gitrepo}'
+          branches:
             - master
     builders:
         - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'

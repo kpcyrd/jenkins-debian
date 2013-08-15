@@ -22,7 +22,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/ruby_qa/
+          url: http://jenkins.debian.net/view/ruby-qa/
           text: Misc debian-installer jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -32,7 +32,11 @@
 
 - job-template:
     defaults: ruby-qa
-    name: 'ruby-qa'
+    name: '{name}_testing'
+
+- job-template:
+    defaults: ruby-qa
+    name: '{name}_unstable'
 
 - project:
     name: ruby-qa

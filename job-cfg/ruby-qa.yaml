@@ -43,11 +43,11 @@
                 - timed: "31 3 * * *"
             distro: 'unstable'
             gitrepo: 'git://anonscm.debian.org/pkg-ruby-extras/ruby-debian-qa.git'
-            my_shell: './ci-build'
+            my_shell: '/srv/jenkins/bin/ci-build'
         - '{name}_testing':
             triggers:
                 - timed: "31 4 * * *"
             distro: 'testing'
             gitrepo: 'git://anonscm.debian.org/pkg-ruby-extras/ruby-debian-qa.git'
-            my_shell: './ci-build'
+            my_shell: '/srv/jenkins/bin/ci-build'
 

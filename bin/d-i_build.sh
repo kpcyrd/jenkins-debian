@@ -49,7 +49,7 @@ pdebuild_package() {
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
 		sudo pbuilder --create
 	else
-		sudo pbuilder --update
+		sudo pbuilder --update || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create )
 	fi
 	#
 	# 3.0 quilt is not happy without an upstream tarball

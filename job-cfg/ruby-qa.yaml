@@ -32,6 +32,10 @@
 
 - job-template:
     defaults: ruby-qa
+    name: '{name}_stable'
+
+- job-template:
+    defaults: ruby-qa
     name: '{name}_testing'
 
 - job-template:
@@ -52,6 +56,12 @@
             triggers:
                 - timed: "31 4 * * *"
             distro: 'testing'
+            gitrepo: 'git://anonscm.debian.org/pkg-ruby-extras/ruby-debian-qa.git'
+            my_shell: './ci-run'
+        - '{name}_stable':
+            triggers:
+                - timed: "31 5 * * *"
+            distro: 'stable'
             gitrepo: 'git://anonscm.debian.org/pkg-ruby-extras/ruby-debian-qa.git'
             my_shell: './ci-run'
 

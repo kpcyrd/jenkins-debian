@@ -34,11 +34,14 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 * 'g-i-installation_debian_sid_daily-lxde' and '-xfce'
 ** sid installation of Xfce/LXDE desktop with daily build sid image
 
-* 'g-i-installation_debian_wheezy_lxde','-xfce','-kde' and '-gnome'
-** wheezy installation of Xfce/LXDE/KDE desktop with weekly build wheezy image
+* 'g-i-installation_debian_jessie_lxde','-xfce','-kde' and '-gnome' and '-kfreebsd'
+** jessie installation of Xfce/LXDE/KDE desktop and kfreebsd install with weekly build jessie image
+
+* 'g-i-installation_debian_wheezy_lxde','-xfce','-kde' and '-gnome' and '-kfreebsd'
+** wheezy installation of Xfce/LXDE/KDE desktop and kfreebsd install with wheezy release image
 
 * 'g-i-installation_debian_squeeze_xfce'
-** wheezy installation of Xfce desktop with squeeze image
+** squeeze installation of Xfce desktop with squeeze image
 
 * Debian Edu installation tests of specific profiles and suites:
 ** 'g-i-installation_debian-edu_squeeze-test_standalone'

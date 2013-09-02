@@ -127,7 +127,7 @@ bootstrap_system() {
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
+	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
@@ -227,7 +227,7 @@ boot_system() {
 	cd $WORKSPACE
 	echo "Booting system installed with g-i installation test for $NAME."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
+	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown"
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	echo "Checking $NAME.raw:"
 	FILE=$(file $NAME.raw)

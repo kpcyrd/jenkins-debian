@@ -14,18 +14,21 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 == General ToDo
 
+* proper git repo url, outside users/holger
+** same for /srv/jenkins.debian.net-scm-sync.git
+** irc notifications for commits to invite more contributors
+
 * keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
 ** create d-i_svn_trigger job to trigger sub-set jobs (like manual)
 ** create d-i git hooks
 * get rid of some reduncacy in job-cfg/*.yaml
 ** FIXME: sometimes true and some True used in yaml files
-* proper git repo url, outside users/holger
-** same for /srv/jenkins.debian.net-scm-sync.git
 * fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
 * try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * push jenkins munin plugins upstream
 * rgrep for ftp.de and put this into a config file. and then put other stuff in that config file, like webserver for d-i preseeding. etc.
+* some way to map failing jobs to debian bugs and display that in the job.... (probably via a 2nd build step)
 
 == Debian Packaging related
 

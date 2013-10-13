@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2013 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 #
@@ -47,6 +47,10 @@ pdebuild_package() {
 	# prepare build
 	#
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
+		# FIXME: begin debug code
+		ls -la /var/cache/pbuilder/base.tgz
+		file /var/cache/pbuilder/base.tgz
+		# FIXME: end debug code
 		sudo pbuilder --create
 	else
 		sudo pbuilder --update || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create )

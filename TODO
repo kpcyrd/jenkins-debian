@@ -70,6 +70,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 * "Hash Sum Mismatch" problem with squid, see http://jenkins.debian.net/job/chroot-installation_squeeze_install_developer_upgrade_to_wheezy/13/console
 ** pere says this is supposed to be fixed in squid3
 * chroot-installation: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
+*  warn about transitional packages installed (on non-upgrades only)
 
 ----
 <pabs> h01ger: how about all of the blends?

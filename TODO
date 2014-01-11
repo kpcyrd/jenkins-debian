@@ -22,6 +22,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 ** create d-i_svn_trigger job to trigger sub-set jobs (like manual)
 ** create d-i git hooks
 * get rid of some reduncacy in job-cfg/*.yaml
+** this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 ** FIXME: sometimes true and some True used in yaml files
 * fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
 * try awstats

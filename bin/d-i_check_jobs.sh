@@ -27,7 +27,7 @@ PROJECT_JOBS=$(mktemp)
 # for this, we compare referred git repos in .mrconfig against locally existing jenkins jobs
 # 	(see http://wiki.debian.org/DebianInstaller/CheckOut)
 #
-echo "Scanning $URL for reffered git repos which have no jenkins job associated."
+echo "Scanning $URL for referred git repos which have no jenkins job associated."
 curl $URL > $TMPFILE 2>/dev/null
 PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
 #

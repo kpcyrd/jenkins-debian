@@ -576,6 +576,9 @@
     name: '{name}_build_debootstrap'
 - job-template:
     defaults: d-i-build
+    name: '{name}_build_desktop-chooser'
+- job-template:
+    defaults: d-i-build
     name: '{name}_build_devicetype-detect'
 - job-template:
     defaults: d-i-build
@@ -1060,6 +1063,8 @@
          gitrepo: 'git://git.debian.org/git/d-i/debian-installer'
       - '{name}_build_debootstrap':
          gitrepo: 'git://git.debian.org/git/d-i/debootstrap'
+      - '{name}_build_desktop-chooser':
+         gitrepo: 'git://git.debian.org/git/d-i/desktop-chooser'
       - '{name}_build_desktop-chooser':
          gitrepo: 'git://git.debian.org/git/d-i/desktop-chooser'
       - '{name}_build_devicetype-detect':

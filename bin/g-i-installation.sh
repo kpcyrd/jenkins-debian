@@ -798,7 +798,7 @@ monitor_system() {
 				break
 			elif [ ! -z "$INVALID_SIG_LINE" ] ; then
 				echo "ERROR: Invalid Release signature found, aborting."
-				break
+				exit 1
 			fi
 		fi
 		# every 100 screenshots, starting from the $TIMEOUTth one...

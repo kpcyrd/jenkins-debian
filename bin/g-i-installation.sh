@@ -788,12 +788,16 @@ monitor_system() {
 			gocr snapshot_${PRINTF_NR}.ppm > $GOCR
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
+			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
 			rm $GOCR
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
 				echo "INFO: got a stack-trace, probably on power-down."
+				break
+			elif [ ! -z "$INVALID_SIG_LINE" ] ; then
+				echo "ERROR: Invalid Release signature found, aborting."
 				break
 			fi
 		fi

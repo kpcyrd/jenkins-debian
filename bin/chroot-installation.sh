@@ -86,7 +86,7 @@ done
 
 prepare_upgrade2() {
 	cat >> $CTMPFILE <<-EOF
-echo "deb $MIRROR $1 main contrib non-free" > /etc/apt/sources.list
+echo "deb $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
 $SCRIPT_HEADER
 apt-get update
 apt-get -y upgrade

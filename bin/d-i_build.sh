@@ -59,7 +59,7 @@ pdebuild_package() {
 	# 3.0 quilt is not happy without an upstream tarball
 	#
 	if [ "$(cat debian/source/format)" = "3.0 (quilt)" ] ; then
-		uscan --download-current-version
+		uscan --download-current-version --symlink
 	fi
 	#
 	#

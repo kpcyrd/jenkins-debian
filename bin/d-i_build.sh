@@ -36,12 +36,14 @@ pdebuild_package() {
 		echo "Warning: A source package without debian/control, so no build will be tried."
 		return
 	fi
-	ARCH=$(dpkg --print-architecture)
-	EGREP_PATTERN="( all| any| $ARCH)"
-	if [ ! $(grep "Architecture:" debian/control | egrep "$EGREP_PATTERN" | wc -l ) -gt 0 ] ; then
-		echo "This package is not to be supposed to be build on $ARCH:"
-		grep "Architecture:" debian/control
-		return
+	ARCH=$(grep 'Architecture:' debian/control | cut -d' ' -f 2)
+	MYARCH=$(dpkg --print-architecture)
+	if [ $ARCH != "all" ] ; then
+		if ! dpkg-architecture -i$ARCH ; then
+			echo "This package is not to be supposed to be build on $MYARCH:"
+			grep "Architecture:" debian/control
+			return
+		fi
 	fi
 	#
 	# prepare build

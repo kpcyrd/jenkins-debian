@@ -36,7 +36,7 @@ pdebuild_package() {
 		echo "Warning: A source package without debian/control, so no build will be tried."
 		return
 	fi
-	if [ $(dh_listpackages | |sed '/^$/d' | wc -l) -eq 0 ]; then
+	if [ $(dh_listpackages | sed '/^$/d' | wc -l) -eq 0 ]; then
 		echo "This package is not to be supposed to be build on $(dpkg --print-architecture)"
 		grep "Architecture:" debian/control
 		return

@@ -239,6 +239,10 @@ boot_system() {
 		debian-edu*-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
 			;;
+		*_hurd*)
+			QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
+			QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
+			;;
 		*)	;;
 	esac
 	echo
@@ -847,6 +851,15 @@ monitor_system() {
 		fi
 		let NR=NR+1
 		sleep 2
+
+		# Hurd can't poweroff itself
+		if [ -v QEMU_SERIAL_OUT ]; then
+			if grep "In tight loop: hit ctl-alt-del to reboot" $QEMU_SERIAL_OUT >/dev/null; then
+				echo "Powering off Hurd VM ..."
+				sleep 10
+				sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}')
+			fi
+		fi
 	done
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo "Warning: running for ${hourlimit}h, forcing termination."

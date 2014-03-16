@@ -231,7 +231,7 @@ boot_system() {
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=writeback -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	echo "Checking $NAME.raw:"
 	FILE=$(file $NAME.raw)
-	if [ $(echo $FILE | grep "x86 boot sector" | wc -l) -eq 0 ] ; then
+	if [ $(echo $FILE | grep -E '(x86 boot sector|DOS/MBR boot sector)' | wc -l) -eq 0 ] ; then
 		echo "ERROR: no x86 boot sector found in $NAME.raw - it's filetype is $FILE."
 		exit 1
 	fi
@@ -949,7 +949,7 @@ trap cleanup_all INT TERM EXIT
 if [ ! -z "$IMAGE" ] ; then
 	fetch_if_newer "$IMAGE" "$URL"
 	# is this really an .iso?
-	if [ $(file "$IMAGE" | grep -c "ISO 9660") -eq 1 ] ; then
+	if [ $(file "$IMAGE" | grep -cE '(ISO 9660|DOS/MBR boot sector)') -eq 1 ] ; then
 		# yes, so let's mount it
 		sudo mkdir -p $IMAGE_MNT
 		grep -q $IMAGE_MNT /proc/mounts && sudo umount -l $IMAGE_MNT

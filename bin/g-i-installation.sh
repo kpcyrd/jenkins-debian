@@ -996,6 +996,8 @@ set +x
 case $NAME in
 	*_rescue*) 	monitor_system rescue
 			;;
+	*_hurd*) 	monitor_system install wait4match 3000
+			;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
 			;;
 	*)		monitor_system install wait4match

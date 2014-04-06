@@ -15,7 +15,7 @@
         - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
     publishers:
         - email:
-            recipients: lintian-maint@debian.org
+            recipients: 'jenkins+debian-qa lintian-maint@debian.org'
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html

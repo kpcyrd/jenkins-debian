@@ -31,7 +31,7 @@
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
     publishers:
       - email:
-          recipients: '[my_recipients}'
+          recipients: '{my_recipients}'
 
 - job-template:
     defaults: lintian-tests

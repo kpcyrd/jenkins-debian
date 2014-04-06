@@ -12,6 +12,10 @@ ToDo for jenkins.debian.net
 
 See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"].
 
+== Fix user submitted bugs
+
+* See https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org@packages.debian.org
+
 == General ToDo
 
 * proper git repo url, outside users/holger

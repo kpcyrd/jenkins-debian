@@ -1,9 +1,49 @@
 NameVirtualHost *:80
 <VirtualHost *:80>
-	ServerName jenkins.debian.net
 	RewriteEngine On
 	RewriteCond %{HTTPS} !=on
+	RewriteCond %{REMOTE_ADDR} !127.0.0.1
 	RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+	ServerName jenkins.debian.net
+	ServerAdmin holger@layer-acht.org
+
+	DocumentRoot /var/www
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+	<Directory "/usr/lib/cgi-bin">
+		AllowOverride None
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+		SSLOptions +StdEnvVars
+	</Directory>
+
+        ProxyRequests Off
+        <Proxy *>
+                Order deny,allow
+                Allow from all
+        </Proxy>
+        ProxyPreserveHost on
+	ProxyPass / http://localhost:8080/
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 
 NameVirtualHost *:443

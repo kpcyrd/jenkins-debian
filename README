@@ -14,7 +14,7 @@ http://jenkins.debian.net is *work in progress* and is in it's infancy as a tool
 
 Get the source by running `git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository.
 
-The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 4 cores and 6 GB memory, thanks a lot!
+The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 6 cores and 10 GB memory, thanks a lot!
 
 Some stats are available using link:http://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
 
@@ -91,6 +91,10 @@ Installation tests inside chroot environments.
 ** `debootstrap $distro`, install a *$set_of_packages* (and upgrade to *$2nd_distro*)
 ** these $set_of_packages exist: 'gnome', 'kde', 'kde-full', 'lxde', 'xfc', 'full_desktop' (all five desktops plus `vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs` and (`libreoffice virt-manager mplayer2` (jessie/sid) or `openoffice virtualbox mplayer` (squeeze/wheezy)) and 'develop'
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
+
+=== lintian and ruby jobs
+
+* FIXME: describe lintian and ruby jobs
 
 === webcheck jobs
 

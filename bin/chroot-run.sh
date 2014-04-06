@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2012,2013 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # released under the GPLv=2
 

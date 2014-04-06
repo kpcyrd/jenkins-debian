@@ -2,13 +2,13 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: jenkins.debian.net
 Upstream-Contact: Holger Levsen <holger@debian.org>
 Source: git://git.debian.org/git/users/holger/jenkins.debian.net.git
-Copyright: 2012 Holger Levsen
+Copyright: 2012-2014 Holger Levsen
 Comment: Original author is Holger Levsen <holger@layer-acht.org>
  Upstream is bunch of lunatics who don't make release tarballs publicly
  available. The Debian .orig.tar.gz is what would be released, though.
 
 Files: *
-Copyright: 2012 Holger Levsen <holger@debian.org>
+Copyright: 2012-2014 Holger Levsen <holger@debian.org> and others
 License: GPL-2+
  This program is free software; you can redistribute it
  and/or modify it under the terms of the GNU General Public

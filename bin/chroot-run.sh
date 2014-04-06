@@ -87,7 +87,8 @@ $SCRIPT_HEADER
 cd /testrun
 if [ -f debian/control ] ; then
 	# install build-depends
-	apt-get -y install build-essential devscripts
+	echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
+	apt-get install build-essential devscripts
 	mk-build-deps -ir
 fi
 $@

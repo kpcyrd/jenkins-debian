@@ -51,17 +51,17 @@
                 - timed: "31 6 * * *"
             distro: 'unstable'
             gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
-            my_shell: './ci-run'
+            my_shell: 'debian/rules runtests'
         - '{name}_testing':
             triggers:
                 - timed: "01 8 * * *"
             distro: 'testing'
             gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
-            my_shell: './ci-run'
+            my_shell: 'debian/rules runtests'
         - '{name}_stable':
             triggers:
                 - timed: "31 9 * * *"
             distro: 'stable'
             gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
-            my_shell: './ci-run'
+            my_shell: 'debian/rules runtests'
 

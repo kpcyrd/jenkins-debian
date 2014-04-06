@@ -14,7 +14,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Debian/Lintian test suite.{do_not_edit}'
+    description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 365
       numToKeep: 365
@@ -26,12 +26,12 @@
           branches:
             - master
     triggers:
-      - pollscm: "*/6 * * * *"
+      - pollscm: '*/6 * * * *'
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
     publishers:
       - email:
-          recipients: jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org
+          recipients: '[my_recipients}'
 
 - job-template:
     defaults: lintian-tests
@@ -48,17 +48,24 @@
 - project:
     name: lintian-tests
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
+    gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
     jobs:
         - '{name}_unstable':
-            distro: 'unstable'
-            gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
+            my_distro: 'unstable'
             my_shell: 'debian/rules runtests'
+            my_description: 'Debian/Lintian testsuite running on unstable.'
+            my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
+
         - '{name}_testing':
-            distro: 'testing'
-            gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
+            my_distro: 'testing'
             my_shell: 'debian/rules runtests'
+            my_description: 'Debian/Lintian testsuite running on testing.'
+            my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
+
         - '{name}_stable':
-            distro: 'stable'
-            gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
+            my_distro: 'stable'
             my_shell: 'debian/rules runtests'
+            my_description: 'Debian/Lintian testsuite running on stable.'
+            my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
+
 

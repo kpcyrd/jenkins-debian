@@ -18,10 +18,7 @@ See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.
 
 == General ToDo
 
-* proper git repo url, outside users/holger
-** same for /srv/jenkins.debian.net-scm-sync.git
-** irc notifications for commits to invite more contributors
-
+* move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 * keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
 ** create d-i_svn_trigger job to trigger sub-set jobs (like manual)
 ** create d-i git hooks

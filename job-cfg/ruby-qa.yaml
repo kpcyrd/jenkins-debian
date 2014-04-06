@@ -44,7 +44,7 @@
 
 - project:
     name: ruby-qa
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/ruby-qa.yaml">ruby-qa.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/ruby-qa.yaml">ruby-qa.yaml</a>.'
     jobs:
         - '{name}_unstable':
             triggers:

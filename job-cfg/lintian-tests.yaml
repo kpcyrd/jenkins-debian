@@ -44,7 +44,7 @@
 
 - project:
     name: lintian-tests
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
     my_recipients: 'jenkins+debian-qa lintian-maint@debian.org holger@layer-acht.org'
     jobs:
         - '{name}_unstable':

@@ -849,7 +849,7 @@
 
 - project:
     name: d-i
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/d-i.yaml">d-i.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/d-i.yaml">d-i.yaml</a>.'
     jobs:
       - '{name}_housekeeping'
       - '{name}_parse_build_logs'

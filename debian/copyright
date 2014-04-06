@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: jenkins.debian.net
 Upstream-Contact: Holger Levsen <holger@debian.org>
-Source: git://git.debian.org/git/users/holger/jenkins.debian.net.git
+Source: git://git.debian.org/git/qa/jenkins.debian.net.git
 Copyright: 2012-2014 Holger Levsen
 Comment: Original author is Holger Levsen <holger@layer-acht.org>
  Upstream is bunch of lunatics who don't make release tarballs publicly

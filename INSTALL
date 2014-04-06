@@ -59,7 +59,7 @@ I would prefer to run a jenkins package from wheezy-backports.
 As 'root' run:
 ----
 cd
-git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git
+git clone git://git.debian.org/git/qa/jenkins.debian.net.git
 cd jenkins.debian.net
 ./update_jdn.sh
 ----

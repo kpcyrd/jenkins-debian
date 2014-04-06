@@ -12,7 +12,7 @@ About jenkins.debian.net
 
 http://jenkins.debian.net is *work in progress* and is in it's infancy as a tool for the automated quality monitoring of Debian. in existence since October 15th 2012.
 
-Get the source by running `git clone git://git.debian.org/git/users/holger/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository.
+Get the source by running `git clone git://git.debian.org/git/qa/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository.
 
 The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 6 cores and 10 GB memory, thanks a lot!
 
@@ -145,6 +145,6 @@ There is still a lot of work left, check the current link:http://jenkins.debian.
 
 == License
 
-* See link:http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=LICENSE[LICENSE].
+* See link:http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=LICENSE[LICENSE].
 
 // vim: set filetype=asciidoc:

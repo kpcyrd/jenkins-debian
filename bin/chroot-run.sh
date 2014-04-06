@@ -85,6 +85,11 @@ run() {
 	cat > $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 $SCRIPT_HEADER
 cd /testrun
+if [ -f debian/control ] ; then
+	# install build-depends
+	apt-get -y install build-essential devscripts
+	mk-build-deps -ir
+fi
 $@
 EOF
 	chmod +x $CHROOT_TARGET/tmp/chroot-testrun

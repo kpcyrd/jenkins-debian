@@ -1,5 +1,19 @@
+NameVirtualHost *:80
 <VirtualHost *:80>
-	ServerAdmin webmaster@localhost
+	ServerName jenkins.debian.net
+	RewriteEngine On
+	RewriteCond %{HTTPS} !=on
+	RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+</VirtualHost>
+
+NameVirtualHost *:443
+<VirtualHost *:443>
+	SSLEngine on
+	SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
+	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+	ServerName jenkins.debian.net
+	ServerAdmin holger@layer-acht.org
 
 	DocumentRoot /var/www
 	<Directory />
@@ -19,6 +33,7 @@
 		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
 		Order allow,deny
 		Allow from all
+		SSLOptions +StdEnvVars
 	</Directory>
 
 	# allow certain params only from alioth (token is used to trigger builds)

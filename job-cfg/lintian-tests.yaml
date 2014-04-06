@@ -12,10 +12,12 @@
           branches:
             - master
     builders:
-        - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
+      - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
+    triggers:
+      - pollscm: "*/6 * * * *"
     publishers:
-        - email:
-            recipients: '{my_recipients}'
+      - email:
+          recipients: 'jenkins+debian-qa lintian-maint@debian.org holger@layer-acht.org'
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -45,23 +47,16 @@
 - project:
     name: lintian-tests
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
-    my_recipients: 'jenkins+debian-qa lintian-maint@debian.org holger@layer-acht.org'
     jobs:
         - '{name}_unstable':
-            triggers:
-                - timed: "31 6 * * *"
             distro: 'unstable'
             gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
             my_shell: 'debian/rules runtests'
         - '{name}_testing':
-            triggers:
-                - timed: "01 8 * * *"
             distro: 'testing'
             gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
             my_shell: 'debian/rules runtests'
         - '{name}_stable':
-            triggers:
-                - timed: "31 9 * * *"
             distro: 'stable'
             gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
             my_shell: 'debian/rules runtests'

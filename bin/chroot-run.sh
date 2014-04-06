@@ -80,11 +80,11 @@ cleanup() {
 trap cleanup INT TERM EXIT
 
 run() {
-	sudo chroot $CHROOT_TARGET mkdir /testrun
-	cp -r $CURDIR $CHROOT_TARGET/testrun
+	mkdir $CHROOT_TARGET/tmp/testrun
+	cp -r $CURDIR/* $CHROOT_TARGET/tmp/testrun
 	cat > $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 $SCRIPT_HEADER
-cd /testrun
+cd /tmp/testrun
 if [ -f debian/control ] ; then
 	cat debian/control
 	# install build-depends

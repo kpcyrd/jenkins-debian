@@ -1,23 +1,6 @@
 - defaults:
     name: lintian-tests
-    description: 'Debian/Lintian test suite.{do_not_edit}'
-    logrotate:
-      daysToKeep: 365
-      numToKeep: 365
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
-    scm:
-      - git:
-          url: '{gitrepo}'
-          branches:
-            - master
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
-    triggers:
-      - pollscm: "*/6 * * * *"
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa lintian-maint@debian.org holger@layer-acht.org'
+    project-type: freestyle
     properties:
       - sidebar:
           url: http://jenkins.debian.net/userContent/about.html
@@ -31,6 +14,24 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+    description: 'Debian/Lintian test suite.{do_not_edit}'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    scm:
+      - git:
+          url: '{gitrepo}'
+          branches:
+            - master
+    triggers:
+      - pollscm: "*/6 * * * *"
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
+    publishers:
+      - email:
+          recipients: jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org
 
 - job-template:
     defaults: lintian-tests

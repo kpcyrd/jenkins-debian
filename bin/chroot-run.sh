@@ -81,7 +81,7 @@ trap cleanup INT TERM EXIT
 
 run() {
 	sudo chroot $CHROOT_TARGET mkdir /testrun
-	sudo mount --bind $CURDIR $CHROOT_TARGET/testrun
+	cp -r $CURDIR $CHROOT_TARGET/testrun
 	cat > $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 $SCRIPT_HEADER
 cd /testrun

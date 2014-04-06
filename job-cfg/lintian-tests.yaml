@@ -1,0 +1,67 @@
+- defaults:
+    name: lintian-tests
+    description: 'Debian/Lintian test suite.{do_not_edit}'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    scm:
+      - git:
+          url: '{gitrepo}'
+          branches:
+            - master
+    builders:
+        - shell: '/srv/jenkins/bin/chroot-run.sh {distro} {my_shell}'
+    publishers:
+        - email:
+            recipients: lintian-maint@debian.org
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/lintian-tests/
+          text: Misc debian-installer jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+
+- job-template:
+    defaults: lintian-tests
+    name: '{name}_stable'
+
+- job-template:
+    defaults: lintian-tests
+    name: '{name}_testing'
+
+- job-template:
+    defaults: lintian-tests
+    name: '{name}_unstable'
+
+- project:
+    name: lintian-tests
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=users/holger/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
+    jobs:
+        - '{name}_unstable':
+            triggers:
+                - timed: "31 6 * * *"
+            distro: 'unstable'
+            gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
+            my_shell: './ci-run'
+        - '{name}_testing':
+            triggers:
+                - timed: "01 8 * * *"
+            distro: 'testing'
+            gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
+            my_shell: './ci-run'
+        - '{name}_stable':
+            triggers:
+                - timed: "31 9 * * *"
+            distro: 'stable'
+            gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
+            my_shell: './ci-run'
+

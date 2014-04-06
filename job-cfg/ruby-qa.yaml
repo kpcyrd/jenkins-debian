@@ -23,7 +23,7 @@
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
           url: http://jenkins.debian.net/view/ruby-qa/
-          text: Misc debian-installer jobs
+          text: Ruby QA jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com

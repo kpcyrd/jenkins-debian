@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2013 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # $1 = vnc-display, each job should have a unique one, so jobs can run in parallel
@@ -87,6 +87,7 @@ cleanup_all() {
 	sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}') || true
 	sleep 0.3s
 	rm $WORKSPACE/$NAME.raw
+	rm $QEMU_LAUNCHER
 	#
 	# cleanup image mount
 	#
@@ -132,12 +133,12 @@ bootstrap_system() {
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
 			*_kfreebsd)	;;
-			*_hurd*)
-				QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
-				QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
-				gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
-			;;
+			*_hurd*)	QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
+					QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
+					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
+					;;
 			*)		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+					;;
 		esac
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
@@ -221,16 +222,16 @@ bootstrap_system() {
 	echo
 	echo "Starting QEMU now:"
 	set -x
-	QEMU_LAUNCHER=$(mktemp $WORKSPACE/qemu-launcher-XXXXXXXX.sh)
+	QEMU_LAUNCHER=$(mktemp)
 	echo "cd $WORKSPACE" > $QEMU_LAUNCHER
 	echo -n "sudo qemu-system-x86_64 $QEMU_OPTS " >> $QEMU_LAUNCHER
-	if [ -v QEMU_KERNEL ]; then
+	if [ -n "$QEMU_KERNEL" ]; then
 		echo -n "$QEMU_KERNEL " >> $QEMU_LAUNCHER
 	else # Hurd needs multiboot options jenkins can't escape correctly
 		echo -n '--kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/gtk/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
 	fi
 	echo "--append \"$APPEND\"" >> $QEMU_LAUNCHER
-	(bash -x $QEMU_LAUNCHER && rm -f $QEMU_LAUNCHER && touch $RESULTS/qemu_quit ) &
+	(bash -x $QEMU_LAUNCHER && touch $RESULTS/qemu_quit ) &
 	set +x
 }
 

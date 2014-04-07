@@ -35,6 +35,7 @@ NameVirtualHost *:80
                 Allow from all
         </Proxy>
         ProxyPreserveHost on
+	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 	ProxyPass / http://localhost:8080/
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log

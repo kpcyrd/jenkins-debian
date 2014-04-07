@@ -80,8 +80,8 @@ cleanup() {
 trap cleanup INT TERM EXIT
 
 run() {
-	mkdir $CHROOT_TARGET/tmp/testrun
-	cp -r $CURDIR/* $CHROOT_TARGET/tmp/testrun
+	cp -r $CURDIR $CHROOT_TARGET/tmp/
+	mv $CHROOT_TARGET/tmp/$(basename $CURDIR) $CHROOT_TARGET/tmp/testrun
 	cat > $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 $SCRIPT_HEADER
 cd /tmp/testrun

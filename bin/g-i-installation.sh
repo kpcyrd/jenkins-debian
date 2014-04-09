@@ -101,7 +101,11 @@ cleanup_all() {
 	# create video
 	#
 	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv > /dev/null
-	rm snapshot_??????.ppm
+	# temporarily keep screenshots from hurd install
+	case $NAME in
+		*_hurd*)	;;
+		*)		rm snapshot_??????.ppm
+	esac
 	# rename .bak files back to .ppm
 	if find . -name "*.ppm.bak" > /dev/null ; then
 		for i in *.ppm.bak ; do

@@ -35,36 +35,36 @@
 
 - job-template:
     defaults: lintian-tests
-    name: '{name}_stable'
+    name: '{name}_wheezy'
 
 - job-template:
     defaults: lintian-tests
-    name: '{name}_testing'
+    name: '{name}_jessie'
 
 - job-template:
     defaults: lintian-tests
-    name: '{name}_unstable'
+    name: '{name}_sid'
 
 - project:
     name: lintian-tests
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
     gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
     jobs:
-        - '{name}_unstable':
-            my_distro: 'unstable'
+        - '{name}_sid':
+            my_distro: 'sid'
             my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on unstable.'
+            my_description: 'Debian/Lintian testsuite running on sid.'
             my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 
-        - '{name}_testing':
-            my_distro: 'testing'
+        - '{name}_jessie':
+            my_distro: 'jessie'
             my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on testing.'
+            my_description: 'Debian/Lintian testsuite running on jessie.'
             my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 
-        - '{name}_stable':
-            my_distro: 'stable+backports'
+        - '{name}_wheezy':
+            my_distro: 'wheezy+backports'
             my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on stable.'
+            my_description: 'Debian/Lintian testsuite running on wheezy.'
             my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 

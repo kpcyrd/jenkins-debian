@@ -27,9 +27,9 @@ if [ $# -lt 2 ]; then
 fi
 
 DISTRO="$1"
-if [ "$DISTRO" == "stable+backports" ] ; then
-	# FIXME: this works but is a bit too hackish for my liking
-	DISTRO="stable"
+if [ "$DISTRO" == "wheezy+backports" ] ; then
+	# FIXME: this works but is a bit too hackish for my liking, ie it will break when jessie will be stable..
+	DISTRO="wheezy"
 	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
 	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
 fi

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
@@ -27,6 +27,12 @@ if [ $# -lt 2 ]; then
 fi
 
 DISTRO="$1"
+if [ "$DISTRO" == "stable+backports" ] ; then
+	# FIXME: this works but is a bit too hackish for my liking
+	DISTRO = "stable"
+	BACKPORTS = "deb $MIRROR ${DISTRO}-backports main"
+	BACKPORTSSRC = "deb-src $MIRROR ${DISTRO}-backports main"
+fi
 shift
 
 if [ ! -d "$CHROOT_BASE" ]; then
@@ -59,6 +65,8 @@ echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "$http_proxy";' > /etc/apt/apt.conf.d/80proxy
 echo "deb-src $MIRROR $DISTRO main" >> /etc/apt/sources.list
+echo "${BACKPORTS}" >> /etc/apt/sources.list
+echo "${BACKPORTSSRC}" >> /etc/apt/sources.list
 apt-get update
 EOF
 

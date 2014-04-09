@@ -63,9 +63,8 @@
             my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 
         - '{name}_stable':
-            my_distro: 'stable'
+            my_distro: 'stable+backports'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on stable.'
             my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
-
 

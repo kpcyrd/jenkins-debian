@@ -29,9 +29,9 @@ fi
 DISTRO="$1"
 if [ "$DISTRO" == "stable+backports" ] ; then
 	# FIXME: this works but is a bit too hackish for my liking
-	DISTRO = "stable"
-	BACKPORTS = "deb $MIRROR ${DISTRO}-backports main"
-	BACKPORTSSRC = "deb-src $MIRROR ${DISTRO}-backports main"
+	DISTRO="stable"
+	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
+	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
 fi
 shift
 

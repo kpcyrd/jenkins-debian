@@ -429,7 +429,14 @@ post_install_boot() {
 						;;
 					0560)	do_and_report key enter
 						;;
-					0570)	do_and_report type "poweroff"
+					0570)	case $NAME in
+							*_hurd*)
+								do_and_report type "echo 'In tight loop: hit ctl-alt-del to reboot' >/dev/com0"
+							;;
+							*)
+								do_and_report type "poweroff"
+							;;
+						esac
 						;;
 					0580)	do_and_report key enter
 						;;

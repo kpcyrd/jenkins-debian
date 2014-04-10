@@ -100,7 +100,7 @@ cleanup_all() {
 	#
 	# create video
 	#
-	ffmpeg2theora --videobitrate 700 --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size 800x600 -o g-i-installation-$NAME.ogv > /dev/null
+	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > /dev/null
 	# temporarily keep screenshots from hurd install
 	case $NAME in
 		*_hurd*)	;;
@@ -113,7 +113,7 @@ cleanup_all() {
 		done
 		# convert to png (less space and better supported in browsers)
 		for i in *.ppm ; do
-			convert $i ${i%.ppm}.png
+			convert $CONVERTOPTS $i ${i%.ppm}.png
 			rm $i
 		done
 	fi
@@ -133,6 +133,8 @@ bootstrap_system() {
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
+	VIDEOBITRATE=700
+	VIDEOSIZE=800x600
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
@@ -140,6 +142,9 @@ bootstrap_system() {
 			*_hurd*)	QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
 					QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
+					VIDEOBITRATE=1200
+					VIDEOSIZE=1024x768
+					CONVERTOPTS="-gravity center -background gray10 -extent $VIDEOSIZE"
 					;;
 			*)		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
 					;;
@@ -786,7 +791,7 @@ monitor_system() {
 		PRINTF_NR=$(printf "%06d" $NR)
 		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || touch $RESULTS/qemu_quit
 		if [ ! -f "$RESULTS/qemu_quit" ] ; then
-			convert snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
+			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot, no qemu running on $DISPLAY"

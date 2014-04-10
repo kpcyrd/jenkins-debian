@@ -141,6 +141,7 @@ bootstrap_system() {
 			*_kfreebsd)	;;
 			*_hurd*)	QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
 					QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
+					QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
 					VIDEOBITRATE=1200
 					VIDEOSIZE=1024x768

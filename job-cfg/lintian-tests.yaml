@@ -25,8 +25,6 @@
           url: '{gitrepo}'
           branches:
             - master
-    triggers:
-      - pollscm: '*/6 * * * *'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
     publishers:
@@ -40,10 +38,18 @@
 - job-template:
     defaults: lintian-tests
     name: '{name}_jessie'
+    publishers:
+      - trigger:
+          project: '{name}_wheezy'
 
 - job-template:
     defaults: lintian-tests
     name: '{name}_sid'
+    triggers:
+      - pollscm: '*/6 * * * *'
+    publishers:
+      - trigger:
+          project: '{name}_jessie'
 
 - project:
     name: lintian-tests
@@ -55,7 +61,6 @@
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on sid.'
             my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
-
         - '{name}_jessie':
             my_distro: 'jessie'
             my_shell: 'debian/rules runtests'

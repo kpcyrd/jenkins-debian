@@ -41,6 +41,10 @@
       - trigger:
           project: '{name}_m68k'
 
+- job-template:
+    defaults: rebootstrap
+    name: '{name}_m68k'
+ 
 - project:
     name: rebootstrap
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/rebootstrap.yaml">rebootstrap.yaml</a>.'

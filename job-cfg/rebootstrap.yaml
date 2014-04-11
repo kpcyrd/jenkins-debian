@@ -1,21 +1,56 @@
 - defaults:
     name: rebootstrap
-    description: 'Verfy bootstrappability of Debian architectures'
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/rebootstrap/
+          text: All rebootstrap jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}{do_not_edit}'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     scm:
       - git:
           url: 'git://anonscm.debian.org/users/helmutg/rebootstrap.git'
           branches:
             - master
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh sid ./bootstrap.sh HOST_ARCH={architecture} {params}'
+      - shell: '/srv/jenkins/bin/chroot-run.sh sid ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:
       - email:
-          recipients: helmutg@debian.org
+          recipients: 'helmutg@debian.org holger@layer-acht.org'
+
+
+- job-template:
+    defaults: rebootstrap
+    name: '{name}_arm64'
+    triggers:
+      - pollscm: '*/6 * * * *'
+    publishers:
+      - trigger:
+          project: '{name}_m68k'
 
 - project:
     name: rebootstrap
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/rebootstrap.yaml">rebootstrap.yaml</a>.'
     jobs:
-        - 'rebootstrap_arm64':
-            architecture: 'arm64'
-        - 'rebootstrap_m68k':
-            architecture: 'm68k'
+        - '{name}_arm64':
+            my_arch: 'arm64'
+            my_params: ''
+            my_description: 'Verfy bootstrappability of Debian on arm64'
+        - '{name}_m68k':
+            my_arch: 'm68k'
+            my_params: ''
+            my_description: 'Verfy bootstrappability of Debian on m68k'
+

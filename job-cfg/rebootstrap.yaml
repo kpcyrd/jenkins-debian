@@ -1,0 +1,21 @@
+- defaults:
+    name: rebootstrap
+    description: 'Verfy bootstrappability of Debian architectures'
+    scm:
+      - git:
+          url: 'git://anonscm.debian.org/users/helmutg/rebootstrap.git'
+          branches:
+            - master
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh sid ./bootstrap.sh HOST_ARCH={architecture} {params}'
+    publishers:
+      - email:
+          recipients: helmutg@debian.org
+
+- project:
+    name: rebootstrap
+    jobs:
+        - 'rebootstrap_arm64':
+            architecture: 'arm64'
+        - 'rebootstrap_m68k':
+            architecture: 'm68k'

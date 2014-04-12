@@ -37,14 +37,16 @@
     name: '{name}_arm64'
     triggers:
       - pollscm: '*/6 * * * *'
-    publishers:
-      - trigger:
-          project: '{name}_m68k'
+      - timed: '55 11 * * 0'    # every sunday at 11:55
 
 - job-template:
     defaults: rebootstrap
     name: '{name}_m68k'
- 
+    triggers:
+      - pollscm: '*/6 * * * *'
+      - timed: '55 12 * * 0'    # every sunday at 12:55
+
+
 - project:
     name: rebootstrap
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/rebootstrap.yaml">rebootstrap.yaml</a>.'

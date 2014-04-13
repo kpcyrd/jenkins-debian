@@ -29,7 +29,7 @@
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
     publishers:
       - email:
-          recipients: '{my_recipients}'
+          recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 
 - job-template:
     defaults: lintian-tests
@@ -60,16 +60,12 @@
             my_distro: 'sid'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on sid.'
-            my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
         - '{name}_jessie':
             my_distro: 'jessie'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on jessie.'
-            my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
-
         - '{name}_wheezy':
             my_distro: 'wheezy+backports'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on wheezy.'
-            my_recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 

@@ -41,6 +41,13 @@
 
 - job-template:
     defaults: rebootstrap
+    name: '{name}_arm64_gcc49'
+    triggers:
+      - pollscm: '*/6 * * * *'
+      - timed: '25 12 * * 0'    # every sunday at 12:25
+
+- job-template:
+    defaults: rebootstrap
     name: '{name}_m68k'
     triggers:
       - pollscm: '*/6 * * * *'
@@ -54,6 +61,10 @@
         - '{name}_arm64':
             my_arch: 'arm64'
             my_params: ''
+            my_description: 'Verfy bootstrappability of Debian on arm64'
+        - '{name}_arm64_gcc49':
+            my_arch: 'arm64'
+            my_params: 'GCC_VER=4.9'
             my_description: 'Verfy bootstrappability of Debian on arm64'
         - '{name}_m68k':
             my_arch: 'm68k'

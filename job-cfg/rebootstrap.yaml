@@ -14,6 +14,15 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - priority:
+          job-prio: '90'
+      - throttle:
+          max-total: 2
+          max-per-node: 2
+          enabled: True
+          option: category
+          categories:
+            - rebootstrap
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 365
@@ -34,7 +43,6 @@
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
-
 
 - job-template:
     defaults: rebootstrap

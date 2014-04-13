@@ -1,0 +1,42 @@
+- defaults:
+    name: haskell-packages
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: http://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://jenkins.debian.net/view/haskell-packages/
+          text: Haskell packages metadata consistency
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}{do_not_edit}'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+    publishers:
+      - email:
+          recipients: '{my_recipients}'
+
+- job-template:
+    defaults: haskell-packages
+    triggers:
+      - pollscm: '*/6 * * * *'
+
+- project:
+    name: haskell-packages
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/haskell-packages.yaml">haskell-packages.yaml</a>.'
+    jobs:
+        - 'haskell-packages':
+            my_distro: 'sid'
+            my_shell: 'apt-get install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
+            my_description: 'Haskell Metadata sanity checks'
+            my_recipients: 'jenkins+debian-qa holger@layer-acht.org pkg-haskell-maintainers@lists.debian.org'

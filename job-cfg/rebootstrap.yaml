@@ -60,10 +60,24 @@
 
 - job-template:
     defaults: rebootstrap
+    name: '{name}_arm64_multilib'
+    triggers:
+      - pollscm: '*/6 * * * *'
+      - timed: '10 12 * * 0'    # every sunday at 12:10
+
+- job-template:
+    defaults: rebootstrap
     name: '{name}_m68k'
     triggers:
       - pollscm: '*/6 * * * *'
       - timed: '55 12 * * 0'    # every sunday at 12:55
+
+- job-template:
+    defaults: rebootstrap
+    name: '{name}_x32'
+    triggers:
+      - pollscm: '*/6 * * * *'
+      - timed: '40 12 * * 0'    # every sunday at 12:40
 
 
 - project:
@@ -73,13 +87,20 @@
         - '{name}_arm64':
             my_arch: 'arm64'
             my_params: ''
-            my_description: 'Verfy bootstrappability of Debian on arm64'
+            my_description: 'Verify bootstrappability of Debian for arm64'
         - '{name}_arm64_gcc49':
             my_arch: 'arm64'
             my_params: 'GCC_VER=4.9'
-            my_description: 'Verfy bootstrappability of Debian usging gcc-4.9 on arm64'
+            my_description: 'Verify bootstrappability of Debian using gcc-4.9 for arm64'
+        - '{name}_arm64_multilib':
+            my_arch: 'arm64'
+            my_params: 'ENABLE_MULTILIB=yes'
+            my_description: 'Verify bootstrappability of Debian with multilib for arm64'
         - '{name}_m68k':
             my_arch: 'm68k'
             my_params: ''
-            my_description: 'Verfy bootstrappability of Debian on m68k'
-
+            my_description: 'Verify bootstrappability of Debian for m68k'
+        - '{name}_x32':
+            my_arch: 'x32'
+            my_params: ''
+            my_description: 'Verify bootstrappability of Debian for x32'

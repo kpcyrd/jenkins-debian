@@ -22,7 +22,7 @@
       artifactNumToKeep: -1
     scm:
       - git:
-          url: '{gitrepo}'
+          url: 'git://anonscm.debian.org/lintian/lintian.git'
           branches:
             - master
     builders:
@@ -54,7 +54,6 @@
 - project:
     name: lintian-tests
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
-    gitrepo: 'git://anonscm.debian.org/lintian/lintian.git'
     jobs:
         - '{name}_sid':
             my_distro: 'sid'

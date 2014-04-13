@@ -69,7 +69,7 @@
         - '{name}_arm64_gcc49':
             my_arch: 'arm64'
             my_params: 'GCC_VER=4.9'
-            my_description: 'Verfy bootstrappability of Debian on arm64'
+            my_description: 'Verfy bootstrappability of Debian usging gcc-4.9 on arm64'
         - '{name}_m68k':
             my_arch: 'm68k'
             my_params: ''

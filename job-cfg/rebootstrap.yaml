@@ -24,7 +24,7 @@
       - git:
           url: 'git://anonscm.debian.org/users/helmutg/rebootstrap.git'
           branches:
-            - master
+            - jenkins
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh sid ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:

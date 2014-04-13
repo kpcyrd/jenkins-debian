@@ -1,0 +1,7 @@
+info /^progress-mark:/
+error /^dpkg-buildpackage: error:/
+error /^make: \*\*\* \[[^]]*\] Error /
+error /^Patch .* does not apply/
+error /fatal error:/
+error /^configure: error: /
+warning /cannot stat .*: No such file or directory/

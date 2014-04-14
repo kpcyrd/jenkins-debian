@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Holger Levsen <holger@debian.org>
 Build-Depends: debhelper (>= 9.20120419~), asciidoc
 Standards-Version: 3.9.1
-Homepage: http://jenkins.debian.net/userContent/about.html
+Homepage: https://jenkins.debian.net/userContent/about.html
 Vcs-Git: git://git.debian.org/git/qa/jenkins.debian.net.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git
 

@@ -10,13 +10,13 @@ Setup of jenkins.debian.net
 
 == About jenkins.debian.net
 
-See link:http://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"].
+See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"].
 
 == Setup
 
 === Installed software that makes jenkins.debian.net run
 
-link:http://jenkins.debian.net[jenkins.debian.net] runs Debian wheezy.
+link:https://jenkins.debian.net[jenkins.debian.net] runs Debian wheezy.
 
 === Jenkins
 
@@ -106,7 +106,7 @@ python setup.py
 
 === munin
 
-link://munin-monitoring[Munin] is installed, running with link:http://jenkins.debian.net/munin/[jenkins plugins] not yet published elsewhere.
+link://munin-monitoring[Munin] is installed, running with link:https://jenkins.debian.net/munin/[jenkins plugins] not yet published elsewhere.
 
 === Backup
 

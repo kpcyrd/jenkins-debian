@@ -103,8 +103,8 @@ if [ "$(sudo su - jenkins -c 'git config --get user.email')" != "jenkins@jenkins
 fi
 #
 # FIXME: file a bug against pbuilder
-#	else you have http://jenkins.debian.net/view/debian-installer/job/d-i_build_partman-ext3/4/console
-#	with this you have: http://jenkins.debian.net/view/debian-installer/job/d-i_build_partman-ext3/5/console
+#	else you have https://jenkins.debian.net/view/debian-installer/job/d-i_build_partman-ext3/4/console
+#	with this you have: https://jenkins.debian.net/view/debian-installer/job/d-i_build_partman-ext3/5/console
 #	and this asks for a password: pdebuild --use-pdebuild-internal --pbuilder '/sbin/sudo /usr/sbin/pbuilder'
 #	despites the jenkins user cam run "sudo pbuilder" without it just fine...??!
 #

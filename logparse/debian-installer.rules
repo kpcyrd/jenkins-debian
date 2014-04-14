@@ -7,7 +7,7 @@ ok /^dpkg-source: warning/
 ok /^dpkg-gencontrol: warning/
 ok /^dpkg-buildpackage: warning/
 
-# make get http://jenkins.debian.net/job/d-i_build_console-setup/ build nicely
+# make get https://jenkins.debian.net/job/d-i_build_console-setup/ build nicely
 ok /^WARNING: U.{5}: can not be positioned properly/
 ok /^WARNING: U.{5}: no glyph defined/
 ok /^WARNING: U.{5}: .+ broken pixel/
@@ -15,7 +15,7 @@ ok /^WARNING: Unknown X keysym/
 ok /^WARNING: Can not find/
 ok /^WARNING: Skipping too long sequence:/
 
-# make http://jenkins.debian.net/job/d-i_build_debian-installer build nicely
+# make https://jenkins.debian.net/job/d-i_build_debian-installer build nicely
 ok /^dpkg: warning: overriding problem because --force enabled:/
 ok /^dpkg-distaddfile: warning: File::FcntlLock not available; using flock which is not NFS-safe/
 ok /^WARNING: If you have created or modified any DOS 6/
@@ -23,10 +23,10 @@ ok /^WARNING: If you have created or modified any DOS 6/
 # make these d-i_manual_$lang_pdf job builds "succeed" even though the build then basically is a no-op
 ok /^Warning: pdf and ps formats are currently not supported for Chinese, Greek, Japanese and Vietnamese/
 
-# make http://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
+# make https://jenkins.debian.net/job/d-i_build_apt-setup/ build nicely
 ok /^WARNING: .+: spurious newline removed/
 
-# make http://jenkins.debian.net/view/d-i_packages/job/d-i_build_rootskel-gtk/ build nicely
+# make https://jenkins.debian.net/view/d-i_packages/job/d-i_build_rootskel-gtk/ build nicely
 ok /^install -m644 warning_icon.png.+/
 
 # make https://jenkins.debian.net/job/d-i_build_partman-basicfilesystems build nicely

@@ -53,17 +53,13 @@
 
 - project:
     name: lintian-tests
+    distro:
+      - sid
+      - jessie
+      - wheezy
     jobs:
-        - '{name}_sid':
-            my_distro: 'sid'
+        - '{name}_{distro}':
+            my_distro: '{distro}'
             my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on sid.'
-        - '{name}_jessie':
-            my_distro: 'jessie'
-            my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on jessie.'
-        - '{name}_wheezy':
-            my_distro: 'wheezy+backports'
-            my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on wheezy.'
+            my_description: 'Debian/Lintian testsuite running on {distro}.'
 

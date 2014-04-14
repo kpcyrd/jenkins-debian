@@ -27,18 +27,20 @@
             - master
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: lintian-tests
+    name: '{name}_wheezy'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 
 - job-template:
     defaults: lintian-tests
-    name: '{name}_wheezy'
-
-- job-template:
-    defaults: lintian-tests
     name: '{name}_jessie'
     publishers:
+      - email:
+          recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
       - trigger:
           project: '{name}_wheezy'
 
@@ -48,6 +50,8 @@
     triggers:
       - pollscm: '*/6 * * * *'
     publishers:
+      - email:
+          recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
       - trigger:
           project: '{name}_jessie'
 

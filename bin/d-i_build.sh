@@ -47,10 +47,8 @@ pdebuild_package() {
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
 		sudo pbuilder --create
 	else
-		# FIXME: begin debug code
 		ls -la /var/cache/pbuilder/base.tgz
 		file /var/cache/pbuilder/base.tgz
-		# FIXME: end debug code
 		sudo pbuilder --update || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create )
 	fi
 	#

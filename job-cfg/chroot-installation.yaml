@@ -18,11 +18,11 @@
           recipients: '{my_recipients}'
     properties:
       - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
+          url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/chroot-installation/
+          url: https://jenkins.debian.net/view/chroot-installation/
           text: All chroot-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -60,11 +60,11 @@
           recipients: '{my_recipients}'
     properties:
       - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
+          url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/chroot-installation/
+          url: https://jenkins.debian.net/view/chroot-installation/
           text: All chroot-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -105,11 +105,11 @@
           recipients: jenkins+debian-qa holger@layer-acht.org
     properties:
       - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
+          url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/chroot-installation/
+          url: https://jenkins.debian.net/view/chroot-installation/
           text: All chroot-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:

@@ -3,11 +3,11 @@
     project-type: freestyle
     properties:
       - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
+          url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/lintian-tests/
+          url: https://jenkins.debian.net/view/lintian-tests/
           text: lintian test jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -33,36 +33,36 @@
 
 - job-template:
     defaults: lintian-tests
-    name: '{my_name}_wheezy'
+    name: '{name}_wheezy'
 
 - job-template:
     defaults: lintian-tests
-    name: '{my_name}_jessie'
+    name: '{name}_jessie'
     publishers:
       - trigger:
-          project: '{my_name}_wheezy'
+          project: '{name}_wheezy'
 
 - job-template:
     defaults: lintian-tests
-    name: '{my_name}_sid'
+    name: '{name}_sid'
     triggers:
       - pollscm: '*/6 * * * *'
     publishers:
       - trigger:
-          project: '{my_name}_jessie'
+          project: '{name}_jessie'
 
 - project:
-    my_name: lintian-tests
+    name: lintian-tests
     jobs:
-        - '{my_name}_sid':
+        - '{name}_sid':
             my_distro: 'sid'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on sid.'
-        - '{my_name}_jessie':
+        - '{name}_jessie':
             my_distro: 'jessie'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on jessie.'
-        - '{my_name}_wheezy':
+        - '{name}_wheezy':
             my_distro: 'wheezy+backports'
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on wheezy.'

@@ -3,11 +3,11 @@
     project-type: freestyle
     properties:
       - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
+          url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/rebootstrap/
+          url: https://jenkins.debian.net/view/rebootstrap/
           text: All rebootstrap jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:

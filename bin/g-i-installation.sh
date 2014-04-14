@@ -211,7 +211,7 @@ bootstrap_system() {
 	esac
 	case $NAME in
 		debian-edu_*)
-			EXTRA_APPEND="$EXTRA_APPEND DEBCONF_DEBUG=developer"  # FIXME: this shall become more conditional...
+			EXTRA_APPEND="$EXTRA_APPEND DEBCONF_DEBUG=developer"
 			;;
 	esac
 	case $NAME in

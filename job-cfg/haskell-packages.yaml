@@ -7,7 +7,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: https://jenkins.debian.net/view/haskell-packages/
+          url: https://jenkins.debian.net/view/haskell/
           text: Haskell packages metadata consistency
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -29,13 +29,13 @@
 - job-template:
     defaults: haskell-packages
     triggers:
-      - pollscm: '*/6 * * * *'
+      - timed: '0 15 * * 1'    # every monday at 15:00 UTC
 
 - project:
     name: haskell-packages
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/haskell-packages.yaml">haskell-packages.yaml</a>.'
     jobs:
-        - 'haskell-packages':
+        - '{name}_sid':
             my_distro: 'sid'
             my_shell: 'apt-get install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'

@@ -3,11 +3,11 @@
     project-type: freestyle
     properties:
       - sidebar:
-          url: http://jenkins.debian.net/userContent/about.html
+          url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: http://jenkins.debian.net/view/haskell-packages/
+          url: https://jenkins.debian.net/view/haskell-packages/
           text: Haskell packages metadata consistency
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
@@ -39,4 +39,4 @@
             my_distro: 'sid'
             my_shell: 'apt-get install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
-            my_recipients: 'jenkins+debian-qa holger@layer-acht.org pkg-haskell-maintainers@lists.debian.org'
+            my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.debian.org'

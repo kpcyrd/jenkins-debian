@@ -92,9 +92,9 @@ Installation tests inside chroot environments.
 ** these $set_of_packages exist: 'gnome', 'kde', 'kde-full', 'lxde', 'xfc', 'full_desktop' (all five desktops plus `vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs` and (`libreoffice virt-manager mplayer2` (jessie/sid) or `openoffice virtualbox mplayer` (squeeze/wheezy)) and 'develop'
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
 
-=== lintian jobs
+=== lintian and other jobs
 
-* FIXME: describe lintian jobs
+* FIXME: describe lintian jobs, rebootstrap ones & haskell packages too
 
 === webcheck jobs
 

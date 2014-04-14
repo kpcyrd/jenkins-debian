@@ -38,6 +38,6 @@
     jobs:
         - '{name}_sid':
             my_distro: 'sid'
-            my_shell: 'apt-get install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
+            my_shell: 'apt-get -y install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.debian.org'

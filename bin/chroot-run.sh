@@ -22,18 +22,18 @@ if [ -z "$CHROOT_BASE" ]; then
 fi
 
 if [ $# -lt 2 ]; then
-	echo "usage: $0 DISTRO CMD [ARG1 ARG2 ...]"
+	echo "usage: $0 DISTRO [backports] CMD [ARG1 ARG2 ...]"
 	exit 1
 fi
 
 DISTRO="$1"
-if [ "$DISTRO" == "wheezy+backports" ] ; then
-	# FIXME: this works but is a bit too hackish for my liking, ie it will break when jessie will be stable..
-	DISTRO="wheezy"
+shift
+
+if [ "$1" == "backports" ] ; then
 	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
 	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
+	shift
 fi
-shift
 
 if [ ! -d "$CHROOT_BASE" ]; then
 	echo "Directory $CHROOT_BASE does not exist, aborting."

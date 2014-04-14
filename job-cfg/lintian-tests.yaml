@@ -67,7 +67,7 @@
             my_shell: 'debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on jessie.'
         - '{name}_wheezy':
-            my_distro: 'wheezy+backports'
+            my_distro: 'wheezy backports'
             my_shell: 'debian/rules runtests'
-            my_description: 'Debian/Lintian testsuite running on wheezy.'
+            my_description: 'Debian/Lintian testsuite running on wheezy (+backports).'
 

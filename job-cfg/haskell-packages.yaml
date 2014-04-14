@@ -28,7 +28,7 @@
 
 - job-template:
     defaults: haskell-packages
-    name: '{name}_sid'
+    name: '{name}'
     triggers:
       - timed: '0 15 * * 1'    # every monday at 15:00 UTC
 
@@ -36,8 +36,8 @@
     name: haskell-packages
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/haskell-packages.yaml">haskell-packages.yaml</a>.'
     jobs:
-        - '{name}_sid':
-            my_distro: 'sid'
+        - '{name}':
+            my_distro: 'jessie'
             my_shell: 'apt-get -y install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.debian.org'

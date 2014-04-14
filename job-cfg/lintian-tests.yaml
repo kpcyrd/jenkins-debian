@@ -14,7 +14,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}{do_not_edit}'
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
     logrotate:
       daysToKeep: 365
       numToKeep: 365
@@ -53,7 +53,6 @@
 
 - project:
     name: lintian-tests
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/lintian-tests.yaml">lintian-tests.yaml</a>.'
     jobs:
         - '{name}_sid':
             my_distro: 'sid'

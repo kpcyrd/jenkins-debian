@@ -30,13 +30,12 @@ check_for_mounted_chroots() {
 }
 
 report_disk_usage() {
-	du -schx /var/lib/jenkins/jobs/${1}_* |grep total |sed -s "s#total#${1} jobs#"
-	# FIXME: if $2 is given check, that disk usage is below $2 GB - same for report_filetype_usage()
+	du -schx /var/lib/jenkins/jobs/${1}* |grep total |sed -s "s#total#${1} jobs#"
 }
 
 report_filetype_usage() {
 	OUTPUT=$(mktemp)
-	find /var/lib/jenkins/jobs/${1}_* -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$1 .$2 files#" > $OUTPUT
+	find /var/lib/jenkins/jobs/${1}* -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$1 .$2 files#" > $OUTPUT
 	if [ "$3" = "warn" ] &&  [ -s $OUTPUT ] ; then
 		echo "Warning: there are $2 files and there should not be any."
 		cat $OUTPUT

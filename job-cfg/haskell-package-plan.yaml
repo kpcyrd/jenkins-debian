@@ -25,11 +25,17 @@
     publishers:
       - email:
           recipients: '{my_recipients}'
+    scm:
+      - git:
+          url: 'git://anonscm.debian.org/pkg-haskell/package-plan.git'
+          branches:
+            - master
 
 - job-template:
     defaults: haskell-package-plan
     name: '{name}'
     triggers:
+      - pollscm: '*/6 * * * *'
       - timed: '0 15 * * 1'    # every monday at 15:00 UTC
 
 - project:
@@ -38,6 +44,6 @@
     jobs:
         - '{name}':
             my_distro: 'jessie'
-            my_shell: 'apt-get -y install cabal-install darcs libtext-patch-perl; cabal update; darcs get http://anonscm.debian.org/darcs/pkg-haskell/tools/; cd tools/all-packages; perl ./test-packages.pl'
+            my_shell: 'apt-get -y install cabal-install darcs libtext-patch-perl; cabal update; ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'

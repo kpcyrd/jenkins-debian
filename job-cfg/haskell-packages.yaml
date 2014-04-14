@@ -28,6 +28,7 @@
 
 - job-template:
     defaults: haskell-packages
+    name: '{name}_sid'
     triggers:
       - timed: '0 15 * * 1'    # every monday at 15:00 UTC
 

@@ -1,5 +1,5 @@
 - defaults:
-    name: lintian-tests
+    name: lintian
     project-type: freestyle
     properties:
       - sidebar:
@@ -32,18 +32,18 @@
           recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
 
 - job-template:
-    defaults: lintian-tests
+    defaults: lintian
     name: '{name}_wheezy'
 
 - job-template:
-    defaults: lintian-tests
+    defaults: lintian
     name: '{name}_jessie'
     publishers:
       - trigger:
           project: '{name}_wheezy'
 
 - job-template:
-    defaults: lintian-tests
+    defaults: lintian
     name: '{name}_sid'
     triggers:
       - pollscm: '*/6 * * * *'

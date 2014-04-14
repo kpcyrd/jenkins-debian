@@ -1,5 +1,5 @@
 - defaults:
-    name: haskell-packages
+    name: haskell-package-plan
     project-type: freestyle
     properties:
       - sidebar:
@@ -27,14 +27,14 @@
           recipients: '{my_recipients}'
 
 - job-template:
-    defaults: haskell-packages
+    defaults: haskell-package-plan
     name: '{name}'
     triggers:
       - timed: '0 15 * * 1'    # every monday at 15:00 UTC
 
 - project:
-    name: haskell-packages
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/haskell-packages.yaml">haskell-packages.yaml</a>.'
+    name: haskell-package-plan
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/haskell-package-plan.yaml">haskell-package-plan.yaml</a>.'
     jobs:
         - '{name}':
             my_distro: 'jessie'

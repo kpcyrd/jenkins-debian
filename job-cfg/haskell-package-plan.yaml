@@ -44,6 +44,6 @@
     jobs:
         - '{name}':
             my_distro: 'jessie'
-            my_shell: 'apt-get -y install cabal-install darcs libtext-patch-perl; cabal update; ./test-packages.pl'
+            my_shell: 'apt-get -y install cabal-install darcs libtext-patch-perl; /usr/bin/cabal update; ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'

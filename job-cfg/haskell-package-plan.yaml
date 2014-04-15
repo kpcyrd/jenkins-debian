@@ -21,7 +21,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} "apt-get -y install {my_pkgs}; {my_shell}"'
     publishers:
       - email:
           recipients: '{my_recipients}'
@@ -44,6 +44,7 @@
     jobs:
         - '{name}':
             my_distro: 'sid'
-            my_shell: 'apt-get -y install cabal-install dctrl-tools darcs libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl\; cabal update \; ./test-packages.pl'
+            my_pkgs: 'cabal-install dctrl-tools darcs libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
+            my_shell: 'cabal update ; ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'

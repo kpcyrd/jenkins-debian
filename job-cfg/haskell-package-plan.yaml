@@ -36,7 +36,7 @@
     name: '{name}'
     triggers:
       - pollscm: '*/6 * * * *'
-      - timed: '0 15 * * 1'    # every monday at 15:00 UTC
+      - timed: '0 16 * * *'    # every day at 16:00 UTC
 
 - project:
     name: haskell-package-plan

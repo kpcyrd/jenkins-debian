@@ -21,7 +21,7 @@ job-template:
 job-template:
         defaults: schroot
         name: '{schroot}-upgrade'
-        description: 'schroot "{schroot}" -- creation {do_not_edit}'
+        description: 'schroot "{schroot}" -- upgrade {do_not_edit}'
         distro: 'sid'
         extra-pkgs: ''
         block-downstream: yes

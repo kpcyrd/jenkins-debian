@@ -4,4 +4,5 @@ error /^make: \*\*\* \[[^]]*\] Error /
 error /^Patch .* does not apply/
 error /fatal error:/
 error /^configure: error: /
+error /^dpkg: dependency problems prevent configuration of /
 warning /cannot stat .*: No such file or directory/

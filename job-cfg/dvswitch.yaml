@@ -55,6 +55,20 @@
       - trigger:
           project: '{name}_jessie'
 
+- job-template:
+    defaults: dvswitch
+    name: '{name}_against_libav_git'
+    triggers:
+      - timed: '0 1 * * *'    # every day at 01:00 UTC
+    publishers:
+      - email:
+          recipients: 'jenkins+dvswitch holger@layer-acht.org wouter@debian.org'
+    scm:
+      - git:
+          url: 'git://git.libav.org/libav.git'
+          branches:
+            - master
+
 - project:
     name: dvswitch
     jobs:
@@ -71,7 +85,7 @@
             my_shell: 'debian/rules build'
             my_description: 'Build the dvswitch git master branch on wheezy (+backports).'
 
-# git://git.libav.org/libav.git
-# < wouter> - build the libav git master branch every night at 1 am (but only if there were changes in the libav master branch)
-# < wouter> - if the libav build was successful, build the dvswitch master branch against the just-built libav library, and run the test suite
-
+        - '{name}_against_libav_git':
+            my_distro: 'sid'
+            my_shell: 'debian/rules build ; cd .. ; dpkg -i -O *.deb ; git clone git://anonscm.debian.org/dvswitch/dvswitch.git ; cd dvswitch ; ./debian/rules build'
+            my_description: 'Build the dvswitch git master branch on sid.'

@@ -1,0 +1,73 @@
+- defaults:
+    name: dvswitch
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/dvswitch/
+          text: dvswitch test jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/dvswitch.yaml">dvswitch.yaml</a>.'
+    logrotate:
+      daysToKeep: 180
+      numToKeep: 100
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    scm:
+      - git:
+          url: 'git://anonscm.debian.org/dvswitch/dvswitch.git'
+          branches:
+            - master
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: dvswitch
+    name: '{name}_wheezy'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa holger@layer-acht.org dvswitch-maint@debian.org'
+
+- job-template:
+    defaults: dvswitch
+    name: '{name}_jessie'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa holger@layer-acht.org dvswitch-maint@debian.org'
+      - trigger:
+          project: '{name}_wheezy'
+
+- job-template:
+    defaults: dvswitch
+    name: '{name}_sid'
+    triggers:
+      - pollscm: '*/6 * * * *'
+    publishers:
+      - email:
+          recipients: 'jenkins-dvswitch holger@layer-acht.org wouter@debian.org'
+      - trigger:
+          project: '{name}_jessie'
+
+- project:
+    name: dvswitch
+    jobs:
+        - '{name}_sid':
+            my_distro: 'sid'
+            my_shell: 'debian/rules build'
+            my_description: 'Build the dvswitch git master branch on sid.'
+        - '{name}_jessie':
+            my_distro: 'jessie'
+            my_shell: 'debian/rules build'
+            my_description: 'Build the dvswitch git master branch on jessie.'
+        - '{name}_wheezy':
+            my_distro: 'wheezy backports'
+            my_shell: 'debian/rules build'
+            my_description: 'Build the dvswitch git master branch on wheezy (+backports).'
+

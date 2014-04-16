@@ -104,6 +104,11 @@ Installation tests inside chroot environments.
 
 * FIXME: describe rebootstrap jobs
 
+=== dvswitch jobs
+
+* FIXME: describe dvswitch jobs
+
+
 === webcheck jobs
 
 * three jobs for running webcheck against www.debian.org, www.debian.org/News and www.debian.org/security

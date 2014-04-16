@@ -97,7 +97,7 @@ if [ -f debian/control ] ; then
 	cat debian/control
 	# install build-depends
 	echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
-	apt-get install build-essential devscripts
+	apt-get install build-essential devscripts git
 	mk-build-deps -ir
 	rm /etc/apt/apt.conf.d/23jenkins
 fi

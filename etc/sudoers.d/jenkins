@@ -1,4 +1,22 @@
-jenkins ALL= NOPASSWD: /usr/sbin/debootstrap *, /usr/sbin/chroot /chroots/*,  /usr/sbin/chroot /media/*, /bin/ls -la /media/*, /bin/rm -rf --one-file-system /chroots/*, /bin/umount -l /chroots/*, /bin/umount -l /media/*, /bin/mount -o loop*, /bin/mount --bind *, /usr/bin/du *, /bin/kill -9 *, /usr/bin/qemu-system-x86_64 *, /bin/mkdir -p /media/*, /usr/bin/guestmount *, /bin/cp -r /media/*, /bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*, SETENV: NOPASSWD: /usr/sbin/pbuilder *, /bin/rm /var/cache/pbuilder/base.tgz
+jenkins ALL=  \
+	NOPASSWD: /usr/sbin/debootstrap *, \
+	/usr/sbin/chroot /chroots/*, \
+	/usr/sbin/chroot /media/*, \
+	/bin/ls -la /media/*, \
+	/bin/rm -rf --one-file-system /chroots/*, \
+	/bin/umount -l /chroots/*, \
+	/bin/umount -l /media/*, \
+	/bin/mount -o loop*, \
+	/bin/mount --bind *, \
+	/usr/bin/du *, \
+	/bin/kill -9 *, \
+	/usr/bin/qemu-system-x86_64 *, \
+	/bin/mkdir -p /media/*, \
+	/usr/bin/guestmount *, \
+	/bin/cp -r /media/*, \
+	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
+	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
+	/bin/rm /var/cache/pbuilder/base.tgz
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

@@ -12,7 +12,7 @@ explain() {
 }
 
 # make sure needed directories exists
-for directory in  /srv/jenkins /chroots /chroots/schroots; do
+for directory in  /srv/jenkins /chroots /schroots; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory

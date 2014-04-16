@@ -25,7 +25,7 @@ if [ -z "$CHROOT_BASE" ]; then
 	export CHROOT_BASE=/chroots
 fi
 if [ -z "$SCHROOT_BASE" ]; then
-	export SCHROOT_BASE=$CHROOT_BASE/schroot
+	export SCHROOT_BASE=/schroots
 fi
 
 if [ $# -lt 2 ]; then

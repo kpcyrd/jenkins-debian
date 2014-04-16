@@ -10,9 +10,9 @@ About jenkins.debian.net
 
 == About jenkins.debian.net
 
-https://jenkins.debian.net is *work in progress* and is in it's infancy as a tool for the automated quality monitoring of Debian. in existence since October 15th 2012.
+https://jenkins.debian.net is a tool for automated quality monitoring of Debian. It is *work in progress* despite being in existence since October 15th 2012.
 
-Get the source by running `git clone git://git.debian.org/git/qa/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository.
+Get the source by running `git clone git://git.debian.org/git/qa/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository. (The irrelevant bits are some very simple configuration files containing passwords.)
 
 The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 6 cores and 10 GB memory, thanks a lot!
 
@@ -22,7 +22,7 @@ If you notice some jobs has problems and you want to find out why, read <<debug,
 
 == Jobs being run
 
-Remember, this is still pretty much work in progress. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
+If you can think of ways to improve the usefulness of certain jobs, please do give feedback! Remember, this is still pretty much work in progress. 
 
 === g-i-installation jobs
 
@@ -31,7 +31,7 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 * 'g-i-installation_debian_sid_daily-rescue'
 ** boot of rescue system with daily build sid image
 
-* 'g-i-installation_debian_sid_daily-lxde' and '-xfce'
+* 'g-i-installation_debian_sid_daily-lxde' and '-xfce' and '-kfreebsd' and '-hurd'
 ** sid installation of Xfce/LXDE desktop with daily build sid image
 
 * 'g-i-installation_debian_jessie_lxde','-xfce','-kde' and '-gnome' and '-kfreebsd'
@@ -92,9 +92,17 @@ Installation tests inside chroot environments.
 ** these $set_of_packages exist: 'gnome', 'kde', 'kde-full', 'lxde', 'xfc', 'full_desktop' (all five desktops plus `vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs` and (`libreoffice virt-manager mplayer2` (jessie/sid) or `openoffice virtualbox mplayer` (squeeze/wheezy)) and 'develop'
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
 
-=== lintian and other jobs
+=== lintian jobs
 
-* FIXME: describe lintian jobs, rebootstrap ones & haskell packages too
+* FIXME: describe lintian jobs
+
+=== haskell jobs
+
+* FIXME: describe haskell jobs
+
+=== rebootstrap jobs
+
+* FIXME: describe rebootstrap jobs
 
 === webcheck jobs
 
@@ -112,9 +120,9 @@ These are jobs for making sure jenkins.debian.net is running smoothly.
 
 *FIXME*: To debug certain jobs, a jenkins setup is actually not needed. Make this easy and describe here.
 
-*This is work in progress too and is not full done yet!*
+*This is work in progress too, but mostly just needs documentation!* In principle the shell commands from the various jobs should run on any Debian system just fine. Please use a test system though, as all your data might be eaten.
 
-Build this source as a debian package and install the jenkins.d.n-debug package and all it's recommends.
+* Build this source as a debian package and install the jenkins.d.n-debug package and all it's recommends.
 
 === Debugging g-i-installation jobs
 
@@ -128,7 +136,7 @@ mkdir workspace ; cd workspace # test-script should check if they are in a direc
 See the *fourth line* on *any* log to find out how to debug any job. Point this out at the end of any log.
 
 
-TODO: Currently as easy: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.
+TODO: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.
 
 === Feedback
 
@@ -145,6 +153,6 @@ There is still a lot of work left, check the current link:https://jenkins.debian
 
 == License
 
-* See link:http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=LICENSE[LICENSE].
+* GPLv2, see link:http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=LICENSE[LICENSE].
 
 // vim: set filetype=asciidoc:

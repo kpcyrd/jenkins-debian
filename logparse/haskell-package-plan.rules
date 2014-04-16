@@ -1,0 +1,8 @@
+info /^\d+ packages successfully tested for co-installability/
+warn /^Updated:/
+warn /^Obsolete:/
+warn /^Added:/
+error /^ERROR:/
+error /^OLD:/
+error /^REMOVED:/
+error /^MISSING:/

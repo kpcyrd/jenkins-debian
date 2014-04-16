@@ -25,6 +25,10 @@
     publishers:
       - email:
           recipients: '{my_recipients}'
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/haskell-package-plan.rules'
+          unstable-on-warning: 'false'
+          fail-on-error: 'false'
     scm:
       - git:
           url: 'git://anonscm.debian.org/pkg-haskell/package-plan.git'

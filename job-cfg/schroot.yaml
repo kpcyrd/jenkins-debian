@@ -1,0 +1,50 @@
+defaults:
+        name: schroot
+        do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/schroot.yaml">schroot.yaml</a>.'
+        publishers:
+                - email:
+                        recipients: jenkins+debian-qa holger@layer-acht.org
+        triggers:
+                - timed: '{my_time}'
+
+
+job-template:
+        defaults: schroot
+        name: '{schroot}-install'
+        description: 'schroot "{schroot}" -- installation {do_not_edit}'
+        distro: 'sid'
+        extra-pkgs: ''
+        block-downstream: yes
+        builders:
+                - shell: '/srv/jenkins/bin/schroot-install.sh {schroot} {distro} {extra_pkgs}'
+
+job-template:
+        defaults: schroot
+        name: '{schroot}-upgrade'
+        description: 'schroot "{schroot}" -- installation {do_not_edit}'
+        distro: 'sid'
+        extra-pkgs: ''
+        block-downstream: yes
+        builders:
+                - shell: 'schroot -u root -c source:jenkins-{schroot} -- apt-get update'
+                - shell: 'schroot -u root -c source:jenkins-{schroot} -- apt-get -y -u dist-upgrade'
+                - shell: 'schroot -u root -c source:jenkins-{schroot} -- apt-get --purge autoremove'
+
+project:
+        name: haskell-schroot
+        schroot: haskell
+        jobs:
+                - '{schroot}-install':
+                        extra_pkgs: 'ghc'
+                        my_time: '0 10 * * 1'
+                - '{schroot}-upgrade':
+                        my_time: '0 11 * * *'
+
+project:
+        name: sid-schroot
+        schroot: sid
+        jobs:
+                - '{schroot}-install':
+                        my_time: '0 10 * * 2'
+                - '{schroot}-upgrade':
+                        my_time: '0 11 * * *'

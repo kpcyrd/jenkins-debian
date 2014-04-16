@@ -43,41 +43,29 @@
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
-
-- job-template:
-    defaults: rebootstrap
-    name: '{name}_arm64'
     triggers:
       - pollscm: '*/6 * * * *'
       - timed: '55 11 * * 0'    # every sunday at 11:55
 
 - job-template:
     defaults: rebootstrap
+    name: '{name}_arm64'
+
+- job-template:
+    defaults: rebootstrap
     name: '{name}_arm64_gcc49'
-    triggers:
-      - pollscm: '*/6 * * * *'
-      - timed: '25 12 * * 0'    # every sunday at 12:25
 
 - job-template:
     defaults: rebootstrap
     name: '{name}_arm64_multilib'
-    triggers:
-      - pollscm: '*/6 * * * *'
-      - timed: '10 12 * * 0'    # every sunday at 12:10
 
 - job-template:
     defaults: rebootstrap
     name: '{name}_m68k'
-    triggers:
-      - pollscm: '*/6 * * * *'
-      - timed: '55 12 * * 0'    # every sunday at 12:55
 
 - job-template:
     defaults: rebootstrap
     name: '{name}_x32'
-    triggers:
-      - pollscm: '*/6 * * * *'
-      - timed: '40 12 * * 0'    # every sunday at 12:40
 
 
 - project:

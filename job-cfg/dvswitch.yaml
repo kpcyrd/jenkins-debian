@@ -33,14 +33,14 @@
     name: '{name}_wheezy'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org dvswitch-maint@debian.org'
+          recipients: 'jenkins+dvswitch holger@layer-acht.org dvswitch-maint@debian.org'
 
 - job-template:
     defaults: dvswitch
     name: '{name}_jessie'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org dvswitch-maint@debian.org'
+          recipients: 'jenkins+dvswitch holger@layer-acht.org dvswitch-maint@debian.org'
       - trigger:
           project: '{name}_wheezy'
 
@@ -51,7 +51,7 @@
       - pollscm: '*/6 * * * *'
     publishers:
       - email:
-          recipients: 'jenkins-dvswitch holger@layer-acht.org wouter@debian.org'
+          recipients: 'jenkins+dvswitch holger@layer-acht.org wouter@debian.org'
       - trigger:
           project: '{name}_jessie'
 
@@ -70,4 +70,8 @@
             my_distro: 'wheezy backports'
             my_shell: 'debian/rules build'
             my_description: 'Build the dvswitch git master branch on wheezy (+backports).'
+
+# git://git.libav.org/libav.git
+# < wouter> - build the libav git master branch every night at 1 am (but only if there were changes in the libav master branch)
+# < wouter> - if the libav build was successful, build the dvswitch master branch against the just-built libav library, and run the test suite
 

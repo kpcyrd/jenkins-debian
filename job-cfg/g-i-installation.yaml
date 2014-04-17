@@ -39,7 +39,7 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
-          job-prio: '80'
+          job-prio: '140'
       - throttle:
           max-total: 3
           max-per-node: 3
@@ -80,7 +80,7 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
-          job-prio: '50'
+          job-prio: '175'
       - throttle:
           max-total: 3
           max-per-node: 3

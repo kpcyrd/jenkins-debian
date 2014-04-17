@@ -37,7 +37,7 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
-          job-prio: '70'
+          job-prio: '120'
 
 - job-template:
     defaults: webcheck

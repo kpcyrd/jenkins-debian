@@ -79,6 +79,14 @@
     defaults: rebootstrap
     name: '{name}_x32_gcc49'
 
+- job-template:
+    defaults: rebootstrap
+    name: '{name}_x32_multilib'
+
+- job-template:
+    defaults: rebootstrap
+    name: '{name}_x32_gcc49_multilib'
+
 
 - project:
     name: rebootstrap
@@ -116,3 +124,11 @@
             my_arch: 'x32'
             my_params: 'GCC_VER=4.9'
             my_description: 'Verify bootstrappability of Debian using gcc-4.9 for x32'
+        - '{name}_x32_multilib':
+            my_arch: 'x32'
+            my_params: 'ENABLE_MULTILIB=yes'
+            my_description: 'Verify bootstrappability of Debian with multilib for x32'
+        - '{name}_x32_gcc49_multilib':
+            my_arch: 'x32'
+            my_params: 'GCC_VER=4.9 ENABLE_MULTILIB=yes'
+            my_description: 'Verify bootstrappability of Debian using gcc-4.9 with multilib for x32'

@@ -93,12 +93,11 @@ run() {
 	cat > $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 $SCRIPT_HEADER
 cd /tmp/testrun
-apt-get -y install git
+echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
+apt-get install build-essential devscripts git
 if [ -f debian/control ] ; then
 	cat debian/control
 	# install build-depends
-	echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
-	apt-get install build-essential devscripts
 	mk-build-deps -ir
 fi
 $@

@@ -87,5 +87,5 @@
 
         - '{name}_against_libav_git':
             my_distro: 'sid'
-            my_shell: '"apt-get -y install build-essential devscripts git ; apt-get -y build-dep dvswitch libav ; ./configure ; make ; make install ; cd .. ; git clone git://anonscm.debian.org/dvswitch/dvswitch.git ; cd dvswitch ; mk-build-deps -ir ; ./debian/rules build"'
+            my_shell: '"apt-get -y build-dep dvswitch libav ; ./configure ; make ; make install ; cd .. ; git clone git://anonscm.debian.org/dvswitch/dvswitch.git ; cd dvswitch ; mk-build-deps -ir ; ./debian/rules build"'
             my_description: 'Build the dvswitch git master branch on sid.'

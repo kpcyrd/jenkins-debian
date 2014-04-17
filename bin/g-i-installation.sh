@@ -909,7 +909,7 @@ save_logs() {
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
 	# FIXME: bugreport guestmount: -o uid doesnt work:
-	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, bt it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
+	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	case $NAME in
 		debian-edu_*_workstation)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
 						;;
@@ -921,7 +921,9 @@ save_logs() {
 		debian-edu_*)			sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
 						sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
 						;;
-		*)				sudo guestmount -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; figlet "fail" ) 
+		debian_wheezy_*)		sudo guestmount -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; figlet "fail" )
+						;;
+		*)				sudo guestmount -a $NAME.raw -m /dev/debian-vg/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian-vg/root" ; figlet "fail" ) 
 						;;
 	esac
 	#

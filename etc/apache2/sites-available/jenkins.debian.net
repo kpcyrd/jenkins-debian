@@ -80,10 +80,8 @@ NameVirtualHost *:443
 	# allow certain params only from alioth (token is used to trigger builds)
 	RewriteEngine on
 	RewriteCond %{REMOTE_ADDR} !5\.153\.231\.21
-	# git.d.o is really moszumanska.d.o
-	# FIXME: REMOTE_HOST surely must work somehow? Anyone can run curl on alioth anyway, so just allowing this trigger from any debian host should be fine, I just couldnt make this work: (so its disabled instead...)
-	# Until then etc/cron.daily/jenkins checks for changes in the IP address... which is a hack hack hack :)
-	#RewriteCond %{REMOTE_HOST} !.*.debian.org
+	# this is git.d.o which is really moszumanska.d.o
+	# etc/cron.daily/jenkins checks for changes in this IP address, so root will be notified and can adopt this...
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 

@@ -4,6 +4,6 @@
 # I couldn't get it to work. so I use REMOTE_ADDR...
 # see etc/apache2/sites-available/jenkins.debian.net
 
-if [ "$(host git.debian.org)" != "git.debian.org has address 217.196.43.140" ] ; then
+if [ "$(host git.debian.org)" != "git.debian.org has address 5.153.231.21" ] ; then
 	echo "IP address of git.debian.org has changed, please update etc/apache2/sites-available/jenkins.debian.net and etc/cron.daily/jenkins"
 fi

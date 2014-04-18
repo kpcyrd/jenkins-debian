@@ -104,6 +104,14 @@ $@
 EOF
 	chmod +x $CHROOT_TARGET/tmp/chroot-testrun
 	sudo chroot $CHROOT_TARGET /tmp/chroot-testrun
+
+	# hack to get data out of the chroot (might be dropped when
+	# haskell-package-plan uses schroot, which will bindmount the current
+	# directory in the schroot)
+	if [ -e $CHROOT_TARGET/tmp/testrun/stats.csv ]
+	then
+		cp -v $CHROOT_TARGET/tmp/testrun/stats.csv .
+	fi
 }
 
 bootstrap

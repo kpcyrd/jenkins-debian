@@ -1,9 +1,8 @@
 #!/bin/sh
 
-# maybe I'm too stupid to use apaches REMOTE_HOST directive correctly
-# I couldn't get it to work. so I use REMOTE_ADDR...
-# see etc/apache2/sites-available/jenkins.debian.net
+# this is needed as this IP address has to be hardcoded in /etc/apache2/sites-available/jenkins.debian.net
 
-if [ "$(host git.debian.org)" != "git.debian.org has address 5.153.231.21" ] ; then
-	echo "IP address of git.debian.org has changed, please update etc/apache2/sites-available/jenkins.debian.net and etc/cron.daily/jenkins"
+if [ "$(host git.debian.org|head -1)" != "git.debian.org has address 5.153.231.21" ] ; then
+	echo "IP address of git.debian.org has changed, please update etc/apache2/sites-available/jenkins.debian.net and etc/cron.daily/jenkins in jenkins.debian.net.git"
+	host git.debian.org
 fi

@@ -34,7 +34,7 @@
         schroot: haskell
         jobs:
                 - '{schroot}-create':
-                        extra_pkgs: 'ghc'
+                        extra_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
                         my_time: '0 10 * * 1'
                 - '{schroot}-upgrade':
                         my_time: '0 11 * * *'

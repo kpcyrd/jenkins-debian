@@ -794,14 +794,17 @@ monitor_system() {
 		#
 		# break if qemu-system has finished
 		#
+		if ! ps fax | grep [q]emu-system | grep vnc=$DISPLAY >/dev/null; then
+			touch $RESULTS/qemu_quit
+			break
+		fi
 		PRINTF_NR=$(printf "%06d" $NR)
-		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || touch $RESULTS/qemu_quit
-		if [ ! -f "$RESULTS/qemu_quit" ] ; then
+		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || true
+		if [ -f snapshot_${PRINTF_NR}.jpg ]; then
 			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
 			rm snapshot_${PRINTF_NR}.jpg
 		else
-			echo "could not take vncsnapshot, no qemu running on $DISPLAY"
-			break
+			echo "could not take vncsnapshot from $DISPLAY"
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then

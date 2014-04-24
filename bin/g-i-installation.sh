@@ -805,6 +805,7 @@ monitor_system() {
 			echo "could not take vncsnapshot from $DISPLAY, lets try again..."
 			let NR=NR-1
 			PRINTF_NR=$(printf "%06d" $NR)
+			echo "$PRINTF_NR: $(date)"
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then

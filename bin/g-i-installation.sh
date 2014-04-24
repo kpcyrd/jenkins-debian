@@ -102,14 +102,14 @@ cleanup_all() {
 	# create video
 	#
 	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > /dev/null
-	rm snapshot_??????.ppm
+	rm "snapshot_??????.ppm"
 	# rename .bak files back to .ppm
 	if find . -name "*.ppm.bak" > /dev/null ; then
-		for i in *.ppm.bak ; do
+		for i in "*.ppm.bak" ; do
 			mv $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
 		done
 		# convert to png (less space and better supported in browsers)
-		for i in *.ppm ; do
+		for i in "*.ppm" ; do
 			convert $CONVERTOPTS $i ${i%.ppm}.png
 			rm $i
 		done

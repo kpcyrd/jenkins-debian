@@ -53,6 +53,7 @@ rm -rf results
 mkdir -p results
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
+QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
 
 #
 # language
@@ -135,9 +136,7 @@ bootstrap_system() {
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
 			*_kfreebsd)	;;
-			*_hurd*)	QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
-					QEMU_OPTS="$QEMU_OPTS -cpu host"
-					QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
+			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -cpu host"
 					QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
 					VIDEOBITRATE=1200
@@ -152,6 +151,7 @@ bootstrap_system() {
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	# FIXME: benchmark cache=none and =writeback
+	QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -256,15 +256,13 @@ boot_system() {
 	fi
 	case $NAME in
 		debian-edu*-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
-			;;
-		*_hurd*)
-			QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
-			QEMU_OPTS="$QEMU_OPTS -cpu host"
-			QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
-			;;
-		*)	;;
+				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
+				;;
+		*_hurd*)	QEMU_OPTS="$QEMU_OPTS -cpu host"
+				;;
+		*)		;;
 	esac
+	QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 	echo
 	echo "Starting QEMU_ now:"
 	set -x
@@ -785,6 +783,10 @@ monitor_system() {
 	fi
 	cd $RESULTS
 	sleep 4
+	echo "Output of QEMU serial log:"  # FIXME: debug code, remove later
+	echo "--------------------------"
+	cat ${QEMU_SERIAL_OUT}
+	echo "--------------------------"
 	hourlimit=16 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo
@@ -805,6 +807,7 @@ monitor_system() {
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot from $DISPLAY"
+			tail ${QEMU_SERIAL_OUT}
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
@@ -812,7 +815,7 @@ monitor_system() {
 		fi
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			# press ctrl-key to avoid screensaver kicking in
-			vncdo -s $DISPLAY key ctrl
+			vncdo -s $DISPLAY key ctrl || tail ${QEMU_SERIAL_OUT} # FIXME: debug code, remove later
 			# take a screenshot for later publishing
 			backup_screenshot
 			#
@@ -937,6 +940,7 @@ save_logs() {
 	set +e
 	mkdir -p $RESULTS/log
 	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/
+	mv $QEMU_SERIAL_OUT $RESULTS/log/
 	#
 	# get list of installed packages
 	#

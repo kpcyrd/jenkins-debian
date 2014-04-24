@@ -886,13 +886,16 @@ monitor_system() {
 		sleep 2
 
 		# Hurd can't poweroff itself
-		if [ -v QEMU_SERIAL_OUT ]; then
-			if grep "In tight loop: hit ctl-alt-del to reboot" $QEMU_SERIAL_OUT >/dev/null; then
-				echo "Powering off Hurd VM ..."
-				sleep 10
-				sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}')
-			fi
-		fi
+		case $NAME in
+			*_hurd*)
+				if grep "In tight loop: hit ctl-alt-del to reboot" $QEMU_SERIAL_OUT >/dev/null; then
+					echo "Powering off Hurd VM ..."
+					sleep 10
+					sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}')
+				fi
+				;;
+			*)	;;
+		esac
 	done
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo "Warning: running for ${hourlimit}h, forcing termination."

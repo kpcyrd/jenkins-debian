@@ -78,6 +78,9 @@ explain "Updated user content for Jenkins."
 #     (using sudo because /etc/jenkins_jobs is root:root 700)
 #
 cd /srv/jenkins/job-cfg
+for metaconfig in *.yaml.py ; do
+	python $metaconfig > ${metaconfig%.py}
+done
 for config in *.yaml ; do
 	sudo jenkins-jobs update $config
 done

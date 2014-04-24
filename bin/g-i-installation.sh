@@ -782,7 +782,7 @@ monitor_system() {
 		TIMEOUT=$3
 	fi
 	cd $RESULTS
-	sleep 4
+	sleep 4	# chosen by fair dice roll
 	hourlimit=16 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo
@@ -802,19 +802,21 @@ monitor_system() {
 			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
 			rm snapshot_${PRINTF_NR}.jpg
 		else
-			echo "could not take vncsnapshot from $DISPLAY"
+			echo "could not take vncsnapshot from $DISPLAY, lets try again..."
+			let NR=NR-1
+			PRINTF_NR=$(printf "%06d" $NR)
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
 			echo "$PRINTF_NR: $(date)"
 		fi
 		if [ $(($NR % 100)) -eq 0 ] ; then
-			# press ctrl-key to avoid screensaver kicking in
+			# press ctrl-key regularily to avoid screensaver kicking in
 			vncdo -s $DISPLAY key ctrl || true
-			# take a screenshot for later publishing
+			# preserve a screenshot for later publishing
 			backup_screenshot
 			#
-			# search for known text ocr of screenshot and break out of this loop if certain content is found
+			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
 			GOCR=$(mktemp)
 			gocr snapshot_${PRINTF_NR}.ppm > $GOCR
@@ -902,7 +904,7 @@ monitor_system() {
 		let NR=NR-1
 		PRINTF_NR=$(printf "%06d" $NR)
 	fi
-	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+	backup_screenshot
 }
 
 save_logs() {

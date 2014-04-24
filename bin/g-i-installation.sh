@@ -783,10 +783,6 @@ monitor_system() {
 	fi
 	cd $RESULTS
 	sleep 4
-	echo "Output of QEMU serial log:"  # FIXME: debug code, remove later
-	echo "--------------------------"
-	cat ${QEMU_SERIAL_OUT}
-	echo "--------------------------"
 	hourlimit=16 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo
@@ -807,7 +803,6 @@ monitor_system() {
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "could not take vncsnapshot from $DISPLAY"
-			tail ${QEMU_SERIAL_OUT}
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
@@ -815,7 +810,7 @@ monitor_system() {
 		fi
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			# press ctrl-key to avoid screensaver kicking in
-			vncdo -s $DISPLAY key ctrl || tail ${QEMU_SERIAL_OUT} # FIXME: debug code, remove later
+			vncdo -s $DISPLAY key ctrl || true
 			# take a screenshot for later publishing
 			backup_screenshot
 			#

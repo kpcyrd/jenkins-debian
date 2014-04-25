@@ -37,6 +37,7 @@
                   format: csv
                   inclusion-flag: exclude-by-string
                   exclude: total
+            group: HaskellPlots
           - title: Totals
             yaxis: Packages
             style: area
@@ -45,6 +46,7 @@
                   format: csv
                   inclusion-flag: include-by-string
                   exclude: total
+            group: HaskellPlots
     scm:
       - git:
           url: 'git://anonscm.debian.org/pkg-haskell/package-plan.git'

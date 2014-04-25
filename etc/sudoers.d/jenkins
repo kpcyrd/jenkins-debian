@@ -1,15 +1,9 @@
 jenkins ALL=  \
 	NOPASSWD: /usr/sbin/debootstrap *, \
-	tee /chroots/*, \
-	tee /etc/schroot/chroot.d/*, \
-	chmod +x /chroots/*, \
 	/usr/sbin/chroot /chroots/*, \
 	/usr/sbin/chroot /media/*, \
 	/bin/ls -la /media/*, \
 	/bin/rm -rf --one-file-system /chroots/*, \
-	/bin/rm -rf --one-file-system /schroots/*, \
-	/bin/mv /chroots/* /schroots/*, \
-	/bin/mv /schroots/* /schroots/*, \
 	/bin/umount -l /chroots/*, \
 	/bin/umount -l /media/*, \
 	/bin/mount -o loop*, \

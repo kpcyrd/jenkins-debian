@@ -56,6 +56,8 @@ export LC_ALL=C
 export http_proxy=$http_proxy"
 
 bootstrap() {
+	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
+	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 	sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR
 
 	cat > $CHROOT_TARGET/tmp/chroot-prepare <<-EOF

@@ -32,6 +32,7 @@
       - plots:
           - title: Stats
             yaxis: Packages
+            group: PlotGroup
             series:
                 - file: stats.csv
                   format: csv
@@ -40,6 +41,7 @@
             group: HaskellPlots
           - title: Totals
             yaxis: Packages
+            group: PlotGroup
             style: area
             series:
                 - file: stats.csv

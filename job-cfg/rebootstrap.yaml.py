@@ -83,7 +83,7 @@ for arch in architectures:
 print("""
 - project:
     name: rebootstrap
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/rebootstrap.yaml">rebootstrap.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/rebootstrap.yaml.py">rebootstrap.yaml.py</a>.'
     jobs:""")
 for arch in architectures:
     for gccver in gcc_versions:

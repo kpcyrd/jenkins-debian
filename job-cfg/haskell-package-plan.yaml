@@ -29,7 +29,7 @@
           parse-rules: '/srv/jenkins/logparse/haskell-package-plan.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
-      - plots:
+      - plot:
           - title: Stats
             yaxis: Packages
             group: PlotGroup

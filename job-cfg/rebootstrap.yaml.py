@@ -39,10 +39,10 @@ print("""
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
-          job-prio: '90'
+          job-prio: '150'
       - throttle:
-          max-total: 6
-          max-per-node: 6
+          max-total: 2
+          max-per-node: 2
           enabled: True
           option: category
           categories:

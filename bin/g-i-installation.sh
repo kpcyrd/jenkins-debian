@@ -105,11 +105,11 @@ cleanup_all() {
 	rm "snapshot_??????.ppm"
 	# rename .bak files back to .ppm
 	if find . -name "*.ppm.bak" > /dev/null ; then
-		for i in "*.ppm.bak" ; do
+		for i in $(find * -name "*.ppm.bak") ; do
 			mv $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
 		done
 		# convert to png (less space and better supported in browsers)
-		for i in "*.ppm" ; do
+		for i in $(find * -name "*.ppm") ; do
 			convert $CONVERTOPTS $i ${i%.ppm}.png
 			rm $i
 		done

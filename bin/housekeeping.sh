@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Copyright 2012-2013 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-#
-# default settings
-#
-export LC_ALL=C
-set -e
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
 
 check_for_mounted_chroots() {
 	CHROOT_PATTERN="/chroots/${1}-*"
@@ -46,7 +43,6 @@ report_filetype_usage() {
 	fi
 	rm $OUTPUT
 }
-
 
 report_squid_usage() {
 	REPORT=/var/www/calamaris/calamaris.txt

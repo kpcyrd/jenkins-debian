@@ -2,37 +2,22 @@
 
 # Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
+# Copyright      2014 Joachim Breitner <nomeata@debian.org>
 # released under the GPLv=2
 
-# $2 = schroot name
-# $1 = base distro
-# $2 $3 ... = extra packages to install
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
 
 # bootstraps a new chroot for schroot, and then moves it into the right location
 
-set -e
-export LC_ALL=C
-
-# Defaults for the jenkins.debian.net environment
-if [ -z "$MIRROR" ]; then
-	export MIRROR=http://ftp.de.debian.org/debian
-fi
-if [ -z "$http_proxy" ]; then
-	# export http_proxy="http://localhost:3128"
-	:
-fi
-if [ -z "$CHROOT_BASE" ]; then
-	export CHROOT_BASE=/chroots
-fi
-if [ -z "$SCHROOT_BASE" ]; then
-	export SCHROOT_BASE=/schroots
-fi
+# $1 = schroot name
+# $2 = base distro
+# $3 $4 ... = extra packages to install
 
 if [ $# -lt 2 ]; then
-	echo "usage: $0 DISTRO [backports] CMD [ARG1 ARG2 ...]"
+	echo "usage: $0 TARGET DISTRO [backports] CMD [ARG1 ARG2 ...]"
 	exit 1
 fi
-
 TARGET="$1"
 shift
 DISTRO="$1"

@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Copyright 2012,2013 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
+
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
 
 # $1 = base distro
 # $2 = extra component
@@ -18,22 +21,6 @@ fi
 SLEEP=$(shuf -i 1-10 -n 1)
 echo "Sleeping $SLEEP seconds to randomize start times and parallel runs."
 sleep $SLEEP
-
-#
-# default settings
-#
-set -x
-set -e
-export LC_ALL=C
-export MIRROR=http://ftp.de.debian.org/debian
-export http_proxy="http://localhost:3128"
-
-export SCRIPT_HEADER="#!/bin/bash
-set -x
-set -e
-export DEBIAN_FRONTEND=noninteractive
-export LC_ALL=C
-export http_proxy=$http_proxy"
 
 export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-installation-$1.XXXXXXXXX)
 export TMPFILE=$(mktemp -u)

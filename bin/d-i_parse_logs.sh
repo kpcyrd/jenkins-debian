@@ -1,26 +1,18 @@
 #!/bin/bash
 
-# Copyright 2012, 2013 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
+
+# convert param to variables
 if [ "$1" == "" ] ; then
 	echo "need at least one URL to act on"
 	echo '# $1 = URL'
 	exit 1
 fi
-
-#
-# convert params to variables
-#
 URL=$1
-
-#
-# default settings
-#
-#set -x
-set -e
-export LC_ALL=C
-export http_proxy="http://localhost:3128"
 
 TMPFILE=$(mktemp)
 curl $URL > $TMPFILE

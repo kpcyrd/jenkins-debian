@@ -1,15 +1,10 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012,2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-#
-# default settings
-#
-#set -x
-set -e
-export LC_ALL=C
-export http_proxy="http://localhost:3128"
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
 
 #
 # define some variables

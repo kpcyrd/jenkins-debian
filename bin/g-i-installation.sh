@@ -3,6 +3,9 @@
 # Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
+
 # $1 = vnc-display, each job should have a unique one, so jobs can run in parallel
 # $2 = name
 # $3 = disksize in GB
@@ -18,16 +21,6 @@ if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] ; then
 	echo '# $4 = wget url/jigdo url'
 	exit 1
 fi
-
-#
-# default settings
-#
-set -x
-set -e
-export LC_ALL=C
-export MIRROR=http://ftp.de.debian.org/debian
-export http_proxy="http://localhost:3128"
-export
 
 #
 # init

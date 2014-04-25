@@ -4,22 +4,11 @@
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # released under the GPLv=2
 
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
+
 # $1 = base distro
 # $2 $3 ... = command to run inside a clean chroot running the distro in $1
-
-set -e
-export LC_ALL=C
-
-# Defaults for the jenkins.debian.net environment
-if [ -z "$MIRROR" ]; then
-	export MIRROR=http://ftp.de.debian.org/debian
-fi
-if [ -z "$http_proxy" ]; then
-	export http_proxy="http://localhost:3128"
-fi
-if [ -z "$CHROOT_BASE" ]; then
-	export CHROOT_BASE=/chroots
-fi
 
 if [ $# -lt 2 ]; then
 	echo "usage: $0 DISTRO [backports] CMD [ARG1 ARG2 ...]"
@@ -47,13 +36,6 @@ if [ -z "$CHROOT_TARGET" ]; then
 fi
 
 export CURDIR=$(pwd)
-
-export SCRIPT_HEADER="#!/bin/bash
-set -x
-set -e
-export DEBIAN_FRONTEND=noninteractive
-export LC_ALL=C
-export http_proxy=$http_proxy"
 
 bootstrap() {
 	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"

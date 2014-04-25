@@ -60,7 +60,7 @@ export CURDIR=$(pwd)
 bootstrap() {
 	sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR
 
-	sudo -s <<-EOF
+	echo sudo -s <<-EOF
 		set -e
 		set -x
 		echo -e '#!/bin/sh\nexit 101' > $CHROOT_TARGET/usr/sbin/policy-rc.d
@@ -74,7 +74,7 @@ bootstrap() {
 
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
+		echo sudo rm -rf --one-file-system $CHROOT_TARGET || echo fuser -mv $CHROOT_TARGET
 	fi
 }
 trap cleanup INT TERM EXIT

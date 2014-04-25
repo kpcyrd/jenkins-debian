@@ -150,7 +150,6 @@ bootstrap_system() {
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
-	# FIXME: benchmark cache=none and =writeback
 	QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables

@@ -496,6 +496,10 @@ post_install_boot() {
 				esac
 				;;
 		*gnome)		case $TOKEN in
+					0150)	do_and_report key tab
+						;;
+					0170)	do_and_report key enter
+						;;
 					0200)	do_and_report key alt-f2
 						;;
 					0210)	do_and_report type "iceweasel"

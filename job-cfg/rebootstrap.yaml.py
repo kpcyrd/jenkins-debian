@@ -77,7 +77,7 @@ for arch in architectures:
             print("""
 - job-template:
     defaults: rebootstrap
-    name '{name}_%(arch)s_gcc%(gccshortver)s%(nobiarch)s'""" %
+    name: '{name}_%(arch)s_gcc%(gccshortver)s%(nobiarch)s'""" %
     dict(arch=arch, gccshortver=gccver.replace(".", ""), nobiarch=nobiarch))
 
 print("""

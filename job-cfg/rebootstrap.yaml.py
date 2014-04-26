@@ -71,8 +71,8 @@ print("""
       - pollscm: '*/6 * * * *'
 """)
 
-for arch in architectures:
-    for gccver in gcc_versions:
+for arch in sorted(architectures):
+    for gccver in sorted(gcc_versions):
         for nobiarch in ["", "_nobiarch"]:
             print("""
 - job-template:
@@ -85,8 +85,8 @@ print("""
     name: rebootstrap
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/rebootstrap.yaml.py">rebootstrap.yaml.py</a>.'
     jobs:""")
-for arch in architectures:
-    for gccver in gcc_versions:
+for arch in sorted(architectures):
+    for gccver in sorted(gcc_versions):
         for nobiarch in (False,) if arch in mono_architectures else (False, True):
             print(
 """        - '{name}_%(suffix)s':

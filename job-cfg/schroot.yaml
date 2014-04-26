@@ -1,5 +1,18 @@
 - defaults:
         name: schroot-create
+        properties:
+                - sidebar:
+                        url: https://jenkins.debian.net/userContent/about.html
+                        text: About jenkins.debian.net
+                        icon: /userContent/images/debian-swirl-24x24.png
+                - sidebar:
+                        url: https://jenkins.debian.net/view/schroot-maint/
+                        text: schroot maintainance jobs
+                        icon: /userContent/images/debian-jenkins-24x24.png
+                - sidebar:
+                        url: http://www.profitbricks.com
+                        text: Sponsored by Profitbricks
+                        icon: /userContent/images/profitbricks-24x24.png
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org
@@ -14,6 +27,19 @@
 
 - defaults:
         name: schroot-upgrade
+        properties:
+                - sidebar:
+                        url: https://jenkins.debian.net/userContent/about.html
+                        text: About jenkins.debian.net
+                        icon: /userContent/images/debian-swirl-24x24.png
+                - sidebar:
+                        url: https://jenkins.debian.net/view/schroot-maint/
+                        text: schroot maintainance jobs
+                        icon: /userContent/images/debian-jenkins-24x24.png
+                - sidebar:
+                        url: http://www.profitbricks.com
+                        text: Sponsored by Profitbricks
+                        icon: /userContent/images/profitbricks-24x24.png
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org

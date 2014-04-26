@@ -102,7 +102,7 @@ cleanup_all() {
 	# create video
 	#
 	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > /dev/null
-	rm "snapshot_??????.ppm"
+	rm snapshot_??????.ppm
 	# rename .bak files back to .ppm
 	if find . -name "*.ppm.bak" > /dev/null ; then
 		for i in $(find * -name "*.ppm.bak") ; do

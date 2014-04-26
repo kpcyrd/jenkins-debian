@@ -7,6 +7,7 @@ architectures = """
    mips mipsel
    powerpc powerpcspe ppc64 ppc64el
    s390 s390x
+   sparc sparc64
    x32
    """.split()
 

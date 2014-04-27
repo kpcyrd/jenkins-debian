@@ -27,6 +27,8 @@ fi
 #
 DISPLAY=localhost:$1
 NAME=$2			# it should be possible to derive $NAME from $JOB_NAME
+VG=jenkins01
+LV=/dev/${VG}/$NAME
 DISKSIZE_IN_GB=$3
 URL=$4
 # $5 and $6 are used below for language setting
@@ -81,7 +83,7 @@ cleanup_all() {
 	#
 	sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
 	sleep 0.3s
-	rm $WORKSPACE/$NAME.raw
+	sudo lvremove -f $LV
 	rm $QEMU_LAUNCHER
 	#
 	# cleanup image mount
@@ -120,8 +122,10 @@ show_preseed() {
 
 bootstrap_system() {
 	cd $WORKSPACE
+	echo "Creating throw-away logical volume with ${DISKSIZE_IN_GB} GiB now."
+	sudo lvcreate -L${DISKSIZE_IN_GB}G -n $NAME $VG
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
-	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
+	sudo qemu-img create -f raw $LV ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
@@ -141,7 +145,7 @@ bootstrap_system() {
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables
@@ -238,13 +242,7 @@ boot_system() {
 	echo "Booting system installed with g-i installation test for $NAME."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
-	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
-	echo "Checking $NAME.raw:"
-	FILE=$(file $NAME.raw)
-	if [ $(echo $FILE | grep -E '(x86 boot sector|DOS/MBR boot sector)' | wc -l) -eq 0 ] ; then
-		echo "ERROR: no x86 boot sector found in $NAME.raw - it's filetype is $FILE."
-		exit 1
-	fi
+	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	case $NAME in
 		debian-edu*-server)
 				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
@@ -999,19 +997,19 @@ save_logs() {
 	# FIXME: bugreport guestmount: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	case $NAME in
-		debian-edu_*_workstation)	sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
+		debian-edu_*_workstation)	sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
 						;;
 		debian-edu_*-server|debian-edu_*minimal)
-						sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
-						sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
-						sudo guestmount -a $NAME.raw -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || ( echo "Warning: cannot mount /dev/vg_system/usr" ; figlet "fail" )
+						sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
+						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
+						sudo guestmount -a $LV -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || ( echo "Warning: cannot mount /dev/vg_system/usr" ; figlet "fail" )
 						;;
-		debian-edu_*)			sudo guestmount -a $NAME.raw -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
-						sudo guestmount -a $NAME.raw -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
+		debian-edu_*)			sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
+						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
 						;;
-		debian_wheezy_*)		sudo guestmount -a $NAME.raw -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; figlet "fail" )
+		debian_wheezy_*)		sudo guestmount -a $LV -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; figlet "fail" )
 						;;
-		*)				sudo guestmount -a $NAME.raw -m /dev/debian-vg/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian-vg/root" ; figlet "fail" ) 
+		*)				sudo guestmount -a $LV -m /dev/debian-vg/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian-vg/root" ; figlet "fail" ) 
 						;;
 	esac
 	#
@@ -1030,7 +1028,7 @@ save_logs() {
 	#	unmount /opt
 	#
 	case $NAME in
-		debian-edu_*combi-server)	sudo guestmount -a $NAME.raw -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; figlet "fail" )
+		debian-edu_*combi-server)	sudo guestmount -a $LV -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; figlet "fail" )
 						mkdir -p $RESULTS/log/opt
 						if [ -d $SYSTEM_MNT/opt/ltsp/amd64 ] ; then
 							LTSPARCH="amd64"

@@ -270,7 +270,7 @@ backup_screenshot() {
 
 do_and_report() {
 	vncdo -s $DISPLAY $1 "$2"
-	echo "At $NR sending $1 $2"
+	echo "At $NR (token: $TOKEN) sending $1 $2"
 	backup_screenshot
 }
 
@@ -488,9 +488,7 @@ post_install_boot() {
 				esac
 				;;
 		*gnome)		case $TOKEN in
-					0150)	do_and_report key tab
-						;;
-					0170)	do_and_report key enter
+					0150)	vncdo move 530 420 click 1
 						;;
 					0200)	do_and_report key alt-f2
 						;;

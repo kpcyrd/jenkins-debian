@@ -13,17 +13,20 @@
                         url: http://www.profitbricks.com
                         text: Sponsored by Profitbricks
                         icon: /userContent/images/profitbricks-24x24.png
+        logrotate:
+                daysToKeep: 365
+                numToKeep: 365
+                artifactDaysToKeep: -1
+                artifactNumToKeep: -1
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org
         triggers:
                 - timed: '{my_time}'
-        description: 'schroot "{schroot}" -- creation {do_not_edit}'
-        distro: 'sid'
-        extra-pkgs: ''
+        description: 'Create {my_schroot} schroot.<br>{do_not_edit}'
         block-downstream: yes
         builders:
-                - shell: '/srv/jenkins/bin/schroot-create.sh {schroot} {distro} {extra_pkgs}'
+                - shell: '/srv/jenkins/bin/schroot-create.sh {my_schroot} {my_distro} {my_extra_pkgs}'
 
 - defaults:
         name: schroot-upgrade
@@ -40,27 +43,22 @@
                         url: http://www.profitbricks.com
                         text: Sponsored by Profitbricks
                         icon: /userContent/images/profitbricks-24x24.png
+        logrotate:
+                daysToKeep: 365
+                numToKeep: 365
+                artifactDaysToKeep: -1
+                artifactNumToKeep: -1
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org
         triggers:
                 - timed: '{my_time}'
-        description: 'schroot "{schroot}" -- upgrade {do_not_edit}'
-        distro: 'sid'
-        extra-pkgs: ''
+        description: 'Upgrade {my_schroot} schroot.<br>{do_not_edit}'
         block-downstream: yes
         builders:
-                - shell: 'schroot -u root -c source:jenkins-{schroot} -- apt-get update'
-                - shell: 'schroot -u root -c source:jenkins-{schroot} -- apt-get -y -u dist-upgrade'
-                - shell: 'schroot -u root -c source:jenkins-{schroot} -- apt-get --purge autoremove'
-
-- job-template:
-        defaults: schroot-create
-        name: '{schroot}-haskell-create'
-
-- job-template:
-        defaults: schroot-upgrade
-        name: '{schroot}-haskell-upgrade'
+                - shell: 'schroot -u root -c source:jenkins-{my_schroot} -- apt-get update'
+                - shell: 'schroot -u root -c source:jenkins-{my_schroot} -- apt-get -y -u dist-upgrade'
+                - shell: 'schroot -u root -c source:jenkins-{my_schroot} -- apt-get --purge autoremove'
 
 - job-template:
         defaults: schroot-create
@@ -70,17 +68,32 @@
         defaults: schroot-upgrade
         name: '{schroot}-sid-upgrade'
 
+- job-template:
+        defaults: schroot-create
+        name: '{schroot}-haskell-create'
+
+- job-template:
+        defaults: schroot-upgrade
+        name: '{schroot}-haskell-upgrade'
+
 - project:
         name: schroot
         do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/schroot.yaml">schroot.yaml</a>.'
         jobs:
-                - '{name}-haskell-create':
-                        extra_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
-                        my_time: '0 10 * * 1'
-                - '{name}-haskell-upgrade':
-                        my_time: '0 11 * * *'
-
                 - '{name}-sid-create':
+                        my_schroot: sid
+                        my_distro: sid
+                        my_extra-pkgs: ''
                         my_time: '0 10 * * 2'
                 - '{name}-sid-upgrade':
+                        my_schroot: sid
                         my_time: '0 11 * * *'
+                - '{name}-haskell-create':
+                        my_schroot: haskell
+                        my_distro: sid
+                        my_extra_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
+                        my_time: '0 10 * * 1'
+                - '{name}-haskell-upgrade':
+                        my_schroot: haskell
+                        my_time: '0 11 * * *'
+

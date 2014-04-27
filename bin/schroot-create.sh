@@ -57,7 +57,7 @@ bootstrap() {
 
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
-		echo sudo rm -rf --one-file-system $CHROOT_TARGET || echo fuser -mv $CHROOT_TARGET
+		sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 	fi
 }
 trap cleanup INT TERM EXIT

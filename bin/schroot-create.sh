@@ -93,8 +93,12 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	union-type=aufs
 	__END__
 
+cd /tmp
+
 schroot -c "source:jenkins-$TARGET" -u root -- apt-get update
 if [ -n "$1" ]
 then
 	schroot -c "source:jenkins-$TARGET" -u root -- apt-get install -y --no-install-recommends "$@"
 fi
+
+cd $CURDIR

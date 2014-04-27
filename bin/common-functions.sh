@@ -25,7 +25,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	#  anytime...)
 	echo "Start running \"$0\" as \"$TTT\" with arguments \"$@\""
 	$TTT "$@"
-	# auto cleanup on trap
+	exit $?
+	# cleanup is done automatically via trap
 else
 	# default settings used for the jenkins.debian.net environment
 	if [ -z "$LC_ALL" ]; then
@@ -55,7 +56,6 @@ else
 	export
 	set -e
 	set -x
-
 fi
 }
 

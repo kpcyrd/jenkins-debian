@@ -40,8 +40,6 @@ if [ -z "$CHROOT_TARGET" ]; then
 	exit 1
 fi
 
-export CURDIR=$(pwd)
-
 bootstrap() {
 	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
@@ -93,12 +91,8 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	union-type=aufs
 	__END__
 
-cd /tmp
-
-schroot -c "source:jenkins-$TARGET" -u root -- apt-get update
+schroot --directory /root -c "source:jenkins-$TARGET" -u root -- apt-get update
 if [ -n "$1" ]
 then
-	schroot -c "source:jenkins-$TARGET" -u root -- apt-get install -y --no-install-recommends "$@"
+	schroot --directory /root -c "source:jenkins-$TARGET" -u root -- apt-get install -y --no-install-recommends "$@"
 fi
-
-cd $CURDIR

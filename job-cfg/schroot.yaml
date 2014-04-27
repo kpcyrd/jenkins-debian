@@ -56,9 +56,9 @@
         description: 'Upgrade {my_schroot} schroot.<br>{do_not_edit}'
         block-downstream: yes
         builders:
-                - shell: 'schroot -u root -c source:jenkins-{my_schroot} -- apt-get update'
-                - shell: 'schroot -u root -c source:jenkins-{my_schroot} -- apt-get -y -u dist-upgrade'
-                - shell: 'schroot -u root -c source:jenkins-{my_schroot} -- apt-get --purge autoremove'
+                - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get update'
+                - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get -y -u dist-upgrade'
+                - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get --purge autoremove'
 
 - job-template:
         defaults: schroot-create

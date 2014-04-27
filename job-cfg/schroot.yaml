@@ -84,16 +84,16 @@
                         my_schroot: sid
                         my_distro: sid
                         my_extra_pkgs: ''
-                        my_time: '0 10 * * 2'
+                        my_time: '0 10 * * 1'
                 - '{name}-sid-upgrade':
                         my_schroot: sid
-                        my_time: '0 11 * * *'
+                        my_time: '0 14 * * *'
                 - '{name}-haskell-create':
                         my_schroot: haskell
                         my_distro: sid
                         my_extra_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
-                        my_time: '0 10 * * 1'
+                        my_time: '0 12 * * 1'
                 - '{name}-haskell-upgrade':
                         my_schroot: haskell
-                        my_time: '0 11 * * *'
+                        my_time: '0 16 * * *'
 

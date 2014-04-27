@@ -138,7 +138,7 @@ mkdir workspace ; cd workspace # test-script should check if they are in a direc
 /srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
 
 ----
-See the *fourth line* on *any* log to find out how to debug any job. Point this out at the end of any log.
+FIXME: explain how to how to debug any job. Point this out at the end of any log.
 
 
 TODO: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.

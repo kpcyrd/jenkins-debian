@@ -4,7 +4,7 @@
 # released under the GPLv=2
 
 common_cleanup(){
-	echo "Cleaned up $TTT, finished running $0"
+	echo "$(date) - $0 stopped running as $TTT, which will now be removed."
 	rm -f $TTT
 }
 
@@ -23,7 +23,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	# (Running shell scripts fail weirdly when overwritten when running,
 	#  this hack makes it possible to overwrite long running scripts
 	#  anytime...)
-	echo "Start running \"$0\" as \"$TTT\" with arguments \"$@\""
+	echo "$(date) - start running \"$0\" as \"$TTT\" using \"$@\" as arguments."
 	$TTT "$@"
 	exit $?
 	# cleanup is done automatically via trap

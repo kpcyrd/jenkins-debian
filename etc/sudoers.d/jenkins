@@ -2,6 +2,7 @@ jenkins ALL=  \
 	NOPASSWD: /usr/sbin/debootstrap *, \
 	/usr/bin/tee /chroots/*, \
 	/usr/bin/tee -a /chroots/*, \
+	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \
 	/bin/chmod +x /chroots/*, \
 	/usr/sbin/chroot /chroots/*, \
 	/usr/sbin/chroot /media/*, \

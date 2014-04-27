@@ -123,8 +123,9 @@ bootstrap_system() {
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
-	VIDEOBITRATE=700
-	VIDEOSIZE=800x600
+	VIDEOBITRATE=1200
+	VIDEOSIZE=1024x768
+	CONVERTOPTS="-gravity center -background gray10 -extent $VIDEOSIZE"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
@@ -132,9 +133,6 @@ bootstrap_system() {
 			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -cpu host"
 					QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
-					VIDEOBITRATE=1200
-					VIDEOSIZE=1024x768
-					CONVERTOPTS="-gravity center -background gray10 -extent $VIDEOSIZE"
 					;;
 			*)		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
 					;;

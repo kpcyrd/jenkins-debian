@@ -83,7 +83,7 @@
                 - '{name}-sid-create':
                         my_schroot: sid
                         my_distro: sid
-                        my_extra-pkgs: ''
+                        my_extra_pkgs: ''
                         my_time: '0 10 * * 2'
                 - '{name}-sid-upgrade':
                         my_schroot: sid

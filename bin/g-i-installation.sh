@@ -488,7 +488,7 @@ post_install_boot() {
 				esac
 				;;
 		*gnome)		case $TOKEN in
-					0150)	vncdo move 530 420 click 1
+					0150)	do_and_report move "530 420 click 1"
 						;;
 					0200)	do_and_report key alt-f2
 						;;

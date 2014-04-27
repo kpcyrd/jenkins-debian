@@ -62,19 +62,19 @@
 
 - job-template:
         defaults: schroot-create
-        name: '{schroot}-sid-create'
+        name: '{name}-sid-create'
 
 - job-template:
         defaults: schroot-upgrade
-        name: '{schroot}-sid-upgrade'
+        name: '{name}-sid-upgrade'
 
 - job-template:
         defaults: schroot-create
-        name: '{schroot}-haskell-create'
+        name: '{name}-haskell-create'
 
 - job-template:
         defaults: schroot-upgrade
-        name: '{schroot}-haskell-upgrade'
+        name: '{name}-haskell-upgrade'
 
 - project:
         name: schroot

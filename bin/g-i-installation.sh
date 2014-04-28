@@ -327,7 +327,7 @@ post_install_boot() {
 	# actions depending on the type of installation
 	#
 	case $NAME in
-		*xfce)		case $TOKEN in
+		debian_*xfce)		case $TOKEN in
 					0200)	do_and_report key enter
 						;;
 					0210)	do_and_report key alt-f2
@@ -377,7 +377,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		*lxde)		case $TOKEN in
+		debian_*lxde)		case $TOKEN in
 					0200)	do_and_report key alt-f2
 						;;
 					0210)	do_and_report type "iceweasel"
@@ -432,7 +432,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		*kde)		case $TOKEN in
+		debian_*kde)		case $TOKEN in
 					0300)	do_and_report key tab
 						;;
 					0310)	do_and_report key enter
@@ -484,7 +484,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		*gnome)		case $TOKEN in
+		debian_*gnome)		case $TOKEN in
 					0150)	do_and_report move 530 420 click 1
 						;;
 					0200)	do_and_report key alt-f2

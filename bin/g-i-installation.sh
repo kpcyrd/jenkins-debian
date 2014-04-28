@@ -819,6 +819,7 @@ monitor_system() {
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
 			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
+			CDROM_PROBLEM=$(grep "There was a problem reading data from the CD-ROM" $GOCR || true)
 			rm $GOCR $GOCR.ppm
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
@@ -828,6 +829,9 @@ monitor_system() {
 				break
 			elif [ ! -z "$INVALID_SIG_LINE" ] ; then
 				echo "ERROR: Invalid Release signature found, aborting."
+				exit 1
+			elif [ ! -z "$CDROM_PROBLEM" ] ; then
+				echo "ERROR: Loading installer components from CDROM failed, aborting."
 				exit 1
 			fi
 		fi

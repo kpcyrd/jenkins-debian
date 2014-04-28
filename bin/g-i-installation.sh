@@ -124,7 +124,7 @@ bootstrap_system() {
 	qemu-img create -f raw $NAME.raw ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
+	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
 	VIDEOBITRATE=1200
 	VIDEOSIZE=1024x768	# don't change this (or adjust what needs to be shaved when ocr'ing later)
 	CONVERTOPTS="-gravity center -background gray10 -extent $VIDEOSIZE"
@@ -132,8 +132,7 @@ bootstrap_system() {
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
 			*_kfreebsd)	;;
-			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -cpu host"
-					QEMU_OPTS="$QEMU_OPTS -vga std"
+			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
 					;;
 			*)		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
@@ -238,7 +237,7 @@ boot_system() {
 	cd $WORKSPACE
 	echo "Booting system installed with g-i installation test for $NAME."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
+	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
 	QEMU_OPTS="$QEMU_OPTS -drive file=$NAME.raw,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	echo "Checking $NAME.raw:"
 	FILE=$(file $NAME.raw)
@@ -249,8 +248,6 @@ boot_system() {
 	case $NAME in
 		debian-edu*-server)
 				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
-				;;
-		*_hurd*)	QEMU_OPTS="$QEMU_OPTS -cpu host"
 				;;
 		*)		;;
 	esac
@@ -1031,8 +1028,6 @@ bootstrap_system
 set +x
 case $NAME in
 	*_rescue*) 	monitor_system rescue
-			;;
-	*_hurd*) 	monitor_system install wait4match 3000
 			;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
 			;;

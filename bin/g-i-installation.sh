@@ -124,7 +124,7 @@ bootstrap_system() {
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm"
 	VIDEOBITRATE=1200
-	VIDEOSIZE=1024x768
+	VIDEOSIZE=1024x768	# don't change this (or adjust what needs to be shaved when ocr'ing later)
 	CONVERTOPTS="-gravity center -background gray10 -extent $VIDEOSIZE"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
@@ -812,11 +812,14 @@ monitor_system() {
 			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
 			GOCR=$(mktemp)
-			gocr snapshot_${PRINTF_NR}.ppm > $GOCR
+			# shave 112 pixels on the sides and 84 on top+bottom
+			# so that 1024x768 becomes 800x600
+			convert -shave 112x84 ${PRINTF_NR}.ppm $GOCR.ppm
+			gocr $GOCR.ppm > $GOCR
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
 			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
-			rm $GOCR
+			rm $GOCR $GOCR.ppm
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
 				break

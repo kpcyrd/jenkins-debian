@@ -774,7 +774,7 @@ monitor_system() {
 		TIMEOUT=$3
 	fi
 	cd $RESULTS
-	sleep 4	# chosen by fair dice roll
+	sleep 8	# chosen by fair dice roll
 	hourlimit=16 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo

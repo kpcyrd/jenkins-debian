@@ -46,7 +46,8 @@ rm -rf results
 mkdir -p results
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
-QEMU_SERIAL_OUT=${WORKSPACE}/serial-out.log
+mkdir -p $RESULTS/log
+QEMU_SERIAL_OUT=${RESULTS}/log/serial-out.log
 
 #
 # language
@@ -107,6 +108,7 @@ cleanup_all() {
 			rm $i
 		done
 	fi
+
 }
 
 show_preseed() {
@@ -938,9 +940,7 @@ save_logs() {
 	# copy logs (and continue if some logs cannot be copied)
 	#
 	set +e
-	mkdir -p $RESULTS/log
 	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/
-	mv $QEMU_SERIAL_OUT $RESULTS/log/
 	#
 	# get list of installed packages
 	#

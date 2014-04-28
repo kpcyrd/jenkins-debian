@@ -856,9 +856,14 @@ monitor_system() {
 				if [ $PIXEL -lt 400 ] ; then
 					# unless TRIGGER_MODE is empty, matching images means its over
 					if [ ! -z "$TRIGGER_MODE" ] ; then
-						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match, ending installation."
+						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match or almost match, ending installation."
 						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
-						figlet "Mode $MODE hangs."
+						if [ "$MODE" = "install" ] ; then
+							echo "System in $MODE mode is hanging, let's end this."
+							# hanging install = broken install
+							exit 1
+						fi
+						echo "System in $MODE mode is hanging, moving on."
 						break
 					else
 						# this is only reached once in rescue mode

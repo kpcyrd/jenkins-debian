@@ -323,6 +323,10 @@ post_install_boot() {
 		# debian-edu installations differ too much, login individually
 		*)	;;
 	esac
+	# Debian Edu -test images usually show a screen with known problems
+	# search for EDUTESTMODE in the code to understand how the next 2 lines are used
+	EDUTESTMODE=false
+	[[ "$NAME" =~ ^debian-edu_.*-test.*$ ]] && EDUTESTMODE=true
 	#
 	# actions depending on the type of installation
 	#
@@ -540,9 +544,9 @@ post_install_boot() {
 				;;
 		debian-edu*minimal)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0030)	do_and_report key tab
+						0030)	$EDUTESTMODE && do_and_report key tab
 							;;
-						0040)	do_and_report key enter
+						0040)	$EDUTESTMODE && do_and_report key enter
 							;;
 						0050)	do_and_report type root
 							;;
@@ -581,9 +585,9 @@ post_install_boot() {
 					;;
 		debian-edu*-server)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0500)	do_and_report key enter		# dummy keypress
+						0500)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
 							;;
-						0900)	do_and_report key enter		# dummy keypress
+						0900)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
 							;;
 						1100)	do_and_report key tab
 							;;
@@ -680,7 +684,7 @@ post_install_boot() {
 					;;
 		debian-edu*workstation)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0100)	do_and_report key enter
+					0100)	$EDUTESTMODE && do_and_report key enter
 						;;
 					0110)	do_and_report type jenkins
 						;;
@@ -695,7 +699,7 @@ post_install_boot() {
 				;;
 		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0100)	do_and_report key enter
+					0100)	$EDUTESTMODE && do_and_report key enter
 						;;
 					0110)	do_and_report type jenkins
 						;;

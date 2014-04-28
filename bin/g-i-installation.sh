@@ -267,12 +267,8 @@ backup_screenshot() {
 }
 
 do_and_report() {
-	echo "At $NR (token: $TOKEN) sending $1 $@"
-	if [ "$1" != "move" ] ; then
-		vncdo -s $DISPLAY $1 "$2"
-	else
-		vncdo -s $DISPLAY $1 $@
-	fi
+	echo "At $NR (token: $TOKEN) sending $@"
+	vncdo -s $DISPLAY $@
 	backup_screenshot
 }
 

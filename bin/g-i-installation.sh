@@ -816,7 +816,7 @@ monitor_system() {
 			GOCR=$(mktemp)
 			# shave 112 pixels on the sides and 84 on top+bottom
 			# so that 1024x768 becomes 800x600
-			convert -shave 112x84 ${PRINTF_NR}.ppm $GOCR.ppm
+			convert -shave 112x84 snapshot_${PRINTF_NR}.ppm $GOCR.ppm
 			gocr $GOCR.ppm > $GOCR
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)

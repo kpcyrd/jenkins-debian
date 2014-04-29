@@ -543,16 +543,16 @@ post_install_boot() {
 				esac
 				;;
 		debian-edu*minimal)	case $TOKEN in
-						# debian-edu*minimal installations result in text mode, thus needing an extra tab
+						# debian-edu installations report error found during installation, go forward
 						0030)	$EDUTESTMODE && do_and_report key tab
 							;;
 						0040)	$EDUTESTMODE && do_and_report key enter
 							;;
-						0050)	do_and_report type root
+						0050)	do_and_report type jenkins
 							;;
 						0060)	do_and_report key enter
 							;;
-						0070)	do_and_report type r00tme
+						0070)	do_and_report type insecure
 							;;
 						0080)	do_and_report key enter
 							;;
@@ -576,108 +576,177 @@ post_install_boot() {
 							;;
 						0200)	do_and_report key enter
 							;;
-						0300)	do_and_report type poweroff
+						0220)	do_and_report type "su"
 							;;
-						0400)	do_and_report key enter
+						0230)	do_and_report key enter
+							;;
+						0240)	do_and_report type r00tme
+							;;
+						0250)	do_and_report key enter
+							;;
+						0260)	do_and_report type poweroff
+							;;
+						0270)	do_and_report key enter
 							;;
 						*)	;;
 					esac
 					;;
-		debian-edu*-server)	case $TOKEN in
-						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0500)	$EDUTESTMODE && do_and_report key tab		# dummy keypress
+		debian-edu*-main-server)	case $TOKEN in
+						# debian-edu installations report error found during installation, go forward
+						0500)	$EDUTESTMODE && do_and_report key tab
 							;;
-						0900)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
+						0550)	$EDUTESTMODE && do_and_report key enter
 							;;
-						1100)	$EDUTESTMODE && do_and_report key tab
+						0770)	do_and_report type root
 							;;
-						1150)	$EDUTESTMODE && do_and_report key enter
+						0780)	do_and_report key enter
 							;;
-						1170)	do_and_report type root
+						0790)	do_and_report type r00tme
 							;;
-						1180)	do_and_report key enter
+						0800)	do_and_report key enter
 							;;
-						1190)	do_and_report type r00tme
+						0850)	do_and_report type ps
 							;;
-						1200)	do_and_report key enter
+						0860)	do_and_report key space
 							;;
-						1250)	do_and_report type ps
+						0870)	do_and_report type fax
 							;;
-						1260)	do_and_report key space
+						0880)	do_and_report key enter
 							;;
-						1270)	do_and_report type fax
+						0890)	do_and_report type df
 							;;
-						1280)	do_and_report key enter
+						0900)	do_and_report key enter
 							;;
-						1290)	do_and_report type df
+						0910)	do_and_report type apt-get 	# apt-get moo
 							;;
-						1300)	do_and_report key enter
+						0920)	do_and_report key space
 							;;
-						1310)	do_and_report type apt-get 	# apt-get moo
+						0930)	do_and_report type moo
 							;;
-						1320)	do_and_report key space
+						0940)	do_and_report key enter
 							;;
-						1330)	do_and_report type moo
+						0950)	do_and_report type apt-get 	# apt-get install w3m
 							;;
-						1340)	do_and_report key enter
+						0960)	do_and_report key space
 							;;
-						1350)	do_and_report type apt-get 	# apt-get install w3m
+						0970)	do_and_report type "-y"
+							;;
+						0980)	do_and_report key space
+							;;
+						0990)	do_and_report type install
+							;;
+						1000)	do_and_report key space
+							;;
+						1010)	do_and_report type w3m
+							;;
+						1020)	do_and_report key enter
+							;;
+						1100)	do_and_report type w3m 		# check nagios
+							;;
+						1110)	do_and_report key space
+							;;
+						1120)	do_and_report type https
+							;;
+						1125)	do_and_report key ":"
+							;;
+						1130)	do_and_report type "//www"
+							;;
+						1140)	do_and_report type "/nagios"
+							;;
+						1150)	do_and_report key enter
+							;;
+						1200)	do_and_report type q
+							;;
+						1220)	do_and_report key enter
+							;;
+						1350)	do_and_report type w3m		# check cups
 							;;
 						1360)	do_and_report key space
 							;;
-						1370)	do_and_report type "-y"
+						1370)	do_and_report type https
 							;;
-						1380)	do_and_report key space
+						1375)	do_and_report key ":"
 							;;
-						1390)	do_and_report type install
+						1380)	do_and_report type "//www"
 							;;
-						1400)	do_and_report key space
+						1385)	do_and_report key ":"
 							;;
-						1410)	do_and_report type w3m
+						1390)	do_and_report type "631"
 							;;
-						1420)	do_and_report key enter
+						1400)	do_and_report key enter
 							;;
-						1500)	do_and_report type w3m 		# check nagios
+						1500)	do_and_report type q
 							;;
-						1510)	do_and_report key space
+						1520)	do_and_report key enter
 							;;
-						1520)	do_and_report type https
+						1600)	do_and_report type poweroff	# poweroff
 							;;
-						1525)	do_and_report key ":"
+						1610)	do_and_report key enter
 							;;
-						1530)	do_and_report type "//www"
+						*)	;;
+					esac
+					;;
+		debian-edu*-combi-server)	case $TOKEN in
+						# debian-edu installations report error found during installation, go forward
+						0500)	$EDUTESTMODE && do_and_report key tab		# dummy keypress
 							;;
-						1540)	do_and_report type "/nagios"
+						0550)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
 							;;
-						1550)	do_and_report key enter
+						0770)	do_and_report type jenkins
 							;;
-						1600)	do_and_report type q
+						0820)	do_and_report key enter
 							;;
-						1620)	do_and_report key enter
+						0830)	do_and_report type insecure
 							;;
-						1750)	do_and_report type w3m		# check cups
+						0840)	do_and_report key enter
 							;;
-						1760)	do_and_report key space
+						0900)	do_and_report key tab
 							;;
-						1770)	do_and_report type https
+						0910)	do_and_report key enter
 							;;
-						1775)	do_and_report key ":"
+						1000)	do_and_report key alt-f2
 							;;
-						1780)	do_and_report type "//www"
+						1010)	do_and_report type "iceweasel"
 							;;
-						1785)	do_and_report key ":"
+						1020)	do_and_report key space
 							;;
-						1790)	do_and_report type "631"
+						1030)	do_and_report type "www"
 							;;
-						1800)	do_and_report key enter
+						1040)	do_and_report type "."
 							;;
-						1900)	do_and_report type q
+						1050)	do_and_report type "debian"
 							;;
-						1920)	do_and_report key enter
+						1060)	do_and_report type "."
 							;;
-						2000)	do_and_report type poweroff	# poweroff
+						1070)	do_and_report type "org"
 							;;
-						2010)	do_and_report key enter
+						1080)	do_and_report key enter
+							;;
+						1200)	do_and_report key alt-f2
+							;;
+						1210)	do_and_report type $GUITERMINAL
+							;;
+						1220)	do_and_report key enter
+							;;
+						1300)	do_and_report type apt-get
+							;;
+						1310)	do_and_report key space
+							;;
+						1320)	do_and_report type moo
+							;;
+						1330)	do_and_report key enter
+							;;
+						1340)	do_and_report type "su"
+							;;
+						1350)	do_and_report key enter
+							;;
+						1360)	do_and_report type r00tme
+							;;
+						1370)	do_and_report key enter
+							;;
+						1380)	do_and_report type "poweroff"
+							;;
+						1390)	do_and_report key enter
 							;;
 						*)	;;
 					esac

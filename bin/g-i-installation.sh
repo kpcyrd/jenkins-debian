@@ -829,7 +829,7 @@ monitor_system() {
 			BUILD_LTSP_PROBLEM=$(grep "The failing step is: Build LTSP chroot" $GOCR || true)
 			rm $GOCR $GOCR.ppm
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
-				echo "QEMU was powered down, continuing."
+				echo "QEMU was powered down."
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
 				echo "INFO: got a stack-trace, probably on power-down."
@@ -864,12 +864,11 @@ monitor_system() {
 					if [ ! -z "$TRIGGER_MODE" ] ; then
 						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match or almost match, ending installation."
 						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
+						echo "System in $MODE mode is hanging."
 						if [ "$MODE" = "install" ] ; then
-							echo "System in $MODE mode is hanging, let's end this."
 							# hanging install = broken install
 							exit 1
 						fi
-						echo "System in $MODE mode is hanging, moving on."
 						break
 					else
 						# this is only reached once in rescue mode

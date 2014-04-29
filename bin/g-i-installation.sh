@@ -826,6 +826,7 @@ monitor_system() {
 			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
 			CDROM_PROBLEM=$(grep "There was a problem reading data from the CD-ROM" $GOCR || true)
 			SOFTWARE_PROBLEM=$(grep "The failing step is: Select and install software" $GOCR || true)
+			BUILD_LTSP_PROBLEM=$(grep "The failing step is: Build LTSP chroot" $GOCR || true)
 			rm $GOCR $GOCR.ppm
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
 				echo "QEMU was powered down, continuing."
@@ -841,6 +842,9 @@ monitor_system() {
 				exit 1
 			elif [ ! -z "$SOFTWARE_PROBLEM" ] ; then
 				echo "ERROR: The failing step is: Select and install software."
+				exit 1
+			elif [ ! -z "$BUILD_LTSP_PROBLEM" ] ; then
+				echo "ERROR: The failing step is: Build LTSP chroot."
 				exit 1
 			fi
 		fi

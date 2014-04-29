@@ -12,7 +12,7 @@ common_init() {
 # check whether this script has been started from /tmp already
 if [ "${0:0:5}" != "/tmp/" ] ; then
 	# mktemp some place for us...
-	TTT=$(mktemp --tmpdir=/tmp)
+	TTT=$(mktemp --tmpdir=/tmp jenkins-script-XXXXXXXX)
 	# prepare cleanup
 	trap common_cleanup INT TERM EXIT
 	# cp $0 to /tmp and run it from there

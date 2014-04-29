@@ -585,13 +585,13 @@ post_install_boot() {
 					;;
 		debian-edu*-server)	case $TOKEN in
 						# debian-edu*minimal installations result in text mode, thus needing an extra tab
-						0500)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
+						0500)	$EDUTESTMODE && do_and_report key tab		# dummy keypress
 							;;
 						0900)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
 							;;
-						1100)	do_and_report key tab
+						1100)	$EDUTESTMODE && do_and_report key tab
 							;;
-						1150)	do_and_report key enter
+						1150)	$EDUTESTMODE && do_and_report key enter
 							;;
 						1170)	do_and_report type root
 							;;
@@ -684,6 +684,8 @@ post_install_boot() {
 					;;
 		debian-edu*workstation)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
+					0090)	$EDUTESTMODE && do_and_report key tab
+						;;
 					0100)	$EDUTESTMODE && do_and_report key enter
 						;;
 					0110)	do_and_report type jenkins
@@ -699,6 +701,8 @@ post_install_boot() {
 				;;
 		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
+					0090)	$EDUTESTMODE && do_and_report key tab
+						;;
 					0100)	$EDUTESTMODE && do_and_report key enter
 						;;
 					0110)	do_and_report type jenkins

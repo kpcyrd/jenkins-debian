@@ -777,7 +777,7 @@ monitor_system() {
 		TIMEOUT=$3
 	fi
 	cd $RESULTS
-	sleep 8	# chosen by fair dice roll
+	sleep 4	# chosen by fair dice roll
 	hourlimit=16 # hours
 	echo "Taking screenshots every 2 seconds now, until qemu ends for whatever reasons or $hourlimit hours have passed or if the test seems to hang."
 	echo
@@ -797,10 +797,8 @@ monitor_system() {
 			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
 			rm snapshot_${PRINTF_NR}.jpg
 		else
-			echo "could not take vncsnapshot from $DISPLAY, lets try again..."
-			let NR=NR-1
-			PRINTF_NR=$(printf "%06d" $NR)
-			echo "$PRINTF_NR: $(date)"
+			echo "$PRINTF_NR: $(date) - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
+			convert -size $VIDEOSIZE xc:none snapshot_${PRINTF_NR}.ppm
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then

@@ -47,11 +47,11 @@
     jobs:
         - '{name}_sid':
             my_distro: 'sid'
-            my_shell: 'debian/rules check'
+            my_shell: 'make check'
             my_description: 'piuparts testsuite running on sid.'
             my_trigger: 'piuparts_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'
-            my_shell: 'debian/rules check'
+            my_shell: 'make check'
             my_description: 'piuparts testsuite running on jessie.'
 

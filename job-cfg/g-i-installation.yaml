@@ -350,7 +350,7 @@
 #         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze_minimal':
          my_title: 'Debian Edu (squeeze) minimal'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 7 debian-edu_squeeze_minimal 20 http://ftp.skolelinux.org/cd-squeeze-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 7 debian-edu_squeeze_minimal 20 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-6.0.7+r1-CD.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze) minimal profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 4 15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'

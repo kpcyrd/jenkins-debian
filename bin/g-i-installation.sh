@@ -543,7 +543,7 @@ post_install_boot() {
 				esac
 				;;
 		debian-edu*minimal)	case $TOKEN in
-						# debian-edu installations report error found during installation, go forward
+						# debian-edu installations report error found during installation, go forward in text mode
 						0030)	$EDUTESTMODE && do_and_report key tab
 							;;
 						0040)	$EDUTESTMODE && do_and_report key enter
@@ -592,7 +592,7 @@ post_install_boot() {
 					esac
 					;;
 		debian-edu*-main-server)	case $TOKEN in
-						# debian-edu installations report error found during installation, go forward
+						# debian-edu installations report error found during installation, go forward, in text mode
 						0500)	$EDUTESTMODE && do_and_report key tab
 							;;
 						0550)	$EDUTESTMODE && do_and_report key enter
@@ -688,9 +688,7 @@ post_install_boot() {
 					;;
 		debian-edu*-combi-server)	case $TOKEN in
 						# debian-edu installations report error found during installation, go forward
-						0500)	$EDUTESTMODE && do_and_report key tab		# dummy keypress
-							;;
-						0550)	$EDUTESTMODE && do_and_report key enter		# dummy keypress
+						0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
 							;;
 						0770)	do_and_report type jenkins
 							;;
@@ -753,9 +751,7 @@ post_install_boot() {
 					;;
 		debian-edu*workstation)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0090)	$EDUTESTMODE && do_and_report key tab
-						;;
-					0100)	$EDUTESTMODE && do_and_report key enter
+					0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
 						;;
 					0110)	do_and_report type jenkins
 						;;
@@ -770,9 +766,7 @@ post_install_boot() {
 				;;
 		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0090)	$EDUTESTMODE && do_and_report key tab
-						;;
-					0100)	$EDUTESTMODE && do_and_report key enter
+					0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
 						;;
 					0110)	do_and_report type jenkins
 						;;

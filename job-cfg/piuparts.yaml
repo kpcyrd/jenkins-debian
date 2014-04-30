@@ -39,7 +39,7 @@
       - pollscm: '*/6 * * * *'
     publishers:
       - trigger:
-          project: '{name}_jessie'
+          project: '{my_trigger}'
 
 - project:
     name: piuparts
@@ -48,6 +48,7 @@
             my_distro: 'sid'
             my_shell: 'debian/rules check'
             my_description: 'piuparts testsuite running on sid.'
+            my_trigger: '{name}_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'
             my_shell: 'debian/rules check'

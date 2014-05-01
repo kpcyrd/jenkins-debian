@@ -918,7 +918,7 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one $TIMEOUT screenshots ago
 			# 400 pixels difference between to images is tolerated, to ignore updating clocks
-			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null || true )
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || true )
 			# usually this returns an integer, but not always....
 			if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
 				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"

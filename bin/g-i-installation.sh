@@ -548,11 +548,11 @@ post_install_boot() {
 							;;
 						0040)	$EDUTESTMODE && do_and_report key enter
 							;;
-						0050)	do_and_report type jenkins
+						0050)	do_and_report type root
 							;;
 						0060)	do_and_report key enter
 							;;
-						0070)	do_and_report type insecure
+						0070)	do_and_report type r00tme
 							;;
 						0080)	do_and_report key enter
 							;;

@@ -63,7 +63,7 @@ print("""
       - shell: '/srv/jenkins/bin/chroot-run.sh sid ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:
       - email:
-          recipients: 'jenkins+debian-bootstrap helmutg@debian.org holger@layer-acht.org'
+          recipients: 'jenkins+debian-bootstrap helmutg@debian.org'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
           unstable-on-warning: 'false'

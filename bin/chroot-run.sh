@@ -11,7 +11,7 @@ common_init "$@"
 # $2 $3 ... = command to run inside a clean chroot running the distro in $1
 
 if [ $# -lt 2 ]; then
-	echo "usage: $0 DISTRO [backports] CMD [ARG1 ARG2 ...]"
+	echo "usage: $0 DISTRO [backports|minimal] CMD [ARG1 ARG2 ...]"
 	exit 1
 fi
 
@@ -21,6 +21,11 @@ shift
 if [ "$1" == "backports" ] ; then
 	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
 	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
+	shift
+fi
+
+if [ "$1" == "minimal" ] ; then
+	MINIMAL=yes
 	shift
 fi
 
@@ -79,6 +84,9 @@ run() {
 	cat > $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 $SCRIPT_HEADER
 cd /tmp/testrun
+EOF
+	if [ "$MINIMAL" != "yes" ]; then
+		cat >> $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
 apt-get install build-essential devscripts git
 if [ -f debian/control ] ; then
@@ -86,8 +94,9 @@ if [ -f debian/control ] ; then
 	# install build-depends
 	mk-build-deps -ir
 fi
-$@
 EOF
+	fi
+	echo "$*" >> $CHROOT_TARGET/tmp/chroot-testrun
 	chmod +x $CHROOT_TARGET/tmp/chroot-testrun
 	sudo chroot $CHROOT_TARGET /tmp/chroot-testrun
 

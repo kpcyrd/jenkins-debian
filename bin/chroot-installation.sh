@@ -117,16 +117,16 @@ trap cleanup_all INT TERM EXIT
 
 case $1 in
 	squeeze)	DISTRO="squeeze"
-			SPECIFIC="openoffice.org virtualbox-ose mplayer"
+			SPECIFIC="openoffice.org virtualbox-ose mplayer chromium"
 			;;
 	wheezy)		DISTRO="wheezy"
-			SPECIFIC="libreoffice virtualbox mplayer"
+			SPECIFIC="libreoffice virtualbox mplayer chromium"
 			;;
 	jessie)		DISTRO="jessie"
-			SPECIFIC="libreoffice virt-manager mplayer2"
+			SPECIFIC="libreoffice virt-manager mplayer2 chromium-browser"
 			;;
 	sid)		DISTRO="sid"
-			SPECIFIC="libreoffice virt-manager mplayer2"
+			SPECIFIC="libreoffice virt-manager mplayer2 chromium-browser"
 			;;
 	*)		echo "unsupported distro."
 			exit 1
@@ -135,7 +135,7 @@ esac
 bootstrap $DISTRO
 
 if [ "$2" != "" ] ; then
-	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs"
+	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs"
 	case $2 in
 		none)		;;
 		gnome)		install_packages gnome gnome desktop-base

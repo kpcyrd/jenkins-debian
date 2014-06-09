@@ -51,7 +51,7 @@ print("""
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 365
-      numToKeep: 365
+      numToKeep: 20
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     scm:

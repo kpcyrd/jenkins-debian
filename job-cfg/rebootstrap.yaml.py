@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 architectures = """
-   arm arm64 armel armhf
    i386
    hppa
    mips mipsel
@@ -12,6 +11,7 @@ architectures = """
    """.split()
 
 mono_architectures = """
+    arm armel armhf arm64
     alpha
     ia64
     m68k

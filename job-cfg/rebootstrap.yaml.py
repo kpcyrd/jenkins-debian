@@ -42,8 +42,8 @@ print("""
       - priority:
           job-prio: '150'
       - throttle:
-          max-total: 2
-          max-per-node: 2
+          max-total: 5
+          max-per-node: 5
           enabled: True
           option: category
           categories:

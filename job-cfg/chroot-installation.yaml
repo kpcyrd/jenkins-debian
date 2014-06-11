@@ -32,8 +32,8 @@
       - priority:
           job-prio: '130'
       - throttle:
-          max-total: 4
-          max-per-node: 4
+          max-total: 6
+          max-per-node: 6
           enabled: True
           option: category
           categories:
@@ -74,8 +74,8 @@
       - priority:
           job-prio: '131'
       - throttle:
-          max-total: 4
-          max-per-node: 4
+          max-total: 6
+          max-per-node: 6
           enabled: True
           option: category
           categories:
@@ -119,8 +119,8 @@
       - priority:
           job-prio: '135'
       - throttle:
-          max-total: 4
-          max-per-node: 4
+          max-total: 6
+          max-per-node: 6
           enabled: True
           option: category
           categories:

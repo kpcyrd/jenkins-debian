@@ -20,7 +20,7 @@ mono_architectures = """
 
 architectures += mono_architectures
 
-gcc_versions = """4.8 4.9""".split()
+gcc_versions = """4.9""".split()
 
 print("""
 - defaults:

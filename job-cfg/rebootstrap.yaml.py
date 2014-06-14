@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 architectures = """
-   arm arm64 armel armhf
    i386
    hppa
    mips mipsel
@@ -12,6 +11,7 @@ architectures = """
    """.split()
 
 mono_architectures = """
+    arm armel armhf arm64
     alpha
     ia64
     m68k
@@ -20,7 +20,7 @@ mono_architectures = """
 
 architectures += mono_architectures
 
-gcc_versions = """4.8 4.9""".split()
+gcc_versions = """4.9""".split()
 
 print("""
 - defaults:
@@ -51,7 +51,7 @@ print("""
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 365
-      numToKeep: 365
+      numToKeep: 20
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     scm:

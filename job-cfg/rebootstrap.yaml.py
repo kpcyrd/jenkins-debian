@@ -61,7 +61,7 @@ print("""
           branches:
             - '{my_branchname}'
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh sid ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
+      - shell: '/srv/jenkins/bin/chroot-run-rebootstrap.sh sid ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:
       - email:
           recipients: 'jenkins+debian-bootstrap helmutg@debian.org'

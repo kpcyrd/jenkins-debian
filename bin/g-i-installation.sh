@@ -1077,7 +1077,8 @@ if [ ! -z "$IMAGE" ] ; then
 	fetch_if_newer "$IMAGE" "$URL"
 	# is this really an .iso?
 	if [ $(file "$IMAGE" | grep -cE '(ISO 9660|DOS/MBR boot sector)') -eq 1 ] ; then
-		# yes, so let's mount it
+		# yes, so let's md5sum and mount it
+		md5sum $IMAGE
 		sudo mkdir -p $IMAGE_MNT
 		grep -q $IMAGE_MNT /proc/mounts && sudo umount -l $IMAGE_MNT
 		sleep 1

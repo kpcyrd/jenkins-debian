@@ -865,7 +865,7 @@ monitor_system() {
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "$PRINTF_NR: $(date) - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
-			convert -size $VIDEOSIZE xc:none snapshot_${PRINTF_NR}.ppm
+			convert -size $VIDEOSIZE xc:none -depth 8 snapshot_${PRINTF_NR}.ppm
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then

@@ -3,9 +3,10 @@
 architectures = """
    i386
    hppa
-   mips mipsel
+   mips mips64el mipsel
    powerpc powerpcspe ppc64 ppc64el
    s390 s390x
+   sh4
    sparc sparc64
    x32
    """.split()

@@ -67,6 +67,6 @@
         - '{name}':
             my_distro: 'sid'
             my_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
-            my_shell: 'cabal update ; ./test-packages.pl'
+            my_shell: 'unset http_proxy; cabal update ; ./test-packages.pl'
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'

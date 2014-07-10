@@ -38,15 +38,15 @@
                   format: csv
                   # inclusion-flag: exclude-by-string
                   # exclude: total
-          - title: Totals
-            yaxis: Packages
-            group: PlotGroup
-            style: area
-            series:
-                - file: stats.csv
-                  format: csv
-                  # inclusion-flag: include-by-string
-                  # exclude: total
+          #- title: Totals
+          #  yaxis: Packages
+          #  group: PlotGroup
+          #  style: area
+          #  series:
+          #      - file: stats.csv
+          #        format: csv
+          #        # inclusion-flag: include-by-string
+          #        # exclude: total
     scm:
       - git:
           url: 'git://anonscm.debian.org/pkg-haskell/package-plan.git'

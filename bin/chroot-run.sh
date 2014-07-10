@@ -66,6 +66,12 @@ EOF
 }
 
 cleanup() {
+	# hack to get data out of the chroot, used by haskell-package-plan
+	if [ -e $CHROOT_TARGET/tmp/testrun/stats.csv ]
+	then
+		cp -v $CHROOT_TARGET/tmp/testrun/stats.csv $CURDIR
+	fi
+
 	if [ -d $CHROOT_TARGET/proc ]; then
 		sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
 	fi
@@ -100,11 +106,6 @@ EOF
 	chmod +x $CHROOT_TARGET/tmp/chroot-testrun
 	sudo chroot $CHROOT_TARGET /tmp/chroot-testrun
 
-	# hack to get data out of the chroot, used by haskell-package-plan
-	if [ -e $CHROOT_TARGET/tmp/testrun/stats.csv ]
-	then
-		cp -v $CHROOT_TARGET/tmp/testrun/stats.csv $CURDIR
-	fi
 }
 
 bootstrap

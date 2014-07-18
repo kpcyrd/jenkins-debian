@@ -47,7 +47,11 @@ bootstrap() {
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
 	echo "Bootstraping $DISTRO into $CHROOT_TARGET now."
-	sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR
+	if ! sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR; then
+		echo "debootstrap failed, slowing down"
+		sleep 1800
+		exit 1
+	fi
 
 	cat > $CHROOT_TARGET/tmp/chroot-prepare <<-EOF
 $SCRIPT_HEADER

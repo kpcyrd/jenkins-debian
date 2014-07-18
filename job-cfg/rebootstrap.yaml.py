@@ -6,7 +6,6 @@ architectures = """
    mips mips64el mipsel
    powerpc powerpcspe ppc64 ppc64el
    s390 s390x
-   sh4
    sparc sparc64
    x32
    """.split()
@@ -17,6 +16,7 @@ mono_architectures = """
     ia64
     m68k
     or1k
+    sh4
     """.split()
 
 architectures += mono_architectures

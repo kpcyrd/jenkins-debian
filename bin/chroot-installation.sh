@@ -117,16 +117,16 @@ trap cleanup_all INT TERM EXIT
 
 case $1 in
 	squeeze)	DISTRO="squeeze"
-			SPECIFIC="openoffice.org virtualbox-ose mplayer chromium"
+			SPECIFIC="openoffice.org virtualbox-ose mplayer chromium-browser"
 			;;
 	wheezy)		DISTRO="wheezy"
 			SPECIFIC="libreoffice virtualbox mplayer chromium"
 			;;
 	jessie)		DISTRO="jessie"
-			SPECIFIC="libreoffice virt-manager mplayer2 chromium-browser"
+			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			;;
 	sid)		DISTRO="sid"
-			SPECIFIC="libreoffice virt-manager mplayer2 chromium-browser"
+			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			;;
 	*)		echo "unsupported distro."
 			exit 1

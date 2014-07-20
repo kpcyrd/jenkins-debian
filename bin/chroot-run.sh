@@ -48,8 +48,9 @@ bootstrap() {
 
 	echo "Bootstraping $DISTRO into $CHROOT_TARGET now."
 	if ! sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR; then
-		echo "debootstrap failed, slowing down"
-		sleep 1800
+		SLEEPTIME=1800
+		echo "debootstrap failed, slowing down, sleeping $SLEEPTIME now..."
+		sleep $SLEEPTIME
 		exit 1
 	fi
 

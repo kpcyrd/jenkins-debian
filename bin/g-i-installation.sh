@@ -422,14 +422,7 @@ post_install_boot() {
 						;;
 					0560)	do_and_report key enter
 						;;
-					0570)	case $NAME in
-							*_hurd*)
-								do_and_report type "echo 'In tight loop: hit ctl-alt-del to reboot' >/dev/com0"
-							;;
-							*)
-								do_and_report type "poweroff"
-							;;
-						esac
+					0570)	do_and_report type "poweroff"
 						;;
 					0580)	do_and_report key enter
 						;;
@@ -961,18 +954,6 @@ monitor_system() {
 		fi
 		let NR=NR+1
 		sleep 2
-
-		# Hurd can't poweroff itself
-		case $NAME in
-			*_hurd*)
-				if grep "In tight loop: hit ctl-alt-del to reboot" $QEMU_SERIAL_OUT >/dev/null; then
-					echo "Powering off Hurd VM ..."
-					sleep 10
-					sudo kill -9 $(ps fax | grep [q]emu-system | grep vnc=$DISPLAY 2>/dev/null | awk '{print $1}')
-				fi
-				;;
-			*)	;;
-		esac
 	done
 	if [ $NR -eq $MAX_RUNS ] ; then
 		echo "Warning: running for ${hourlimit}h, forcing termination."

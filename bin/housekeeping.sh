@@ -26,6 +26,13 @@ check_for_mounted_chroots() {
 	rm $OUTPUT
 }
 
+chroot_checks() {
+	check_for_mounted_chroots $1
+	report_disk_usage /chroots
+	report_disk_usage /schroots
+	echo "WARNING: should remove directories in /(s)chroots which are older than a month."
+}
+
 report_disk_usage() {
 	du -schx /var/lib/jenkins/jobs/${1}* |grep total |sed -s "s#total#${1} jobs#"
 }
@@ -70,7 +77,7 @@ general_housekeeping() {
 	df -h 2>/dev/null || true
 
 	echo
-	for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ ; do
+	for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ /chroots /schroots ; do
 		sudo du -shx $DIR 2>/dev/null
 	done
 	JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -f -u)
@@ -94,7 +101,7 @@ else
 	case $1 in
 		chroot-installation*)		wait4idle $1
 						report_disk_usage $1
-						check_for_mounted_chroots $1
+						chroot_checks $1
 						;;
 		g-i-installation)		wait4idle $1
 						report_disk_usage $1
@@ -103,6 +110,7 @@ else
 						report_filetype_usage $1 png
 						report_filetype_usage $1 ppm warn
 						report_filetype_usage $1 bak warn
+						echo "WARNING: there is no check / handling on stale lvm volumes"
 						;;
 		squid)				report_squid_usage
 						;;

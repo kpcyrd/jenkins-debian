@@ -49,7 +49,6 @@ mkdir -p results
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
 mkdir -p $RESULTS/log
-QEMU_SERIAL_OUT=${RESULTS}/log/serial-out.log
 
 #
 # language
@@ -151,7 +150,6 @@ bootstrap_system() {
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
-	QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -260,7 +258,6 @@ boot_system() {
 				;;
 		*)		;;
 	esac
-	QEMU_OPTS="$QEMU_OPTS -serial file:${QEMU_SERIAL_OUT}"
 	echo
 	echo "Starting QEMU_ now:"
 	set -x

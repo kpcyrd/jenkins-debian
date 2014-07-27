@@ -4,6 +4,8 @@
 # released under the GPLv=2
 
 BASEDIR=/root/jenkins.debian.net
+PVNAME=/dev/vdb      # LVM physical volume for jobs
+VGNAME=jenkins01     # LVM volume group
 
 explain() {
 	echo
@@ -122,3 +124,16 @@ sudo chown jenkins /var/cache/pbuilder/result
 echo
 rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 
+#
+# creating LVM volume group for jobs
+#
+if [ "$PVNAME" = "" ]; then
+    figlet Error
+    explain "Set \$PVNAME to physical volume pathname."
+    exit 1
+else
+    if ! sudo pvs $PVNAME >/dev/null 2>&1; then
+        sudo pvcreate $PVNAME
+        sudo vgcreate $VGNAME $PVNAME
+    fi
+fi

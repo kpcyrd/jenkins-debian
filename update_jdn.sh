@@ -134,6 +134,8 @@ if [ "$PVNAME" = "" ]; then
 else
     if ! sudo pvs $PVNAME >/dev/null 2>&1; then
         sudo pvcreate $PVNAME
+    fi
+    if ! sudo vgs $VGNAME >/dev/null 2>&1; then
         sudo vgcreate $VGNAME $PVNAME
     fi
 fi

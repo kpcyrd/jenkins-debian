@@ -888,7 +888,9 @@ monitor_system() {
 			SOFTWARE_PROBLEM=$(grep "The failing step is: Select and install software" $GOCR || true)
 			BUILD_LTSP_PROBLEM=$(grep "The failing step is: Build LTSP chroot" $GOCR || true)
 			rm $GOCR $GOCR.ppm
-			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ; then
+			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ||
+			    [[ "$LAST_LINE" =~ .*System\ halted.* ]] ||
+			    [[ "$LAST_LINE" =~ .*Cannot\ .inalize\ remaining\ .ile\ systems.* ]]; then
 				echo "QEMU was powered down."
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then

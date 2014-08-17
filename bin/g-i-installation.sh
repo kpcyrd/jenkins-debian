@@ -64,6 +64,13 @@ else
 	PRESEEDCFG="${DI_LANG}_preseed.cfg"
 fi
 
+#
+# video
+#
+VIDEOBITRATE=1200
+VIDEOSIZE=1024x768
+VIDEOBGCOLOR=gray10
+
 fetch_if_newer() {
 	url="$2"
 	file="$1"
@@ -129,9 +136,7 @@ bootstrap_system() {
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
-	VIDEOBITRATE=1200
-	VIDEOSIZE=1024x768	# don't change this (or adjust what needs to be shaved when ocr'ing later)
-	CONVERTOPTS="-gravity center -background gray10 -extent $VIDEOSIZE"
+	CONVERTOPTS="-gravity center -background $VIDEOBGCOLOR -extent $VIDEOSIZE"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
@@ -877,9 +882,8 @@ monitor_system() {
 			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
 			GOCR=$(mktemp)
-			# shave 112 pixels on the sides and 84 on top+bottom
-			# so that 1024x768 becomes 800x600
-			convert -shave 112x84 snapshot_${PRINTF_NR}.ppm $GOCR.ppm
+			# gocr likes black background
+			convert -fill black -opaque $VIDEOBGCOLOR snapshot_${PRINTF_NR}.ppm $GOCR.ppm
 			gocr $GOCR.ppm > $GOCR
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)

@@ -246,7 +246,7 @@ boot_system() {
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
 	echo "Checking $LV:"
-	FILE=$(file -Ls $LV)
+	FILE=$(sudo file -Ls $LV)
 	if [ $(echo $FILE | grep -E '(x86 boot sector|DOS/MBR boot sector)' | wc -l) -eq 0 ] ; then
 		echo "ERROR: no x86 boot sector found in $LV - its filetype is $FILE."
 		exit 1

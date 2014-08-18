@@ -17,6 +17,7 @@ jenkins ALL=  \
 	/bin/mount --bind *, \
 	/usr/bin/du *, \
 	/bin/kill -9 *, \
+	/usr/bin/file *, \
 	/usr/bin/qemu-system-x86_64 *, \
 	/usr/bin/qemu-img *, \
 	/sbin/lvcreate *, /sbin/lvremove *, \

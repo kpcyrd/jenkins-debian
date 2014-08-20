@@ -130,6 +130,8 @@ bootstrap_system() {
 	cd $WORKSPACE
 	echo "Creating throw-away logical volume with ${DISKSIZE_IN_GB} GiB now."
 	sudo lvcreate -L${DISKSIZE_IN_GB}G -n $NAME $VG
+	echo "Workaround to remove swap signature from previous installs, see #757818"
+	time sudo dd if=/dev/zero of=$LV bs=4096 || true
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	sudo qemu-img create -f raw $LV ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."

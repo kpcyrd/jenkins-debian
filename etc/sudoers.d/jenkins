@@ -18,6 +18,7 @@ jenkins ALL=  \
 	/usr/bin/du *, \
 	/bin/kill -9 *, \
 	/usr/bin/file *, \
+	/bin/dd if=/dev/zero of=/dev/jenkins*, \
 	/usr/bin/qemu-system-x86_64 *, \
 	/usr/bin/qemu-img *, \
 	/sbin/lvcreate *, /sbin/lvremove *, \

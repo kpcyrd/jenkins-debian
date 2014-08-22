@@ -275,7 +275,16 @@ backup_screenshot() {
 
 do_and_report() {
 	echo "At $NR (token: $TOKEN) sending $@"
-	vncdo -s $DISPLAY $@
+	# Workaround vncdo type command sending "e" chars sometimes not
+	# received, sometimes received as if "e" key was kept pressed.
+	if [ "$1" = "type" ]; then
+		typestr=$2
+		for i in $(seq 0 $(( ${#typestr} - 1 ))); do
+			vncdo -s $DISPLAY --delay=100 key ${typestr:$i:1}
+		done
+	else
+		vncdo -s $DISPLAY $@
+	fi
 	backup_screenshot
 }
 

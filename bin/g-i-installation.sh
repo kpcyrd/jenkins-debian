@@ -275,7 +275,7 @@ backup_screenshot() {
 
 do_and_report() {
 	echo "At $NR (token: $TOKEN) sending $@"
-	# Workaround vncdo type command sending "e" chars sometimes not
+	# Workaround #758881: vncdo type command sending "e" chars sometimes not
 	# received, sometimes received as if "e" key was kept pressed.
 	if [ "$1" = "type" ]; then
 		typestr=$2

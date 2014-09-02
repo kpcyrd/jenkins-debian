@@ -25,7 +25,7 @@ done
 # install packages we need
 # (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
-sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host \
+sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host \
 	build-essential python-setuptools \
 	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml vncsnapshot imagemagick ffmpeg2theora python-twisted python-imaging gocr guestmount schroot
 sudo apt-get install -t wheezy-backports qemu
@@ -54,9 +54,10 @@ fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
 sudo service apache2 reload
-cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts diskstats irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
+cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
 [ -L apache_accesses ] || for i in apache_accesses apache_volume ; do ln -s /usr/share/munin/plugins/$i $i ; done
 explain "Packages configured."
+sudo service munin-node reload
 
 #
 # install the heart of jenkins.debian.net

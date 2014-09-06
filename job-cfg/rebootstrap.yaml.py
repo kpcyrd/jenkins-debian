@@ -4,17 +4,18 @@ architectures = """
    i386
    hppa
    mips mips64el mipsel
-   powerpc powerpcspe ppc64 ppc64el
+   powerpc powerpcspe ppc64
    s390 s390x
    sparc sparc64
    x32
    """.split()
 
 mono_architectures = """
-    arm armel armhf arm64
+    armel armhf arm64
     alpha
     ia64
     m68k
+    ppc64el
     or1k
     sh4
     """.split()

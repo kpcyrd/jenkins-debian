@@ -57,7 +57,7 @@ sudo service apache2 reload
 cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
 [ -L apache_accesses ] || for i in apache_accesses apache_volume ; do ln -s /usr/share/munin/plugins/$i $i ; done
 explain "Packages configured."
-sudo service munin-node reload
+sudo service munin-node force-reload
 
 #
 # install the heart of jenkins.debian.net

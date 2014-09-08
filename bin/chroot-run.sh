@@ -26,6 +26,7 @@ fi
 
 if [ "$1" == "minimal" ] ; then
 	MINIMAL=yes
+	BOOTSTRAP_OPTIONS=--variant=minbase
 	shift
 fi
 
@@ -47,7 +48,7 @@ bootstrap() {
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
 	echo "Bootstraping $DISTRO into $CHROOT_TARGET now."
-	if ! sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR; then
+	if ! sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR; then
 		SLEEPTIME=1800
 		echo "debootstrap failed, slowing down, sleeping $SLEEPTIME now..."
 		sleep $SLEEPTIME

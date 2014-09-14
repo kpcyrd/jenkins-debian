@@ -60,7 +60,7 @@
     jobs:
         - '{name}_sid':
             my_distro: 'sid'
-            my_shell: 'debian/rules runtests'
+            my_shell: 'timeout 6h debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on sid.'
             my_trigger: 'lintian-tests_jessie'
         - '{name}_jessie':

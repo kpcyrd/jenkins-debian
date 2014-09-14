@@ -5,7 +5,7 @@ architectures = """
    hppa
    mips mips64el mipsel
    powerpc powerpcspe ppc64
-   s390 s390x
+   s390x
    sparc sparc64
    x32
    """.split()
@@ -13,7 +13,6 @@ architectures = """
 mono_architectures = """
     armel armhf arm64
     alpha
-    ia64
     m68k
     ppc64el
     or1k

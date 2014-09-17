@@ -32,6 +32,10 @@ ok /^install -m644 warning_icon.png.+/
 # make https://jenkins.debian.net/job/d-i_build_partman-basicfilesystems build nicely
 ok /^dpkg: warning: unable to delete old directory/
 
+# ignore warnings as requested by KiBi in <20140916211708.GW2754@mraw.org>
+ok /^dpkg: warning: trying to overwrite .+, which is also in package/
+ok /^dpkg-genchanges: warning: the current version .+ is earlier than the previous one/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 

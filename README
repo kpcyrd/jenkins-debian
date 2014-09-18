@@ -158,6 +158,6 @@ There is still a lot of work left, check the current link:https://jenkins.debian
 
 == License
 
-* GPLv2, see link:http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=LICENSE[LICENSE].
+* GPLv2, see link:http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/LICENSE[LICENSE].
 
 // vim: set filetype=asciidoc:

@@ -303,7 +303,7 @@
 
 - project:
     name: g-i-installation
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git;a=blob;f=job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
       - '{name}_housekeeping'
       - '{name}_debian-edu_wheezy-test_minimal':

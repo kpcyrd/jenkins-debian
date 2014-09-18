@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 9.20120419~), asciidoc
 Standards-Version: 3.9.1
 Homepage: https://jenkins.debian.net/userContent/about.html
 Vcs-Git: git://git.debian.org/git/qa/jenkins.debian.net.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=qa/jenkins.debian.net.git
+Vcs-Browser: http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git
 
 Package: jenkins.debian.net-setup
 Architecture: all

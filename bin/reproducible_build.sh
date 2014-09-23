@@ -32,7 +32,7 @@ for PACKAGE in "$@" ; do
 
 	TMPFILE=$(mktemp)
 	./misc.git/diffp b1/*.changes b2/*.changes | tee ${TMPFILE}
-	if grep -qv '^\*\*\*\*\*' ${TMPFILE} ; then
+	if $(grep -qv '^\*\*\*\*\*' ${TMPFILE}) ; then
 		figlet ${PACKAGE}
 		echo
 		echo "${PACKAGE} build successfull."

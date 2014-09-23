@@ -23,7 +23,9 @@ for SRCPACKAGE in "$@" ; do
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
 	rm b1 b2 -rf
 	apt-get source --download-only ${SRCPACKAGE} || true
-	if $(sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz ${SRCPACKAGE}_*.dsc) ; then
+	RESULT=0
+	sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz ${SRCPACKAGE}_*.dsc || RESULT=$? || true
+	if [ $RESULT = 0 ] ; then
 		mkdir b1 b2
 		dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b1
 		sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
@@ -47,9 +49,11 @@ for SRCPACKAGE in "$@" ; do
 		rm b1 b2 ${TMPFILE} -rf
 	fi
 
+	set +x
 	echo "=============================================================="
 	echo "$COUNT_TOTAL of ${#@} done."
 	echo "=============================================================="
+	set -x
 done
 
 set +x

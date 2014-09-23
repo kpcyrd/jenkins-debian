@@ -68,3 +68,4 @@
             my_description: 'Reproducible build all packages build-essential depends on.'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh eglibc gcc-defaults make-dfsg dpkg'
 
+# libreoffice virt-manager mplayer2 chromium desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs

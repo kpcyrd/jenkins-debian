@@ -17,6 +17,8 @@ fi
 COUNT_TOTAL=0
 COUNT_GOOD=0
 COUNT_BAD=0
+GOOD=""
+BAD=""
 for PACKAGE in "$@" ; do
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
 	rm b1 b2 -rf
@@ -37,9 +39,11 @@ for PACKAGE in "$@" ; do
 		echo
 		echo "${PACKAGE} build successfull."
 		let "COUNT_GOOD=COUNT_GOOD+1"
+		GOOD="${PACKAGE} ${GOOD}"
 	else
 		echo "Warning: ${PACKAGE} failed to build reproducible."
 		let "COUNT_BAD=COUNT_BAD+1"
+		GOOD="${PACKAGE} ${BAD}"
 	fi
 
 	rm b1 b2 ${TMPFILE} -rf
@@ -47,7 +51,5 @@ done
 
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
-echo "$COUNT_GOOD packages successfully built reproducible."
-echo "$COUNT_BAD packages failed to built reproducible."
-echo
-echo "The full list of packages: $@"
+echo "$COUNT_GOOD packages successfully built reproducible: ${GOOD}"
+echo "$COUNT_BAD packages failed to built reproducible: ${BAD}"

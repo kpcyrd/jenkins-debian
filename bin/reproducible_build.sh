@@ -31,7 +31,6 @@ for PACKAGE in "$@" ; do
 	dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes b2
 	sudo dcmd rm /var/cache/pbuilder/result/${PACKAGE}_*.changes
 	cat b1/${PACKAGE}_*.changes
-
 	TMPFILE=$(mktemp)
 	./misc.git/diffp b1/*.changes b2/*.changes | tee ${TMPFILE}
 	if $(grep -qv '^\*\*\*\*\*' ${TMPFILE}) ; then
@@ -45,10 +44,15 @@ for PACKAGE in "$@" ; do
 		let "COUNT_BAD=COUNT_BAD+1"
 		GOOD="${PACKAGE} ${BAD}"
 	fi
-
 	rm b1 b2 ${TMPFILE} -rf
+
+	echo "=============================================================="
+	echo "$COUNT_TOTAL of ${#@} done."
+	echo "=============================================================="
 done
 
+set +x
+echo
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
 echo "$COUNT_GOOD packages successfully built reproducible: ${GOOD}"

@@ -7,7 +7,7 @@
 common_init "$@"
 
 TMPFILE=$(mktemp)
-cat > $TMPFILE <<- EOF
+cat > ${TMPFILE} <<- EOF
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
 apt-get update
 echo "Warning: Usage of --force-yes to override the apt authentication warning. Don't do this."
@@ -16,5 +16,5 @@ EOF
 
 sudo rm /var/cache/pbuilder/base-reproducible.tgz || true
 sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid
-sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz -- $TMPFILE
-rm $TMPFILE
+sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz -- ${TMPFILE}
+rm ${TMPFILE}

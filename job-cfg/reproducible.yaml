@@ -32,14 +32,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_build_example_good'
-    publishers:
-      - email:
-          recipients: 'jenkins+reproducible holger@layer-acht.org lunar@debian.org'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_build_example_fail'
+    name: '{name}_build_test_reproducibility'
     publishers:
       - email:
           recipients: 'jenkins+reproducible holger@layer-acht.org lunar@debian.org'
@@ -51,19 +44,27 @@
       - email:
           recipients: 'jenkins+reproducible holger@layer-acht.org lunar@debian.org'
 
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_build-essential'
+    publishers:
+      - email:
+          recipients: 'jenkins+reproducible holger@layer-acht.org lunar@debian.org'
+
+
 - project:
     name: reproducible
     jobs:
         - '{name}_setup':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
-        - '{name}_build_example_good':
-            my_description: 'Build one package (one we know will succeed) with pbuilder so far....'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh patch hostname debianutils'
-        - '{name}_build_example_fail':
-            my_description: 'Build one package (one we know will fail) with pbuilder so far....'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh patch lsof'
+        - '{name}_build_test_reproducibility':
+            my_description: 'Reproducible build two packages, one we know will succeed and one which used to fail....'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh debianutils hostname' # lsof
         - '{name}_build_core':
-            my_description: 'Build all the core packages as defined by UDD as described in https://wiki.debian.org/ReproducibleBuilds'
+            my_description: 'Reproducible build all the core packages as defined by UDD as described in https://wiki.debian.org/ReproducibleBuilds'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh acl adduser base-files base-passwd bash binutils bsdmainutils bsdutils build-essential bzip2 coreutils cpp cpp-4.9 dash debconf debhelper debianutils dh-buildinfo diffutils dmsetup dpkg dpkg-dev e2fslibs e2fsprogs file findutils g++ g++-4.9 gcc gcc-4.9 gcc-4.9-base gettext gettext-base grep groff-base gzip hostname init initscripts insserv intltool-debian libacl1 libasan1 libasprintf0c2 libatomic1 libattr1 libaudit1 libaudit-common libblkid1 libbz2-1.0 libc6 libc6-dev libcap2 libcap2-bin libc-bin libc-dev-bin libcilkrts5 libcloog-isl4 libcomerr2 libcroco3 libcryptsetup4 libdb5.3 libdbus-1-3 libdebconfclient0 libdevmapper1.02.1 libdpkg-perl libffi6 libgcc1 libgcc-4.9-dev libgcrypt11 libgcrypt20 libgdbm3 libglib2.0-0 libgmp10 libgomp1 libgpg-error0 libintl-perl libisl10 libitm1 libkmod2 liblzma5 libmagic1 libmount1 libmpc3 libmpfr4 libncurses5 libncurses5-dev libncursesw5 libpam0g libpam-modules libpam-modules-bin libpam-runtime libpcre3 libpipeline1 libprocps3 libquadmath0 libselinux1 libsemanage1 libsemanage-common libsepol1 libss2 libstdc++-4.9-dev libstdc++6 libsystemd-journal0 libsystemd-login0 libtext-unidecode-perl libtimedate-perl libtinfo5 libtinfo-dev libubsan0 libudev1 libunistring0 libustr-1.0-1 libuuid1 libwrap0 libxml2 libxml-libxml-perl libxml-namespacesupport-perl libxml-sax-base-perl libxml-sax-perl linux-libc-dev login lsb-base make man-db mawk mount ncurses-base ncurses-bin passwd patch perl perl-base perl-modules po-debconf procps sed sensible-utils startpar systemd systemd-sysv sysvinit-utils sysv-rc tar texinfo tzdata ucf udev util-linux xz-utils zlib1g'
+        - '{name}_build_build-essential':
+            my_description: 'Reproducible build all packages build-essential depends on.'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh libc6-dev gcc g++ make dpkg-dev'
 

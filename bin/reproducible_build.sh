@@ -28,10 +28,11 @@ for PACKAGE in "$@" ; do
 	sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz ${PACKAGE}_*.dsc
 	dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes b2
 	sudo dcmd rm /var/cache/pbuilder/result/${PACKAGE}_*.changes
+	cat b1/${PACKAGE}_*.changes
 
 	TMPFILE=$(mktemp)
-	./misc.git/diffp b1/*.changes b2/*.changes | tee $TMPFILE
-	if grep -qv '^\*\*\*\*\*' $TMPFILE ; then
+	./misc.git/diffp b1/*.changes b2/*.changes | tee ${TMPFILE}
+	if grep -qv '^\*\*\*\*\*' ${TMPFILE} ; then
 		figlet ${PACKAGE}
 		echo
 		echo "${PACKAGE} build successfull."
@@ -41,12 +42,12 @@ for PACKAGE in "$@" ; do
 		let "COUNT_BAD=COUNT_BAD+1"
 	fi
 
-	rm b1 b2 $TMPFILE -rf
+	rm b1 b2 ${TMPFILE} -rf
 done
 
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
 echo "$COUNT_GOOD packages successfully built reproducible."
-echo "$COUNT_GOOD packages failed to built reproducible."
+echo "$COUNT_BAD packages failed to built reproducible."
 echo
 echo "The full list of packages: $@"

@@ -101,9 +101,11 @@ general
 
 * pbuilder results cleanup
 * pbuilder cleanup cache
-* time based triggers reproducible build jobs
+* time+job based triggers reproducible build jobs:
+** setup: time based
+** example_good: triggered by setup
+** core and all other: triggered by exampled_good
 * use git repo in job config?
-* implement logic / counter for getting results from testing 100 packages in one job
 * job to build minimal debootstrap packages
 * job to build all build-essential packages
 

@@ -14,7 +14,7 @@ echo "Warning: Usage of --force-yes to override the apt authentication warning. 
 apt-get install --force-yes -y dpkg dpkg-dev debhelper dh-python discount
 EOF
 
-sudo rm /var/cache/pbuilder/base-reproducible.tgz
+sudo rm /var/cache/pbuilder/base-reproducible.tgz || true
 sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid
-sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz --
+sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz -- $TMPFILE
 rm $TMPFILE

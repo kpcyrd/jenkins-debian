@@ -8,7 +8,7 @@
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
           url: https://jenkins.debian.net/view/reproducible
-          text: dvswitch test jobs
+          text: reproducible builds jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
           url: http://www.profitbricks.com
@@ -59,7 +59,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
         - '{name}_build_example_good':
             my_description: 'Build one package (one we know will succeed) with pbuilder so far....'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh lsb'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh patch hostname debianutils'
         - '{name}_build_example_fail':
             my_description: 'Build one package (one we know will fail) with pbuilder so far....'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh lsof'

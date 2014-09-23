@@ -27,7 +27,9 @@ jenkins ALL=  \
 	/bin/cp -r /media/*, \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
-	/bin/rm /var/cache/pbuilder/base.tgz
+	/bin/rm /var/cache/pbuilder/base.tgz, \
+	/bin/cp /var/cache/pbuilder/base.tgz /var/cache/pbuilder/base-reproducible.tgz, \
+	/usr/bin/dcmd rm *.changes
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

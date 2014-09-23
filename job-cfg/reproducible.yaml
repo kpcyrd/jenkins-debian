@@ -21,25 +21,30 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+      - shell: '{my_shell}'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_sid_core'
-    triggers:
-      - pollscm: '*/6 * * * *'
+    name: '{name}_pbuilder_setup'
     publishers:
       - email:
           recipients: 'jenkins+sid-reproducible holger@layer-acht.org lunar@debian.org'
-      - trigger:
-          timed: "0 42 23 * *"
 
+- job-template:
+    defaults: reproducible
+    name: '{name}_pbuild_one'
+    publishers:
+      - email:
+          recipients: 'jenkins+sid-reproducible holger@layer-acht.org' # FIXME add lunar here again
 
 - project:
     name: reproducible
     jobs:
-        - '{name}_sid_core':
-            my_distro: 'sid'
-            my_shell: "echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list ; apt-get update ; apt-get install dpkg dpkg-dev debhelper dh-python proot"
-            my_description: 'Start with reproducible builds...'
+        - '{name}_pbuilder_setup':
+            my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_shell: '/srv/jenkins/bin/reproducible_pbuilder_setup.sh'
+    jobs:
+        - '{name}_pbuild_one':
+            my_description: 'Build one package with pbuilder so far....'
+            my_shell: '/srv/jenkins/bin/reproducible_pbuild_run.sh acl'
 

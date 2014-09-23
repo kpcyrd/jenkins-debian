@@ -1,0 +1,44 @@
+- defaults:
+    name: sid-reproducible
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/dvswitch/
+          text: dvswitch test jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/sid-reprodible.yaml">sid-reprodible.yaml</a>.'
+    logrotate:
+      daysToKeep: 180
+      numToKeep: 100
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: sid-reprodible
+    name: '{name}_core'
+    triggers:
+      - pollscm: '*/6 * * * *'
+    publishers:
+      - email:
+          recipients: 'jenkins+sid-reprodible holger@layer-acht.org wouter@debian.org'
+      - trigger:
+          project: '{my_trigger}'
+
+- project:
+    name: sid-reprodible
+    jobs:
+        - '{name}_core':
+            my_distro: 'sid-reproducible'
+            my_shell: "echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list ; apt-get update ; apt-get install dpkg dpkg-dev debhelper dh-python proot"
+            my_description: 'Start with reproducible builds...'
+

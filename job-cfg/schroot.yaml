@@ -76,6 +76,14 @@
         defaults: schroot-upgrade
         name: '{name}-haskell-upgrade'
 
+- job-template:
+        defaults: schroot-create
+        name: '{name}-reproducible-sid-create'
+
+- job-template:
+        defaults: schroot-upgrade
+        name: '{name}-reproducible-sid-upgrade'
+
 - project:
         name: schroot
         do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/schroot.yaml">schroot.yaml</a>.'
@@ -96,4 +104,12 @@
                 - '{name}-haskell-upgrade':
                         my_schroot: haskell
                         my_time: '0 16 * * *'
+                - '{name}-reproducible-sid-create':
+                        my_schroot: reproducible-sid
+                        my_distro: sid
+                        my_extra_pkgs: 'build-essential dpkg-dev debhelper dh-python proot'
+                        my_time: '0 14 * * 1'
+                - '{name}-reproducible-sid-upgrade':
+                        my_schroot: reproducible-sid
+                        my_time: '0 17 * * *'
 

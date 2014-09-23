@@ -6,11 +6,12 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-TMPFILE=$(mktemp=)
+TMPFILE=$(mktemp)
 cat > $TMPFILE <<- EOF
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
 apt-get update
-apt-get install -y dpkg dpkg-dev debhelper dh-python proot
+echo "Warning: Usage of --force-yes to override the apt authentication warning. Don't do this."
+apt-get install --force-yes -y dpkg dpkg-dev debhelper dh-python proot
 EOF
 
 sudo cp /var/cache/pbuilder/base.tgz /var/cache/pbuilder/base-reproducible.tgz

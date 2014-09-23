@@ -25,26 +25,31 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_pbuilder_setup'
+    name: '{name}_setup'
     publishers:
       - email:
           recipients: 'jenkins+sid-reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_pbuild_one'
+    name: '{name}_build_core'
     publishers:
       - email:
           recipients: 'jenkins+sid-reproducible holger@layer-acht.org' # FIXME add lunar here again
+    scm:
+      - git:
+          url: 'git://git.debian.org/git/reproducible/misc.git'
+          branches:
+            - master
+
 
 - project:
     name: reproducible
     jobs:
-        - '{name}_pbuilder_setup':
+        - '{name}_setup':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_shell: '/srv/jenkins/bin/reproducible_pbuilder_setup.sh'
-    jobs:
-        - '{name}_pbuild_one':
+            my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
+        - '{name}_build_core':
             my_description: 'Build one package with pbuilder so far....'
-            my_shell: '/srv/jenkins/bin/reproducible_pbuild_run.sh acl'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh acl'
 

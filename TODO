@@ -97,6 +97,16 @@ general
 * use jigdo to download images - but no edu jigdo images.
 * still havent got http://www.os-autoinst.org/ out of my mind
 
+=== reproducible
+
+* pbuilder results cleanup
+* pbuilder cleanup cache
+* time based triggers reproducible build jobs
+* use git repo in job config?
+* implement logic / counter for getting results from testing 100 packages in one job
+* job to build minimal debootstrap packages
+* job to build all build-essential packages
+
 === Test Debian live
 
 * daily build from sid

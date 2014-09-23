@@ -25,7 +25,9 @@ for PACKAGE in "$@" ; do
 	dcmd cp /var/cache/pbuilder/result/${PACKAGE}_*.changes b2
 	sudo dcmd rm /var/cache/pbuilder/result/${PACKAGE}_*.changes
 
-	./misc.git/diffp b1/*.changes b2/*.changes
+	TMPFILE=$(mktemp)
+	./misc.git/diffp b1/*.changes b2/*.changes | tee $TMPFILE
+	grep -qv '^\*\*\*\*\*' $TMPFILE && figlet ${PACKAGE}_&& echo && echo "${PACKAGE} build successfull."
 
-	rm b1 b2 -rf
+	rm b1 b2 $TMPFILE -rf
 done

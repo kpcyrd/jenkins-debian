@@ -7,7 +7,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
-          url: https://jenkins.debian.net/view/dvswitch/
+          url: https://jenkins.debian.net/view/reproducible
           text: dvswitch test jobs
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:

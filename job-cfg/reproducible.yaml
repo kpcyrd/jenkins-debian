@@ -32,14 +32,14 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_build_core_good'
+    name: '{name}_build_example_good'
     publishers:
       - email:
           recipients: 'jenkins+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_build_core_fail'
+    name: '{name}_build_example_fail'
     publishers:
       - email:
           recipients: 'jenkins+reproducible holger@layer-acht.org lunar@debian.org'

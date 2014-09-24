@@ -50,11 +50,11 @@ for SRCPACKAGE in "$@" ; do
 			sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
-			dcmd rm ${SRCPACKAGE}_*.dsc
 			set -e
 			cat b1/${SRCPACKAGE}_*.changes
 			mkdir -p results
-			LOGFILE=./results/$(ls -1 "b1/${SRCPACKAGE}_*.changes" | head -1 | cut -d "/" -f2-).diffp
+			LOGFILE=./results/$(ls ${SRCPACKAGE}_*.dsc)
+			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp)
 			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ${LOGFILE}
 			if ! $(grep -qv '^\*\*\*\*\*' ${LOGFILE}) ; then
 				figlet ${SRCPACKAGE}
@@ -67,6 +67,7 @@ for SRCPACKAGE in "$@" ; do
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
+			dcmd rm ${SRCPACKAGE}_*.dsc
 			rm b1 b2 -rf
 		fi
 	fi

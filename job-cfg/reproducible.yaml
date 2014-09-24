@@ -22,55 +22,40 @@
       artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
+      - archive:
+          artifacts: 'results/*.*'
+          latest_only: false
 
 - job-template:
     defaults: reproducible
     name: '{name}_setup'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
     name: '{name}_build_test_reproducibility'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
     name: '{name}_build_core'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
     name: '{name}_build_build-essential'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
     name: '{name}_build_desktop'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
     name: '{name}_build_libreoffice'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - job-template:
     defaults: reproducible
     name: '{name}_build_xorg'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
 
 - project:
     name: reproducible

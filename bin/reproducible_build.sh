@@ -53,9 +53,10 @@ for SRCPACKAGE in "$@" ; do
 			dcmd rm ${SRCPACKAGE}_*.dsc
 			set -e
 			cat b1/${SRCPACKAGE}_*.changes
-			TMPFILE=$(mktemp)
-			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ${TMPFILE}
-			if ! $(grep -qv '^\*\*\*\*\*' ${TMPFILE}) ; then
+			mkdir -p results
+			LOGFILE=./results/$(ls -1 "b1/${SRCPACKAGE}_*.changes" | head -1 | cut -d "/" -f2-).diffp
+			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ${LOGFILE}
+			if ! $(grep -qv '^\*\*\*\*\*' ${LOGFILE}) ; then
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} build successfull."
@@ -66,7 +67,7 @@ for SRCPACKAGE in "$@" ; do
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
-			rm b1 b2 ${TMPFILE} -rf
+			rm b1 b2 -rf
 		fi
 	fi
 

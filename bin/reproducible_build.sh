@@ -21,6 +21,9 @@ echo "The following source packages will be build: $@"
 echo "=============================================================="
 echo
 set -x
+# this needs sid entries in sources.list:
+grep deb-src /etc/apt/sources.list | grep sid
+sudo apt-get update
 
 COUNT_TOTAL=0
 COUNT_GOOD=0
@@ -38,13 +41,13 @@ for SRCPACKAGE in "$@" ; do
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 	else
-		sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz ${SRCPACKAGE}_*.dsc
+		sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 		RESULT=$?
 		if [ $RESULT = 0 ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b1
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
-			sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz ${SRCPACKAGE}_*.dsc
+			sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
 			set -e
@@ -60,7 +63,7 @@ for SRCPACKAGE in "$@" ; do
 			else
 				echo "Warning: ${SRCPACKAGE} failed to build reproducible."
 				let "COUNT_BAD=COUNT_BAD+1"
-				GOOD="${SRCPACKAGE} ${BAD}"
+				BAD="${SRCPACKAGE} ${BAD}"
 			fi
 			rm b1 b2 ${TMPFILE} -rf
 		fi

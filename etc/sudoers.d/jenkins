@@ -28,7 +28,8 @@ jenkins ALL=  \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	/bin/rm /var/cache/pbuilder/base*.tgz, \
-	/usr/bin/dcmd rm *.changes
+	/usr/bin/dcmd rm *.changes, \
+	/usr/bin/apt-get update
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

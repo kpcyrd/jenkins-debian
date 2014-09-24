@@ -108,7 +108,7 @@ general
 ** core and all other: triggered by exampled_good
 * use git repo in job config?
 * job to build minimal debootstrap packages
-* job to build all build-essential packages
+* email notifications to reproducible-commits@lists.alioth.debian.org
 
 === Test Debian live
 

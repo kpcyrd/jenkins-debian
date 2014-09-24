@@ -20,6 +20,7 @@ echo "=============================================================="
 echo "The following source packages will be build: $@"
 echo "=============================================================="
 echo
+set -x
 
 COUNT_TOTAL=0
 COUNT_GOOD=0
@@ -49,8 +50,8 @@ for SRCPACKAGE in "$@" ; do
 			set -e
 			cat b1/${SRCPACKAGE}_*.changes
 			TMPFILE=$(mktemp)
-			./misc.git/diffp b1/${SRCPACKAGE}_.changes b2/${SRCPACKAGE}_.changes | tee ${TMPFILE}
-			if $(grep -qv '^\*\*\*\*\*' ${TMPFILE}) ; then
+			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ${TMPFILE}
+			if ! $(grep -qv '^\*\*\*\*\*' ${TMPFILE}) ; then
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} build successfull."

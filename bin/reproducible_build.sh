@@ -50,6 +50,7 @@ for SRCPACKAGE in "$@" ; do
 			sudo pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
+			dcmd rm ${SRCPACKAGE}_*.dsc
 			set -e
 			cat b1/${SRCPACKAGE}_*.changes
 			TMPFILE=$(mktemp)

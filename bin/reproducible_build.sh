@@ -52,11 +52,12 @@ for SRCPACKAGE in "$@" ; do
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
 			set -e
 			cat b1/${SRCPACKAGE}_*.changes
-			mkdir -p results
-			LOGFILE=./results/$(ls ${SRCPACKAGE}_*.dsc)
+			mkdir -p results/_success
+			LOGFILE=$(ls ${SRCPACKAGE}_*.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp)
-			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ${LOGFILE}
-			if ! $(grep -qv '^\*\*\*\*\*' ${LOGFILE}) ; then
+			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ./results/${LOGFILE}
+			if ! $(grep -qv '^\*\*\*\*\*' ./results/${LOGFILE}) ; then
+				mv ./results/${LOGFILE} ./results/_success/
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} build successfull."

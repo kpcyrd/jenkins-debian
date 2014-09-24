@@ -26,7 +26,7 @@
       - email:
           recipients: 'jenkins+debian+reproducible holger@layer-acht.org lunar@debian.org'
       - archive:
-          artifacts: 'results/*.*, results/success/*.*'
+          artifacts: 'results/*.*, results/_success/*.*'
           latest_only: false
 
 - job-template:

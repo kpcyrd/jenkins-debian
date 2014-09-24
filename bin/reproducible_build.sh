@@ -60,11 +60,11 @@ for SRCPACKAGE in "$@" ; do
 				mv ./results/${LOGFILE} ./results/_success/
 				figlet ${SRCPACKAGE}
 				echo
-				echo "${SRCPACKAGE} build successfull."
+				echo "${SRCPACKAGE} built successfully and reproducibly."
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
-				echo "Warning: ${SRCPACKAGE} failed to build reproducible."
+				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
@@ -84,6 +84,6 @@ set +x
 echo
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
-echo "$COUNT_GOOD packages successfully built reproducible: ${GOOD}"
-echo "$COUNT_BAD packages failed to built reproducible: ${BAD}"
+echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
+echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
 echo "The following source packages doesn't exist in sid: $SOURCELESS"

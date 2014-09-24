@@ -6,7 +6,7 @@ deb http://ftp.de.debian.org/debian/ wheezy main
 #deb-src http://ftp.de.debian.org/debian/ wheezy main
 
 # needed for job/reproducible*
-deb-src http://ftp.de.debian.org/debian/ sid main
+deb-src http://ftp.de.debian.org/debian/ sid main contrib
 
 deb http://security.debian.org/ wheezy/updates main
 #deb-src http://security.debian.org/ wheezy/updates main

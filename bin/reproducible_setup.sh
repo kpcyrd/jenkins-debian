@@ -18,3 +18,8 @@ sudo rm /var/cache/pbuilder/base-reproducible.tgz || true
 sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz -- ${TMPFILE}
 rm ${TMPFILE}
+
+# the alternative would be to make the job definition more complicated: collecting logs for all jobs but this one...
+mkdir -p results/_success
+touch results/dummy.log
+touch results/_success/dummy.log

@@ -37,6 +37,10 @@
       - archive:
           artifacts: 'results/*.*, results/_success/*.*'
           latest_only: false
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
 
 - job-template:
     defaults: reproducible

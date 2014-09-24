@@ -99,8 +99,6 @@ general
 
 === reproducible
 
-* pbuilder results cleanup
-* pbuilder cleanup cache
 * time+job based triggers reproducible build jobs:
 ** setup: time based
 ** example_good: triggered by setup
@@ -108,6 +106,8 @@ general
 * use git repo in job config?
 * document this on https://wiki.debian.org/ReproducibleBuilds
 * investigate packages not in sid from https://jenkins.debian.net/view/reproducible/job/reproducible_build_d-i/lastBuild/console - the list was taken from the jenkins d-i jobs...
+* pbuilder results cleanup
+* pbuilder cleanup cache
 
 === Test Debian live
 

@@ -99,6 +99,7 @@ general
 
 === reproducible
 
+* diffp output should be downloadable
 * pbuilder results cleanup
 * pbuilder cleanup cache
 * time+job based triggers reproducible build jobs:

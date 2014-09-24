@@ -14,6 +14,13 @@ else
 	git clone git://git.debian.org/git/reproducible/misc.git misc.git
 fi
 
+set +x
+echo
+echo "=============================================================="
+echo "The following source packages will be build: $@"
+echo "=============================================================="
+echo
+
 COUNT_TOTAL=0
 COUNT_GOOD=0
 COUNT_BAD=0

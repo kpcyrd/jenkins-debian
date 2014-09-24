@@ -109,6 +109,7 @@ general
 * use git repo in job config?
 * job to build minimal debootstrap packages
 * email notifications to reproducible-commits@lists.alioth.debian.org
+* limit concurrancy to 2 or 3
 
 === Test Debian live
 

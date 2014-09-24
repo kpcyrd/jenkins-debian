@@ -63,7 +63,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_build_security+privacy'
+    name: '{name}_build_security-privacy'
 
 - project:
     name: reproducible
@@ -95,7 +95,7 @@
             my_description: 'Reproducible build of server packages'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh apache2 courier icinga icinga2 lighttpd munin mysql-5.5 nginx postfix postgresql squid3'
 
-        - '{name}_build_security+privacy':
+        - '{name}_build_security-privacy':
             my_description: 'Reproducible build of security and privacy related packages'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh apparmor apparmor-profiles-extra assword debian-security-support flashproxy gnunet gnupg gnupg2 golang-ed25519-dev golang-siphash-dev https-everywhere irssi-plugin-otr libotr mat obfs4proxy obfsproxy onioncat onionshare pidgin-otr pwgen schleuder signing-party tlsdate tor torbrowser-launcher torbutton torsocks torsocks vidalia wireshark'
 

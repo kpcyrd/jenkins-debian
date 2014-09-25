@@ -33,7 +33,7 @@
       - shell: '{my_shell} {my_packages}'
     publishers:
       - email:
-          recipients: 'jenkins+debian+reproducible holger@layer-acht.org reproducible-commits@lists.alioth.debian.org'
+          recipients: 'jenkins+debian-reproducible holger@layer-acht.org reproducible-commits@lists.alioth.debian.org'
       - archive:
           artifacts: 'results/*.*, results/_success/*.*'
           latest_only: false

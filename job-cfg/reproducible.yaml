@@ -89,11 +89,11 @@
     jobs:
         - '{name}_setup':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 0 * * *'
+            my_timed: '42 0 1,2,3,4,16,17,18,19 * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
             my_packages: ''
         - '{name}_build_test_reproducibility':
-            my_description: 'Reproducible build of a few packages, some  we know will succeed and some we know which "should" fail: '
+            my_description: 'Reproducible build of a few packages, some we know will succeed and some we know which "should" fail: '
             my_timed: ''
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'lsb ucf lsof'

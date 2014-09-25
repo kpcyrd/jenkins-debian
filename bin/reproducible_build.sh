@@ -68,9 +68,9 @@ for SRCPACKAGE in "$@" ; do
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
-			dcmd rm ${SRCPACKAGE}_*.dsc
 			rm b1 b2 -rf
 		fi
+		dcmd rm ${SRCPACKAGE}_*.dsc
 	fi
 
 	set +x

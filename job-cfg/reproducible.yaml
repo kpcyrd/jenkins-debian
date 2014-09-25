@@ -62,7 +62,31 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_build_desktop'
+    name: '{name}_build_desktop_apps'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_gnome'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_kde'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_xfce'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_lxde'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_mate'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_build_cinnamon'
 
 - job-template:
     defaults: reproducible
@@ -89,7 +113,7 @@
     jobs:
         - '{name}_setup':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 0 1,2,3,4,16,17,18,19 * *'
+            my_timed: '42 0 1,2,3,4,5,6,7,16,17,18,19,20,21,22 * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
             my_packages: ''
         - '{name}_build_test_reproducibility':
@@ -106,35 +130,65 @@
             my_description: 'Reproducible build packages which are used to build other packages.<br>Source packages to be build: '
             my_timed: '42 23 1,16 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'eglibc gcc-defaults make-dfsg dpkg python python3 ruby ghc php5 tcl asciidoc'
-        - '{name}_build_desktop':
-            my_description: 'Reproducible build of the six major desktops and associated packages: '
+            my_packages: 'eglibc gcc-defaults make-dfsg devscripts python python3 ruby ghc php5 tcl asciidoc'
+        - '{name}_build_desktop_apps':
+            my_description: 'Reproducible build of desktop applications: '
             my_timed: '42 5 2,17 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'abiword alacarte asciidoc avahi calligra cheese chromium-browser cinnamon cinnamon-control-center cinnamon-desktop cinnamon-desktop-environment gobby-0.5 cinnamon-screensaver cinnamon-session cinnamon-settings-daemon cinnamon-translations cups cups-pk-helper desktop-base devscripts emacs-defaults evince evolution galculator gdm3 gedit-plugins gimp gnome-color-manager gnome-documents gnome-main-menu gnome-media gnome-nettool gnome-orca gnome-shell-extensions gnome-tweak-tool gnumeric gpicview gst-libav1.0 gst-plugins-ugly1.0 gtk2-engines-xfce hamster-applet iceweasel inkscape irssi kdeartwork kde-baseapps kde-l10n kdepim kdeplasma-addons kde-runtime kdewebdev kde-workspace leafpad libgtk2-perl libxfce4ui lxappearance lxde-icon-theme lxde-metapackages lxinput lxrandr lxsession-edit lxshortcut lxterminal mate-applets mate-backgrounds mate-common mate-control-center mate-desktop mate-desktop-environment mate-icon-theme mate-icon-theme-faenza mate-indicator-applet mate-media mate-menus mate-netbook mate-netspeed mate-notification-daemon mate-panel mate-polkit mate-power-manager mate-screensaver mate-sensors-applet mate-session-manager mate-settings-daemon mate-system-monitor mate-terminal mate-themes mate-user-share mate-utils meta-gnome3 meta-kde mplayer2 screen mutt marble nautilus-sendto network-manager-applet obconf orage pidgin rhythmbox rygel seahorse shotwell simple-scan sound-juicer tango-icon-theme telepathy-gabble telepathy-rakia telepathy-salut texlive-base thunar thunar-volman tomboy totem tracker transmission udisks2 upower vim vinagre virt-manager vlc wine xarchiver xdg-user-dirs-gtk xfce4 xfce4-appfinder xfce4-mixer xfce4-notifyd xfce4-panel xfce4-power-manager xfce4-session xfce4-settings xfconf xfdesktop4 xfw virtualbox'
-        - '{name}_build_libreoffice':
+            my_packages: 'abiword alacarte avahi calligra cheese chromium-browser gobby-0.5 cups cups-pk-helper desktop-base emacs-defaults evince evolution galculator gedit-plugins gimp gnumeric gpicview gst-libav1.0 gst-plugins-ugly1.0 hamster-applet iceweasel inkscape irssi leafpad libgtk2-perl mplayer2 screen mutt marble network-manager obconf orage pidgin rhythmbox rygel seahorse shotwell simple-scan sound-juicer tango-icon-theme telepathy-gabble telepathy-rakia telepathy-salut texlive-base thunar thunar-volman tomboy totem tracker transmission udisks2 upower vim vinagre virt-manager vlc wine xarchiver xdg-user-dirs-gtk virtualbox'
+        - '{name}_build_gnome':
+            my_description: 'Reproducible build of GNOME packages: '
+            my_timed: '23 5 2,17 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: 'gdm3 gnome-color-manager gnome-documents gnome-main-menu gnome-media gnome-nettool gnome-orca gnome-shell-extensions gnome-tweak-tool meta-gnome3 nautilus-sendto'
+        - '{name}_build_kde':
+            my_description: 'Reproducible build of KDE packages: '
+            my_timed: '42 5 3,18 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: 'kdeartwork kde-baseapps kde-l10n kdepim kdeplasma-addons kde-runtime kdewebdev kde-workspace meta-kde'
+        - '{name}_build_xfce'
+            my_description: 'Reproducible build of Xfce packages: '
+            my_timed: '23 5 3,18 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: 'gtk2-engines-xfce libxfce4ui xfce4 xfce4-appfinder xfce4-mixer xfce4-notifyd xfce4-panel xfce4-power-manager xfce4-session xfce4-settings xfconf xfdesktop4'
+        - '{name}_build_lxde':
+            my_description: 'Reproducible build of LXDE packages: '
+            my_timed: '42 5 4,19 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: 'lxappearance lxde-icon-theme lxde-metapackages lxinput lxrandr lxsession-edit lxshortcut lxterminal'
+        - '{name}_build_mate':
+            my_description: 'Reproducible build of the Mate packages: '
+            my_timed: '23 5 4,19 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: 'mate-applets mate-backgrounds mate-common mate-control-center mate-desktop mate-desktop-environment mate-icon-theme mate-icon-theme-faenza mate-indicator-applet mate-media mate-menus mate-netbook mate-netspeed mate-notification-daemon mate-panel mate-polkit mate-power-manager mate-screensaver mate-sensors-applet mate-session-manager mate-settings-daemon mate-system-monitor mate-terminal mate-themes mate-user-share mate-utils'
+        - '{name}_build_cinnamon':
+            my_description: 'Reproducible build of the Cinnamon packages: '
+            my_timed: '42 5 5,20 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: 'cinnamon cinnamon-control-center cinnamon-desktop cinnamon-desktop-environment cinnamon-screensaver cinnamon-session cinnamon-settings-daemon cinnamon-translations'
+         - '{name}_build_libreoffice':
             my_description: 'Reproducible build of these libreoffice related packages: '
-            my_timed: '42 23 2,17 * *'
+            my_timed: '42 23 5,20 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'libreoffice'
         - '{name}_build_xorg':
             my_description: 'Reproducible build of these X.Org and and related packages: '
-            my_timed: '42 5 3,18 * *'
+            my_timed: '42 5 6,21 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'libglu mesa x11-apps x11-session-utils x11-utils x11-xfs-utils x11-xkb-utils x11-xserver-utils xauth xfonts-100dpi xfonts-75dpi xfonts-base xfonts-scalable xfonts-utils xinit xkeyboard-config xorg xorg-docs xorg-server xserver-xorg-input-evdev xterm x-terminal-emulator glx-alternatives fglrx-driver xserver-xorg-video-nouveau xf86-input-mtrack xf86-input-multitouch xf86-input-wacom xserver-xorg-input-acecad xserver-xorg-input-aiptek xserver-xorg-input-elographics xserver-xorg-input-joystick xserver-xorg-input-keyboard xserver-xorg-input-mouse xserver-xorg-input-mutouch xserver-xorg-input-vmmouse xserver-xorg-input-void xf86-video-glamo xserver-xorg-video-ati xserver-xorg-video-cirrus xserver-xorg-video-dummy xserver-xorg-video-fbdev xserver-xorg-video-glide xserver-xorg-video-intel xserver-xorg-video-ivtvdev xserver-xorg-video-mach64 xserver-xorg-video-mga xserver-xorg-video-modesetting xserver-xorg-video-neomagic xserver-xorg-video-openchrome xserver-xorg-video-qxl xserver-xorg-video-r128 xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-trident xserver-xorg-video-vesa xserver-xorg-video-vmware xpra aterm mlterm mrxvt putty roxterm rxvt rxvt-unicode terminal.app'
         - '{name}_build_server':
             my_description: 'Reproducible build of these server packages: '
-            my_timed: '42 23 3,18 * *'
+            my_timed: '42 23 6,21 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'apache2 asterisk bind9 courier icinga icinga2 lighttpd munin mysql-5.5 nginx postfix postgresql squid3'
         - '{name}_build_security-privacy':
             my_description: 'Reproducible build of these security and privacy related packages: '
-            my_timed: '42 5 4,19 * *'
+            my_timed: '42 5 7,22 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'aircrack-ng apparmor apparmor-profiles-extra assword bilibop corkscrew cryptsetup debian-archive-keyring debian-security-support dmsetup flashproxy gnome-keyring gnunet gnunet-fuse gnunet-gtk gnupg gnupg2 gnutls28 haveged https-everywhere iodine irssi-plugin-otr keepassx libotr macchanger macchanger mat monkeysign monkeysphere mozilla-noscript msva-perl mumble nautilus-wipe obfs4proxy obfsproxy onioncat onionshare openssl openvpn parcimonie pidgin-otr pinentry privoxy pwgen python-pyptlib python-stem python-torctl python-txtorcon seahorse-nautilus secure-delete signing-party tcpdump tlsdate tor tor-arm torbrowser-launcher torsocks vidalia wireshark'
         - '{name}_build_d-i':
             my_description: 'Reproducible build of these debian-installer packages: '
-            my_timed: '42 23 4,19 * *'
+            my_timed: '42 23 7,22 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'aboot-installer anna apt-setup arcboot-installer auto-install base-installer bterm-unifont babelbox busybox cdebconf-entropy cdebconf-terminal cdebconf cdrom-checker cdrom-detect cdrom-retriever choose-mirror clock-setup colo-installer console-setup debian-installer-launcher debian-installer-netboot-images debian-installer-utils debian-installer debootstrap desktop-chooser devicetype-detect dh-di efi-reader elilo-installer etch-support finish-install flash-kernel grub-installer hw-detect installation-locale installation-report iso-scan kbd-chooser kernel-wedge kfreebsd-kernel-di-amd64 kfreebsd-kernel-di-i386 kickseed lenny-support libdebian-installer lilo-installer live-installer localechooser lowmem lvmcfg main-menu mdcfg media-retriever mklibs mountmedia net-retriever netboot-assistant netcfg network-console nobootloader oldsys-preseed os-prober palo-installer partconf partitioner partman-auto-crypto partman-auto-lvm partman-auto-raid partman-auto partman-base partman-basicfilesystems partman-basicmethods partman-btrfs partman-crypto partman-efi partman-ext2r0 partman-ext3 partman-iscsi partman-jfs partman-lvm partman-md partman-multipath partman-nbd partman-newworld partman-palo partman-partitioning partman-prep partman-reiserfs partman-target partman-ufs partman-xfs partman-zfs pkgsel prep-installer preseed quik-installer rescue rootskel-gtk rootskel s390-dasd s390-netdevice s390-sysconfig-writer sarge-support sibyl-installer silo-installer srm-reader tzsetup udpkg usb-discover user-setup userdevfs vmelilo-installer win32-loader yaboot-installer zipl-installer'
 
@@ -142,4 +196,4 @@
 # PACKAGES="aircrack-ng apparmor apparmor-profiles-extra assword bilibop corkscrew cryptsetup debian-archive-keyring debian-security-support dmsetup flashproxy gnome-keyring gnunet gnunet-fuse gnunet-gtk gnupg gnupg2 gnutls28 haveged https-everywhere iodine irssi-plugin-otr keepassx libotr macchanger macchanger mat monkeysign monkeysphere mozilla-noscript msva-perl mumble nautilus-wipe obfs4proxy obfsproxy onioncat onionshare openssl openvpn parcimonie pidgin-otr pinentry privoxy pwgen python-pyptlib python-stem python-torctl python-txtorcon seahorse-nautilus secure-delete signing-party tcpdump tlsdate tor tor-arm torbrowser-launcher torsocks vidalia wireshark"
 # echo $PACKAGES | sed -s "s# #\n#g" | sort | xargs echo
 
-# (for i in virtualbox galculator gpicview leafpad lxappearance lxde-core lxde-icon-theme lxinput lxrandr lxsession-edit lxshortcut lxterminal obconf xarchiver kde-plasma-desktop kde-plasma-netbook kdeadmin  kdeartwork kdegraphics gobby-0.5 kdeedu kdegames kdemultimedia kdenetwork kdeutils kdepim kde-standard kdeaccessibility kdesdk kdetoys kdewebdev calligra kdeplasma-addons kde-runtime plasma-desktop kde-workspace kde-baseapps udisks2 upower kdm gdm3 kde-l10n xfwm4 xfconf xfce4-settings xfce4-panel xfdesktop4 thunar  gtk2-engines-xfce xfce4-session xfce4-appfinder  xfce4-mixer orage  libxfce4ui-utils thunar-volman  tango-icon-theme  xfce4-notifyd xfce4-power-manager evince iceweasel pidgin virt-manager mplayer2 screen mutt marble chromium desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs gnome gnome-core network-manager-gnome cheese evolution evolution-plugins gnome-color-manager gnome-documents gnome-games gnome-nettool nautilus-sendto gnome-orca seahorse totem vinagre alacarte avahi-daemon gimp gnome-media gnome-tweak-tool hamster-applet irssi inkscape libreoffice-gnome abiword gnumeric rhythmbox shotwell simple-scan sound-juicer tomboy tracker-gui transmission-gtk xdg-user-dirs-gtk cups-pk-helper gedit-plugins gnome-shell-extensions gstreamer1.0-libav gstreamer1.0-plugins-ugly rhythmbox-plugins rhythmbox-plugin-cdrecorder rygel-playbin rygel-tracker telepathy-gabble telepathy-rakia telepathy-salut totem-plugins libgtk2-perl cinnamon cinnamon-control-center cinnamon-desktop cinnamon-desktop-environment cinnamon-screensaver cinnamon-session cinnamon-settings-daemon cinnamon-translations gnome-main-menu mate-applets mate-backgrounds mate-common mate-control-center mate-desktop mate-desktop-environment mate-icon-theme mate-icon-theme-faenza mate-indicator-applet mate-media mate-menus mate-netbook mate-netspeed mate-notification-daemon mate-panel mate-polkit mate-power-manager mate-screensaver mate-sensors-applet mate-session-manager mate-settings-daemon mate-system-monitor mate-terminal mate-themes mate-user-share mate-utils ; do apt-cache show $i | grep ^Source | cut -d " " -f2  ; apt-cache show $i | grep -q Source || echo $i ; apt-cache showsrc $i 2>/dev/null | grep ^Package  | cut -d " " -f2 ; done ) | sort -u | grep -v build-essential | xargs echo
+# (for i in $LIST_OF_BINARIES; do apt-cache show $i | grep ^Source | cut -d " " -f2  ; apt-cache show $i | grep -q Source || echo $i ; apt-cache showsrc $i 2>/dev/null | grep ^Package  | cut -d " " -f2 ; done ) | sort -u | grep -v build-essential | xargs echo

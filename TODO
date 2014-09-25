@@ -99,7 +99,6 @@ general
 
 === reproducible
 
-* split desktop job in 7
 * use git repo in job config?
 * document this on https://wiki.debian.org/ReproducibleBuilds
 * investigate packages not in sid from https://jenkins.debian.net/view/reproducible/job/reproducible_build_d-i/lastBuild/console - the list was taken from the jenkins d-i jobs...

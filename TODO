@@ -99,6 +99,7 @@ general
 
 === reproducible
 
+* split desktop job in 7
 * time+job based triggers reproducible build jobs:
 ** setup: time based
 ** example_good: triggered by setup

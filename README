@@ -104,6 +104,10 @@ Installation tests inside chroot environments.
 
 * FIXME: describe rebootstrap jobs
 
+=== reproducible jobs
+
+* FIXME: describe reproducible jobs
+
 === dvswitch jobs
 
 * FIXME: describe dvswitch jobs

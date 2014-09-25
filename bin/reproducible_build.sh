@@ -63,10 +63,12 @@ for SRCPACKAGE in "$@" ; do
 				echo "${SRCPACKAGE} built successfully and reproducibly."
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
+				touch results/___.dummy.log # not having any bad logs is not a reason for failure
 			else
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
+				rm -f results/dummy.log 2>/dev/null # just cleanup
 			fi
 			rm b1 b2 -rf
 		fi

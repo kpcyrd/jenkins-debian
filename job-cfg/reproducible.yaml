@@ -146,7 +146,7 @@
             my_timed: '42 5 3,18 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'kdeartwork kde-baseapps kde-l10n kdepim kdeplasma-addons kde-runtime kdewebdev kde-workspace meta-kde'
-        - '{name}_build_xfce'
+        - '{name}_build_xfce':
             my_description: 'Reproducible build of Xfce packages: '
             my_timed: '23 5 3,18 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
@@ -166,7 +166,7 @@
             my_timed: '42 5 5,20 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: 'cinnamon cinnamon-control-center cinnamon-desktop cinnamon-desktop-environment cinnamon-screensaver cinnamon-session cinnamon-settings-daemon cinnamon-translations'
-         - '{name}_build_libreoffice':
+        - '{name}_build_libreoffice':
             my_description: 'Reproducible build of these libreoffice related packages: '
             my_timed: '42 23 5,20 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'

@@ -135,12 +135,12 @@
             my_description: 'Reproducible build of desktop applications: '
             my_timed: '42 5 2,17 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'abiword alacarte avahi calligra cheese chromium-browser gobby-0.5 cups cups-pk-helper desktop-base emacs-defaults evince evolution galculator gedit-plugins gimp gnumeric gpicview gst-libav1.0 gst-plugins-ugly1.0 hamster-applet iceweasel inkscape irssi leafpad libgtk2-perl mplayer2 screen mutt marble network-manager obconf orage pidgin rhythmbox rygel seahorse shotwell simple-scan sound-juicer tango-icon-theme telepathy-gabble telepathy-rakia telepathy-salut texlive-base thunar thunar-volman tomboy totem tracker transmission udisks2 upower vim vinagre virt-manager vlc wine xarchiver xdg-user-dirs-gtk virtualbox'
+            my_packages: 'abiword alacarte avahi calligra cheese chromium-browser gobby-0.5 cups cups-pk-helper desktop-base emacs-defaults evince evolution galculator gedit-plugins gimp gnumeric gpicview gst-libav1.0 gst-plugins-ugly1.0 hamster-applet iceweasel inkscape irssi leafpad libgtk2-perl mplayer2 screen mutt marble network-manager obconf orage pidgin rhythmbox rygel seahorse shotwell simple-scan sound-juicer tango-icon-theme telepathy-gabble telepathy-rakia telepathy-salut texlive-base tomboy totem tracker transmission udisks2 upower vim vinagre virt-manager vlc wine xarchiver xdg-user-dirs-gtk virtualbox'
         - '{name}_build_gnome':
             my_description: 'Reproducible build of GNOME packages: '
             my_timed: '23 5 2,17 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'gdm3 gnome-color-manager gnome-documents gnome-main-menu gnome-media gnome-nettool gnome-orca gnome-shell-extensions gnome-tweak-tool meta-gnome3 nautilus-sendto'
+            my_packages: 'gdm3 gnome-color-manager gnome-documents gnome-main-menu gnome-media gnome-nettool gnome-orca gnome-shell-extensions gnome-tweak-tool meta-gnome3 nautilus'
         - '{name}_build_kde':
             my_description: 'Reproducible build of KDE packages: '
             my_timed: '42 5 3,18 * *'
@@ -150,7 +150,7 @@
             my_description: 'Reproducible build of Xfce packages: '
             my_timed: '23 5 3,18 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'gtk2-engines-xfce libxfce4ui xfce4 xfce4-appfinder xfce4-mixer xfce4-notifyd xfce4-panel xfce4-power-manager xfce4-session xfce4-settings xfconf xfdesktop4'
+            my_packages: 'gtk2-engines-xfce libxfce4ui thunar thunar-volman xfce4 xfce4-appfinder xfce4-mixer xfce4-notifyd xfce4-panel xfce4-power-manager xfce4-session xfce4-settings xfconf xfdesktop4'
         - '{name}_build_lxde':
             my_description: 'Reproducible build of LXDE packages: '
             my_timed: '42 5 4,19 * *'

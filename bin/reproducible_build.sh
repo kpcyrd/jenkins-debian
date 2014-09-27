@@ -27,13 +27,6 @@ if [ ! -f $PACKAGES_DB ] ; then
 	PRIMARY KEY (name))'
 fi
 
-set +x
-echo
-echo "=============================================================="
-echo "The following source packages will be build: $@"
-echo "=============================================================="
-echo
-set -x
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
 sudo apt-get update
@@ -48,6 +41,13 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 else
 	PACKAGES="$@"
 fi
+set +x
+echo
+echo "=============================================================="
+echo "The following source packages will be build: $PACKAGES"
+echo "=============================================================="
+echo
+set -x
 
 COUNT_TOTAL=0
 COUNT_GOOD=0

@@ -25,13 +25,24 @@ set -x
 grep deb-src /etc/apt/sources.list | grep sid
 sudo apt-get update
 
+# if $1 is an integer, build $1 random packages
+if [[ $1 =~ ^-?[0-9]+$ ]] ; then
+	TMPFILE=$(mktemp)
+	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
+	AMOUNT=$1
+	PACKAGES=$(xzcat $TMPFILE | grep "^Package" | cut -d " " -f2 | sort -R | head -$AMOUNT | xargs echo)
+	rm $TMPFILE
+else
+	PACKAGES="$@"
+fi
+
 COUNT_TOTAL=0
 COUNT_GOOD=0
 COUNT_BAD=0
 GOOD=""
 BAD=""
 SOURCELESS=""
-for SRCPACKAGE in "$@" ; do
+for SRCPACKAGE in $PACKAGES ; do
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
 	rm b1 b2 -rf
 	set +e

@@ -54,6 +54,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_build_random_packages'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_build_core'
 
 - job-template:
@@ -113,9 +117,14 @@
     jobs:
         - '{name}_setup':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 0 1,2,3,4,5,6,7,16,17,18,19,20,21,22 * *'
+            my_timed: '42 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
             my_packages: ''
+        - '{name}_build_random_packages':
+            my_description: 'Reproducible build 50 random packages each day.'
+            my_timed: '23 3 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: '50'
         - '{name}_build_test_reproducibility':
             my_description: 'Reproducible build of a few packages, some we know will succeed and some we know which "should" fail: '
             my_timed: ''

@@ -66,9 +66,9 @@ for SRCPACKAGE in $PACKAGES ; do
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
-		sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\")"
+		sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"none available\", \"404\")"
 	else
-		VERSION=$(grep ^Version ${SRCPACKAGE}_*.dsc | cut -d " " -f)
+		VERSION=$(grep ^Version ${SRCPACKAGE}_*.dsc | cut -d " " -f2 | head -1)
 		STATUS=$(sqlite3 $PACKAGES_DB "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
 		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 25 ] ; then
 			echo "Package ${SRCPACKAGE} (${VERSION}) build reproducibly in the past and was thus randomly skipped."

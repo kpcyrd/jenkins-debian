@@ -36,7 +36,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	TMPFILE=$(mktemp)
 	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
 	AMOUNT=$1
-	PACKAGES=$(xzcat $TMPFILE | grep "^Package" | cut -d " " -f2 | sort -R | head -$AMOUNT | xargs echo)
+	PACKAGES=$(xzcat $TMPFILE | grep "^Package" | cut -d " " -f2 | egrep -v "linux$"| sort -R | head -$AMOUNT | xargs echo)
 	rm $TMPFILE
 else
 	PACKAGES="$@"

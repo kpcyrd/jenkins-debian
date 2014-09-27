@@ -19,7 +19,7 @@ sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible.tgz --dis
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz -- ${TMPFILE}
 rm ${TMPFILE}
 
-# the alternative would be to make the job definition more complicated: collecting logs for all jobs but this one...
+# the alternative would be to make the job definition more complicated: collecting logs for all jobs but this one and _stats...
 mkdir -p results/_success
 touch results/dummy.log
 touch results/_success/dummy.log

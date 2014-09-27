@@ -6,12 +6,25 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# fetch git repo for the diffp command used later
 if [ -d misc.git ] ; then
 	cd misc.git
 	git pull
 	cd ..
 else
 	git clone git://git.debian.org/git/reproducible/misc.git misc.git
+fi
+
+# create sqlite db
+PACKAGES_DB=/var/lib/jenkins/reproducible.db
+if [ ! -f $PACKAGES_DB ] ; then
+	sqlite3 $PACKAGES_DB '
+	CREATE TABLE source_packages
+	(name TEXT NOT NULL,
+	version TEXT NOT NULL,
+	status TEXT NOT NULL
+	CHECK (status IN ("FTBFS","reproducible","unreproducible","404")),
+	PRIMARY KEY (name))'
 fi
 
 set +x
@@ -39,9 +52,11 @@ fi
 COUNT_TOTAL=0
 COUNT_GOOD=0
 COUNT_BAD=0
+COUNT_SKIPPED=0
 GOOD=""
 BAD=""
 SOURCELESS=""
+SKIPPED=""
 for SRCPACKAGE in $PACKAGES ; do
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
 	rm b1 b2 -rf
@@ -51,7 +66,16 @@ for SRCPACKAGE in $PACKAGES ; do
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
+		sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\")"
 	else
+		VERSION=$(grep ^Version ${SRCPACKAGE}_*.dsc | cut -d " " -f)
+		STATUS=$(sqlite3 $PACKAGES_DB "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
+		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 25 ] ; then
+			echo "Package ${SRCPACKAGE} (${VERSION}) build reproducibly in the past and was thus randomly skipped."
+			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
+			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
+			continue
+		fi
 		sudo DEB_BUILD_OPTIONS="parallel=4 nocheck" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 		RESULT=$?
 		if [ $RESULT = 0 ] ; then
@@ -72,16 +96,21 @@ for SRCPACKAGE in $PACKAGES ; do
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
+				sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\")"
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 				touch results/___.dummy.log # not having any bad logs is not a reason for failure
 			else
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
+				sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\")"
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 				rm -f results/dummy.log 2>/dev/null # just cleanup
 			fi
 			rm b1 b2 -rf
+		else
+			sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\")"
+
 		fi
 		dcmd rm ${SRCPACKAGE}_*.dsc
 	fi
@@ -98,5 +127,6 @@ echo
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
 echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
+echo "$COUNT_SKIPPED packages skipped which were successfully built reproducibly in the past: ${SKIPPED}"
 echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
 echo "The following source packages doesn't exist in sid: $SOURCELESS"

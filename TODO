@@ -104,6 +104,10 @@ general
 * investigate packages not in sid from https://jenkins.debian.net/view/reproducible/job/reproducible_build_d-i/lastBuild/console - the list was taken from the jenkins d-i jobs...
 * pbuilder results cleanup
 * pbuilder cleanup cache
+* put package results (name, version, result) in an sqlite db
+** only reschedule successful packages with 25% probability, always reschedule failed package, reschedule successful packages in a new version with 75% approx
+** new job: 99-random: build 99 random packages each day
+** graph number of reproducible packages
 
 === Test Debian live
 

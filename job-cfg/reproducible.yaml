@@ -50,6 +50,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_stats'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_build_test_reproducibility'
 
 - job-template:
@@ -120,8 +124,13 @@
             my_timed: '42 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
             my_packages: ''
+        - '{name}_stats':
+            my_description: 'Reproducible builds statistics'
+            my_timed: '0 0 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
+            my_packages: ''
         - '{name}_build_random_packages':
-            my_description: 'Reproducible build 50 random packages each day.'
+            my_description: 'Reproducible build this many random packages each day:'
             my_timed: '23 3 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: '50'

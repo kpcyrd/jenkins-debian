@@ -76,13 +76,14 @@ for SRCPACKAGE in $PACKAGES ; do
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
 		fi
-		sudo DEB_BUILD_OPTIONS="parallel=4 nocheck" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
+		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 		RESULT=$?
 		if [ $RESULT = 0 ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b1
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
-			sudo DEB_BUILD_OPTIONS="parallel=4 nocheck" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
+			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
 			set -e

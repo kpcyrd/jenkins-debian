@@ -37,7 +37,7 @@ htmlecho "<html><body>" > index.html
 htmlecho "<h2>Simple statistics for reproducible builds</h2>"
 htmlecho "<p>Results were obtaining by <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>.</p>"
 htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, out of $AMOUNT in $SUITE currently. That's $PERCENT_TOTAL%!</p>"
-htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly: <code>"
+htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 	htmlecho "<a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp\">$PKG </a> "
@@ -46,7 +46,7 @@ htmlecho "</code></p>"
 htmlecho
 htmlecho "<p>$COUNT_UGLY packages failed to build from source: <code>${UGLY}</code></p>"
 htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS<code></p>"
-htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>${GOOD}</code></p>"
+htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD% of $COUNT_TOTAL) successfully built reproducibly: <code>${GOOD}</code></p>"
 htmlecho "<hr><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"
 htmlecho "</p></body></html>"
 

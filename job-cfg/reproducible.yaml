@@ -216,7 +216,7 @@
             my_description: 'Reproducible build packages which are used to build other packages.<br>Source packages to be build: '
             my_timed: '42 23 1,16 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'cdbs eglibc gcc-defaults make-dfsg devscripts python python3 ruby ghc php5 tcl asciidoc'
+            my_packages: 'cdbs eglibc gcc-defaults make-dfsg devscripts python python3 ruby ghc php5 tcl asciidoc ant maven maven2 lintian pbuilder piuparts schroot fakeroot sbuild cowbuilder'
         - '{name}_build_desktop_apps':
             my_description: 'Reproducible build of desktop applications: '
             my_timed: '42 5 2,17 * *'

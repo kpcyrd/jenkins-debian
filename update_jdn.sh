@@ -13,13 +13,45 @@ explain() {
 	echo
 }
 
+mkdir -p /srv/workspace
+
+if ! grep -q '^tmpfs\s\+/srv/workspace\s'; then
+	echo "tmpfs		/srv/workspace	tmpfs	defaults,size=60g	0	0" >> /etc/fstab
+fi
+
+if ! mountpoint -q /srv/workspace; then
+	if test -z "$(ls -A /srv/workspace)"; then
+		mount /srv/workspace
+	else
+		echo "mountpoint /srv/workspace is non-empty"
+	fi
+fi
+
 # make sure needed directories exists
-for directory in  /srv/jenkins /chroots /schroots; do
+for directory in  /srv/jenkins /schroots; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory
 	fi
 done
+
+if ! test -h /chroots; then
+	rmdir /chroots || rm -f /chroots # do not recurse
+	if test -e /chroots; then
+		echo could not clear /chroots
+	else
+		ln -s /srv/workspace/chroots /chroots
+	fi
+fi
+
+if ! test -h /var/cache/pbuilder/build; then
+	rmdir /var/cache/pbuilder/build || rm -f /var/cache/pbuilder/build
+	if test -e /var/cache/pbuilder/build; then
+		echo could not clear /var/cache/pbuilder/build
+	else
+		ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build
+	fi
+fi
 
 #
 # install packages we need
@@ -42,6 +74,7 @@ sudo apt-get build-dep installation-guide
 #
 cd $BASEDIR
 sudo cp -r etc/* /etc
+update-rc.d jenkins-workspace defaults
 
 #
 # more configuration than a simple cp can do

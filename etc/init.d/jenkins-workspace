@@ -1,0 +1,22 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:		jenkins-workspace
+# Required-Start:	$remote_fs
+# Required-Stop:	$remote_fs
+# Default-Start:	2 3 4 5
+# Default-Stop:
+# X-Start-Before:	jenkins
+# Short-Description:	Create jenkins workspace directory structure
+### END INIT INFO
+
+WORKSPACE=/srv/workspace
+
+case "$1" in
+	start)
+		echo "Creating jenkins workspace"
+		mkdir "$WORKSPACE/chroots"
+		chown jenkins:jenkins "$WORKSPACE/chroots"
+		mkdir "$WORKSPACE/pbuilder"
+		echo done
+	;;
+esac

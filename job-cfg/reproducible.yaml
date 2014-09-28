@@ -201,7 +201,7 @@
             my_description: 'Reproducible build this many random packages each day:'
             my_timed: '23 3 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: '50'
+            my_packages: '100'
         - '{name}_build_test_reproducibility':
             my_description: 'Reproducible build of a few packages, some we know will succeed and some we know which "should" fail: '
             my_timed: ''

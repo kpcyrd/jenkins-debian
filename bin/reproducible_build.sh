@@ -42,6 +42,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	rm $TMPFILE
 else
 	PACKAGES="$@"
+	AMOUNT="${#@}"
 fi
 set +x
 echo
@@ -124,7 +125,7 @@ for SRCPACKAGE in $PACKAGES ; do
 
 	set +x
 	echo "=============================================================="
-	echo "$COUNT_TOTAL of ${#PACKAGES} done."
+	echo "$COUNT_TOTAL of $AMOUNT done."
 	echo "=============================================================="
 	set -x
 done

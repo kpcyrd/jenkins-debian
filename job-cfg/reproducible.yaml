@@ -45,6 +45,7 @@
           fail-on-error: 'true'
       - trigger:
           project: 'reproducible_stats'
+          threshold: 'UNSTABLE'
 
 - defaults:
     name: reproducible_setup

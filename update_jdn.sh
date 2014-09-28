@@ -15,7 +15,7 @@ explain() {
 
 mkdir -p /srv/workspace
 
-if ! grep -q '^tmpfs\s\+/srv/workspace\s'; then
+if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 	echo "tmpfs		/srv/workspace	tmpfs	defaults,size=60g	0	0" >> /etc/fstab
 fi
 

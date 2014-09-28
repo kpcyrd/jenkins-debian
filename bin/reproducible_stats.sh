@@ -26,23 +26,22 @@ htmlecho() {
 rm index.html
 
 htmlecho "<html><body>" > index.html
-htmlecho
 htmlecho "<h2>Simple statistics for reproducible builds as tested on jenkins.debian.net so far</h2>"
-htmlecho 
 htmlecho "<p>$COUNT_TOTAL packages attempted to build in total.</p>"
-htmlecho
 htmlecho "<p>$COUNT_GOOD packages successfully built reproducibly: <code>${GOOD}</code></p>"
-htmlecho
 htmlecho "$COUNT_BAD packages failed to built reproducibly: <code>"
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
-	htmlecho "<a href=$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp>$PKG </a> "
+	htmlecho "<a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp\">$PKG </a> "
 done
 htmlecho "</code></p>"
 htmlecho
 htmlecho "$COUNT_UGLY packages failed to build from source: <code>${UGLY}</code></p>"
 htmlecho "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: <code>$SOURCELESS<code></p>"
+htmlecho "<font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a></font>"
+eht
 htmlecho "</ul></p></body></html>"
 
 # job output
 html2text index.html
+cp index.html /var/lib/jenkins/userContent/diffp.html

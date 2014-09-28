@@ -65,14 +65,15 @@ for SRCPACKAGE in $PACKAGES ; do
 	rm b1 b2 -rf
 	set +e
 	DATE=$(date +'%Y-%m-%d %H:%M')
-	apt-get source --download-only ${SRCPACKAGE}
+	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | head -1)
+
+	apt-get source --download-only ${SRCPACKAGE}=${VERSION}
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
-		sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"none available\", \"404\", \"$DATE\", \"\")"
+		sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
 	else
-		VERSION=$(grep ^Version ${SRCPACKAGE}_*.dsc | cut -d " " -f2 | head -1)
 		STATUS=$(sqlite3 $PACKAGES_DB "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
 		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 25 ] ; then
 			echo "Package ${SRCPACKAGE} (${VERSION}) build reproducibly in the past and was thus randomly skipped."

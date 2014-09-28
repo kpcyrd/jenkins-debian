@@ -22,7 +22,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
 ** create d-i_svn_trigger job to trigger sub-set jobs (like manual)
 ** create d-i git hooks
-* get rid of some reduncacy in job-cfg/*.yaml
 * fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
 * try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
@@ -38,6 +37,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === jenkins-job-builder related
 
+* get rid of some reduncacy in job-cfg/*.yaml
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 * FIXME: sometimes true and some True used in yaml files
 * support for gitweb in jobs 

@@ -32,7 +32,4 @@ echo
 echo "$COUNT_UGLY packages failed to build from source: ${UGLY}"
 echo "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: $SOURCELESS"
 
-# the alternative would be to make the job definition more complicated: collecting logs for all jobs but this one and _setup...
-mkdir -p results/_success
-touch results/dummy.log
-touch results/_success/dummy.log
+echo "<html><body><p>Hello world</p></body></html>" > inde.html

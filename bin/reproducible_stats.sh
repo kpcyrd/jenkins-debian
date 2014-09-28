@@ -32,4 +32,11 @@ echo
 echo "$COUNT_UGLY packages failed to build from source: ${UGLY}"
 echo "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: $SOURCELESS"
 
-echo "<html><body><p>Hello world</p></body></html>" > inde.html
+echo "<html><body><p>Hello World<ul>" > index.html
+for PKG in $BAD ; do
+	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
+	echo "<li><a href=https://$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}>diffp output for $PKG</a></li> " >> index.html
+done
+echo "</ul></p></body></html>" >> index.html
+
+

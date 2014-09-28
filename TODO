@@ -99,13 +99,13 @@ general
 
 === reproducible
 
-* copy diffp files away and make them accessable and link them from stats.html
 * use git repo in job config?
 * use 2 job templates
 * document this on https://wiki.debian.org/ReproducibleBuilds
 * investigate packages not in sid from https://jenkins.debian.net/view/reproducible/job/reproducible_build_d-i/lastBuild/console - the list was taken from the jenkins d-i jobs...
 * pbuilder results cleanup
 * pbuilder cleanup cache
+* cleanup userContent/diffp/
 ** graph number of reproducible packages
 
 === Test Debian live

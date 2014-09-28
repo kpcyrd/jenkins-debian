@@ -45,6 +45,36 @@
           fail-on-error: 'true'
 
 - defaults:
+    name: reproducible_setup
+    triggers:
+      - timed: "{my_timed}"
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/reproducible
+          text: reproducible builds jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}{my_packages}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-reproducible holger@layer-acht.org reproducible-commits@lists.alioth.debian.org'
+
+- defaults:
     name: reproducible_stats
     triggers:
       - timed: "{my_timed}"
@@ -69,7 +99,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '{my_shell} {my_packages}'
+      - shell: '{my_shell}'
     publishers:
       - email:
           recipients: 'jenkins+debian-reproducible holger@layer-acht.org reproducible-commits@lists.alioth.debian.org'
@@ -80,7 +110,7 @@
           keepall: True
 
 - job-template:
-    defaults: reproducible_stats
+    defaults: reproducible_setup
     name: '{name}_setup'
 
 - job-template:

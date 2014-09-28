@@ -108,7 +108,7 @@ for SRCPACKAGE in $PACKAGES ; do
 			mkdir -p results/_success
 			mkdir -p /var/lib/jenkins/userContent/diffp/
 			LOGFILE=$(ls ${SRCPACKAGE}_*.dsc)
-			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp)
+			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.log)
 			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ./results/${LOGFILE}
 			cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
 			if ! $(grep -qv '^\*\*\*\*\*' ./results/${LOGFILE}) ; then

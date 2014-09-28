@@ -19,14 +19,19 @@ fi
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
 if [ ! -f $PACKAGES_DB ] ; then
 	sqlite3 $PACKAGES_DB '
-	CREATE TABLE source_packages
-	(name TEXT NOT NULL,
-	version TEXT NOT NULL,
-	status TEXT NOT NULL
-	CHECK (status IN ("FTBFS","reproducible","unreproducible","404")),
-	build_date TEXT NOT NULL,
-	diffp_path TEXT,
-	PRIMARY KEY (name))'
+		CREATE TABLE source_packages
+		(name TEXT NOT NULL,
+		version TEXT NOT NULL,
+		status TEXT NOT NULL
+		CHECK (status IN ("FTBFS","reproducible","unreproducible","404")),
+		build_date TEXT NOT NULL,
+		diffp_path TEXT,
+		PRIMARY KEY (name))'
+	sqlite3 $PACKAGES_DB '
+		CREATE TABLE source_stats
+		(suite TEXT NOT NULL,
+		amount INTEGER NOT NULL,
+		PRIMARY KEY (suite))'
 fi
 # 30 seconds timeout when trying to get a lock
 INIT=/var/lib/jenkins/reproducible.init
@@ -44,6 +49,8 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
 	AMOUNT=$1
 	PACKAGES=$(xzcat $TMPFILE | grep "^Package" | cut -d " " -f2 | egrep -v "linux$"| sort -R | head -$AMOUNT | xargs echo)
+	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | cut -d " " -f2 | wc -l)
+	sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
 	rm $TMPFILE
 else
 	PACKAGES="$@"

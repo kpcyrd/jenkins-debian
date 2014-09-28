@@ -40,6 +40,8 @@ htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, out of $AMOUNT in 
 htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
+	# remove epoch
+	VERSION=$(echo $VERSION | cut -d ":" -f2)
 	htmlecho "<a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.log\">$PKG </a> "
 done
 htmlecho "</code></p>"

@@ -20,23 +20,29 @@ SOURCELESS=$(sqlite3 $PACKAGES_DB "SELECT name FROM source_packages WHERE status
 COUNT_SOURCELESS=$(sqlite3 $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"404\"" | xargs echo)
 COUNT_TOTAL=$(sqlite3 $PACKAGES_DB "SELECT COUNT(name) FROM source_packages")
 
-echo
-echo "Simple statistics for reproducible builds as tested on jenkins.debian.net so far"
-echo 
-echo "$COUNT_TOTAL packages attempted to build in total."
-echo
-echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
-echo
-echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
-echo
-echo "$COUNT_UGLY packages failed to build from source: ${UGLY}"
-echo "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: $SOURCELESS"
+htmlecho() {
+	echo "$1" >> index.html
+}
+rm index.html
 
-echo "<html><body><p>Hello World<ul>" > index.html
+htmlecho "<html><body>" > index.html
+htmlecho
+htmlecho "<h2>Simple statistics for reproducible builds as tested on jenkins.debian.net so far</h2>"
+htmlecho 
+htmlecho "<p>$COUNT_TOTAL packages attempted to build in total.</p>"
+htmlecho
+htmlecho "<p>$COUNT_GOOD packages successfully built reproducibly: <code>${GOOD}</code></p>"
+htmlecho
+htmlecho "$COUNT_BAD packages failed to built reproducibly: <code>"
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
-	echo "<li><a href=https://$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}>diffp output for $PKG</a></li> " >> index.html
+	htmlecho "<a href=$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp>$PKG </a> "
 done
-echo "</ul></p></body></html>" >> index.html
+htmlecho "</code></p>"
+htmlecho
+htmlecho "$COUNT_UGLY packages failed to build from source: <code>${UGLY}</code></p>"
+htmlecho "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: <code>$SOURCELESS<code></p>"
+htmlecho "</ul></p></body></html>"
 
-
+# job output
+html2text index.html

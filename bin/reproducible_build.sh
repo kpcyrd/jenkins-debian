@@ -51,6 +51,7 @@ echo "=============================================================="
 echo
 set -x
 
+NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 COUNT_TOTAL=0
 COUNT_GOOD=0
 COUNT_BAD=0
@@ -79,7 +80,6 @@ for SRCPACKAGE in $PACKAGES ; do
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
 		fi
-		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 		RESULT=$?
 		if [ $RESULT = 0 ] ; then
@@ -121,7 +121,7 @@ for SRCPACKAGE in $PACKAGES ; do
 
 	set +x
 	echo "=============================================================="
-	echo "$COUNT_TOTAL of ${#@} done."
+	echo "$COUNT_TOTAL of ${#PACKAGES} done."
 	echo "=============================================================="
 	set -x
 done

@@ -24,8 +24,11 @@ echo
 echo "Simple statistics for reproducible builds as tested on jenkins.debian.net so far"
 echo 
 echo "$COUNT_TOTAL packages attempted to build in total."
+echo
 echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
+echo
 echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
+echo
 echo "$COUNT_UGLY packages failed to build from source: ${UGLY}"
 echo "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: $SOURCELESS"
 

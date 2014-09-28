@@ -28,6 +28,11 @@ if [ ! -f $PACKAGES_DB ] ; then
 	diffp_path TEXT,
 	PRIMARY KEY (name))'
 fi
+# 30 seconds timeout when trying to get a lock
+INIT=/var/lib/jenkins/reproducible.init
+cat >/var/lib/jenkins/reproducible.init <<-EOF
+.timeout 30000
+EOF
 
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
@@ -73,7 +78,7 @@ for SRCPACKAGE in $PACKAGES ; do
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
-		sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
+		sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
 	else
 		STATUS=$(sqlite3 $PACKAGES_DB "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
 		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 25 ] ; then
@@ -104,20 +109,20 @@ for SRCPACKAGE in $PACKAGES ; do
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
-				sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\", \"\")"
+				sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\", \"\")"
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 				touch results/___.dummy.log # not having any bad logs is not a reason for failure
 			else
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
-				sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
+				sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 				rm -f results/dummy.log 2>/dev/null # just cleanup
 			fi
 			rm b1 b2 -rf
 		else
-			sqlite3 $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
+			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 
 		fi
 		dcmd rm ${SRCPACKAGE}_*.dsc

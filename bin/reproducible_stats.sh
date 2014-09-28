@@ -38,7 +38,7 @@ htmlecho "</code></p>"
 htmlecho
 htmlecho "$COUNT_UGLY packages failed to build from source: <code>${UGLY}</code></p>"
 htmlecho "$COUNT_SOURCELESS packages doesn't exist in sid and need investigation: <code>$SOURCELESS<code></p>"
-htmlecho "<font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a></font>"
+htmlecho "<hr><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"
 eht
 htmlecho "</ul></p></body></html>"
 

@@ -43,6 +43,8 @@
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - trigger:
+          project: 'reproducible_stats'
 
 - defaults:
     name: reproducible_setup

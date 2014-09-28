@@ -47,11 +47,11 @@ done
 htmlecho "</code></p>"
 htmlecho
 htmlecho "<p>$COUNT_UGLY packages failed to build from source: <code>${UGLY}</code></p>"
-htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS<code></p>"
+htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
 htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD% of $COUNT_TOTAL) successfully built reproducibly: <code>${GOOD}</code></p>"
 htmlecho "<hr><p>Packages which fail to build reproducibly, sorted by Maintainers: and Uploaders: fields."
 htmlecho "<pre>$(echo $BAD | dd-list -i) </pre></p>"
-htmlecho "<hr><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"
+htmlecho "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"
 htmlecho "</p></body></html>"
 
 # job output

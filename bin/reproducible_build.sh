@@ -110,7 +110,6 @@ for SRCPACKAGE in $PACKAGES ; do
 			LOGFILE=$(ls ${SRCPACKAGE}_*.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.log)
 			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ./results/${LOGFILE}
-			cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
 			if ! $(grep -qv '^\*\*\*\*\*' ./results/${LOGFILE}) ; then
 				mv ./results/${LOGFILE} ./results/_success/
 				figlet ${SRCPACKAGE}
@@ -121,6 +120,7 @@ for SRCPACKAGE in $PACKAGES ; do
 				GOOD="${SRCPACKAGE} ${GOOD}"
 				touch results/___.dummy.log # not having any bad logs is not a reason for failure
 			else
+				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
 				let "COUNT_BAD=COUNT_BAD+1"

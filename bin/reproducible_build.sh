@@ -80,6 +80,10 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were nadomly picked
 		AMOUNT=33
 		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT source_packages.name FROM source_packages,job_sources  WHERE (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = job_sources.name AND job_sources.job = 'random') ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
+		AMOUNT=0
+		for PKG in $PACKAGES ; do
+			let "AMOUNT=AMOUNT+1"
+		done
 	fi
 	# update amount of available packages (for doing statistics later)
 	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | wc -l)

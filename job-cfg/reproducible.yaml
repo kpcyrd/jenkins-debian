@@ -130,6 +130,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_build_random_failures'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_build_core'
 
 - job-template:
@@ -202,6 +206,11 @@
             my_timed: '23 3,7,11,15,19,23 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: '66'
+        - '{name}_build_random_failures':
+            my_description: 'Try to reproducible build 33 packages which failed before and which come from the random job:'
+            my_timed: '42 15 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_packages: '0'
         - '{name}_build_test_reproducibility':
             my_description: 'Reproducible build of a few packages, some we know will succeed and some we know which "should" fail: '
             my_timed: ''

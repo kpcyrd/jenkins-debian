@@ -20,7 +20,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 * keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
-* fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
+* fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * push jenkins munin plugins upstream
 
@@ -90,9 +90,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === reproducible
 
-* done: improve random jobs to only select previously untested packages
-* plus random_any (=the existing random job) then?
-* have a job which runs failed packages for which a newer version exists
+* have a job which runs failed packages for which a newer version exists, oldest first. doing this in sql is impossible with bash, while easy in python...
+* packages from jobs should insert themselves into job_sources and then issue a warning if found in two jobs..
 
 === Test Debian live
 

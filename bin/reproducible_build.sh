@@ -37,6 +37,10 @@ if [ ! -f ${PACKAGES_DB} ] ; then
 		(suite TEXT NOT NULL,
 		amount INTEGER NOT NULL,
 		PRIMARY KEY (suite))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE job_sources
+		(name TEXT NOT NULL,
+		job TEXT NOT NULL)'
 fi
 # 30 seconds timeout when trying to get a lock
 INIT=/var/lib/jenkins/reproducible.init
@@ -53,21 +57,30 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	TMPFILE=$(mktemp)
 	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
 	AMOUNT=$1
-	REAL_AMOUNT=0
-	GUESSES=$(echo "${AMOUNT}*3" | bc)
-	PACKAGES=""
-	CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^linux$"| sort -R | head -$GUESSES | xargs echo)
-	for PKG in $CANDIDATES ; do
-		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
-			continue
-		fi
-		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
-		if [ "$RESULT" = "" ] ; then
-			PACKAGES="${PACKAGES} $PKG"
-			let "REAL_AMOUNT=REAL_AMOUNT+1"
-		fi
-	done
-	AMOUNT=$REAL_AMOUNT
+	if [ $AMOUNT -gt 0 ] ; then
+		REAL_AMOUNT=0
+		GUESSES=$(echo "${AMOUNT}*3" | bc)
+		PACKAGES=""
+		CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^linux$"| sort -R | head -$GUESSES | xargs echo)
+		for PKG in $CANDIDATES ; do
+			if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
+				continue
+			fi
+			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
+			if [ "$RESULT" = "" ] ; then
+				PACKAGES="${PACKAGES} $PKG"
+				let "REAL_AMOUNT=REAL_AMOUNT+1"
+			fi
+		done
+		AMOUNT=$REAL_AMOUNT
+		for PKG in $PACKAGES ; do
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
+		done
+	else
+		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were nadomly picked
+		AMOUNT=33
+		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT source_packages.name FROM source_packages,job_sources  WHERE (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = job_sources.name AND job_sources.job = 'random') ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
+	fi
 	# update amount of available packages (for doing statistics later)
 	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | wc -l)
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"

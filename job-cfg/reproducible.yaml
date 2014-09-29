@@ -216,12 +216,12 @@
             my_description: 'Reproducible build packages which are used to build other packages.<br>Source packages to be build: '
             my_timed: '42 23 1,16 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'cdbs eglibc gcc-defaults devscripts python python3 ruby ghc php5 tcl asciidoc ant maven maven2 lintian pbuilder piuparts schroot fakeroot sbuild cowbuilder'
+            my_packages: 'cdbs eglibc gcc-defaults devscripts python python3 ruby ghc php5 tcl asciidoc ant maven maven2 lintian pbuilder piuparts schroot fakeroot sbuild cowbuilder git subversion bzr'
         - '{name}_build_desktop_apps':
             my_description: 'Reproducible build of desktop applications: '
             my_timed: '42 5 2,17 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'abiword alacarte avahi calligra cheese chromium-browser gobby-0.5 cups cups-pk-helper desktop-base emacs-defaults evince evolution galculator gedit-plugins gimp gnumeric gpicview gst-libav1.0 gst-plugins-ugly1.0 hamster-applet iceweasel inkscape irssi leafpad libgtk2-perl mplayer2 screen mutt marble network-manager obconf orage pidgin rhythmbox rygel seahorse shotwell simple-scan sound-juicer tango-icon-theme telepathy-gabble telepathy-rakia telepathy-salut texlive-base tomboy totem tracker transmission udisks2 upower vim vinagre virt-manager vlc wine xarchiver xdg-user-dirs-gtk virtualbox wpasupplicant wicd'
+            my_packages: 'abiword alacarte avahi calligra cheese chromium-browser gobby-0.5 cups cups-pk-helper desktop-base emacs23 emacs24 vim joe nano emacs-defaults evince evolution galculator gedit-plugins gimp gnumeric gpicview gst-libav1.0 gst-plugins-ugly1.0 hamster-applet iceweasel inkscape irssi leafpad libgtk2-perl mplayer2 screen mutt marble network-manager obconf orage pidgin rhythmbox rygel seahorse shotwell simple-scan sound-juicer tango-icon-theme telepathy-gabble telepathy-rakia telepathy-salut texlive-base tomboy totem tracker transmission udisks2 upower vim vinagre virt-manager vlc wine xarchiver xdg-user-dirs-gtk virtualbox wpasupplicant wicd'
         - '{name}_build_gnome':
             my_description: 'Reproducible build of GNOME packages: '
             my_timed: '23 5 2,17 * *'
@@ -266,7 +266,7 @@
             my_description: 'Reproducible build of these server packages: '
             my_timed: '42 23 6,21 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'apache2 asterisk bind9 courier icinga icinga2 lighttpd munin mysql-5.5 nginx postfix exim4 sendmail postgresql squid squid3 roundcube openssh rsync nfs-utils bitlbee dropbear'
+            my_packages: 'apache2 asterisk bind9 courier icinga icinga2 lighttpd munin mysql-5.5 nginx postfix exim4 sendmail postgresql squid squid3 roundcube openssh rsync nfs-utils bitlbee dropbear puppet cfengine2 ansible fai salt'
         - '{name}_build_security-privacy':
             my_description: 'Reproducible build of these security and privacy related packages: '
             my_timed: '42 5 7,22 * *'

@@ -165,6 +165,6 @@ echo
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
 echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
-echo "$COUNT_SKIPPED packages skipped (either because they were successfully built reproducibly in the past or because they are not for amd64 / arch all): ${SKIPPED}"
+echo "$COUNT_SKIPPED packages skipped (either because they were successfully built reproducibly in the past or because they are not for amd64 / all / any): ${SKIPPED}"
 echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
 echo "The following source packages doesn't exist in sid: $SOURCELESS"

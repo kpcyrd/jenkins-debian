@@ -199,7 +199,7 @@
             my_packages: ''
         - '{name}_build_random_packages':
             my_description: 'Reproducible build this many random packages each day:'
-            my_timed: '23 3,9 * * *'
+            my_timed: '23 3,9,15,21 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_packages: '66'
         - '{name}_build_test_reproducibility':

@@ -56,7 +56,8 @@ htmlecho
 htmlecho "<p>$COUNT_UGLY packages failed to build from source: <code>"
 for PKG in $UGLY ; do
 	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
-	# keep epoch
+	# remove epoch
+	VERSION=$(echo $VERSION | cut -d ":" -f2)
 	if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log" ] ; then
 		htmlecho "<a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log\">$PKG </a> "
 	else

@@ -275,7 +275,7 @@
             my_description: 'Reproducible build of these server packages: '
             my_timed: '42 23 6,21 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'apache2 asterisk bind9 courier icinga icinga2 lighttpd munin mysql-5.5 nginx postfix exim4 sendmail postgresql squid squid3 roundcube openssh rsync nfs-utils bitlbee dropbear puppet cfengine2 ansible fai salt'
+            my_packages: 'apache2 asterisk bind9 courier icinga icinga2 lighttpd munin mysql-5.5 nginx postfix exim4 sendmail postgresql-9.4 squid squid3 roundcube openssh rsync nfs-utils bitlbee dropbear puppet cfengine2 ansible fai salt'
         - '{name}_build_security-privacy':
             my_description: 'Reproducible build of these security and privacy related packages: '
             my_timed: '42 5 7,22 * *'

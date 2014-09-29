@@ -149,20 +149,22 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
 		fi
-		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${VERSION}.pbuilder.log
-		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes ] ; then
+		# EPOCH_FREE_VERSION was too long
+		EVERSION=$(echo $VERSION | cut -d ":" -f2)
+		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${EVERSION}.pbuilder.log
+		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
-			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes b1
-			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes
+			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b1
+			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			rm ${SRCPACKAGE}_*.pbuilder.log /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log
-			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${VERSION}.dsc
-			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes b2
-			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes
+			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
+			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
+			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			set -e
-			cat b1/${SRCPACKAGE}_${VERSION}_amd64.changes
-			LOGFILE=$(ls ${SRCPACKAGE}_${VERSION}.dsc)
+			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes
+			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.log)
-			./misc.git/diffp b1/${SRCPACKAGE}_${VERSION}_amd64.changes b2/${SRCPACKAGE}_${VERSION}_amd64.changes | tee ./results/${LOGFILE}
+			./misc.git/diffp b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee ./results/${LOGFILE}
 			if ! $(grep -qv '^\*\*\*\*\*' ./results/${LOGFILE}) ; then
 				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				figlet ${SRCPACKAGE}
@@ -183,8 +185,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		else
 			echo "Warning: ${SRCPACKAGE} failed to build from source."
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
-			mv ${SRCPACKAGE}_${VERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
-			dcmd rm ${SRCPACKAGE}_${VERSION}.dsc
+			mv ${SRCPACKAGE}_${EVERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
+			dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
 		fi
 	fi
 

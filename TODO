@@ -20,20 +20,15 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 * keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
-** create d-i_svn_trigger job to trigger sub-set jobs (like manual)
-** create d-i git hooks
 * fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ too
-* try awstats
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * push jenkins munin plugins upstream
-* some way to map failing jobs to debian bugs and display that in the job.... (probably via a 2nd build step)
 
 == Debian Packaging related
 
 * /usr/sbin/jenkins.debian.net-setup needs to be written
 * what update-j.d.n.sh does, needs to be put elsewhere...
 * debian/copyright is incorrect about some licenses: a.) the profitbricks+debian+jenkins logos b.) the preseeding files
-* better switch to scm trigger instead of scm pulling before releasing this as 0.1...
 
 === jenkins-job-builder related
 
@@ -89,9 +84,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * $name-preseed.base -> sed .cfg (LANG)
 * for edu: pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
 ** these jobs would not need to do an install, just booting them in rescue mode is probably enough
-
-general
-
 * test moar images: debian wheezy+sid cd and dvd images too and use lxde cd for installing lxde + etc
 * use jigdo to download images - but no edu jigdo images.
 * still havent got http://www.os-autoinst.org/ out of my mind
@@ -130,6 +122,8 @@ general
 ----
 
 Help explaining how to test tasks (ie all the language tasks) very much welcome!
+
+== Ideas...
 
 === Test co-installability
 

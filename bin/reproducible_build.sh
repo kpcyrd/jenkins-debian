@@ -23,7 +23,7 @@ if [ ! -f $PACKAGES_DB ] ; then
 		(name TEXT NOT NULL,
 		version TEXT NOT NULL,
 		status TEXT NOT NULL
-		CHECK (status IN ("FTBFS","reproducible","unreproducible","404")),
+		CHECK (status IN ("FTBFS","reproducible","unreproducible","404", "not for us")),
 		build_date TEXT NOT NULL,
 		diffp_path TEXT,
 		PRIMARY KEY (name))'
@@ -88,6 +88,14 @@ for SRCPACKAGE in $PACKAGES ; do
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
 	else
+		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d ":" -f2)
+		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] ; then
+			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
+			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
+			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
+			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
+			continue
+		fi
 		STATUS=$(sqlite3 $PACKAGES_DB "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
 		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 20 ] ; then
 			echo "Package ${SRCPACKAGE} (${VERSION}) build reproducibly in the past and was thus randomly skipped."
@@ -148,6 +156,6 @@ echo
 echo
 echo "$COUNT_TOTAL packages attempted to build in total."
 echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
-echo "$COUNT_SKIPPED packages skipped which were successfully built reproducibly in the past: ${SKIPPED}"
+echo "$COUNT_SKIPPED packages skipped (either because they were successfully built reproducibly in the past or because they are not for amd64 / arch all): ${SKIPPED}"
 echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
 echo "The following source packages doesn't exist in sid: $SOURCELESS"

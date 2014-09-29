@@ -56,6 +56,7 @@ EOF
 grep deb-src /etc/apt/sources.list | grep sid
 sudo apt-get update
 
+set +x
 # if $1 is an integer, build $1 random packages
 if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	TMPFILE=$(mktemp)
@@ -79,7 +80,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		AMOUNT=$REAL_AMOUNT
 		for PKG in $PACKAGES ; do
 			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = 'random' )")
-			if [ "$RESULT" != "" ] ; then
+			if [ "$RESULT" = "" ] ; then
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
 			fi
 		done
@@ -108,12 +109,11 @@ else
 	JOB=$(echo $JOB_NAME|cut -d "_" -f3)
 	for PKG in $PACKAGES ; do
 		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = '$JOB' )")
-		if [ "$RESULT" != "" ] ; then
+		if [ "$RESULT" = "" ] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','$JOB')"
 		fi
 	done
 fi
-set +x
 echo
 echo "=============================================================="
 echo "The following source packages will be build: ${PACKAGES}"

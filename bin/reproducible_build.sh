@@ -18,7 +18,7 @@ fi
 
 # create dirs for results
 mkdir -p results/_success
-mkdir -p /var/lib/jenkins/userContent/diffp/
+mkdir -p /var/lib/jenkins/userContent/diffp/ /var/lib/jenkins/userContent/pbuilder/
 
 # create sqlite db
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
@@ -108,12 +108,13 @@ for SRCPACKAGE in $PACKAGES ; do
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
 		fi
-		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
+		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${VERSION}.pbuilder.log
 		RESULT=$?
 		if [ $RESULT = 0 ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b1
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
+			rm ${SRCPACKAGE}_${VERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log
 			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
@@ -144,6 +145,7 @@ for SRCPACKAGE in $PACKAGES ; do
 			rm b1 b2 -rf
 		else
 			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
+			mv ${SRCPACKAGE}_${VERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
 
 		fi
 		dcmd rm ${SRCPACKAGE}_*.dsc

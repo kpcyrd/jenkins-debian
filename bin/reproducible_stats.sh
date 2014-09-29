@@ -37,7 +37,6 @@ GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 htmlecho() {
 	echo "$1" >> index.html
 }
-rm index.html
 
 htmlecho "<html><body>" > index.html
 htmlecho "<h2>Statistics for reproducible builds</h2>"
@@ -52,7 +51,18 @@ for PKG in $BAD ; do
 done
 htmlecho "</code></p>"
 htmlecho
-htmlecho "<p>$COUNT_UGLY packages failed to build from source: <code>${UGLY}</code></p>"
+htmlecho "<p>$COUNT_UGLY packages failed to build from source: <code>"
+for PKG in $UGLY ; do
+	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
+	# remove epoch
+	VERSION=$(echo $VERSION | cut -d ":" -f2)
+	if [ -f /var/lib/jenkins/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log ] ; then
+		htmlecho "<a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log\">$PKG </a> "
+	else
+		htmlecho "$PKG "
+	fi
+done
+htmlecho "</code></p>"
 if [ $COUNT_SOURCELESS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
 fi

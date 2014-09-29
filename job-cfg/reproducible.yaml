@@ -37,7 +37,7 @@
       - email:
           recipients: 'jenkins+debian-reproducible holger@layer-acht.org reproducible-commits@lists.alioth.debian.org'
       - archive:
-          artifacts: 'results/*.*, results/_success/*.*'
+          artifacts: 'results/*.*'
           latest_only: false
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'

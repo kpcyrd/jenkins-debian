@@ -15,6 +15,10 @@ else
 	git clone git://git.debian.org/git/reproducible/misc.git misc.git
 fi
 
+# create dirs for results
+mkdir -p results/_success
+mkdir -p /var/lib/jenkins/userContent/diffp/
+
 # create sqlite db
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
 if [ ! -f $PACKAGES_DB ] ; then
@@ -114,13 +118,12 @@ for SRCPACKAGE in $PACKAGES ; do
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_*.changes
 			set -e
 			cat b1/${SRCPACKAGE}_*.changes
-			mkdir -p results/_success
-			mkdir -p /var/lib/jenkins/userContent/diffp/
 			LOGFILE=$(ls ${SRCPACKAGE}_*.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.log)
 			./misc.git/diffp b1/${SRCPACKAGE}_*.changes b2/${SRCPACKAGE}_*.changes | tee ./results/${LOGFILE}
 			if ! $(grep -qv '^\*\*\*\*\*' ./results/${LOGFILE}) ; then
 				mv ./results/${LOGFILE} ./results/_success/
+				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
@@ -129,6 +132,7 @@ for SRCPACKAGE in $PACKAGES ; do
 				GOOD="${SRCPACKAGE} ${GOOD}"
 				touch results/___.dummy.log # not having any bad logs is not a reason for failure
 			else
+				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
@@ -142,6 +146,8 @@ for SRCPACKAGE in $PACKAGES ; do
 
 		fi
 		dcmd rm ${SRCPACKAGE}_*.dsc
+		sudo rm -f /var/cache/pbuilder/result/${SRCPACKAGE}_*
+
 	fi
 
 	set +x

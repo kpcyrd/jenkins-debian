@@ -60,6 +60,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === d-i_build*
 
+* pbuilder results cleanup
 * run scripts/digress/ ?
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
 * build branches? (which?)
@@ -100,11 +101,7 @@ general
 === reproducible
 
 * use git repo in job config?
-* investigate packages not in sid from https://jenkins.debian.net/view/reproducible/job/reproducible_build_d-i/lastBuild/console - the list was taken from the jenkins d-i jobs...
-* pbuilder results cleanup
 * pbuilder cleanup cache
-* cleanup userContent/diffp/
-** graph number of reproducible packages
 
 === Test Debian live
 

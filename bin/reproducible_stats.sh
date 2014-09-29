@@ -37,7 +37,7 @@ rm index.html
 htmlecho "<html><body>" > index.html
 htmlecho "<h2>Statistics for reproducible builds</h2>"
 htmlecho "<p>Results were obtaining by <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. This page is updated after each job run.</p>"
-htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be build reproducibly! Yay! :-)</p>"
+htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be build reproducibly! Yay! :-)</p>"
 htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")

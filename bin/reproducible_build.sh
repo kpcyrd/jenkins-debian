@@ -22,8 +22,8 @@ mkdir -p /var/lib/jenkins/userContent/diffp/ /var/lib/jenkins/userContent/pbuild
 
 # create sqlite db
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
-if [ ! -f $PACKAGES_DB ] ; then
-	sqlite3 $PACKAGES_DB '
+if [ ! -f ${PACKAGES_DB} ] ; then
+	sqlite3 ${PACKAGES_DB} '
 		CREATE TABLE source_packages
 		(name TEXT NOT NULL,
 		version TEXT NOT NULL,
@@ -32,7 +32,7 @@ if [ ! -f $PACKAGES_DB ] ; then
 		build_date TEXT NOT NULL,
 		diffp_path TEXT,
 		PRIMARY KEY (name))'
-	sqlite3 $PACKAGES_DB '
+	sqlite3 ${PACKAGES_DB} '
 		CREATE TABLE source_stats
 		(suite TEXT NOT NULL,
 		amount INTEGER NOT NULL,
@@ -53,10 +53,24 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	TMPFILE=$(mktemp)
 	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
 	AMOUNT=$1
-	PACKAGES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "linux$"| sort -R | head -$AMOUNT | xargs echo)
+	REAL_AMOUNT=0
+	GUESSES=$(echo "${AMOUNT}*3" | bc)
+	PACKAGES=""
+	CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^linux$"| sort -R | head -$GUESSES | xargs echo)
+	for PKG in $CANDIDATES ; do
+		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
+			continue
+		fi
+		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
+		if [ "$RESULT" = "" ] ; then
+			PACKAGES="${PACKAGES} $PKG"
+			let "REAL_AMOUNT=REAL_AMOUNT+1"
+		fi
+	done
+	AMOUNT=$REAL_AMOUNT
 	# update amount of available packages (for doing statistics later)
 	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | wc -l)
-	sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
 	rm $TMPFILE
 else
 	PACKAGES="$@"
@@ -65,7 +79,7 @@ fi
 set +x
 echo
 echo "=============================================================="
-echo "The following source packages will be build: $PACKAGES"
+echo "The following source packages will be build: ${PACKAGES}"
 echo "=============================================================="
 echo
 set -x
@@ -79,7 +93,7 @@ GOOD=""
 BAD=""
 SOURCELESS=""
 SKIPPED=""
-for SRCPACKAGE in $PACKAGES ; do
+for SRCPACKAGE in ${PACKAGES} ; do
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
 	rm b1 b2 -rf
 	set +e
@@ -91,17 +105,17 @@ for SRCPACKAGE in $PACKAGES ; do
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
-		sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
 	else
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d ":" -f2)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
-			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
 		fi
-		STATUS=$(sqlite3 $PACKAGES_DB "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
+		STATUS=$(sqlite3 ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
 		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 20 ] ; then
 			echo "Package ${SRCPACKAGE} (${VERSION}) build reproducibly in the past and was thus randomly skipped."
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
@@ -127,21 +141,21 @@ for SRCPACKAGE in $PACKAGES ; do
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
-				sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\", \"\")"
+				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\", \"\")"
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
 				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
-				sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
+				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
 			rm b1 b2 -rf
 		else
 			echo "Warning: ${SRCPACKAGE} failed to build from source."
-			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 			mv ${SRCPACKAGE}_${VERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
 			dcmd rm ${SRCPACKAGE}_${VERSION}.dsc
 		fi

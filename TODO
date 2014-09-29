@@ -90,7 +90,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === reproducible
 
-* improve random jobs to only select previously untested packages?
+* done: improve random jobs to only select previously untested packages
 * plus random_any (=the existing random job) then?
 * have a job which runs failed packages for which a newer version exists
 

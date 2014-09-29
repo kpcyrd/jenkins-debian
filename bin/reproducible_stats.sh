@@ -37,7 +37,7 @@ rm index.html
 htmlecho "<html><body>" > index.html
 htmlecho "<h2>Statistics for reproducible builds</h2>"
 htmlecho "<p>Results were obtaining by <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. This page is updated after each job run.</p>"
-htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT in Debian $SUITE currently.</p>"
+htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be build reproducibly! Yay! :-)</p>"
 htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
@@ -52,7 +52,6 @@ if [ $COUNT_SOURCELESS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
 fi
 htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD% of $COUNT_TOTAL) successfully built reproducibly: <code>${GOOD}</code></p>"
-htmlecho "<p>\"$PERCENT_GOOD% of $AMOUNT\" and \"$PERCENT_TOTAL% of $AMOUNT\" means roughly+wildly guessed $GUESS_GOOD packages that can be build reproducibly! Yay! :-)"
 htmlecho "<hr><p>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields."
 htmlecho "<pre>$(echo $BAD | dd-list -i) </pre></p>"
 htmlecho "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"

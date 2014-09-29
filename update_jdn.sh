@@ -59,7 +59,7 @@ fi
 #
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host \
 	build-essential python-setuptools \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml vncsnapshot imagemagick ffmpeg2theora python-twisted python-imaging gocr guestmount schroot sqlite3\
+	debootstrap sudo figlet -f banner graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml vncsnapshot imagemagick ffmpeg2theora python-twisted python-imaging gocr guestmount schroot sqlite3\
 	unzip python-hachoir-metadata ghc
 sudo apt-get install -t wheezy-backports qemu
 explain "Packages installed."
@@ -132,7 +132,7 @@ DEFINED_DI_TRIGGERS=$(grep "defaults: d-i-manual-html" d-i.yaml|wc -l)
 let DEFINED_TRIGGERS=DEFINED_MY_TRIGGERS+DEFINED_DI_TRIGGERS
 let CONFIGURED_TRIGGERS=$(grep \<childProjects /var/lib/jenkins/jobs/*/config.xml|wc -l)+$(grep  \<childProjects /var/lib/jenkins/jobs/*/config.xml |grep , |xargs -r echo | sed 's/[^,]//g'| wc -m)-1
 if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
-	figlet Warning
+	figlet -f banner Warning
 	explain "Number of defined triggers ($DEFINED_TRIGGERS) differs from currently configured triggers ($CONFIGURED_TRIGGERS), please investigate."
 fi
 
@@ -163,7 +163,7 @@ rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 # creating LVM volume group for jobs
 #
 if [ "$PVNAME" = "" ]; then
-    figlet Error
+    figlet -f banner Error
     explain "Set \$PVNAME to physical volume pathname."
     exit 1
 else

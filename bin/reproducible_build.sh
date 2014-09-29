@@ -81,7 +81,7 @@ for SRCPACKAGE in $PACKAGES ; do
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | head -1)
 
-	apt-get source --download-only ${SRCPACKAGE}=${VERSION}
+	apt-get source --download-only --only-source ${SRCPACKAGE}=${VERSION}
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"

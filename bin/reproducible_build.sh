@@ -136,7 +136,15 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	set +e
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | head -1)
-
+	# check if we tested this version already before...
+	STATUS=$(sqlite3 ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
+	# if reproducible or ( unreproducible/FTBFS by 50% chance )
+	if [ "$STATUS" = "reproducible" ] || (( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) && [ $(( $RANDOM % 100 )) -gt 50 ] ) ; then
+		echo "Package ${SRCPACKAGE} (${VERSION}) with status '$STATUS' skipped, no newer version available."
+		let "COUNT_SKIPPED=COUNT_SKIPPED+1"
+		SKIPPED="${SRCPACKAGE} ${SKIPPED}"
+		continue
+	fi
 	apt-get source --download-only --only-source ${SRCPACKAGE}=${VERSION}
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
@@ -148,13 +156,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
-			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
-			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
-			continue
-		fi
-		STATUS=$(sqlite3 ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
-		if [ "$STATUS" = "reproducible" ] && [ $(( $RANDOM % 100 )) -gt 20 ] ; then
-			echo "Package ${SRCPACKAGE} (${VERSION}) build reproducibly in the past and was thus randomly skipped."
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue

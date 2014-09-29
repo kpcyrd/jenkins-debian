@@ -8,3 +8,4 @@ MIRRORSITE=http://ftp.de.debian.org/debian/
 EXTRAPACKAGES="fakeroot"
 APTCACHE=""
 export http_proxy="http://localhost:3128"
+COMPRESSPROG="pigz"

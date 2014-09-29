@@ -90,8 +90,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === reproducible
 
-* have a job which runs failed packages for which a newer version exists, oldest first. doing this in sql is impossible with bash, while easy in python...
-* packages from jobs should insert themselves into job_sources and then issue a warning if found in two jobs..
+* watch it build :)
 
 === Test Debian live
 

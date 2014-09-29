@@ -78,7 +78,10 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		done
 		AMOUNT=$REAL_AMOUNT
 		for PKG in $PACKAGES ; do
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
+			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_source WHERE ( name = '${PKG}' AND job = 'random' )")
+			if [ "$RESULT" != "" ] ; then
+				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
+			fi
 		done
 	else
 		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were nadomly picked and where a new version is available
@@ -102,6 +105,13 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 else
 	PACKAGES="$@"
 	AMOUNT="${#@}"
+	JOB=$(echo $JOB_NAME|cut -d "_" -f3)
+	for PKG in $PACKAGES ; do
+		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_source WHERE ( name = '${PKG}' AND job = '$JOB' )")
+		if [ "$RESULT" != "" ] ; then
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','$JOB')"
+		fi
+	done
 fi
 set +x
 echo

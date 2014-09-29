@@ -108,6 +108,7 @@ ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons 
 [ todo.html -nt TODO ] || asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
 [ setup.html -nt INSTALL ] || asciidoc $ASCIIDOC_PARAMS -o setup.html INSTALL
 rm TODO README INSTALL
+chown -R jenkins.jenkins /var/lib/jenkins/userContent
 explain "Updated user content for Jenkins."
 
 #

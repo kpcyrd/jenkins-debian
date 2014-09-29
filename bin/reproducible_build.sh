@@ -109,7 +109,6 @@ for SRCPACKAGE in $PACKAGES ; do
 			continue
 		fi
 		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${VERSION}.pbuilder.log
-		RESULT=$?
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${VERSION}_amd64.changes b1
@@ -146,11 +145,8 @@ for SRCPACKAGE in $PACKAGES ; do
 		else
 			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 			mv ${SRCPACKAGE}_${VERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
-
+			dcmd rm ${SRCPACKAGE}_${VERSION}.dsc
 		fi
-		dcmd rm ${SRCPACKAGE}_${VERSION}.dsc
-		sudo rm -fv /var/cache/pbuilder/result/${SRCPACKAGE}_* 2>/dev/null
-
 	fi
 
 	set +x

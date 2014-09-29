@@ -305,6 +305,10 @@
     defaults: g-i-installation
     name: '{name}_debian-edu_jessie_main-server'
 
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie_main+ltsp-server'
+
 - project:
     name: g-i-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
@@ -626,8 +630,14 @@
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_jessie_main-server':
          my_title: 'Debian Edu (jessie) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 52 debian-edu_jessie_main-server 25 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 52 debian-edu_jessie_main-server 40 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 3 * * *'
+         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
+      - '{name}_debian-edu_jessie_main+ltsp-server':
+         my_title: 'Debian Edu (jessie) main+ltsp-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 53 debian-edu_jessie_main+ltsp-server 40 http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '42 0 * * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
 

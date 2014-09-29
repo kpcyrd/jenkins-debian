@@ -41,6 +41,10 @@ if [ ! -f ${PACKAGES_DB} ] ; then
 		CREATE TABLE job_sources
 		(name TEXT NOT NULL,
 		job TEXT NOT NULL)'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE sources
+		(name TEXT NOT NULL,
+		version TEXT NOT NULL)'
 fi
 # 30 seconds timeout when trying to get a lock
 INIT=/var/lib/jenkins/reproducible.init
@@ -77,13 +81,19 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
 		done
 	else
-		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were nadomly picked
+		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were nadomly picked and where a new version is available
+		CSVFILE=$(mktemp)
+		sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
+		(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
+		echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
+		rm $CSVFILE
 		AMOUNT=33
-		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT source_packages.name FROM source_packages,job_sources  WHERE (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = job_sources.name AND job_sources.job = 'random') ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
+		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources,job_sources  WHERE (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = job_sources.name AND source_packages.name = sources.name AND job_sources.job = 'random' AND source_packages.version != sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
 		AMOUNT=0
 		for PKG in $PACKAGES ; do
 			let "AMOUNT=AMOUNT+1"
 		done
+		rm $CSVFILE
 	fi
 	# update amount of available packages (for doing statistics later)
 	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | wc -l)

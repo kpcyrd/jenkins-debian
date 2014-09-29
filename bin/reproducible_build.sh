@@ -140,6 +140,7 @@ for SRCPACKAGE in $PACKAGES ; do
 			fi
 			rm b1 b2 -rf
 		else
+			echo "Warning: ${SRCPACKAGE} failed to build from source."
 			sqlite3 -init $INIT $PACKAGES_DB "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 			mv ${SRCPACKAGE}_${VERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
 			dcmd rm ${SRCPACKAGE}_${VERSION}.dsc

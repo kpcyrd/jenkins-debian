@@ -78,7 +78,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		done
 		AMOUNT=$REAL_AMOUNT
 		for PKG in $PACKAGES ; do
-			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_source WHERE ( name = '${PKG}' AND job = 'random' )")
+			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = 'random' )")
 			if [ "$RESULT" != "" ] ; then
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
 			fi
@@ -107,7 +107,7 @@ else
 	AMOUNT="${#@}"
 	JOB=$(echo $JOB_NAME|cut -d "_" -f3)
 	for PKG in $PACKAGES ; do
-		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_source WHERE ( name = '${PKG}' AND job = '$JOB' )")
+		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = '$JOB' )")
 		if [ "$RESULT" != "" ] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','$JOB')"
 		fi

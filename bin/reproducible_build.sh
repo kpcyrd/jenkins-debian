@@ -97,7 +97,6 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		for PKG in $PACKAGES ; do
 			let "AMOUNT=AMOUNT+1"
 		done
-		rm $CSVFILE
 	fi
 	# update amount of available packages (for doing statistics later)
 	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | wc -l)
@@ -106,7 +105,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 else
 	PACKAGES="$@"
 	AMOUNT="${#@}"
-	JOB=$(echo $JOB_NAME|cut -d "_" -f3)
+	JOB=$(echo $JOB_NAME|cut -d "_" -f3-)
 	for PKG in $PACKAGES ; do
 		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = '$JOB' )")
 		if [ "$RESULT" = "" ] ; then

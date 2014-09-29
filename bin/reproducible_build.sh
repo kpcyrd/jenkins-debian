@@ -6,6 +6,7 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# FIXME: needed as long as #763328 (RFP: /usr/bin/diffp) is unfixed...
 # fetch git repo for the diffp command used later
 if [ -d misc.git ] ; then
 	cd misc.git

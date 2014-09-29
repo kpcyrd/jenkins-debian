@@ -60,11 +60,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === d-i_build*
 
-* pbuilder results cleanup
 * run scripts/digress/ ?
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
 * build branches? (which?)
-* inform debian-boot@ ?
 
 === chroot-installation_*
 
@@ -100,8 +98,8 @@ general
 
 === reproducible
 
-* use git repo in job config?
-* pbuilder cleanup cache
+* improve random jobs to only select previously untested packages?
+* plus random_any (=the existing random job) then?
 
 === Test Debian live
 

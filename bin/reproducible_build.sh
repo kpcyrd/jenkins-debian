@@ -94,6 +94,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		rm $CSVFILE
 		AMOUNT=33
 		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources,job_sources  WHERE (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = job_sources.name AND source_packages.name = sources.name AND job_sources.job = 'random' AND source_packages.version != sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
+		echo "Info: Only unreproducible and FTBFS packages with a new version available are selected from this job."
 		AMOUNT=0
 		for PKG in $PACKAGES ; do
 			let "AMOUNT=AMOUNT+1"

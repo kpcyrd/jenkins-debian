@@ -69,7 +69,7 @@ if [ $COUNT_SOURCELESS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
 fi
 if [ $COUNT_NOTFORUS -gt 0 ] ; then
-	htmlecho "<p>$COUNT_NOTFORUS packages which are neither Architecture: <code>any</code> nor <code>all</code> nor <code>amd64</code>: <code>$NOTFORUS</code></p>"
+	htmlecho "<p>$COUNT_NOTFORUS packages which are neither Architecture: 'any' nor 'all' nor 'amd64': <code>$NOTFORUS</code></p>"
 fi
 htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD% of $COUNT_TOTAL) successfully built reproducibly: <code>${GOOD}</code></p>"
 htmlecho "<hr><p>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields."

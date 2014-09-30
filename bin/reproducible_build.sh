@@ -129,6 +129,7 @@ BAD=""
 SOURCELESS=""
 SKIPPED=""
 for SRCPACKAGE in ${PACKAGES} ; do
+	set +x
 	echo "============================================================================="
 	echo "Trying to build ${SRCPACKAGE} reproducibly now."
 	echo "============================================================================="

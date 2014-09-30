@@ -101,7 +101,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		done
 	fi
 	# update amount of available packages (for doing statistics later)
-	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | wc -l)
+	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | sort -u | wc -l)
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
 	rm $TMPFILE
 else

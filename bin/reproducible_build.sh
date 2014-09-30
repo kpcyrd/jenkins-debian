@@ -8,12 +8,12 @@ common_init "$@"
 
 # FIXME: needed as long as #763328 (RFP: /usr/bin/diffp) is unfixed...
 # fetch git repo for the diffp command used later
-if [ -d misc.git ] ; then
-	cd misc.git
+if [ -d debbindiff.git ] ; then
+	cd debbindiff.git
 	git pull
 	cd ..
 else
-	git clone git://git.debian.org/git/reproducible/misc.git misc.git
+	git clone git://git.debian.org/git/reproducible/debbindiff.git debbindiff.git
 fi
 
 # create dirs for results
@@ -182,8 +182,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			set -e
 			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
-			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.log)
-			./misc.git/diffp b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee ./results/${LOGFILE}
+			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.html)
+			./debbindiff.git/debbindiff.py --html ./results/${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			if ! $(grep -qv '^\*\*\*\*\*' ./results/${LOGFILE}) ; then
 				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				figlet ${SRCPACKAGE}

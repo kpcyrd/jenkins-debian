@@ -54,7 +54,9 @@ EOF
 
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
-sudo apt-get update
+# try apt-get update twice, else fail gracefully, aka not.
+sudo apt-get update || ( sleep $(( $RANDOM % 100 )) ; sudo apt-get update || true )
+
 
 set +x
 # if $1 is an integer, build $1 random packages

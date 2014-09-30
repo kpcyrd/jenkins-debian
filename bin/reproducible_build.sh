@@ -115,12 +115,10 @@ else
 		fi
 	done
 fi
-echo
-echo "=============================================================="
+echo "============================================================================="
 echo "The following source packages will be build: ${PACKAGES}"
-echo "=============================================================="
+echo "============================================================================="
 echo
-set -x
 
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 COUNT_TOTAL=0
@@ -132,6 +130,10 @@ BAD=""
 SOURCELESS=""
 SKIPPED=""
 for SRCPACKAGE in ${PACKAGES} ; do
+	echo "============================================================================="
+	echo "Trying to build ${SRCPACKAGE} reproducibly now."
+	echo "============================================================================="
+	set -x
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
 	rm b1 b2 -rf
 	set +e
@@ -203,9 +205,9 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	fi
 
 	set +x
-	echo "=============================================================="
-	echo "$COUNT_TOTAL of $AMOUNT done."
-	echo "=============================================================="
+	echo "============================================================================="
+	echo "$COUNT_TOTAL of $AMOUNT done. Previous package: ${SRCPACKAGE}"
+	echo "============================================================================="
 	set -x
 done
 

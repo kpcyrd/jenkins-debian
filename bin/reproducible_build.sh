@@ -68,7 +68,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		REAL_AMOUNT=0
 		GUESSES=$(echo "${AMOUNT}*3" | bc)
 		PACKAGES=""
-		CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux$|util-linux)$" | sort -R | head -$GUESSES | xargs echo)
+		CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^linux$" | sort -R | head -$GUESSES | xargs echo)
 		for PKG in $CANDIDATES ; do
 			if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
 				continue
@@ -138,7 +138,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	rm b1 b2 -rf
 	set +e
 	DATE=$(date +'%Y-%m-%d %H:%M')
-	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | head -1)
+	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | sort -r | head -1)
 	# check if we tested this version already before...
 	STATUS=$(sqlite3 ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
 	# if reproducible or ( unreproducible/FTBFS by 50% chance )
@@ -148,13 +148,15 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 		continue
 	fi
-	apt-get source --download-only --only-source ${SRCPACKAGE}=${VERSION}
+	# host has only sid in deb-src in sources.list
+	apt-get source --download-only --only-source ${SRCPACKAGE}
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
 	else
+		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | cut -d ":" -f2-)
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d ":" -f2)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"

@@ -55,8 +55,7 @@ EOF
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
 # try apt-get update twice, else fail gracefully, aka not.
-sudo apt-get update || ( sleep $(( $RANDOM % 100 )) ; sudo apt-get update || true )
-
+sudo apt-get update || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update || true )
 
 set +x
 # if $1 is an integer, build $1 random packages
@@ -148,6 +147,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 		continue
 	fi
+	rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	# host has only sid in deb-src in sources.list
 	apt-get source --download-only --only-source ${SRCPACKAGE}
 	RESULT=$?
@@ -155,9 +155,10 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
+		continue
 	else
-		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | cut -d ":" -f2-)
-		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d ":" -f2)
+		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d ":" -f2-)
+		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d ":" -f2)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
@@ -202,8 +203,9 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			echo "Warning: ${SRCPACKAGE} failed to build from source."
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 			mv ${SRCPACKAGE}_${EVERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
-			dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
 		fi
+		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
+		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	fi
 
 	set +x

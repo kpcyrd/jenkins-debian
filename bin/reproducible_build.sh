@@ -66,7 +66,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		REAL_AMOUNT=0
 		GUESSES=$(echo "${AMOUNT}*3" | bc)
 		PACKAGES=""
-		CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^linux$"| sort -R | head -$GUESSES | xargs echo)
+		CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux$|util-linux)$" | sort -R | head -$GUESSES | xargs echo)
 		for PKG in $CANDIDATES ; do
 			if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
 				continue

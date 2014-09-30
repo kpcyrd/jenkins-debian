@@ -154,8 +154,9 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
-		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
+		set +x
+		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		continue
 	else
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d ":" -f2-)
@@ -194,16 +195,18 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			else
 				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
-				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
+				set +x
+				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
 			rm b1 b2 -rf
 		else
-			echo "Warning: ${SRCPACKAGE} failed to build from source."
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 			mv ${SRCPACKAGE}_${EVERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
+			set +x
+			echo "Warning: ${SRCPACKAGE} failed to build from source."
 		fi
 		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
 		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1

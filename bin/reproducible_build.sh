@@ -159,7 +159,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		continue
 	else
-		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d ":" -f2-)
+		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d ":" -f2-)
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d ":" -f2)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"

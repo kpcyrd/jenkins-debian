@@ -3,6 +3,7 @@
     triggers:
       - timed: "{my_timed}"
     project-type: freestyle
+    concurrent: True
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

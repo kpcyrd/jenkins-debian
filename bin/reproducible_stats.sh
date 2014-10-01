@@ -34,6 +34,9 @@ COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_p
 PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
 PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
+PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$AMOUNT)" | bc)
+PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$AMOUNT)" | bc)
+PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$AMOUNT)" | bc)
 GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 
 htmlecho() {
@@ -57,25 +60,25 @@ for PKG in $BAD ; do
 done
 htmlecho "</code></p>"
 htmlecho
-htmlecho "<p>$COUNT_UGLY packages failed to build from source: <code>"
+htmlecho "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
 for PKG in $UGLY ; do
 	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 	# remove epoch
 	VERSION=$(echo $VERSION | cut -d ":" -f2)
 	if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log" ] ; then
-		htmlecho "<a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log\">$PKG </a> "
+		htmlecho " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log\">$PKG</a> "
 	else
-		htmlecho "$PKG "
+		htmlecho " $PKG "
 	fi
 done
 htmlecho "</code></p>"
 if [ $COUNT_SOURCELESS -gt 0 ] ; then
-	htmlecho "<p>$COUNT_SOURCELESS packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
+	htmlecho "<p>$COUNT_SOURCELESS ($PERCENT_SORCELESS%) packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
 fi
 if [ $COUNT_NOTFORUS -gt 0 ] ; then
-	htmlecho "<p>$COUNT_NOTFORUS packages which are neither Architecture: 'any' nor 'all' nor 'amd64': <code>$NOTFORUS</code></p>"
+	htmlecho "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64': <code>$NOTFORUS</code></p>"
 fi
-htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD% of $COUNT_TOTAL) successfully built reproducibly: <code>${GOOD}</code></p>"
+htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>${GOOD}</code></p>"
 htmlecho "<hr><p>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields."
 htmlecho "<pre>$(echo $BAD | dd-list -i) </pre></p>"
 htmlecho "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"

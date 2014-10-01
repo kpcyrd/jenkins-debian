@@ -176,7 +176,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b1
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
-			rm ${SRCPACKAGE}_*.pbuilder.log /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log
+			rm ${SRCPACKAGE}_*.pbuilder.log
+			rm -f /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log 2>/dev/null
 			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes

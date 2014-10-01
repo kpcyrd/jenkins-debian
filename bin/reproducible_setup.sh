@@ -12,6 +12,8 @@ echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.l
 apt-get update
 echo "Warning: Usage of --force-yes to override the apt authentication warning. Don't do this."
 apt-get install --force-yes -y dpkg dpkg-dev debhelper dh-python discount
+echo
+dpkg -l
 EOF
 
 sudo rm /var/cache/pbuilder/base-reproducible.tgz || true

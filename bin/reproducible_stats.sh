@@ -50,9 +50,9 @@ for PKG in $BAD ; do
 	# remove epoch
 	VERSION=$(echo $VERSION | cut -d ":" -f2)
 	if [ -f "/var/lib/jenkins/userContent/diffp/${PKG}_${VERSION}.diffp.html" ] ; then
-		htmlecho "<a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.html\">$PKG </a> "
+		htmlecho " <a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.html\">$PKG</a> "
 	else
-		htmlecho "<a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.log\">$PKG </a> "
+		htmlecho " <a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.log\">$PKG</a> "
 	fi
 done
 htmlecho "</code></p>"

@@ -91,6 +91,12 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === reproducible
 
 * watch it build :)
+* provide link to jenkins console log for 404 packages. probably use diff_path to store it (for all packages maybe?)
+* get rid of non-random jobs and include those packages into a scheduler
+** foo=(haklo hete joa)
+** echo ${foo[1]}
+** result: hete
+* design schedulers before writing them: [todo here]
 
 === Test Debian live
 

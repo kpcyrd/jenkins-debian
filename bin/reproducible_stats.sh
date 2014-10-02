@@ -73,7 +73,7 @@ for PKG in $UGLY ; do
 done
 htmlecho "</code></p>"
 if [ $COUNT_SOURCELESS -gt 0 ] ; then
-	htmlecho "<p>$COUNT_SOURCELESS ($PERCENT_SORCELESS%) packages which don't exist in sid and need investigation: <code>$SOURCELESS</code></p>"
+	htmlecho "<p>$COUNT_SOURCELESS ($PERCENT_SORCELESS%) packages where the source could not be downloaded. <code>$SOURCELESS</code></p>"
 fi
 if [ $COUNT_NOTFORUS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64': <code>$NOTFORUS</code></p>"

@@ -34,9 +34,9 @@ COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_p
 PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
 PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
-PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$AMOUNT)" | bc)
-PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$AMOUNT)" | bc)
-PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$AMOUNT)" | bc)
+PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
+PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
+PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 
 htmlecho() {

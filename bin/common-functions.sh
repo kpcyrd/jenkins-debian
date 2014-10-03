@@ -24,7 +24,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	#  this hack makes it possible to overwrite long running scripts
 	#  anytime...)
 	echo "$(date) - start running \"$0\" as \"$TTT\" using \"$@\" as arguments."
-	$TTT "$@"
+	/srv/jenkins/bin/setsid.py $TTT "$@"
 	exit $?
 	# cleanup is done automatically via trap
 else

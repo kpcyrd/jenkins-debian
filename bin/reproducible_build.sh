@@ -214,6 +214,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			echo "Warning: ${SRCPACKAGE} failed to build from source."
 		fi
 		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
+		sudo dcmd rm -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	fi
 

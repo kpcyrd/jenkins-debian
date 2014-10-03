@@ -120,7 +120,11 @@ echo "The following source packages will be build: ${PACKAGES}"
 echo "============================================================================="
 echo
 
-TMPDIR=$(mktemp --tmpdir=. -d)
+cleanup_all() {
+	rm -r $TMPDIR
+}
+
+TMPDIR=$(mktemp --tmpdir=$PWD -d)
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 COUNT_TOTAL=0
 COUNT_GOOD=0
@@ -130,6 +134,7 @@ GOOD=""
 BAD=""
 SOURCELESS=""
 SKIPPED=""
+trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 for SRCPACKAGE in ${PACKAGES} ; do
 	set +x
@@ -229,7 +234,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	set -x
 done
 cd ..
-rm -r $TMPDIR
+cleanup_all
+trap - INT TERM EXIT
 
 set +x
 echo

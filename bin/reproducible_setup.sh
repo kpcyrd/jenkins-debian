@@ -42,6 +42,8 @@ apt-get update
 apt-get install -y dpkg dpkg-dev debhelper dh-python discount
 echo
 dpkg -l
+echo
+for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print $2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org  ; done
 EOF
 
 sudo rm /var/cache/pbuilder/base-reproducible.tgz || true

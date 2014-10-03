@@ -28,8 +28,9 @@ jenkins ALL=  \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	/bin/rm /var/cache/pbuilder/base*.tgz, \
-	/bin/rm -f /var/cache/pbuilder/result/*, \
+	/bin/rm /var/cache/pbuilder/result/*, \
 	/usr/bin/dcmd rm *.changes, \
+	/usr/bin/dcmd rm -f *.dsc, \
 	/usr/bin/apt-get update
 
 # keep these environment variables

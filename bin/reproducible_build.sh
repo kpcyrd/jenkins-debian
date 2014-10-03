@@ -206,15 +206,17 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi
+			set -x
 			rm b1 b2 -rf
+			sudo dcmd rm -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 		else
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
 			mv ${SRCPACKAGE}_${EVERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
 			set +x
 			echo "Warning: ${SRCPACKAGE} failed to build from source."
 		fi
+		set -x
 		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
-		sudo dcmd rm -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	fi
 

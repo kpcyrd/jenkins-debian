@@ -120,6 +120,7 @@ echo "The following source packages will be build: ${PACKAGES}"
 echo "============================================================================="
 echo
 
+TMPDIR=$(mktemp --tmpdir=. -d)
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 COUNT_TOTAL=0
 COUNT_GOOD=0
@@ -129,6 +130,7 @@ GOOD=""
 BAD=""
 SOURCELESS=""
 SKIPPED=""
+cd $TMPDIR
 for SRCPACKAGE in ${PACKAGES} ; do
 	set +x
 	echo "============================================================================="
@@ -226,6 +228,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	echo "============================================================================="
 	set -x
 done
+cd ..
+rm -r $TMPDIR
 
 set +x
 echo

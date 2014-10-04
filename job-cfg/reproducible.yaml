@@ -204,9 +204,9 @@
             my_packages: ''
         - '{name}_build_random_packages':
             my_description: 'Reproducible build this many random packages each day:'
-            my_timed: '23 0,3,4,7,8,11,12,15,16,19,20,23 * * *'
+            my_timed: '0,15,30,45 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: '66'
+            my_packages: '10'
         - '{name}_build_random_failures':
             my_description: 'Try to reproducible build 33 packages which failed before and which come from the random job:'
             my_timed: '42 2,14 * * *'

@@ -86,7 +86,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 			fi
 		done
 	else
-		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were nadomly picked and where a new version is available
+		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were randomly picked and where a new version is available
 		CSVFILE=$(mktemp)
 		sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
 		(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
@@ -167,8 +167,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		continue
 	else
-		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d ":" -f2-)
-		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d ":" -f2)
+		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
+		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."

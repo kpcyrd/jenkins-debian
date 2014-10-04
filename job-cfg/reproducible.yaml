@@ -251,7 +251,7 @@
             my_description: 'Reproducible build of LXDE packages: '
             my_timed: '42 5 4,19 * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_packages: 'lxappearance lxde-icon-theme lxde-metapackages lxinput lxrandr lxsession-edit lxshortcut lxterminal'
+            my_packages: 'lxappearance lxde-icon-theme lxde-metapackages lxinput lxrandr lxsession libfm lxterminal'
         - '{name}_build_mate':
             my_description: 'Reproducible build of the Mate packages: '
             my_timed: '23 5 4,19 * *'

@@ -23,6 +23,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	# (Running shell scripts fail weirdly when overwritten when running,
 	#  this hack makes it possible to overwrite long running scripts
 	#  anytime...)
+	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)
 	echo "$(date) - start running \"$0\" as \"$TTT\" using \"$@\" as arguments."
 	/srv/jenkins/bin/setsid.py $TTT "$@"
 	exit $?

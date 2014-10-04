@@ -76,7 +76,7 @@ if [ $COUNT_SOURCELESS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages where the source could not be downloaded. <code>$SOURCELESS</code></p>"
 fi
 if [ $COUNT_NOTFORUS -gt 0 ] ; then
-	htmlecho "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64': <code>$NOTFORUS</code></p>"
+	htmlecho "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>$NOTFORUS</code></p>"
 fi
 htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>${GOOD}</code></p>"
 htmlecho "<hr><p>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields."

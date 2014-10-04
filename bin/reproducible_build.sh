@@ -169,7 +169,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	else
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2)
-		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] ; then
+		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] && [[ ! "$ARCH" =~ "linux-amd64" ]]; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"

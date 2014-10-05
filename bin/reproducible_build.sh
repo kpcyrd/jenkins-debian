@@ -157,12 +157,12 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			set -e
 			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
-			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.html)
+			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			rm -f ./results/${LOGFILE} > /dev/null 2>&1
 			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./results/${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
 			if [ ! -f ./results/${LOGFILE} ] ; then
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.html > /dev/null 2>&1 
+				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
+				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
@@ -170,8 +170,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.html > /dev/null 2>&1 
+				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
+				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
 				set +x

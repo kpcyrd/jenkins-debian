@@ -49,8 +49,8 @@ for PKG in $BAD ; do
 	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 	# remove epoch
 	VERSION=$(echo $VERSION | cut -d ":" -f2)
-	if [ -f "/var/lib/jenkins/userContent/diffp/${PKG}_${VERSION}.diffp.html" ] ; then
-		htmlecho " <a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.html\">$PKG</a> "
+	if [ -f "/var/lib/jenkins/userContent/diffp/${PKG}_${VERSION}.debbindiff.html" ] ; then
+		htmlecho " <a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.debbindiff.html\">$PKG</a> "
 	else
 		htmlecho " <a href=\"$JENKINS_URL/userContent/diffp/${PKG}_${VERSION}.diffp.log\">$PKG</a> "
 	fi

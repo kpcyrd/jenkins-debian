@@ -26,7 +26,7 @@
           option: category
           categories:
             - reproducible
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.'
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds statistics</a> page.'
     logrotate:
       daysToKeep: 365
       numToKeep: 20
@@ -66,7 +66,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.'
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds statistics</a> page.'
     logrotate:
       daysToKeep: 365
       numToKeep: 20
@@ -96,7 +96,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.'
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds statistics</a> page.'
     logrotate:
       daysToKeep: 365
       numToKeep: 20

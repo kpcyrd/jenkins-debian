@@ -25,7 +25,7 @@ sudo apt-get update || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update ||
 # update sources table in db
 update_sources_table() {
 	TMPFILE=$(mktemp)
-	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
+	curl $MIRROR/dists/sid/main/source/Sources.xz > $TMPFILE
 	CSVFILE=$(mktemp)
 	(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
 	sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"

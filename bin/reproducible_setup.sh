@@ -100,5 +100,5 @@ EOF
 #
 sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible-new.tgz --distribution sid
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible-new.tgz -- ${TMPFILE}
-sudo mv pbuilder/base-reproducible-new.tgz /var/cache/pbuilder/base-reproducible.tgz
+sudo mv /var/cache/pbuilder/base-reproducible-new.tgz /var/cache/pbuilder/base-reproducible.tgz
 rm ${TMPFILE}

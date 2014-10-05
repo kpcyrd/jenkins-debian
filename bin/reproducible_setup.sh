@@ -6,6 +6,38 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# create sqlite db
+PACKAGES_DB=/var/lib/jenkins/reproducible.db
+if [ ! -f ${PACKAGES_DB} ] ; then
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE source_packages
+		(name TEXT NOT NULL,
+		version TEXT NOT NULL,
+		status TEXT NOT NULL
+		CHECK (status IN ("FTBFS","reproducible","unreproducible","404", "not for us")),
+		build_date TEXT NOT NULL,
+		diffp_path TEXT,
+		PRIMARY KEY (name))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE source_stats
+		(suite TEXT NOT NULL,
+		amount INTEGER NOT NULL,
+		PRIMARY KEY (suite))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE job_sources
+		(name TEXT NOT NULL,
+		job TEXT NOT NULL)'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE sources
+		(name TEXT NOT NULL,
+		version TEXT NOT NULL)'
+fi
+# 30 seconds timeout when trying to get a lock
+INIT=/var/lib/jenkins/reproducible.init
+cat >/var/lib/jenkins/reproducible.init <<-EOF
+.timeout 30000
+EOF
+
 TMPFILE=$(mktemp)
 cat > ${TMPFILE} <<- EOF
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----

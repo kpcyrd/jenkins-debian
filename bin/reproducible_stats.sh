@@ -7,16 +7,13 @@
 common_init "$@"
 
 set +x
+# define db
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
+INIT=/var/lib/jenkins/reproducible.init
 if [ ! -f $PACKAGES_DB ] ; then
 	echo "$PACKAGES_DB doesn't exist, no stats possible."
 	exit 1
 fi 
-# 30 seconds timeout when trying to get a lock
-INIT=/var/lib/jenkins/reproducible.init
-cat >/var/lib/jenkins/reproducible.init <<-EOF
-.timeout 30000
-EOF
 
 SUITE=sid
 AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)

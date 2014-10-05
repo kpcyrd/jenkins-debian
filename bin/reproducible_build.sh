@@ -15,7 +15,7 @@ if [ ! -f $PACKAGES_DB ] ; then
 fi
 
 # create dirs for results
-mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/pbuilder/
+mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/pbuilder/
 
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
@@ -89,6 +89,13 @@ cleanup_all() {
 	rm -r $TMPDIR
 }
 
+cleanup_userContent() {
+	# FIXME: remove this first rm once all diffp.log files are gone
+	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
+}
+
 TMPDIR=$(mktemp --tmpdir=$PWD -d)
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 COUNT_TOTAL=0
@@ -157,10 +164,11 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
+			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
 			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
-			if [ ! -f ./${LOGFILE} ] ; then
-				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
-				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+			if [ ! -f ./${LOGFILE} ] || [ ! -f b1/${BUILD_INFO} ] ; then
+				cleanup_userContent
+				cp b1/${BUILD_INFO} /var/lib/jenkins/userContent/buildinfo/ || true
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
@@ -168,8 +176,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
-				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
-				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+				cleanup_userContent
+				cp b1/${BUILD_INFO} /var/lib/jenkins/userContent/buildinfo/
 				mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x

@@ -182,7 +182,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x
 				echo -n "Warning: ${SRCPACKAGE} failed to build reproducibly."
-				if [ ! -f b1/${BUILDINFO} ] ;
+				if [ ! -f b1/${BUILDINFO} ] ; then
 					echo " .buildinfo file is missing."
 				else
 					echo

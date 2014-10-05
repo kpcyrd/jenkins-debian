@@ -62,6 +62,8 @@ init_navi_frame() {
 	NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
 	echo "<!DOCTYPE html><html><body><p>" > $NAVI
 	echo "<font size=+1>$1</font>: " >> $NAVI
+	BUILD_DATE=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date FROM source_packages WHERE name = \"$PKG\"")
+	echo "<font size=-1>($BUILD_DATE)</font> "
 }
 
 append2navi_frame() {
@@ -84,24 +86,24 @@ link_packages() {
 			MAINLINK=""
 			init_navi_frame "$PKG"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\">buildinfo</a> "
+				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
 			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\">debbindiff</a> "
+				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
 				MAINLINK="$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html"
 			elif [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log\">diffp</a> "
+				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log\" target=\"main\">diffp</a> "
 				MAINLINK="$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log"
 			fi
 			if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log\">rbuild</a> "
+				append2navi_frame " <a href=\"$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log\" target=\"main\">rbuild</a> "
 				if [ "$MAINLINK" = "" ] ; then
 					MAINLINK="$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log"
 				fi
 			fi
 			if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log\">pbuilder</a> "
+				append2navi_frame " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log\" target=\"main\">pbuilder</a> "
 				if [ "$MAINLINK" = "" ] ; then
 					MAINLINK="$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log"
 				fi

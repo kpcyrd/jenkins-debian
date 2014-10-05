@@ -37,6 +37,7 @@
     publishers:
       - email:
           recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+          notify-every-unstable-build: False
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'

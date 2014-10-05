@@ -147,6 +147,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		continue
 	else
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
+		# EPOCH_FREE_VERSION was too long
+		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		TMPLOG=$(mktemp)
 		mv ${RBUILDLOG} ${TMPLOG}
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log
@@ -160,8 +162,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			continue
 			move_rbuildlog
 		fi
-		# EPOCH_FREE_VERSION was too long
-		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${EVERSION}.pbuilder.log
 		cat ${SRCPACKAGE}_${EVERSION}.pbuilder.log >> ${RBUILDLOG}
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then

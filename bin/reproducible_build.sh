@@ -44,12 +44,6 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 			fi
 		done
 		AMOUNT=$REAL_AMOUNT
-		for PKG in $PACKAGES ; do
-			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = 'random' )")
-			if [ "$RESULT" = "" ] ; then
-				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','random')"
-			fi
-		done
 	else
 		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were randomly picked and where a new version is available
 		CSVFILE=$(mktemp)
@@ -58,7 +52,7 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
 		rm $CSVFILE
 		AMOUNT=33
-		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources,job_sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = job_sources.name AND source_packages.name = sources.name AND job_sources.job = 'random' AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
+		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
 		echo "Info: Only unreproducible and FTBFS packages with a new version available are selected from this job."
 		AMOUNT=0
 		for PKG in $PACKAGES ; do
@@ -72,13 +66,6 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 else
 	PACKAGES="$@"
 	AMOUNT="${#@}"
-	JOB=$(echo $JOB_NAME|cut -d "_" -f3-)
-	for PKG in $PACKAGES ; do
-		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM job_sources WHERE ( name = '${PKG}' AND job = '$JOB' )")
-		if [ "$RESULT" = "" ] ; then
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO job_sources VALUES ('$PKG','$JOB')"
-		fi
-	done
 fi
 echo "============================================================================="
 echo "The following source packages will be build: ${PACKAGES}"

@@ -23,10 +23,6 @@ if [ ! -f ${PACKAGES_DB} ] ; then
 		amount INTEGER NOT NULL,
 		PRIMARY KEY (suite))'
 	sqlite3 ${PACKAGES_DB} '
-		CREATE TABLE job_sources
-		(name TEXT NOT NULL,
-		job TEXT NOT NULL)'
-	sqlite3 ${PACKAGES_DB} '
 		CREATE TABLE sources
 		(name TEXT NOT NULL,
 		version TEXT NOT NULL)'

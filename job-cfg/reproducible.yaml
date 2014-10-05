@@ -37,9 +37,6 @@
     publishers:
       - email:
           recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
-      - archive:
-          artifacts: 'results/*.*'
-          latest_only: false
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'

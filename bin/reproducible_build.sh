@@ -101,7 +101,6 @@ SOURCELESS=""
 SKIPPED=""
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
-mkdir -p results/
 for SRCPACKAGE in ${PACKAGES} ; do
 	set +x
 	echo "============================================================================="
@@ -158,9 +157,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
-			rm -f ./results/${LOGFILE} > /dev/null 2>&1
-			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./results/${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
-			if [ ! -f ./results/${LOGFILE} ] ; then
+			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
+			if [ ! -f ./${LOGFILE} ] ; then
 				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
 				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 				figlet ${SRCPACKAGE}
@@ -172,7 +170,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			else
 				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
 				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
-				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/dbd/
+				mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."

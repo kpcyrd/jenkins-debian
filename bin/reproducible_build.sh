@@ -14,16 +14,6 @@ if [ ! -f $PACKAGES_DB ] ; then
 	exit 1
 fi
 
-# FIXME: needed as long as #763328 (RFP: /usr/bin/diffp) is unfixed...
-# fetch git repo for the diffp command used later
-if [ -d debbindiff.git ] ; then
-	cd debbindiff.git
-	git pull
-	cd ..
-else
-	git clone git://git.debian.org/git/reproducible/debbindiff.git debbindiff.git
-fi
-
 # create dirs for results
 mkdir -p results/
 mkdir -p /var/lib/jenkins/userContent/diffp/ /var/lib/jenkins/userContent/pbuilder/
@@ -169,7 +159,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.diffp.html)
 			rm -f ./results/${LOGFILE} > /dev/null 2>&1
-			./debbindiff.git/debbindiff.py --html ./results/${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
+			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./results/${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
 			if [ ! -f ./results/${LOGFILE} ] ; then
 				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1 
 				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.html > /dev/null 2>&1 

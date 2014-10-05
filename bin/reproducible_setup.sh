@@ -38,8 +38,27 @@ cat >/var/lib/jenkins/reproducible.init <<-EOF
 .timeout 30000
 EOF
 
+# FIXME: needed as long as there is no backport for debbindiff
+# 	 or as long as we dont run it within pbuilder...
+# fetch git repo for the debbindiff command used in reproducible_build.sh
+WORKSPACE=$PWD
+cd /var/lib/jenkins
+if [ -d debbindiff.git ] ; then
+	cd debbindiff.git
+	git pull
+else
+	git clone git://git.debian.org/git/reproducible/debbindiff.git debbindiff.git
+fi
+cd $WORKSPACE
+
+#
+# finally, setup pbuilder
+#
 TMPFILE=$(mktemp)
 cat > ${TMPFILE} <<- EOF
+#
+# this script is run within the pbuilder environment to further customize it
+#
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -77,7 +96,9 @@ dpkg -l
 echo
 for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org || true  ; done
 EOF
-
+#
+# actually setup pbuilder
+#
 sudo rm /var/cache/pbuilder/base-reproducible.tgz || true
 sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid
 sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible.tgz -- ${TMPFILE}

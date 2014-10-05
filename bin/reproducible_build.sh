@@ -22,11 +22,18 @@ grep deb-src /etc/apt/sources.list | grep sid
 # try apt-get update twice, else fail gracefully, aka not.
 sudo apt-get update || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update || true )
 
+# update sources table in db
+TMPFILE=$(mktemp)
+curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
+CSVFILE=$(mktemp)
+(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
+sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
+echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
+rm $CSVFILE # $TMPFILE is still being used
+
 set +x
 # if $1 is an integer, build $1 random packages
 if [[ $1 =~ ^-?[0-9]+$ ]] ; then
-	TMPFILE=$(mktemp)
-	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
 	AMOUNT=$1
 	if [ $AMOUNT -gt 0 ] ; then
 		REAL_AMOUNT=0
@@ -46,11 +53,6 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 		AMOUNT=$REAL_AMOUNT
 	else
 		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were randomly picked and where a new version is available
-		CSVFILE=$(mktemp)
-		sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
-		(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
-		echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
-		rm $CSVFILE
 		AMOUNT=33
 		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
 		echo "Info: Only unreproducible and FTBFS packages with a new version available are selected from this job."

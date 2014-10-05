@@ -74,6 +74,7 @@ NameVirtualHost *:443
 		AllowOverride None
 		Order allow,deny
 		allow from all
+		AddType text/plain .log
 	</Directory>
 
 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/

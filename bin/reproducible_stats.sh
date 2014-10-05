@@ -78,9 +78,9 @@ fi
 htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>${GOOD}</code></p>"
 htmlecho "<hr><p>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields."
 htmlecho "<pre>$(echo $BAD | dd-list -i) </pre></p>"
-htmlecho "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/diffp.html\">Static URL for this page.</a> Last modified: $(date)</font>"
+htmlecho "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date)</font>"
 htmlecho "</p></body></html>"
 
 # job output
 html2text index.html
-cp index.html /var/lib/jenkins/userContent/diffp.html
+cp index.html /var/lib/jenkins/userContent/reproducible.html

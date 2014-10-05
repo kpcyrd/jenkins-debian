@@ -113,6 +113,9 @@ link_packages() {
 					MAINLINK="$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log"
 				fi
 			fi
+			append2navi_frame " <a href=\"https://packages.qa.debian.org/${PKG}\" target=\"main\">PTS</a> "
+			append2navi_frame " <a href=\"https://bugs.debian.org/src:${PKG}\" target=\"main\">BTS</a> "
+
 			finish_navi_frame
 			write_pkg_frameset "$PKG" "$MAINLINK"
 			write_index " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR "

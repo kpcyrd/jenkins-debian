@@ -138,12 +138,10 @@
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '42 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
-            my_params: ''
         - '{name}_stats':
             my_description: 'Reproducible builds statistics'
             my_timed: '0 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
-            my_params: ''
         - '{name}_build_random_packages':
             my_description: 'Reproducible build this many random packages each day:'
             my_timed: '0,15,30,45 * * * *'
@@ -156,7 +154,7 @@
             my_params: 'known 25'
         - '{name}_build_candidates':
             my_description: 'Reproducible build packages from a list of pre-defined candidates: '
-            my_timed: '40,15,30,45 3,9,15,21 * * *'
+            my_timed: '0 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_params: 'candidates 20'
 

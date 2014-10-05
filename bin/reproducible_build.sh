@@ -68,7 +68,7 @@ else
 	AMOUNT="${#@}"
 fi
 echo "============================================================================="
-echo "The following source packages will be build: ${PACKAGES}"
+echo "The following $AMOUNT source packages will be build: ${PACKAGES}"
 echo "============================================================================="
 echo
 

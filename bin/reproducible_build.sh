@@ -177,8 +177,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
 				cleanup_userContent
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
-				mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ || true
+				mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/ || true
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x
 				echo -n "Warning: ${SRCPACKAGE} failed to build reproducibly."

@@ -166,7 +166,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			set -e
-			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee ${RBUILDLOG}
+			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee -a ${RBUILDLOG}
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo

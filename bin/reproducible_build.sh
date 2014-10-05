@@ -23,53 +23,45 @@ grep deb-src /etc/apt/sources.list | grep sid
 sudo apt-get update || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update || true )
 
 # update sources table in db
-TMPFILE=$(mktemp)
-curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
-CSVFILE=$(mktemp)
-(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
-sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
-echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
-rm $CSVFILE # $TMPFILE is still being used
-
-set +x
-# if $1 is an integer, build $1 random packages
-if [[ $1 =~ ^-?[0-9]+$ ]] ; then
-	AMOUNT=$1
-	if [ $AMOUNT -gt 0 ] ; then
-		REAL_AMOUNT=0
-		GUESSES=$(echo "${AMOUNT}*3" | bc)
-		PACKAGES=""
-		CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux|cups|zurl)$" | sort -R | head -$GUESSES | xargs echo)
-		for PKG in $CANDIDATES ; do
-			if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
-				continue
-			fi
-			RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
-			if [ "$RESULT" = "" ] ; then
-				PACKAGES="${PACKAGES} $PKG"
-				let "REAL_AMOUNT=REAL_AMOUNT+1"
-			fi
-		done
-		AMOUNT=$REAL_AMOUNT
-	else
-		# this is kind of a hack: if $1 is 0, then schedule 33 failed packages which were randomly picked and where a new version is available
-		AMOUNT=33
-		PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
-		echo "Info: Only unreproducible and FTBFS packages with a new version available are selected from this job."
-		AMOUNT=0
-		for PKG in $PACKAGES ; do
-			let "AMOUNT=AMOUNT+1"
-		done
-	fi
+update_sources_table() {
+	TMPFILE=$(mktemp)
+	curl http://ftp.de.debian.org/debian/dists/sid/main/source/Sources.xz > $TMPFILE
+	CSVFILE=$(mktemp)
+	(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
+	sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
+	echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
 	# update amount of available packages (for doing statistics later)
 	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | sort -u | wc -l)
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
-	rm $TMPFILE
+	rm $CSVFILE # $TMPFILE is still being used
+}
+
+set +x
+if [ $1 = "unknown" ] ; then
+	update_sources_table
+	AMOUNT=$2
+	REAL_AMOUNT=0
+	GUESSES=$(echo "${AMOUNT}*3" | bc)
+	PACKAGES=""
+	CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux|cups|zurl)$" | sort -R | head -$GUESSES | xargs echo)
+	for PKG in $CANDIDATES ; do
+		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
+			continue
+		fi
+		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
+		if [ "$RESULT" = "" ] ; then
+			PACKAGES="${PACKAGES} $PKG"
+		fi
+	done
+elif [ $1 = "known" ] ; then
+	update_sources_table
+	AMOUNT=$2
+	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
 else
 	# CANDIDATES is defined in that file
 	. /srv/jenkins/bin/reproducible-candidates.sh
 	PACKAGES=""
-	AMOUNT="10"
+	AMOUNT=$2
 	REAL_AMOUNT=0
 	for i in $(seq 0 ${#CANDIDATES[@]}) ; do
 		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
@@ -82,13 +74,16 @@ else
 			let "REAL_AMOUNT=REAL_AMOUNT+1"
 		fi
 	done
-	AMOUNT=$REAL_AMOUNT
-
 fi
+AMOUNT=0
+for PKG in $PACKAGES ; do
+	let "AMOUNT=AMOUNT+1"
+done
 echo "============================================================================="
 echo "The following $AMOUNT source packages will be build: ${PACKAGES}"
 echo "============================================================================="
 echo
+rm -f $TMPFILE
 
 cleanup_all() {
 	rm -r $TMPDIR

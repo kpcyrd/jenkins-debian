@@ -33,7 +33,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '{my_shell} {my_param}'
+      - shell: '{my_shell} {my_params}'
     publishers:
       - email:
           recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
@@ -140,25 +140,25 @@
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '42 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
-            my_param: ''
+            my_params: ''
         - '{name}_stats':
             my_description: 'Reproducible builds statistics'
             my_timed: '0 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
-            my_param: ''
+            my_params: ''
         - '{name}_build_random_packages':
             my_description: 'Reproducible build this many random packages each day:'
             my_timed: '0,15,30,45 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_param: '10'
+            my_params: 'unknown 10'
         - '{name}_build_random_failures':
-            my_description: 'Try to reproducible build 33 packages which failed before and which come from the random job:'
+            my_description: 'Try to reproducible build packages which were build before and for which a new version exists:'
             my_timed: '42 2,14 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_param: '0'
+            my_params: 'known 25'
         - '{name}_build_candidates':
             my_description: 'Reproducible build packages from a list of pre-defined candidates: '
             my_timed: '40,15,30,45 3,9,15,21 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_param: ''
+            my_params: 'candidates 20'
 

@@ -74,6 +74,7 @@ finish_navi_frame() {
 
 link_packages() {
 	for PKG in $@ ; do
+		echo -n "."
 		VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
@@ -113,11 +114,13 @@ link_packages() {
 	done
 }
 
+echo "Starting to write statistics index page."
 write_index "<!DOCTYPE html><html><body>" > index.html
 write_index "<h2>Statistics for reproducible builds</h2>"
 write_index "<p>Results were obtained by <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. This page is updated after each job run.</p>"
 write_index "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be reproducibly buildable!</p>"
 write_index "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
+echo -n "Starting to loop through the packages tested"
 link_packages $BAD
 write_index "</code></p>"
 write_index
@@ -140,6 +143,7 @@ write_index "<hr><p>Packages which failed to build reproducibly, sorted by Maint
 write_index "<pre>$(echo $BAD | dd-list -i) </pre></p>"
 write_index "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date)</font>"
 write_index "</p></body></html>"
+echo
 
 # job output
 html2text index.html

@@ -15,7 +15,6 @@ if [ ! -f $PACKAGES_DB ] ; then
 fi
 
 # create dirs for results
-mkdir -p results/
 mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/pbuilder/
 
 # this needs sid entries in sources.list:
@@ -102,6 +101,7 @@ SOURCELESS=""
 SKIPPED=""
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
+mkdir -p results/
 for SRCPACKAGE in ${PACKAGES} ; do
 	set +x
 	echo "============================================================================="

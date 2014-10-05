@@ -27,6 +27,7 @@ jenkins ALL=  \
 	/bin/cp -r /media/*, \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
+	/bin/mv pbuilder/base-reproducible-new.tgz /var/cache/pbuilder/base-reproducible.tgz, \
 	/bin/rm /var/cache/pbuilder/base*.tgz, \
 	/bin/rm /var/cache/pbuilder/result/*, \
 	/usr/bin/dcmd rm *.changes, \

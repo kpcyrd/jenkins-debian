@@ -65,7 +65,7 @@ init_navi_frame() {
 }
 
 append2navi_frame() {
-	echo "$2" >> $NAVI
+	echo "$1" >> $NAVI
 }
 
 finish_navi_frame() {

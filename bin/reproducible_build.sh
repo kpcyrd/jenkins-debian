@@ -59,7 +59,7 @@ elif [ $1 = "known" ] ; then
 	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
 else
 	# CANDIDATES is defined in that file
-	. /srv/jenkins/bin/reproducible-candidates.sh
+	. /srv/jenkins/bin/reproducible_candidates.sh
 	PACKAGES=""
 	AMOUNT=$2
 	REAL_AMOUNT=0

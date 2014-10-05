@@ -15,7 +15,7 @@ if [ ! -f $PACKAGES_DB ] ; then
 fi
 
 # create dirs for results
-mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/pbuilder/
+mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/pbuilder/ /var/lib/jenkins/userContent/rbuild/
 
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
@@ -94,6 +94,11 @@ cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
+}
+
+move_rbuildlog() {
+	mv ${RBUILDLOG} /var/lib/jenkins/userContent/rbuild/
 }
 
 TMPDIR=$(mktemp --tmpdir=$PWD -d)
@@ -129,17 +134,23 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		continue
 	fi
 	rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
+	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
 	# host has only sid in deb-src in sources.list
-	apt-get source --download-only --only-source ${SRCPACKAGE}
+	apt-get source --download-only --only-source ${SRCPACKAGE} > ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\")"
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
 		set +x
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
+		move_rbuildlog
 		continue
 	else
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
+		TMPLOG=$(mktemp)
+		mv ${RBUILDLOG} ${TMPLOG}
+		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log
+		mv ${TMPLOG} ${RBUILDLOG}
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2-)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] && [[ ! "$ARCH" =~ "linux-amd64" ]]; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
@@ -147,10 +158,12 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
+			move_rbuildlog
 		fi
 		# EPOCH_FREE_VERSION was too long
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${EVERSION}.pbuilder.log
+		cat ${SRCPACKAGE}_${EVERSION}.pbuilder.log >> ${RBUILDLOG}
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b1
@@ -161,7 +174,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			set -e
-			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes
+			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee ${RBUILDLOG}
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
@@ -202,6 +215,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		set -x
 		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
 		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
+		move_rbuildlog
 	fi
 
 	set +x

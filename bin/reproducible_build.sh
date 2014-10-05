@@ -16,7 +16,7 @@ fi
 
 # create dirs for results
 mkdir -p results/
-mkdir -p /var/lib/jenkins/userContent/diffp/ /var/lib/jenkins/userContent/pbuilder/
+mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/pbuilder/
 
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
@@ -161,8 +161,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			rm -f ./results/${LOGFILE} > /dev/null 2>&1
 			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./results/${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
 			if [ ! -f ./results/${LOGFILE} ] ; then
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
+				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
@@ -170,9 +170,9 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
-				rm -f /var/lib/jenkins/userContent/diffp/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
-				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/diffp/
+				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
+				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/dbd/
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
 				set +x
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."

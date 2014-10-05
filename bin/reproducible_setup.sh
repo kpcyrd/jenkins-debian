@@ -16,7 +16,6 @@ if [ ! -f ${PACKAGES_DB} ] ; then
 		status TEXT NOT NULL
 		CHECK (status IN ("FTBFS","reproducible","unreproducible","404", "not for us")),
 		build_date TEXT NOT NULL,
-		diffp_path TEXT,
 		PRIMARY KEY (name))'
 	sqlite3 ${PACKAGES_DB} '
 		CREATE TABLE source_stats

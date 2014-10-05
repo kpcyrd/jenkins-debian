@@ -50,7 +50,7 @@ write_pkg_frameset() {
 <html>
     <head>
     </head>
-    <frameset framespacing="0" rows="20,*" frameborder="0" noresize>
+    <frameset framespacing="0" rows="42,*" frameborder="0" noresize>
         <frame name="top" src="$1_navigation.html" target="top">
         <frame name="main" src="$2" target="main">
     </frameset>

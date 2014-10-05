@@ -115,8 +115,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | sort -r | head -1)
 	# check if we tested this version already before...
 	STATUS=$(sqlite3 ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
-	# if reproducible or ( unreproducible/FTBFS by 50% chance )
-	if [ "$STATUS" = "reproducible" ] || (( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) && [ $(( $RANDOM % 100 )) -gt 50 ] ) ; then
+	# skip if we know this version and status = reproducible or unreproducible or FTBFS
+	if [ "$STATUS" = "reproducible" ] || [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ; then
 		echo "Package ${SRCPACKAGE} (${VERSION}) with status '$STATUS' skipped, no newer version available."
 		let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 		SKIPPED="${SRCPACKAGE} ${SKIPPED}"

@@ -14,7 +14,7 @@ if [ ! -f ${PACKAGES_DB} ] ; then
 		(name TEXT NOT NULL,
 		version TEXT NOT NULL,
 		status TEXT NOT NULL
-		CHECK (status IN ("FTBFS","reproducible","unreproducible","404", "not for us")),
+		CHECK (status IN ("blacklisted", "FTBFS","reproducible","unreproducible","404", "not for us")),
 		build_date TEXT NOT NULL,
 		PRIMARY KEY (name))'
 	sqlite3 ${PACKAGES_DB} '

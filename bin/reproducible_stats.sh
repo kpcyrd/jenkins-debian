@@ -48,10 +48,10 @@ link_packages() {
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		htmlecho $PKG
-		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.buildinfo" ] ; then
+		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 			htmlecho "<font size='-2'> ("
-			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}.buildinfo" ] ; then
-				htmlecho " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}.buildinfo\"> buildinfo </a> "
+			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
+				htmlecho " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\"> buildinfo </a> "
 			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
 				htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\"> debbindiff </a> "

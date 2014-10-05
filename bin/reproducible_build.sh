@@ -97,10 +97,6 @@ cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
 }
 
-move_rbuildlog() {
-	mv ${RBUILDLOG} /var/lib/jenkins/userContent/rbuild/
-}
-
 TMPDIR=$(mktemp --tmpdir=$PWD -d)
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 COUNT_TOTAL=0
@@ -143,7 +139,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
 		set +x
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
-		move_rbuildlog
 		continue
 	else
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
@@ -160,7 +155,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
-			move_rbuildlog
 		fi
 		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${EVERSION}.pbuilder.log
 		cat ${SRCPACKAGE}_${EVERSION}.pbuilder.log >> ${RBUILDLOG}
@@ -215,7 +209,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		set -x
 		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
 		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
-		move_rbuildlog
 	fi
 
 	set +x

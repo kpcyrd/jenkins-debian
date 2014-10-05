@@ -63,7 +63,7 @@ init_navi_frame() {
 	echo "<!DOCTYPE html><html><body><p>" > $NAVI
 	echo "<font size=+1>$1</font>: " >> $NAVI
 	BUILD_DATE=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date FROM source_packages WHERE name = \"$PKG\"")
-	echo "<font size=-1>($BUILD_DATE)</font> "
+	echo "<font size=-1>($BUILD_DATE)</font> " >> $NAVI
 }
 
 append2navi_frame() {

@@ -68,6 +68,14 @@ NameVirtualHost *:443
 		allow from all
 	</Directory>
 
+	Alias /userContent /var/lib/jenkins/userContent
+	<Directory /var/lib/jenkins/userContent>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+
 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
 	<Directory "/usr/lib/cgi-bin">
 		AllowOverride None
@@ -99,6 +107,7 @@ NameVirtualHost *:443
 	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
+	ProxyPass /userContent !
 	ProxyPass / http://localhost:8080/
 
 

@@ -40,34 +40,37 @@ htmlecho() {
 	echo "$1" >> index.html
 }
 
+link_packages() {
+	for PKG in $@ ; do
+		VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
+		# remove epoch
+		EVERSION=$(echo $VERSION | cut -d ":" -f2)
+		echo $PKG
+		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
+			htmlecho "<font size='-1'> ("
+			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
+				htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\"> dbd </a> "
+			elif [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] ; then
+				htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log\"> diffp </a> "
+			fi
+			if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
+				htmlecho " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log\"> pbuilder </a> "
+			fi
+			htmlecho ")</font> "
+		fi
+	done
+}
+
 htmlecho "<html><body>" > index.html
 htmlecho "<h2>Statistics for reproducible builds</h2>"
 htmlecho "<p>Results were obtained by <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. This page is updated after each job run.</p>"
 htmlecho "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be reproducibly buildable!</p>"
 htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
-for PKG in $BAD ; do
-	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
-	# remove epoch
-	EVERSION=$(echo $VERSION | cut -d ":" -f2)
-	if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
-		htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\">$PKG</a> "
-	else
-		htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log\">$PKG</a> "
-	fi
-done
+link_packages $BAD
 htmlecho "</code></p>"
 htmlecho
 htmlecho "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
-for PKG in $UGLY ; do
-	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
-	# remove epoch
-	EVERSION=$(echo $VERSION | cut -d ":" -f2)
-	if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
-		htmlecho " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log\">$PKG</a> "
-	else
-		htmlecho " $PKG "
-	fi
-done
+link_packages $UGLY
 htmlecho "</code></p>"
 if [ $COUNT_SOURCELESS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages where the source could not be downloaded. <code>$SOURCELESS</code></p>"
@@ -75,7 +78,9 @@ fi
 if [ $COUNT_NOTFORUS -gt 0 ] ; then
 	htmlecho "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>$NOTFORUS</code></p>"
 fi
-htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>${GOOD}</code></p>"
+htmlecho "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>"
+link_packages $GOOD
+htmlecho "</code></p>"
 htmlecho "<hr><p>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields."
 htmlecho "<pre>$(echo $BAD | dd-list -i) </pre></p>"
 htmlecho "<hr><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date)</font>"

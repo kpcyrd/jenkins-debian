@@ -66,8 +66,24 @@ if [[ $1 =~ ^-?[0-9]+$ ]] ; then
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
 	rm $TMPFILE
 else
-	PACKAGES="$@"
-	AMOUNT="${#@}"
+	# CANDIDATES is defined in that file
+	. /srv/jenkins/bin/reproducible-candidates.sh
+	PACKAGES=""
+	AMOUNT="10"
+	REAL_AMOUNT=0
+	for i in $(seq 0 ${#CANDIDATES[@]}) ; do
+		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
+			continue
+		fi
+		PKG=${CANDIDATES[$i]}
+		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
+		if [ "$RESULT" = "" ] ; then
+			PACKAGES="${PACKAGES} $PKG"
+			let "REAL_AMOUNT=REAL_AMOUNT+1"
+		fi
+	done
+	AMOUNT=$REAL_AMOUNT
+
 fi
 echo "============================================================================="
 echo "The following $AMOUNT source packages will be build: ${PACKAGES}"

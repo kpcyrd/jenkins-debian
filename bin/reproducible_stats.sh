@@ -48,11 +48,11 @@ htmlecho "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built
 for PKG in $BAD ; do
 	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 	# remove epoch
-	VERSION=$(echo $VERSION | cut -d ":" -f2)
-	if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${VERSION}.debbindiff.html" ] ; then
-		htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${VERSION}.debbindiff.html\">$PKG</a> "
+	EVERSION=$(echo $VERSION | cut -d ":" -f2)
+	if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
+		htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\">$PKG</a> "
 	else
-		htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${VERSION}.diffp.log\">$PKG</a> "
+		htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log\">$PKG</a> "
 	fi
 done
 htmlecho "</code></p>"
@@ -61,9 +61,9 @@ htmlecho "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: 
 for PKG in $UGLY ; do
 	VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 	# remove epoch
-	VERSION=$(echo $VERSION | cut -d ":" -f2)
-	if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log" ] ; then
-		htmlecho " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${VERSION}.pbuilder.log\">$PKG</a> "
+	EVERSION=$(echo $VERSION | cut -d ":" -f2)
+	if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
+		htmlecho " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log\">$PKG</a> "
 	else
 		htmlecho " $PKG "
 	fi

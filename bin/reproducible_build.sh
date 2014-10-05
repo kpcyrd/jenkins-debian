@@ -95,6 +95,11 @@ cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log 2>/dev/null
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
+}
+
+cleanup_prebuild() {
+	rm b1 b2 -rf
+	rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
 }
 
@@ -117,7 +122,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	echo "============================================================================="
 	set -x
 	let "COUNT_TOTAL=COUNT_TOTAL+1"
-	rm b1 b2 -rf
+	cleanup_prebuild
 	set +e
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | sort -r | head -1)
@@ -130,7 +135,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 		continue
 	fi
-	rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
 	# host has only sid in deb-src in sources.list
 	apt-get source --download-only --only-source ${SRCPACKAGE} > ${RBUILDLOG} 2>&1

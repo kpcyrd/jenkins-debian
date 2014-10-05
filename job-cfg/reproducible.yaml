@@ -127,7 +127,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_build_random_failures'
+    name: '{name}_build_new_versions'
 
 - job-template:
     defaults: reproducible
@@ -151,7 +151,7 @@
             my_timed: '0,15,30,45 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_params: 'unknown 10'
-        - '{name}_build_random_failures':
+        - '{name}_build_new_versions':
             my_description: 'Try to reproducible build packages which were build before and for which a new version exists:'
             my_timed: '42 2,14 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'

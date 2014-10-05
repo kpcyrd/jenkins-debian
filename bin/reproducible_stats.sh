@@ -48,6 +48,7 @@ link_packages() {
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		htmlecho $PKG
+		# FIXME: remove unused code once all diffp.log and pbuilder.log files are gone
 		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
 			htmlecho "<font size='-2'> ("
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then

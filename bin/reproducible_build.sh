@@ -15,7 +15,7 @@ if [ ! -f $PACKAGES_DB ] ; then
 fi
 
 # create dirs for results
-mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/pbuilder/ /var/lib/jenkins/userContent/rbuild/
+mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/rbuild/
 
 # this needs sid entries in sources.list:
 grep deb-src /etc/apt/sources.list | grep sid
@@ -90,8 +90,9 @@ cleanup_all() {
 }
 
 cleanup_userContent() {
-	# FIXME: remove this first rm once all diffp.log files are gone
+	# FIXME: remove unused code once all diffp.log and pbuilder.log files are gone
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log 2>/dev/null
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
@@ -156,14 +157,11 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
 			continue
 		fi
-		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee ${SRCPACKAGE}_${EVERSION}.pbuilder.log
-		cat ${SRCPACKAGE}_${EVERSION}.pbuilder.log >> ${RBUILDLOG}
+		sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc | tee -a ${RBUILDLOG}
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b1
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
-			rm ${SRCPACKAGE}_*.pbuilder.log
-			rm -f /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log 2>/dev/null
 			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
@@ -202,7 +200,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			sudo dcmd rm -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 		else
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
-			mv ${SRCPACKAGE}_${EVERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
 			set +x
 			echo "Warning: ${SRCPACKAGE} failed to build from source."
 		fi

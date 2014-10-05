@@ -46,8 +46,11 @@ link_packages() {
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		htmlecho $PKG
-		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
+		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.buildinfo" ] ; then
 			htmlecho "<font size='-1'> ("
+			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}.buildinfo.log" ] ; then
+				htmlecho " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}.buildinfo.log\"> buildinfo </a> "
+			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
 				htmlecho " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\"> dbd </a> "
 			elif [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] ; then

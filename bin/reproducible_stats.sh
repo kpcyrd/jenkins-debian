@@ -61,7 +61,7 @@ EOF
 init_navi_frame() {
 	NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
 	echo "<!DOCTYPE html><html><body><p>" > $NAVI
-	echo "<font size=+1>$1</font>: " >> $NAVI
+	echo "<font size=+1>$1</font> " >> $NAVI
 	RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
 	BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
 	VERSION=$(echo $RESULT|cut -d "|" -f2)
@@ -85,14 +85,14 @@ link_packages() {
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		# FIXME: remove unused code once all diffp.log and pbuilder.log files are gone
 		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
-			write_index " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>"
+			STAR=""
 			MAINLINK=""
 			init_navi_frame "$PKG"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
-			elif [ "$2" != "" ] ; then
-				write_index "<font size=\"-1\"><sup>*</sup></font> "
+			elif $EXTRA_STAR ; then
+				STAR="<sup>*</sup>"
 			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
@@ -115,6 +115,7 @@ link_packages() {
 			fi
 			finish_navi_frame
 			write_pkg_frameset "$PKG" "$MAINLINK"
+			write_index " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR "
 		else
 			write_index " $PKG "
 		fi
@@ -128,7 +129,9 @@ write_index "<p>Results were obtained by <a href=\"$JENKINS_URL/view/reproducibl
 write_index "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be reproducibly buildable!</p>"
 write_index "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 echo -n "Starting to loop through the packages tested"
-link_packages $BAD buildinfo
+EXTRA_STAR=true
+link_packages $BAD
+EXTRA_STAR=false
 write_index "</code></p>"
 write_index
 write_index "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"

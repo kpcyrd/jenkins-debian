@@ -166,9 +166,9 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
 			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
-			if [ ! -f ./${LOGFILE} ] || [ ! -f b1/${BUILD_INFO} ] ; then
+			if [ ! -f ./${LOGFILE} ] && [ ! -f b1/${BUILDINFO} ] ; then
 				cleanup_userContent
-				cp b1/${BUILD_INFO} /var/lib/jenkins/userContent/buildinfo/ || true
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
@@ -177,11 +177,16 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
 				cleanup_userContent
-				cp b1/${BUILD_INFO} /var/lib/jenkins/userContent/buildinfo/
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
 				mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x
-				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
+				echo -n "Warning: ${SRCPACKAGE} failed to build reproducibly."
+				if [ ! -f b1/${BUILDINFO} ] ;
+					echo " .buildinfo file is missing."
+				else
+					echo
+				fi
 				let "COUNT_BAD=COUNT_BAD+1"
 				BAD="${SRCPACKAGE} ${BAD}"
 			fi

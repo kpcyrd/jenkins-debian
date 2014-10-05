@@ -166,7 +166,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
 			/var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes || true
-			if [ ! -f ./${LOGFILE} ] && [ ! -f b1/${BUILDINFO} ] ; then
+			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cleanup_userContent
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
 				figlet ${SRCPACKAGE}

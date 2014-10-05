@@ -128,7 +128,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\", \"\")"
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"404\", \"$DATE\")"
 		set +x
 		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
 		continue
@@ -136,7 +136,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2-)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] && [[ ! "$ARCH" =~ "linux-amd64" ]]; then
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\", \"\")"
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
@@ -166,14 +166,14 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				figlet ${SRCPACKAGE}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
-				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\", \"\")"
+				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
 				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
 				rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 				cp ./results/${LOGFILE} /var/lib/jenkins/userContent/dbd/
-				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\", \"\")"
+				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x
 				echo "Warning: ${SRCPACKAGE} failed to build reproducibly."
 				let "COUNT_BAD=COUNT_BAD+1"
@@ -183,7 +183,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			rm b1 b2 -rf
 			sudo dcmd rm -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 		else
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\", \"\")"
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
 			mv ${SRCPACKAGE}_${EVERSION}.pbuilder.log /var/lib/jenkins/userContent/pbuilder/
 			set +x
 			echo "Warning: ${SRCPACKAGE} failed to build from source."

@@ -152,7 +152,7 @@ fi
 write_index "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>"
 link_packages $GOOD
 write_index "</code></p>"
-write_index "<hr/><h1>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields</h1>"
+write_index "<hr/><h2>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields</h2>"
 write_index "<p><pre>$(echo $BAD | dd-list -i) </pre></p>"
 write_index "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a></font>"
 write_index "</p></body></html>"

@@ -92,7 +92,7 @@ link_packages() {
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
 			elif $EXTRA_STAR ; then
-				STAR="&beta;" # used to be a star...
+				STAR="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
 			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "

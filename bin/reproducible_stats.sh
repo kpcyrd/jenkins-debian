@@ -62,7 +62,7 @@ EOF
 init_navi_frame() {
 	NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
-	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
 	echo "<body><p><font size=+1>$1</font> " >> $NAVI
 	RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
 	BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)

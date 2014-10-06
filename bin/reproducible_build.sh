@@ -173,7 +173,11 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
-			timeout 15m /var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes 2>&1 > ${RBUILDLOG} || echo "debbindiff.py was auto killed..." >> ./${LOGFILE}
+			timeout 15m /var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes 2>&1 > ${RBUILDLOG}
+			RESULT=$?
+			if [ $RESULT -eq 124 ] ; then
+				echo "$(date) - debbindiff.py was killed after running into timeouot..." >> ./${RBUILDLOG}
+			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cleanup_userContent
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/

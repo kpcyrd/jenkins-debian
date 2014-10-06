@@ -114,6 +114,8 @@ NameVirtualHost *:443
 	ProxyPass /userContent !
 	ProxyPass / http://localhost:8080/ nocanon
 	ProxyPassReverse  / http://localhost:8080/
+	RequestHeader set X-Forwarded-Proto "https"
+	RequestHeader set X-Forwarded-Port "443"
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 

@@ -83,8 +83,8 @@ link_packages() {
 		VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
-		# FIXME: remove unused code once all diffp.log and pbuilder.log files are gone
-		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
+		# FIXME: remove unused code once all diffp.log files are gone
+		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
 			STAR=""
 			MAINLINK=""
 			init_navi_frame "$PKG"
@@ -105,12 +105,6 @@ link_packages() {
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log\" target=\"main\">rbuild</a> "
 				if [ "$MAINLINK" = "" ] ; then
 					MAINLINK="$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log"
-				fi
-			fi
-			if [ -f "/var/lib/jenkins/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log\" target=\"main\">pbuilder</a> "
-				if [ "$MAINLINK" = "" ] ; then
-					MAINLINK="$JENKINS_URL/userContent/pbuilder/${PKG}_${EVERSION}.pbuilder.log"
 				fi
 			fi
 			append2navi_frame " <a href=\"https://packages.qa.debian.org/${PKG}\" target=\"main\">PTS</a> "

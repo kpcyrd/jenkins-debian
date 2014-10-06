@@ -90,9 +90,8 @@ cleanup_all() {
 }
 
 cleanup_userContent() {
-	# FIXME: remove unused code once all diffp.log and pbuilder.log files are gone
+	# FIXME: remove unused code once all diffp.log files are gone
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.diffp.log > /dev/null 2>&1
-	rm -f /var/lib/jenkins/userContent/pbuilder/${SRCPACKAGE}_*.pbuilder.log 2>/dev/null
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }

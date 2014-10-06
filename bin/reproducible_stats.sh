@@ -61,8 +61,9 @@ EOF
 
 init_navi_frame() {
 	NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
-	echo "<!DOCTYPE html><link href="../static/style.css" type="text/css" rel="stylesheet"> </link><html><body><p>" > $NAVI
-	echo "<font size=+1>$1</font> " >> $NAVI
+	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
+	echo "<body><p><font size=+1>$1</font> " >> $NAVI
 	RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
 	BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
 	VERSION=$(echo $RESULT|cut -d "|" -f2)
@@ -122,8 +123,10 @@ link_packages() {
 
 echo "Starting to write statistics index page."
 echo
-write_index "<!DOCTYPE html><html><link href="static/style.css" type="text/css" rel="stylesheet"> </link><body>" > index.html
-write_index "<header><h2>Statistics for reproducible builds</h2>"
+write_index "<!DOCTYPE html><html><head>"
+write_index "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
+write_index "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
+write_index "<body><header><h2>Statistics for reproducible builds</h2>"
 write_index "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 write_index "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be reproducibly buildable! Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p></header>"
 write_index "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"

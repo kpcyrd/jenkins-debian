@@ -168,13 +168,13 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
-			set -e
 			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee -a ${RBUILDLOG}
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
 			timeout 15m /var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes 2>&1 > ${RBUILDLOG}
 			RESULT=$?
+			set -e
 			if [ $RESULT -eq 124 ] ; then
 				echo "$(date) - debbindiff.py was killed after running into timeouot..." >> ./${RBUILDLOG}
 			fi

@@ -40,6 +40,7 @@ GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 
 write_index() {
 	echo "$1" >> index.html
+	echo "$1" | html2text
 }
 
 mkdir -p /var/lib/jenkins/userContent/rb-pkg/
@@ -79,7 +80,6 @@ finish_navi_frame() {
 
 link_packages() {
 	for PKG in $@ ; do
-		echo -n "."
 		VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
@@ -127,12 +127,12 @@ link_packages() {
 }
 
 echo "Starting to write statistics index page."
+echo
 write_index "<!DOCTYPE html><html><body>" > index.html
 write_index "<h2>Statistics for reproducible builds</h2>"
 write_index "<p>Results were obtained by <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. This page is updated after each job run.</p>"
 write_index "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD packages should be reproducibly buildable!</p>"
 write_index "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
-echo -n "Starting to loop through the packages tested"
 EXTRA_STAR=true
 link_packages $BAD
 EXTRA_STAR=false
@@ -161,5 +161,4 @@ write_index "</p></body></html>"
 echo
 
 # job output
-html2text index.html
 cp index.html /var/lib/jenkins/userContent/reproducible.html

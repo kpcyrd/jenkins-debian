@@ -124,6 +124,7 @@ link_packages() {
 
 echo "Starting to write statistics index page."
 echo
+rm -f index.html
 write_index "<!DOCTYPE html><html><head>"
 write_index "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 write_index "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
@@ -160,3 +161,4 @@ echo
 
 # job output
 cp index.html /var/lib/jenkins/userContent/reproducible.html
+rm index.html

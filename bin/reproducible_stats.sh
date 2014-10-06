@@ -115,6 +115,7 @@ link_packages() {
 			fi
 			append2navi_frame " <a href=\"https://packages.qa.debian.org/${PKG}\" target=\"main\">PTS</a> "
 			append2navi_frame " <a href=\"https://bugs.debian.org/src:${PKG}\" target=\"main\">BTS</a> "
+			append2navi_frame " <a href=\"https://sources.debian.net/src/${PKG}/\" target=\"main\">sources</a> "
 
 			finish_navi_frame
 			write_pkg_frameset "$PKG" "$MAINLINK"

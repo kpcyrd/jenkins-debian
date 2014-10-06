@@ -35,8 +35,10 @@ NameVirtualHost *:80
                 Allow from all
         </Proxy>
         ProxyPreserveHost on
+	AllowEncodedSlashes NoDecode
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 	ProxyPass / http://localhost:8080/
+	ProxyPassReverse  / http://localhost:8080/ nocanon
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 
@@ -100,6 +102,7 @@ NameVirtualHost *:443
                 Allow from all
         </Proxy>
         ProxyPreserveHost on
+	AllowEncodedSlashes NoDecode
 	# proxy everything but a few urls
         ProxyPass /munin !
        	ProxyPass /server-status !
@@ -109,8 +112,8 @@ NameVirtualHost *:443
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 	ProxyPass /userContent !
-	ProxyPass / http://localhost:8080/
-
+	ProxyPass / http://localhost:8080/ nocanon
+	ProxyPassReverse  / http://localhost:8080/
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 

@@ -169,10 +169,10 @@ write_summary_header() {
 		write_summary "<p>These pages are updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 	fi
 	write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a>"
-	if [ "$1" = "$MAINVIEW" ] || [ "$1" = "dd-list" ] ; then
+	if [ "${1:0:3}" = "all" ] || [ "$1" = "dd-list" ] ; then
 		write_summary " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
 	fi
-	write summary "</p>"
+	write_summary "</p>"
 	write_summary "<p><ul>Other views for these build results:"
 	for TARGET in $ALLVIEWS dd-list; do
 		if [ "$TARGET" = "$1" ] ; then
@@ -203,7 +203,7 @@ process_packages ${BAD["all"]}
 EXTRA_STAR=false
 process_packages ${UGLY["all"]} ${GOOD["all"]}
 
-MAINVIEW="last_24h"
+MAINVIEW="all_abc"
 ALLVIEWS="last_24h last_48h all all_abc"
 for VIEW in $ALLVIEWS ; do
 	SUMMARY=index_${VIEW}.html

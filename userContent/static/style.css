@@ -6,11 +6,12 @@ html {
 
 body {
 	width: 99%;
-	margin: 1em auto;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
 	line-height: 20px;
 	color: #333333;
+	padding: 0.25em 0.5em;
+	margin: 0.25em 0.25em 0em 0.25em;
 }
 
 pre {
@@ -29,7 +30,6 @@ a:hover, a:focus {
 
 header {
 	border-bottom: 1px solid #d70a53;
-	margin-bottom: 1em;
 }
 
 footer {
@@ -96,7 +96,7 @@ table {
 	border-radius: 0.5em;
 	border-collapse: collapse;
 	box-shadow: 0 1px 3px #eee;
-	margin-bottom: 1em;
+	padding: 0
 }
 
 tr:nth-child(odd) {

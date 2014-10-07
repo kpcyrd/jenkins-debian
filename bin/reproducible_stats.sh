@@ -154,42 +154,49 @@ process_packages ${BAD["all"]}
 EXTRA_STAR=false
 process_packages ${UGLY["all"]} ${GOOD["all"]}
 
-echo "Starting to write statistics index page."
-echo
-SUMMARY=index.html
-rm -f $SUMMARY
-write_summary "<!DOCTYPE html><html><head>"
-write_summary "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-write_summary "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
-write_summary "<body><header><h2>Statistics for reproducible builds</h2>"
-write_summary "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
-write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p></header>"
-write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
-link_packages ${BAD["all"]}
-write_summary "</code></p>"
-write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
-write_summary
-write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
-link_packages ${UGLY["all"]}
-write_summary "</code></p>"
-if [ $COUNT_SOURCELESS -gt 0 ] ; then
-	write_summary "<p>$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages where the source could not be downloaded. <code>${SOURCELESS["all"]}</code></p>"
+MAINVIEW="last_24h"
+ALLVIEWS="all last_24h last_48h"
+for VIEW in $ALLVIEWS ; do
+	echo "Starting to write statistics index_$VIEW page."
+	echo
+	SUMMARY=index_${VIEW}.html
+	rm -f $SUMMARY
+	write_summary "<!DOCTYPE html><html><head>"
+	write_summary "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
+	write_summary "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
+	write_summary "<body><header><h2>Statistics for reproducible builds</h2>"
+	write_summary "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
+	write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p></header>"
+	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
+	link_packages ${BAD[$VIEW]}
+	write_summary "</code></p>"
+	write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
+	write_summary
+	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
+	link_packages ${UGLY[$VIEW]}
+	write_summary "</code></p>"
+	if [ $COUNT_SOURCELESS -gt 0 ] ; then
+		write_summary "<p>$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages where the source could not be downloaded. <code>${SOURCELESS[$VIEW]}</code></p>"
+	fi
+	if [ $COUNT_NOTFORUS -gt 0 ] ; then
+		write_summary "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
+	fi
+	if [ $COUNT_BLACKLISTED -gt 0 ] ; then
+		write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
+	fi
+	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>"
+	link_packages ${GOOD[$VIEW]}
+	write_summary "</code></p>"
+	write_summary "<hr/><h2>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields</h2>"
+	write_summary "<p><pre>$(echo ${BAD[$VIEW]} | dd-list -i) </pre></p>"
+	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a></font>"
+	write_summary "</p></body></html>"
 fi
-if [ $COUNT_NOTFORUS -gt 0 ] ; then
-	write_summary "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>${NOTFORUS["all"]}</code></p>"
-fi
-if [ $COUNT_BLACKLISTED -gt 0 ] ; then
-	write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
-fi
-write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>"
-link_packages ${GOOD["all"]}
-write_summary "</code></p>"
-write_summary "<hr/><h2>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields</h2>"
-write_summary "<p><pre>$(echo ${BAD["all"]} | dd-list -i) </pre></p>"
-write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a></font>"
-write_summary "</p></body></html>"
 echo
 
 # job output
-cp $SUMMARY /var/lib/jenkins/userContent/reproducible.html
+cp $SUMMARY /var/lib/jenkins/userContent/
+if [ "$VIEW" = "$MAINVIEW" ] ; then
+	cp $SUMMARY reproducible.html
+fi
 rm $SUMMARY

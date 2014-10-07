@@ -59,7 +59,6 @@ declare -A LINKTARGET
 
 write_summary() {
 	echo "$1" >> $SUMMARY
-	echo "$1" | html2text
 }
 
 mkdir -p /var/lib/jenkins/userContent/rb-pkg/
@@ -154,12 +153,15 @@ process_packages ${BAD["all"]}
 EXTRA_STAR=false
 process_packages ${UGLY["all"]} ${GOOD["all"]}
 
+SPOKENTARGET["all"]="all tested packages"
+SPOKENTARGET["last_24h"]="packages tested in the last 24h"
+SPOKENTARGET["last_48"]="packages tested in the last 48h"
+
 MAINVIEW="last_24h"
 ALLVIEWS="all last_24h last_48h"
 for VIEW in $ALLVIEWS ; do
-	echo "Starting to write statistics index_$VIEW page."
-	echo
 	SUMMARY=index_${VIEW}.html
+	echo "Starting to write $SUMMARY page."
 	rm -f $SUMMARY
 	write_summary "<!DOCTYPE html><html><head>"
 	write_summary "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
@@ -169,6 +171,14 @@ for VIEW in $ALLVIEWS ; do
 		write_summary "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 		write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p>"
 	fi
+	write_summary "<p>Other views for the build results:<ul>"
+	for TARGET in $ALLVIEWS ; do
+		if [ "$TARGET" = "$VIEW" ] ; then
+			continue
+		fi
+		write_summary "<li><a href=\"index_${TARGET}.html\">${SPOKENTARGET[$TARGET]}</a></li>"
+	done
+	write_summary "</ul></p>"
 	write_summary "</header>"
 	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 	link_packages ${BAD[$VIEW]}
@@ -197,7 +207,7 @@ for VIEW in $ALLVIEWS ; do
 	# publish
 	cp $SUMMARY /var/lib/jenkins/userContent/
 	if [ "$VIEW" = "$MAINVIEW" ] ; then
-		cp $SUMMARY reproducible.html
+		cp $SUMMARY /var/lib/jenkins/userContent/reproducible.html
 	fi
 	rm $SUMMARY
 done

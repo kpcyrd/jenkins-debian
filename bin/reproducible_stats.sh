@@ -38,6 +38,7 @@ PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
 PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 declare -A STAR
+declare -A LINKTARGET
 
 write_summary() {
 	echo "$1" >> $SUMMARY
@@ -117,10 +118,11 @@ link_packages() {
 			write_pkg_frameset "$PKG" "$MAINLINK"
 		fi
 		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			write_summary " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]} "
+			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]}"
 		else
-			write_summary " $PKG "
+			LINKTARGET[$PKG]="$PKG"
 		fi
+		write_summary " ${LINKTARGET[$PKG]} "
 	done
 }
 

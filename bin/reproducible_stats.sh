@@ -83,8 +83,7 @@ link_packages() {
 		VERSION=$(echo $RESULT|cut -d "|" -f2)
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
-		# FIXME: remove unused code once all diffp.log files are gone
-		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
+		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
 			STAR=""
 			MAINLINK=""
 			init_navi_frame "$PKG" "$VERSION" "$BUILD_DATE"
@@ -97,9 +96,6 @@ link_packages() {
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
 				MAINLINK="$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html"
-			elif [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log\" target=\"main\">diffp</a> "
-				MAINLINK="$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.diffp.log"
 			fi
 			if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log\" target=\"main\">rbuild</a> "

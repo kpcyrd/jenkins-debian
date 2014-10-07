@@ -102,10 +102,12 @@ link_packages() {
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
 				MAINLINK="$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html"
 			fi
-			if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-				append2navi_frame " <a href=\"$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log\" target=\"main\">rbuild</a> "
+			RBUILD_LOG="rbuild/${PKG}_${EVERSION}.rbuild.log"
+			if [ -f "/var/lib/jenkins/userContent/${RBUILD_LOG}" ] ; then
+				SIZE=$(du -sh "/var/lib/jenkins/userContent/${RBUILD_LOG}" |cut -f1)
+				append2navi_frame " <a href=\"$JENKINS_URL/userContent/${RBUILD_LOG}\" target=\"main\">rbuild ($SIZE)</a> "
 				if [ "$MAINLINK" = "" ] ; then
-					MAINLINK="$JENKINS_URL/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log"
+					MAINLINK="$JENKINS_URL/userContent/${RBUILD_LOG}"
 				fi
 			fi
 			append2navi_frame " <a href=\"https://packages.qa.debian.org/${PKG}\" target=\"main\">PTS</a> "

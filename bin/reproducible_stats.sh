@@ -60,7 +60,6 @@ EOF
 }
 
 init_navi_frame() {
-	NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
 	echo "<body><p><font size=+1>$1</font> " >> $NAVI
@@ -83,8 +82,13 @@ link_packages() {
 		VERSION=$(echo $RESULT|cut -d "|" -f2)
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
-		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
-			STAR=""
+		STAR=""
+		if $EXTRA_STAR && [ ! -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
+			STAR="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
+		fi
+		NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
+		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
+		if [ ! -f $NAVI ] || [ "$(find ! -newermt '$BUILD_DATE' -name $NAVI)" != "" ] ; then
 			MAINLINK=""
 			init_navi_frame "$PKG" "$VERSION" "$BUILD_DATE"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
@@ -110,6 +114,8 @@ link_packages() {
 
 			finish_navi_frame
 			write_pkg_frameset "$PKG" "$MAINLINK"
+		fi
+		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
 			write_index " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR "
 		else
 			write_index " $PKG "

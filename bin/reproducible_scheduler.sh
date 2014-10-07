@@ -40,7 +40,8 @@ if [ $1 = "unknown" ] ; then
 	REAL_AMOUNT=0
 	GUESSES=$(echo "${AMOUNT}*3" | bc)
 	PACKAGES=""
-	CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux|cups|zurl)$" | sort -R | head -$GUESSES | xargs echo)
+	# FIXME: blacklisted is a valid status in the db which should be used...
+	CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux|cups|zurl|openclipart)$" | sort -R | head -$GUESSES | xargs echo)
 	for PKG in $CANDIDATES ; do
 		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
 			continue

@@ -200,7 +200,7 @@ EXTRA_STAR=false
 process_packages ${UGLY["all"]} ${GOOD["all"]}
 
 MAINVIEW="last_24h"
-ALLVIEWS="last_24h last_48h abc all all_abc"
+ALLVIEWS="last_24h last_48h all all_abc"
 for VIEW in $ALLVIEWS ; do
 	SUMMARY=index_${VIEW}.html
 	echo "Starting to write $SUMMARY page."

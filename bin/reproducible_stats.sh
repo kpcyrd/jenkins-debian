@@ -27,25 +27,30 @@ LAST24="AND build_date > datetime('now', '-24 hours') "
 LAST48="AND build_date > datetime('now', '-48 hours') "
 SUITE=sid
 AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)
-GOOD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY name" | xargs echo)
-GOOD["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST24 ORDER BY name" | xargs echo)
-GOOD["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST48 ORDER BY name" | xargs echo)
+GOOD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY build_date DESC" | xargs echo)
+GOOD["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST24 ORDER BY build_date DESC" | xargs echo)
+GOOD["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST48 ORDER BY build_date DESC" | xargs echo)
+GOOD["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY name" | xargs echo)
 COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"reproducible\"")
 BAD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"unreproducible\" ORDER BY build_date DESC" | xargs echo)
 BAD["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"unreproducible\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 BAD["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"unreproducible\" $LAST48 ORDER BY build_date DESC" | xargs echo)
+BAD["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"unreproducible\" ORDER BY name" | xargs echo)
 COUNT_BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"unreproducible\"")
 UGLY["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"FTBFS\" ORDER BY build_date DESC" | xargs echo)
 UGLY["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"FTBFS\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 UGLY["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"FTBFS\" $LAST48 ORDER BY build_date DESC" | xargs echo)
+UGLY["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"FTBFS\" ORDER BY name" | xargs echo)
 COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"FTBFS\"")
 SOURCELESS["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" ORDER BY build_date DESC" | xargs echo)
 SOURCELESS["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 SOURCELESS["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" $LAST48 ORDER BY build_date DESC" | xargs echo)
+SOURCELESS["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" ORDER BY name" | xargs echo)
 COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"404\"" | xargs echo)
 NOTFORUS["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" ORDER BY build_date DESC" | xargs echo)
 NOTFORUS["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 NOTFORUS["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" $LAST48 ORDER BY build_date DESC" | xargs echo)
+NOTFORUS["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" ORDER BY name" | xargs echo)
 COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"not for us\"" | xargs echo)
 BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"blacklisted\" ORDER BY name" | xargs echo)
 COUNT_BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"blacklisted\"" | xargs echo)
@@ -60,6 +65,7 @@ GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 SPOKENTARGET["all"]="all tested packages"
 SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 SPOKENTARGET["last_48h"]="packages tested in the last 48h"
+SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 
 
@@ -163,7 +169,7 @@ write_summary_header() {
 		write_summary "<p>These pages are updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 		write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p>"
 	fi
-	write_summary "<p><ul>Other views for the build results:"
+	write_summary "<p><ul>Other views for these build results:"
 	for TARGET in $ALLVIEWS dd-list; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
@@ -194,29 +200,30 @@ EXTRA_STAR=false
 process_packages ${UGLY["all"]} ${GOOD["all"]}
 
 MAINVIEW="last_24h"
-ALLVIEWS="last_24h last_48h all"
+ALLVIEWS="last_24h last_48h abc all all_abc"
 for VIEW in $ALLVIEWS ; do
 	SUMMARY=index_${VIEW}.html
 	echo "Starting to write $SUMMARY page."
 	write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
-	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total, from ${SPOKENTARGET[$VIEW]} these were: <code>"
+	SHORTER_TARGET=$(echo ${SPOKENTARGET[$VIEW]} | cut -d "(" -f1)
+	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total, from $SHORTER_TARGET these were: <code>"
 	link_packages ${BAD[$VIEW]}
 	write_summary "</code></p>"
 	write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
 	write_summary
-	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total, from ${SPOKENTARGET[$VIEW]} these were: <code>"
+	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total, from $SHORTER_TARGET these were: <code>"
 	link_packages ${UGLY[$VIEW]}
 	write_summary "</code></p>"
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
-		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded, from ${SPOKENTARGET[$VIEW]} these were: <code>${SOURCELESS[$VIEW]}</code></p>"
+		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded, from $SHORTER_TARGET these were: <code>${SOURCELESS[$VIEW]}</code></p>"
 	fi
 	if [ $COUNT_NOTFORUS -gt 0 ] ; then
-		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64', from ${SPOKENTARGET[$VIEW]} these were: <code>${NOTFORUS[$VIEW]}</code></p>"
+		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64', from $SHORTER_TARGET these were: <code>${NOTFORUS[$VIEW]}</code></p>"
 	fi
 	if [ "$VIEW" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
 		write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
 	fi
-	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly, from ${SPOKENTARGET[$VIEW]} these were: <code>"
+	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly, from $SHORTER_TARGET these were: <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_summary "</code></p>"
 	write_summary_footer

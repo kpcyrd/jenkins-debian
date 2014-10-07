@@ -117,7 +117,7 @@ link_packages() {
 			write_pkg_frameset "$PKG" "$MAINLINK"
 		fi
 		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			write_summary " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR[$PKG] "
+			write_summary " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]} "
 		else
 			write_summary " $PKG "
 		fi

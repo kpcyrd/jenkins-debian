@@ -66,7 +66,7 @@
       - shell: '{my_shell} {my_params}'
     publishers:
       - email:
-          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+          recipients: 'holger@layer-acht.org'
           notify-every-unstable-build: False
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'

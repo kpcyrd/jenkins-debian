@@ -21,7 +21,7 @@ declare -A UGLY
 declare -A SOURCELESS
 declare -A NOTFORUS
 LAST24="AND build_date > datetime('now', '-24 hours') "
-LAST48="AND build_date > datetime('now', '-24 hours') "
+LAST48="AND build_date > datetime('now', '-48 hours') "
 SUITE=sid
 AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)
 GOOD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY name" | xargs echo)
@@ -191,7 +191,7 @@ for VIEW in $ALLVIEWS ; do
 	write_summary "<p><pre>$(echo ${BAD[$VIEW]} | dd-list -i) </pre></p>"
 	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a></font>"
 	write_summary "</p></body></html>"
-fi
+done
 echo
 
 # job output

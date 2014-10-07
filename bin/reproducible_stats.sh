@@ -37,6 +37,7 @@ PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
 PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
 PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
+declare -A STAR
 
 write_summary() {
 	echo "$1" >> $SUMMARY
@@ -82,9 +83,8 @@ link_packages() {
 		VERSION=$(echo $RESULT|cut -d "|" -f2)
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
-		STAR=""
 		if $EXTRA_STAR && [ ! -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
-			STAR="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
+			STAR[$PKG]="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
 		fi
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
 		NAVI="/var/lib/jenkins/userContent/rb-pkg/${PKG}_navigation.html"
@@ -95,8 +95,6 @@ link_packages() {
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
-			elif $EXTRA_STAR ; then
-				STAR="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
 			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
@@ -119,7 +117,7 @@ link_packages() {
 			write_pkg_frameset "$PKG" "$MAINLINK"
 		fi
 		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			write_summary " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR "
+			write_summary " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR[$PKG] "
 		else
 			write_summary " $PKG "
 		fi

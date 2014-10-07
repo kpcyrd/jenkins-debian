@@ -209,25 +209,30 @@ for VIEW in $ALLVIEWS ; do
 	SUMMARY=index_${VIEW}.html
 	echo "Starting to write $SUMMARY page."
 	write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
-	SHORTER_TARGET=$(echo ${SPOKENTARGET[$VIEW]} | cut -d "(" -f1)
-	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total, from $SHORTER_TARGET these were: <code>"
+	if [ "${VIEW:0:3}" = "all" ] ; then
+		FINISH=":"
+	else
+		SHORTER_SPOKENTARGET=$(echo ${SPOKENTARGET[$VIEW]} | cut -d "(" -f1)
+		FINISH=", from $SHORTER_SPOKENTARGET these were:"
+	fi
+	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"
 	link_packages ${BAD[$VIEW]}
 	write_summary "</code></p>"
 	write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
 	write_summary
-	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total, from $SHORTER_TARGET these were: <code>"
+	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total$FINISH <code>"
 	link_packages ${UGLY[$VIEW]}
 	write_summary "</code></p>"
-	if [ $COUNT_SOURCELESS -gt 0 ] ; then
-		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded, from $SHORTER_TARGET these were: <code>${SOURCELESS[$VIEW]}</code></p>"
+	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_SOURCELESS -gt 0 ] ; then
+		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded$FINISH <code>${SOURCELESS[$VIEW]}</code></p>"
 	fi
-	if [ $COUNT_NOTFORUS -gt 0 ] ; then
-		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64', from $SHORTER_TARGET these were: <code>${NOTFORUS[$VIEW]}</code></p>"
+	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_NOTFORUS -gt 0 ] ; then
+		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64'$FINISH <code>${NOTFORUS[$VIEW]}</code></p>"
 	fi
-	if [ "$VIEW" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
+	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
 		write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
 	fi
-	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly, from $SHORTER_TARGET these were: <code>"
+	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_summary "</code></p>"
 	write_summary_footer
@@ -238,7 +243,25 @@ VIEW=dd-list
 SUMMARY=index_${VIEW}.html
 echo "Starting to write $SUMMARY page."
 write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
-write_summary "<p><pre>$(echo ${BAD["all"]} | dd-list -i) </pre></p>"
+TMPFILE=$(mktemp)
+echo "${BAD["all"]}" | dd-list -i > $TMPFILE
+write_summary "<p><pre>"
+while IFS= read -r LINE ; do
+	if [ "${LINE:0:3}" = "   " ] ; then
+		PACKAGE=$(echo "${LINE:3}" | cut -d " " -f1)
+		UPLOADERS=$(echo "${LINE:3}" | cut -d " " -f2-)
+		if [ "$UPLOADERS" = "$PACKAGE" ] ; then
+			UPLOADERS=""
+		fi
+		write_summary "   <a href=\"$JENKINS_URL/userContent/rb-pkg/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
+	else
+		LINE="$(echo $LINE | sed 's#&#\&amp;#g ; s#<#\&lt;#g ; s#>#\&gt;#g')"
+		write_summary "$LINE"
+	fi
+done < $TMPFILE
+write_summary "</pre></p>"
+rm $TMPFILE
 write_summary_footer
-	publish_summary
+publish_summary
 
+echo "Enjoy https://jenkins.debian.net/userContent/reproducible.html"

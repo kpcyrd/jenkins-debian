@@ -136,7 +136,7 @@ EXTRA_STAR=true
 link_packages $BAD
 EXTRA_STAR=false
 write_index "</code></p>"
-write_index "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo files were generated.</font></p>"
+write_index "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
 write_index
 write_index "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
 link_packages $UGLY

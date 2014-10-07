@@ -109,6 +109,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** killer job is run before setup
 *** scheduler and builder jobs are started after
 
+* for PKG in $(cat packages.yml | ../shyaml/shyaml keys) ; do echo "   $PKG" ; for ATTRIBUTE in version issues bugs comments ; do echo " $ATTRIBUTE = $(cat packages.yml | ../shyaml/shyaml get-value ${PKG}.${ATTRIBUTE} | xargs echo )" ; done ; done
 * watch: zephyr (debbindiff timeout?)
 * watch: haskell-hsql-odbc
 * watch: cxxtest: dbd failure should be in rbuild output!

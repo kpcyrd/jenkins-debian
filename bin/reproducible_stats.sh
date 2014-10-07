@@ -43,13 +43,9 @@ UGLY["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_pac
 UGLY["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"FTBFS\" ORDER BY name" | xargs echo)
 COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"FTBFS\"")
 SOURCELESS["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" ORDER BY build_date DESC" | xargs echo)
-SOURCELESS["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" $LAST24 ORDER BY build_date DESC" | xargs echo)
-SOURCELESS["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" $LAST48 ORDER BY build_date DESC" | xargs echo)
 SOURCELESS["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"404\" ORDER BY name" | xargs echo)
 COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"404\"" | xargs echo)
 NOTFORUS["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" ORDER BY build_date DESC" | xargs echo)
-NOTFORUS["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" $LAST24 ORDER BY build_date DESC" | xargs echo)
-NOTFORUS["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" $LAST48 ORDER BY build_date DESC" | xargs echo)
 NOTFORUS["all_abc"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"not for us\" ORDER BY name" | xargs echo)
 COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"not for us\"" | xargs echo)
 BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"blacklisted\" ORDER BY name" | xargs echo)
@@ -197,7 +193,7 @@ publish_summary() {
 	rm $SUMMARY
 }
 
-echo "Processing packages... this will take a while."
+echo "Processing $COUNT_TOTAL packages... this will take a while."
 EXTRA_STAR=true
 process_packages ${BAD["all"]}
 EXTRA_STAR=false
@@ -224,10 +220,10 @@ for VIEW in $ALLVIEWS ; do
 	link_packages ${UGLY[$VIEW]}
 	write_summary "</code></p>"
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_SOURCELESS -gt 0 ] ; then
-		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded$FINISH <code>${SOURCELESS[$VIEW]}</code></p>"
+		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>${SOURCELESS[$VIEW]}</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_NOTFORUS -gt 0 ] ; then
-		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64'$FINISH <code>${NOTFORUS[$VIEW]}</code></p>"
+		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
 		write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"

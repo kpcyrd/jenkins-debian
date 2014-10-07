@@ -88,7 +88,8 @@ link_packages() {
 		fi
 		NAVI="/var/lib/jenkins/userContent/rb-pkg/$1_navigation.html"
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
-		if [ ! -f $NAVI ] || [ "$(find ! -newermt '$BUILD_DATE' -name $NAVI)" != "" ] ; then
+		FILE=$(find ! -newermt "$BUILD_DATE" -name $NAVI)
+		if [ ! -f $NAVI ] || [ "$FILE" != "" ] ; then
 			MAINLINK=""
 			init_navi_frame "$PKG" "$VERSION" "$BUILD_DATE"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then

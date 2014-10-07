@@ -38,8 +38,8 @@ PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
 PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
 
-write_index() {
-	echo "$1" >> index.html
+write_summary() {
+	echo "$1" >> $SUMMARY
 	echo "$1" | html2text
 }
 
@@ -119,50 +119,51 @@ link_packages() {
 			write_pkg_frameset "$PKG" "$MAINLINK"
 		fi
 		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			write_index " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR "
+			write_summary " <a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>$STAR "
 		else
-			write_index " $PKG "
+			write_summary " $PKG "
 		fi
 	done
 }
 
 echo "Starting to write statistics index page."
 echo
-rm -f index.html
-write_index "<!DOCTYPE html><html><head>"
-write_index "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-write_index "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
-write_index "<body><header><h2>Statistics for reproducible builds</h2>"
-write_index "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
-write_index "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p></header>"
-write_index "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
+SUMMARY=index.html
+rm -f $SUMMARY
+write_summary "<!DOCTYPE html><html><head>"
+write_summary "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
+write_summary "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
+write_summary "<body><header><h2>Statistics for reproducible builds</h2>"
+write_summary "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
+write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p></header>"
+write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
 EXTRA_STAR=true
 link_packages $BAD
 EXTRA_STAR=false
-write_index "</code></p>"
-write_index "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
-write_index
-write_index "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
+write_summary "</code></p>"
+write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
+write_summary
+write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source: <code>"
 link_packages $UGLY
-write_index "</code></p>"
+write_summary "</code></p>"
 if [ $COUNT_SOURCELESS -gt 0 ] ; then
-	write_index "<p>$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages where the source could not be downloaded. <code>$SOURCELESS</code></p>"
+	write_summary "<p>$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages where the source could not be downloaded. <code>$SOURCELESS</code></p>"
 fi
 if [ $COUNT_NOTFORUS -gt 0 ] ; then
-	write_index "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>$NOTFORUS</code></p>"
+	write_summary "<p>$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-amd64': <code>$NOTFORUS</code></p>"
 fi
 if [ $COUNT_BLACKLISTED -gt 0 ] ; then
-	write_index "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
+	write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
 fi
-write_index "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>"
+write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly: <code>"
 link_packages $GOOD
-write_index "</code></p>"
-write_index "<hr/><h2>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields</h2>"
-write_index "<p><pre>$(echo $BAD | dd-list -i) </pre></p>"
-write_index "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a></font>"
-write_index "</p></body></html>"
+write_summary "</code></p>"
+write_summary "<hr/><h2>Packages which failed to build reproducibly, sorted by Maintainers: and Uploaders: fields</h2>"
+write_summary "<p><pre>$(echo $BAD | dd-list -i) </pre></p>"
+write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a></font>"
+write_summary "</p></body></html>"
 echo
 
 # job output
-cp index.html /var/lib/jenkins/userContent/reproducible.html
-rm index.html
+cp $SUMMARY /var/lib/jenkins/userContent/reproducible.html
+rm $SUMMARY

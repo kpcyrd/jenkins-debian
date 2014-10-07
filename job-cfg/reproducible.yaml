@@ -105,7 +105,7 @@
       - htmlpublisher:
           name: 'Reproducible builds statistics'
           directory: '.'
-          indexfiles: 'index.html'
+          indexfiles: 'reproducible.html'
           keepall: True
 #      - trigger:
 #          project: 'reproducible_stats'

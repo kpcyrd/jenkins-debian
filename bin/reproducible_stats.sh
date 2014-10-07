@@ -86,9 +86,9 @@ link_packages() {
 		if $EXTRA_STAR && [ ! -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 			STAR="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
 		fi
-		NAVI="/var/lib/jenkins/userContent/rb-pkg/${PKG}_navigation.html"
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
-		FILE=$(find ! -newermt "$BUILD_DATE" -name $NAVI)
+		NAVI="/var/lib/jenkins/userContent/rb-pkg/${PKG}_navigation.html"
+		FILE=$(find $(dirname $NAVI) -name $(basename $NAVI) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
 		if [ ! -f $NAVI ] || [ "$FILE" != "" ] ; then
 			MAINLINK=""
 			init_navi_frame "$PKG" "$VERSION" "$BUILD_DATE"

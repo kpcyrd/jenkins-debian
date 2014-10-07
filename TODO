@@ -90,13 +90,32 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === reproducible
 
+* schedule packages by adding them to a table in the db, to make sure each package is only scheduled once.
+** needs new table: sources_scheduled: name, schedule_date (older=will be scheduled sooner, so its possible to set schedule_date to 1970...
+** schedule (once every hour) if there are less then 300 packages scheduled:
+*** schedule up to 200 new ones
+*** then schedule up to 100 new versions (but not more than 200 in total)
+** if thats less than 200 and in total there are less then 300 scheduled:
+*** schedule up to 100 same versions, older than a week
+** another job: reschedule packages supplied by params (first those initital ones but also on demand, via cli or webgui)
+** dont reschedule packages which 404ed or are blacklisted
+
+* then have other three runner job constantly picking up scheduled packages
+** needs new table: runner_status, id, status (RUNNING, IDLE, STOPPED, START), timestamp
+** if there are more than 30 packages scheduled, take 10, if more than 10, take 3, else 1. if 0, sleep 15m
+** they write a timestamp to runner_status on each started package, so hanging builds can be detected
+** have another job which kills them and marks them killed in db
+** setup script shall cleanup workspaces from workers
+*** killer job is run before setup
+*** scheduler and builder jobs are started after
+
+* watch: zephyr (debbindiff timeout?)
+* watch: haskell-hsql-odbc
+* watch: cxxtest: dbd failure should be in rbuild output!
+* generate .json for tracker.d.o
+* reschedule all pkg tested before oct 06 00:00 UTC (we want to know if they generate .buildinfo files)
+* reschedule all files with 0 length .rbuild.log files
 * watch it build :)
-* provide link to jenkins console log for 404 packages. probably use diff_path to store it (for all packages maybe?)
-* get rid of non-random jobs and include those packages into a scheduler
-** foo=(haklo hete joa)
-** echo ${foo[1]}
-** result: hete
-* design schedulers before writing them: [todo here]
 
 === Test Debian live
 

@@ -62,7 +62,7 @@ EOF
 init_navi_frame() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
-	echo "<body><p><font size=+1>$1</font> " >> $NAVI
+	echo "<body><table><tr><td align=\"left\"><font size=+1>$1</font> " >> $NAVI
 	echo "($2) " >> $NAVI
 	echo "<font size=-1>at $3:</font> " >> $NAVI
 }
@@ -72,7 +72,7 @@ append2navi_frame() {
 }
 
 finish_navi_frame() {
-	echo "</p></body></html>" >> $NAVI
+	echo "</td><td align=\"right\"><a href=\"$JENKINS_URL/userContent/reproducible.html\">stats for reproducible builds</a></td></tr></table></body></html>" >> $NAVI
 }
 
 link_packages() {

@@ -77,7 +77,7 @@ finish_navi_frame() {
 	echo "</td><td style=\"text-align:right\"><a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats for reproducible builds</a></td></tr></table></body></html>" >> $NAVI
 }
 
-link_packages() {
+process_packages() {
 	for PKG in $@ ; do
 		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
 		BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
@@ -122,9 +122,20 @@ link_packages() {
 		else
 			LINKTARGET[$PKG]="$PKG"
 		fi
+	done
+}
+
+link_packages() {
+	for PKG in $@ ; do
 		write_summary " ${LINKTARGET[$PKG]} "
 	done
 }
+
+echo "Processing packages... this will take a while."
+EXTRA_STAR=true
+process_packages $BAD
+EXTRA_STAR=false
+process_packages $UGLY $GOOD
 
 echo "Starting to write statistics index page."
 echo
@@ -137,9 +148,7 @@ write_summary "<body><header><h2>Statistics for reproducible builds</h2>"
 write_summary "<p>This page is updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a> Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!</p></header>"
 write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly: <code>"
-EXTRA_STAR=true
 link_packages $BAD
-EXTRA_STAR=false
 write_summary "</code></p>"
 write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
 write_summary

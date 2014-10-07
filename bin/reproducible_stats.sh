@@ -64,11 +64,8 @@ init_navi_frame() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
 	echo "<body><p><font size=+1>$1</font> " >> $NAVI
-	RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
-	BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
-	VERSION=$(echo $RESULT|cut -d "|" -f2)
-	echo "($VERSION) " >> $NAVI
-	echo "<font size=-1>at $BUILD_DATE:</font> " >> $NAVI
+	echo "($2) " >> $NAVI
+	echo "<font size=-1>at $3:</font> " >> $NAVI
 }
 
 append2navi_frame() {
@@ -81,14 +78,16 @@ finish_navi_frame() {
 
 link_packages() {
 	for PKG in $@ ; do
-		VERSION=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT version FROM source_packages WHERE name = \"$PKG\"")
+		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
+		BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
+		VERSION=$(echo $RESULT|cut -d "|" -f2)
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		# FIXME: remove unused code once all diffp.log files are gone
 		if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] || [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.diffp.log" ] || [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] || [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ]; then
 			STAR=""
 			MAINLINK=""
-			init_navi_frame "$PKG"
+			init_navi_frame "$PKG" "$VERSION" "$BUILD_DATE"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"

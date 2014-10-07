@@ -140,8 +140,7 @@
     jobs:
         - '{name}_setup':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: ''
-#            my_timed: '42 0 * * *'
+            my_timed: '42 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
         - '{name}_stats':
             my_description: 'Reproducible builds statistics'

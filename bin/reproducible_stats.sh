@@ -230,7 +230,8 @@ for VIEW in $ALLVIEWS ; do
 	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_summary "</code></p>"
-	write_summary "<p><font size=\"-1\">A &beta; sign after a package which is unreproducible indicates that no .buildinfo file was generated.</font></p>"
+	write_summary "<p><font size=\"-1\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
+	write_summary "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</font></p>"
 	write_summary_footer
 	publish_summary
 done

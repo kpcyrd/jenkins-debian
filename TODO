@@ -97,6 +97,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** then schedule up to 100 new versions (but not more than 200 in total)
 ** if thats less than 200 and in total there are less then 300 scheduled:
 *** schedule up to 100 same versions, older than a week
+*** schedule the oldest FTBFS packages - once every other scheduler run, which is run 24x a day
 ** another job: reschedule packages supplied by params (first those initital ones but also on demand, via cli or webgui)
 ** dont reschedule packages which 404ed or are blacklisted
 

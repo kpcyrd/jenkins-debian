@@ -175,7 +175,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			RESULT=$?
 			set -e
 			if [ $RESULT -eq 124 ] ; then
-				echo "$(date) - debbindiff.py was killed after running into timeouot..." >> ./${RBUILDLOG}
+				echo "$(date) - debbindiff.py was killed after running into timeouot..." >> ${RBUILDLOG}
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cleanup_userContent

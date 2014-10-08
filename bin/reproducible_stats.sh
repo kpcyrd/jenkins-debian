@@ -88,9 +88,27 @@ EOF
 init_navi_frame() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
-	echo "<body><table><tr><td><font size=+1>$1</font> " >> $NAVI
-	echo "($2) " >> $NAVI
-	echo "<font size=-1>at $3:</font> " >> $NAVI
+	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
+	# icons taken from tango-icon-theme (0.8.90-5)
+	# licenced under http://creativecommons.org/licenses/publicdomain/
+	case $3 in
+		reproducible)	ICON=weather-clear.png
+				;;
+		unreproducible)	if [ "$5" != "" ] ; then
+					ICON=weather-showers-scattered.png
+				else
+					ICON=weather-showers.png
+				fi
+				;;
+		FTBFS)		ICON=weather-storm.png
+				;;
+		404)		ICON=weather-severe-alert.png
+				;;
+		"not for us")	ICON=weather-few-clouds-night.png
+				;;
+	esac
+	echo "<img src=\"../static/$ICON\" /> $3" >> $NAVI
+	echo "<font size=-1>at $4:</font> " >> $NAVI
 }
 
 append2navi_frame() {
@@ -103,9 +121,10 @@ finish_navi_frame() {
 
 process_packages() {
 	for PKG in $@ ; do
-		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version FROM source_packages WHERE name = \"$PKG\"")
+		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version,status FROM source_packages WHERE name = \"$PKG\"")
 		BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
 		VERSION=$(echo $RESULT|cut -d "|" -f2)
+		STATUS=$(echo $RESULT|cut -d "|" -f3)
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		if $BUILDINFO_SIGNS && [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
@@ -116,7 +135,7 @@ process_packages() {
 		FILE=$(find $(dirname $NAVI) -name $(basename $NAVI) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
 		if [ ! -f $NAVI ] || [ "$FILE" != "" ] ; then
 			MAINLINK=""
-			init_navi_frame "$PKG" "$VERSION" "$BUILD_DATE"
+			init_navi_frame "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "${STAR[$PKG]}"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"

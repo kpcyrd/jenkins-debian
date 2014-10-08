@@ -216,7 +216,7 @@ echo "Processing $COUNT_TOTAL packages... this will take a while."
 BUILDINFO_SIGNS=true
 process_packages ${BAD["all"]}
 BUILDINFO_SIGNS=false
-process_packages ${UGLY["all"]} ${GOOD["all"]}
+process_packages ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
 
 MAINVIEW="all_abc"
 ALLVIEWS="last_24h last_48h all all_abc"

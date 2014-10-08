@@ -98,7 +98,7 @@ append2navi_frame() {
 }
 
 finish_navi_frame() {
-	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"http://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for reproducible builds</font></td></tr></table></body></html>" >> $NAVI
+	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"http://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
 }
 
 process_packages() {

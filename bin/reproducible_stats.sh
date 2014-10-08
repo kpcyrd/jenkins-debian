@@ -108,7 +108,7 @@ process_packages() {
 		VERSION=$(echo $RESULT|cut -d "|" -f2)
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
-		if $EXTRA_STAR && [ ! -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
+		if $BUILDINFO_SIGNS && [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 			STAR[$PKG]="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
 		fi
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
@@ -194,9 +194,9 @@ publish_summary() {
 }
 
 echo "Processing $COUNT_TOTAL packages... this will take a while."
-EXTRA_STAR=true
+BUILDINFO_SIGNS=true
 process_packages ${BAD["all"]}
-EXTRA_STAR=false
+BUILDINFO_SIGNS=false
 process_packages ${UGLY["all"]} ${GOOD["all"]}
 
 MAINVIEW="all_abc"
@@ -214,7 +214,6 @@ for VIEW in $ALLVIEWS ; do
 	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"
 	link_packages ${BAD[$VIEW]}
 	write_summary "</code></p>"
-	write_summary "<p><font size=\"-1\">A &beta; sign after a package name indicates that no .buildinfo file was generated.</font></p>"
 	write_summary
 	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total$FINISH <code>"
 	link_packages ${UGLY[$VIEW]}
@@ -231,6 +230,7 @@ for VIEW in $ALLVIEWS ; do
 	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_summary "</code></p>"
+	write_summary "<p><font size=\"-1\">A &beta; sign after a package which is unreproducible indicates that no .buildinfo file was generated.</font></p>"
 	write_summary_footer
 	publish_summary
 done

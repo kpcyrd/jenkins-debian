@@ -57,7 +57,8 @@ if [ $1 = "unknown" ] ; then
 elif [ $1 = "known" ] ; then
 	update_sources_table
 	AMOUNT=$2
-	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | xargs -r echo)
+	# FIXME: blacklisted is a valid status in the db which should be used...
+	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | egrep -v "^(linux|cups|zurl|openclipart)$" | xargs -r echo)
 else
 	# CANDIDATES is defined in that file
 	. /srv/jenkins/bin/reproducible_candidates.sh
@@ -69,6 +70,7 @@ else
 			continue
 		fi
 		PKG=${CANDIDATES[$i]}
+		# FIXME: blacklisted is a valid status in the db which should be used...
 		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
 		if [ "$RESULT" = "" ] ; then
 			PACKAGES="${PACKAGES} $PKG"

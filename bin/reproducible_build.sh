@@ -91,6 +91,7 @@ cleanup_all() {
 }
 
 cleanup_userContent() {
+	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
@@ -98,7 +99,6 @@ cleanup_userContent() {
 cleanup_prebuild() {
 	rm b1 b2 -rf
 	rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
-	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
 }
 
 TMPDIR=$(mktemp --tmpdir=$PWD -d)
@@ -147,10 +147,14 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
 		# EPOCH_FREE_VERSION was too long
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
+		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,
+		# and then access RBUILDLOG with it's correct name (=eversion)
 		TMPLOG=$(mktemp)
 		mv ${RBUILDLOG} ${TMPLOG}
+		cleanup_userContent
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}
+		# check whether the package is not for us...
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2-)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] && [[ ! "$ARCH" =~ "linux-amd64" ]]; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
@@ -178,7 +182,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				echo "$(date) - debbindiff.py was killed after running into timeouot..." >> ${RBUILDLOG}
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
-				cleanup_userContent
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
 				figlet ${SRCPACKAGE}
 				echo
@@ -187,7 +190,6 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				let "COUNT_GOOD=COUNT_GOOD+1"
 				GOOD="${SRCPACKAGE} ${GOOD}"
 			else
-				cleanup_userContent
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ || true
 				mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/ || true
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"

@@ -113,6 +113,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * watch: zephyr (debbindiff timeout?)
 * watch: haskell-hsql-odbc
 * watch: cxxtest: dbd failure should be in rbuild output!
+* watch: file - debbindiff file should be deleted....
 * generate .json for tracker.d.o
 * reschedule all pkg tested before oct 06 00:00 UTC (we want to know if they generate .buildinfo files)
 * reschedule all files with 0 length .rbuild.log files

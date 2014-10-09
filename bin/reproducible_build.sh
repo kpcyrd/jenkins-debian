@@ -140,6 +140,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 	apt-get source --download-only --only-source ${SRCPACKAGE} > ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
+		ls -l ${SRCPACKAGE}* >> ${RBUILDLOG}
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
 		set +x

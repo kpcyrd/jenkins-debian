@@ -27,6 +27,8 @@ LAST24="AND build_date > datetime('now', '-24 hours') "
 LAST48="AND build_date > datetime('now', '-48 hours') "
 SUITE=sid
 AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)
+#ALLSTATES="reproducible FTBR FTBR_with_buildinfo FTBFS 404 not_for_us blacklisted"
+ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 GOOD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY build_date DESC" | xargs echo)
 GOOD["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 GOOD["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST48 ORDER BY build_date DESC" | xargs echo)
@@ -64,6 +66,14 @@ SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 SPOKENTARGET["notes"]="packages with notes"
+SPOKENTARGET["reproducible"]="packages which built reproducibly"
+SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
+#SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and have a .buildinfo file"
+SPOKENTARGET["FTBFS"]="packages which fail to build from source"
+SPOKENTARGET["404"]="packages where the sources failed to downloaded"
+SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
+SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
+
 
 #
 # gather notes
@@ -391,6 +401,12 @@ write_summary_header() {
 	fi
 	write_summary "</p>"
 	write_summary "<p><ul>Other views for these build results:"
+	write_summary "<li>"
+	for MY_STATE in $ALLSTATES ; do
+		set_icon $MY_STATE		# sets ICON and STATE_TARGET_NAME
+		write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" /></a> "
+	done
+	write_summary "</li>"
 	for TARGET in notes $ALLVIEWS dd-list ; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
@@ -501,21 +517,11 @@ write_summary "<p><font size=\"-1\">Notes are stored in <a href=\"https://anonsc
 write_summary_footer
 publish_summary
 
-SPOKENTARGET["reproducible"]="packages which built reproducibly"
-SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
-#SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and have a .buildinfo file"
-SPOKENTARGET["FTBFS"]="packages which fail to build from source"
-SPOKENTARGET["404"]="packages where the sources failed to downloaded"
-SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
-SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
-
 count_packages() {
 	COUNT=${#@}
 	PERCENT=$(echo "scale=1 ; ($COUNT*100/$COUNT_TOTAL)" | bc)
 }
 
-#ALLSTATES="reproducible FTBR FTBR_with_buildinfo FTBFS 404 not_for_us blacklisted"
-ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 for STATE in $ALLSTATES ; do
 	SUMMARY=index_${STATE}.html
 	echo "Starting to write $SUMMARY page."

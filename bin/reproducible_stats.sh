@@ -91,21 +91,23 @@ init_navi_frame() {
 	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
 	# icons taken from tango-icon-theme (0.8.90-5)
 	# licenced under http://creativecommons.org/licenses/publicdomain/
-	case $3 in
-		reproducible)	ICON=weather-clear.png
-				;;
-		unreproducible)	if [ "$5" != "" ] ; then
-					ICON=weather-showers-scattered.png
-				else
-					ICON=weather-showers.png
-				fi
-				;;
-		FTBFS)		ICON=weather-storm.png
-				;;
-		404)		ICON=weather-severe-alert.png
-				;;
-		"not for us")	ICON=weather-few-clouds-night.png
-				;;
+	case "$3" in
+		"reproducible")		ICON=weather-clear.png
+					;;
+		"unreproducible")	if [ "$5" != "" ] ; then
+						ICON=weather-showers-scattered.png
+					else
+						ICON=weather-showers.png
+					fi
+					;;
+		"FTBFS")		ICON=weather-storm.png
+					;;
+		"404")			ICON=weather-severe-alert.png
+					;;
+		"not for us")		ICON=weather-few-clouds-night.png
+					;;
+		"blacklisted")		ICON=error.png
+					;;
 	esac
 	echo "<img src=\"../static/$ICON\" /> $3" >> $NAVI
 	echo "<font size=-1>at $4:</font> " >> $NAVI

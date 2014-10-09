@@ -144,7 +144,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
         - '{name}_stats':
             my_description: 'Reproducible builds statistics'
-            my_timed: '0 0,3,6,9,12,15,18,21 * * *'
+            my_timed: '0 0,6,12,18 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
         - '{name}_build_random_packages':
             my_description: 'Reproducible build this many random packages each day:'

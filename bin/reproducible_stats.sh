@@ -205,7 +205,7 @@ create_pkg_note() {
 	echo "</tr>" >> ${NOTE}
 	echo "<tr><td colspan=\"3\">&nbsp;</td></tr>" >> ${NOTE}
 	echo "<tr><td colspan=\"3\" style=\"text-align:right\"><font size=\"-1\">" >> ${NOTE}
-	echo "Notes are stored in <a href=\"http://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>." >> ${NOTE}
+	echo "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>." >> ${NOTE}
 	echo "</font></td></tr></table></body></html>" >> ${NOTE}
 }
 
@@ -295,7 +295,7 @@ append2navi_frame() {
 }
 
 finish_navi_frame() {
-	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"$JENKINS_URL/userContent/index_notes.html\" target=\"_parent\">notes</a>/<a href=\"http://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
+	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"$JENKINS_URL/userContent/index_notes.html\" target=\"_parent\">notes</a>/<a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
 }
 
 process_packages() {
@@ -487,7 +487,7 @@ force_package_targets $PACKAGES_WITH_NOTES
 PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
 link_packages $PACKAGES_WITH_NOTES
 write_summary "</code></p>"
-write_summary "<p><font size=\"-1\">Notes are stored in <a href=\"http://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</font></font>"
+write_summary "<p><font size=\"-1\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</font></font>"
 write_summary_footer
 publish_summary
 

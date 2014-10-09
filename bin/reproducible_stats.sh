@@ -310,7 +310,7 @@ append2navi_frame() {
 }
 
 finish_navi_frame() {
-	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"$JENKINS_URL/userContent/index_notes.html\" target=\"_parent\">notes</a>/<a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
+	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
 }
 
 process_packages() {
@@ -447,7 +447,7 @@ ALLVIEWS="last_24h last_48h all_abc"
 for VIEW in $ALLVIEWS ; do
 	SUMMARY=index_${VIEW}.html
 	echo "Starting to write $SUMMARY page."
-	write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
+	write_summary_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
 	if [ "${VIEW:0:3}" = "all" ] ; then
 		FINISH=":"
 	else
@@ -481,10 +481,10 @@ done
 VIEW=dd-list
 SUMMARY=index_${VIEW}.html
 echo "Starting to write $SUMMARY page."
-write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
+write_summary_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
 echo "${BAD["all"]}" | dd-list -i > $TMPFILE
-write_summary "<p><pre>"
+write_summary "<p>The following maintainers and uploaders are listed for packages which have built unreproducibly:</p><p><pre>"
 while IFS= read -r LINE ; do
 	if [ "${LINE:0:3}" = "   " ] ; then
 		PACKAGE=$(echo "${LINE:3}" | cut -d " " -f1)
@@ -506,7 +506,7 @@ publish_summary
 VIEW=notes
 SUMMARY=index_${VIEW}.html
 echo "Starting to write $SUMMARY page."
-write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
+write_summary_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 write_summary "<p>Packages which have notes: <code>"
 for PKG in $PACKAGES_WITH_NOTES ; do
 	NOTES_PACKAGE[${PKG}]=""
@@ -527,7 +527,7 @@ count_packages() {
 for STATE in $ALLSTATES ; do
 	SUMMARY=index_${STATE}.html
 	echo "Starting to write $SUMMARY page."
-	write_summary_header $STATE "Statistics for reproducible builds of ${SPOKENTARGET[$STATE]}"
+	write_summary_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
 	WITH=""
 	case "$STATE" in
 		reproducible)	PACKAGES=${GOOD["all"]}

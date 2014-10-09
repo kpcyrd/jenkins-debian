@@ -114,6 +114,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * watch: haskell-hsql-odbc (debbindiff error only in jenkins log, not in rbuild log
 * watch: cxxtest: dbd failure should be in rbuild output!
 * watch: android: no debbindiff output?
+* watch/fix: swig/subversion
 * generate .json for tracker.d.o
 * reschedule all pkg tested before oct 06 00:00 UTC (we want to know if they generate .buildinfo files)
 * reschedule all files with 0 length .rbuild.log files

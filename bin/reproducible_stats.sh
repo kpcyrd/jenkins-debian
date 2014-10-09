@@ -67,7 +67,7 @@ SPOKENTARGET["notes"]="packages with notes"
 SPOKENTARGET["reproducible"]="packages which built reproducibly"
 SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and don't create a .buildinfo file"
 SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
-SPOKENTARGET["FTBFS"]="packages which fail to build from source"
+SPOKENTARGET["FTBFS"]="packages which failed to build from source"
 SPOKENTARGET["404"]="packages where the sources failed to downloaded"
 SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
 SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
@@ -185,7 +185,8 @@ issues_loop() {
 
 create_pkg_note() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > ${NOTE}
-	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> ${NOTE}
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> ${NOTE}
+	echo "<title>Notes for $1</title></head>" >> ${NOTE}
 	echo "<body><table>" >> ${NOTE}
 
 	echo "<tr><td>Version annotated:</td><td colspan=\"2\">${NOTES_VERSION[$1]}</td></tr>" >> ${NOTE}
@@ -247,21 +248,24 @@ done
 # end note parsing
 #
 
-
+mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 
 write_summary() {
 	echo "$1" >> $SUMMARY
 }
 
-mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 write_pkg_frameset() {
 	FRAMESET="/var/lib/jenkins/userContent/rb-pkg/$1.html"
 	cat > $FRAMESET <<-EOF
 <!DOCTYPE html>
 <html>
-	<head>
-	</head>
-	<frameset framespacing="0" rows="42,*" frameborder="0" noresize>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>
+		$1 - reproducible builds results
+	</title>
+</head>
+	<frameset rows="42,*">
 		<frame name="top" src="$1_navigation.html" target="top">
 		<frame name="main" src="$2" target="main">
 	</frameset>
@@ -298,10 +302,11 @@ set_icon() {
 
 init_navi_frame() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
-	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> $NAVI
+	echo "<title>Navigation for $1</title></head>" >> $NAVI
 	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
 	set_icon $3 $5
-	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" /></a>" >> $NAVI
+	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> $NAVI
 	echo "<font size=-1>at $4:</font> " >> $NAVI
 }
 
@@ -388,7 +393,8 @@ write_summary_header() {
 	rm -f $SUMMARY
 	write_summary "<!DOCTYPE html><html><head>"
 	write_summary "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-	write_summary "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>"
+	write_summary "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
+	write_summary "<title>$2</title></head>"
 	write_summary "<body><header><h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		write_summary "<p>These pages are updated every three hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
@@ -406,7 +412,7 @@ write_summary_header() {
 			WITH="YES"
 		fi
 		set_icon $MY_STATE $WITH	# sets ICON and STATE_TARGET_NAME
-		write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" /></a> "
+		write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a> "
 	done
 	write_summary "</li>"
 	for TARGET in notes $ALLVIEWS dd-list ; do
@@ -561,7 +567,7 @@ for STATE in $ALLSTATES ; do
 	count_packages ${PACKAGES}
 	write_summary "<p> $COUNT ($PERCENT%)"
 	set_icon $STATE	$WITH	# sets ICON and STATE_TARGET_NAME
-	write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" /></a>"
+	write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
 	write_summary " ${SPOKENTARGET[$STATE]}:<code>"
 	link_packages ${PACKAGES}
 	write_summary "</code></p>"

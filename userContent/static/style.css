@@ -18,6 +18,10 @@ pre {
 	overflow: auto;
 }
 
+img {
+	vertical-align: middle;
+}
+
 a {
 	color:#0088cc;
 	text-decoration:none;
@@ -55,7 +59,7 @@ ul li a {
 	margin: 0 0.5em 0.2em 0;
 	border-radius: 0.5em;
 	padding: 0.15em 0.5em;
-	display: block;
+	line-height: 2.1em;
 }
 
 nav ul li {
@@ -79,7 +83,7 @@ h1 {
 h2 {
 	font-size : 110%;
 	background: #d70a53;
-	margin: 1em 0 0;
+	margin: 0.25em 0 0;
 	padding: 0.5em;
 	color: #fff;
 	border-top-left-radius: 0.5em;

@@ -303,7 +303,7 @@ init_navi_frame() {
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
 	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
 	set_icon $3 $5
-	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" /> $3</a>" >> $NAVI
+	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" /></a>" >> $NAVI
 	echo "<font size=-1>at $4:</font> " >> $NAVI
 }
 

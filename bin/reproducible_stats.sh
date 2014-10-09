@@ -63,6 +63,183 @@ SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
+SPOKENTARGET["notes"]="packages with notes"
+
+#
+# gather notes
+#
+WORKSPACE=$PWD
+cd /var/lib/jenkins
+if [ -d notes.git ] ; then
+	cd notes.git
+	git pull
+else
+	git clone git://git.debian.org/git/reproducible/notes.git notes.git
+fi
+cd $WORKSPACE
+PACKAGES_YML=/var/lib/jenkins/notes.git/packages.yml
+ISSUES_YML=/var/lib/jenkins/notes.git/issues.yml
+NOTES_PATH=/var/lib/jenkins/userContent/notes
+mkdir -p $NOTES_PATH
+rm -f $NOTES_PATH/*.html
+
+declare -A NOTES_PACKAGE
+declare -A NOTES_VERSION
+declare -A NOTES_ISSUES
+declare -A NOTES_BUGS
+declare -A NOTES_COMMENTS
+declare -A ISSUES_DESCRIPTION
+declare -A ISSUES_URL
+
+show_multi_values() {
+	TMPFILE=$(mktemp)
+	echo "$@" > $TMPFILE
+	while IFS= read -r p ; do
+		if [ "$p" = "-" ] || [ "$p" = "" ] ; then
+			continue
+		elif [ "${p:0:2}" = "- " ] ; then
+			p="${p:2}"
+		fi
+		echo "    $PROPERTY = $p"
+	done < $TMPFILE
+	unset IFS
+	rm $TMPFILE
+}
+
+ISSUES=$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml keys)
+for ISSUE in ${ISSUES} ; do
+	echo " Issue = ${ISSUE}"
+	for PROPERTY in url description ; do
+		VALUE="$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml get-value ${ISSUE}.${PROPERTY} )"
+		if [ "$VALUE" != "" ] ; then
+			case $PROPERTY in
+				url)		ISSUES_URL[${ISSUE}]=$VALUE
+						echo "    $PROPERTY = $VALUE"
+						;;
+				description)	ISSUES_DESCRIPTION[${ISSUE}]=$VALUE
+						show_multi_values "$VALUE"
+						;;
+			esac
+		fi
+	done
+done
+
+tag_property_loop() {
+	BEFORE=$1
+	shift
+	AFTER=$1
+	shift
+	TMPFILE=$(mktemp)
+	echo "$@" > $TMPFILE
+	while IFS= read -r p ; do
+		if [ "$p" = "-" ] || [ "$p" = "" ] ; then
+			continue
+		elif [ "${p:0:2}" = "- " ] ; then
+			p="${p:2}"
+		fi
+		echo "$BEFORE" >> ${NOTE}
+		if $BUG ; then
+			# turn bugs into links
+			p="<a href=\"https://bugs.debian.org/$p\">#$p</a>"
+		else
+			# turn URLs into links
+			p="$(echo $p |sed  -e 's|http[s:]*//[^ ]*|<a href=\"\0\">\0</a>|g')"
+		fi
+		echo "$p" >> ${NOTE}
+		echo "$AFTER" >> ${NOTE}
+	done < $TMPFILE
+	unset IFS
+	rm $TMPFILE
+}
+
+issues_loop() {
+	TTMPFILE=$(mktemp)
+	echo "$@" > $TTMPFILE
+	FIRST=true
+	while IFS= read -r p ; do
+		if [ "${p:0:2}" = "- " ] ; then
+			p="${p:2}"
+		fi
+		if ! $FIRST ; then
+			echo "<tr><td>&nbsp;</td>" >> ${NOTE}
+		fi
+		FIRST=false
+		if [ "${ISSUES_URL[$p]}" != "" ] ; then
+			echo "<td><a href=\"${ISSUES_URL[$p]}\">$p</a></td><td>" >> ${NOTE}
+		else
+			echo "<td>$p</td><td>" >> ${NOTE}
+		fi
+		tag_property_loop "" "<br />" "${ISSUES_DESCRIPTION[$p]}"
+		echo "</td></tr>" >> ${NOTE}
+	done < $TTMPFILE
+	unset IFS
+	rm $TTMPFILE
+}
+
+create_pkg_note() {
+	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > ${NOTE}
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> ${NOTE}
+	echo "<body><table>" >> ${NOTE}
+
+	echo "<tr><td>Version annotated:</td><td colspan=\"2\">${NOTES_VERSION[$1]}</td></tr>" >> ${NOTE}
+	BUG=false
+
+	if [ "${NOTES_ISSUES[$1]}" != "" ] ; then
+		echo "<tr><td>Identified issues:</td>" >> ${NOTE}
+		issues_loop "${NOTES_ISSUES[$1]}"
+	fi
+	BUG=true
+	if [ "${NOTES_BUGS[$1]}" != "" ] ; then
+		echo "<tr><td colspan=\"3\">Bugs noted:</td></tr>" >> ${NOTE}
+		echo "<tr><td>&nbsp;</td><td colspan=\"2\">" >> ${NOTE}
+		tag_property_loop "" "<br />" "${NOTES_BUGS[$1]}"
+		echo "</td></tr>" >> ${NOTE}
+	fi
+	BUG=false
+	if [ "${NOTES_COMMENTS[$1]}" != "" ] ; then
+		echo "<tr><td colspan=\"3\">Comments:</td></tr>" >> ${NOTE}
+		echo "<tr><td>&nbsp;</td><td colspan=\"2\">" >> ${NOTE}
+		tag_property_loop "" "<br />" "${NOTES_COMMENTS[$1]}"
+		echo "</td></tr>"  >> ${NOTE}
+	fi
+	echo "</tr>" >> ${NOTE}
+	echo "<tr><td colspan=\"3\">&nbsp;</td></tr>" >> ${NOTE}
+	echo "<tr><td colspan=\"3\" style=\"text-align:right\"><font size=\"-1\">" >> ${NOTE}
+	echo "Notes are stored in <a href=\"http://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>." >> ${NOTE}
+	echo "</font></td></tr></table></body></html>" >> ${NOTE}
+}
+
+PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
+for PKG in $PACKAGES_WITH_NOTES ; do
+	echo " Package = ${PKG}"
+	NOTES_PACKAGE[${PKG}]=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
+	for PROPERTY in version issues bugs comments ; do
+		VALUE="$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml get-value ${PKG}.${PROPERTY} )"
+		if [ "$VALUE" != "" ] ; then
+			case $PROPERTY in
+				version)	NOTES_VERSION[${PKG}]=$VALUE
+						echo "    $PROPERTY = $VALUE"
+						;;
+				issues)		NOTES_ISSUES[${PKG}]=$VALUE
+						show_multi_values "$VALUE"
+						;;
+				bugs)		NOTES_BUGS[${PKG}]=$VALUE
+						show_multi_values "$VALUE"
+						;;
+				comments)	NOTES_COMMENTS[${PKG}]=$VALUE
+						show_multi_values "$VALUE"
+						;;
+			esac
+		fi
+	done
+	NOTE=$NOTES_PATH/${PKG}_note.html
+	create_pkg_note $PKG
+done
+
+#
+# end note parsing
+#
+
 
 
 write_summary() {
@@ -118,7 +295,7 @@ append2navi_frame() {
 }
 
 finish_navi_frame() {
-	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"http://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
+	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"$JENKINS_URL/userContent/index_notes.html\" target=\"_parent\">notes</a>/<a href=\"http://bugs.debian.org/cgi-bin/pkgreport.cgi?usertag=reproducible-builds@lists.alioth.debian.org\" target=\"_parent\">bugs</a>/<a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">stats</a> for <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
 }
 
 process_packages() {
@@ -135,9 +312,11 @@ process_packages() {
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
 		NAVI="/var/lib/jenkins/userContent/rb-pkg/${PKG}_navigation.html"
 		FILE=$(find $(dirname $NAVI) -name $(basename $NAVI) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
-		if [ ! -f $NAVI ] || [ "$FILE" != "" ] ; then
+		# if no navigation exists, or is older than last build_date or if a note exist...
+		if [ ! -f $NAVI ] || [ "$FILE" != "" ] || [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
 			MAINLINK=""
 			init_navi_frame "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "${STAR[$PKG]}"
+			append2navi_frame "${NOTES_PACKAGE[${PKG}]}"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 				append2navi_frame " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
@@ -159,14 +338,28 @@ process_packages() {
 			append2navi_frame " <a href=\"https://sources.debian.net/src/${PKG}/\" target=\"main\">sources</a> "
 			append2navi_frame " <a href=\"https://sources.debian.net/src/${PKG}/${VERSION}/debian/rules\" target=\"main\">debian/rules</a> "
 
+			if [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+				MAINLINK="$JENKINS_URL/userContent/notes/${PKG}_note.html"
+			fi
 			finish_navi_frame
 			write_pkg_frameset "$PKG" "$MAINLINK"
 		fi
 		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]}"
+			if [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+				NOTED="N"
+			else
+				NOTED=""
+			fi
+			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]}$NOTED"
 		else
 			LINKTARGET[$PKG]="$PKG"
 		fi
+	done
+}
+
+force_package_targets() {
+	for PKG in $@ ; do
+		LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]}"
 	done
 }
 
@@ -191,7 +384,7 @@ write_summary_header() {
 	fi
 	write_summary "</p>"
 	write_summary "<p><ul>Other views for these build results:"
-	for TARGET in $ALLVIEWS dd-list; do
+	for TARGET in notes $ALLVIEWS dd-list ; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
 		fi
@@ -279,6 +472,22 @@ while IFS= read -r LINE ; do
 done < $TMPFILE
 write_summary "</pre></p>"
 rm $TMPFILE
+write_summary_footer
+publish_summary
+
+VIEW=notes
+SUMMARY=index_${VIEW}.html
+echo "Starting to write $SUMMARY page."
+write_summary_header $VIEW "Statistics for reproducible builds of ${SPOKENTARGET[$VIEW]}"
+write_summary "<p>Packages which have notes: <code>"
+for PKG in $PACKAGES_WITH_NOTES ; do
+	NOTES_PACKAGE[${PKG}]=""
+done
+force_package_targets $PACKAGES_WITH_NOTES
+PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
+link_packages $PACKAGES_WITH_NOTES
+write_summary "</code></p>"
+write_summary "<p><font size=\"-1\">Notes are stored in <a href=\"http://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</font></font>"
 write_summary_footer
 publish_summary
 

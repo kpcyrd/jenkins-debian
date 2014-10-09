@@ -9,3 +9,5 @@ EXTRAPACKAGES="fakeroot"
 APTCACHE=""
 export http_proxy="http://localhost:3128"
 COMPRESSPROG="pigz"
+# FIXME: remove /run/shm bindmount once we are running jessie - this is a workaround for #700591
+BINDMOUNTS="$BINDMOUNTS /run/shm /dev/shm"

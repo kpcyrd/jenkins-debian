@@ -32,7 +32,6 @@ jenkins ALL=  \
 	/bin/rm /var/cache/pbuilder/result/*, \
 	/usr/bin/dcmd rm *.changes, \
 	/usr/bin/dcmd rm *.dsc, \
-	/usr/bin/dcmd rm -f *.dsc, \
 	/usr/bin/apt-get update
 
 # keep these environment variables

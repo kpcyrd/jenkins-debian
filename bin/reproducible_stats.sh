@@ -27,8 +27,7 @@ LAST24="AND build_date > datetime('now', '-24 hours') "
 LAST48="AND build_date > datetime('now', '-48 hours') "
 SUITE=sid
 AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)
-#ALLSTATES="reproducible FTBR FTBR_with_buildinfo FTBFS 404 not_for_us blacklisted"
-ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
+ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
 GOOD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY build_date DESC" | xargs echo)
 GOOD["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 GOOD["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST48 ORDER BY build_date DESC" | xargs echo)
@@ -67,8 +66,8 @@ SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 SPOKENTARGET["notes"]="packages with notes"
 SPOKENTARGET["reproducible"]="packages which built reproducibly"
-SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
-#SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and have a .buildinfo file"
+SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and don't create a .buildinfo file"
+SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
 SPOKENTARGET["FTBFS"]="packages which fail to build from source"
 SPOKENTARGET["404"]="packages where the sources failed to downloaded"
 SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
@@ -279,12 +278,13 @@ set_icon() {
 	case "$1" in
 		reproducible)		ICON=weather-clear.png
 					;;
-		unreproducible|FTBR)	if [ "$2" != "" ] ; then
+		unreproducible|FTBR*)	if [ "$2" != "" ] ; then
 						ICON=weather-showers-scattered.png
+						STATE_TARGET_NAME=FTBR_with_buildinfo
 					else
 						ICON=weather-showers.png
+						STATE_TARGET_NAME=FTBR
 					fi
-					STATE_TARGET_NAME=FTBR
 					;;
 		FTBFS)			ICON=weather-storm.png
 					;;
@@ -403,7 +403,11 @@ write_summary_header() {
 	write_summary "<p><ul>Other views for these build results:"
 	write_summary "<li>"
 	for MY_STATE in $ALLSTATES ; do
-		set_icon $MY_STATE		# sets ICON and STATE_TARGET_NAME
+		WITH=""
+		if [ "$MY_STATE" = "FTBR_with_buildinfo" ] ; then
+			WITH="YES"
+		fi
+		set_icon $MY_STATE $WITH	# sets ICON and STATE_TARGET_NAME
 		write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" /></a> "
 	done
 	write_summary "</li>"
@@ -526,10 +530,26 @@ for STATE in $ALLSTATES ; do
 	SUMMARY=index_${STATE}.html
 	echo "Starting to write $SUMMARY page."
 	write_summary_header $STATE "Statistics for reproducible builds of ${SPOKENTARGET[$STATE]}"
+	WITH=""
 	case "$STATE" in
 		reproducible)	PACKAGES=${GOOD["all"]}
 				;;
-		FTBR)		PACKAGES=${BAD["all"]}
+		FTBR)		CANDIDATES=${BAD["all"]}
+				PACKAGES=""
+				for PKG in $CANDIDATES ; do
+					if [ "${STAR[$PKG]}" = "" ] ; then
+						PACKAGES="$PACKAGES $PKG"
+					fi
+				done
+				;;
+		FTBR_with_buildinfo)	CANDIDATES=${BAD["all"]}
+				PACKAGES=""
+				for PKG in $CANDIDATES ; do
+					if [ "${STAR[$PKG]}" != "" ] ; then
+						PACKAGES="$PACKAGES $PKG"
+					fi
+				done
+				WITH="YES"
 				;;
 		FTBFS)		PACKAGES=${UGLY["all"]}
 				;;
@@ -542,7 +562,7 @@ for STATE in $ALLSTATES ; do
 	esac
 	count_packages ${PACKAGES}
 	write_summary "<p> $COUNT ($PERCENT%)"
-	set_icon $STATE		# sets ICON and STATE_TARGET_NAME
+	set_icon $STATE	$WITH	# sets ICON and STATE_TARGET_NAME
 	write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" /></a>"
 	write_summary " ${SPOKENTARGET[$STATE]}:<code>"
 	link_packages ${PACKAGES}

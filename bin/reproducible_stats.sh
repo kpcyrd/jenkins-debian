@@ -262,31 +262,38 @@ write_pkg_frameset() {
 EOF
 }
 
-init_navi_frame() {
-	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
-	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
-	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
+set_icon() {
 	# icons taken from tango-icon-theme (0.8.90-5)
 	# licenced under http://creativecommons.org/licenses/publicdomain/
-	case "$3" in
-		"reproducible")		ICON=weather-clear.png
+	STATE_TARGET_NAME=$1
+	case "$1" in
+		reproducible)		ICON=weather-clear.png
 					;;
-		"unreproducible")	if [ "$5" != "" ] ; then
+		unreproducible|FTBR)	if [ "$2" != "" ] ; then
 						ICON=weather-showers-scattered.png
 					else
 						ICON=weather-showers.png
 					fi
+					STATE_TARGET_NAME=FTBR
 					;;
-		"FTBFS")		ICON=weather-storm.png
+		FTBFS)			ICON=weather-storm.png
 					;;
-		"404")			ICON=weather-severe-alert.png
+		404)			ICON=weather-severe-alert.png
 					;;
-		"not for us")		ICON=weather-few-clouds-night.png
+		not_for_us)		ICON=weather-few-clouds-night.png
 					;;
-		"blacklisted")		ICON=error.png
+		blacklisted)		ICON=error.png
 					;;
+		*)			ICON=""
 	esac
-	echo "<img src=\"../static/$ICON\" /> $3" >> $NAVI
+}
+
+init_navi_frame() {
+	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" /></head>" >> $NAVI
+	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
+	set_icon $3 $5
+	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" /> $3</a>" >> $NAVI
 	echo "<font size=-1>at $4:</font> " >> $NAVI
 }
 
@@ -399,6 +406,10 @@ write_summary_footer() {
 	write_summary "</p></body></html>"
 }
 
+write_summary_beta_sign() {
+	write_summary "<p><font size=\"-1\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
+	write_summary "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</font></p>"
+}
 publish_summary() {
 	cp $SUMMARY /var/lib/jenkins/userContent/
 	if [ "$VIEW" = "$MAINVIEW" ] ; then
@@ -444,8 +455,7 @@ for VIEW in $ALLVIEWS ; do
 	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_summary "</code></p>"
-	write_summary "<p><font size=\"-1\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
-	write_summary "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</font></p>"
+	write_summary_beta_sign
 	write_summary_footer
 	publish_summary
 done
@@ -490,5 +500,53 @@ write_summary "</code></p>"
 write_summary "<p><font size=\"-1\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</font></font>"
 write_summary_footer
 publish_summary
+
+SPOKENTARGET["reproducible"]="packages which built reproducibly"
+SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
+#SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and have a .buildinfo file"
+SPOKENTARGET["FTBFS"]="packages which fail to build from source"
+SPOKENTARGET["404"]="packages where the sources failed to downloaded"
+SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
+SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
+
+count_packages() {
+	COUNT=${#@}
+	PERCENT=$(echo "scale=1 ; ($COUNT*100/$COUNT_TOTAL)" | bc)
+}
+
+#ALLSTATES="reproducible FTBR FTBR_with_buildinfo FTBFS 404 not_for_us blacklisted"
+ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
+for STATE in $ALLSTATES ; do
+	SUMMARY=index_${STATE}.html
+	echo "Starting to write $SUMMARY page."
+	write_summary_header $STATE "Statistics for reproducible builds of ${SPOKENTARGET[$STATE]}"
+	case "$STATE" in
+		reproducible)	PACKAGES=${GOOD["all"]}
+				;;
+		FTBR)		PACKAGES=${BAD["all"]}
+				;;
+		FTBFS)		PACKAGES=${UGLY["all"]}
+				;;
+		404)		PACKAGES=${SOURCELESS["all"]}
+				;;
+		not_for_us)	PACKAGES=${NOTFORUS["all"]}
+				;;
+		blacklisted)	PACKAGES=${BLACKLISTED}
+				;;
+	esac
+	count_packages ${PACKAGES}
+	write_summary "<p> $COUNT ($PERCENT%)"
+	set_icon $STATE		# sets ICON and STATE_TARGET_NAME
+	write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" /></a>"
+	write_summary " ${SPOKENTARGET[$STATE]}:<code>"
+	link_packages ${PACKAGES}
+	write_summary "</code></p>"
+	write_summary
+	if [ "${STATE:0:4}" = "FTBR" ] ; then
+		write_summary_beta_sign
+	fi
+	write_summary_footer
+	publish_summary
+done
 
 echo "Enjoy https://jenkins.debian.net/userContent/reproducible.html"

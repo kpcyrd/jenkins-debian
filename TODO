@@ -110,7 +110,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** killer job is run before setup
 *** scheduler and builder jobs are started after
 
-* generate views for (all?/last 24h?) FTBR packages with|without .buildinfo files?
 * watch: zephyr (debbindiff timeout?)
 * watch: haskell-hsql-odbc (debbindiff error only in jenkins log, not in rbuild log
 * watch: cxxtest: dbd failure should be in rbuild output!

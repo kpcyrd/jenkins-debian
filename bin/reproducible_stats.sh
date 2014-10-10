@@ -325,10 +325,8 @@ process_packages() {
 	for PKG in $@ ; do
 		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version,status FROM source_packages WHERE name = \"$PKG\"")
 		BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
-		VERSION=$(echo $RESULT|cut -d "|" -f2)
-		STATUS=$(echo $RESULT|cut -d "|" -f3)
-		# remove epoch
-		EVERSION=$(echo $VERSION | cut -d ":" -f2)
+		# version with epoch removed
+		EVERSION=$(echo $RESULT | cut -d "|" -f2 | cut -d ":" -f2)
 		if $BUILDINFO_SIGNS && [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 			STAR[$PKG]="<span style=\"color:#555555; font-size:0.8em;\">&beta;</span>" # used to be a star...
 		fi
@@ -337,6 +335,8 @@ process_packages() {
 		FILE=$(find $(dirname $NAVI) -name $(basename $NAVI) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
 		# if no navigation exists, or is older than last build_date or if a note exist...
 		if [ ! -f $NAVI ] || [ "$FILE" != "" ] || [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+			VERSION=$(echo $RESULT | cut -d "|" -f2)
+			STATUS=$(echo $RESULT | cut -d "|" -f3)
 			MAINLINK=""
 			init_navi_frame "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "${STAR[$PKG]}"
 			append2navi_frame "${NOTES_PACKAGE[${PKG}]}"

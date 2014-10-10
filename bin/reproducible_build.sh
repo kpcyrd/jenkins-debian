@@ -136,15 +136,17 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		continue
 	fi
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
+	echo "Starting to build ${SRCPACKAGE} on $DATE" | tee ${RBUILDLOG}
 	# host has only sid in deb-src in sources.list
-	apt-get source --download-only --only-source ${SRCPACKAGE} > ${RBUILDLOG} 2>&1
+	apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
-		ls -l ${SRCPACKAGE}* >> ${RBUILDLOG}
+		echo "Warning: Download of ${SRCPACKAGE} sources failed." | tee -a ${RBUILDLOG}
+		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
 		set +x
-		echo "Warning: ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate."
+		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
 		continue
 	else
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
@@ -157,15 +159,25 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		cleanup_userContent
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}
+		cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 		# check whether the package is not for us...
-		# FIXME: needs to check for all packages, not just the first one
-		# FIXME: linux-any is valid too (but hurd-any not)
-		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2-)
-		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] && [[ ! "$ARCH" =~ "linux-amd64" ]]; then
+		SUITABLE=false
+		ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
+		set +x
+		for ARCH in ${ARCHITECTURES} ; do
+			if [ "$ARCH" = "any" ] || [ "$ARCH" = "all" ] || [ "$ARCH" = "amd64" ] || [ "$ARCH" = "linux-amd64" ] ; then
+				SUITABLE=true
+				break
+			fi
+		done
+		set -x
+		if ! $SUITABLE ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
-			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$ARCH\" and was thus skipped."
+			set +x
+			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"${ARCHITECTURES}\" and thus was skipped." | tee -a ${RBUILDLOG}
 			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
 			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
+			dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
 			continue
 		fi
 		nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc 2>&1 | tee -a ${RBUILDLOG}
@@ -189,9 +201,9 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			RESULT=$?
 			set -e
 			if [ $RESULT -eq 124 ] ; then
-				echo "$(date) - debbindiff.py was killed after running into timeouot..." >> ${RBUILDLOG}
+				echo "$(date) - debbindiff.py was killed after running into timeouot..." | tee -a ${RBUILDLOG}
 			elif [ $RESULT -eq 1 ] ; then
-				echo "$(date) - debbindiff.py crashed..." >> ${RBUILDLOG}
+				echo "$(date) - debbindiff.py crashed..." | tee -a ${RBUILDLOG}
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/

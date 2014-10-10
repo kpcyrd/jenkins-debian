@@ -310,7 +310,7 @@ init_navi_frame() {
 	echo "<body><table><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> $NAVI
 	set_icon "$3" $5
 	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> $NAVI
-	echo "<span style=\"text-align:right; font-size:0.9em;\">at $4:</span> " >> $NAVI
+	echo "<span style=\"font-size:0.9em;\">at $4:</span> " >> $NAVI
 }
 
 append2navi_frame() {
@@ -321,6 +321,14 @@ finish_navi_frame() {
 	echo "</td><td style=\"text-align:right; font-size:0.9em;\"><a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">reproducible builds</a></td></tr></table></body></html>" >> $NAVI
 }
 
+set_package_class() {
+	if [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+		CLASS="class=\"noted\""
+	else
+		CLASS="class=\"package\""
+	fi
+}
+
 process_packages() {
 	for PKG in $@ ; do
 		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version,status FROM source_packages WHERE name = \"$PKG\"")
@@ -328,7 +336,7 @@ process_packages() {
 		# version with epoch removed
 		EVERSION=$(echo $RESULT | cut -d "|" -f2 | cut -d ":" -f2)
 		if $BUILDINFO_SIGNS && [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
-			STAR[$PKG]="<span style=\"color:#555555; font-size:0.8em;\">&beta;</span>" # used to be a star...
+			STAR[$PKG]="<span class=\"beta\">&beta;</span>" # used to be a star...
 		fi
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
 		NAVI="/var/lib/jenkins/userContent/rb-pkg/${PKG}_navigation.html"
@@ -368,12 +376,8 @@ process_packages() {
 			write_pkg_frameset "$PKG" "$MAINLINK"
 		fi
 		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			if [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
-				NOTED="N"
-			else
-				NOTED=""
-			fi
-			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]}$NOTED"
+			set_package_class
+			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>${STAR[$PKG]}"
 		else
 			LINKTARGET[$PKG]="$PKG"
 		fi
@@ -382,7 +386,8 @@ process_packages() {
 
 force_package_targets() {
 	for PKG in $@ ; do
-		LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\">$PKG</a>${STAR[$PKG]}"
+		set_package_class
+		LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>${STAR[$PKG]}"
 	done
 }
 
@@ -407,24 +412,22 @@ write_summary_header() {
 		write_summary " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
 	fi
 	write_summary "</p>"
-	write_summary "<p><ul>Other views for these build results:"
-	write_summary "<li>"
+	write_summary "<ul><li>Other views for these build results:</li>"
 	for MY_STATE in $ALLSTATES ; do
 		WITH=""
 		if [ "$MY_STATE" = "FTBR_with_buildinfo" ] ; then
 			WITH="YES"
 		fi
 		set_icon $MY_STATE $WITH	# sets ICON and STATE_TARGET_NAME
-		write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a> "
+		write_summary "<li><a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a></li>"
 	done
-	write_summary "</li>"
 	for TARGET in notes $ALLVIEWS dd-list ; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
 		fi
 		write_summary "<li><a href=\"index_${TARGET}.html\">${SPOKENTARGET[$TARGET]}</a></li>"
 	done
-	write_summary "</ul></p>"
+	write_summary "</ul>"
 	write_summary "</header>"
 }
 
@@ -517,14 +520,11 @@ SUMMARY=index_${VIEW}.html
 echo "Starting to write $SUMMARY page."
 write_summary_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 write_summary "<p>Packages which have notes: <code>"
-for PKG in $PACKAGES_WITH_NOTES ; do
-	NOTES_PACKAGE[${PKG}]=""
-done
 force_package_targets $PACKAGES_WITH_NOTES
 PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
 link_packages $PACKAGES_WITH_NOTES
 write_summary "</code></p>"
-write_summary "<p style=\"font-size:0.9em\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+write_summary "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
 write_summary_footer
 publish_summary
 

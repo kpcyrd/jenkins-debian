@@ -22,17 +22,32 @@ img {
 	vertical-align: middle;
 }
 
-a {
+.beta {
+	color:#555555;
+	font-size:0.8em;
+}
+
+a, a.package {
 	color:#0088cc;
 	text-decoration:none;
 }
 
-a:hover, a:focus {
+a.noted {
+	color:#0088cc;
+	text-decoration:underline;
+}
+
+a:hover, a:focus, a.package:hover, a.package:focus {
 	color:#005580;
 	text-decoration:underline;
 }
 
-a:visited {
+a.noted:hover, a.noted:focus {
+	color:#005580;
+	text-decoration:none;
+}
+
+a.package:visited, a.noted:visited {
 	color:green;
 }
 

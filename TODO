@@ -113,11 +113,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * bugs
 ** when notes are removed the navigation pages are not updated... (touch note_new on create, then on next run delete on all navi pages for which note_new exists)
 *** modify packages.yml locally to test...
+** add note about notes on every page which has them...
 
 * CSS/HTML
 ** use iframes
 ** use icons within index pages (refactor to get rid of that case statement, use array instead)
-** use css class to mark packages with notes, underline them. explain HAS_NOTE on every page which has them...
 
 * watch: zephyr (debbindiff timeout?)
 * watch: haskell-hsql-odbc (debbindiff error only in jenkins log, not in rbuild log

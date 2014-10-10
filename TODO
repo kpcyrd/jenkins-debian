@@ -3,7 +3,7 @@ ToDo for jenkins.debian.net
 :Author:           Holger Levsen
 :Authorinitials:   holger
 :EMail:            holger@layer-acht.org
-:Status:           in progress
+:Status:           working, in progress
 :lang:             en
 :Doctype:          article
 :Licence:	   GPLv2
@@ -110,11 +110,23 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** killer job is run before setup
 *** scheduler and builder jobs are started after
 
+* bugs
+** fix check for Architecture, see FIXME in _builds.sh
+*** once done, schedule hurd-libfuse
+** when notes are removed the navigation pages are not updated... (touch note_new on create, then on next run delete on all navi pages for which note_new exists)
+
+* CSS/HTML
+** use iframes
+** use font class=small statt size=+1
+** use icons within index pages (refactor to get rid of that case statement, use array instead)
+** use css class to mark packages with notes, underline them. explain HAS_NOTE on every page which has them...
+
 * watch: zephyr (debbindiff timeout?)
 * watch: haskell-hsql-odbc (debbindiff error only in jenkins log, not in rbuild log
 * watch: cxxtest: dbd failure should be in rbuild output!
 * watch: android: no debbindiff output?
-* watch/fix: swig/subversion
+* watch: swig/subversion (FTBFS, report note at least...)
+* watch: hurd-libfuse: should be not for us
 * generate .json for tracker.d.o
 * reschedule all pkg tested before oct 06 00:00 UTC (we want to know if they generate .buildinfo files)
 * reschedule all files with 0 length .rbuild.log files

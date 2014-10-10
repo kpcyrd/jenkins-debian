@@ -71,6 +71,8 @@ SPOKENTARGET["FTBFS"]="packages which failed to build from source"
 SPOKENTARGET["404"]="packages where the sources failed to downloaded"
 SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
 SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
+# shop trailing slash
+JENKINS_URL=${JENKINS_URL:0:-1}
 
 #
 # gather notes
@@ -276,7 +278,7 @@ EOF
 set_icon() {
 	# icons taken from tango-icon-theme (0.8.90-5)
 	# licenced under http://creativecommons.org/licenses/publicdomain/
-	STATE_TARGET_NAME=$1
+	STATE_TARGET_NAME="$1"
 	case "$1" in
 		reproducible)		ICON=weather-clear.png
 					;;
@@ -292,7 +294,7 @@ set_icon() {
 					;;
 		404)			ICON=weather-severe-alert.png
 					;;
-		not_for_us)		ICON=weather-few-clouds-night.png
+		not*)			ICON=weather-few-clouds-night.png
 					;;
 		blacklisted)		ICON=error.png
 					;;
@@ -399,7 +401,7 @@ write_summary_header() {
 	if [ "$1" = "$MAINVIEW" ] ; then
 		write_summary "<p>These pages are updated every six hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several build jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 	fi
-	write_summary "<p>$COUNT_TOTAL packages attempted to build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a>"
+	write_summary "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a>"
 	if [ "${1:0:3}" = "all" ] || [ "$1" = "dd-list" ] ; then
 		write_summary " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
 	fi
@@ -426,7 +428,7 @@ write_summary_header() {
 }
 
 write_summary_footer() {
-	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/reproducible.html\">Static URL for this page.</a> Last modified: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. <a href=\"https://jenkins.debian.net/userContent/about.html\">About jenkins.debian.net</a>. Weather icons are taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</font>"
+	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/about.html\">About jenkins.debian.net</a>, about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> and <a href=\"$JENKINS_URL/userContent/reproducible.html\">overview of reproducible build results on jenkins.d.n</a>. Last update: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</font>"
 	write_summary "</p></body></html>"
 }
 
@@ -579,4 +581,4 @@ for STATE in $ALLSTATES ; do
 	publish_summary
 done
 
-echo "Enjoy https://jenkins.debian.net/userContent/reproducible.html"
+echo "Enjoy $JENKINS_URL/userContent/reproducible.html"

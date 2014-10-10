@@ -158,6 +158,8 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}
 		# check whether the package is not for us...
+		# FIXME: needs to check for all packages, not just the first one
+		# FIXME: linux-any is valid too (but hurd-any not)
 		ARCH=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| sort -r | head -1 | cut -d " " -f2-)
 		if [[ ! "$ARCH" =~ "amd64" ]] && [[ ! "$ARCH" =~ "all" ]] && [[ ! "$ARCH" =~ "any" ]] && [[ ! "$ARCH" =~ "linux-amd64" ]]; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"

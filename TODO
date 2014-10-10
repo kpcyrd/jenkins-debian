@@ -110,14 +110,12 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** killer job is run before setup
 *** scheduler and builder jobs are started after
 
-* bugs / todo
-** reschedule hurd-libfuse
+* bugs
 ** when notes are removed the navigation pages are not updated... (touch note_new on create, then on next run delete on all navi pages for which note_new exists)
 *** modify packages.yml locally to test...
 
 * CSS/HTML
 ** use iframes
-** use font class=small statt size=+1
 ** use icons within index pages (refactor to get rid of that case statement, use array instead)
 ** use css class to mark packages with notes, underline them. explain HAS_NOTE on every page which has them...
 

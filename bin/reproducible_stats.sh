@@ -214,9 +214,9 @@ create_pkg_note() {
 	fi
 	echo "</tr>" >> ${NOTE}
 	echo "<tr><td colspan=\"3\">&nbsp;</td></tr>" >> ${NOTE}
-	echo "<tr><td colspan=\"3\" style=\"text-align:right\"><font size=\"-1\">" >> ${NOTE}
+	echo "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">" >> ${NOTE}
 	echo "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>." >> ${NOTE}
-	echo "</font></td></tr></table></body></html>" >> ${NOTE}
+	echo "</td></tr></table></body></html>" >> ${NOTE}
 }
 
 PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
@@ -307,10 +307,10 @@ init_navi_frame() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > $NAVI
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> $NAVI
 	echo "<title>Navigation for $1</title></head>" >> $NAVI
-	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
+	echo "<body><table><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> $NAVI
 	set_icon "$3" $5
 	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> $NAVI
-	echo "<font size=-1>at $4:</font> " >> $NAVI
+	echo "<span style=\"text-align:right; font-size:0.9em;\">at $4:</span> " >> $NAVI
 }
 
 append2navi_frame() {
@@ -318,7 +318,7 @@ append2navi_frame() {
 }
 
 finish_navi_frame() {
-	echo "</td><td style=\"text-align:right\"><font size=\"-1\"><a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">reproducible builds</a></font></td></tr></table></body></html>" >> $NAVI
+	echo "</td><td style=\"text-align:right; font-size:0.9em;\"><a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">reproducible builds</a></td></tr></table></body></html>" >> $NAVI
 }
 
 process_packages() {
@@ -330,7 +330,7 @@ process_packages() {
 		# remove epoch
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		if $BUILDINFO_SIGNS && [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
-			STAR[$PKG]="<font color=\"#333333\" size=\"-1\">&beta;</font>" # used to be a star...
+			STAR[$PKG]="<span style=\"color:#555555; font-size:0.8em;\">&beta;</span>" # used to be a star...
 		fi
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
 		NAVI="/var/lib/jenkins/userContent/rb-pkg/${PKG}_navigation.html"
@@ -429,13 +429,13 @@ write_summary_header() {
 }
 
 write_summary_footer() {
-	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/about.html\">About jenkins.debian.net</a> in general and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a>. Last update: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</font>"
-	write_summary "</p></body></html>"
+	write_summary "<hr/><p style=\"font-size:0.9em;\">There is more information <a href=\"$JENKINS_URL/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere. Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</p>"
+	write_summary "</body></html>"
 }
 
 write_summary_beta_sign() {
-	write_summary "<p><font size=\"-1\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
-	write_summary "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</font></p>"
+	write_summary "<p style=\"font-size:0.9em;\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
+	write_summary "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</p>"
 }
 publish_summary() {
 	cp $SUMMARY /var/lib/jenkins/userContent/
@@ -524,7 +524,7 @@ force_package_targets $PACKAGES_WITH_NOTES
 PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
 link_packages $PACKAGES_WITH_NOTES
 write_summary "</code></p>"
-write_summary "<p><font size=\"-1\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</font></font>"
+write_summary "<p style=\"font-size:0.9em\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
 write_summary_footer
 publish_summary
 

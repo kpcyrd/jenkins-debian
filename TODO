@@ -116,7 +116,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** add note about notes on every page which has them...
 
 * CSS/HTML
-** use iframes
 ** use icons within index pages (refactor to get rid of that case statement, use array instead)
 
 * watch: zephyr (debbindiff timeout?)

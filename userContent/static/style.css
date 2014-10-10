@@ -2,6 +2,7 @@ html {
 	font-size: 100%;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust:100%;
+	height:100%;
 }
 
 body {
@@ -12,6 +13,8 @@ body {
 	color: #333333;
 	padding: 0.25em 0.25em 0em 0.25em;
 	margin: 0.25em 0.25em 0em 0.25em;
+	height: 100%;
+	overflow: hidden;
 }
 
 pre {

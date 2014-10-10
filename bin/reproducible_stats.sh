@@ -294,7 +294,8 @@ set_icon() {
 					;;
 		404)			ICON=weather-severe-alert.png
 					;;
-		not*)			ICON=weather-few-clouds-night.png
+		not_for_us|"not for us")	ICON=weather-few-clouds-night.png
+					STATE_TARGET_NAME="not_for_us"
 					;;
 		blacklisted)		ICON=error.png
 					;;
@@ -307,7 +308,7 @@ init_navi_frame() {
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> $NAVI
 	echo "<title>Navigation for $1</title></head>" >> $NAVI
 	echo "<body><table><tr><td><font size=+1>$1</font> $2" >> $NAVI
-	set_icon $3 $5
+	set_icon "$3" $5
 	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> $NAVI
 	echo "<font size=-1>at $4:</font> " >> $NAVI
 }
@@ -428,7 +429,7 @@ write_summary_header() {
 }
 
 write_summary_footer() {
-	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/about.html\">About jenkins.debian.net</a>, about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> and <a href=\"$JENKINS_URL/userContent/reproducible.html\">overview of reproducible build results on jenkins.d.n</a>. Last update: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</font>"
+	write_summary "<hr/><p><font size='-1'><a href=\"$JENKINS_URL/userContent/about.html\">About jenkins.debian.net</a> in general and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a>. Last update: $(date). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</font>"
 	write_summary "</p></body></html>"
 }
 

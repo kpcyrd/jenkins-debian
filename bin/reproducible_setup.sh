@@ -30,7 +30,7 @@ fi
 # 30 seconds timeout when trying to get a lock
 INIT=/var/lib/jenkins/reproducible.init
 cat >/var/lib/jenkins/reproducible.init <<-EOF
-.timeout 30000
+.timeout 60000
 EOF
 
 # blacklist some packages

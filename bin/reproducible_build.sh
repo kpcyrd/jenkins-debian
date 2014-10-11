@@ -52,6 +52,7 @@ update_sources_table() {
 	if [ $P_IN_TMPFILE -ne $P_IN_SOURCES ] ; then
 		echo "DEBUG: P_IN_SOURCES = $P_IN_SOURCES"
 		echo "DEBUG: P_IN_TMPFILE = $P_IN_TMPFILE"
+		exit 1
 	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
 	rm $CSVFILE # $TMPFILE is still being used

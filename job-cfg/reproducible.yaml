@@ -27,6 +27,10 @@
     publishers:
       - email:
           recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
 
 - defaults:
     name: reproducible_builder

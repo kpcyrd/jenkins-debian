@@ -115,23 +115,25 @@ show_multi_values() {
 	rm $TMPFILE
 }
 
-ISSUES=$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml keys)
-for ISSUE in ${ISSUES} ; do
-	echo " Issue = ${ISSUE}"
-	for PROPERTY in url description ; do
-		VALUE="$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml get-value ${ISSUE}.${PROPERTY} )"
-		if [ "$VALUE" != "" ] ; then
-			case $PROPERTY in
-				url)		ISSUES_URL[${ISSUE}]=$VALUE
-						echo "    $PROPERTY = $VALUE"
-						;;
-				description)	ISSUES_DESCRIPTION[${ISSUE}]=$VALUE
-						show_multi_values "$VALUE"
-						;;
-			esac
-		fi
+parse_issues() {
+	ISSUES=$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml keys)
+	for ISSUE in ${ISSUES} ; do
+		echo " Issue = ${ISSUE}"
+		for PROPERTY in url description ; do
+			VALUE="$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml get-value ${ISSUE}.${PROPERTY} )"
+			if [ "$VALUE" != "" ] ; then
+				case $PROPERTY in
+					url)		ISSUES_URL[${ISSUE}]=$VALUE
+							echo "    $PROPERTY = $VALUE"
+							;;
+					description)	ISSUES_DESCRIPTION[${ISSUE}]=$VALUE
+							show_multi_values "$VALUE"
+							;;
+				esac
+			fi
+		done
 	done
-done
+}
 
 tag_property_loop() {
 	BEFORE=$1
@@ -219,32 +221,55 @@ create_pkg_note() {
 	echo "</td></tr></table></body></html>" >> ${NOTE}
 }
 
-PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
-for PKG in $PACKAGES_WITH_NOTES ; do
-	echo " Package = ${PKG}"
-	NOTES_PACKAGE[${PKG}]=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
-	for PROPERTY in version issues bugs comments ; do
-		VALUE="$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml get-value ${PKG}.${PROPERTY} )"
-		if [ "$VALUE" != "" ] ; then
-			case $PROPERTY in
-				version)	NOTES_VERSION[${PKG}]=$VALUE
-						echo "    $PROPERTY = $VALUE"
-						;;
-				issues)		NOTES_ISSUES[${PKG}]=$VALUE
-						show_multi_values "$VALUE"
-						;;
-				bugs)		NOTES_BUGS[${PKG}]=$VALUE
-						show_multi_values "$VALUE"
-						;;
-				comments)	NOTES_COMMENTS[${PKG}]=$VALUE
-						show_multi_values "$VALUE"
-						;;
-			esac
-		fi
+parse_notes() {
+	PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
+	for PKG in $PACKAGES_WITH_NOTES ; do
+		echo " Package = ${PKG}"
+		NOTES_PACKAGE[${PKG}]=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
+		for PROPERTY in version issues bugs comments ; do
+			VALUE="$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml get-value ${PKG}.${PROPERTY} )"
+			if [ "$VALUE" != "" ] ; then
+				case $PROPERTY in
+					version)	NOTES_VERSION[${PKG}]=$VALUE
+							echo "    $PROPERTY = $VALUE"
+							;;
+					issues)		NOTES_ISSUES[${PKG}]=$VALUE
+							show_multi_values "$VALUE"
+							;;
+					bugs)		NOTES_BUGS[${PKG}]=$VALUE
+							show_multi_values "$VALUE"
+							;;
+					comments)	NOTES_COMMENTS[${PKG}]=$VALUE
+							show_multi_values "$VALUE"
+							;;
+				esac
+			fi
+		done
+		NOTE=$NOTES_PATH/${PKG}_note.html
+		create_pkg_note $PKG
 	done
-	NOTE=$NOTES_PATH/${PKG}_note.html
-	create_pkg_note $PKG
-done
+}
+
+validate_yaml() {
+	VALID_YAML=true
+	set +e
+	cat $1 | /srv/jenkins/bin/shyaml keys > /dev/null 2>&1 || VALID_YAML=false
+	cat $1 | /srv/jenkins/bin/shyaml get-values > /dev/null 2>&1 || VALID_YAML=false
+	set -e
+	echo "$1 is valid yaml: $VALID_YAML"
+}
+
+#
+# actually parse the notes
+#
+validate_yaml ${ISSUES_YML}
+validate_yaml ${PACKAGES_YML}
+if $VALID_YAML ; then
+	parse_issues
+	parse_notes
+else
+	echo "Warning: ${ISSUES_YML} or ${PACKAGES_YML} contains invalid yaml, please fix."
+fi
 
 #
 # end note parsing
@@ -503,11 +528,15 @@ VIEW=notes
 SUMMARY=index_${VIEW}.html
 echo "Starting to write $SUMMARY page."
 write_summary_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
-write_summary "<p>Packages which have notes: <code>"
-force_package_targets $PACKAGES_WITH_NOTES
-PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
-link_packages $PACKAGES_WITH_NOTES
-write_summary "</code></p>"
+if $VALID_YAML ; then
+	write_summary "<p>Packages which have notes: <code>"
+	force_package_targets $PACKAGES_WITH_NOTES
+	PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
+	link_packages $PACKAGES_WITH_NOTES
+	write_summary "</code></p>"
+else
+	write_summary "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
+fi
 write_summary "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
 write_summary_footer
 publish_summary

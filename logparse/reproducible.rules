@@ -1,9 +1,7 @@
 # see https://wiki.jenkins-ci.org/display/JENKINS/Log+Parser+Plugin
 
 # list of warnings here...
-warning /Warning: .+ failed to build reproducibly./
 warning /Warning: .+ is not a source package, or was removed or renamed. Please investigate./
-warning /Warning: .+ failed to build from source./
 warning /Warning: Download of .+ sources failed./
 warning /Warning: .+ contains invalid yaml, please fix./
 

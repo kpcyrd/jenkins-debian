@@ -226,7 +226,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				fi
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				set +x
-				echo -n "Warning: ${SRCPACKAGE} failed to build reproducibly."
+				echo -n "${SRCPACKAGE} failed to build reproducibly."
 				if [ ! -f b1/${BUILDINFO} ] ; then
 					echo " .buildinfo file is missing."
 				else
@@ -240,7 +240,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		else
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
 			set +x
-			echo "Warning: ${SRCPACKAGE} failed to build from source."
+			echo "${SRCPACKAGE} failed to build from source."
 		fi
 		set -x
 		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc

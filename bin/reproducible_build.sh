@@ -30,8 +30,29 @@ update_sources_table() {
 	(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
 	sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
 	echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
+	echo "$(date) Removing duplicate versions from sources db..."
+	for PKG in $(sqlite3 ${PACKAGES_DB} 'SELECT name FROM sources GROUP BY name HAVING count(name) > 1') ; do
+		BET=""
+		for VERSION in $(sqlite3 ${PACKAGES_DB} "SELECT version FROM sources where name = \"$PKG\"") ; do
+			if [ "$BET" = "" ] ; then
+				BET=$VERSION
+				continue
+			elif dpkg --compare-versions "$BET" gt "$VERSION"  ; then
+				sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version = '$VERSION'"
+			else
+				sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version = '$BET'"
+				BET=$VERSION
+			fi
+		done
+	done
+	echo "$(date) Done removing duplicate versions from sources db..."
 	# update amount of available packages (for doing statistics later)
-	P_IN_SOURCES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" | cut -d " " -f2 | sort -u | wc -l)
+	P_IN_TMPFILE=$(xzcat $TMPFILE | grep "^Package:" | cut -d " " -f2 | sort -u | wc -l)
+	P_IN_SOURCES=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources')
+	if [ $P_IN_TMPFILE -ne $P_IN_SOURCES ] ; then
+		echo "DEBUG: P_IN_SOURCES = $P_IN_SOURCES"
+		echo "DEBUG: P_IN_TMPFILE = $P_IN_TMPFILE"
+	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
 	rm $CSVFILE # $TMPFILE is still being used
 }
@@ -44,7 +65,7 @@ if [ $1 = "unknown" ] ; then
 	GUESSES=$(echo "${AMOUNT}*3" | bc)
 	PACKAGES=""
 	# FIXME: blacklisted is a valid status in the db which should be used...
-	CANDIDATES=$(xzcat $TMPFILE | grep "^Package" | grep -v "^Package-List:" |  cut -d " " -f2 | egrep -v "^(linux|cups|zurl|openclipart|eigen3|xmds2)$" | sort -R | head -$GUESSES | xargs echo)
+	CANDIDATES=$(xzcat $TMPFILE | grep "^Package:" | cut -d " " -f2 | egrep -v "^(linux|cups|zurl|openclipart|eigen3|xmds2)$" | sort -R | head -$GUESSES | xargs echo)
 	for PKG in $CANDIDATES ; do
 		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
 			continue
@@ -58,7 +79,7 @@ elif [ $1 = "known" ] ; then
 	update_sources_table
 	AMOUNT=$2
 	# FIXME: blacklisted is a valid status in the db which should be used...
-	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version < sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | egrep -v "^(linux|cups|zurl|openclipart|eigen3|xmds2)$" | xargs -r echo)
+	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version != sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | egrep -v "^(linux|cups|zurl|openclipart|eigen3|xmds2)$" | xargs -r echo)
 else
 	# CANDIDATES is defined in that file
 	. /srv/jenkins/bin/reproducible_candidates.sh

@@ -111,7 +111,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** scheduler and builder jobs are started after
 
 * bugs
-** when notes are removed the navigation pages are not updated... (touch note_new on create, then on next run delete on all navi pages for which note_new exists)
+** when notes are removed the navigation pages are not updated... 
+*** always create notes + navi pages if note exist
+*** check if package has a note which is older than navi page -> delete note
 *** modify packages.yml locally to test...
 ** add note about notes on every page which has them...
 
@@ -122,9 +124,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * watch: haskell-hsql-odbc (debbindiff error only in jenkins log, not in rbuild log
 * watch: cxxtest: dbd failure should be in rbuild output!
 * watch: android: no debbindiff output?
-* watch: swig/subversion (FTBFS, report note at least...)
 * watch: hurd-libfuse: should be not for us
-* run pbuilder with timeout 12h
 * new view: issues (show all issues in one page and the packages which are affected.)
 * generate .json for tracker.d.o
 * reschedule all pkg tested before oct 06 00:00 UTC (we want to know if they generate .buildinfo files)

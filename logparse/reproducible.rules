@@ -4,4 +4,5 @@
 warning /Warning: .+ failed to build reproducibly./
 warning /Warning: .+ is not a source package, or was removed or renamed. Please investigate./
 warning /Warning: .+ failed to build from source./
+warning /Warning: Download of .+ sources failed./
 

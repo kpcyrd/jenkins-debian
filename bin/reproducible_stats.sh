@@ -90,7 +90,6 @@ PACKAGES_YML=/var/lib/jenkins/notes.git/packages.yml
 ISSUES_YML=/var/lib/jenkins/notes.git/issues.yml
 NOTES_PATH=/var/lib/jenkins/userContent/notes
 mkdir -p $NOTES_PATH
-rm -f $NOTES_PATH/*.html
 
 declare -A NOTES_PACKAGE
 declare -A NOTES_VERSION
@@ -222,6 +221,7 @@ create_pkg_note() {
 }
 
 parse_notes() {
+	touch $NOTES_PATH/stamp
 	PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
 	for PKG in $PACKAGES_WITH_NOTES ; do
 		echo " Package = ${PKG}"
@@ -248,6 +248,22 @@ parse_notes() {
 		NOTE=$NOTES_PATH/${PKG}_note.html
 		create_pkg_note $PKG
 	done
+	cd $NOTES_PATH
+	for FILE in *.html ; do
+		PKG_FILE=/var/lib/jenkins/userContent/rb-pkg/${FILE:0:-10}.html
+		# if note was removed...
+		if [ $FILE -ot stamp ] ; then
+			# cleanup old notes
+			rm $FILE
+			# force re-creation of package file if there was a note
+			rm ${PKG_FILE}
+		else
+			# ... else re-recreate ${PKG_FILE} if it does not contain a link to the note
+			grep _note.html ${PKG_FILE} > /dev/null || rm ${PKG_FILE}
+		fi
+	done
+	rm stamp
+	cd - > /dev/null
 }
 
 validate_yaml() {
@@ -348,11 +364,11 @@ process_packages() {
 		if $BUILDINFO_SIGNS && [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 			STAR[$PKG]="<span class=\"beta\">&beta;</span>" # used to be a star...
 		fi
-		# only build $PKG pages if they don't exist or are older than $BUILD_DATE
+		# only build $PKG pages if they don't exist or are older than $BUILD_DATE or have a note
 		PKG_FILE="/var/lib/jenkins/userContent/rb-pkg/${PKG}.html"
 		OLD_FILE=$(find $(dirname ${PKG_FILE}) -name $(basename ${PKG_FILE}) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
-		# if no package file exists, or is older than last build_date or if a note exist...
-		if [ ! -f ${PKG_FILE} ] || [ "$OLD_FILE" != "" ] || [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+		# if no package file exists, or is older than last build_date
+		if [ ! -f ${PKG_FILE} ] || [ "$OLD_FILE" != "" ] ; then
 			VERSION=$(echo $RESULT | cut -d "|" -f2)
 			STATUS=$(echo $RESULT | cut -d "|" -f3)
 			MAINLINK=""
@@ -458,6 +474,7 @@ publish_summary() {
 }
 
 echo "Processing $COUNT_TOTAL packages... this will take a while."
+process_packages ${PACKAGES_WITH_NOTES}
 BUILDINFO_SIGNS=true
 process_packages ${BAD["all"]}
 BUILDINFO_SIGNS=false

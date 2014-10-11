@@ -111,10 +111,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** scheduler and builder jobs are started after
 
 * bugs
-** when notes are removed the navigation pages are not updated... 
-*** always create notes + navi pages if note exist
-*** check if package has a note which is older than navi page -> delete note
-*** modify packages.yml locally to test...
 ** add note about notes on every page which has them...
 
 * CSS/HTML

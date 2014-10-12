@@ -187,7 +187,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 		ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 		set +x
 		for ARCH in ${ARCHITECTURES} ; do
-			if [ "$ARCH" = "any" ] || [ "$ARCH" = "all" ] || [ "$ARCH" = "amd64" ] || [ "$ARCH" = "linux-any" ] || [ "$ARCH" = "linux-amd64" ] ; then
+			if [ "$ARCH" = "any" ] || [ "$ARCH" = "all" ] || [ "$ARCH" = "amd64" ] || [ "$ARCH" = "linux-any" ] || [ "$ARCH" = "linux-amd64" ] || [ "$ARCH" = "any-amd64" ] ; then
 				SUITABLE=true
 				break
 			fi

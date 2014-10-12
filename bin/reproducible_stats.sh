@@ -227,6 +227,7 @@ create_issue() {
 	fi
 
 	write_page "<tr><td colspan=\"2\">Packages known to be affected by this issue:</td><td>"
+	BETA_SIGN=false
 	for PKG in $PACKAGES_WITH_NOTES ; do
 		if [ "${NOTES_ISSUES[$PKG]}" != "" ] ; then
 			TTMPFILE=$(mktemp)
@@ -237,6 +238,9 @@ create_issue() {
 				fi
 			if [ "$p" = "$1" ] ; then
 				write_page " ${LINKTARGET[$PKG]} "
+				if ! $BETA_SIGN && [ "${STAR[$PKG]}" != "" ] ; then
+					BETA_SIGN=true
+				fi
 			fi
 			done < $TTMPFILE
 			unset IFS
@@ -248,6 +252,7 @@ create_issue() {
 	write_page "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">"
 	write_page "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>."
 	write_page "</td></tr></table>"
+	write_page_meta_sign
 	write_page_footer
 }
 
@@ -480,6 +485,9 @@ force_package_targets() {
 link_packages() {
 	for PKG in $@ ; do
 		write_page " ${LINKTARGET[$PKG]} "
+		if ! $BETA_SIGN && [ "${STAR[$PKG]}" != "" ] ; then
+			BETA_SIGN=true
+		fi
 	done
 }
 
@@ -526,9 +534,13 @@ write_page_footer() {
 	write_page "</body></html>"
 }
 
-write_page_beta_sign() {
-	write_page "<p style=\"font-size:0.9em;\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
-	write_page "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</p>"
+write_page_meta_sign() {
+	write_page "<p style=\"font-size:0.9em;\">An underlined package is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
+	if $BETA_SIGN ; then
+		write_page "A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
+		write_page "And that means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a>."
+	fi
+	write_page "</p>"
 }
 
 publish_summary() {
@@ -565,6 +577,7 @@ BUILDINFO_SIGNS=false
 process_packages ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
 
 for VIEW in $ALLVIEWS ; do
+	BETA_SIGN=false
 	PAGE=index_${VIEW}.html
 	echo "Starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
@@ -593,7 +606,7 @@ for VIEW in $ALLVIEWS ; do
 	write_page "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_page "</code></p>"
-	write_page_beta_sign
+	write_page_meta_sign
 	write_page_footer
 	publish_summary
 done
@@ -603,6 +616,7 @@ PAGE=index_${VIEW}.html
 echo "Starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
+	BETA_SIGN=false
 	write_page "<p>Packages which have notes: <code>"
 	force_package_targets ${PACKAGES_WITH_NOTES}
 	PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
@@ -612,6 +626,7 @@ else
 	write_page "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
 fi
 write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+write_page_meta_sign
 write_page_footer
 publish_summary
 
@@ -639,6 +654,7 @@ count_packages() {
 }
 
 for STATE in $ALLSTATES ; do
+	BETA_SIGN=false
 	PAGE=index_${STATE}.html
 	echo "Starting to write $PAGE page."
 	write_page_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
@@ -680,9 +696,7 @@ for STATE in $ALLSTATES ; do
 	link_packages ${PACKAGES}
 	write_page "</code></p>"
 	write_page
-	if [ "${STATE:0:4}" = "FTBR" ] ; then
-		write_page_beta_sign
-	fi
+	write_page_meta_sign
 	write_page_footer
 	publish_summary
 done

@@ -37,13 +37,11 @@ update_sources_table() {
 			if [ "$BET" = "" ] ; then
 				BET=$VERSION
 				continue
-			elif dpkg --compare-versions "$BET" gt "$VERSION"  ; then
-				sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version = '$VERSION'"
-			else
-				sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version = '$BET'"
-				BET=$VERSION
+			elif dpkg --compare-versions "$BET" lt "$VERSION"  ; then
+						BET=$VERSION
 			fi
 		done
+		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version != '$BET'"
 	done
 	echo "$(date) Done removing duplicate versions from sources db..."
 	# update amount of available packages (for doing statistics later)

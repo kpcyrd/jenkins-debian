@@ -210,6 +210,11 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			# so first delete files from .dsc, then from .changes file
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
+			set +x
+			echo "============================================================================="
+			echo "Re-building ${SRCPACKAGE} now."
+			echo "============================================================================="
+			set -x
 			timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			# and again (see comment 5 lines above)

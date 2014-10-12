@@ -28,6 +28,8 @@ LAST48="AND build_date > datetime('now', '-48 hours') "
 SUITE=sid
 AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)
 ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
+MAINVIEW="all_abc"
+ALLVIEWS="last_24h last_48h all_abc"
 GOOD["all"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" ORDER BY build_date DESC" | xargs echo)
 GOOD["last_24h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST24 ORDER BY build_date DESC" | xargs echo)
 GOOD["last_48h"]=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status = \"reproducible\" $LAST48 ORDER BY build_date DESC" | xargs echo)
@@ -64,6 +66,7 @@ SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 SPOKENTARGET["notes"]="packages with notes"
+SPOKENTARGET["issues"]="known issues related to reproducible builds"
 SPOKENTARGET["reproducible"]="packages which built reproducibly"
 SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and don't create a .buildinfo file"
 SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
@@ -89,7 +92,8 @@ cd $WORKSPACE
 PACKAGES_YML=/var/lib/jenkins/notes.git/packages.yml
 ISSUES_YML=/var/lib/jenkins/notes.git/issues.yml
 NOTES_PATH=/var/lib/jenkins/userContent/notes
-mkdir -p $NOTES_PATH
+ISSUES_PATH=/var/lib/jenkins/userContent/issues
+mkdir -p $NOTES_PATH $ISSUES_PATH
 
 declare -A NOTES_PACKAGE
 declare -A NOTES_VERSION
@@ -114,6 +118,156 @@ show_multi_values() {
 	rm $TMPFILE
 }
 
+tag_property_loop() {
+	BEFORE=$1
+	shift
+	AFTER=$1
+	shift
+	TMPFILE=$(mktemp)
+	echo "$@" > $TMPFILE
+	while IFS= read -r p ; do
+		if [ "$p" = "-" ] || [ "$p" = "" ] ; then
+			continue
+		elif [ "${p:0:2}" = "- " ] ; then
+			p="${p:2}"
+		fi
+		write_page "$BEFORE"
+		if $BUG ; then
+			# turn bugs into links
+			p="<a href=\"https://bugs.debian.org/$p\">#$p</a>"
+		else
+			# turn URLs into links
+			p="$(echo $p |sed  -e 's|http[s:]*//[^ ]*|<a href=\"\0\">\0</a>|g')"
+		fi
+		write_page "$p"
+		write_page "$AFTER"
+	done < $TMPFILE
+	unset IFS
+	rm $TMPFILE
+}
+
+issues_loop() {
+	TTMPFILE=$(mktemp)
+	echo "$@" > $TTMPFILE
+	while IFS= read -r p ; do
+		if [ "${p:0:2}" = "- " ] ; then
+			p="${p:2}"
+		fi
+		write_page "<table><tr><td>Identifier:</td><td><a href=\"$JENKINS_URL/userContent/issues/${p}_issue.html\" target=\"_parent\">$p</a></tr>"
+		if [ "${ISSUES_URL[$p]}" != "" ] ; then
+			write_page "<tr><td>URL</td><td><a href=\"${ISSUES_URL[$p]}\" target=\"_blank\">${ISSUES_URL[$p]}</a></td></tr>"
+		fi
+		if [ "${ISSUES_DESCRIPTION[$p]}" != "" ] ; then
+			write_page "<tr><td>Description</td><td>"
+			tag_property_loop "" "<br />" "${ISSUES_DESCRIPTION[$p]}"
+			write_page "</td></tr>"
+		fi
+		write_page "</table>"
+	done < $TTMPFILE
+	unset IFS
+	rm $TTMPFILE
+}
+
+create_pkg_note() {
+	BUG=false
+	rm -f $PAGE
+	# write_page_header() is not used as it contains the <h2> tag...
+	write_page "<!DOCTYPE html><html><head>"
+	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
+	write_page "<link href=\"$JENKINS_URL/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
+	write_page "<title>Notes for $1</title></head>"
+	write_page "<body><header>"
+	write_page "<table>"
+
+	write_page "<tr><td>Version annotated:</td><td colspan=\"2\">${NOTES_VERSION[$1]}</td></tr>"
+
+	if [ "${NOTES_ISSUES[$1]}" != "" ] ; then
+		write_page "<tr><td colspan=\"2\">Identified issues:</td><td>"
+		issues_loop "${NOTES_ISSUES[$1]}"
+		write_page "</td></tr>"
+	fi
+
+	BUG=true
+	if [ "${NOTES_BUGS[$1]}" != "" ] ; then
+		write_page "<tr><td>Bugs noted:</td>"
+		write_page "<td colspan=\"2\">"
+		tag_property_loop "" "<br />" "${NOTES_BUGS[$1]}"
+		write_page "</tr>"
+	fi
+	BUG=false
+
+	if [ "${NOTES_COMMENTS[$1]}" != "" ] ; then
+		write_page "<tr><td>Comments:</td>"
+		write_page "<td colspan=\"2\">"
+		tag_property_loop "" "<br />" "${NOTES_COMMENTS[$1]}"
+		write_page "</tr>"
+	fi
+	write_page "<tr><td colspan=\"3\">&nbsp;</td></tr>"
+	write_page "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">"
+	write_page "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>."
+	write_page "</td></tr></table>"
+	write_page_footer
+}
+
+create_issue() {
+	BUG=false
+	write_page_header "" "Notes about issue '$1'"
+	write_page "<table>"
+
+	write_page "<tr><td>Identifier:</td><td colspan=\"2\">$1</td></tr>"
+
+	if [ "${ISSUES_URL[$1]}" != "" ] ; then
+		write_page "<tr><td>URL:</td><td colspan=\"2\"><a href=\"${ISSUES_URL[$1]}\">${ISSUES_URL[$1]}</a></td></tr>"
+	fi
+	if [ "${ISSUES_DESCRIPTION[$1]}" != "" ] ; then
+		write_page "<tr><td>Description:</td>"
+		write_page "<td colspan=\"2\">"
+		tag_property_loop "" "<br />" "${ISSUES_DESCRIPTION[$1]}"
+		write_page "</td></tr>"
+	fi
+
+	write_page "<tr><td colspan=\"2\">Packages known to be affected by this issue:</td><td>"
+	for PKG in $PACKAGES_WITH_NOTES ; do
+		if [ "${NOTES_ISSUES[$PKG]}" != "" ] ; then
+			TTMPFILE=$(mktemp)
+			echo "${NOTES_ISSUES[$PKG]}" > $TTMPFILE
+			while IFS= read -r p ; do
+				if [ "${p:0:2}" = "- " ] ; then
+					p="${p:2}"
+				fi
+			if [ "$p" = "$1" ] ; then
+				write_page " ${LINKTARGET[$PKG]} "
+			fi
+			done < $TTMPFILE
+			unset IFS
+			rm $TTMPFILE
+		fi
+	done
+	write_page "</td></tr>"
+	write_page "<tr><td colspan=\"3\">&nbsp;</td></tr>"
+	write_page "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">"
+	write_page "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>."
+	write_page "</td></tr></table>"
+	write_page_footer
+}
+
+write_issues() {
+	touch $ISSUES_PATH/stamp
+	for ISSUE in ${ISSUES} ; do
+		PAGE=$ISSUES_PATH/${ISSUE}_issue.html
+		create_issue $ISSUE
+	done
+	cd $ISSUES_PATH
+	for FILE in *.html ; do
+		# if issue is older than stamp file...
+		if [ $FILE -ot stamp ] ; then
+			rm $FILE
+		fi
+	done
+	rm stamp
+	cd - > /dev/null
+}
+
 parse_issues() {
 	ISSUES=$(cat ${ISSUES_YML} | /srv/jenkins/bin/shyaml keys)
 	for ISSUE in ${ISSUES} ; do
@@ -134,94 +288,31 @@ parse_issues() {
 	done
 }
 
-tag_property_loop() {
-	BEFORE=$1
-	shift
-	AFTER=$1
-	shift
-	TMPFILE=$(mktemp)
-	echo "$@" > $TMPFILE
-	while IFS= read -r p ; do
-		if [ "$p" = "-" ] || [ "$p" = "" ] ; then
-			continue
-		elif [ "${p:0:2}" = "- " ] ; then
-			p="${p:2}"
-		fi
-		echo "$BEFORE" >> ${NOTE}
-		if $BUG ; then
-			# turn bugs into links
-			p="<a href=\"https://bugs.debian.org/$p\">#$p</a>"
+write_notes() {
+	touch $NOTES_PATH/stamp
+	for PKG in $PACKAGES_WITH_NOTES ; do
+		PAGE=$NOTES_PATH/${PKG}_note.html
+		create_pkg_note $PKG
+	done
+	cd $NOTES_PATH
+	for FILE in *.html ; do
+		PKG_FILE=/var/lib/jenkins/userContent/rb-pkg/${FILE:0:-10}.html
+		# if note was removed...
+		if [ $FILE -ot stamp ] ; then
+			# cleanup old notes
+			rm $FILE
+			# force re-creation of package file if there was a note
+			rm ${PKG_FILE}
 		else
-			# turn URLs into links
-			p="$(echo $p |sed  -e 's|http[s:]*//[^ ]*|<a href=\"\0\">\0</a>|g')"
+			# ... else re-recreate ${PKG_FILE} if it does not contain a link to the note
+			grep _note.html ${PKG_FILE} > /dev/null || rm ${PKG_FILE}
 		fi
-		echo "$p" >> ${NOTE}
-		echo "$AFTER" >> ${NOTE}
-	done < $TMPFILE
-	unset IFS
-	rm $TMPFILE
-}
-
-issues_loop() {
-	TTMPFILE=$(mktemp)
-	echo "$@" > $TTMPFILE
-	FIRST=true
-	while IFS= read -r p ; do
-		if [ "${p:0:2}" = "- " ] ; then
-			p="${p:2}"
-		fi
-		if ! $FIRST ; then
-			echo "<tr><td>&nbsp;</td>" >> ${NOTE}
-		fi
-		FIRST=false
-		if [ "${ISSUES_URL[$p]}" != "" ] ; then
-			echo "<td><a href=\"${ISSUES_URL[$p]}\">$p</a></td><td>" >> ${NOTE}
-		else
-			echo "<td>$p</td><td>" >> ${NOTE}
-		fi
-		tag_property_loop "" "<br />" "${ISSUES_DESCRIPTION[$p]}"
-		echo "</td></tr>" >> ${NOTE}
-	done < $TTMPFILE
-	unset IFS
-	rm $TTMPFILE
-}
-
-create_pkg_note() {
-	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > ${NOTE}
-	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> ${NOTE}
-	echo "<title>Notes for $1</title></head>" >> ${NOTE}
-	echo "<body><table>" >> ${NOTE}
-
-	echo "<tr><td>Version annotated:</td><td colspan=\"2\">${NOTES_VERSION[$1]}</td></tr>" >> ${NOTE}
-	BUG=false
-
-	if [ "${NOTES_ISSUES[$1]}" != "" ] ; then
-		echo "<tr><td>Identified issues:</td>" >> ${NOTE}
-		issues_loop "${NOTES_ISSUES[$1]}"
-	fi
-	BUG=true
-	if [ "${NOTES_BUGS[$1]}" != "" ] ; then
-		echo "<tr><td colspan=\"3\">Bugs noted:</td></tr>" >> ${NOTE}
-		echo "<tr><td>&nbsp;</td><td colspan=\"2\">" >> ${NOTE}
-		tag_property_loop "" "<br />" "${NOTES_BUGS[$1]}"
-		echo "</td></tr>" >> ${NOTE}
-	fi
-	BUG=false
-	if [ "${NOTES_COMMENTS[$1]}" != "" ] ; then
-		echo "<tr><td colspan=\"3\">Comments:</td></tr>" >> ${NOTE}
-		echo "<tr><td>&nbsp;</td><td colspan=\"2\">" >> ${NOTE}
-		tag_property_loop "" "<br />" "${NOTES_COMMENTS[$1]}"
-		echo "</td></tr>"  >> ${NOTE}
-	fi
-	echo "</tr>" >> ${NOTE}
-	echo "<tr><td colspan=\"3\">&nbsp;</td></tr>" >> ${NOTE}
-	echo "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">" >> ${NOTE}
-	echo "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>." >> ${NOTE}
-	echo "</td></tr></table></body></html>" >> ${NOTE}
+	done
+	rm stamp
+	cd - > /dev/null
 }
 
 parse_notes() {
-	touch $NOTES_PATH/stamp
 	PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
 	for PKG in $PACKAGES_WITH_NOTES ; do
 		echo " Package = ${PKG}"
@@ -245,25 +336,7 @@ parse_notes() {
 				esac
 			fi
 		done
-		NOTE=$NOTES_PATH/${PKG}_note.html
-		create_pkg_note $PKG
 	done
-	cd $NOTES_PATH
-	for FILE in *.html ; do
-		PKG_FILE=/var/lib/jenkins/userContent/rb-pkg/${FILE:0:-10}.html
-		# if note was removed...
-		if [ $FILE -ot stamp ] ; then
-			# cleanup old notes
-			rm $FILE
-			# force re-creation of package file if there was a note
-			rm ${PKG_FILE}
-		else
-			# ... else re-recreate ${PKG_FILE} if it does not contain a link to the note
-			grep _note.html ${PKG_FILE} > /dev/null || rm ${PKG_FILE}
-		fi
-	done
-	rm stamp
-	cd - > /dev/null
 }
 
 validate_yaml() {
@@ -276,25 +349,13 @@ validate_yaml() {
 }
 
 #
-# actually parse the notes
-#
-validate_yaml ${ISSUES_YML}
-validate_yaml ${PACKAGES_YML}
-if $VALID_YAML ; then
-	parse_issues
-	parse_notes
-else
-	echo "Warning: ${ISSUES_YML} or ${PACKAGES_YML} contains invalid yaml, please fix."
-fi
-
-#
-# end note parsing
+# end note parsing functions...
 #
 
 mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 
-write_summary() {
-	echo "$1" >> $SUMMARY
+write_page() {
+	echo "$1" >> $PAGE
 }
 
 set_icon() {
@@ -418,144 +479,157 @@ force_package_targets() {
 
 link_packages() {
 	for PKG in $@ ; do
-		write_summary " ${LINKTARGET[$PKG]} "
+		write_page " ${LINKTARGET[$PKG]} "
 	done
 }
 
-write_summary_header() {
-	rm -f $SUMMARY
-	write_summary "<!DOCTYPE html><html><head>"
-	write_summary "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-	write_summary "<link href=\"static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
-	write_summary "<title>$2</title></head>"
-	write_summary "<body><header><h2>$2</h2>"
+write_page_header() {
+	rm -f $PAGE
+	write_page "<!DOCTYPE html><html><head>"
+	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
+	write_page "<link href=\"$JENKINS_URL/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
+	write_page "<title>$2</title></head>"
+	write_page "<body><header><h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
-		write_summary "<p>These pages are updated every six hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
+		write_page "<p>These pages are updated every six hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 	fi
-	write_summary "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a>"
+	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a>"
 	if [ "${1:0:3}" = "all" ] || [ "$1" = "dd-list" ] ; then
-		write_summary " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
+		write_page " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
 	fi
-	write_summary "</p>"
-	write_summary "<ul><li>Other views for these build results:</li>"
+	write_page "</p>"
+	write_page "<ul><li>Other views for these build results:</li>"
 	for MY_STATE in $ALLSTATES ; do
 		WITH=""
 		if [ "$MY_STATE" = "FTBR_with_buildinfo" ] ; then
 			WITH="YES"
 		fi
 		set_icon $MY_STATE $WITH	# sets ICON and STATE_TARGET_NAME
-		write_summary "<li><a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a></li>"
+		write_page "<li><a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a></li>"
 	done
-	for TARGET in notes $ALLVIEWS dd-list ; do
+	for TARGET in issues notes $ALLVIEWS dd-list ; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
+		elif [ "$TARGET" = "issues" ] ; then
+			SPOKEN_TARGET="issues"
+		else
+			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi
-		write_summary "<li><a href=\"index_${TARGET}.html\">${SPOKENTARGET[$TARGET]}</a></li>"
+		write_page "<li><a href=\"$JENKINS_URL/userContent/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 	done
-	write_summary "</ul>"
-	write_summary "</header>"
+	write_page "</ul>"
+	write_page "</header>"
 }
 
-write_summary_footer() {
-	write_summary "<hr/><p style=\"font-size:0.9em;\">There is more information <a href=\"$JENKINS_URL/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere. Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</p>"
-	write_summary "</body></html>"
+write_page_footer() {
+	write_page "<hr/><p style=\"font-size:0.9em;\">There is more information <a href=\"$JENKINS_URL/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere. Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a>, GPL-2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>.</p>"
+	write_page "</body></html>"
 }
 
-write_summary_beta_sign() {
-	write_summary "<p style=\"font-size:0.9em;\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
-	write_summary "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</p>"
+write_page_beta_sign() {
+	write_page "<p style=\"font-size:0.9em;\">A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
+	write_page "This means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a> :-)</p>"
 }
+
 publish_summary() {
-	cp $SUMMARY /var/lib/jenkins/userContent/
+	cp $PAGE /var/lib/jenkins/userContent/
 	if [ "$VIEW" = "$MAINVIEW" ] ; then
-		cp $SUMMARY /var/lib/jenkins/userContent/reproducible.html
+		cp $PAGE /var/lib/jenkins/userContent/reproducible.html
 	fi
-	rm $SUMMARY
+	rm $PAGE
 }
 
+#
+# actually parse the notes
+#
+validate_yaml ${ISSUES_YML}
+validate_yaml ${PACKAGES_YML}
+if $VALID_YAML ; then
+	parse_issues
+	parse_notes
+	process_packages ${PACKAGES_WITH_NOTES}
+	write_issues
+	write_notes
+else
+	echo "Warning: ${ISSUES_YML} or ${PACKAGES_YML} contains invalid yaml, please fix."
+fi
+
+#
+# actually build the package pages
+#
 echo "Processing $COUNT_TOTAL packages... this will take a while."
-process_packages ${PACKAGES_WITH_NOTES}
 BUILDINFO_SIGNS=true
 process_packages ${BAD["all"]}
 BUILDINFO_SIGNS=false
 process_packages ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
 
-MAINVIEW="all_abc"
-ALLVIEWS="last_24h last_48h all_abc"
 for VIEW in $ALLVIEWS ; do
-	SUMMARY=index_${VIEW}.html
-	echo "Starting to write $SUMMARY page."
-	write_summary_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
+	PAGE=index_${VIEW}.html
+	echo "Starting to write $PAGE page."
+	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
 	if [ "${VIEW:0:3}" = "all" ] ; then
 		FINISH=":"
 	else
 		SHORTER_SPOKENTARGET=$(echo ${SPOKENTARGET[$VIEW]} | cut -d "(" -f1)
 		FINISH=", from $SHORTER_SPOKENTARGET these were:"
 	fi
-	write_summary "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"
+	write_page "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"
 	link_packages ${BAD[$VIEW]}
-	write_summary "</code></p>"
-	write_summary
-	write_summary "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total$FINISH <code>"
+	write_page "</code></p>"
+	write_page
+	write_page "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total$FINISH <code>"
 	link_packages ${UGLY[$VIEW]}
-	write_summary "</code></p>"
+	write_page "</code></p>"
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_SOURCELESS -gt 0 ] ; then
-		write_summary "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>${SOURCELESS[$VIEW]}</code></p>"
+		write_page "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>${SOURCELESS[$VIEW]}</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_NOTFORUS -gt 0 ] ; then
-		write_summary "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-any' nor 'linux-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
+		write_page "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any' nor 'all' nor 'amd64' nor 'linux-any' nor 'linux-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
-		write_summary "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
+		write_page "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
 	fi
-	write_summary "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
+	write_page "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
-	write_summary "</code></p>"
-	write_summary_beta_sign
-	write_summary_footer
+	write_page "</code></p>"
+	write_page_beta_sign
+	write_page_footer
 	publish_summary
 done
 
-VIEW=dd-list
-SUMMARY=index_${VIEW}.html
-echo "Starting to write $SUMMARY page."
-write_summary_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
-TMPFILE=$(mktemp)
-echo "${BAD["all"]}" | dd-list -i > $TMPFILE
-write_summary "<p>The following maintainers and uploaders are listed for packages which have built unreproducibly:</p><p><pre>"
-while IFS= read -r LINE ; do
-	if [ "${LINE:0:3}" = "   " ] ; then
-		PACKAGE=$(echo "${LINE:3}" | cut -d " " -f1)
-		UPLOADERS=$(echo "${LINE:3}" | cut -d " " -f2-)
-		if [ "$UPLOADERS" = "$PACKAGE" ] ; then
-			UPLOADERS=""
-		fi
-		write_summary "   <a href=\"$JENKINS_URL/userContent/rb-pkg/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
-	else
-		LINE="$(echo $LINE | sed 's#&#\&amp;#g ; s#<#\&lt;#g ; s#>#\&gt;#g')"
-		write_summary "$LINE"
-	fi
-done < $TMPFILE
-write_summary "</pre></p>"
-rm $TMPFILE
-write_summary_footer
-publish_summary
-
 VIEW=notes
-SUMMARY=index_${VIEW}.html
-echo "Starting to write $SUMMARY page."
-write_summary_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+PAGE=index_${VIEW}.html
+echo "Starting to write $PAGE page."
+write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
-	write_summary "<p>Packages which have notes: <code>"
+	write_page "<p>Packages which have notes: <code>"
 	force_package_targets $PACKAGES_WITH_NOTES
 	PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
 	link_packages $PACKAGES_WITH_NOTES
-	write_summary "</code></p>"
+	write_page "</code></p>"
 else
-	write_summary "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
+	write_page "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
 fi
-write_summary "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
-write_summary_footer
+write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+write_page_footer
+publish_summary
+
+VIEW=issues
+PAGE=index_${VIEW}.html
+echo "Starting to write $PAGE page."
+write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+if $VALID_YAML ; then
+	write_page "<table>"
+	ISSUES=$(echo ${ISSUES} | sed -s "s# #\n#g" | sort | xargs echo)
+	for ISSUE in ${ISSUES} ; do
+		write_page "<tr><td><a href=\"$JENKINS_URL/userContent/issues/${ISSUE}_issue.html\">${ISSUE}</a></td></tr>"
+	done
+	write_page "</table>"
+else
+	write_page "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
+fi
+write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+write_page_footer
 publish_summary
 
 count_packages() {
@@ -564,9 +638,9 @@ count_packages() {
 }
 
 for STATE in $ALLSTATES ; do
-	SUMMARY=index_${STATE}.html
-	echo "Starting to write $SUMMARY page."
-	write_summary_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
+	PAGE=index_${STATE}.html
+	echo "Starting to write $PAGE page."
+	write_page_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
 	WITH=""
 	case "$STATE" in
 		reproducible)	PACKAGES=${GOOD["all"]}
@@ -598,18 +672,43 @@ for STATE in $ALLSTATES ; do
 				;;
 	esac
 	count_packages ${PACKAGES}
-	write_summary "<p> $COUNT ($PERCENT%)"
+	write_page "<p> $COUNT ($PERCENT%)"
 	set_icon $STATE	$WITH	# sets ICON and STATE_TARGET_NAME
-	write_summary "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
-	write_summary " ${SPOKENTARGET[$STATE]}:<code>"
+	write_page "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
+	write_page " ${SPOKENTARGET[$STATE]}:<code>"
 	link_packages ${PACKAGES}
-	write_summary "</code></p>"
-	write_summary
+	write_page "</code></p>"
+	write_page
 	if [ "${STATE:0:4}" = "FTBR" ] ; then
-		write_summary_beta_sign
+		write_page_beta_sign
 	fi
-	write_summary_footer
+	write_page_footer
 	publish_summary
 done
+
+VIEW=dd-list
+PAGE=index_${VIEW}.html
+echo "Starting to write $PAGE page."
+write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+TMPFILE=$(mktemp)
+echo "${BAD["all"]}" | dd-list -i > $TMPFILE
+write_page "<p>The following maintainers and uploaders are listed for packages which have built unreproducibly:</p><p><pre>"
+while IFS= read -r LINE ; do
+	if [ "${LINE:0:3}" = "   " ] ; then
+		PACKAGE=$(echo "${LINE:3}" | cut -d " " -f1)
+		UPLOADERS=$(echo "${LINE:3}" | cut -d " " -f2-)
+		if [ "$UPLOADERS" = "$PACKAGE" ] ; then
+			UPLOADERS=""
+		fi
+		write_page "   <a href=\"$JENKINS_URL/userContent/rb-pkg/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
+	else
+		LINE="$(echo $LINE | sed 's#&#\&amp;#g ; s#<#\&lt;#g ; s#>#\&gt;#g')"
+		write_page "$LINE"
+	fi
+done < $TMPFILE
+write_page "</pre></p>"
+rm $TMPFILE
+write_page_footer
+publish_summary
 
 echo "Enjoy $JENKINS_URL/userContent/reproducible.html"

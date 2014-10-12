@@ -543,7 +543,7 @@ write_page_meta_sign() {
 	write_page "</p>"
 }
 
-publish_summary() {
+publish_page() {
 	cp $PAGE /var/lib/jenkins/userContent/
 	if [ "$VIEW" = "$MAINVIEW" ] ; then
 		cp $PAGE /var/lib/jenkins/userContent/reproducible.html
@@ -608,7 +608,7 @@ for VIEW in $ALLVIEWS ; do
 	write_page "</code></p>"
 	write_page_meta_sign
 	write_page_footer
-	publish_summary
+	publish_page
 done
 
 VIEW=notes
@@ -628,7 +628,7 @@ fi
 write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
 write_page_meta_sign
 write_page_footer
-publish_summary
+publish_page
 
 VIEW=issues
 PAGE=index_${VIEW}.html
@@ -646,7 +646,7 @@ else
 fi
 write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
 write_page_footer
-publish_summary
+publish_page
 
 count_packages() {
 	COUNT=${#@}
@@ -698,7 +698,7 @@ for STATE in $ALLSTATES ; do
 	write_page
 	write_page_meta_sign
 	write_page_footer
-	publish_summary
+	publish_page
 done
 
 VIEW=dd-list
@@ -724,6 +724,6 @@ done < $TMPFILE
 write_page "</pre></p>"
 rm $TMPFILE
 write_page_footer
-publish_summary
+publish_page
 
 echo "Enjoy $JENKINS_URL/userContent/reproducible.html"

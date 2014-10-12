@@ -548,6 +548,7 @@ if $VALID_YAML ; then
 	parse_issues
 	parse_notes
 	process_packages ${PACKAGES_WITH_NOTES}
+	force_package_targets ${PACKAGES_WITH_NOTES}
 	write_issues
 	write_notes
 else
@@ -603,7 +604,7 @@ echo "Starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
 	write_page "<p>Packages which have notes: <code>"
-	force_package_targets $PACKAGES_WITH_NOTES
+	force_package_targets ${PACKAGES_WITH_NOTES}
 	PACKAGES_WITH_NOTES=$(echo $PACKAGES_WITH_NOTES | sed -s "s# #\n#g" | sort | xargs echo)
 	link_packages $PACKAGES_WITH_NOTES
 	write_page "</code></p>"

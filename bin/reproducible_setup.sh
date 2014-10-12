@@ -18,11 +18,6 @@ if [ ! -f ${PACKAGES_DB} ] ; then
 		build_date TEXT NOT NULL,
 		PRIMARY KEY (name))'
 	sqlite3 ${PACKAGES_DB} '
-		CREATE TABLE source_stats
-		(suite TEXT NOT NULL,
-		amount INTEGER NOT NULL,
-		PRIMARY KEY (suite))'
-	sqlite3 ${PACKAGES_DB} '
 		CREATE TABLE sources
 		(name TEXT NOT NULL,
 		version TEXT NOT NULL)'

@@ -26,7 +26,7 @@ declare -A SPOKENTARGET
 LAST24="AND build_date > datetime('now', '-24 hours') "
 LAST48="AND build_date > datetime('now', '-48 hours') "
 SUITE=sid
-AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT amount FROM source_stats WHERE suite = \"$SUITE\"" | xargs echo)
+AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources")
 ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
 MAINVIEW="all_abc"
 ALLVIEWS="last_24h last_48h all_abc"

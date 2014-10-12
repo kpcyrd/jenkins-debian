@@ -30,6 +30,7 @@ update_sources_table() {
 	(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
 	sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
 	echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
+	rm $CSVFILE # $TMPFILE is still being used # FIXME: remove TMPFILE too...
 	echo "$(date) Removing duplicate versions from sources db..."
 	for PKG in $(sqlite3 ${PACKAGES_DB} 'SELECT name FROM sources GROUP BY name HAVING count(name) > 1') ; do
 		BET=""
@@ -44,7 +45,7 @@ update_sources_table() {
 		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version != '$BET'"
 	done
 	echo "$(date) Done removing duplicate versions from sources db..."
-	# update amount of available packages (for doing statistics later)
+	# verify duplicate entries have been removed correctly from the db
 	P_IN_TMPFILE=$(xzcat $TMPFILE | grep "^Package:" | cut -d " " -f2 | sort -u | wc -l)
 	P_IN_SOURCES=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources')
 	if [ $P_IN_TMPFILE -ne $P_IN_SOURCES ] ; then
@@ -52,8 +53,6 @@ update_sources_table() {
 		echo "DEBUG: P_IN_TMPFILE = $P_IN_TMPFILE"
 		exit 1
 	fi
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_stats VALUES (\"sid\", \"${P_IN_SOURCES}\")"
-	rm $CSVFILE # $TMPFILE is still being used
 }
 
 set +x

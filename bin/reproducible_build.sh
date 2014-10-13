@@ -24,96 +24,6 @@ fi
 # create dirs for results
 mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/rbuild/
 
-# this needs sid entries in sources.list:
-grep deb-src /etc/apt/sources.list | grep sid
-# try apt-get update twice, else fail gracefully, aka not.
-sudo apt-get update || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update || true )
-
-# update sources table in db
-update_sources_table() {
-	TMPFILE=$(mktemp)
-	curl $MIRROR/dists/sid/main/source/Sources.xz > $TMPFILE
-	CSVFILE=$(mktemp)
-	(xzcat $TMPFILE | egrep "(^Package:|^Version:)" | sed -s "s#^Version: ##g; s#Package: ##g; s#\n# #g"| while read PKG ; do read VERSION ; echo "$PKG,$VERSION" ; done) > $CSVFILE
-	sqlite3 -csv -init $INIT ${PACKAGES_DB} "DELETE from sources"
-	echo ".import $CSVFILE sources" | sqlite3 -csv -init $INIT ${PACKAGES_DB}
-	rm $CSVFILE # $TMPFILE is still being used # FIXME: remove TMPFILE too...
-	echo "$(date) Removing duplicate versions from sources db..."
-	for PKG in $(sqlite3 ${PACKAGES_DB} 'SELECT name FROM sources GROUP BY name HAVING count(name) > 1') ; do
-		BET=""
-		for VERSION in $(sqlite3 ${PACKAGES_DB} "SELECT version FROM sources where name = \"$PKG\"") ; do
-			if [ "$BET" = "" ] ; then
-				BET=$VERSION
-				continue
-			elif dpkg --compare-versions "$BET" lt "$VERSION"  ; then
-						BET=$VERSION
-			fi
-		done
-		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources WHERE name = '$PKG' AND version != '$BET'"
-	done
-	echo "$(date) Done removing duplicate versions from sources db..."
-	# verify duplicate entries have been removed correctly from the db
-	P_IN_TMPFILE=$(xzcat $TMPFILE | grep "^Package:" | cut -d " " -f2 | sort -u | wc -l)
-	P_IN_SOURCES=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources')
-	if [ $P_IN_TMPFILE -ne $P_IN_SOURCES ] ; then
-		echo "DEBUG: P_IN_SOURCES = $P_IN_SOURCES"
-		echo "DEBUG: P_IN_TMPFILE = $P_IN_TMPFILE"
-		exit 1
-	fi
-}
-
-set +x
-if [ $1 = "unknown" ] ; then
-	update_sources_table
-	AMOUNT=$2
-	REAL_AMOUNT=0
-	GUESSES=$(echo "${AMOUNT}*3" | bc)
-	PACKAGES=""
-	# FIXME: blacklisted is a valid status in the db which should be used...
-	CANDIDATES=$(xzcat $TMPFILE | grep "^Package:" | cut -d " " -f2 | egrep -v "^(linux|cups|zurl|openclipart|eigen3|xmds2)$" | sort -R | head -$GUESSES | xargs echo)
-	for PKG in $CANDIDATES ; do
-		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
-			continue
-		fi
-		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
-		if [ "$RESULT" = "" ] ; then
-			PACKAGES="${PACKAGES} $PKG"
-		fi
-	done
-elif [ $1 = "known" ] ; then
-	update_sources_table
-	AMOUNT=$2
-	# FIXME: blacklisted is a valid status in the db which should be used...
-	PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT DISTINCT source_packages.name FROM source_packages,sources WHERE sources.version IN (SELECT version FROM sources WHERE name=source_packages.name ORDER by sources.version DESC LIMIT 1) AND (( source_packages.status = 'unreproducible' OR source_packages.status = 'FTBFS') AND source_packages.name = sources.name AND source_packages.version != sources.version) ORDER BY source_packages.build_date LIMIT $AMOUNT" | egrep -v "^(linux|cups|zurl|openclipart|eigen3|xmds2)$" | xargs -r echo)
-else
-	# CANDIDATES is defined in that file
-	. /srv/jenkins/bin/reproducible_candidates.sh
-	PACKAGES=""
-	AMOUNT=$2
-	REAL_AMOUNT=0
-	for i in $(seq 0 ${#CANDIDATES[@]}) ; do
-		if [ $REAL_AMOUNT -eq $AMOUNT ] ; then
-			continue
-		fi
-		PKG=${CANDIDATES[$i]}
-		# FIXME: blacklisted is a valid status in the db which should be used...
-		RESULT=$(sqlite3 ${PACKAGES_DB} "SELECT name FROM source_packages WHERE name = \"${PKG}\"")
-		if [ "$RESULT" = "" ] ; then
-			PACKAGES="${PACKAGES} $PKG"
-			let "REAL_AMOUNT=REAL_AMOUNT+1"
-		fi
-	done
-fi
-AMOUNT=0
-for PKG in $PACKAGES ; do
-	let "AMOUNT=AMOUNT+1"
-done
-echo "============================================================================="
-echo "The following $AMOUNT source packages will be build: ${PACKAGES}"
-echo "============================================================================="
-echo
-rm -f $TMPFILE
-
 cleanup_all() {
 	rm -r $TMPDIR
 }
@@ -124,57 +34,46 @@ cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
-cleanup_prebuild() {
-	rm b1 b2 -rf
-	rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
+unschedule_from_db() {
+	# unmark build as properly finished
+	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources_scheduled WHERE name = '$SRCPACKAGE';"
 }
 
 TMPDIR=$(mktemp --tmpdir=$PWD -d)
-NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-COUNT_TOTAL=0
-COUNT_GOOD=0
-COUNT_BAD=0
-COUNT_SKIPPED=0
-GOOD=""
-BAD=""
-SOURCELESS=""
-SKIPPED=""
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
-for SRCPACKAGE in ${PACKAGES} ; do
+RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name,date_scheduled FROM sources_scheduled WHERE date_build_started = '' ORDER BY date_scheduled LIMIT 1")
+if [ -z "$RESULT" ] ; then
+	echo "No packages scheduled, sleeping 30m."
+	sleep 30m
+else
 	set +x
+	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f1)
+	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f2)
 	echo "============================================================================="
 	echo "Trying to build ${SRCPACKAGE} reproducibly now."
 	echo "============================================================================="
 	set -x
-	let "COUNT_TOTAL=COUNT_TOTAL+1"
-	cleanup_prebuild
-	set +e
 	DATE=$(date +'%Y-%m-%d %H:%M')
-	VERSION=$(apt-cache showsrc ${SRCPACKAGE} | grep ^Version | cut -d " " -f2 | sort -r | head -1)
-	# check if we tested this version already before...
-	STATUS=$(sqlite3 ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name = \"${SRCPACKAGE}\" AND version = \"${VERSION}\"")
-	# skip if we know this version and status = reproducible or unreproducible or FTBFS
-	if [ "$STATUS" = "reproducible" ] || [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ; then
-		echo "Package ${SRCPACKAGE} (${VERSION}) with status '$STATUS' skipped, no newer version available."
-		let "COUNT_SKIPPED=COUNT_SKIPPED+1"
-		SKIPPED="${SRCPACKAGE} ${SKIPPED}"
-		continue
-	fi
+	# mark build attempt
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO sources_scheduled VALUES ('$SRCPACKAGE','$SCHEDULED_DATE','$DATE');"
+
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
 	echo "Starting to build ${SRCPACKAGE} on $DATE" | tee ${RBUILDLOG}
 	# host has only sid in deb-src in sources.list
+	set +e
 	apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		echo "Warning: Download of ${SRCPACKAGE} sources failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		SOURCELESS="${SOURCELESS} ${SRCPACKAGE}"
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
 		set +x
 		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
-		continue
+		unschedule_from_db
+		exit 0
 	else
+		set -e
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
 		# EPOCH_FREE_VERSION was too long
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
@@ -201,11 +100,11 @@ for SRCPACKAGE in ${PACKAGES} ; do
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
 			set +x
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"${ARCHITECTURES}\" and thus was skipped." | tee -a ${RBUILDLOG}
-			let "COUNT_SKIPPED=COUNT_SKIPPED+1"
-			SKIPPED="${SRCPACKAGE} ${SKIPPED}"
-			dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
-			continue
+			unschedule_from_db
+			exit 0
 		fi
+		set +e
+		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 		( timeout 15m nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee -a ${RBUILDLOG}
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
@@ -242,8 +141,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
-				let "COUNT_GOOD=COUNT_GOOD+1"
-				GOOD="${SRCPACKAGE} ${GOOD}"
+				unschedule_from_db
 			else
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ || true
 				if [ -f ./${LOGFILE} ] ; then
@@ -256,6 +154,7 @@ for SRCPACKAGE in ${PACKAGES} ; do
 					fi
 				fi
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
+				unschedule_from_db
 				set +x
 				echo -n "${SRCPACKAGE} failed to build reproducibly."
 				if [ ! -f b1/${BUILDINFO} ] ; then
@@ -263,36 +162,18 @@ for SRCPACKAGE in ${PACKAGES} ; do
 				else
 					echo
 				fi
-				let "COUNT_BAD=COUNT_BAD+1"
-				BAD="${SRCPACKAGE} ${BAD}"
 			fi
-			set -x
-			rm b1 b2 -rf
 		else
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
+			unschedule_from_db
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."
 		fi
-		set -x
-		dcmd rm ${SRCPACKAGE}_${EVERSION}.dsc
-		rm -f ${SRCPACKAGE}_* > /dev/null 2>&1
 	fi
 
-	set +x
-	echo "============================================================================="
-	echo "$COUNT_TOTAL of $AMOUNT done. Previous package: ${SRCPACKAGE}"
-	echo "============================================================================="
-	set -x
-done
+fi
+set -x
 cd ..
 cleanup_all
 trap - INT TERM EXIT
 
-set +x
-echo
-echo
-echo "$COUNT_TOTAL packages attempted to build in total."
-echo "$COUNT_GOOD packages successfully built reproducibly: ${GOOD}"
-echo "$COUNT_SKIPPED packages skipped (either because they were successfully built reproducibly in the past or because they are not Architecture: 'any' nor 'all' nor 'amd64'): ${SKIPPED}"
-echo "$COUNT_BAD packages failed to built reproducibly: ${BAD}"
-echo "The following source packages doesn't exist in sid: $SOURCELESS"

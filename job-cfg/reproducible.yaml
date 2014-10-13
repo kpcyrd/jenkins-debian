@@ -19,29 +19,24 @@
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
     logrotate:
       daysToKeep: 365
-      numToKeep: 20
+      numToKeep: 100
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
     publishers:
       - email:
-#          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
-          recipients: 'holger@layer-acht.org'
+          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
-#      - trigger:
-#          project: 'reproducible_stats'
-#          threshold: 'UNSTABLE'
 
 - defaults:
     name: reproducible_builder
     triggers:
       - timed: "{my_timed}"
     project-type: freestyle
-    concurrent: True
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -71,7 +66,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '{my_shell} {my_params}'
+      - shell: '{my_shell}'
     publishers:
       - email:
           recipients: 'holger@layer-acht.org'
@@ -91,15 +86,15 @@
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_build_random_packages'
+    name: '{name}_builder_one'
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_build_new_versions'
+    name: '{name}_builder_two'
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_build_candidates'
+    name: '{name}_builder_three'
 
 - job-template:
     defaults: reproducible
@@ -116,24 +111,20 @@
             my_description: 'Generates HTML results for reproducible builds.'
             my_timed: '0 0,6,12,18 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
-        - '{name}_build_random_packages':
-            my_description: 'Reproducible build this many random packages each day:'
-            my_timed: '0,15,30,45 * * * *'
+        - '{name}_builder_one':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/3 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_params: 'unknown 10'
-        - '{name}_build_new_versions':
-            my_description: 'Try to reproducible build packages which were build before and for which a new version exists:'
-            my_timed: '42 2,14 * * *'
+        - '{name}_builder_two':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/3 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_params: 'known 25'
-        - '{name}_build_candidates':
-            my_description: 'Reproducible build packages from a list of pre-defined candidates: '
-            my_timed: '0 0,4,8,12,16,20 * * *'
+        - '{name}_builder_three':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/3 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-            my_params: 'candidates 20'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested on reproducible building.'
-#            my_timed: '55 * * * *'
-            my_timed: ''
+            my_timed: '55 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
 

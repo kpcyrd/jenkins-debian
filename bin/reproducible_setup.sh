@@ -41,11 +41,14 @@ cat >/var/lib/jenkins/reproducible.init <<-EOF
 .timeout 60000
 EOF
 
+set +x
 # blacklist some packages
 for PKG in linux cups zurl openclipart eigen3 xmds2 ; do
 	RESULT=$(sqlite3 -init $INIT $PACKAGES_DB " SELECT name FROM source_packages WHERE status = 'blacklisted' AND name = '$PKG'")
 	if [ "$RESULT" = "" ] ; then
+		set -x
 		sqlite3 -init $INIT $PACKAGES_DB "REPLACE into source_packages VALUES ('$PKG','0','blacklisted',date('now'))"
+		set +x
 	fi
 done
 

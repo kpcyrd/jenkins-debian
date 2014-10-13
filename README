@@ -14,7 +14,7 @@ https://jenkins.debian.net is a tool for automated quality monitoring of Debian.
 
 Get the source by running `git clone git://git.debian.org/git/qa/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository. (The irrelevant bits are some very simple configuration files containing passwords.)
 
-The (virtualized) hardware is sponsored by http://www.profitbricks.com - currently it's using 6 cores and 10 GB memory, thanks a lot!
+The (virtualized) hardware is sponsored since 2012 by http://www.profitbricks.com - currently it's using 15 cores and 50 GB memory, thanks a lot!
 
 Some stats are available using link:https://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
 
@@ -109,7 +109,10 @@ Installation tests inside chroot environments.
 * FIXME: describe reproducible jobs
 
 * manual rescheduling is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
-** <code>jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde</code>
+
+----
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde</code>
+----
 
 === dvswitch jobs
 

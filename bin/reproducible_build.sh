@@ -99,7 +99,7 @@ else
 		if ! $SUITABLE ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
 			set +x
-			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"${ARCHITECTURES}\" and thus was skipped." | tee -a ${RBUILDLOG}
+			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}")\" and thus was skipped." | tee -a ${RBUILDLOG}
 			unschedule_from_db
 			exit 0
 		fi

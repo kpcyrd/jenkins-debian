@@ -26,11 +26,15 @@
       - shell: '{my_shell}'
     publishers:
       - email:
-          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+#          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+          recipients: 'holger@layer-acht.org'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+#      - trigger:
+#          project: 'reproducible_stats'
+#          threshold: 'UNSTABLE'
 
 - defaults:
     name: reproducible_builder
@@ -63,7 +67,7 @@
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
     logrotate:
       daysToKeep: 365
-      numToKeep: 20
+      numToKeep: 500
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -77,50 +81,12 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
 
-- defaults:
-    name: reproducible_stats
-    triggers:
-      - timed: "{my_timed}"
-    project-type: freestyle
-    properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.com
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
-    logrotate:
-      daysToKeep: 365
-      numToKeep: 20
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
-    builders:
-      - shell: '{my_shell}'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
-      - htmlpublisher:
-          name: 'Reproducible build overview'
-          directory: '.'
-          indexfiles: 'reproducible.html'
-          keepall: True
-#      - trigger:
-#          project: 'reproducible_stats'
-#          threshold: 'UNSTABLE'
-
 - job-template:
     defaults: reproducible
     name: '{name}_setup'
 
 - job-template:
-    defaults: reproducible_stats
+    defaults: reproducible
     name: '{name}_stats'
 
 - job-template:
@@ -167,7 +133,7 @@
             my_params: 'candidates 20'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested on reproducible building.'
-#            my_timed: '23 * * * *'
+#            my_timed: '55 * * * *'
             my_timed: ''
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
 

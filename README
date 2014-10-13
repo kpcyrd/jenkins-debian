@@ -108,6 +108,9 @@ Installation tests inside chroot environments.
 
 * FIXME: describe reproducible jobs
 
+* manual rescheduling is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
+** <code>jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde</code>
+
 === dvswitch jobs
 
 * FIXME: describe dvswitch jobs

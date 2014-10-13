@@ -61,6 +61,7 @@ check_candidates
 if [ $#{PACKAGES} -gt 256 ] ; then
 	BLABLABLA="..."
 fi
+PACKAGES=$(echo $PACKAGES)
 MESSAGE="$TOTAL package(s) manually (re-)scheduled: ${PACKAGES:0:256}$BLABLABLA"
 
 # finally

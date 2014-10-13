@@ -113,15 +113,15 @@
             my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
-            my_timed: 'H/3 * * * *'
+            my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
         - '{name}_builder_beta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
-            my_timed: 'H/3 * * * *'
+            my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
         - '{name}_builder_gamma':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
-            my_timed: 'H/3 * * * *'
+            my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested on reproducible building.'

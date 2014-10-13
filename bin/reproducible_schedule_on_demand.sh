@@ -58,7 +58,7 @@ check_candidates() {
 #
 CANDIDATES="$@"
 check_candidates
-MESSAGE="$TOTAL package(s) manually (re-)scheduled."
+MESSAGE="$TOTAL package(s) manually (re-)scheduled: $PACKAGES"
 
 # finally
 schedule_packages

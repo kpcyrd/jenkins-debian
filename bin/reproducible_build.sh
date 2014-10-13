@@ -133,11 +133,12 @@ else
 			if [ $RESULT -eq 124 ] ; then
 				echo "$(date) - debbindiff.py was killed after running into timeouot..." | tee -a ${RBUILDLOG}
 			elif [ $RESULT -eq 1 ] ; then
-				echo "$(date) - debbindiff.py crashed..." | tee -a ${RBUILDLOG}
+				echo "$(date) - debbindiff.py found issues, please investigate $JENKINS_URL/userContent/dbd/${SRCPACKAGE}_${VERSION}.html" | tee -a ${RBUILDLOG}
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
 				figlet ${SRCPACKAGE}
+				echo "debbindiff.py found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
 				echo
 				echo "${SRCPACKAGE} built successfully and reproducibly."
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
@@ -156,11 +157,11 @@ else
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
 				unschedule_from_db
 				set +x
-				echo -n "${SRCPACKAGE} failed to build reproducibly."
+				echo -n "${SRCPACKAGE} failed to build reproducibly" | tee -a ${RBUILDLOG}
 				if [ ! -f b1/${BUILDINFO} ] ; then
-					echo " .buildinfo file is missing."
+					echo "and a .buildinfo file is missing too." | tee -a ${RBUILDLOG}
 				else
-					echo
+					echo "." | tee -a ${RBUILDLOG}
 				fi
 			fi
 		else

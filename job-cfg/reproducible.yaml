@@ -86,15 +86,15 @@
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_builder_one'
+    name: '{name}_builder_alpha'
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_builder_two'
+    name: '{name}_builder_beta'
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_builder_three'
+    name: '{name}_builder_gamma'
 
 - job-template:
     defaults: reproducible
@@ -111,15 +111,15 @@
             my_description: 'Generates HTML results for reproducible builds.'
             my_timed: '0 0,6,12,18 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
-        - '{name}_builder_one':
+        - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/3 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-        - '{name}_builder_two':
+        - '{name}_builder_beta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/3 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
-        - '{name}_builder_three':
+        - '{name}_builder_gamma':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/3 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'

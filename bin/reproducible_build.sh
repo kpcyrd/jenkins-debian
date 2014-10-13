@@ -12,6 +12,13 @@ INIT=/var/lib/jenkins/reproducible.init
 if [ ! -f $PACKAGES_DB ] ; then
 	echo "$PACKAGES_DB doesn't exist, no builds possible."
 	exit 1
+elif [ -f $PACKAGES_DB.lock ] ; then
+        for i in $(seq 0 100) ; do
+		sleep 15
+		[ -f $PACKAGES_DB.lock ] || break
+	done
+	echo "$PACKAGES_DB.lock still exist, exiting."
+	exit 1
 fi
 
 # create dirs for results

@@ -148,10 +148,10 @@ schedule_packages() {
 	done
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE
-echo "============================================================================="
-echo "The following $TOTAL source packages have been scheduled: $CANDIDATES"
-echo "============================================================================="
-echo
+	echo "============================================================================="
+	echo "The following $TOTAL source packages have been scheduled: $CANDIDATES"
+	echo "============================================================================="
+	echo
 }
 
 #

@@ -143,13 +143,13 @@ select_old_versions() {
 schedule_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	TMPFILE=$(mktemp)
-	for PKG in $CANDIDATES ; do
+	for PKG in $ALL_PACKAGES ; do
 		echo "INSERT INTO sources_scheduled VALUES ('$PKG','$DATE','');" >> $TMPFILE
 	done
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE
 	echo "============================================================================="
-	echo "The following $TOTAL source packages have been scheduled: $CANDIDATES"
+	echo "The following $TOTAL source packages have been scheduled: $ALL_PACKAGES"
 	echo "============================================================================="
 	echo
 }
@@ -171,7 +171,7 @@ echo "Requesting 200 unknown packages..."
 select_unknown_packages 200
 let "TOTAL=$SCHEDULED+$AMOUNT"
 echo "So in total now $TOTAL packages about to be scheduled."
-CANDIDATES=$PACKAGES
+ALL_PACKAGES="$PACKAGES"
 MESSAGE="Scheduled $AMOUNT unknown packages"
 
 if [ $TOTAL -le 250 ] ; then
@@ -183,7 +183,7 @@ echo "Requesting $NEW new packages..."
 select_new_versions $NEW
 let "TOTAL=$TOTAL+$AMOUNT"
 echo "So in total now $TOTAL packages about to be scheduled."
-CANDIDATES="$CANDIDATES $PACKAGES"
+ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE, $AMOUNT packages with new versions"
 
 if [ $TOTAL -lt 250 ] ; then
@@ -197,7 +197,7 @@ echo "Requesting $OLD old packages..."
 select_old_versions $OLD
 let "TOTAL=$TOTAL+$AMOUNT"
 echo "So in total now $TOTAL packages about to be scheduled."
-CANDIDATES="$CANDIDATES $PACKAGES"
+ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE and $AMOUNT packages with the same version again, for a total of $TOTAL scheduled packages."
 
 # finally

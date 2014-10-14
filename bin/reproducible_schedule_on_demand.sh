@@ -6,24 +6,8 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-set +x
-
-#
-# define db
-#
-PACKAGES_DB=/var/lib/jenkins/reproducible.db
-INIT=/var/lib/jenkins/reproducible.init
-if [ ! -f $PACKAGES_DB ] ; then
-	echo "$PACKAGES_DB doesn't exist, no builds possible."
-	exit 1
-elif [ -f $PACKAGES_DB.lock ] ; then
-	for i in $(seq 0 100) ; do
-		sleep 15
-		[ -f $PACKAGES_DB.lock ] || break
-	done
-	echo "$PACKAGES_DB.lock still exist, exiting."
-	exit 1
-fi
+# common code defining db access
+. /srv/jenkins/bin/reproducible_common.sh
 
 schedule_packages() {
 	DATE="2014-10-01 00:23"
@@ -56,6 +40,7 @@ check_candidates() {
 #
 # main
 #
+set +x
 CANDIDATES="$@"
 check_candidates
 if [ $#{PACKAGES} -gt 256 ] ; then

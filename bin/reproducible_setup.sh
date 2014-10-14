@@ -6,40 +6,8 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-# create sqlite db
-PACKAGES_DB=/var/lib/jenkins/reproducible.db
-if [ ! -f ${PACKAGES_DB} ] ; then
-	sqlite3 ${PACKAGES_DB} '
-		CREATE TABLE source_packages
-		(name TEXT NOT NULL,
-		version TEXT NOT NULL,
-		status TEXT NOT NULL
-		CHECK (status IN ("blacklisted", "FTBFS","reproducible","unreproducible","404", "not for us")),
-		build_date TEXT NOT NULL,
-		PRIMARY KEY (name))'
-	sqlite3 ${PACKAGES_DB} '
-		CREATE TABLE sources_scheduled
-		(name TEXT NOT NULL,
-		date_scheduled TEXT NOT NULL,
-		date_build_started TEXT NOT NULL,
-		PRIMARY KEY (name))'
-	sqlite3 ${PACKAGES_DB} '
-		CREATE TABLE sources
-		(name TEXT NOT NULL,
-		version TEXT NOT NULL)'
-elif [ -f $PACKAGES_DB.lock ] ; then
-	for i in $(seq 0 100) ; do
-		sleep 15
-		[ -f $PACKAGES_DB.lock ] || break
-	done
-	echo "$PACKAGES_DB.lock still exist, exiting."
-	exit 1
-fi
-# 30 seconds timeout when trying to get a lock
-INIT=/var/lib/jenkins/reproducible.init
-cat >/var/lib/jenkins/reproducible.init <<-EOF
-.timeout 60000
-EOF
+# common code defining db access
+. /srv/jenkins/bin/reproducible_common.sh
 
 set +x
 # blacklist some packages

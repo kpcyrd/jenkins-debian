@@ -13,7 +13,7 @@ if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
 	if [ -f $PACKAGES_DB.lock ] ; then
 		for i in $(seq 0 100) ; do
 			sleep 15
-			if [ -! -f $PACKAGES_DB.lock ] ; then
+			if [ ! -f $PACKAGES_DB.lock ] ; then
 				break
 			fi
 		done

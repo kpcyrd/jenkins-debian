@@ -65,11 +65,6 @@ sudo apt-get install -t wheezy-backports qemu
 explain "Packages installed."
 
 #
-# as long as d-i_manual_*_(html|pdf) is build on the host system...
-#
-sudo apt-get build-dep installation-guide
-
-#
 # deploy package configuration in /etc
 #
 cd $BASEDIR

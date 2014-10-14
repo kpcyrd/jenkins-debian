@@ -87,7 +87,7 @@ else
 		if ! $SUITABLE ; then
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
 			set +x
-			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}")\" and thus was skipped." | tee -a ${RBUILDLOG}
+			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
 			unschedule_from_db
 			exit 0
 		fi
@@ -126,9 +126,10 @@ else
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
 				figlet ${SRCPACKAGE}
+				echo | tee -a ${RBUILDLOG}
 				echo "debbindiff.py found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
-				echo
-				echo "${SRCPACKAGE} built successfully and reproducibly."
+				echo | tee -a ${RBUILDLOG}
+				echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
 				unschedule_from_db
 			else

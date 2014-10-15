@@ -19,8 +19,13 @@ update_apt() {
 	sudo apt-get update || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update ) || ( sleep $(( $RANDOM % 70 + 30 )) ; sudo apt-get update || exit 1 ) 
 }
 
+cleanup_lock() {
+	rm -f ${PACKAGES_DB}.lock
+}
+
 # update sources table in db
 update_sources_table() {
+	trap cleanup_lock INT TERM EXIT
 	touch ${PACKAGES_DB}.lock
 	TMPFILE=$(mktemp)
 	curl $MIRROR/dists/sid/main/source/Sources.xz > $TMPFILE
@@ -49,7 +54,8 @@ update_sources_table() {
 	done
 	echo "$(date) Done removing duplicate versions from sources db..."
 	echo "============================================================================="
-	rm ${PACKAGES_DB}.lock
+	cleanup_lock
+	trap - INT TERM EXIT
 	# verify duplicate entries have been removed correctly from the db
 	P_IN_SOURCES=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources')
 	if [ $P_IN_TMPFILE -ne $P_IN_SOURCES ] ; then

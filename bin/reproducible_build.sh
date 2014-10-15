@@ -62,7 +62,7 @@ else
 		exit 0
 	else
 		set -e
-		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| grep -v "GnuPG v" | sort -r | head -1 | cut -d " " -f2-)
+		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
 		# EPOCH_FREE_VERSION was too long
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,

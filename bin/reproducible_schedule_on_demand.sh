@@ -33,6 +33,10 @@ check_candidates() {
 			let "TOTAL+=1"
 		fi
 	done
+	if [ $TOTAL -eq 0 ] ; then
+		echo "No packages to schedule, exiting."
+		exit 0
+	fi
 }
 
 
@@ -43,7 +47,7 @@ check_candidates() {
 set +x
 CANDIDATES="$@"
 check_candidates
-if [ $#{PACKAGES} -gt 256 ] ; then
+if [ ${#PACKAGES} -gt 256 ] ; then
 	BLABLABLA="..."
 fi
 PACKAGES=$(echo $PACKAGES)

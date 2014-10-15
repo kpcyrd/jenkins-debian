@@ -116,12 +116,19 @@ h3 {
 }
 
 table {
-	width: 100%;
 	border: 1px solid #ddd;
 	border-radius: 0.5em;
 	border-collapse: collapse;
 	box-shadow: 0 1px 3px #eee;
 	padding: 0
+}
+
+table.head {
+	width: 100%;
+}
+
+table.body {
+	margin: 0.75em 0.25em 0em 0em;
 }
 
 tr:nth-child(odd) {

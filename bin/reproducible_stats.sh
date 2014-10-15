@@ -149,7 +149,7 @@ issues_loop() {
 		if [ "${p:0:2}" = "- " ] ; then
 			p="${p:2}"
 		fi
-		write_page "<table><tr><td>Identifier:</td><td><a href=\"$JENKINS_URL/userContent/issues/${p}_issue.html\" target=\"_parent\">$p</a></tr>"
+		write_page "<table class=\"body\"><tr><td>Identifier:</td><td><a href=\"$JENKINS_URL/userContent/issues/${p}_issue.html\" target=\"_parent\">$p</a></tr>"
 		if [ "${ISSUES_URL[$p]}" != "" ] ; then
 			write_page "<tr><td>URL</td><td><a href=\"${ISSUES_URL[$p]}\" target=\"_blank\">${ISSUES_URL[$p]}</a></td></tr>"
 		fi
@@ -173,7 +173,7 @@ create_pkg_note() {
 	write_page "<link href=\"$JENKINS_URL/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>Notes for $1</title></head>"
 	write_page "<body><header>"
-	write_page "<table>"
+	write_page "<table class=\"body\">"
 
 	write_page "<tr><td>Version annotated:</td><td colspan=\"2\">${NOTES_VERSION[$1]}</td></tr>"
 
@@ -208,7 +208,7 @@ create_pkg_note() {
 create_issue() {
 	BUG=false
 	write_page_header "" "Notes about issue '$1'"
-	write_page "<table>"
+	write_page "<table class=\"body\">"
 
 	write_page "<tr><td>Identifier:</td><td colspan=\"2\">$1</td></tr>"
 
@@ -396,7 +396,7 @@ init_pkg_page() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > ${PKG_FILE}
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> ${PKG_FILE}
 	echo "<title>$1 - reproducible builds results</title></head>" >> ${PKG_FILE}
-	echo "<body><table><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> ${PKG_FILE}
+	echo "<body><table class=\"head\"><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> ${PKG_FILE}
 	set_icon "$3" $5
 	write_icon
 	echo "<span style=\"font-size:0.9em;\">at $4:</span> " >> ${PKG_FILE}
@@ -658,7 +658,7 @@ PAGE=index_${VIEW}.html
 echo "Starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
-	write_page "<table>"
+	write_page "<table class=\"body\">"
 	ISSUES=$(echo ${ISSUES} | sed -s "s# #\n#g" | sort | xargs echo)
 	for ISSUE in ${ISSUES} ; do
 		write_page "<tr><td><a href=\"$JENKINS_URL/userContent/issues/${ISSUE}_issue.html\">${ISSUE}</a></td></tr>"
@@ -852,7 +852,7 @@ write_usertag_table() {
 			let "COUNT+=1"
 			VALUE=$(echo $RESULT | cut -d "|" -f$COUNT)
 			if [ $COUNT -eq 1 ] ; then
-				write_page "<table><tr><td colspan=\"4\"><em>Bugs with usertags for reproducible-builds@lists.alioth.debian.org on $VALUE</em></td></tr>"
+				write_page "<table class=\"body\"><tr><td colspan=\"4\"><em>Bugs with usertags for reproducible-builds@lists.alioth.debian.org on $VALUE</em></td></tr>"
 			elif [ $((COUNT%2)) -eq 0 ] ; then
 				write_page "<tr><td>&nbsp;</td><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&archive=both\">${FIELD:5}</a></td><td>Open: $VALUE</td>"
 			else

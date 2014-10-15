@@ -111,8 +111,15 @@ Installation tests inside chroot environments.
 * manual rescheduling is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
 
 ----
-jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde</code>
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde
 ----
+
+* blacklisting packages can be done similarily, optionally list reaons in 'notes.git/packages.yml'
+
+----
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh package1
+----
+
 
 === dvswitch jobs
 

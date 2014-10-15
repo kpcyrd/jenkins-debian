@@ -69,6 +69,28 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		oldest_unreproducible REAL,
 		oldest_FTBFS REAL,
 		PRIMARY KEY (datum))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_bugs
+		(datum TEXT NOT NULL,
+		open_toolchain INTEGER,
+		done_toolchain INTEGER,
+		open_infrastructure INTEGER,
+		done_infrastructure INTEGER,
+		open_timestamps INTEGER,
+		done_timestamps INTEGER,
+		open_fileordering INTEGER,
+		done_fileordering INTEGER,
+		open_buildpath INTEGER,
+		done_buildpath INTEGER,
+		open_username INTEGER,
+		done_username INTEGER,
+		open_hostname INTEGER,
+		done_hostname INTEGER,
+		open_uname INTEGER,
+		done_uname INTEGER,
+		open_randomness INTEGER,
+		done_randomness INTEGER,
+		PRIMARY KEY (datum))'
 	# 60 seconds timeout when trying to get a lock
 	cat >/var/lib/jenkins/reproducible.init <<-EOF
 .timeout 60000

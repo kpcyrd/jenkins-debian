@@ -60,7 +60,7 @@ fi
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
 	build-essential python-setuptools \
 	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat webcheck poxml vncsnapshot imagemagick ffmpeg2theora python-twisted python-imaging gocr guestmount schroot sqlite3\
-	unzip python-hachoir-metadata ghc python-rpy2
+	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl
 sudo apt-get install -t wheezy-backports qemu
 explain "Packages installed."
 

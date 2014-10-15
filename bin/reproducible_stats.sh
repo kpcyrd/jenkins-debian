@@ -729,7 +729,7 @@ PAGE=index_${VIEW}.html
 echo "Starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
-echo "${BAD["all"]}" | dd-list -i > $TMPFILE
+echo "${BAD["all"]}" | dd-list -i > $TMPFILE || true
 write_page "<p>The following maintainers and uploaders are listed for packages which have built unreproducibly:</p><p><pre>"
 while IFS= read -r LINE ; do
 	if [ "${LINE:0:3}" = "   " ] ; then

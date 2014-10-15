@@ -397,8 +397,8 @@ init_pkg_page() {
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> ${PKG_FILE}
 	echo "<title>$1 - reproducible builds results</title></head>" >> ${PKG_FILE}
 	echo "<body><table class=\"head\"><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> ${PKG_FILE}
-	set_icon "$3" $5
-	write_icon
+	set_icon "$3" $5 # this sets $STATE_TARGET_NAME and $ICON
+	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> ${PKG_FILE}
 	echo "<span style=\"font-size:0.9em;\">at $4:</span> " >> ${PKG_FILE}
 }
 

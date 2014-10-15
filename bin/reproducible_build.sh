@@ -121,7 +121,7 @@ else
 			if [ $RESULT -eq 124 ] ; then
 				echo "$(date) - debbindiff.py was killed after running into timeouot..." | tee -a ${RBUILDLOG}
 			elif [ $RESULT -eq 1 ] ; then
-				echo "$(date) - debbindiff.py found issues, please investigate $JENKINS_URL/userContent/dbd/${SRCPACKAGE}_${VERSION}.html" | tee -a ${RBUILDLOG}
+				echo "$(date) - debbindiff.py found issues, please investigate $JENKINS_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/

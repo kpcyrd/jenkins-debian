@@ -387,13 +387,18 @@ set_icon() {
 	esac
 }
 
+write_icon() {
+	# ICON and STATE_TARGET_NAME are set by set_icon()
+	write_page "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
+}
+
 init_pkg_page() {
 	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > ${PKG_FILE}
 	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> ${PKG_FILE}
 	echo "<title>$1 - reproducible builds results</title></head>" >> ${PKG_FILE}
 	echo "<body><table><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> ${PKG_FILE}
 	set_icon "$3" $5
-	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"../static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> ${PKG_FILE}
+	write_icon
 	echo "<span style=\"font-size:0.9em;\">at $4:</span> " >> ${PKG_FILE}
 }
 
@@ -508,14 +513,16 @@ write_page_header() {
 		if [ "$MY_STATE" = "FTBR_with_buildinfo" ] ; then
 			WITH="YES"
 		fi
-		set_icon $MY_STATE $WITH	# sets ICON and STATE_TARGET_NAME
-		write_page "<li><a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a></li>"
+		set_icon $MY_STATE $WITH
+		write_page "<li>"
+		write_icon
+		write_page "</li>"
 	done
 	for TARGET in issues notes $ALLVIEWS dd-list stats ; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
-		elif [ "$TARGET" = "issues" ] ; then
-			SPOKEN_TARGET="issues"
+		elif [ "$TARGET" = "issues" ] || [ "$TARGET" = "stats" ]; then
+			SPOKEN_TARGET=$TARGET
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi
@@ -583,23 +590,43 @@ for VIEW in $ALLVIEWS ; do
 		SHORTER_SPOKENTARGET=$(echo ${SPOKENTARGET[$VIEW]} | cut -d "(" -f1)
 		FINISH=", from $SHORTER_SPOKENTARGET these were:"
 	fi
-	write_page "<p>$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"
+	write_page "<p>"
+	set_icon unreproducible with
+	write_icon
+	set_icon unreproducible
+	write_icon
+	write_page "$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"
 	link_packages ${BAD[$VIEW]}
 	write_page "</code></p>"
 	write_page
-	write_page "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total$FINISH <code>"
+	write_page "<p>"
+	set_icon FTBFS
+	write_icon
+	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source in total$FINISH <code>"
 	link_packages ${UGLY[$VIEW]}
 	write_page "</code></p>"
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_SOURCELESS -gt 0 ] ; then
-		write_page "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>${SOURCELESS[$VIEW]}</code></p>"
+		write_page "<p>For "
+		set_icon 404
+		write_icon
+		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>${SOURCELESS[$VIEW]}</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_NOTFORUS -gt 0 ] ; then
-		write_page "<p>In total there were $COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
+		write_page "<p>In total there were "
+		set_icon not_for_us
+		write_icon
+		write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
-		write_page "<p>$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
+		write_page "<p>"
+		set_icon blacklisted
+		write_icon
+		write_page "$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
 	fi
-	write_page "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
+	write_page "<p>"
+	set_icon reproducible
+	write_icon
+	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
 	link_packages ${GOOD[$VIEW]}
 	write_page "</code></p>"
 	write_page_meta_sign
@@ -685,10 +712,10 @@ for STATE in $ALLSTATES ; do
 				;;
 	esac
 	count_packages ${PACKAGES}
-	write_page "<p> $COUNT ($PERCENT%)"
-	set_icon $STATE	$WITH	# sets ICON and STATE_TARGET_NAME
-	write_page "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
-	write_page " ${SPOKENTARGET[$STATE]}:<code>"
+	write_page "<p>"
+	set_icon $STATE	$WITH
+	write_icon
+	write_page "$COUNT ($PERCENT%) ${SPOKENTARGET[$STATE]}:<code>"
 	link_packages ${PACKAGES}
 	write_page "</code></p>"
 	write_page
@@ -781,14 +808,32 @@ VIEW=stats
 PAGE=index_${VIEW}.html
 echo "Starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
-write_page "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly.</p>"
-write_page "<p>$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly.</p>"
-write_page "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
+write_page "<p>"
+set_icon reproducible
+write_icon
+write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly."
+set_icon unreproducible with
+write_icon
+set_icon unreproducible
+write_icon
+write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."
+set_icon FTBFS
+write_icon
+write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
+write_page "<p>"
 if [ $COUNT_SOURCELESS -gt 0 ] ; then
-	write_page "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages sources could not be downloaded,"
+	write_page "For "
+	set_icon 404
+	write_icon
+	write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages sources could not be downloaded,"
 fi
+set_icon not_for_us
+write_icon
 write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will never be build here"
-write_page "and those $COUNT_BLACKLISTED blacklisted packages neither.</p>"
+write_page "and those "
+set_icon blacklisted
+write_icon
+write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do stats_builds_age.png yet :/
 for i in 0 1 ; do

@@ -42,7 +42,34 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		CREATE TABLE sources
 		(name TEXT NOT NULL,
 		version TEXT NOT NULL)'
-	# 30 seconds timeout when trying to get a lock
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_pkg_state
+		(datum TEXT NOT NULL,
+		suite TEXT NOT NULL,
+		untested INTEGER,
+		reproducible INTEGER,
+		unreproducible INTEGER,
+		FTBFS INTEGER,
+		other INTEGER,
+		PRIMARY KEY (datum))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_builds_per_day
+		(datum TEXT NOT NULL,
+		suite TEXT NOT NULL,
+		reproducible INTEGER,
+		unreproducible INTEGER,
+		FTBFS INTEGER,
+		other INTEGER,
+		PRIMARY KEY (datum))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_builds_age
+		(datum TEXT NOT NULL,
+		suite TEXT NOT NULL,
+		oldest_reproducible REAL,
+		oldest_unreproducible REAL,
+		oldest_FTBFS REAL,
+		PRIMARY KEY (datum))'
+	# 60 seconds timeout when trying to get a lock
 	cat >/var/lib/jenkins/reproducible.init <<-EOF
 .timeout 60000
 EOF

@@ -60,6 +60,7 @@ SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
+SPOKENTARGET["stats"]="various statistics about reproducible builds"
 SPOKENTARGET["notes"]="packages with notes"
 SPOKENTARGET["issues"]="known issues related to reproducible builds"
 SPOKENTARGET["reproducible"]="packages which built reproducibly"
@@ -510,7 +511,7 @@ write_page_header() {
 		set_icon $MY_STATE $WITH	# sets ICON and STATE_TARGET_NAME
 		write_page "<li><a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a></li>"
 	done
-	for TARGET in issues notes $ALLVIEWS dd-list ; do
+	for TARGET in issues notes $ALLVIEWS dd-list stats ; do
 		if [ "$TARGET" = "$1" ] ; then
 			continue
 		elif [ "$TARGET" = "issues" ] ; then
@@ -718,6 +719,86 @@ while IFS= read -r LINE ; do
 done < $TMPFILE
 write_page "</pre></p>"
 rm $TMPFILE
+write_page_footer
+publish_page
+
+#
+# create stats
+#
+# FIXME: we only do stats up until yesterday... we also could do today too but not update the db yet...
+DATE=$(date -d "1 day ago" '+%Y-%m-%d')
+TABLE[0]=stats_pkg_state
+TABLE[1]=stats_builds_per_day
+TABLE[2]=stats_builds_age
+RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
+if [ -z $RESULT ] ; then
+	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) from sources")
+	GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE';")
+	GOOAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)='$DATE';")
+	BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE';")
+	BAAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)='$DATE';")
+	UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE';")
+	UGLDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)='$DATE';")
+	REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE';")
+	RESDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)='$DATE';")
+	OLDESTG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT build_date FROM source_packages WHERE status = 'reproducible' AND NOT date(build_date)>='$DATE' ORDER BY build_date LIMIT 1;")
+	OLDESTB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT build_date FROM source_packages WHERE status = 'unreproducible' AND NOT date(build_date)>='$DATE' ORDER BY build_date LIMIT 1;")
+	OLDESTU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT build_date FROM source_packages WHERE status = 'FTBFS' AND NOT date(build_date)>='$DATE' ORDER BY build_date LIMIT 1;")
+	DIFFG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTG');")
+	if [ -z $DIFFG ] ; then DIFFG=0 ; fi
+	DIFFB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTB');")
+	if [ -z $DIFFB ] ; then DIFFB=0 ; fi
+	DIFFU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTU');")
+	if [ -z $DIFFU ] ; then DIFFU=0 ; fi
+	let "TOTAL=GOOD+BAD+UGLY+REST"
+	let "UNTESTED=ALL-TOTAL"
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
+fi
+
+redo_png() {
+	FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
+	FIELDS[1]="datum, reproducible, unreproducible, FTBFS, other"
+	FIELDS[2]="datum, oldest_reproducible, oldest_unreproducible, oldest_FTBFS"
+	COLOR[0]=5
+	COLOR[1]=4
+	COLOR[2]=3
+	MAINLABEL[0]="Package reproducibility status"
+	MAINLABEL[1]="Amout of packages build each day"
+	MAINLABEL[2]="Age in days of oldest kind of logfile"
+	YLABEL[0]="Amount (total)"
+	YLABEL[1]="Amount (per day)"
+	YLABEL[2]="Age in days"
+	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
+	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$i]} from ${TABLE[$i]} WHERE suite = '$SUITE' ORDER BY datum" >> ${TABLE[$i]}.csv
+	/srv/jenkins/bin/make_graph.py ${TABLE[$i]}.csv ${TABLE[$i]}.png ${COLOR[$i]} "${MAINLABEL[$i]}" "${YLABEL[$i]}"
+	rm ${TABLE[$i]}.csv
+	mv ${TABLE[$i]}.png /var/lib/jenkins/userContent/
+}
+
+VIEW=stats
+PAGE=index_${VIEW}.html
+echo "Starting to write $PAGE page."
+write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+write_page "<p>$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly.</p>"
+write_page "<p>$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly.</p>"
+write_page "<p>$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
+if [ $COUNT_SOURCELESS -gt 0 ] ; then
+	write_page "<p>For $COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages sources could not be downloaded,"
+fi
+write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will never be build here"
+write_page "and those $COUNT_BLACKLISTED blacklisted packages neither.</p>"
+write_page "<p>"
+# FIXME: we don't do stats_builds_age.png yet :/
+for i in 0 1 ; do
+	# redo pngs once a day
+	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime -1 -name ${TABLE[$i]}.png) ] ; then
+		redo_png
+	fi
+	write_page " <a href=\"$JENKINS_URL/userContent/${TABLE[$i]}.png\"><img src=\"$JENKINS_URL/userContent/${TABLE[$i]}.png\" width=\"50%\" height=\"50%\" alt=\"${MAINLABEL[$i]}\"></a>"
+done
+write_page "</p>"
 write_page_footer
 publish_page
 

@@ -48,6 +48,7 @@ else
 
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
 	echo "Starting to build ${SRCPACKAGE} on $DATE" | tee ${RBUILDLOG}
+	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 	# host has only sid in deb-src in sources.list
 	set +e
 	apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
@@ -138,7 +139,6 @@ else
 				figlet ${SRCPACKAGE}
 				echo | tee -a ${RBUILDLOG}
 				echo "debbindiff.py found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
-				echo | tee -a ${RBUILDLOG}
 				echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
 				unschedule_from_db

@@ -6,14 +6,15 @@ html {
 }
 
 body {
-	width: 98%;
+	width: 99%;
+	border-sizing: border-box;
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
 	line-height: 20px;
 	color: #333333;
-	padding: 0.25em;
-	margin: 0.25em auto;
-	/*height: 100%;*/
+	padding: 0.25em 0.25em 0em 0.25em;
+	margin: 0.25em 0.25em 0em 0.25em;
+	height: 100%;
 }
 
 pre {

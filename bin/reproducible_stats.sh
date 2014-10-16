@@ -9,6 +9,9 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+# cp db away for backup purposes
+cp $PACKAGES_DB /var/lib/jenkins/userContent/reproducible.db
+
 set +x
 declare -A GOOD
 declare -A BAD

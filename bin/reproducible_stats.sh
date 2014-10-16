@@ -609,19 +609,25 @@ for VIEW in $ALLVIEWS ; do
 		write_page "<p>For "
 		set_icon 404
 		write_icon
-		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>${SOURCELESS[$VIEW]}</code></p>"
+		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages in total sources could not be downloaded: <code>"
+		link_packages ${SOURCELESS[$VIEW]}
+		write_page "</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_NOTFORUS -gt 0 ] ; then
 		write_page "<p>In total there were "
 		set_icon not_for_us
 		write_icon
-		write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64': <code>${NOTFORUS[$VIEW]}</code></p>"
+		write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64': <code>"
+		link_packages ${NOTFORUS[$VIEW]}
+		write_page "</code></p>"
 	fi
 	if [ "${VIEW:0:3}" = "all" ] && [ $COUNT_BLACKLISTED -gt 0 ] ; then
 		write_page "<p>"
 		set_icon blacklisted
 		write_icon
-		write_page "$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>$BLACKLISTED</code></p>"
+		write_page "$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>"
+		link_packages $BLACKLISTED
+		write_page "</code></p>"
 	fi
 	write_page "<p>"
 	set_icon reproducible

@@ -22,6 +22,8 @@ pre {
 
 img {
 	vertical-align: middle;
+	max-width: 100%;
+	height: auto;
 }
 
 .beta {
@@ -252,9 +254,9 @@ span.dangerous { color: orange; }
 	}
 }
 
-#@media all and (min-width: 641px) {
-#	header {
-#		background: url(/userContent/static/logo.png) right 5px no-repeat;
-#		min-height: 30px;
-#	}
-#}
+@media all and (min-width: 841px) {
+	img.graph {
+		width: 50%;
+		height: auto;
+	}
+}

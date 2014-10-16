@@ -53,6 +53,16 @@ else
 	apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
+		# sometimes apt-get cannot download a package for whatever reason.
+		# if so, wait some time and try again. only if that fails, give up.
+		echo "Download of ${SRCPACKAGE} sources failed." | tee -a ${RBUILDLOG}
+		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
+		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
+		sleep 5m
+		apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+		RESULT=$?
+	fi
+	if [ $RESULT != 0 ] ; then
 		echo "Warning: Download of ${SRCPACKAGE} sources failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"

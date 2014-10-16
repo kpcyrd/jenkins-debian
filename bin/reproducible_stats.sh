@@ -783,6 +783,11 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
+	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see below)
+	for i in 0 1 ; do
+		# force regeneration of the image
+		touch -d "$DATE 00:00" ${TABLE[$i]}.png
+	done
 fi
 
 # query bts
@@ -808,6 +813,8 @@ if [ -z $RESULT ] ; then
 	SQL="$SQL)"
 	echo $SQL
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
+	# force regeneration of the image
+	touch -d "$DATE 00:00" ${TABLE[3]}.png
 fi
 
 # used for redo_png (but only needed to define once)
@@ -894,7 +901,7 @@ set_icon blacklisted
 write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
-# FIXME: we don't do 2 / stats_builds_age.png yet :/
+# FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
 for i in 0 1 3 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table

@@ -26,6 +26,10 @@ img {
 	height: auto;
 }
 
+img.graph {
+	width: 100%;
+}
+
 .beta {
 	color:#555555;
 	font-size:0.8em;

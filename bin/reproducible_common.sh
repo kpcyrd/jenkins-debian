@@ -111,23 +111,24 @@ mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 
 init_html() {
 	SUITE=sid
-	ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
 	MAINVIEW="stats"
-	ALLVIEWS="last_24h last_48h all_abc"
-	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
-	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
-	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
-	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
-	SPOKENTARGET["stats"]="various statistics about reproducible builds"
-	SPOKENTARGET["notes"]="packages with notes"
-	SPOKENTARGET["issues"]="known issues related to reproducible builds"
+	ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
+	ALLVIEWS="issues notes scheduled last_24h last_48h all_abc dd-list stats"
 	SPOKENTARGET["reproducible"]="packages which built reproducibly"
-	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and don't create a .buildinfo file"
+	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and do'nt create a .buildinfo file"
 	SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
 	SPOKENTARGET["FTBFS"]="packages which failed to build from source"
 	SPOKENTARGET["404"]="packages where the sources failed to downloaded"
 	SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
 	SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
+	SPOKENTARGET["issues"]="known issues related to reproducible builds"
+	SPOKENTARGET["notes"]="packages with notes"
+	SPOKENTARGET["scheduled"]="packages currently scheduled for testing"
+	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
+	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
+	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
+	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
+	SPOKENTARGET["stats"]="various statistics about reproducible builds"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages")
@@ -184,7 +185,7 @@ write_page_header() {
 	write_page "<title>$2</title></head>"
 	write_page "<body><header><h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
-		write_page "<p>These pages are updated every six hours. Results are obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
+		write_page "<p>These pages contain results obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 	fi
 	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $PERCENT_GOOD% were successful, so quite wildly guessing this roughy means about $GUESS_GOOD <a href=\"https://wiki.debian.org/ReproducibleBuilds\">packages should be reproducibly buildable!</a>"
 	if [ "${1:0:3}" = "all" ] || [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
@@ -202,9 +203,11 @@ write_page_header() {
 		write_icon
 		write_page "</li>"
 	done
-	for TARGET in issues notes $ALLVIEWS dd-list stats ; do
-		if [ "$TARGET" = "issues" ] || [ "$TARGET" = "stats" ]; then
+	for TARGET in $ALLVIEWS ; do
+		if [ "$TARGET" = "issues" ] || [ "$TARGET" = "stats" ] ; then
 			SPOKEN_TARGET=$TARGET
+		elif [ "$TARGET" = "scheduled" ] ; then
+			SPOKEN_TARGET="currently scheduled"
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi
@@ -265,8 +268,12 @@ link_packages() {
 	for PKG in $@ ; do
 		if $BUILDINFO_SIGNS ; then
 			set_package_star
+			if ! $BUILDINFO_ON_PAGE && [ ! -z "$STAR" ] ; then
+				BUILDINFO_ON_PAGE=true
+			fi
+
 		fi
-		write_page " ${LINKTARGET[$PKG]} $STAR"
+		write_page " ${LINKTARGET[$PKG]}$STAR"
 	done
 }
 
@@ -298,7 +305,6 @@ process_packages() {
 		BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
 		# version with epoch removed
 		EVERSION=$(echo $RESULT | cut -d "|" -f2 | cut -d ":" -f2)
-		set_package_star
 		# only build $PKG pages if they don't exist or are older than $BUILD_DATE or have a note
 		PKG_FILE="/var/lib/jenkins/userContent/rb-pkg/${PKG}.html"
 		OLD_FILE=$(find $(dirname ${PKG_FILE}) -name $(basename ${PKG_FILE}) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
@@ -311,6 +317,7 @@ process_packages() {
 			if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
 				NOTES_LINK=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
 			fi
+			set_package_star
 			init_pkg_page "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "$STAR"
 			append2pkg_page "${NOTES_LINK}"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
@@ -339,12 +346,6 @@ process_packages() {
 			fi
 			finish_pkg_page "$MAINLINK"
 		fi
-		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
-			set_package_class
-			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>$STAR"
-		else
-			LINKTARGET[$PKG]="$PKG"
-		fi
 	done
 }
 
@@ -358,4 +359,22 @@ gather_stats() {
 	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
 	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
+}
+
+update_html_schedule() {
+	gather_stats
+	SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM sources_scheduled ORDER BY date_scheduled DESC" | xargs echo)
+	COUNT_SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources_scheduled ORDER BY date_scheduled DESC" | xargs echo)
+	VIEW=scheduled
+	BUILDINFO_SIGNS=true
+	PAGE=index_${VIEW}.html
+	echo "$(date) - starting to write $PAGE page."
+	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
+	write_page "<p>${COUNT_SCHEDULED} packages are currently scheduled for testing: <code>"
+	force_package_targets $SCHEDULED
+	link_packages $SCHEDULED
+	write_page "</code></p>"
+	write_page_meta_sign
+	write_page_footer
+	publish_page
 }

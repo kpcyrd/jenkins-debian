@@ -39,8 +39,6 @@ check_candidates() {
 	fi
 }
 
-
-
 #
 # main
 #

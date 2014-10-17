@@ -149,12 +149,14 @@ schedule_packages() {
 #
 set +x
 update_apt
-SCHEDULED=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources_scheduled')
-if [ $SCHEDULED -gt 250 ] ; then
-	echo "$SCHEDULED packages scheduled, nothing to do."
+init_html
+COUNT_SCHEDULED=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources_scheduled')
+if [ $COUNT_SCHEDULED -gt 250 ] ; then
+	update_html_schedule
+	echo "$COUNT_SCHEDULED packages scheduled, nothing to do."
 	exit 0
 else
-	echo "$SCHEDULED packages currently scheduled, scheduling some more..."
+	echo "$COUNT_SCHEDULED packages currently scheduled, scheduling some more..."
 fi
 update_sources_table
 
@@ -193,6 +195,7 @@ MESSAGE="$MESSAGE and $AMOUNT packages with the same version again, for a total 
 
 # finally
 schedule_packages
+update_html_schedule
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"

@@ -45,7 +45,7 @@ echo "$(date) - processing $COUNT_TOTAL packages... this will take a while."
 force_package_targets ${BAD["all"]}
 force_package_targets ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
 
-for VIEW in $ALLVIEWS ; do
+for VIEW in last_24h last_48h all_abc ; do
 	BUILDINFO_SIGNS=true
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
@@ -163,3 +163,4 @@ for STATE in $ALLSTATES ; do
 	publish_page
 done
 
+update_html_schedule

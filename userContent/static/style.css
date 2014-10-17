@@ -261,7 +261,7 @@ span.dangerous { color: orange; }
 
 @media all and (min-width: 841px) {
 	img.graph {
-		width: 50%;
+		width: 70%;
 		height: auto;
 	}
 }

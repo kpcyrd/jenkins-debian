@@ -9,6 +9,7 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+# FIXME: move to daily cleanup job
 # cp db away for backup purposes
 cp $PACKAGES_DB /var/lib/jenkins/userContent/reproducible.db
 
@@ -73,8 +74,6 @@ SPOKENTARGET["FTBFS"]="packages which failed to build from source"
 SPOKENTARGET["404"]="packages where the sources failed to downloaded"
 SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
 SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
-# shop trailing slash
-JENKINS_URL=${JENKINS_URL:0:-1}
 
 #
 # gather notes
@@ -94,7 +93,6 @@ NOTES_PATH=/var/lib/jenkins/userContent/notes
 ISSUES_PATH=/var/lib/jenkins/userContent/issues
 mkdir -p $NOTES_PATH $ISSUES_PATH
 
-declare -A NOTES_PACKAGE
 declare -A NOTES_VERSION
 declare -A NOTES_ISSUES
 declare -A NOTES_BUGS
@@ -320,7 +318,6 @@ parse_notes() {
 	PACKAGES_WITH_NOTES=$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml keys)
 	for PKG in $PACKAGES_WITH_NOTES ; do
 		echo " Package = ${PKG}"
-		NOTES_PACKAGE[${PKG}]=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
 		for PROPERTY in version issues bugs comments ; do
 			VALUE="$(cat ${PACKAGES_YML} | /srv/jenkins/bin/shyaml get-value ${PKG}.${PROPERTY} )"
 			if [ "$VALUE" != "" ] ; then
@@ -418,7 +415,7 @@ finish_pkg_page() {
 }
 
 set_package_class() {
-	if [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+	if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
 		CLASS="class=\"noted\""
 	else
 		CLASS="class=\"package\""
@@ -442,8 +439,12 @@ process_packages() {
 			VERSION=$(echo $RESULT | cut -d "|" -f2)
 			STATUS=$(echo $RESULT | cut -d "|" -f3)
 			MAINLINK=""
+			NOTES_LINK=""
+			if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
+				NOTES_LINK=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
+			fi
 			init_pkg_page "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "${STAR[$PKG]}"
-			append2pkg_page "${NOTES_PACKAGE[${PKG}]}"
+			append2pkg_page "${NOTES_LINK}"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
 				append2pkg_page " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
 				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
@@ -465,7 +466,7 @@ process_packages() {
 			append2pkg_page " <a href=\"https://sources.debian.net/src/${PKG}/\" target=\"main\">sources</a> "
 			append2pkg_page " <a href=\"https://sources.debian.net/src/${PKG}/${VERSION}/debian/rules\" target=\"main\">debian/rules</a> "
 
-			if [ "${NOTES_PACKAGE[${PKG}]}" != "" ] ; then
+			if [ ! -z "${NOTES_LINK}" ] ; then
 				MAINLINK="$JENKINS_URL/userContent/notes/${PKG}_note.html"
 			fi
 			finish_pkg_page "$MAINLINK"

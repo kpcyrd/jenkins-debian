@@ -97,3 +97,6 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 EOF
 fi
 
+# shop trailing slash
+JENKINS_URL=${JENKINS_URL:0:-1}
+

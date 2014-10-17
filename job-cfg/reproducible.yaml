@@ -33,6 +33,45 @@
           fail-on-error: 'true'
 
 - defaults:
+    name: reproducible_notes
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/reproducible
+          text: reproducible builds jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 100
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+    scm:
+      - git:
+          url: '{my_gitrepo}'
+          branches:
+            - master
+    triggers:
+      - pollscm: "*/6 * * * *"
+
+- defaults:
     name: reproducible_builder
     triggers:
       - timed: "{my_timed}"
@@ -93,7 +132,7 @@
     name: '{name}_html_dd_list'
 
 - job-template:
-    defaults: reproducible
+    defaults: reproducible_notes
     name: '{name}_html_notes'
 
 - job-template:
@@ -133,7 +172,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
         - '{name}_html_notes':
             my_description: 'Generates HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
-            my_timed: ''
+            my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'

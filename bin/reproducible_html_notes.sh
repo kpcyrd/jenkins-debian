@@ -9,34 +9,19 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-# FIXME: move to daily cleanup job
-# cp db away for backup purposes
-cp $PACKAGES_DB /var/lib/jenkins/userContent/reproducible.db
-
 set +x
 init_html
 
 #
-# update git
+# this files are from the git repo cloned by the job-cfg
+# on changes, this job is triggered
 #
-
-WORKSPACE=$PWD
-cd /var/lib/jenkins
-if [ -d notes.git ] ; then
-	cd notes.git
-	git pull
-else
-	git clone git://git.debian.org/git/reproducible/notes.git notes.git
-fi
-cd $WORKSPACE
+PACKAGES_YML=$PWD/packages.yml
+ISSUES_YML=$PWD/issues.yml
 
 #
 # declare some variables
 #
-
-PACKAGES_YML=/var/lib/jenkins/notes.git/packages.yml
-ISSUES_YML=/var/lib/jenkins/notes.git/issues.yml
-
 declare -A NOTES_VERSION
 declare -A NOTES_ISSUES
 declare -A NOTES_BUGS
@@ -47,7 +32,6 @@ declare -A ISSUES_URL
 #
 # declare some functions only used for dealing with notes
 #
-
 show_multi_values() {
 	TMPFILE=$(mktemp)
 	echo "$@" > $TMPFILE
@@ -113,6 +97,10 @@ issues_loop() {
 	rm $TTMPFILE
 }
 
+write_meta_note() {
+	write_page "<p>Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+}
+
 create_pkg_note() {
 	BUG=false
 	rm -f $PAGE
@@ -149,7 +137,7 @@ create_pkg_note() {
 	fi
 	write_page "<tr><td colspan=\"3\">&nbsp;</td></tr>"
 	write_page "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">"
-	write_page "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>."
+	write_meta_note
 	write_page "</td></tr></table>"
 	write_page_footer
 }
@@ -191,7 +179,7 @@ create_issue() {
 	write_page "</td></tr>"
 	write_page "<tr><td colspan=\"3\">&nbsp;</td></tr>"
 	write_page "<tr><td colspan=\"3\" style=\"text-align:right; font-size:0.9em;\">"
-	write_page "Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>."
+	write_meta_note
 	write_page "</td></tr></table>"
 	write_page_meta_sign
 	write_page_footer
@@ -330,7 +318,7 @@ if $VALID_YAML ; then
 else
 	write_page "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
 fi
-write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+write_meta_note
 write_page_meta_sign
 write_page_footer
 publish_page
@@ -352,7 +340,7 @@ if $VALID_YAML ; then
 else
 	write_page "<p style=\"font-size:1.5em; color: red;\">Broken .yaml files in notes.git could not be parsed, please investigate and fix!</p>"
 fi
-write_page "<p style=\"font-size:0.9em;\">Notes are stored in <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\">notes.git</a>.</p>"
+write_meta_note
 write_page_footer
 publish_page
 

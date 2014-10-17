@@ -38,4 +38,3 @@ rm $TMPFILE
 write_page_footer
 publish_page
 
-echo "Enjoy $JENKINS_URL/userContent/$PAGE"

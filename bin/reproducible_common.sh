@@ -100,12 +100,15 @@ fi
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
 
+# we only need them for html creation but we cannot declare them in a function
+declare -A SPOKENTARGET
+declare -A LINKTARGET
+
 init_html() {
 	SUITE=sid
 	ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
 	MAINVIEW="stats"
 	ALLVIEWS="last_24h last_48h all_abc"
-	declare -A SPOKENTARGET
 	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
@@ -132,6 +135,7 @@ init_html() {
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
 	GUESS_GOOD=$(echo "$PERCENT_GOOD*$AMOUNT/100" | bc)
+	BUILDINFO_SIGNS=true
 }
 
 write_page() {
@@ -173,6 +177,7 @@ write_icon() {
 
 write_page_header() {
 	rm -f $PAGE
+	BUILDINFO_ON_PAGE=false
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<link href=\"$JENKINS_URL/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
@@ -216,7 +221,7 @@ write_page_footer() {
 
 write_page_meta_sign() {
 	write_page "<p style=\"font-size:0.9em;\">An underlined package is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
-	if $BETA_SIGN ; then
+	if $BUILDINFO_ON_PAGE ; then
 		write_page "A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
 		write_page "And that means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a>."
 	fi
@@ -229,5 +234,121 @@ publish_page() {
 		cp $PAGE /var/lib/jenkins/userContent/reproducible.html
 	fi
 	rm $PAGE
+	echo "Enjoy $JENKINS_URL/userContent/$PAGE"
 }
+
+set_package_star() {
+	if [ ! -z "$(find /var/lib/jenkins/userContent/buildinfo/ -name ${PKG}_*_amd64.buildinfo)"  ] ; then
+		STAR="<span class=\"beta\">&beta;</span>" # used to be a star...
+	else
+		STAR=""
+	fi
+}
+
+set_package_class() {
+	if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
+		CLASS="class=\"noted\""
+	else
+		CLASS="class=\"package\""
+	fi
+}
+
+force_package_targets() {
+	for PKG in $@ ; do
+		set_package_class
+		LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>"
+	done
+}
+
+link_packages() {
+	for PKG in $@ ; do
+		STAR=""
+		write_page " ${LINKTARGET[$PKG]}"
+		if $BUILDINFO_SIGNS ; then
+			set_package_star
+			if [ ! -z "$STAR" ] ; then
+				write_page "$STAR "
+			fi
+		fi
+	done
+}
+
+init_pkg_page() {
+	echo "<!DOCTYPE html><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" > ${PKG_FILE}
+	echo "<link href=\"../static/style.css\" type=\"text/css\" rel=\"stylesheet\" />" >> ${PKG_FILE}
+	echo "<title>$1 - reproducible builds results</title></head>" >> ${PKG_FILE}
+	echo "<body><table class=\"head\"><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> ${PKG_FILE}
+	set_icon "$3" $5 # this sets $STATE_TARGET_NAME and $ICON
+	echo "<a href=\"$JENKINS_URL/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"$JENKINS_URL/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> ${PKG_FILE}
+	echo "<span style=\"font-size:0.9em;\">at $4:</span> " >> ${PKG_FILE}
+}
+
+append2pkg_page() {
+	echo "$1" >> ${PKG_FILE}
+}
+
+finish_pkg_page() {
+	echo "</td><td style=\"text-align:right; font-size:0.9em;\"><a href=\"$JENKINS_URL/userContent/reproducible.html\" target=\"_parent\">reproducible builds</a></td></tr></table>" >> ${PKG_FILE}
+	echo "<iframe name=\"main\" src=\"$1\" width=\"100%\" height=\"98%\" frameborder=\"0\">" >> ${PKG_FILE}
+	echo "<p>Your browser does not support iframes. Use a different one or follow the links above.</p>" >> ${PKG_FILE}
+	echo "</iframe>" >> ${PKG_FILE}
+	echo "</body></html>" >> ${PKG_FILE}
+}
+
+process_packages() {
+	for PKG in $@ ; do
+		RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT build_date,version,status FROM source_packages WHERE name = \"$PKG\"")
+		BUILD_DATE=$(echo $RESULT|cut -d "|" -f1)
+		# version with epoch removed
+		EVERSION=$(echo $RESULT | cut -d "|" -f2 | cut -d ":" -f2)
+		set_package_star
+		# only build $PKG pages if they don't exist or are older than $BUILD_DATE or have a note
+		PKG_FILE="/var/lib/jenkins/userContent/rb-pkg/${PKG}.html"
+		OLD_FILE=$(find $(dirname ${PKG_FILE}) -name $(basename ${PKG_FILE}) ! -newermt "$BUILD_DATE" 2>/dev/null || true)
+		# if no package file exists, or is older than last build_date
+		if [ ! -f ${PKG_FILE} ] || [ "$OLD_FILE" != "" ] ; then
+			VERSION=$(echo $RESULT | cut -d "|" -f2)
+			STATUS=$(echo $RESULT | cut -d "|" -f3)
+			MAINLINK=""
+			NOTES_LINK=""
+			if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
+				NOTES_LINK=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
+			fi
+			init_pkg_page "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "$STAR"
+			append2pkg_page "${NOTES_LINK}"
+			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
+				append2pkg_page " <a href=\"$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
+				MAINLINK="$JENKINS_URL/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
+			fi
+			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
+				append2pkg_page " <a href=\"$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
+				MAINLINK="$JENKINS_URL/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html"
+			fi
+			RBUILD_LOG="rbuild/${PKG}_${EVERSION}.rbuild.log"
+			if [ -f "/var/lib/jenkins/userContent/${RBUILD_LOG}" ] ; then
+				SIZE=$(du -sh "/var/lib/jenkins/userContent/${RBUILD_LOG}" |cut -f1)
+				append2pkg_page " <a href=\"$JENKINS_URL/userContent/${RBUILD_LOG}\" target=\"main\">rbuild ($SIZE)</a> "
+				if [ "$MAINLINK" = "" ] ; then
+					MAINLINK="$JENKINS_URL/userContent/${RBUILD_LOG}"
+				fi
+			fi
+			append2pkg_page " <a href=\"https://packages.qa.debian.org/${PKG}\" target=\"main\">PTS</a> "
+			append2pkg_page " <a href=\"https://bugs.debian.org/src:${PKG}\" target=\"main\">BTS</a> "
+			append2pkg_page " <a href=\"https://sources.debian.net/src/${PKG}/\" target=\"main\">sources</a> "
+			append2pkg_page " <a href=\"https://sources.debian.net/src/${PKG}/${VERSION}/debian/rules\" target=\"main\">debian/rules</a> "
+
+			if [ ! -z "${NOTES_LINK}" ] ; then
+				MAINLINK="$JENKINS_URL/userContent/notes/${PKG}_note.html"
+			fi
+			finish_pkg_page "$MAINLINK"
+		fi
+		if [ -f "/var/lib/jenkins/userContent/rbuild/${PKG}_${EVERSION}.rbuild.log" ] ; then
+			set_package_class
+			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>$STAR"
+		else
+			LINKTARGET[$PKG]="$PKG"
+		fi
+	done
+}
+
 

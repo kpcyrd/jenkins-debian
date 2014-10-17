@@ -89,6 +89,10 @@
     name: '{name}_dd_list'
 
 - job-template:
+    defaults: reproducible
+    name: '{name}_notes'
+
+- job-template:
     defaults: reproducible_builder
     name: '{name}_builder_alpha'
 
@@ -119,6 +123,10 @@
             my_description: 'Generates HTML results (dd-list) for reproducible builds.'
             my_timed: '53 23 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
+        - '{name}_notes':
+            my_description: 'Generates HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
+            my_timed: ''
+            my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'

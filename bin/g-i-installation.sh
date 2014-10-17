@@ -908,7 +908,7 @@ monitor_system() {
 			rm $GOCR $GOCR.ppm
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ||
 			    [[ "$LAST_LINE" =~ .*System\ halted.* ]] ||
-			    [[ "$LAST_LINE" =~ .*Reached target Shutdown.* ]] ||
+			    [[ "$LAST_LINE" =~ .*Reached\ target\ Shutdown.* ]] ||
 			    [[ "$LAST_LINE" =~ .*Cannot\ .inalize\ remaining\ .ile\ systems.* ]]; then
 				echo "QEMU was powered down."
 				break

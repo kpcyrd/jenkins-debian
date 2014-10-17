@@ -53,6 +53,8 @@ MESSAGE="$TOTAL package(s) manually (re-)scheduled for immediate testing: ${PACK
 
 # finally
 schedule_packages
+init_html
+update_html_schedule
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"

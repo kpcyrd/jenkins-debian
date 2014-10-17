@@ -26,7 +26,7 @@
       - shell: '{my_shell}'
     publishers:
       - email:
-          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+          recipients: '{my_recipients}'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
@@ -58,7 +58,7 @@
       - shell: '{my_shell}'
     publishers:
       - email:
-          recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+          recipients: '{my_recipients}'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
@@ -108,7 +108,7 @@
       - shell: '{my_shell}'
     publishers:
       - email:
-          recipients: 'holger@layer-acht.org'
+          recipients: '{my_recipients}'
           notify-every-unstable-build: False
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
@@ -158,36 +158,45 @@
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
+            my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_html_indexes':
             my_description: 'Generates HTML results (indexes) for reproducible builds.'
             my_timed: '59 */2 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_indexes.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_html_graphs':
             my_description: 'Generates HTML results (stats with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_html_dd_list':
             my_description: 'Generates HTML results (dd-list) for reproducible builds.'
             my_timed: '55 23 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_html_notes':
             my_description: 'Generates HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
+            my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_beta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_gamma':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested on reproducible building.'
             my_timed: '42 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
+            my_recipients: 'holger@layer-acht.org'
 

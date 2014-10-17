@@ -241,7 +241,7 @@ publish_page() {
 }
 
 set_package_star() {
-	if [ ! -z "$(find /var/lib/jenkins/userContent/buildinfo/ -name ${PKG}_*_amd64.buildinfo)"  ] ; then
+	if [ -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_.buildinfo ] ; then
 		STAR="<span class=\"beta\">&beta;</span>" # used to be a star...
 	else
 		STAR=""
@@ -318,6 +318,10 @@ process_packages() {
 				NOTES_LINK=" <a href=\"$JENKINS_URL/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
 			fi
 			set_package_star
+			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
+				STAR="has buildinfo"
+				touch /var/lib/jenkins/userContent/buildinfo/${PKG}_.buildinfo
+			fi
 			init_pkg_page "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "$STAR"
 			append2pkg_page "${NOTES_LINK}"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then

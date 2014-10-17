@@ -511,7 +511,7 @@ write_page_header() {
 		write_page " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
 	fi
 	write_page "</p>"
-	write_page "<ul><li>Other views for these build results:</li>"
+	write_page "<ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do
 		WITH=""
 		if [ "$MY_STATE" = "FTBR_with_buildinfo" ] ; then
@@ -523,9 +523,7 @@ write_page_header() {
 		write_page "</li>"
 	done
 	for TARGET in issues notes $ALLVIEWS dd-list stats ; do
-		if [ "$TARGET" = "$1" ] ; then
-			continue
-		elif [ "$TARGET" = "issues" ] || [ "$TARGET" = "stats" ]; then
+		if [ "$TARGET" = "issues" ] || [ "$TARGET" = "stats" ]; then
 			SPOKEN_TARGET=$TARGET
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}

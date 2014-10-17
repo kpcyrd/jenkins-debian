@@ -54,8 +54,8 @@ PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 # actually build the package pages
 #
 echo "$(date) - processing $COUNT_TOTAL packages... this will take a while."
-process_packages ${BAD["all"]}
-process_packages ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
+force_package_targets ${BAD["all"]}
+force_package_targets ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
 
 for VIEW in $ALLVIEWS ; do
 	BUILDINFO_SIGNS=true

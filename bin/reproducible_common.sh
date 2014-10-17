@@ -258,8 +258,12 @@ set_package_class() {
 
 force_package_targets() {
 	for PKG in $@ ; do
-		set_package_class
-		LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>"
+		if [ -f /var/lib/jenkins/userContent/rb-pkg/$PKG.html ] ; then
+			set_package_class
+			LINKTARGET[$PKG]="<a href=\"$JENKINS_URL/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>"
+		else
+			LINKTARGET[$PKG]="$PKG"
+		fi
 	done
 }
 

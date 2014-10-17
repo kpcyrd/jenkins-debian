@@ -162,7 +162,7 @@ update_sources_table
 
 echo "Requesting 200 unknown packages..."
 select_unknown_packages 200
-let "TOTAL=$SCHEDULED+$AMOUNT"
+let "TOTAL=$COUNT_SCHEDULED+$AMOUNT"
 echo "So in total now $TOTAL packages about to be scheduled."
 ALL_PACKAGES="$PACKAGES"
 MESSAGE="Scheduled $AMOUNT unknown packages"

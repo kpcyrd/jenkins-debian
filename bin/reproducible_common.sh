@@ -261,15 +261,12 @@ force_package_targets() {
 }
 
 link_packages() {
+	STAR=""
 	for PKG in $@ ; do
-		STAR=""
-		write_page " ${LINKTARGET[$PKG]}"
 		if $BUILDINFO_SIGNS ; then
 			set_package_star
-			if [ ! -z "$STAR" ] ; then
-				write_page "$STAR "
-			fi
 		fi
+		write_page " ${LINKTARGET[$PKG]} $STAR"
 	done
 }
 
@@ -351,4 +348,14 @@ process_packages() {
 	done
 }
 
-
+gather_stats() {
+	COUNT_BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"unreproducible\"")
+	COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"FTBFS\"")
+	COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"404\"")
+	COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"not for us\"")
+	COUNT_BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"blacklisted\"")
+	PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
+	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
+	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
+	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
+}

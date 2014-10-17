@@ -82,15 +82,19 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_stats'
+    name: '{name}_html_graphs'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_dd_list'
+    name: '{name}_html_indexes'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_notes'
+    name: '{name}_html_dd_list'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_notes'
 
 - job-template:
     defaults: reproducible_builder
@@ -115,15 +119,19 @@
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '42 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
-        - '{name}_stats':
-            my_description: 'Generates HTML results (various stats) for reproducible builds.'
-            my_timed: '0 0,6,12,18 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_stats.sh'
-        - '{name}_dd_list':
+        - '{name}_html_indexes':
+            my_description: 'Generates HTML results (indexes) for reproducible builds.'
+            my_timed: '0 3,6,9,12,15,18,21 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_indexes.sh'
+        - '{name}_html_graphs':
+            my_description: 'Generates HTML results (stats with graphs) for reproducible builds.'
+            my_timed: '0 0 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh'
+        - '{name}_html_dd_list':
             my_description: 'Generates HTML results (dd-list) for reproducible builds.'
             my_timed: '53 23 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
-        - '{name}_notes':
+        - '{name}_html_notes':
             my_description: 'Generates HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
             my_timed: ''
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'

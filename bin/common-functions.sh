@@ -11,6 +11,11 @@ common_cleanup(){
 common_init() {
 # check whether this script has been started from /tmp already
 if [ "${0:0:5}" != "/tmp/" ] ; then
+	# check that we are not root
+	if [ $(id -u) -eq 0 ] ; then
+		echo "Do not run this as root."
+		exit 1
+	fi
 	# mktemp some place for us...
 	TTT=$(mktemp --tmpdir=/tmp jenkins-script-XXXXXXXX)
 	# prepare cleanup

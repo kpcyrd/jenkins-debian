@@ -563,8 +563,10 @@ publish_page() {
 validate_yaml ${ISSUES_YML}
 validate_yaml ${PACKAGES_YML}
 if $VALID_YAML ; then
+	echo "$(date) - processing notes and issues"
 	parse_issues
 	parse_notes
+	echo "$(date) - processing packages with notes"
 	process_packages ${PACKAGES_WITH_NOTES}
 	force_package_targets ${PACKAGES_WITH_NOTES}
 	write_issues
@@ -576,7 +578,7 @@ fi
 #
 # actually build the package pages
 #
-echo "Processing $COUNT_TOTAL packages... this will take a while."
+echo "$(date) - processing $COUNT_TOTAL packages... this will take a while."
 BUILDINFO_SIGNS=true
 process_packages ${BAD["all"]}
 BUILDINFO_SIGNS=false
@@ -585,7 +587,7 @@ process_packages ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["
 for VIEW in $ALLVIEWS ; do
 	BETA_SIGN=false
 	PAGE=index_${VIEW}.html
-	echo "Starting to write $PAGE page."
+	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
 	if [ "${VIEW:0:3}" = "all" ] ; then
 		FINISH=":"
@@ -645,7 +647,7 @@ done
 
 VIEW=notes
 PAGE=index_${VIEW}.html
-echo "Starting to write $PAGE page."
+echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
 	BETA_SIGN=false
@@ -664,7 +666,7 @@ publish_page
 
 VIEW=issues
 PAGE=index_${VIEW}.html
-echo "Starting to write $PAGE page."
+echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
 	write_page "<table class=\"body\">"
@@ -688,7 +690,7 @@ count_packages() {
 for STATE in $ALLSTATES ; do
 	BETA_SIGN=false
 	PAGE=index_${STATE}.html
-	echo "Starting to write $PAGE page."
+	echo "$(date) - starting to write $PAGE page."
 	write_page_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
 	WITH=""
 	case "$STATE" in
@@ -735,7 +737,7 @@ done
 
 VIEW=dd-list
 PAGE=index_${VIEW}.html
-echo "Starting to write $PAGE page."
+echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
 echo "${BAD["all"]}" | dd-list -i > $TMPFILE || true
@@ -881,7 +883,7 @@ write_usertag_table() {
 
 VIEW=stats
 PAGE=index_${VIEW}.html
-echo "Starting to write $PAGE page."
+echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 write_page "<p>"
 set_icon reproducible

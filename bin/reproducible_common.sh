@@ -123,7 +123,7 @@ init_html() {
 	SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
 	SPOKENTARGET["issues"]="known issues related to reproducible builds"
 	SPOKENTARGET["notes"]="packages with notes"
-	SPOKENTARGET["scheduled"]="packages currently scheduled for testing"
+	SPOKENTARGET["scheduled"]="packages currently scheduled for testing for build reproducibility"
 	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
@@ -391,7 +391,7 @@ update_html_schedule() {
 	BUILDINFO_SIGNS=true
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
-	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
+	write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 	gather_schedule_stats
 	if [ ${COUNT_NEW_VERSIONS} -ne 0 ] ; then
 		write_page "<p>For ${COUNT_NEW_VERSIONS} packages newer versions are available which have not been tested yet.</p>"

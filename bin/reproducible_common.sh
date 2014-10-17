@@ -241,7 +241,7 @@ publish_page() {
 }
 
 set_package_star() {
-	if [ -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_.buildinfo ] ; then
+	if [ -f /var/lib/jenkins/userContent/buildinfo/${PKG}_.buildinfo ] ; then
 		STAR="<span class=\"beta\">&beta;</span>" # used to be a star...
 	else
 		STAR=""

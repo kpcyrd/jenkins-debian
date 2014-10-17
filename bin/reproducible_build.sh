@@ -25,6 +25,11 @@ cleanup_userContent() {
 unschedule_from_db() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources_scheduled WHERE name = '$SRCPACKAGE';"
+	# update html page for package
+	set -x
+	process_packages $SRCPACKAGE
+	echo "Successfully updated the database and updated the html file for the package."
+	echo "Enjoy $JENKINS_URL/userContent/rb-pkg/$SRCPACKAGE.html"
 }
 
 TMPDIR=$(mktemp --tmpdir=$PWD -d)

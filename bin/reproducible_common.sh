@@ -103,6 +103,11 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 declare -A LINKTARGET
+NOTES_PATH=/var/lib/jenkins/userContent/notes
+ISSUES_PATH=/var/lib/jenkins/userContent/issues
+mkdir -p $NOTES_PATH $ISSUES_PATH
+# FIXME RB_PATH would also be a good idea
+mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 
 init_html() {
 	SUITE=sid
@@ -123,11 +128,6 @@ init_html() {
 	SPOKENTARGET["404"]="packages where the sources failed to downloaded"
 	SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
 	SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
-	NOTES_PATH=/var/lib/jenkins/userContent/notes
-	ISSUES_PATH=/var/lib/jenkins/userContent/issues
-	mkdir -p $NOTES_PATH $ISSUES_PATH
-	# FIXME RB_PATH would also be a good idea
-	mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages")

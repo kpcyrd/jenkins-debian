@@ -357,6 +357,23 @@ process_packages() {
 	done
 }
 
+gather_schedule_stats() {
+	SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM sources_scheduled ORDER BY date_scheduled DESC" | xargs echo)
+	COUNT_SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources_scheduled ORDER BY date_scheduled DESC" | xargs echo)
+	let "COUNT_NOTYET=AMOUNT-COUNT_TOTAL-COUNT_SCHEDULED"
+	QUERY="	SELECT count(sources.name) FROM sources,source_packages
+			WHERE sources.name NOT IN
+			(SELECT sources.name FROM sources,sources_scheduled
+				WHERE sources.name=sources_scheduled.name)
+			AND sources.name IN
+			(SELECT sources.name FROM sources,source_packages
+				WHERE sources.name=source_packages.name
+				AND sources.version!=source_packages.version
+				AND source_packages.status!='blacklisted')
+			AND sources.name=source_packages.name"
+	COUNT_NEW_VERSIONS=$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
+}
+
 gather_stats() {
 	COUNT_BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"unreproducible\"")
 	COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"FTBFS\"")
@@ -370,14 +387,16 @@ gather_stats() {
 }
 
 update_html_schedule() {
-	gather_stats
-	SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM sources_scheduled ORDER BY date_scheduled DESC" | xargs echo)
-	COUNT_SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources_scheduled ORDER BY date_scheduled DESC" | xargs echo)
 	VIEW=scheduled
 	BUILDINFO_SIGNS=true
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
+	gather_schedule_stats
+	if [ ${COUNT_NEW_VERSIONS} -ne 0 ] ; then
+		write_page "<p>For ${COUNT_NEW_VERSIONS} packages newer versions are available which have not been tested yet.</p>"
+	fi
+	write_page "<p>${COUNT_NOTYET} packages have not been tested at all.</p>"
 	write_page "<p>${COUNT_SCHEDULED} packages are currently scheduled for testing: <code>"
 	force_package_targets $SCHEDULED
 	link_packages $SCHEDULED

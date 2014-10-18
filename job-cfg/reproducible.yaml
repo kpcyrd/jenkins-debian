@@ -1,8 +1,8 @@
 - defaults:
     name: reproducible
+    project-type: freestyle
     triggers:
       - timed: "{my_timed}"
-    project-type: freestyle
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -35,6 +35,8 @@
 - defaults:
     name: reproducible_notes
     project-type: freestyle
+    triggers:
+      - timed: "{my_timed}"
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -73,9 +75,9 @@
 
 - defaults:
     name: reproducible_builder
+    project-type: freestyle
     triggers:
       - timed: "{my_timed}"
-    project-type: freestyle
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -206,6 +208,7 @@
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_notes':
             my_description: 'Generates HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
+            my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'

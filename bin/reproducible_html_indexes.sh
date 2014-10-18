@@ -113,14 +113,13 @@ count_packages() {
 }
 
 for STATE in $ALLSTATES ; do
-	BUILDINFO_SIGNS=true
+	BUILDINFO_SIGNS=false
 	PAGE=index_${STATE}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
 	WITH=""
 	case "$STATE" in
-		reproducible)	BUILDINFO_SIGNS=false
-				PACKAGES=${GOOD["all"]}
+		reproducible)	PACKAGES=${GOOD["all"]}
 				;;
 		FTBR)		CANDIDATES=${BAD["all"]}
 				PACKAGES=""
@@ -131,7 +130,9 @@ for STATE in $ALLSTATES ; do
 					fi
 				done
 				;;
-		FTBR_with_buildinfo)	CANDIDATES=${BAD["all"]}
+		FTBR_with_buildinfo)
+				BUILDINFO_SIGNS=true
+				CANDIDATES=${BAD["all"]}
 				PACKAGES=""
 				for PKG in $CANDIDATES ; do
 					set_package_star

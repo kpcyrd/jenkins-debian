@@ -13,12 +13,15 @@ if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
 	if [ -f $PACKAGES_DB.lock ] ; then
 		for i in $(seq 0 100) ; do
 			sleep 15
+			echo "sleeping 15s, $PACKAGES_DB is locked."
 			if [ ! -f $PACKAGES_DB.lock ] ; then
 				break
 			fi
 		done
-		echo "$PACKAGES_DB.lock still exist, exiting."
-		exit 1
+		if [ -f $PACKAGES_DB.lock ] ; then
+			echo "$PACKAGES_DB.lock still exist, exiting."
+			exit 1
+		fi
 	fi
 elif [ ! -f ${PACKAGES_DB} ] ; then
 	echo "Warning: $PACKAGES_DB doesn't exist, creating it now."

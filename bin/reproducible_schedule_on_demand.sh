@@ -10,6 +10,8 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 schedule_packages() {
+	# these packages are manually scheduled, so should have high prio
+	# so schedule them in the past, so they are picked earlier :)
 	DATE="2014-10-01 00:23"
 	TMPFILE=$(mktemp)
 	for PKG in $PACKAGES ; do

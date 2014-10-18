@@ -56,11 +56,9 @@ mkdir -p $RESULTS/log
 if [ -z "$5" ] || [ -z "$6" ] ; then
 	DI_LANG="en"
 	DI_LOCALE="en_US"
-	PRESEEDCFG="preseed.cfg"
 else
 	DI_LANG=$5
 	DI_LOCALE=$6
-	PRESEEDCFG="${DI_LANG}_preseed.cfg"
 fi
 
 #
@@ -160,6 +158,7 @@ bootstrap_system() {
 	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	QEMU_WEBSERVER=http://10.0.2.1/
 	# preseeding related variables
+	PRESEEDCFG="preseed.cfg"
 	PRESEED_PATH=d-i-preseed-cfgs
 	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
 	INST_LOCALE="locale=$DI_LOCALE"

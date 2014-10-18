@@ -134,10 +134,29 @@ else
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
+			# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
+			if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
+				for i in $(seq 0 100) ; do
+					sleep 15
+					echo "sleeping 15s, debbindiff schroot is locked."
+					if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then
+						break
+					fi
+				done
+				if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ]  ; then
+					echo "Warning: lock $DBDCHROOT_WRITELOCK or [ -f $DBDCHROOT_READLOCK ] still exists, exiting."
+					exit 1
+				fi
+			else
+				# we create (more) read-lock(s) but stop on write locks...
+				# write locks are only done by the schroot setup job
+				touch $DBDCHROOT_READLOCK
+			fi
 			( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
 			RESULT=$?
 			set +x
 			set -e
+			rm -f $DBDCHROOT_READLOCK
 			echo | tee -a ${RBUILDLOG}
 			if [ $RESULT -eq 124 ] ; then
 				echo "$(date) - debbindiff was killed after running into timeouot... maybe there is still $JENKINS_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}

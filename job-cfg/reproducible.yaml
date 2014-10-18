@@ -183,12 +183,12 @@
         - '{name}_setup_pbuilder':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_setup_schroot':
             my_description: 'Setup schroot for running debbindiff in a sid environment, this is needed eg to be able to correctly investigate haskell binaries....'
             my_timed: '23 0 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-sid sid debbindiff'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid sid debbindiff'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested on reproducible building.'

@@ -117,7 +117,15 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup'
+    name: '{name}_setup_pbuilder'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_scheduler'
 
 - job-template:
     defaults: reproducible
@@ -147,27 +155,40 @@
     defaults: reproducible_builder
     name: '{name}_builder_gamma'
 
-- job-template:
-    defaults: reproducible
-    name: '{name}_scheduler'
+#
+# sometimes used for development:
+#
+#- job-template:
+#    defaults: reproducible_builder
+#    name: '{name}_builder_delta'
 
 - project:
     name: reproducible
     jobs:
-        - '{name}_setup':
+        - '{name}_setup_pbuilder':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
-        - '{name}_html_indexes':
-            my_description: 'Generates HTML results (indexes) for reproducible builds.'
-            my_timed: '59 */2 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_indexes.sh'
+        - '{name}_setup_schroot':
+            my_description: 'Setup schroot for running debbindiff in a sid environment, this is needed eg to be able to correctly investigate haskell binaries....'
+            my_timed: '23 0 * * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-sid sid debbindiff'
+            my_recipients: 'holger@layer-acht.org'
+        - '{name}_scheduler':
+            my_description: 'Schedule packages to be tested on reproducible building.'
+            my_timed: '42 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_graphs':
             my_description: 'Generates HTML results (stats with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh'
+            my_recipients: 'holger@layer-acht.org'
+        - '{name}_html_indexes':
+            my_description: 'Generates HTML results (indexes) for reproducible builds.'
+            my_timed: '59 */2 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_indexes.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_dd_list':
             my_description: 'Generates HTML results (dd-list) for reproducible builds.'
@@ -194,9 +215,8 @@
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'holger@layer-acht.org'
-        - '{name}_scheduler':
-            my_description: 'Schedule packages to be tested on reproducible building.'
-            my_timed: '42 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
-            my_recipients: 'holger@layer-acht.org'
-
+#        - '{name}_builder_delta':
+#            my_description: 'This is a builder job only used for development.'
+#            my_timed: ''
+#            my_shell: '/srv/jenkins/bin/reproducible_build_delta.sh'
+#            my_recipients: 'holger@layer-acht.org'

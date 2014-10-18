@@ -53,6 +53,11 @@ bootstrap() {
 	echo "deb-src $MIRROR $DISTRO main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 	echo "${BACKPORTS}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 	echo "${BACKPORTSSRC}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
+
+	sudo chroot $CHROOT_TARGET apt-get update
+	if [ -n "$1" ] ; then
+		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@"
+	fi
 }
 
 cleanup() {
@@ -61,7 +66,7 @@ cleanup() {
 	fi
 }
 trap cleanup INT TERM EXIT
-bootstrap
+bootstrap $@
 
 trap - INT TERM EXIT
 
@@ -91,8 +96,4 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	union-type=aufs
 	__END__
 
-schroot --directory /root -c "source:jenkins-$TARGET" -u root -- apt-get update
-if [ -n "$1" ]
-then
-	schroot --directory /root -c "source:jenkins-$TARGET" -u root -- apt-get install -y --no-install-recommends "$@"
-fi
+

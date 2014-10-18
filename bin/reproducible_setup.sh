@@ -23,23 +23,10 @@ for PKG in linux cups zurl openclipart eigen3 xmds2 ; do
 	fi
 done
 
-# FIXME: needed as long as there is no backport for debbindiff
-# 	 or as long as we dont run it within pbuilder...
-# fetch git repo for the debbindiff command used in reproducible_build.sh
-WORKSPACE=$PWD
-cd /var/lib/jenkins
-if [ -d debbindiff.git ] ; then
-	cd debbindiff.git
-	git pull
-else
-	git clone git://git.debian.org/git/reproducible/debbindiff.git debbindiff.git
-fi
-cd $WORKSPACE
-
+#
+# create script to configure a pbuilder chroot
+#
 create_setup_tmpfile() {
-	#
-	# script to configure a pbuilder chroot
-	#
 	cat > ${TMPFILE} <<- EOF
 #
 # this script is run within the pbuilder environment to further customize it
@@ -84,10 +71,10 @@ echo
 EOF
 }
 
-setup_pbuilder() {
 #
 # setup pbuilder for reproducible builds
 #
+setup_pbuilder() {
 	echo "$(date) - creating /var/cache/pbuilder/${1}.tgz now..."
 	TMPFILE=$(mktemp)
 	create_setup_tmpfile

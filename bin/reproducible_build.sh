@@ -26,13 +26,14 @@ unschedule_from_db() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources_scheduled WHERE name = '$SRCPACKAGE';"
 	# update html page for package
-	set -x
+	set +x
 	process_packages $SRCPACKAGE
-	echo "Successfully updated the database and updated the html file for the package."
-	echo "Enjoy $JENKINS_URL/userContent/rb-pkg/$SRCPACKAGE.html"
+	echo
+	echo "Successfully updated the database and updated $JENKINS_URL/userContent/rb-pkg/$SRCPACKAGE.html"
+	echo
 }
 
-TMPDIR=$(mktemp --tmpdir=$PWD -d)
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name,date_scheduled FROM sources_scheduled WHERE date_build_started = '' ORDER BY date_scheduled LIMIT 1")
@@ -99,8 +100,8 @@ else
 				break
 			fi
 		done
-		set -x
 		if ! $SUITABLE ; then
+			set -x
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
 			set +x
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
@@ -108,8 +109,10 @@ else
 			exit 0
 		fi
 		set +e
+		set -x
 		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-		( timeout 15m nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee -a ${RBUILDLOG}
+		( timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee -a ${RBUILDLOG}
+		set +x
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b1
@@ -117,12 +120,12 @@ else
 			# so first delete files from .dsc, then from .changes file
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
-			set +x
 			echo "============================================================================="
 			echo "Re-building ${SRCPACKAGE} now."
 			echo "============================================================================="
 			set -x
 			timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
+			set +x
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			# and again (see comment 5 lines above)
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
@@ -131,25 +134,30 @@ else
 			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
 			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
-			( timeout 15m /var/lib/jenkins/debbindiff.git/debbindiff.py --html ./${LOGFILE} b1/${SRCPACKAGE}_${EVERSION}_amd64.changes b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
+			( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
 			RESULT=$?
+			set +x
 			set -e
 			echo | tee -a ${RBUILDLOG}
 			if [ $RESULT -eq 124 ] ; then
-				echo "$(date) - debbindiff.py was killed after running into timeouot..." | tee -a ${RBUILDLOG}
+				echo "$(date) - debbindiff was killed after running into timeouot... maybe there is still $JENKINS_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
 			elif [ $RESULT -eq 1 ] ; then
-				echo "$(date) - debbindiff.py found issues, please investigate $JENKINS_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
+				DEBBINDIFFOUT="debbindiff found issues, please investigate $JENKINS_URL/userContent/dbd/${LOGFILE}"
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ 2>&1 > /dev/null
 				figlet ${SRCPACKAGE}
-				echo "debbindiff.py found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
+				echo
+				echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
 				echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
 				unschedule_from_db
 			else
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ || true
+				echo | tee -a ${RBUILDLOG}
+				echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ 2>&1 > /dev/null || true
 				if [ -f ./${LOGFILE} ] ; then
+					echo -n "$DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 					# FIXME: work around debbindiff not having external CSS support (#764470)
 					# should really be fixed in debbindiff and just moved....
 					if grep -q "Generated by debbindiff 3" ./${LOGFILE} ; then
@@ -157,27 +165,26 @@ else
 					else
 						mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
 					fi
+				else
+					echo -n ", debbindiff produced no output (which is strange)"
 				fi
-				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
-				unschedule_from_db
-				set +x
-				echo -n "${SRCPACKAGE} failed to build reproducibly" | tee -a ${RBUILDLOG}
 				if [ ! -f b1/${BUILDINFO} ] ; then
-					echo "and a .buildinfo file is missing too." | tee -a ${RBUILDLOG}
+					echo " and a .buildinfo file is missing." | tee -a ${RBUILDLOG}
 				else
 					echo "." | tee -a ${RBUILDLOG}
 				fi
+				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
+				unschedule_from_db
 			fi
 		else
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
-			unschedule_from_db
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
+			unschedule_from_db
 		fi
 	fi
 
 fi
-set -x
 cd ..
 cleanup_all
 trap - INT TERM EXIT

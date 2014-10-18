@@ -150,6 +150,10 @@
     name: '{name}_html_notes'
 
 - job-template:
+    defaults: reproducible
+    name: '{name}_html_all_packages'
+
+- job-template:
     defaults: reproducible_builder
     name: '{name}_builder_alpha'
 
@@ -212,6 +216,11 @@
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
+        - '{name}_html_all_packages':
+            my_description: 'Generates HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'
+            my_timed: '12 12 30 12 *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'

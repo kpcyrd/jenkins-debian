@@ -145,7 +145,7 @@ else
 				DEBBINDIFFOUT="debbindiff found issues, please investigate $JENKINS_URL/userContent/dbd/${LOGFILE}"
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ 2>&1 > /dev/null
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1
 				figlet ${SRCPACKAGE}
 				echo
 				echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
@@ -155,7 +155,7 @@ else
 			else
 				echo | tee -a ${RBUILDLOG}
 				echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ 2>&1 > /dev/null || true
+				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1 || true
 				if [ -f ./${LOGFILE} ] ; then
 					echo -n "$DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 					# FIXME: work around debbindiff not having external CSS support (#764470)

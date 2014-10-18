@@ -117,6 +117,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_housekeeping'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_pbuilder'
 
 - job-template:
@@ -165,6 +169,11 @@
 - project:
     name: reproducible
     jobs:
+        - '{name}_housekeeping':
+            my_description: 'Do some housekeeping, check no old directories are laying around, do backups, etc.'
+            my_timed: '0 12 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_housekeeping.sh'
+            my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_pbuilder':
             my_description: 'Setup pbuilder for reproducible builds as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0 * * *'

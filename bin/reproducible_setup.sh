@@ -33,11 +33,11 @@ else
 fi
 cd $WORKSPACE
 
-#
-# finally, setup pbuilder
-#
-TMPFILE=$(mktemp)
-cat > ${TMPFILE} <<- EOF
+create_setup_tmpfile() {
+	#
+	# script to configure a pbuilder chroot
+	#
+	cat > ${TMPFILE} <<- EOF
 #
 # this script is run within the pbuilder environment to further customize it
 #
@@ -79,10 +79,20 @@ echo
 for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org || true  ; done
 echo
 EOF
+}
+
+setup_pbuilder() {
 #
-# actually setup pbuilder
+# setup pbuilder for reproducible builds
 #
-sudo pbuilder --create --basetgz /var/cache/pbuilder/base-reproducible-new.tgz --distribution sid
-sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/base-reproducible-new.tgz -- ${TMPFILE}
-sudo mv /var/cache/pbuilder/base-reproducible-new.tgz /var/cache/pbuilder/base-reproducible.tgz
-rm ${TMPFILE}
+	echo "$(date) - creating /var/cache/pbuilder/${1}.tgz now..."
+	TMPFILE=$(mktemp)
+	create_setup_tmpfile
+	sudo pbuilder --create --basetgz /var/cache/pbuilder/${1}-new.tgz --distribution sid
+	sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/${1}-new.tgz -- ${TMPFILE}
+	sudo mv /var/cache/pbuilder/${1}-new.tgz /var/cache/pbuilder/${1}.tgz
+	rm ${TMPFILE}
+	echo
+}
+
+setup_pbuilder base-reproducible

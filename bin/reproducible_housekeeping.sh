@@ -11,6 +11,7 @@ common_init "$@"
 
 # common
 set +x
+set -e
 REP_RESULTS=/srv/reproducible-results
 
 # prepare backup
@@ -71,3 +72,30 @@ if [ -s $RESULT ] ; then
 fi
 rm $HAYSTACK $RESULT
 
+# find packages which build didnt end correctly
+QUERY="
+	SELECT * FROM sources_scheduled
+		WHERE date_scheduled != ''
+		AND date_build_started != ''
+		AND date_build_started < datetime('now', '-1 day')
+		ORDER BY date_scheduled
+	"
+PACKAGES=$(mktemp)
+sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES
+if [ -s $PACKAGES ] ; then
+	echo
+	echo "Warning: packages found where the build was started more than 24h ago:"
+	echo "name|date_scheduled|date_build_started"
+	echo
+	cat $PACKAGES
+	echo
+	echo "To fix:"
+	echo
+	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
+		echo " sqlite3 ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\""
+	done
+	echo
+fi
+rm $PACKAGES
+
+exit 0

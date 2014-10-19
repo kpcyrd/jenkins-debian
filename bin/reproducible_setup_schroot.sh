@@ -8,6 +8,9 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# common code defining db access
+. /srv/jenkins/bin/reproducible_common.sh
+
 # bootstraps a new chroot for schroot, and then moves it into the right location
 
 # $1 = schroot name

@@ -27,9 +27,13 @@ img {
 	height: auto;
 }
 
-img.graph {
-	width: 100%;
-}
+/*
+ *
+ * img.graph {
+ *	width: 100%;
+ * }
+ *
+ */
 
 .beta {
 	color:#555555;
@@ -259,9 +263,11 @@ span.dangerous { color: orange; }
 	}
 }
 
-@media all and (min-width: 841px) {
-	img.graph {
-		width: 70%;
-		height: auto;
-	}
-}
+/*
+ * @media all and (min-width: 841px) {
+ *	img.graph {
+ *		width: 70%;
+ *		height: auto;
+ *	}
+ * }
+ */

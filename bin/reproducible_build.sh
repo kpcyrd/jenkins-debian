@@ -25,8 +25,9 @@ cleanup_userContent() {
 unschedule_from_db() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources_scheduled WHERE name = '$SRCPACKAGE';"
-	# update html page for package
 	set +x
+	# (force) update html page for package (only really needed for long building packages where a note updates the page during build....)
+	touch -d $PREDATE /var/lib/jenkins/userContent/rb-pkg/${SRCPACKAGE}.html
 	process_packages $SRCPACKAGE
 	echo
 	echo "Successfully updated the database and updated $JENKINS_URL/userContent/rb-pkg/$SRCPACKAGE.html"
@@ -48,6 +49,7 @@ else
 	echo "Trying to build ${SRCPACKAGE} reproducibly now."
 	echo "============================================================================="
 	set -x
+	PREDATE=$(date -d "1 minute ago" +'%Y-%m-%d %H:%M')
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO sources_scheduled VALUES ('$SRCPACKAGE','$SCHEDULED_DATE','$DATE');"

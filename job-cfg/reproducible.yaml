@@ -2,7 +2,7 @@
     name: reproducible
     project-type: freestyle
     triggers:
-      - timed: "{my_timed}"
+      - timed: '{my_timed}'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -36,7 +36,8 @@
     name: reproducible_notes
     project-type: freestyle
     triggers:
-      - timed: "{my_timed}"
+      - timed: '{my_timed}'
+      - pollscm: '*/6 * * * *'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -70,14 +71,12 @@
           url: '{my_gitrepo}'
           branches:
             - master
-    triggers:
-      - pollscm: "*/6 * * * *"
 
 - defaults:
     name: reproducible_builder
     project-type: freestyle
     triggers:
-      - timed: "{my_timed}"
+      - timed: '{my_timed}'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

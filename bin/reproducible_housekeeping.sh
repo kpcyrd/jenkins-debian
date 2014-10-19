@@ -53,3 +53,21 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 fi
 
+# find processes which should not be there
+HAYSTACK=$(mktemp)
+RESULT=$(mktemp)
+ps axo pid,user,size,pcpu,cmd > $HAYSTACK
+for ZOMBIE in $(pgrep -u 1234 -P 1) ; do
+	# faked-sysv comes and goes...
+	grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null
+done
+if [ -s $RESULT ] ; then
+	echo
+	echo "Warnung: processes found which should not be there:"
+	cat $RESULT
+	echo
+	echo "Please cleanup manually."
+	echo
+fi
+rm $HAYSTACK $RESULT
+

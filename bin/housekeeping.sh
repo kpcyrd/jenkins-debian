@@ -6,6 +6,9 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# let's have readable output here
+set +x
+
 check_for_mounted_chroots() {
 	CHROOT_PATTERN="/chroots/${1}-*"
 	OUTPUT=$(mktemp)
@@ -43,8 +46,9 @@ report_filetype_usage() {
 	if [ "$3" = "warn" ] &&  [ -s $OUTPUT ] ; then
 		echo "Warning: there are $2 files and there should not be any."
 		cat $OUTPUT
-		echo "Checking for running QEMU processes:"
-		ps fax | grep [q]emu-system || true
+		echo
+		echo "Checking for running QEMU processes: (might be causing these files to be there right now)"
+		ps fax | grep [q]emu-system | grep -v grep || true
 	else
 		cat $OUTPUT
 	fi

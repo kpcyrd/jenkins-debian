@@ -42,8 +42,10 @@ report_disk_usage() {
 
 report_filetype_usage() {
 	OUTPUT=$(mktemp)
+	echo "File system use in $1 for $2 files:"
+	echo
 	find /var/lib/jenkins/jobs/${1}* -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$1 .$2 files#" > $OUTPUT
-	if [ "$3" = "warn" ] &&  [ -s $OUTPUT ] ; then
+	if [ "$3" = "warn" ] && [ -s $OUTPUT ] ; then
 		echo "Warning: there are $2 files and there should not be any."
 		cat $OUTPUT
 		echo
@@ -123,5 +125,5 @@ else
 fi
 
 echo
-echo "No problems found, all seems good."
+echo "No (big) problems found, all seems good."
 figlet "Ok."

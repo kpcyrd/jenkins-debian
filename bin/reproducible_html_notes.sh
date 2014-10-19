@@ -147,7 +147,7 @@ create_issue() {
 	write_page_header "" "Notes about issue '$1'"
 	write_page "<table class=\"body\">"
 
-	write_page "<tr><td>Identifier:</td><td colspan=\"2\">$1</td></tr>"
+	write_page "<tr><td>Identifier:</td><th colspan=\"2\">$1</th></tr>"
 
 	if [ "${ISSUES_URL[$1]}" != "" ] ; then
 		write_page "<tr><td>URL:</td><td colspan=\"2\"><a href=\"${ISSUES_URL[$1]}\">${ISSUES_URL[$1]}</a></td></tr>"
@@ -332,6 +332,7 @@ echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 if $VALID_YAML ; then
 	write_page "<table class=\"body\">"
+	write_page "<tr><th>Identified issues</th></tr>"
 	ISSUES=$(echo ${ISSUES} | sed -s "s# #\n#g" | sort | xargs echo)
 	for ISSUE in ${ISSUES} ; do
 		write_page "<tr><td><a href=\"$JENKINS_URL/userContent/issues/${ISSUE}_issue.html\">${ISSUE}</a></td></tr>"

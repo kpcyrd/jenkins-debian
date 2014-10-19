@@ -123,9 +123,9 @@ write_usertag_table() {
 			let "COUNT+=1"
 			VALUE=$(echo $RESULT | cut -d "|" -f$COUNT)
 			if [ $COUNT -eq 1 ] ; then
-				write_page "<table class=\"body\"><tr><td colspan=\"4\"><em>Bugs with usertags for reproducible-builds@lists.alioth.debian.org on $VALUE</em></td></tr>"
+				write_page "<table class=\"body\"><tr><th colspan=\"3\">Bugs with usertags for reproducible-builds@lists.alioth.debian.org on $VALUE</th></tr>"
 			elif [ $((COUNT%2)) -eq 0 ] ; then
-				write_page "<tr><td>&nbsp;</td><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&archive=both\">${FIELD:5}</a></td><td>Open: $VALUE</td>"
+				write_page "<tr><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&archive=both\">${FIELD:5}</a></td><td>Open: $VALUE</td>"
 			else
 				write_page "<td>Done: $VALUE</td></tr>"
 			fi

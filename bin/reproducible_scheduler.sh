@@ -123,7 +123,7 @@ select_old_versions() {
 				AND sources.version=source_packages.version
 				AND source_packages.status!='blacklisted')
 			AND sources.name=source_packages.name
-			AND source_packages.build_date < datetime('now', '-4 day')
+			AND source_packages.build_date < datetime('now', '-14 day')
 			ORDER BY source_packages.build_date
 		LIMIT $1"
 	do_sql_query "tested at least two weeks ago, no new version available, sorted by last test date"

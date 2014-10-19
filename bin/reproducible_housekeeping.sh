@@ -37,7 +37,7 @@ fi
 OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +7 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Warnung: old temp directories found in $REP_RESULTS"
+	echo "Warning: old temp directories found in $REP_RESULTS"
 	echo "$OLDSTUFF"
 	echo "Please cleanup manually."
 	echo
@@ -47,7 +47,7 @@ fi
 OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +7 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Warnung: old temp directories found in /var/cache/pbuilder/result/"
+	echo "Warning: old temp directories found in /var/cache/pbuilder/result/"
 	echo "$OLDSTUFF"
 	echo "Please cleanup manually."
 	echo
@@ -63,7 +63,7 @@ for ZOMBIE in $(pgrep -u 1234 -P 1) ; do
 done
 if [ -s $RESULT ] ; then
 	echo
-	echo "Warnung: processes found which should not be there:"
+	echo "Warning: processes found which should not be there:"
 	cat $RESULT
 	echo
 	echo "Please cleanup manually."

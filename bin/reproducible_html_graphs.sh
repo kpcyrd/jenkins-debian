@@ -172,7 +172,7 @@ for i in 0 1 3 ; do
 	fi
 	write_page " <a href=\"$JENKINS_URL/userContent/${TABLE[$i]}.png\"><img src=\"$JENKINS_URL/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
-	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime -1 -name ${TABLE[$i]}.png) ] ; then
+	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 		redo_png
 	fi
 done

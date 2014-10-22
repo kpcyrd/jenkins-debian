@@ -73,7 +73,7 @@ cd jenkins.debian.net
 ----
 pip install python-jenkins
 
-git clone https://github.com/openstack-ci/jenkins-job-builder
+git clone git://git.openstack.org/openstack-infra/jenkins-job-builder
 cd jenkins-job-builder 
 python setup.py install
 ----

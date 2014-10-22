@@ -24,7 +24,9 @@ done
 # create script to configure a pbuilder chroot
 #
 create_setup_tmpfile() {
-	cat > ${TMPFILE} <<- EOF
+	TMPFILE=$1
+	shift
+	cat > $TMPFILE <<- EOF
 #
 # this script is run within the pbuilder environment to further customize it
 #
@@ -59,7 +61,7 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
 apt-get update
-apt-get install -y dpkg dpkg-dev debhelper dh-python discount
+apt-get install -y $@
 echo
 dpkg -l
 echo
@@ -72,14 +74,25 @@ EOF
 # setup pbuilder for reproducible builds
 #
 setup_pbuilder() {
-	echo "$(date) - creating /var/cache/pbuilder/${1}.tgz now..."
+	NAME=$1
+	shift
+	PACKAGES="$@"
+	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp)
-	create_setup_tmpfile
-	sudo pbuilder --create --basetgz /var/cache/pbuilder/${1}-new.tgz --distribution sid
-	sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/${1}-new.tgz -- ${TMPFILE}
-	sudo mv /var/cache/pbuilder/${1}-new.tgz /var/cache/pbuilder/${1}.tgz
+	LOG=$(mktemp)
+	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
+	sudo pbuilder --create --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution sid
+	sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	echo
+	echo "Now let's see whether the correct packages where installed..."
+	for PKG in ${PACKAGES} ; do
+		grep "http://reproducible.alioth.debian.org/debian/ ./ Packages" ${LOG} \
+			| grep -v grep | grep "${PKG} " \
+			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; exit 1 )
+	done
+	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
 	rm ${TMPFILE}
 	echo
 }
 
-setup_pbuilder base-reproducible
+setup_pbuilder base-reproducible dpkg dpkg-dev debhelper dh-python discount

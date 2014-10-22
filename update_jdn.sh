@@ -69,7 +69,6 @@ explain "Packages installed."
 #
 cd $BASEDIR
 sudo cp -r etc/* /etc
-update-rc.d jenkins-workspace defaults
 
 #
 # more configuration than a simple cp can do

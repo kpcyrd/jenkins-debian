@@ -51,6 +51,11 @@ RESULTS=$WORKSPACE/results
 mkdir -p $RESULTS/log
 
 #
+# set main counter
+#
+NR=0
+
+#
 # language
 #
 if [ -z "$5" ] || [ -z "$6" ] ; then
@@ -119,7 +124,11 @@ cleanup_all() {
 	#
 	case $NAME in
 		*_rescue*)	;;
-		*)		save_logs
+		*)		if [ $NR -gt 200 ] ; then
+					save_logs
+				else
+					echo "Not trying to get logs."
+				fi
 				;;
 	esac
 }
@@ -669,7 +678,7 @@ post_install_boot() {
 							;;
 						1120)	do_and_report type https
 							;;
-						1125)	do_and_report key ":"
+						1125)	do_and_report key ":"		# this will get a :
 							;;
 						1130)	do_and_report type "//www"
 							;;
@@ -687,11 +696,11 @@ post_install_boot() {
 							;;
 						1370)	do_and_report type https
 							;;
-						1375)	do_and_report key ":"
+						1375)	do_and_report key ";"		# this will get a :
 							;;
 						1380)	do_and_report type "//www"
 							;;
-						1385)	do_and_report key ":"
+						1385)	do_and_report key ";"		# this will get a :
 							;;
 						1390)	do_and_report type "631"
 							;;
@@ -1117,7 +1126,6 @@ fi
 #
 # run g-i
 #
-NR=0
 bootstrap_system
 set +x
 case $NAME in

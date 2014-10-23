@@ -154,7 +154,7 @@ else
 				# write locks are only done by the schroot setup job
 				touch $DBDCHROOT_READLOCK
 			fi
-			( timeout 1h schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
+			( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
 			RESULT=$?
 			set +x
 			set -e

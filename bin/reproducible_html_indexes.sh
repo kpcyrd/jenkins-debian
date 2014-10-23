@@ -159,7 +159,9 @@ for STATE in $ALLSTATES ; do
 	link_packages ${PACKAGES}
 	write_page "</code></p>"
 	write_page
-	write_page_meta_sign
+	if [ $COUNT -ne 0 ] ; then
+		write_page_meta_sign
+	fi
 	write_page_footer
 	publish_page
 done

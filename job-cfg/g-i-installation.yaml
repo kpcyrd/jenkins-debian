@@ -127,10 +127,6 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_squeeze-test_standalone'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian-edu_squeeze_standalone'
 
 - job-template:
@@ -366,33 +362,27 @@
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze) minimal profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 4 15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
-      - '{name}_debian-edu_squeeze-test_standalone':
-         my_title: 'Debian Edu (squeeze-test) standalone'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 8 debian-edu_squeeze-test_standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze-test) standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '42 4 15 * *'
-         my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze_standalone':
          my_title: 'Debian Edu (squeeze) standalone'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 9 debian-edu_squeeze_standalone 20 http://ftp.skolelinux.org/cd-squeeze-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 9 debian-edu_squeeze_standalone 20 http://ftp.skolelinux.org/skolelinux-cd/older/squeeze/debian-edu-6.0.7+r1-CD.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze) standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 4 15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze_workstation':
          my_title: 'Debian Edu (squeeze) workstation'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 debian-edu_squeeze_workstation 30 http://ftp.skolelinux.org/cd-squeeze-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 debian-edu_squeeze_workstation 30 http://ftp.skolelinux.org/skolelinux-cd/older/squeeze/debian-edu-6.0.7+r1-CD.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze) workstation profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze_workstation_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 7 15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze_combi-server':
          my_title: 'Debian Edu (squeeze) combi-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 11 debian-edu_squeeze_combi-server 30 http://ftp.skolelinux.org/cd-squeeze-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 11 debian-edu_squeeze_combi-server 30 http://ftp.skolelinux.org/skolelinux-cd/older/squeeze/debian-edu-6.0.7+r1-CD.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze) combi-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 8 15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'
       - '{name}_debian-edu_squeeze_main-server':
          my_title: 'Debian Edu (squeeze) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 12 debian-edu_squeeze_main-server 30 http://ftp.skolelinux.org/cd-squeeze-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 12 debian-edu_squeeze_main-server 30 http://ftp.skolelinux.org/skolelinux-cd/older/squeeze/debian-edu-6.0.7+r1-CD.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Squeeze (suite: squeeze) main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_squeeze_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 16 15 * *'
          my_recipients: 'jenkins+debian-edu holger@layer-acht.org'

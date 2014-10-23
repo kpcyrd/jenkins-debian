@@ -125,7 +125,7 @@ init_html() {
 	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and do'nt create a .buildinfo file"
 	SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
 	SPOKENTARGET["FTBFS"]="packages which failed to build from source"
-	SPOKENTARGET["404"]="packages where the sources failed to downloaded"
+	SPOKENTARGET["404"]="packages where the sources failed to download"
 	SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
 	SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
 	SPOKENTARGET["issues"]="known issues related to reproducible builds"

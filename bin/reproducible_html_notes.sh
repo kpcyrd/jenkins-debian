@@ -224,10 +224,12 @@ parse_issues() {
 
 write_notes() {
 	touch $NOTES_PATH/stamp
+	# actually write notes
 	for PKG in $PACKAGES_WITH_NOTES ; do
 		PAGE=$NOTES_PATH/${PKG}_note.html
 		create_pkg_note $PKG
 	done
+	# cleanup old notes and re-create package page if needed
 	cd $NOTES_PATH
 	for FILE in *.html ; do
 		PKG_FILE=/var/lib/jenkins/userContent/rb-pkg/${FILE:0:-10}.html
@@ -237,9 +239,13 @@ write_notes() {
 			rm $FILE
 			# force re-creation of package file if there was a note
 			rm -f ${PKG_FILE}
+			process_packages ${FILE:0-10}
 		else
-			# ... else re-recreate ${PKG_FILE} if it does not contain a link to the note
-			grep _note.html ${PKG_FILE} > /dev/null 2>&1 || rm -f ${PKG_FILE}
+			# ... else re-recreate ${PKG_FILE} if it does not contain a link to the note already
+			if ! grep _note.html ${PKG_FILE} > /dev/null 2>&1 ; then
+				rm -f ${PKG_FILE}
+				process_packages ${FILE:0-10}
+			fi
 		fi
 	done
 	rm stamp
@@ -296,9 +302,8 @@ if $VALID_YAML ; then
 	parse_notes
 	echo "$(date) - processing packages with notes"
 	force_package_targets ${PACKAGES_WITH_NOTES}
-	write_issues
 	write_notes
-	process_packages ${PACKAGES_WITH_NOTES}
+	write_issues
 else
 	echo "Warning: ${ISSUES_YML} or ${PACKAGES_YML} contains invalid yaml, please fix."
 fi

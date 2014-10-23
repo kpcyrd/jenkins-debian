@@ -160,6 +160,8 @@ if [ "$2" != "" ] ; then
 				;;
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
+		education*)	install_packages "Debian Edu task" $2
+				;;
 		*)		echo "unsupported component."
 				exit 1
 				;;

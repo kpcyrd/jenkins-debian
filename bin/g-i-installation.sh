@@ -114,7 +114,14 @@ cleanup_all() {
 			rm $i
 		done
 	fi
-
+	#
+	# save logs if there are any
+	#
+	case $NAME in
+		*_rescue*)	;;
+		*)		save_logs
+				;;
+	esac
 }
 
 show_preseed() {
@@ -1142,7 +1149,6 @@ case $NAME in
 			boot_system
 			let START_TRIGGER=NR+500
 			monitor_system post_install $START_TRIGGER
-			save_logs
 			;;
 esac
 cleanup_all

@@ -613,7 +613,7 @@ post_install_boot() {
 						*)	;;
 					esac
 					;;
-		debian-edu*-main-server)	case $TOKEN in
+		debian-edu*main-server)	case $TOKEN in
 						# debian-edu installations report error found during installation, go forward, in text mode
 						0500)	$EDUTESTMODE && do_and_report key tab
 							;;

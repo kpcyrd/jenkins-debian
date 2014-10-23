@@ -92,6 +92,21 @@ cleanup_all() {
 	#
 	sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
 	sleep 0.3s
+	#
+	# save logs if there are any
+	#
+	case $NAME in
+		*_rescue*)	;;
+		*)		if [ $NR -gt 200 ] ; then
+					save_logs
+				else
+					echo "Not trying to get logs."
+				fi
+				;;
+	esac
+	#
+	# remove lvm volume
+	#
 	sudo lvremove -f $LV
 	rm -f $QEMU_LAUNCHER
 	#
@@ -119,18 +134,6 @@ cleanup_all() {
 			rm $i
 		done
 	fi
-	#
-	# save logs if there are any
-	#
-	case $NAME in
-		*_rescue*)	;;
-		*)		if [ $NR -gt 200 ] ; then
-					save_logs
-				else
-					echo "Not trying to get logs."
-				fi
-				;;
-	esac
 }
 
 show_preseed() {

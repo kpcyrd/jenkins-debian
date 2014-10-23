@@ -338,19 +338,19 @@ post_install_boot() {
 	#
 	case $NAME in
 		debian_*)	case $TOKEN in
-			0050)	do_and_report type jenkins
+					0050)	do_and_report type jenkins
+						;;
+					0060)	do_and_report key enter
+						;;
+					0070)	do_and_report type insecure
+						;;
+					0080)	do_and_report key enter
+						;;
+					*)	;;
+				esac
 				;;
-			0060)	do_and_report key enter
-				;;
-			0070)	do_and_report type insecure
-				;;
-			0080)	do_and_report key enter
-				;;
-			*)	;;
-		esac
-		;;
-		# debian-edu installations differ too much, login individually
-		*)	;;
+				# debian-edu installations differ too much, login individually
+				*)	;;
 	esac
 	# Debian Edu -test images usually show a screen with known problems
 	# search for EDUTESTMODE in the code to understand how the next 2 lines are used
@@ -360,7 +360,7 @@ post_install_boot() {
 	# actions depending on the type of installation
 	#
 	case $NAME in
-		debian_*xfce)		case $TOKEN in
+		debian_*xfce)	case $TOKEN in
 					0200)	do_and_report key enter
 						;;
 					0210)	do_and_report key alt-f2
@@ -410,7 +410,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		debian_*lxde)		case $TOKEN in
+		debian_*lxde)	case $TOKEN in
 					0200)	do_and_report key alt-f2
 						;;
 					0210)	do_and_report type "iceweasel"
@@ -458,7 +458,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		debian_*kde)		case $TOKEN in
+		debian_*kde)	case $TOKEN in
 					0300)	do_and_report key tab
 						;;
 					0310)	do_and_report key enter
@@ -510,7 +510,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		debian_*gnome)		case $TOKEN in
+		debian_*gnome)	case $TOKEN in
 					0150)	do_and_report move 530 420 click 1
 						;;
 					0200)	do_and_report key alt-f2
@@ -708,7 +708,7 @@ post_install_boot() {
 						*)	;;
 					esac
 					;;
-		debian-edu*-combi-server)	case $TOKEN in
+		debian-edu*-combi-server) case $TOKEN in
 						# debian-edu installations report error found during installation, go forward
 						0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
 							;;
@@ -772,83 +772,83 @@ post_install_boot() {
 					esac
 					;;
 		debian-edu*workstation)	case $TOKEN in
-					# debian-edu installations report error found during installation, go forward
-					0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
-						;;
-					0110)	do_and_report type jenkins
-						;;
-					0120)	do_and_report key enter
-						;;
-					0130)	do_and_report type insecure
-						;;
-					0140)	do_and_report key enter
-						;;
-					*)	;;
-				esac
-				;;
+						# debian-edu installations report error found during installation, go forward
+						0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
+							;;
+						0110)	do_and_report type jenkins
+							;;
+						0120)	do_and_report key enter
+							;;
+						0130)	do_and_report type insecure
+							;;
+						0140)	do_and_report key enter
+							;;
+						*)	;;
+					esac
+					;;
 		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-					0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
-						;;
-					0110)	do_and_report type jenkins
-						;;
-					0120)	do_and_report key enter
-						;;
-					0130)	do_and_report type insecure
-						;;
-					0140)	do_and_report key enter
-						;;
-					0300)	do_and_report key tab
-						;;
-					0310)	do_and_report key enter
-						;;
-					0400)	do_and_report key alt-f2
-						;;
-					0410)	do_and_report type "iceweasel"
-						;;
-					0420)	do_and_report key space
-						;;
-					0430)	do_and_report type "www"
-						;;
-					0440)	do_and_report type "."
-						;;
-					0450)	do_and_report type "debian"
-						;;
-					0460)	do_and_report type "."
-						;;
-					0470)	do_and_report type "org"
-						;;
-					0480)	do_and_report key enter
-						;;
-					0600)	do_and_report key alt-f2
-						;;
-					0610)	do_and_report type $GUITERMINAL
-						;;
-					0620)	do_and_report key enter
-						;;
-					0700)	do_and_report type apt-get
-						;;
-					0710)	do_and_report key space
-						;;
-					0720)	do_and_report type moo
-						;;
-					0730)	do_and_report key enter
-						;;
-					0740)	do_and_report type "su"
-						;;
-					0750)	do_and_report key enter
-						;;
-					0760)	do_and_report type r00tme
-						;;
-					0770)	do_and_report key enter
-						;;
-					0780)	do_and_report type "poweroff"
-						;;
-					0790)	do_and_report key enter
-						;;
-					*)	;;
-				esac
-				;;
+						0010)	$EDUTESTMODE && do_and_report move 760 560 click 1
+							;;
+						0050)	do_and_report type jenkins
+							;;
+						0060)	do_and_report key enter
+							;;
+						0130)	do_and_report type insecure
+							;;
+						0140)	do_and_report key enter
+							;;
+						0300)	do_and_report key tab
+							;;
+						0310)	do_and_report key enter
+							;;
+						0400)	do_and_report key alt-f2
+							;;
+						0410)	do_and_report type "iceweasel"
+							;;
+						0420)	do_and_report key space
+							;;
+						0430)	do_and_report type "www"
+							;;
+						0440)	do_and_report type "."
+							;;
+						0450)	do_and_report type "debian"
+							;;
+						0460)	do_and_report type "."
+							;;
+						0470)	do_and_report type "org"
+							;;
+						0480)	do_and_report key enter
+							;;
+						0600)	do_and_report key alt-f2
+							;;
+						0610)	do_and_report type $GUITERMINAL
+							;;
+						0620)	do_and_report key enter
+							;;
+						0700)	do_and_report type apt-get
+							;;
+						0710)	do_and_report key space
+							;;
+						0720)	do_and_report type moo
+							;;
+						0730)	do_and_report key enter
+							;;
+						0740)	do_and_report type "su"
+							;;
+						0750)	do_and_report key enter
+							;;
+						0760)	do_and_report type r00tme
+							;;
+						0770)	do_and_report key enter
+							;;
+						0780)	do_and_report type "poweroff"
+							;;
+						0790)	do_and_report key enter
+							;;
+						*)	;;
+					esac
+					;;
 		*)		;;
 	esac
 }
@@ -891,7 +891,7 @@ monitor_system() {
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
-			echo "$PRINTF_NR: $(date)"
+			echo "$(date) $PRINTF_NR / $TOKEN"
 		fi
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			# press ctrl-key regularily to avoid screensaver kicking in

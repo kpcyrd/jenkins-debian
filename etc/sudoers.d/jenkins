@@ -29,6 +29,7 @@ jenkins ALL=  \
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	/bin/mv /var/cache/pbuilder/base*.tgz /var/cache/pbuilder/base*.tgz, \
 	/bin/rm /var/cache/pbuilder/base*.tgz, \
+	/bin/rm -v /var/cache/pbuilder/base*.tgz, \
 	/bin/rm /var/cache/pbuilder/result/*, \
 	/usr/bin/dcmd rm *.changes, \
 	/usr/bin/dcmd rm *.dsc, \

@@ -33,6 +33,7 @@
           - title: Stats
             yaxis: Packages
             group: PlotGroup
+            csv-file-name: package-plan-stats.csv
             series:
                 - file: stats.csv
                   format: csv

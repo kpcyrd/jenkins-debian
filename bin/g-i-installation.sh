@@ -22,7 +22,7 @@ fi
 # init
 #
 DISPLAY=localhost:$EXECUTOR_NUMBER
-NAME=$JOB_NAME
+NAME=$(echo $JOB_NAME | cut -d "_" -f2)
 VG=jenkins01
 LV=/dev/${VG}/$NAME
 DISKSIZE_IN_GB=$1

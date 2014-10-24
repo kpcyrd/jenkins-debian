@@ -6,32 +6,28 @@
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-# $1 = vnc-display, each job should have a unique one, so jobs can run in parallel
-# $2 = name
-# $3 = disksize in GB
-# $4 = wget url/jigdo url
-# $5 = d-i lang setting (default is 'en')
-# $6 = d-i locale setting (default is 'en_us')
+# $1 = disksize in GB
+# $2 = wget url/jigdo url
+# $3 = d-i lang setting (default is 'en')
+# $4 = d-i locale setting (default is 'en_us')
 
-if [ "$1" = "" ] || [ "$2" = "" ] || [ "$3" = "" ] || [ "$4" = "" ] ; then
-	echo "need three params"
-	echo '# $1 = vnc-display, each job should have a unique one, so jobs can run in parallel'
-	echo '# $2 = name'
-	echo '# $3 = disksize in GB'
-	echo '# $4 = wget url/jigdo url'
+if [ "$1" = "" ] || [ "$2" = "" ] ; then
+	echo "need two params"
+	echo '# $1 = disksize in GB'
+	echo '# $2 = wget url/jigdo url'
 	exit 1
 fi
 
 #
 # init
 #
-DISPLAY=localhost:$1
-NAME=$2			# it should be possible to derive $NAME from $JOB_NAME
+DISPLAY=localhost:$EXECUTOR_NUMBER
+NAME=$JOB_NAME
 VG=jenkins01
 LV=/dev/${VG}/$NAME
-DISKSIZE_IN_GB=$3
-URL=$4
-# $5 and $6 are used below for language setting
+DISKSIZE_IN_GB=$1
+URL=$2
+# $3 and $4 are used below for language setting
 RAMSIZE=1024
 if [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
@@ -58,12 +54,12 @@ NR=0
 #
 # language
 #
-if [ -z "$5" ] || [ -z "$6" ] ; then
+if [ -z "$3" ] || [ -z "$4" ] ; then
 	DI_LANG="en"
 	DI_LOCALE="en_US"
 else
-	DI_LANG=$5
-	DI_LOCALE=$6
+	DI_LANG=$3
+	DI_LOCALE=$4
 fi
 
 #

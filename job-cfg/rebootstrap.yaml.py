@@ -51,10 +51,8 @@ print("""
             - rebootstrap
     description: '{my_description}{do_not_edit}'
     logrotate:
-      daysToKeep: 365
+      daysToKeep: 90
       numToKeep: 20
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
     scm:
       - git:
           url: 'git://anonscm.debian.org/users/helmutg/rebootstrap.git'

@@ -14,10 +14,8 @@
                         text: Sponsored by Profitbricks
                         icon: /userContent/images/profitbricks-24x24.png
         logrotate:
-                daysToKeep: 365
-                numToKeep: 365
-                artifactDaysToKeep: -1
-                artifactNumToKeep: -1
+                daysToKeep: 90
+                numToKeep: 30
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org
@@ -44,10 +42,8 @@
                         text: Sponsored by Profitbricks
                         icon: /userContent/images/profitbricks-24x24.png
         logrotate:
-                daysToKeep: 365
-                numToKeep: 365
-                artifactDaysToKeep: -1
-                artifactNumToKeep: -1
+                daysToKeep: 90
+                numToKeep: 30
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org

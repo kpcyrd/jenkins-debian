@@ -2,10 +2,8 @@
     name: self-housekeeping
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     logrotate:
-      daysToKeep: 365
-      numToKeep: 365
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 30
     triggers:
       - timed: "30 6 * * *"
     builders:

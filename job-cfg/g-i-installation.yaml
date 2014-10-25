@@ -4,9 +4,7 @@
     description: '{my_description}{do_not_edit}'
     logrotate:
       daysToKeep: 90
-      numToKeep: 25
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 20
     triggers:
       - timed: "{my_timed}"
     builders:
@@ -51,10 +49,8 @@
     name: g-i-installation-housekeeping
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     logrotate:
-      daysToKeep: 365
-      numToKeep: 365
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 20
     triggers:
       - timed: "0 6 * * *"
     builders:

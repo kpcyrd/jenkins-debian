@@ -3,10 +3,8 @@
     name: webcheck
     description: 'Run <a href="http://arthurdejong.org/webcheck/">webcheck</a> on {webcheck_url} on the first day of a month. These patters are ignored: <pre>{webcheck_ignore_patterns}</pre>{do_not_edit}'
     logrotate:
-      daysToKeep: 365
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 30
     triggers:
       - timed: "{timed}"
     builders:

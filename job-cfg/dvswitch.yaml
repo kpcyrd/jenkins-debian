@@ -16,10 +16,8 @@
           icon: /userContent/images/profitbricks-24x24.png
     description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/dvswitch.yaml">dvswitch.yaml</a>.'
     logrotate:
-      daysToKeep: 180
-      numToKeep: 100
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 30
     scm:
       - git:
           url: 'git://anonscm.debian.org/dvswitch/dvswitch.git'

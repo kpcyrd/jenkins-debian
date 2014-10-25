@@ -30,10 +30,8 @@ print("""
           icon: /userContent/images/profitbricks-24x24.png
     description: 'Build the master branch of git://anonscm.debian.org/debian-edu/{my_package}.git in sid on every commit.<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/edu-packages.yaml">edu-packages.yaml</a>.'
     logrotate:
-      daysToKeep: 180
-      numToKeep: 100
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 30
     scm:
       - git:
           url: 'git://anonscm.debian.org/debian-edu/{my_package}.git'

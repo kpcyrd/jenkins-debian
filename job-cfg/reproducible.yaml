@@ -18,10 +18,8 @@
           icon: /userContent/images/profitbricks-24x24.png
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
     logrotate:
-      daysToKeep: 365
-      numToKeep: 100
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 30
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -53,10 +51,8 @@
           icon: /userContent/images/profitbricks-24x24.png
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
     logrotate:
-      daysToKeep: 365
-      numToKeep: 100
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 90
+      numToKeep: 20
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -101,10 +97,8 @@
             - reproducible
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
     logrotate:
-      daysToKeep: 365
-      numToKeep: 500
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      daysToKeep: 14
+      numToKeep: 750
     builders:
       - shell: '{my_shell}'
     publishers:

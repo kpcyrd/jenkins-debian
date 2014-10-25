@@ -3,9 +3,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 30
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -25,9 +23,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 30
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -78,9 +74,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 30
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -131,9 +125,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 30
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -179,9 +171,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 30
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -227,9 +217,7 @@
     project-type: freestyle
     logrotate:
       daysToKeep: 90
-      numToKeep: 50
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+      numToKeep: 30
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

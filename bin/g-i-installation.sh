@@ -1155,7 +1155,7 @@ case $NAME in
 			echo "Sleeping 15 seconds."
 			sleep 15
 			boot_system
-			let START_TRIGGER=NR+500
+			let START_TRIGGER=NR+200
 			monitor_system post_install $START_TRIGGER
 			;;
 esac

@@ -249,7 +249,6 @@ bootstrap_system() {
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"
-	set -x
 	QEMU_LAUNCHER=$(mktemp)
 	echo "cd $WORKSPACE" > $QEMU_LAUNCHER
 	echo -n "sudo qemu-system-x86_64 $QEMU_OPTS " >> $QEMU_LAUNCHER
@@ -259,6 +258,7 @@ bootstrap_system() {
 		echo -n '--kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
 	fi
 	echo "--append \"$APPEND\"" >> $QEMU_LAUNCHER
+	set -x
 	(bash -x $QEMU_LAUNCHER && touch $RESULTS/qemu_quit ) &
 	set +x
 }

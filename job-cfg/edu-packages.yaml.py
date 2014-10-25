@@ -43,7 +43,7 @@ print("""
       - pollscm: '*/6 * * * *'
     publishers:
       - email:
-          recipients: 'jenkins+debian-edu holger@layer-acht.org'
+          recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
 
 """)
 

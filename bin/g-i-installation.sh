@@ -1087,7 +1087,7 @@ save_logs() {
 		*)				;;
 	esac
 	sudo umount -l $SYSTEM_MNT || ( echo "Warning: cannot un-mount $SYSTEM_MNT" ; figlet "fail" )
-	set -x
+	set +x
 }
 
 trap cleanup_all INT TERM EXIT

@@ -1,5 +1,6 @@
 #!/usr/bin/python
-"""backport of util-linux' setsid -w to Debian stable"""
+"""backport of util-linux' setsid -w to Debian wheezy"""
+# FIXME: replace with setsid from jessie (stable) or wheezy-bpo
 
 import os
 import sys

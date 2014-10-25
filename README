@@ -47,14 +47,6 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 * 'g-i-installation_debian_squeeze_xfce'
 ** squeeze installation of Xfce desktop with squeeze image
 
-* Debian Edu installation tests of specific profiles and suites:
-** 'g-i-installation_debian-edu_squeeze-test_standalone'
-** 'g-i-installation_debian-edu_squeeze-test_workstation'
-** 'g-i-installation_debian-edu_squeeze-test_combi-server'
-** 'g-i-installation_debian-edu_wheezy-test_standalone'
-** 'g-i-installation_debian-edu_wheezy-test_workstation'
-** 'g-i-installation_debian-edu_wheezy-test_combi-server'
-
 === debian-installer jobs
 
 * 'd_i_build_$source_package'
@@ -96,6 +88,23 @@ Installation tests inside chroot environments.
 ** these $set_of_packages exist: 'gnome', 'kde', 'kde-full', 'lxde', 'xfc', 'full_desktop' (all five desktops plus `vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs` and (`libreoffice virt-manager mplayer2` (jessie/sid) or `openoffice virtualbox mplayer` (squeeze/wheezy)) and 'develop'
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
 
+=== Debian Edu related jobs
+
+* All Debian Edu related jobs can be seen at these two URLs:
+** https://jenkins.debian.net/view/edu_devel/ about Debian Edu Jessie
+** https://jenkins.debian.net/view/edu_stable/ about Debian Edu Wheezy and Squeeze
+
+* Then there are three types of jobs:
+** 'g-i-installation-$(distro)-$(profile)':
+*** tests installation of a profile with preseeding in the graphical installer,
+*** screenshots and logs are preserved and a movie created,
+*** testing clients against the main-server is planned too, for some time...
+** 'chroot-installation-$(distro)-$(education-metapackage)':
+*** tests apt installation of a metapackage in a specic distro.
+* 'edu-packages-$(distro)-$(src-package)':
+** builds one of the six debian-edu packages ('debian-edu', 'debian-edu-config', 'debian-edu-install', 'debian-edu-doc', 'debian-edu-artwork', 'debian-edu-archive-keyring' on every push to it's git master branch
+** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ get's updated automatically afterwards too.
+
 === lintian jobs
 
 * FIXME: describe lintian jobs
@@ -128,9 +137,6 @@ jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh package1
 ----
 
-=== edu-packages jobs
-
-* These jobs just build the master branch of the GIT repository of six Debian Edu packages in a sid environment on every GIT push.
 
 === dvswitch jobs
 

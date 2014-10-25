@@ -1038,7 +1038,7 @@ save_logs() {
 	# copy logs (and continue if some logs cannot be copied)
 	#
 	set +e
-	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/
+	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( ls $SYSTEM_MNT ; echo ; ls $SYSTEM_MNT/var ; echo ; ls $SYSTEM_MNT/var/log/ ; figlet "why no logs" ) || true
 	set -e
 	#
 	# get list of installed packages

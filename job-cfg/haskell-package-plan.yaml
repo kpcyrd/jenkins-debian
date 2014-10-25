@@ -18,6 +18,8 @@
     logrotate:
       daysToKeep: 365
       numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} "apt-get --no-install-recommends -y install {my_pkgs}; {my_shell}"'
     publishers:

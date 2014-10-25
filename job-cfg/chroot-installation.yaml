@@ -5,6 +5,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     builders:
       - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
     publishers:
@@ -43,6 +45,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     builders:
       - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
     publishers:
@@ -83,6 +87,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     triggers:
       - timed: '{my_time}'
     builders:

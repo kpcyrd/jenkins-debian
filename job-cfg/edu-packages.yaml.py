@@ -32,6 +32,8 @@ print("""
     logrotate:
       daysToKeep: 90
       numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     scm:
       - git:
           url: 'git://anonscm.debian.org/debian-edu/{my_package}.git'

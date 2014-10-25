@@ -16,6 +16,8 @@
         logrotate:
                 daysToKeep: 90
                 numToKeep: 30
+                artifactDaysToKeep: -1
+                artifactNumToKeep: -1
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org
@@ -44,6 +46,8 @@
         logrotate:
                 daysToKeep: 90
                 numToKeep: 30
+                artifactDaysToKeep: -1
+                artifactNumToKeep: -1
         publishers:
                 - email:
                         recipients: jenkins+debian-qa holger@layer-acht.org

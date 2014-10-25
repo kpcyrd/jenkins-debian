@@ -20,6 +20,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -53,6 +55,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -99,6 +103,8 @@
     logrotate:
       daysToKeep: 14
       numToKeep: 750
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
     publishers:

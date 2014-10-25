@@ -5,6 +5,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     triggers:
       - timed: "{my_timed}"
     builders:
@@ -51,6 +53,8 @@
     logrotate:
       daysToKeep: 90
       numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
     triggers:
       - timed: "0 6 * * *"
     builders:

@@ -52,16 +52,20 @@ else
 	fi
 	# use these settings in the scripts in the (s)chroots too
 	export SCRIPT_HEADER="#!/bin/bash
+	if $DEBUG ; then
+		set -x
+	fi
 	set -e
-	set -x
 	export DEBIAN_FRONTEND=noninteractive
 	export LC_ALL=$LC_ALL
 	export http_proxy=$http_proxy
 	export MIRROR=$MIRROR"
-	# be more verbose
-	export
+	# be more verbose, maybe
+	if $DEBUG ; then
+		export
+		set -x
+	fi
 	set -e
-	set -x
 fi
 }
 

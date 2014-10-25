@@ -79,6 +79,29 @@ cleanup() {
 		cp -v $CHROOT_TARGET/tmp/testrun/stats.csv $CURDIR
 	fi
 
+	#
+	# special case debian-edu-doc
+	#
+	CHANGES=$(cd $CHROOT_TARGET/tmp/ ; ls -1 debian-edu-doc_*.changes 2>/dev/null|| true)
+	if [ ! -z "$CHANGES" ] ; then
+		echo "Extracting contents from .deb files..."
+		cd $CHROOT_TARGET/tmp/
+		NEWDOC=$(mktemp -d)
+		for DEB in $(dcmd --deb $CHANGES) ; do
+			dpkg --extract $DEB $NEWDOC 2>/dev/null
+		done
+		EDUDOC="/var/lib/jenkins/userContent/debian-edu-doc"
+		rm -rf $EDUDOC
+		mkdir $EDUDOC
+		mv $NEWDOC/usr/share/doc/debian-edu-doc-* $EDUDOC/
+		rm -r $NEWDOC
+		MESSAGE="https://jenkins.debian.net/userContent/debian-edu-doc/ has been updated."
+		kgb-client --conf /srv/jenkins/kgb/debian-edu.conf --relay-msg "$MESSAGE"
+		echo
+		echo $MESSAGE
+		echo
+	fi
+
 	if [ -d $CHROOT_TARGET/proc ]; then
 		sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
 	fi
@@ -117,7 +140,6 @@ EOF
 
 bootstrap
 run "$@"
-cleanup
-
 trap - INT TERM EXIT
+cleanup
 

@@ -49,7 +49,7 @@ fi
 OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +7 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Warning: old temp directories found in /var/cache/pbuilder/result/"
+	echo "Warning: old files or directories found in /var/cache/pbuilder/result/"
 	echo "$OLDSTUFF"
 	echo "Please cleanup manually."
 	echo

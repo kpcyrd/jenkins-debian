@@ -82,10 +82,9 @@ cleanup() {
 	#
 	# special case debian-edu-doc
 	#
-	CHANGES=$(cd $CHROOT_TARGET/tmp/ ; ls -1 debian-edu-doc_*.changes 2>/dev/null|| true)
+	CHANGES=$(ls -1 $CHROOT_TARGET/tmp/debian-edu-doc_*.changes 2>/dev/null|| true)
 	if [ ! -z "$CHANGES" ] ; then
 		echo "Extracting contents from .deb files..."
-		cd $CHROOT_TARGET/tmp/
 		NEWDOC=$(mktemp -d)
 		for DEB in $(dcmd --deb $CHANGES) ; do
 			dpkg --extract $DEB $NEWDOC 2>/dev/null
@@ -94,8 +93,10 @@ cleanup() {
 		rm -rf $EDUDOC
 		mkdir $EDUDOC
 		mv $NEWDOC/usr/share/doc/debian-edu-doc-* $EDUDOC/
+		VERSION=$(echo $CHANGES | cut -d "_" -f2)
+		touch "$EDUDOC/${VERSION}_git${GIT_COMMIT:0:8}"
 		rm -r $NEWDOC
-		MESSAGE="https://jenkins.debian.net/userContent/debian-edu-doc/ has been updated."
+		MESSAGE="https://jenkins.debian.net/userContent/debian-edu-doc/ has been updated from ${GIT_COMMIT:0:8}"
 		kgb-client --conf /srv/jenkins/kgb/debian-edu.conf --relay-msg "$MESSAGE"
 		echo
 		echo $MESSAGE

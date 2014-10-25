@@ -94,9 +94,9 @@ cleanup() {
 		mkdir $EDUDOC
 		mv $NEWDOC/usr/share/doc/debian-edu-doc-* $EDUDOC/
 		VERSION=$(echo $CHANGES | cut -d "_" -f2)
-		touch "$EDUDOC/${VERSION}_git${GIT_COMMIT:0:8}"
+		touch "$EDUDOC/${VERSION}_git${GIT_COMMIT:0:7}"
 		rm -r $NEWDOC
-		MESSAGE="https://jenkins.debian.net/userContent/debian-edu-doc/ has been updated from ${GIT_COMMIT:0:8}"
+		MESSAGE="https://jenkins.debian.net/userContent/debian-edu-doc/ has been updated from ${GIT_COMMIT:0:7}"
 		kgb-client --conf /srv/jenkins/kgb/debian-edu.conf --relay-msg "$MESSAGE"
 		echo
 		echo $MESSAGE

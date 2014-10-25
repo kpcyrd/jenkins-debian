@@ -1156,7 +1156,12 @@ case $NAME in
 			sleep 15
 			boot_system
 			let START_TRIGGER=NR+200
-			monitor_system post_install $START_TRIGGER
+			case $NAME in
+				debian-edu_*server)		monitor_system post_install $START_TRIGGER 900
+								;;
+				*)				monitor_system post_install $START_TRIGGER
+								;;
+			esac
 			;;
 esac
 cleanup_all

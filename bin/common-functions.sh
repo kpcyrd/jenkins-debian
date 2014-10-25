@@ -69,3 +69,37 @@ else
 fi
 }
 
+publish_changes_to_userContent(){
+	echo "Extracting contents from .deb files..."
+	CHANGES=$1
+	CHANNEL=$2
+	SRCPKG=$(basename $CHANGES | cut -d "_" -f1)
+	if [ -z "$SRCPKG" ] ; then
+		exit 1
+	fi
+	VERSION=$(basename $CHANGES | cut -d "_" -f2)
+	TARGET="/var/lib/jenkins/userContent/$SRCPKG"
+	NEW_CONTENT=$(mktemp -d)
+	for DEB in $(dcmd --deb $CHANGES) ; do
+		dpkg --extract $DEB ${NEW_CONTENT} 2>/dev/null
+	done
+	rm -rf $TARGET
+	mkdir $TARGET
+	mv ${NEW_CONTENT}/usr/share/doc/${SRCPKG}-* $TARGET/
+	rm -r ${NEW_CONTENT}
+	if [ -z "$3" ] ; then
+		touch "$TARGET/${VERSION}"
+		FROM=""
+	else
+		touch "$TARGET/${VERSION}_$3"
+		FROM=" from $3"
+	fi
+	MESSAGE="https://jenkins.debian.net/userContent/$SRCPKG/ has been updated${FROM}."
+	echo
+	echo $MESSAGE
+	echo
+	if [ ! -z "$CHANNEL" ] ; then
+		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE"
+	fi
+}
+

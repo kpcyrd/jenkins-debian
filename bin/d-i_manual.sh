@@ -21,6 +21,10 @@ init_workspace() {
 
 pdebuild_package() {
 	#
+	# only used to build the installation-guide package
+	#
+	SOURCE=installation-guide
+	#
 	# prepare build
 	#
 	if [ -f /var/cache/pbuilder/base.tgz ] ; then
@@ -35,9 +39,12 @@ pdebuild_package() {
 	cd manual
 	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU"
-	# cleanup
-	SOURCE=$(grep "^Source: " debian/control |cut -d " " -f2)
-	sudo dcmd rm /var/cache/pbuilder/result/${SOURCE}_*changes
+	#
+	# publish and cleanup
+	#
+	CHANGES=$(ls /var/cache/pbuilder/result/${SOURCE}_*changes)
+	publish_changes_to_userContent $CHANGES debian-boot "svn-r$SVN_REVISION"
+	sudo dcmd rm $CHANGES
 	cd ..
 }
 

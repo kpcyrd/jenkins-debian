@@ -80,27 +80,11 @@ cleanup() {
 	fi
 
 	#
-	# special case debian-edu-doc
+	# special case: publish debian-edu-doc on the webserver
 	#
 	CHANGES=$(ls -1 $CHROOT_TARGET/tmp/debian-edu-doc_*.changes 2>/dev/null|| true)
 	if [ ! -z "$CHANGES" ] ; then
-		echo "Extracting contents from .deb files..."
-		NEWDOC=$(mktemp -d)
-		for DEB in $(dcmd --deb $CHANGES) ; do
-			dpkg --extract $DEB $NEWDOC 2>/dev/null
-		done
-		EDUDOC="/var/lib/jenkins/userContent/debian-edu-doc"
-		rm -rf $EDUDOC
-		mkdir $EDUDOC
-		mv $NEWDOC/usr/share/doc/debian-edu-doc-* $EDUDOC/
-		VERSION=$(echo $CHANGES | cut -d "_" -f2)
-		touch "$EDUDOC/${VERSION}_git${GIT_COMMIT:0:7}"
-		rm -r $NEWDOC
-		MESSAGE="https://jenkins.debian.net/userContent/debian-edu-doc/ has been updated from ${GIT_COMMIT:0:7}"
-		kgb-client --conf /srv/jenkins/kgb/debian-edu.conf --relay-msg "$MESSAGE"
-		echo
-		echo $MESSAGE
-		echo
+		publish_changes_to_userContent $CHANGES debian-edu "git${GIT_COMMIT:0:7}"
 	fi
 
 	if [ -d $CHROOT_TARGET/proc ]; then

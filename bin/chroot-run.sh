@@ -118,3 +118,6 @@ EOF
 bootstrap
 run "$@"
 cleanup
+
+trap - INT TERM EXIT
+

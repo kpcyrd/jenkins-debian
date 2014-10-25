@@ -95,13 +95,13 @@ Installation tests inside chroot environments.
 ** https://jenkins.debian.net/view/edu_stable/ about Debian Edu Wheezy and Squeeze
 
 * Then there are three types of jobs:
-** 'g-i-installation-$(distro)-$(profile)':
+** 'g-i-installation_$(distro)_$(profile)':
 *** tests installation of a profile with preseeding in the graphical installer,
 *** screenshots and logs are preserved and a movie created,
 *** testing clients against the main-server is planned too, for some time...
-** 'chroot-installation-$(distro)-$(education-metapackage)':
+** 'chroot-installation_$(distro)_install_$(education-metapackage)':
 *** tests apt installation of a metapackage in a specic distro.
-* 'edu-packages-$(distro)-$(src-package)':
+* 'edu-packages_$(distro)_$(src-package)':
 ** builds one of the six debian-edu packages ('debian-edu', 'debian-edu-config', 'debian-edu-install', 'debian-edu-doc', 'debian-edu-artwork', 'debian-edu-archive-keyring' on every push to it's git master branch
 ** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ get's updated automatically afterwards too.
 

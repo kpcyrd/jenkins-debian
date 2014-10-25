@@ -1012,7 +1012,6 @@ save_logs() {
 	#
 	# get logs and other files from the installed system
 	#
-	# remove set +e & -x once the code has proven its good
 	set -x
 	cd $WORKSPACE
 	SYSTEM_MNT=/media/$NAME
@@ -1040,6 +1039,7 @@ save_logs() {
 	#
 	set +e
 	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/
+	set -e
 	#
 	# get list of installed packages
 	#
@@ -1087,6 +1087,7 @@ save_logs() {
 		*)				;;
 	esac
 	sudo umount -l $SYSTEM_MNT || ( echo "Warning: cannot un-mount $SYSTEM_MNT" ; figlet "fail" )
+	set -x
 }
 
 trap cleanup_all INT TERM EXIT

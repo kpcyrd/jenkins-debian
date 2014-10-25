@@ -601,152 +601,152 @@
       - '{name}_sid_install_education-tasks':
          installation_params: 'sid education-tasks'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-tasks.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-menus':
          installation_params: 'sid education-menus'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-menus.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-astronomy':
          installation_params: 'sid education-astronomy'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-astronomy.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-chemistry':
          installation_params: 'sid education-chemistry'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-chemistry.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-common':
          installation_params: 'sid education-common'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-common.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-gnome':
          installation_params: 'sid education-desktop-gnome'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-gnome.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-kde':
          installation_params: 'sid education-desktop-kde'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-kde.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-lxde':
          installation_params: 'sid education-desktop-lxde'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-lxde.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-mate':
          installation_params: 'sid education-desktop-mate'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-mate.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-other':
          installation_params: 'sid education-desktop-other'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-other.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-sugar':
          installation_params: 'sid education-desktop-sugar'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-sugar.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-desktop-xfce':
          installation_params: 'sid education-desktop-xfce'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-desktop-xfce.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-development':
          installation_params: 'sid education-development'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-development.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-electronics':
          installation_params: 'sid education-electronics'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-electronics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-geography':
          installation_params: 'sid education-geography'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-geography.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-graphics':
          installation_params: 'sid education-graphics'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-graphics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-language':
          installation_params: 'sid education-language'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-language.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-laptop':
          installation_params: 'sid education-laptop'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-laptop.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-logic-games':
          installation_params: 'sid education-logic-games'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-logic-games.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-main-server':
          installation_params: 'sid education-main-server'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-main-server.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-mathematics':
          installation_params: 'sid education-mathematics'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-mathematics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-misc':
          installation_params: 'sid education-misc'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-misc.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-music':
          installation_params: 'sid education-music'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-music.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-networked':
          installation_params: 'sid education-networked'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-networked.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-physics':
          installation_params: 'sid education-physics'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-physics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-services':
          installation_params: 'sid education-services'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-services.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-standalone':
          installation_params: 'sid education-standalone'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-standalone.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-thin-client':
          installation_params: 'sid education-thin-client'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-thin-client.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-thin-client-server':
          installation_params: 'sid education-thin-client-server'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-thin-client-server.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_install_education-workstation':
          installation_params: 'sid education-workstation'
          my_description: 'Debootstrap sid, then install the Debian Edu metapackage education-workstation.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_sid_bootstrap':
          installation_params: 'sid'
@@ -879,152 +879,152 @@
       - '{name}_jessie_install_education-tasks':
          installation_params: 'jessie education-tasks'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-tasks.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-menus':
          installation_params: 'jessie education-menus'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-menus.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-astronomy':
          installation_params: 'jessie education-astronomy'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-astronomy.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-chemistry':
          installation_params: 'jessie education-chemistry'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-chemistry.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-common':
          installation_params: 'jessie education-common'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-common.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-gnome':
          installation_params: 'jessie education-desktop-gnome'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-gnome.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-kde':
          installation_params: 'jessie education-desktop-kde'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-kde.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-lxde':
          installation_params: 'jessie education-desktop-lxde'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-lxde.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-mate':
          installation_params: 'jessie education-desktop-mate'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-mate.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-other':
          installation_params: 'jessie education-desktop-other'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-other.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-sugar':
          installation_params: 'jessie education-desktop-sugar'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-sugar.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-desktop-xfce':
          installation_params: 'jessie education-desktop-xfce'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-desktop-xfce.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-development':
          installation_params: 'jessie education-development'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-development.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-electronics':
          installation_params: 'jessie education-electronics'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-electronics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-geography':
          installation_params: 'jessie education-geography'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-geography.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-graphics':
          installation_params: 'jessie education-graphics'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-graphics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-language':
          installation_params: 'jessie education-language'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-language.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-laptop':
          installation_params: 'jessie education-laptop'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-laptop.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-logic-games':
          installation_params: 'jessie education-logic-games'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-logic-games.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-main-server':
          installation_params: 'jessie education-main-server'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-main-server.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-mathematics':
          installation_params: 'jessie education-mathematics'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-mathematics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-misc':
          installation_params: 'jessie education-misc'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-misc.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-music':
          installation_params: 'jessie education-music'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-music.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-networked':
          installation_params: 'jessie education-networked'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-networked.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-physics':
          installation_params: 'jessie education-physics'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-physics.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-services':
          installation_params: 'jessie education-services'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-services.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-standalone':
          installation_params: 'jessie education-standalone'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-standalone.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-thin-client':
          installation_params: 'jessie education-thin-client'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-thin-client.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-thin-client-server':
          installation_params: 'jessie education-thin-client-server'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-thin-client-server.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_install_education-workstation':
          installation_params: 'jessie education-workstation'
          my_description: 'Debootstrap jessie, then install the Debian Edu metapackage education-workstation.'
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org holger@layer-acht.org'
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
       - '{name}_jessie_bootstrap':
          installation_params: 'jessie'

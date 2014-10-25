@@ -3,7 +3,6 @@
 # Copyright 2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
 #
 # included by all reproducible_*.sh scripts
 #

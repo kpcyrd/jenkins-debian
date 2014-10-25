@@ -93,7 +93,7 @@ if [ -s $PACKAGES ] ; then
 	echo "To fix:"
 	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
-		echo " sqlite3 ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\""
+		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\""
 	done
 	echo
 fi

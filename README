@@ -20,9 +20,13 @@ Some stats are available using link:https://jenkins.debian.net/munin/jenkins-mon
 
 If you notice some jobs has problems and you want to find out why, read <<debug,debug certain jobs>> to learn how to do this locally.
 
+== Notifications
+
+There are two types of notifications being used: email and IRC. At the end of each builds console log it says to where notifcations has been send. An adress of the form 'jenkins-foo' means an IRC notification has been send to the #foo IRC channel.
+
 == Jobs being run
 
-If you can think of ways to improve the usefulness of certain jobs, please do give feedback! Remember, this is still pretty much work in progress. 
+There are over 400 jobs being run currently. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
 
 === g-i-installation jobs
 
@@ -106,9 +110,13 @@ Installation tests inside chroot environments.
 
 === reproducible jobs
 
-* FIXME: describe reproducible jobs
+* Several jobs are being to test packages whether they can be build reproducible or not. The result is the website http://reproducible.debian.net which is actually just a collection of html files being served from this host.
 
-* manual rescheduling is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
+* There are three builder job, alpha+beta+gamma which are each started every 2min., and there is a scheduler jobs scheduling builds for them. Several other jobs exist to build the html pages.
+
+* The reproducible build jobs use their own pbuilder base.tgz, which has the reproducible apt repo added. And there another sid schroot is being used, where debbindiff (which has lots of depends installed) is run from
+
+* Manual rescheduling of packages is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
 
 ----
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde
@@ -120,6 +128,9 @@ jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh package1
 ----
 
+=== edu-packages jobs
+
+* These jobs just build the master branch of the GIT repository of six Debian Edu packages in a sid environment on every GIT push.
 
 === dvswitch jobs
 
@@ -163,6 +174,10 @@ TODO: svn/git using test-scripts need to learn checkout out - currently this is 
 === Feedback
 
 I love to get feedback on this! Please send an email to debian-qa@lists.debian.org or just join #debian-qa on irc.debian.org to report bugs or give other feedback there! 
+
+==== Self signed SSL certificate
+
+Yes, I know, there's a self signed certificate being used. But that's better than plain http anyway and if you provide a better certificate I will very likely happily take it.
 
 === Setup
 

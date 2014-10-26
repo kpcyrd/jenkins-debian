@@ -163,7 +163,7 @@ elif [ -s $CLEANUP ] ; then
 	cat $CLEANUP
 	echo
 	figlet "Achtung:"
-	echo "Do not forget to also delete these jobs from job-cfg/d-i.yaml - else they will be recreated and build attempted, which will fail and cause notifications..."
+	echo "Do not forget to also and ***first*** delete these jobs from job-cfg/d-i.yaml - else they will be recreated and build attempted, which will fail and cause notifications..."
 	# FIXME: adopt this text once job-cfg/d-i.yaml.py generates job-cfg/d-i.yaml
 else
 	figlet ok

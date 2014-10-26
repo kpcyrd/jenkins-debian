@@ -528,10 +528,6 @@
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_zh_TW_html'
-
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_aboot-installer'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_anna'
@@ -541,9 +537,6 @@
 - job-template:
     defaults: d-i-build
     name: '{name}_build_arcboot-installer'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_auto-install'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_base-installer'
@@ -582,9 +575,6 @@
     name: '{name}_build_clock-setup'
 - job-template:
     defaults: d-i-build
-    name: '{name}_build_colo-installer'
-- job-template:
-    defaults: d-i-build
     name: '{name}_build_console-setup'
 - job-template:
     defaults: d-i-build
@@ -618,9 +608,6 @@
     name: '{name}_build_elilo-installer'
 - job-template:
     defaults: d-i-build
-    name: '{name}_build_etch-support'
-- job-template:
-    defaults: d-i-build
     name: '{name}_build_finish-install'
 - job-template:
     defaults: d-i-build
@@ -646,12 +633,6 @@
 - job-template:
     defaults: d-i-build
     name: '{name}_build_kernel-wedge'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_kfreebsd-kernel-di-amd64'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_kfreebsd-kernel-di-i386'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_kickseed'
@@ -714,9 +695,6 @@
     name: '{name}_build_os-prober'
 - job-template:
     defaults: d-i-build
-    name: '{name}_build_palo-installer'
-- job-template:
-    defaults: d-i-build
     name: '{name}_build_partconf'
 - job-template:
     defaults: d-i-build
@@ -753,9 +731,6 @@
     name: '{name}_build_partman-efi'
 - job-template:
     defaults: d-i-build
-    name: '{name}_build_partman-ext2r0'
-- job-template:
-    defaults: d-i-build
     name: '{name}_build_partman-ext3'
 - job-template:
     defaults: d-i-build
@@ -780,16 +755,10 @@
     name: '{name}_build_partman-newworld'
 - job-template:
     defaults: d-i-build
-    name: '{name}_build_partman-palo'
-- job-template:
-    defaults: d-i-build
     name: '{name}_build_partman-partitioning'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_partman-prep'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_partman-reiserfs'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_partman-target'
@@ -834,16 +803,10 @@
     name: '{name}_build_s390-sysconfig-writer'
 - job-template:
     defaults: d-i-build
-    name: '{name}_build_sarge-support'
-- job-template:
-    defaults: d-i-build
     name: '{name}_build_sibyl-installer'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_silo-installer'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_srm-reader'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_tzsetup'
@@ -856,12 +819,6 @@
 - job-template:
     defaults: d-i-build
     name: '{name}_build_user-setup'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_userdevfs'
-- job-template:
-    defaults: d-i-build
-    name: '{name}_build_vmelilo-installer'
 - job-template:
     defaults: d-i-build
     name: '{name}_build_win32-loader'
@@ -1039,16 +996,12 @@
       - '{name}_manual_pt_BR_pdf':
          lang: 'pt_BR'
          languagename: 'Brazilian Portuguese'
-      - '{name}_build_aboot-installer':
-         gitrepo: 'git://git.debian.org/git/d-i/aboot-installer'
       - '{name}_build_anna':
          gitrepo: 'git://git.debian.org/git/d-i/anna'
       - '{name}_build_apt-setup':
          gitrepo: 'git://git.debian.org/git/d-i/apt-setup'
       - '{name}_build_arcboot-installer':
          gitrepo: 'git://git.debian.org/git/d-i/arcboot-installer'
-      - '{name}_build_auto-install':
-         gitrepo: 'git://git.debian.org/git/d-i/auto-install'
       - '{name}_build_base-installer':
          gitrepo: 'git://git.debian.org/git/d-i/base-installer'
       - '{name}_build_bterm-unifont':
@@ -1073,8 +1026,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/choose-mirror'
       - '{name}_build_clock-setup':
          gitrepo: 'git://git.debian.org/git/d-i/clock-setup'
-      - '{name}_build_colo-installer':
-         gitrepo: 'git://git.debian.org/git/d-i/colo-installer'
       - '{name}_build_console-setup':
          gitrepo: 'git://git.debian.org/git/d-i/console-setup'
       - '{name}_build_debian-installer-launcher':
@@ -1097,8 +1048,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/efi-reader'
       - '{name}_build_elilo-installer':
          gitrepo: 'git://git.debian.org/git/d-i/elilo-installer'
-      - '{name}_build_etch-support':
-         gitrepo: 'git://git.debian.org/git/d-i/etch-support'
       - '{name}_build_finish-install':
          gitrepo: 'git://git.debian.org/git/d-i/finish-install'
       - '{name}_build_flash-kernel':
@@ -1117,14 +1066,8 @@
          gitrepo: 'git://git.debian.org/git/d-i/kbd-chooser'
       - '{name}_build_kernel-wedge':
          gitrepo: 'git://git.debian.org/git/d-i/kernel-wedge'
-      - '{name}_build_kfreebsd-kernel-di-amd64':
-         gitrepo: 'git://git.debian.org/git/d-i/kfreebsd-kernel-di-amd64'
-      - '{name}_build_kfreebsd-kernel-di-i386':
-         gitrepo: 'git://git.debian.org/git/d-i/kfreebsd-kernel-di-i386'
       - '{name}_build_kickseed':
          gitrepo: 'git://git.debian.org/git/d-i/kickseed'
-      - '{name}_build_lenny-support':
-         gitrepo: 'git://git.debian.org/git/d-i/lenny-support'
       - '{name}_build_libdebian-installer':
          gitrepo: 'git://git.debian.org/git/d-i/libdebian-installer'
       - '{name}_build_lilo-installer':
@@ -1161,8 +1104,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/oldsys-preseed'
       - '{name}_build_os-prober':
          gitrepo: 'git://git.debian.org/git/d-i/os-prober'
-      - '{name}_build_palo-installer':
-         gitrepo: 'git://git.debian.org/git/d-i/palo-installer'
       - '{name}_build_partconf':
          gitrepo: 'git://git.debian.org/git/d-i/partconf'
       - '{name}_build_partitioner':
@@ -1187,8 +1128,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/partman-crypto'
       - '{name}_build_partman-efi':
          gitrepo: 'git://git.debian.org/git/d-i/partman-efi'
-      - '{name}_build_partman-ext2r0':
-         gitrepo: 'git://git.debian.org/git/d-i/partman-ext2r0'
       - '{name}_build_partman-ext3':
          gitrepo: 'git://git.debian.org/git/d-i/partman-ext3'
       - '{name}_build_partman-iscsi':
@@ -1205,14 +1144,10 @@
          gitrepo: 'git://git.debian.org/git/d-i/partman-nbd'
       - '{name}_build_partman-newworld':
          gitrepo: 'git://git.debian.org/git/d-i/partman-newworld'
-      - '{name}_build_partman-palo':
-         gitrepo: 'git://git.debian.org/git/d-i/partman-palo'
       - '{name}_build_partman-partitioning':
          gitrepo: 'git://git.debian.org/git/d-i/partman-partitioning'
       - '{name}_build_partman-prep':
          gitrepo: 'git://git.debian.org/git/d-i/partman-prep'
-      - '{name}_build_partman-reiserfs':
-         gitrepo: 'git://git.debian.org/git/d-i/partman-reiserfs'
       - '{name}_build_partman-target':
          gitrepo: 'git://git.debian.org/git/d-i/partman-target'
       - '{name}_build_partman-ufs':
@@ -1241,14 +1176,10 @@
          gitrepo: 'git://git.debian.org/git/d-i/s390-netdevice'
       - '{name}_build_s390-sysconfig-writer':
          gitrepo: 'git://git.debian.org/git/d-i/s390-sysconfig-writer'
-      - '{name}_build_sarge-support':
-         gitrepo: 'git://git.debian.org/git/d-i/sarge-support'
       - '{name}_build_sibyl-installer':
          gitrepo: 'git://git.debian.org/git/d-i/sibyl-installer'
       - '{name}_build_silo-installer':
          gitrepo: 'git://git.debian.org/git/d-i/silo-installer'
-      - '{name}_build_srm-reader':
-         gitrepo: 'git://git.debian.org/git/d-i/srm-reader'
       - '{name}_build_tzsetup':
          gitrepo: 'git://git.debian.org/git/d-i/tzsetup'
       - '{name}_build_udpkg':
@@ -1257,8 +1188,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/usb-discover'
       - '{name}_build_user-setup':
          gitrepo: 'git://git.debian.org/git/d-i/user-setup'
-      - '{name}_build_userdevfs':
-         gitrepo: 'git://git.debian.org/git/d-i/userdevfs'
       - '{name}_build_vmelilo-installer':
          gitrepo: 'git://git.debian.org/git/d-i/vmelilo-installer'
       - '{name}_build_win32-loader':

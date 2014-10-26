@@ -362,9 +362,11 @@ post_install_boot() {
 				*)	;;
 	esac
 	# Debian Edu -test images usually show a screen with known problems
-	# search for EDUTESTMODE in the code to understand how the next 2 lines are used
+	# if in EDUTESTMODE we'll acknowledge these
 	EDUTESTMODE=false
-	[[ "$NAME" =~ ^debian-edu_.*-test.*$ ]] && EDUTESTMODE=true
+	if [[ "$NAME" =~ ^debian-edu_.*-test.*$ ]] ; then
+		EDUTESTMODE=true
+	fi
 	#
 	# actions depending on the type of installation
 	#
@@ -575,9 +577,9 @@ post_install_boot() {
 				;;
 		debian-edu*minimal)	case $TOKEN in
 						# debian-edu installations report error found during installation, go forward in text mode
-						0030)	$EDUTESTMODE && do_and_report key tab
+						0030)	! $EDUTESTMODE || do_and_report key tab
 							;;
-						0040)	$EDUTESTMODE && do_and_report key enter
+						0040)	! $EDUTESTMODE || do_and_report key enter
 							;;
 						0050)	do_and_report type root
 							;;
@@ -624,9 +626,9 @@ post_install_boot() {
 					;;
 		debian-edu*main-server)	case $TOKEN in
 						# debian-edu installations report error found during installation, go forward, in text mode
-						0200)	$EDUTESTMODE && do_and_report key tab
+						0200)	! $EDUTESTMODE || do_and_report key tab
 							;;
-						0250)	$EDUTESTMODE && do_and_report key enter
+						0250)	! $EDUTESTMODE || do_and_report key enter
 							;;
 						0350)	do_and_report type root
 							;;
@@ -719,7 +721,7 @@ post_install_boot() {
 					;;
 		debian-edu*-combi-server) case $TOKEN in
 						# debian-edu installations report error found during installation, go forward
-						0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
+						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
 						0300)	do_and_report type jenkins
 							;;
@@ -782,7 +784,7 @@ post_install_boot() {
 					;;
 		debian-edu*workstation)	case $TOKEN in
 						# debian-edu installations report error found during installation, go forward
-						0100)	$EDUTESTMODE && do_and_report move 760 560 click 1
+						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
 						0110)	do_and_report type jenkins
 							;;
@@ -797,7 +799,7 @@ post_install_boot() {
 					;;
 		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-						0010)	$EDUTESTMODE && do_and_report move 760 560 click 1
+						0010)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
 						0050)	do_and_report type jenkins
 							;;

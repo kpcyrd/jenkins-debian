@@ -39,10 +39,14 @@ ok /^dpkg-genchanges: warning: the current version .+ is earlier than the previo
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 
+# suppress warnings in configure questiosn
+ok /warning.+\[N\/y\/\?\] n/
+ok /warning.+\[Y\/n\/\?\] y/
+
 # list of warnings here...
 warning /[Ww]arning/
 warning /WARNING/
 
 # create a quick access link to lines in the report containing 'INFO'
-info /INFO/
+info /^INFO.*/
 

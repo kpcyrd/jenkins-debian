@@ -1188,8 +1188,6 @@
          gitrepo: 'git://git.debian.org/git/d-i/usb-discover'
       - '{name}_build_user-setup':
          gitrepo: 'git://git.debian.org/git/d-i/user-setup'
-      - '{name}_build_vmelilo-installer':
-         gitrepo: 'git://git.debian.org/git/d-i/vmelilo-installer'
       - '{name}_build_win32-loader':
          gitrepo: 'git://git.debian.org/git/d-i/win32-loader'
       - '{name}_build_yaboot-installer':

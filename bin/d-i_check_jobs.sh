@@ -61,9 +61,13 @@ for JOB in $(ls -1 ~jenkins/jobs/ | grep ${DI_BUILD_JOB_PATTERN}) ; do
 	if grep -q git+ssh://git.debian.org/git/d-i/$REPONAME $TMPFILE ; then
 		if grep -A 1 git+ssh://git.debian.org/git/d-i/$REPONAME $TMPFILE | grep -q "deleted = true" ; then
 			echo "Warning: Job $JOB exists, but has 'deleted = true' set in .mrconfig."
-			echo "jenkins-jobs delete $JOB" >> $CLEANUP
+			if ! grep -q "'git://git.debian.org/git/d-i/$REPONAME'" /srv/jenkins/job-cfg/d-i.yaml ; then
+				echo "jenkins-jobs delete $JOB" >> $CLEANUP
+			else
+				echo "# Please remove $JOB from job-cfg/d-i.yaml before deleting the job." >> $CLEANUP
+			fi
 		else
-			echo "Ok: Job $JOB with git+ssh://git.debian.org/git/d-i/$REPONAME found."
+			echo "Ok: Job $JOB for git+ssh://git.debian.org/git/d-i/$REPONAME found."
 		fi
 	else
 		echo "Warning: Git repo $REPONAME not found in $URL, but job $JOB exists."
@@ -162,8 +166,7 @@ elif [ -s $CLEANUP ] ; then
 	echo
 	cat $CLEANUP
 	echo
-	figlet "Achtung:"
-	echo "Do not forget to also and ***first*** delete these jobs from job-cfg/d-i.yaml - else they will be recreated and build attempted, which will fail and cause notifications..."
+	echo "Jobs need to be deleted from job-cfg/d-i.yaml first, before deleting them with jenkins-jobs, cause else they will be recreated and then builds will be attempted, which will fail and cause notifications..."
 	# FIXME: adopt this text once job-cfg/d-i.yaml.py generates job-cfg/d-i.yaml
 else
 	figlet ok

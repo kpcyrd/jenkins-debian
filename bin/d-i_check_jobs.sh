@@ -17,12 +17,14 @@ DI_MANUAL_JOB_PATTERN=d-i_manual_
 TMPFILE=$(mktemp)
 JOB_TEMPLATES=$(mktemp)
 PROJECT_JOBS=$(mktemp)
+CLEANUP=$(mktemp)
 
 #
 # check for missing d-i package build jobs
 # for this, we compare referred git repos in .mrconfig against locally existing jenkins jobs
 # 	(see http://wiki.debian.org/DebianInstaller/CheckOut)
 #
+echo
 echo "Scanning $URL for referred git repos which have no jenkins job associated."
 curl $URL > $TMPFILE 2>/dev/null
 PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
@@ -30,7 +32,11 @@ PACKAGES=$( grep git.debian.org/git/d-i $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
 # check for each git repo if a jenkins job exists
 #
 for PACKAGE in $PACKAGES ; do
-	if [ ! -d ~jenkins/jobs/${DI_BUILD_JOB_PATTERN}${PACKAGE} ] ; then
+	if grep -A 1 git+ssh://git.debian.org/git/d-i/$PACKAGE $TMPFILE | grep -q "deleted = true" ; then
+		# ignore deleted repos
+		echo "Info: git+ssh://git.debian.org/git/d-i/$PACKAGE ignored as it has been deleted."
+		continue
+	elif [ ! -d ~jenkins/jobs/${DI_BUILD_JOB_PATTERN}${PACKAGE} ] ; then
 		echo "Warning: No build job '${DI_BUILD_JOB_PATTERN}${PACKAGE}'."
 		FAIL=true
 		#
@@ -45,15 +51,27 @@ for PACKAGE in $PACKAGES ; do
 		echo "Ok: Job '${DI_BUILD_JOB_PATTERN}${PACKAGE}' exists."
 	fi
 done
+echo
 #
 # check for each job if there still is a git repo
 #
+echo "Checking if there are jenkins jobs for which there is no repo in $URL - or only a deleted one."
 for JOB in $(ls -1 ~jenkins/jobs/ | grep ${DI_BUILD_JOB_PATTERN}) ; do
 	REPONAME=${JOB:10}
-	grep -q git+ssh://git.debian.org/git/d-i/$REPONAME $TMPFILE || echo "Warning: Git repo $REPONAME not found in $URL, but job $JOB exists."
+	if grep -q git+ssh://git.debian.org/git/d-i/$REPONAME $TMPFILE ; then
+		if grep -A 1 git+ssh://git.debian.org/git/d-i/$REPONAME $TMPFILE | grep -q "deleted = true" ; then
+			echo "Warning: Job $JOB exists, but has 'deleted = true' set in .mrconfig."
+			echo "jenkins-jobs delete $JOB" >> $CLEANUP
+		else
+			echo "Ok: Job $JOB with git+ssh://git.debian.org/git/d-i/$REPONAME found."
+		fi
+	else
+		echo "Warning: Git repo $REPONAME not found in $URL, but job $JOB exists."
+	fi
 done 
 # cleanup
 rm $TMPFILE
+echo
 
 #
 # check for missing d-i manual language build jobs
@@ -136,8 +154,16 @@ if $FAIL ; then
 	echo "Append this to the project definition in job-cfg/d-i.yaml:"
 	cat $PROJECT_JOBS
 	echo
-	rm $JOB_TEMPLATES $PROJECT_JOBS
+	rm -f $JOB_TEMPLATES $PROJECT_JOBS $CLEANUP
 	exit 1
+elif [ -s $CLEANUP ] ; then
+	echo
+	echo "Warning: some jobs exist which should be deleted, run these commands to clean up:"
+	echo
+	cat $CLEANUP
+	echo
 else
 	figlet ok
 fi
+rm -f $CLEANUP
+echo

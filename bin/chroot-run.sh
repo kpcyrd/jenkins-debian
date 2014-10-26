@@ -84,7 +84,7 @@ cleanup() {
 	#
 	CHANGES=$(ls -1 $CHROOT_TARGET/tmp/debian-edu-doc_*.changes 2>/dev/null|| true)
 	if [ ! -z "$CHANGES" ] ; then
-		publish_changes_to_userContent $CHANGES debian-edu "git${GIT_COMMIT:0:7}"
+		publish_changes_to_userContent $CHANGES debian-edu "git ${GIT_COMMIT:0:7}"
 	fi
 
 	if [ -d $CHROOT_TARGET/proc ]; then

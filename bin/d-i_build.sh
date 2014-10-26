@@ -53,10 +53,10 @@ pdebuild_package() {
 	fi
 	#
 	#
-	# build
+	# build (binary packages only, as sometimes we cannot get the upstream tarball...)
 	#
 	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU"
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b"
 	# cleanup
 	SOURCE=$(grep "^Source: " debian/control |cut -d " " -f2)
 	sudo dcmd rm /var/cache/pbuilder/result/${SOURCE}_*changes

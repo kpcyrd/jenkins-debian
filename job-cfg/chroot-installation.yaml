@@ -16,6 +16,7 @@
           fail-on-error: 'false'
       - email:
           recipients: '{my_recipients}'
+          notify-every-unstable-build: false
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

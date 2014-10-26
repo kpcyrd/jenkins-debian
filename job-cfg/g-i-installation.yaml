@@ -18,6 +18,7 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
+          notify-every-unstable-build: false
       - archive:
           artifacts: 'results/*.*, results/log/*, results/log/installer/*'
           latest_only: false

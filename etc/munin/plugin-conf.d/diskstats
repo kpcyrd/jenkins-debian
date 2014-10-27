@@ -1,5 +1,4 @@
-[diskstats_*]
-# Set graph_width to 450, device names which are longer get trimmed
+[diskstats]
 env.trim_labels yes
-env.graph_width 400
-env.exclude="/dev/jenkins01"
+env.include_only /dev/vda,/dev/vdb
+

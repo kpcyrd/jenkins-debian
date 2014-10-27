@@ -37,8 +37,9 @@ NameVirtualHost *:80
         ProxyPreserveHost on
 	AllowEncodedSlashes NoDecode
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
+	ProxyPass /server-status !
 	ProxyPass / http://localhost:8080/
-	ProxyPassReverse  / http://localhost:8080/ nocanon
+	ProxyPassReverse / http://localhost:8080/ nocanon
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 

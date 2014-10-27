@@ -658,37 +658,55 @@ post_install_boot() {
 							;;
 						0640)	do_and_report key enter
 							;;
-						0650)	do_and_report type apt-get 	# apt-get install w3m
+						0650)	do_and_report type ip
 							;;
 						0660)	do_and_report key space
 							;;
-						0670)	do_and_report type "-y"
+						0670)	do_and_report type a
 							;;
-						0680)	do_and_report key space
+						0680)	do_and_report key enter
 							;;
-						0690)	do_and_report type install
+						0690)	do_and_report type ping
 							;;
 						0700)	do_and_report key space
 							;;
-						0710)	do_and_report type w3m
+						0710)	do_and_report type "-c 3 "
 							;;
-						0720)	do_and_report key enter
+						0720)	do_and_report type "8.8.8.8"
 							;;
-						0800)	do_and_report type w3m 		# check nagios
+						0730)	do_and_report key enter
 							;;
-						0810)	do_and_report key space
+						0750)	do_and_report type apt-get 	# apt-get install w3m
 							;;
-						0820)	do_and_report type https
+						0760)	do_and_report key space
 							;;
-						0825)	do_and_report key ":"		# this will get a :
+						0770)	do_and_report type "-y"
 							;;
-						0830)	do_and_report type "//www"
+						0780)	do_and_report key space
 							;;
-						0840)	do_and_report type "/nagios"
+						0790)	do_and_report type install
 							;;
-						0850)	do_and_report key enter
+						0800)	do_and_report key space
 							;;
-						0950)	do_and_report type q
+						0810)	do_and_report type w3m
+							;;
+						0820)	do_and_report key enter
+							;;
+						0900)	do_and_report type w3m 		# check nagios
+							;;
+						0910)	do_and_report key space
+							;;
+						0920)	do_and_report type https
+							;;
+						0925)	do_and_report key ":"		# this will get a :
+							;;
+						0930)	do_and_report type "//www"
+							;;
+						0940)	do_and_report type "/nagios"
+							;;
+						0950)	do_and_report key enter
+							;;
+						0990)	do_and_report type q
 							;;
 						1000)	do_and_report key enter
 							;;

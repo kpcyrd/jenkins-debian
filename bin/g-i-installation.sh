@@ -673,9 +673,9 @@ post_install_boot() {
 							;;
 						0700)	do_and_report key space
 							;;
-						0710)	do_and_report type "-c 3 "
+						0710)	do_and_report type '-c 3 '
 							;;
-						0720)	do_and_report type "8.8.8.8"
+						0720)	do_and_report type '8.8.8.8'
 							;;
 						0730)	do_and_report key enter
 							;;
@@ -683,7 +683,7 @@ post_install_boot() {
 							;;
 						0760)	do_and_report key space
 							;;
-						0770)	do_and_report type "-y"
+						0770)	do_and_report type '-y'
 							;;
 						0780)	do_and_report key space
 							;;
@@ -699,11 +699,11 @@ post_install_boot() {
 							;;
 						0910)	do_and_report key space
 							;;
-						0920)	do_and_report type "https:"
+						0920)	do_and_report type 'https:'
 							;;
-						0930)	do_and_report type "//www"
+						0930)	do_and_report type '//www'
 							;;
-						0940)	do_and_report type "/nagios"
+						0940)	do_and_report type '/nagios'
 							;;
 						0950)	do_and_report key enter
 							;;
@@ -715,11 +715,11 @@ post_install_boot() {
 							;;
 						1020)	do_and_report key space
 							;;
-						1030)	do_and_report type "https:"
+						1030)	do_and_report type 'https:'
 							;;
-						1050)	do_and_report type "//www"
+						1050)	do_and_report type '//www'
 							;;
-						1070)	do_and_report type ":631"
+						1070)	do_and_report type ':631'
 							;;
 						1080)	do_and_report key enter
 							;;

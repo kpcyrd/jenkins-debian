@@ -13,6 +13,7 @@ jenkins ALL=  \
 	/bin/mv /schroots/* /schroots/*, \
 	/bin/umount -l /chroots/*, \
 	/bin/umount -l /media/*, \
+	/bin/rmdir /media/*, \
 	/bin/mount -o loop*, \
 	/bin/mount --bind *, \
 	/usr/bin/du *, \

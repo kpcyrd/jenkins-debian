@@ -1,0 +1,5 @@
+[df*]
+env.exclude none unknown iso9660 squashfs udf romfs ramfs debugfs /srv/workspace/pbuilder
+env.warning 92
+env.critical 98
+

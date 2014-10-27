@@ -295,7 +295,7 @@ backup_screenshot() {
 }
 
 do_and_report() {
-	echo "At $NR (token: $TOKEN) sending $@"
+	echo "$(date) $PRINTF_NR / $TOKEN - sending $@"
 	# Workaround #758881: vncdo type command sending "e" chars sometimes not
 	# received, sometimes received as if "e" key was kept pressed.
 	if [ "$1" = "type" ]; then
@@ -915,7 +915,7 @@ monitor_system() {
 			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
 			rm snapshot_${PRINTF_NR}.jpg
 		else
-			echo "$PRINTF_NR: $(date) - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
+			echo "$(date) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
 			convert -size $VIDEOSIZE xc:none -depth 8 snapshot_${PRINTF_NR}.ppm
 		fi
 		# give signal we are still running

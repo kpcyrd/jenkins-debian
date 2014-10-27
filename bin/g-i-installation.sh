@@ -823,15 +823,15 @@ post_install_boot() {
 							;;
 						0060)	do_and_report key enter
 							;;
-						0130)	do_and_report type insecure
+						0070)	do_and_report type insecure
 							;;
-						0140)	do_and_report key enter
+						0080)	do_and_report key enter
 							;;
-						0300)	do_and_report key tab
+						0150)	do_and_report key tab
 							;;
-						0310)	do_and_report key enter
+						0250)	do_and_report key enter
 							;;
-						0400)	do_and_report key alt-f2
+						0350)	do_and_report key alt-f2
 							;;
 						0410)	do_and_report type "iceweasel"
 							;;

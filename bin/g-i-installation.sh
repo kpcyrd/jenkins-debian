@@ -168,7 +168,8 @@ bootstrap_system() {
 			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
 					;;
-			*)		QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
+			*)		QEMU_OPTS="$QEMU_OPTS -vga std" # try to workaround lp#1318119
+					QEMU_KERNEL="--kernel $IMAGE_MNT/install.amd/vmlinuz --initrd $IMAGE_MNT/install.amd/gtk/initrd.gz"
 					;;
 		esac
 	else

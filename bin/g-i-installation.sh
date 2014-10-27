@@ -76,7 +76,7 @@ fetch_if_newer() {
 	echo "Downloading $url"
 	curlopts="-L -s -S"
 	if [ -f "$file" ] ; then
-		Echo "$file exists, will only re-download if a newer one is available..."
+		echo "$file exists, will only re-download if a newer one is available..."
 		ls $file
 		curlopts="$curlopts -z $file"
 	fi

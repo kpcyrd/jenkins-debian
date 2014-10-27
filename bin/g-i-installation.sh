@@ -76,8 +76,8 @@ fetch_if_newer() {
 	echo "Downloading $url"
 	curlopts="-L -s -S"
 	if [ -f "$file" ] ; then
-		echo "$file exists, will only re-download if a newer one is available..."
-		ls $file
+		ls -l $file
+		echo "File exists, will only re-download if a newer one is available..."
 		curlopts="$curlopts -z $file"
 	fi
 	curl $curlopts -o $file $url
@@ -699,9 +699,7 @@ post_install_boot() {
 							;;
 						0910)	do_and_report key space
 							;;
-						0920)	do_and_report type https
-							;;
-						0925)	do_and_report key ":"		# this will get a :
+						0920)	do_and_report type "https:"
 							;;
 						0930)	do_and_report type "//www"
 							;;
@@ -717,15 +715,11 @@ post_install_boot() {
 							;;
 						1020)	do_and_report key space
 							;;
-						1030)	do_and_report type https
-							;;
-						1045)	do_and_report key ";"		# this will get a :
+						1030)	do_and_report type "https:"
 							;;
 						1050)	do_and_report type "//www"
 							;;
-						1060)	do_and_report key ";"		# this will get a :
-							;;
-						1070)	do_and_report type "631"
+						1070)	do_and_report type ":631"
 							;;
 						1080)	do_and_report key enter
 							;;

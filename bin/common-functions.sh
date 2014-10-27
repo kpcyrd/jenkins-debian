@@ -30,6 +30,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	#  anytime...)
 	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)
 	echo "$(date) - start running \"$0\" as \"$TTT\" using \"$@\" as arguments."
+	echo
 	/srv/jenkins/bin/setsid.py $TTT "$@"
 	exit $?
 	# cleanup is done automatically via trap

@@ -1058,7 +1058,7 @@ save_logs() {
 	# copy logs (and continue if some logs cannot be copied)
 	#
 	set +e
-	sudo cp -r $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( ls $SYSTEM_MNT ; echo ; ls $SYSTEM_MNT/var ; echo ; ls $SYSTEM_MNT/var/log/ ; figlet "why no logs" ) || true
+	sudo cp -rv $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( ls -lad $SYSTEM_MNT ; echo ; ls $SYSTEM_MNT/var ; echo ; ls $SYSTEM_MNT/var/log/ ; figlet "why no logs" ) || true
 	set -e
 	#
 	# get list of installed packages
@@ -1081,7 +1081,7 @@ save_logs() {
 							echo "Warning: no LTSP chroot found."
 						fi
 						if [ ! -z "$LTSPARCH" ] ; then
-							sudo cp -r $SYSTEM_MNT/opt/ltsp/$LTSPARCH/var/log $RESULTS/log/opt/
+							sudo cp -rv $SYSTEM_MNT/opt/ltsp/$LTSPARCH/var/log $RESULTS/log/opt/
 							sudo chroot $SYSTEM_MNT/opt/ltsp/$LTSPARCH dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/$LTSPARCH ; figlet "fail" )
 						fi
 						sudo umount -l $SYSTEM_MNT/opt || ( echo "Warning: cannot un-mount $SYSTEM_MNT/opt" ; figlet "fail" )

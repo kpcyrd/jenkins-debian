@@ -24,7 +24,7 @@ jenkins ALL=  \
 	/sbin/lvcreate *, /sbin/lvremove *, \
 	/bin/mkdir -p /media/*, \
 	/usr/bin/guestmount *, \
-	/bin/cp -r /media/*, \
+	/bin/cp -rv /media/*, \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	/bin/mv /var/cache/pbuilder/base*.tgz /var/cache/pbuilder/base*.tgz, \

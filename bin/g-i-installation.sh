@@ -1030,50 +1030,38 @@ save_logs() {
 	#
 	# get logs and other files from the installed system
 	#
-	set -x
 	cd $WORKSPACE
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
+	FAILURE=false
 	# FIXME: bugreport guestmount: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	case $NAME in
-		debian-edu_*workstation)	sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
+		debian-edu_*)			sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; export FAILURE=true )
+						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || echo "Not mounting /dev/vg_system/var - it's probably not used in this profile."
+						sudo guestmount -a $LV -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || echo "Not mounting /dev/vg_system/usr - it's probably not used in this profile."
+						sudo guestmount -a $LV -m /dev/vg_system/var+log -o nonempty --ro $SYSTEM_MNT/var/log || echo "Not mounting /dev/vg_system/var+log - it's probably not used in this profile."
 						;;
-		debian-edu_*standalone*)	sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
-						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
+		debian_wheezy_*)		sudo guestmount -a $LV -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; export FAILURE=true )
 						;;
-		debian-edu_*minimal)
-						sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
-						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
-						sudo guestmount -a $LV -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || ( echo "Warning: cannot mount /dev/vg_system/usr" ; figlet "fail" )
-						;;
-		debian-edu_*server)
-						sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; figlet "fail" )
-						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || ( echo "Warning: cannot mount /dev/vg_system/var" ; figlet "fail" )
-						sudo guestmount -a $LV -m /dev/vg_system/var+log -o nonempty --ro $SYSTEM_MNT/var/log || ( echo "Warning: cannot mount /dev/vg_system/var+log" ; figlet "fail" )
-						sudo guestmount -a $LV -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || ( echo "Warning: cannot mount /dev/vg_system/usr" ; figlet "fail" )
-						;;
-		debian_wheezy_*)		sudo guestmount -a $LV -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; figlet "fail" )
-						;;
-		*)				sudo guestmount -a $LV -m /dev/debian-vg/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian-vg/root" ; figlet "fail" ) 
+		*)				sudo guestmount -a $LV -m /dev/debian-vg/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian-vg/root" ; export FAILURE=true )
 						;;
 	esac
 	#
 	# copy logs (and continue if some logs cannot be copied)
 	#
-	sudo cp -rv $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( figlet "cannot get logs out" ; echo "Maybe the installation didn't finish and that's why." )
+	sudo cp -rv $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( echo "Warning: cannot get logs from installed system." ; echo "Did the installation finish correctly?" ; export FAILURE=true )
 	#
 	# get list of installed packages
 	#
-	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system." ; figlet "fail" )
+	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/log/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system, did the installation finish correctly?" ; export FAILURE=true )
 	#
 	# only on combi-servers and ltsp-servers:
 	#	mount /opt
 	#	copy LTSP logs and package list
 	#	unmount /opt
 	#
-	case $NAME in
-		debian-edu_*ltsp-server|debian-edu_*combi-server)	sudo guestmount -a $LV -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; figlet "fail" )
+	case $NAME in debian-edu_*ltsp-server|debian-edu_*combi-server)	sudo guestmount -a $LV -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; export FAILURE=true )
 						mkdir -p $RESULTS/log/opt
 						if [ -d $SYSTEM_MNT/opt/ltsp/amd64 ] ; then
 							LTSPARCH="amd64"
@@ -1084,9 +1072,9 @@ save_logs() {
 						fi
 						if [ ! -z "$LTSPARCH" ] ; then
 							sudo cp -rv $SYSTEM_MNT/opt/ltsp/$LTSPARCH/var/log $RESULTS/log/opt/
-							sudo chroot $SYSTEM_MNT/opt/ltsp/$LTSPARCH dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/$LTSPARCH ; figlet "fail" )
+							sudo chroot $SYSTEM_MNT/opt/ltsp/$LTSPARCH dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/$LTSPARCH ; export FAILURE=true )
 						fi
-						sudo umount -l $SYSTEM_MNT/opt || ( echo "Warning: cannot un-mount $SYSTEM_MNT/opt" ; figlet "fail" )
+						sudo umount -l $SYSTEM_MNT/opt || echo "Warning: cannot un-mount $SYSTEM_MNT/opt"
 						;;
 		*)				;;
 	esac
@@ -1094,22 +1082,13 @@ save_logs() {
 	# umount guests
 	#
 	sync
-	case $NAME in
-		debian-edu_*_workstation)	;;	# done below
-		debian-edu_*standalone*)	sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
-						;;
-		debian-edu_*minimal)
-						sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
-						sudo umount -l $SYSTEM_MNT/usr || ( echo "Warning: cannot un-mount $SYSTEM_MNT/usr" ; figlet "fail" )
-						;;
-		debian-edu_*-server)
-						sudo umount -l $SYSTEM_MNT/var/log || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var/log" ; figlet "fail" )
-						sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
-						sudo umount -l $SYSTEM_MNT/usr || ( echo "Warning: cannot un-mount $SYSTEM_MNT/usr" ; figlet "fail" )
+	case $NAME in debian-edu_*)		sudo umount -l $SYSTEM_MNT/var/log || true
+						sudo umount -l $SYSTEM_MNT/var || true
+						sudo umount -l $SYSTEM_MNT/usr || true
 						;;
 		*)				;;
 	esac
-	sudo umount -l $SYSTEM_MNT || ( echo "Warning: cannot un-mount $SYSTEM_MNT" ; figlet "fail" )
+	sudo umount -l $SYSTEM_MNT || ( echo "Warning: cannot un-mount $SYSTEM_MNT" ; export FAILURE=true )
 	#
 	# make sure we can read everything after installation
 	#
@@ -1118,7 +1097,12 @@ save_logs() {
 	# finally delete the mountpoint again
 	#
 	sudo rmdir $SYSTEM_MNT
-	set +x
+	#
+	# cry out lout, if...
+	#
+	if $FAILURE ; then
+		figlet "failure"
+	fi
 }
 
 trap cleanup_all INT TERM EXIT

@@ -16,9 +16,15 @@
           parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
-      - email:
+      - email-ext:
           recipients: '{my_recipients}'
-          notify-every-unstable-build: false
+          first-failure: true
+          fixed: true
+          subject: 'Build failed in Jenkins: $JOB_NAME $BUILD_NUMBER'
+          attach-build-log: true
+          body: 'See $BUILD_URL
+and $BUILD_URL/console
+and $BUILD_URL/artifact/results/ if there are any.'
       - archive:
           artifacts: 'results/*.*, results/log/*, results/log/installer/*'
           latest_only: false

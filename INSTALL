@@ -31,6 +31,7 @@ I would prefer to run a jenkins package from wheezy-backports.
 * Jenkins GIT plugin
 * Jenkins Subversion Plug-in
 
+* Email-ext Plugin
 * Log Parser Plugin
 * HTML Publisher plugin
 * Static Analysis Utilities

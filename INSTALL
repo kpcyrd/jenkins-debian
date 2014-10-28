@@ -50,6 +50,7 @@ I would prefer to run a jenkins package from wheezy-backports.
 * Sidebar Link
 * Green Balls
 * Compact Columns
+* Console Tail Plugin
 * Cron Column
 * Simple Theme Plugin
 * LiveScreenshot Plugin

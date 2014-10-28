@@ -307,7 +307,7 @@ backup_screenshot() {
 }
 
 do_and_report() {
-	echo "$(date) $PRINTF_NR / $TOKEN - sending $@"
+	echo "$(date) $PRINTF_NR / $TOKEN - sending '$@'"
 	# Workaround #758881: vncdo type command sending "e" chars sometimes not
 	# received, sometimes received as if "e" key was kept pressed.
 	if [ "$1" = "type" ]; then
@@ -316,7 +316,7 @@ do_and_report() {
 			vncdo -s $DISPLAY --delay=100 key ${typestr:$i:1}
 		done
 	else
-		vncdo -s $DISPLAY $@
+		vncdo -s $DISPLAY "$@"
 	fi
 	backup_screenshot
 }
@@ -682,11 +682,13 @@ post_install_boot() {
 							;;
 						0700)	do_and_report key space
 							;;
-						0710)	do_and_report type '-c 3 '
+						0710)	do_and_report type '-'
 							;;
-						0720)	do_and_report type '8.8.8.8'
+						0720)	do_and_report type 'c 2 '
 							;;
-						0730)	do_and_report key enter
+						0730)	do_and_report type '8.8.8.8'
+							;;
+						0740)	do_and_report key enter
 							;;
 						0750)	do_and_report type apt-get 	# apt-get install w3m
 							;;

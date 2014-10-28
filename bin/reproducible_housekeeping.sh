@@ -10,12 +10,10 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-# common
-set +x
-set -e
-REP_RESULTS=/srv/reproducible-results
+DIRTY=false
 
 # prepare backup
+REP_RESULTS=/srv/reproducible-results
 mkdir -p $REP_RESULTS/backup
 cd $REP_RESULTS/backup
 
@@ -29,9 +27,9 @@ fi
 # actually do the backup
 DATE=$(date '+%Y-%m-%d')
 if [ ! -f reproducible_$DATE.db.xz ] ; then
-	cp $PACKAGES_DB .
+	cp -v $PACKAGES_DB .
 	DATE=$(date '+%Y-%m-%d')
-	mv reproducible.db reproducible_$DATE.db
+	mv -v reproducible.db reproducible_$DATE.db
 	xz reproducible_$DATE.db
 fi
 
@@ -43,6 +41,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	echo "$OLDSTUFF"
 	echo "Please cleanup manually."
 	echo
+	DIRTY=true
 fi
 
 # find and warn about pbuild leftovers
@@ -53,6 +52,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	echo "$OLDSTUFF"
 	echo "Please cleanup manually."
 	echo
+	DIRTY=true
 fi
 
 # find processes which should not be there
@@ -70,6 +70,7 @@ if [ -s $RESULT ] ; then
 	echo
 	echo "Please cleanup manually."
 	echo
+	DIRTY=true
 fi
 rm $HAYSTACK $RESULT
 
@@ -96,7 +97,11 @@ if [ -s $PACKAGES ] ; then
 		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\""
 	done
 	echo
+	DIRTY=true
 fi
 rm $PACKAGES
 
-exit 0
+if ! $DIRTY ; then
+	echo "Everything seems to be fine."
+	echo
+fi

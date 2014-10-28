@@ -13,53 +13,14 @@
           parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
-      - email:
-          recipients: '{my_recipients}'
-          notify-every-unstable-build: false
-    properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/chroot-installation/
-          text: All chroot-installation jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.com
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
-      - priority:
-          job-prio: '130'
-      - throttle:
-          max-total: 6
-          max-per-node: 6
-          enabled: True
-          option: category
-          categories:
-            - chroot-installation
-
-- defaults:
-    name: chroot-installation-less-mail
-    description: '{my_description}{do_not_edit}'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 30
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-installation.sh {installation_params}'
-    publishers:
-      - logparser:
-          parse-rules: '/srv/jenkins/logparse/debian.rules'
-          unstable-on-warning: 'false'
-          fail-on-error: 'false'
       - email-ext:
           recipients: '{my_recipients}'
           first-failure: true
           fixed: true
           subject: 'Build failed in Jenkins: $JOB_NAME $BUILD_NUMBER'
           attach-build-log: true
+          body: 'See $BUILD_URL
+and $BUILD_URL/console'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -219,123 +180,123 @@
     name: '{name}_sid_install_developer'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-tasks'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-menus'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-astronomy'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-chemistry'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-common'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-gnome'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-kde'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-lxde'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-mate'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-other'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-sugar'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-desktop-xfce'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-development'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-electronics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-geography'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-graphics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-language'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-laptop'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-logic-games'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-main-server'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-mathematics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-misc'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-music'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-networked'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-physics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-services'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-standalone'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-thin-client'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-thin-client-server'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_sid_install_education-workstation'
 
 - job-template:
@@ -439,123 +400,123 @@
     name: '{name}_jessie_install_developer'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-tasks'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-menus'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-astronomy'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-chemistry'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-common'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-gnome'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-kde'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-lxde'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-mate'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-other'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-sugar'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-desktop-xfce'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-development'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-electronics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-geography'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-graphics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-language'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-laptop'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-logic-games'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-main-server'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-mathematics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-misc'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-music'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-networked'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-physics'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-services'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-standalone'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-thin-client'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-thin-client-server'
 
 - job-template:
-    defaults: chroot-installation-less-mail
+    defaults: chroot-installation
     name: '{name}_jessie_install_education-workstation'
 
 - job-template:

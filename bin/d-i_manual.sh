@@ -44,6 +44,9 @@ pdebuild_package() {
 	#
 	CHANGES=$(ls /var/cache/pbuilder/result/${SOURCE}_*changes)
 	publish_changes_to_userContent $CHANGES debian-boot "svn-r$SVN_REVISION"
+	echo
+	cat $CHANGES
+	echo
 	sudo dcmd rm $CHANGES
 	cd ..
 }

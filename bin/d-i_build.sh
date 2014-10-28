@@ -59,6 +59,9 @@ pdebuild_package() {
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b"
 	# cleanup
 	SOURCE=$(grep "^Source: " debian/control |cut -d " " -f2)
+	echo
+	cat /var/cache/pbuilder/result/${SOURCE}_*changes
+	echo
 	sudo dcmd rm /var/cache/pbuilder/result/${SOURCE}_*changes
 }
 

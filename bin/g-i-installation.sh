@@ -46,6 +46,7 @@ mkdir -p results
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
 mkdir -p $RESULTS/log
+GOCR=$(mktemp)
 
 #
 # set main counter
@@ -133,6 +134,13 @@ cleanup_all() {
 			convert $CONVERTOPTS $i ${i%.ppm}.png
 			rm $i
 		done
+	fi
+	# finally
+	if [ -f "$GOCR" ] ; then
+		echo "Results of running /usr/bin/gocr on last screenshot:"
+		echo
+		cat $GOCR
+		echo
 	fi
 }
 
@@ -928,7 +936,6 @@ monitor_system() {
 			#
 			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
-			GOCR=$(mktemp)
 			# gocr likes black background
 			convert -fill black -opaque $VIDEOBGCOLOR snapshot_${PRINTF_NR}.ppm $GOCR.ppm
 			gocr $GOCR.ppm > $GOCR
@@ -936,29 +943,30 @@ monitor_system() {
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
 			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
 			CDROM_PROBLEM=$(grep "There was a problem reading data from the CD-ROM" $GOCR || true)
-			SOFTWARE_PROBLEM=$(grep "The failing step is: Select and install software" $GOCR || true)
+			INSTALL_PROBLEM=$(egrep "(nstallation step fail|he failing step i)"  $GOCR || true)
 			BUILD_LTSP_PROBLEM=$(grep "The failing step is: Build LTSP chroot" $GOCR || true)
-			rm $GOCR $GOCR.ppm
+			echo >> $GOCR
+			rm $GOCR.ppm
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ||
 			    [[ "$LAST_LINE" =~ .*System\ halted.* ]] ||
 			    [[ "$LAST_LINE" =~ .*Reached\ target\ Shutdown.* ]] ||
 			    [[ "$LAST_LINE" =~ .*Cannot\ .inalize\ remaining\ .ile\ systems.* ]]; then
-				echo "QEMU was powered down."
+				echo "QEMU was powered down." >> $GOCR
 				break
 			elif [ ! -z "$STACK_LINE" ] ; then
-				echo "INFO: got a stack-trace, probably on power-down."
+				echo "INFO: got a stack-trace, probably on power-down." >> $GOCR
 				break
 			elif [ ! -z "$INVALID_SIG_LINE" ] ; then
-				echo "ERROR: Invalid Release signature found, aborting."
+				echo "ERROR: Invalid Release signature found, aborting." >> $GOCR
 				exit 1
 			elif [ ! -z "$CDROM_PROBLEM" ] ; then
-				echo "ERROR: Loading installer components from CDROM failed, aborting."
+				echo "ERROR: Loading installer components from CDROM failed, aborting." >> $GOCR
 				exit 1
-			elif [ ! -z "$SOFTWARE_PROBLEM" ] ; then
-				echo "ERROR: The failing step is: Select and install software."
+			elif [ ! -z "$INSTALL_PROBLEM" ] ; then
+				echo "ERROR: An installation steü failed." >> $GOCR
 				exit 1
 			elif [ ! -z "$BUILD_LTSP_PROBLEM" ] ; then
-				echo "ERROR: The failing step is: Build LTSP chroot."
+				echo "ERROR: The failing step is: Build LTSP chroot." >> $GOCR
 				exit 1
 			fi
 		fi

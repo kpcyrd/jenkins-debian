@@ -1101,6 +1101,7 @@ save_logs() {
 		debian-edu_*minimal)
 						sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )
 						sudo umount -l $SYSTEM_MNT/usr || ( echo "Warning: cannot un-mount $SYSTEM_MNT/usr" ; figlet "fail" )
+						;;
 		debian-edu_*-server)
 						sudo umount -l $SYSTEM_MNT/var/log || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var/log" ; figlet "fail" )
 						sudo umount -l $SYSTEM_MNT/var || ( echo "Warning: cannot un-mount $SYSTEM_MNT/var" ; figlet "fail" )

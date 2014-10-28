@@ -55,10 +55,13 @@ for arch in sorted(archs):
           parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
-      - email:
+      - email-ext:
           recipients: holger@layer-acht.org
-          notify-every-unstable-build: false
-#          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Build failed in Jenkins: $JOB_NAME $BUILD_NUMBER'
+          attach-build-log: true
+# FIXME:  recipients: jenkins+debian-boot holger@layer-acht.org
 """ % dict(arch=arch))
 
 print("""

@@ -96,4 +96,4 @@ setup_pbuilder() {
 	echo
 }
 
-setup_pbuilder base-reproducible dpkg dpkg-dev debhelper dh-python discount
+setup_pbuilder base-reproducible dpkg dpkg-dev debhelper discount

@@ -61,9 +61,7 @@ for arch in sorted(archs):
           fixed: true
           subject: 'Build failed in Jenkins: $JOB_NAME $BUILD_NUMBER'
           attach-build-log: true
-          body: 'See $BUILD_URL
-and $BUILD_URL/console
-and http://d-i.debian.org/daily-images/daily-build-overview.html#%(arch)s'
+          body: 'See $BUILD_URL\nand $BUILD_URL/console\nand http://d-i.debian.org/daily-images/daily-build-overview.html#%(arch)s'
 # FIXME:  recipients: jenkins+debian-boot holger@layer-acht.org
 """ % dict(arch=arch))
 

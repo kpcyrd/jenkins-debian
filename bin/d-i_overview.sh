@@ -27,16 +27,20 @@ echo "Checking $URL for build issues on $ARCH."
 awk '/ul id="missingarchs/,/<\/ul>/' $TMPFILE > $MISSING
 awk '/ul id="failedarchs/,/<\/ul>/' $TMPFILE > $FAILED
 if grep -q "<li><a href=\"#$ARCH\"" $MISSING ; then
-	echo "Warning: Build for $ARCH is missing!"
+	echo "Warning: Build for $ARCH is missing - check $URL#$ARCH"
 	CLEAN=false
 fi
 if grep -q "<li><a href=\"#$ARCH\"" $FAILED ; then
-	echo "Failure: Build for $ARCH failed!"
-	exit 1
+	echo "Failure: Build for $ARCH failed - check $URL#$ARCH"
+	CLEAN=false
 fi
+
 if $CLEAN ; then
 	echo "None found."
 fi
 echo
 
 rm $TMPFILE $FAILED $MISSING
+if ! $CLEAN ; then
+	exit 1
+fi

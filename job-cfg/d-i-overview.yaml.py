@@ -56,13 +56,12 @@ for arch in sorted(archs):
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email-ext:
-          recipients: holger@layer-acht.org
+          recipients: jenkins+debian-boot holger@layer-acht.org
           first-failure: true
           fixed: true
           subject: 'Build results for: $JOB_NAME $BUILD_NUMBER $BUILD_STATUS'
           attach-build-log: true
           body: 'See $BUILD_URL and $BUILD_URL/console and http://d-i.debian.org/daily-images/daily-build-overview.html#%(arch)s'
-# FIXME:  recipients: jenkins+debian-boot holger@layer-acht.org
 """ % dict(arch=arch))
 
 print("""

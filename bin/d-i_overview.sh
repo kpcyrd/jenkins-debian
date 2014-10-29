@@ -15,6 +15,10 @@ fi
 ARCH=$1
 URL=http://d-i.debian.org/daily-images/daily-build-overview.html
 
+# randomize start times slightly
+SLEEP=$(shuf -i 1-10 -n 1)
+sleep 0.$SLEEP
+
 TMPFILE=$(mktemp)
 MISSING=$(mktemp)
 FAILED=$(mktemp)

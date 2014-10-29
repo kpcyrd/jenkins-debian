@@ -112,12 +112,10 @@ cleanup_all() {
 	#
 	# cleanup image mount
 	#
-	( sudo umount -l $IMAGE_MNT ; rmdir $IMAGE_MNT ) &
+	( sudo umount -l $IMAGE_MNT && rmdir $IMAGE_MNT ) 2> /dev/null &
 	cd $RESULTS
 	echo -n "Last screenshot: "
-	if [ -f snapshot_000000.ppm ] ; then
-		ls -t1 snapshot_??????.ppm | tail -1
-	fi
+	(ls -t1 snapshot_??????.ppm || true ) | tail -1
 	#
 	# create video
 	#

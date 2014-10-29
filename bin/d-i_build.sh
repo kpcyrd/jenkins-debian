@@ -55,10 +55,15 @@ pdebuild_package() {
 	#
 	# build (binary packages only, as sometimes we cannot get the upstream tarball...)
 	#
-	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	SOURCE=$(dpkg-parsechangelog |grep ^Source: | cut -d " " -f2)
+	# FIXME: workaround: #767260 (console-setup doesnt support parallel build)
+	if [ "$SOURCE" != "console-setup" ] ; then
+		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	else
+		NUM_CPU=1
+	fi
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b"
 	# cleanup
-	SOURCE=$(grep "^Source: " debian/control |cut -d " " -f2)
 	echo
 	cat /var/cache/pbuilder/result/${SOURCE}_*changes
 	echo

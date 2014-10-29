@@ -17,9 +17,9 @@
           recipients: '{my_recipients}'
           first-failure: true
           fixed: true
-          subject: 'Build failed in Jenkins: $JOB_NAME $BUILD_NUMBER'
+          subject: 'Build results for: $JOB_NAME $BUILD_NUMBER $BUILD_STATUS'
           attach-build-log: true
-          body: 'See $BUILD_URL\nand $BUILD_URL/console'
+          body: 'See $BUILD_URL and $BUILD_URL/console'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

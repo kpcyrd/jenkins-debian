@@ -59,7 +59,7 @@ fi
 HAYSTACK=$(mktemp)
 RESULT=$(mktemp)
 ps axo pid,user,size,pcpu,cmd > $HAYSTACK
-for ZOMBIE in $(pgrep -u 1234 -P 1) ; do
+for ZOMBIE in $(pgrep -u 1234 -P 1 || true) ; do
 	# faked-sysv comes and goes...
 	grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null
 done
@@ -83,7 +83,7 @@ QUERY="
 		ORDER BY date_scheduled
 	"
 PACKAGES=$(mktemp)
-sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES
+sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES || echo "Warning: SQL query '$QUERY' failed."
 if [ -s $PACKAGES ] ; then
 	echo
 	echo "Warning: packages found where the build was started more than 24h ago:"

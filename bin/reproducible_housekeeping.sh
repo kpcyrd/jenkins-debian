@@ -34,7 +34,7 @@ if [ ! -f reproducible_$DATE.db.xz ] ; then
 fi
 
 # find and warn about old temp directories
-OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +7 -exec ls -lad {} \;)
+OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +1 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old temp directories found in $REP_RESULTS"
@@ -45,7 +45,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # find and warn about pbuild leftovers
-OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +7 -exec ls -lad {} \;)
+OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +0 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old files or directories found in /var/cache/pbuilder/result/"
@@ -61,7 +61,7 @@ RESULT=$(mktemp)
 ps axo pid,user,size,pcpu,cmd > $HAYSTACK
 for ZOMBIE in $(pgrep -u 1234 -P 1 || true) ; do
 	# faked-sysv comes and goes...
-	grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null
+	grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null || true
 done
 if [ -s $RESULT ] ; then
 	echo

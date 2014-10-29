@@ -684,27 +684,33 @@ post_install_boot() {
 							;;
 						0710)	do_and_report type '-'
 							;;
-						0720)	do_and_report type 'c 2 '
+						0720)	do_and_report type 'c'
 							;;
-						0730)	do_and_report type '8.8.8.8'
+						0730)	do_and_report key space
 							;;
-						0740)	do_and_report key enter
+						0740)	do_and_report type '2'
 							;;
-						0750)	do_and_report type apt-get 	# apt-get install w3m
+						0750)	do_and_report key space
 							;;
-						0760)	do_and_report key space
+						0760)	do_and_report type '8.8.8.8'
 							;;
-						0770)	do_and_report type '-y'
+						0770)	do_and_report key enter
 							;;
-						0780)	do_and_report key space
+						0880)	do_and_report type apt-get 	# apt-get install w3m
 							;;
-						0790)	do_and_report type install
+						0810)	do_and_report key space
 							;;
-						0800)	do_and_report key space
+						0820)	do_and_report type '-y'
 							;;
-						0810)	do_and_report type w3m
+						0830)	do_and_report key space
 							;;
-						0820)	do_and_report key enter
+						0840)	do_and_report type install
+							;;
+						0850)	do_and_report key space
+							;;
+						0860)	do_and_report type w3m
+							;;
+						0870)	do_and_report key enter
 							;;
 						0900)	do_and_report type w3m 		# check nagios
 							;;

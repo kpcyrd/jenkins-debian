@@ -44,9 +44,6 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 * 'g-i-installation_debian_wheezy_lxde','-xfce','-kde' and '-gnome' and '-kfreebsd'
 ** wheezy installation of Xfce/LXDE/KDE desktop and kfreebsd install with wheezy release image
 
-* 'g-i-installation_debian_squeeze_xfce'
-** squeeze installation of Xfce desktop with squeeze image
-
 === debian-installer jobs
 
 * 'd_i_build_$source_package'
@@ -92,7 +89,7 @@ Installation tests inside chroot environments.
 
 * All Debian Edu related jobs can be seen at these two URLs:
 ** https://jenkins.debian.net/view/edu_devel/ about Debian Edu Jessie
-** https://jenkins.debian.net/view/edu_stable/ about Debian Edu Wheezy and Squeeze
+** https://jenkins.debian.net/view/edu_stable/ about Debian Edu Wheezy
 
 * Then there are three types of jobs:
 ** 'g-i-installation_$(distro)_$(profile)':
@@ -155,20 +152,6 @@ These are jobs for making sure jenkins.debian.net is running smoothly.
 *This is work in progress too, but mostly just needs documentation!* In principle the shell commands from the various jobs should run on any Debian system just fine. Please use a test system though, as all your data might be eaten.
 
 * Build this source as a debian package and install the jenkins.d.n-debug package and all it's recommends.
-
-=== Debugging g-i-installation jobs
-
-as user run:
-
-----
-mkdir workspace ; cd workspace # test-script should check if they are in a directory called workspace and if not, mkdir it and cd into it.
-/srv/jenkins/bin/cd_tester.sh 2 squeeze-test-debian-edu-standalone 20 http://ftp.skolelinux.org/cd-squeeze-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
-
-----
-FIXME: explain how to how to debug any job. Point this out at the end of any log.
-
-
-TODO: svn/git using test-scripts need to learn checkout out - currently this is always done by jenkins.
 
 === Feedback
 

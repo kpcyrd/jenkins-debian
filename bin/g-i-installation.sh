@@ -153,7 +153,7 @@ bootstrap_system() {
 	cd $WORKSPACE
 	echo "Creating throw-away logical volume with ${DISKSIZE_IN_GB} GiB now."
 	sudo lvcreate -L${DISKSIZE_IN_GB}G -n $NAME $VG
-	# FIXME: the following will become unneeded / simpler once squeeze+wheezy are not tested anymore
+	# FIXME: the following will become unneeded / simpler once wheezy is not tested anymore
 	RELEASE="$(echo $NAME | cut -d "_" -f2)"
 	if [ "$RELEASE" != "jessie" ] ; then
 		echo "Workaround to remove swap signature from previous installs, see #757818"
@@ -192,9 +192,6 @@ bootstrap_system() {
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
 	EXTRA_APPEND=""
 	case $NAME in
-		debian*_squeeze*)
-			INST_KEYMAP="console-keymaps-at/$INST_KEYMAP"
-			;;
 		*_sid_daily*)
 			EXTRA_APPEND="mirror/suite=sid"
 			;;

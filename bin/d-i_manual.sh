@@ -77,6 +77,15 @@ build_language() {
 		# ignore kernel architectures
 		if [ "$ARCH" != "hurd" ] && [ "$ARCH" != "kfreebsd" ] && [ "$ARCH" != "linux" ] ; then
 			make languages=$1 architectures=$ARCH destination=../../$FORMAT/ formats=$FORMAT
+			if ( [ "$FORMAT" = "pdf" ] && [ ! -f pdf/$1.$ARCH/install.$1.pdf ] ) || \
+				( [ "$FORMAT" = "html" ] && [ ! -f html/$1.$ARCH/index.html ] ) ; then
+					echo
+					echo "Failed to build $1 $FORMAT for $ARCH, exiting."
+					echo
+					cd ../..
+					svn revert manual -R
+					exit 1
+			fi
 		fi
 	done
 	cd ../..
@@ -89,6 +98,7 @@ build_language() {
 		mkdir -p pdf/dummy
 		touch pdf/dummy/dummy.pdf
 	fi
+	echo
 }
 
 po_cleanup() {

@@ -30,13 +30,6 @@
 
 - job-template:
     defaults: dvswitch
-    name: '{name}_wheezy'
-    publishers:
-      - email:
-          recipients: 'jenkins+dvswitch holger@layer-acht.org dvswitch-maint@debian.org'
-
-- job-template:
-    defaults: dvswitch
     name: '{name}_jessie'
     publishers:
       - email:
@@ -81,11 +74,7 @@
             my_distro: 'jessie'
             my_shell: 'debian/rules build'
             my_description: 'Build the dvswitch git master branch on jessie.'
-            my_trigger: 'dvswitch_wheezy'
-        - '{name}_wheezy':
-            my_distro: 'wheezy backports'
-            my_shell: 'debian/rules build'
-            my_description: 'Build the dvswitch git master branch on wheezy (+backports).'
+            my_trigger: ''
         - '{name}_against_libav_git':
             my_distro: 'sid'
             my_shell: '"apt-get -y build-dep dvswitch libav ; ./configure --enable-shared --disable-static ; make ; make install ; cd .. ; git clone git://anonscm.debian.org/dvswitch/dvswitch.git ; cd dvswitch ; mk-build-deps -ir ; apt-get -y remove libavcodec-dev libavutil-dev ; ./debian/rules build"'

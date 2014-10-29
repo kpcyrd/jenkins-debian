@@ -143,13 +143,6 @@ jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh package1
 * FIXME: describe dvswitch jobs
 
 
-=== webcheck jobs
-
-* three jobs for running webcheck against www.debian.org, www.debian.org/News and www.debian.org/security
-* several webcheck jobs for running again various debconf.org websites
-
-These jobs are only run on the first day of each month.
-
 === self jobs
 
 These are jobs for making sure jenkins.debian.net is running smoothly.

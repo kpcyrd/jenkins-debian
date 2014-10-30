@@ -20,7 +20,7 @@
           recipients: '{my_recipients}'
           first-failure: true
           fixed: true
-          subject: 'Build results for: $JOB_NAME $BUILD_NUMBER $BUILD_STATUS'
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
           attach-build-log: true
           body: 'See $BUILD_URL and $BUILD_URL/console and $BUILD_URL/artifact/results/ if there are any.'
       - archive:

@@ -34,7 +34,7 @@ if [ ! -f reproducible_$DATE.db.xz ] ; then
 fi
 
 # find and warn about old temp directories
-OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +1 -exec ls -lad {} \;)
+OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old temp directories found in $REP_RESULTS"

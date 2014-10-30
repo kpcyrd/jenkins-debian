@@ -711,7 +711,7 @@ post_install_boot() {
 							;;
 						0910)	do_and_report key space
 							;;
-						0920)	do_and_report type 'https:'
+						0920)	do_and_report type 'https;'
 							;;
 						0930)	do_and_report type '//www'
 							;;
@@ -727,11 +727,11 @@ post_install_boot() {
 							;;
 						1020)	do_and_report key space
 							;;
-						1030)	do_and_report type 'https:'
+						1030)	do_and_report type 'https;'
 							;;
 						1050)	do_and_report type '//www'
 							;;
-						1070)	do_and_report type ':631'
+						1070)	do_and_report type ';631'
 							;;
 						1080)	do_and_report key enter
 							;;
@@ -966,7 +966,7 @@ monitor_system() {
 				echo "ERROR: Loading installer components from CDROM failed, aborting." >> $GOCR
 				exit 1
 			elif [ ! -z "$INSTALL_PROBLEM" ] ; then
-				echo "ERROR: An installation steü failed." >> $GOCR
+				echo "ERROR: An installation step failed." >> $GOCR
 				exit 1
 			elif [ ! -z "$BUILD_LTSP_PROBLEM" ] ; then
 				echo "ERROR: The failing step is: Build LTSP chroot." >> $GOCR

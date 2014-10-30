@@ -49,7 +49,8 @@ while read line ; do
 		if [ "${line:0:5}" = "-----" ] ; then
 			read line
 			read line
-			MY_LINE=$(read line | cut -d " " -f1-2)
+			MY_LINE=$(read line)
+			MY_LINE=$(echo $MY_LINE | cut -d " " -f1-2)
 		else
 			MY_LINE=$(echo $line | tr -d \< | tr -d \>)
 		fi

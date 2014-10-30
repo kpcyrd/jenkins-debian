@@ -584,49 +584,49 @@ post_install_boot() {
 				;;
 		debian-edu*minimal)	case $TOKEN in
 						# debian-edu installations report error found during installation, go forward in text mode
-						0030)	! $EDUTESTMODE || do_and_report key tab
+						0180)	! $EDUTESTMODE || do_and_report key tab
 							;;
-						0040)	! $EDUTESTMODE || do_and_report key enter
+						0220)	! $EDUTESTMODE || do_and_report key enter
 							;;
-						0050)	do_and_report type root
+						0250)	do_and_report type root
 							;;
-						0060)	do_and_report key enter
+						0260)	do_and_report key enter
 							;;
-						0070)	do_and_report type r00tme
+						0270)	do_and_report type r00tme
 							;;
-						0080)	do_and_report key enter
+						0280)	do_and_report key enter
 							;;
-						0100)	do_and_report type ps
+						0300)	do_and_report type ps
 							;;
-						0110)	do_and_report key space
+						0310)	do_and_report key space
 							;;
-						0120)	do_and_report type fax
+						0320)	do_and_report type fax
 							;;
-						0130)	do_and_report key enter
+						0330)	do_and_report key enter
 							;;
-						0140)	do_and_report type df
+						0340)	do_and_report type df
 							;;
-						0150)	do_and_report key enter
+						0350)	do_and_report key enter
 							;;
-						0160)	do_and_report type apt-get
+						0360)	do_and_report type apt-get
 							;;
-						0170)	do_and_report key space
+						0370)	do_and_report key space
 							;;
-						0180)	do_and_report type moo
+						0380)	do_and_report type moo
 							;;
-						0200)	do_and_report key enter
+						0400)	do_and_report key enter
 							;;
-						0220)	do_and_report type "su"
+						0420)	do_and_report type "su"
 							;;
-						0230)	do_and_report key enter
+						0430)	do_and_report key enter
 							;;
-						0240)	do_and_report type r00tme
+						0440)	do_and_report type r00tme
 							;;
-						0250)	do_and_report key enter
+						0450)	do_and_report key enter
 							;;
-						0260)	do_and_report type poweroff
+						0460)	do_and_report type poweroff
 							;;
-						0270)	do_and_report key enter
+						0470)	do_and_report key enter
 							;;
 						*)	;;
 					esac
@@ -826,19 +826,19 @@ post_install_boot() {
 					;;
 		debian-edu*standalone*)	case $TOKEN in
 					# debian-edu installations report error found during installation, go forward
-						0010)	! $EDUTESTMODE || do_and_report move 760 560 click 1
+						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
-						0050)	do_and_report type jenkins
+						0110)	do_and_report type jenkins
 							;;
-						0060)	do_and_report key enter
+						0120)	do_and_report key enter
 							;;
-						0070)	do_and_report type insecure
+						0130)	do_and_report type insecure
 							;;
-						0080)	do_and_report key enter
+						0140)	do_and_report key enter
 							;;
-						0150)	do_and_report key tab
+						0200)	do_and_report key tab
 							;;
-						0250)	do_and_report key enter
+						0300)	do_and_report key enter
 							;;
 						0350)	do_and_report key alt-f2
 							;;

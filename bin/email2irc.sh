@@ -15,7 +15,7 @@ LOGFILE=/var/lib/jenkins/email_log
 #
 HEADER=true
 VALID_MAIL=false
-FIRST_LINE=""
+MY_LINE=""
 while read line ; do
 	if [ "$HEADER" == "true" ] ; then
 		# check if email header ends
@@ -43,8 +43,16 @@ while read line ; do
 		fi
 	fi
 	# catch first line of email body (to send to IRC later)
-	if [ "$HEADER" == "false" ] && [ -z "$FIRST_LINE" ] ; then
-		FIRST_LINE=$line
+	if [ "$HEADER" == "false" ] && [ -z "$MY_LINE" ] ; then
+		MY_LINE=$line
+		# if this is a multipart email it comes from the email extension plugin
+		if [ "${line:0:5}" = "-----" ] ; then
+			read line
+			read line
+			MY_LINE=$(read line | cut -d " " -f1-2)
+		else
+			MY_LINE=$(echo $line | tr -d \< | tr -d \>)
+		fi
 	fi
 
 done
@@ -57,15 +65,13 @@ fi
 if [ "$VALID_MAIL" == "true" ] ; then
 	echo -e "----------\nvalid email\n-----------" >> $LOGFILE
 	echo $JENKINS_JOB | cut -d ":" -f1 >> $LOGFILE
-	SUBJECT=$(echo $SUBJECT | cut -d ":" -f1)
 	echo $SUBJECT >> $LOGFILE
-	echo $FIRST_LINE >> $LOGFILE
+	echo $MY_LINE >> $LOGFILE
 	# only notify if there is a channel to notify
 	if [ ! -z $CHANNEL ] ; then
 		# log message
-		echo "#$CHANNEL: $SUBJECT. $FIRST_LINE" >> $LOGFILE
-		#MESSAGE=$(echo "$SUBJECT. $FIRST_LINE" | colorit -c /etc/colorit.conf )
-		MESSAGE="$JENKINS_JOB: $SUBJECT. $FIRST_LINE"
+		echo "#$CHANNEL: $SUBJECT. $MY_LINE" >> $LOGFILE
+		MESSAGE="$JENKINS_JOB: $SUBJECT. $MY_LINE"
 		# notify kgb
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" && echo "kgb informed successfully." >> $LOGFILE
 		echo >> $LOGFILE

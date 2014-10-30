@@ -691,7 +691,7 @@ post_install_boot() {
 							;;
 						0770)	do_and_report key enter
 							;;
-						0880)	do_and_report type apt-get 	# apt-get install w3m
+						0800)	do_and_report type apt-get 	# apt-get install w3m
 							;;
 						0810)	do_and_report key space
 							;;

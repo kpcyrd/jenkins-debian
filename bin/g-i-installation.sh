@@ -691,57 +691,67 @@ post_install_boot() {
 							;;
 						0770)	do_and_report key enter
 							;;
-						0800)	do_and_report type apt-get 	# apt-get install w3m
+						0800)	do_and_report type route
 							;;
 						0810)	do_and_report key space
 							;;
-						0820)	do_and_report type '-y'
+						0820)	do_and_report type '-'
 							;;
-						0830)	do_and_report key space
+						0830)	do_and_report type 'n'
 							;;
-						0840)	do_and_report type install
+						0840)	do_and_report key enter
 							;;
-						0850)	do_and_report key space
+						0850)	do_and_report type apt-get 	# apt-get install w3m
 							;;
-						0860)	do_and_report type w3m
+						0860)	do_and_report key space
 							;;
-						0870)	do_and_report key enter
+						0870)	do_and_report type '-y'
 							;;
-						0900)	do_and_report type w3m 		# check nagios
+						0880)	do_and_report key space
 							;;
-						0910)	do_and_report key space
+						0890)	do_and_report type install
 							;;
-						0920)	do_and_report type 'https;'
+						0900)	do_and_report key space
 							;;
-						0930)	do_and_report type '//www'
+						0910)	do_and_report type w3m
 							;;
-						0940)	do_and_report type '/nagios'
+						0920)	do_and_report key enter
 							;;
-						0950)	do_and_report key enter
+						1000)	do_and_report type w3m 		# check nagios
 							;;
-						0990)	do_and_report type q
+						1010)	do_and_report key space
 							;;
-						1000)	do_and_report key enter
+						1020)	do_and_report type 'https;'
+							;;
+						1030)	do_and_report type '//www'
+							;;
+						1040)	do_and_report type '/nagios'
+							;;
+						1050)	do_and_report key enter
+							;;
+						1090)	do_and_report type q
+							;;
+						1100)	do_and_report key enter
 							;;
 						1010)	do_and_report type w3m		# check cups
 							;;
-						1020)	do_and_report key space
+						1120)	do_and_report key space
 							;;
-						1030)	do_and_report type 'https;'
+						1130)	do_and_report type 'https;'
 							;;
-						1050)	do_and_report type '//www'
+						1150)	do_and_report type '//www'
 							;;
-						1070)	do_and_report type ';631'
+						1170)	do_and_report type ';631'
 							;;
-						1080)	do_and_report key enter
+						1180)	do_and_report key enter
 							;;
-						1200)	do_and_report type q
+						1250)	do_and_report type q
 							;;
-						1220)	do_and_report key enter
+						1270)	do_and_report key enter
 							;;
-						1300)	do_and_report type poweroff	# poweroff
+						1330)	do_and_report type poweroff	# poweroff
 							;;
-						1310)	do_and_report key enter
+						1340)	do_and_report key enter
 							;;
 						*)	;;
 					esac

@@ -122,7 +122,7 @@ init_html() {
 	ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes scheduled last_24h last_48h all_abc dd-list stats"
 	SPOKENTARGET["reproducible"]="packages which built reproducibly"
-	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and do'nt create a .buildinfo file"
+	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and do not create a .buildinfo file"
 	SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
 	SPOKENTARGET["FTBFS"]="packages which failed to build from source"
 	SPOKENTARGET["404"]="packages where the sources failed to download"

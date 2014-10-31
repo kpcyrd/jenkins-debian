@@ -1,0 +1,336 @@
+
+- defaults:
+    name: d-i
+    project-type: freestyle
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/d-i_misc/
+          text: Misc debian-installer jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_amd64'
+    description: 'Parses d-i build overview for problems on amd64 from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh amd64'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#amd64' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_arm64'
+    description: 'Parses d-i build overview for problems on arm64 from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh arm64'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#arm64' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_armel'
+    description: 'Parses d-i build overview for problems on armel from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh armel'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#armel' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_armhf'
+    description: 'Parses d-i build overview for problems on armhf from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh armhf'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#armhf' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_hurd-i386'
+    description: 'Parses d-i build overview for problems on hurd-i386 from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh hurd-i386'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#hurd-i386' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_i386'
+    description: 'Parses d-i build overview for problems on i386 from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh i386'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#i386' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_kfreebsd-amd64'
+    description: 'Parses d-i build overview for problems on kfreebsd-amd64 from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh kfreebsd-amd64'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#kfreebsd-amd64' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_kfreebsd-i386'
+    description: 'Parses d-i build overview for problems on kfreebsd-i386 from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh kfreebsd-i386'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#kfreebsd-i386' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_mips'
+    description: 'Parses d-i build overview for problems on mips from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh mips'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#mips' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_mipsel'
+    description: 'Parses d-i build overview for problems on mipsel from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh mipsel'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#mipsel' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_powerpc'
+    description: 'Parses d-i build overview for problems on powerpc from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh powerpc'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#powerpc' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_ppc64el'
+    description: 'Parses d-i build overview for problems on ppc64el from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh ppc64el'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#ppc64el' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_s390x'
+    description: 'Parses d-i build overview for problems on s390x from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh s390x'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#s390x' or $BUILD_URL and $BUILD_URL/console'
+
+- job-template:
+    defaults: d-i
+    name: '{name}_overview_sparc'
+    description: 'Parses d-i build overview for problems on sparc from <code>http://d-i.debian.org/daily-images/daily-build-overview.html</code> daily. {do_not_edit}'
+    builders:
+      - shell: '/srv/jenkins/bin/d-i_overview.sh sparc'
+    triggers:
+      - timed: "0 * * * *"
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email-ext:
+          recipients: jenkins+debian-boot holger@layer-acht.org
+          first-failure: true
+          fixed: true
+          subject: 'Jenkins: $JOB_NAME/$BUILD_NUMBER is now: $BUILD_STATUS'
+          attach-build-log: true
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#sparc' or $BUILD_URL and $BUILD_URL/console'
+
+
+- project:
+    name: d-i
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/d-i-overview.yaml.py">d-i-overview.yaml.py</a>.'
+    jobs:
+      - '{name}_overview_amd64'
+      - '{name}_overview_arm64'
+      - '{name}_overview_armel'
+      - '{name}_overview_armhf'
+      - '{name}_overview_hurd-i386'
+      - '{name}_overview_i386'
+      - '{name}_overview_kfreebsd-amd64'
+      - '{name}_overview_kfreebsd-i386'
+      - '{name}_overview_mips'
+      - '{name}_overview_mipsel'
+      - '{name}_overview_powerpc'
+      - '{name}_overview_ppc64el'
+      - '{name}_overview_s390x'
+      - '{name}_overview_sparc'

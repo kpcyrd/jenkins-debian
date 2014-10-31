@@ -190,6 +190,7 @@ write_issues() {
 	touch $ISSUES_PATH/stamp
 	for ISSUE in ${ISSUES} ; do
 		PAGE=$ISSUES_PATH/${ISSUE}_issue.html
+		echo "Updating ${ISSUE}_issue.html"
 		create_issue $ISSUE
 	done
 	cd $ISSUES_PATH
@@ -197,6 +198,7 @@ write_issues() {
 		# if issue is older than stamp file...
 		if [ $FILE -ot stamp ] ; then
 			rm $FILE
+			echo "Deleting $FILE"
 		fi
 	done
 	rm stamp
@@ -230,22 +232,29 @@ write_notes() {
 		PAGE=$NOTES_PATH/${PKG}_note.html
 		create_pkg_note $PKG
 	done
+	echo
 	# cleanup old notes and re-create package page if needed
 	cd $NOTES_PATH
 	for FILE in *.html ; do
 		PKG_FILE=/var/lib/jenkins/userContent/rb-pkg/${FILE:0:-10}.html
+		PKG=${FILE:0:-10}
+		echo -n "Checking ${PKG_FILE} for ${PKG} - "
 		# if note was removed...
 		if [ $FILE -ot stamp ] ; then
+			echo "old note found, removing and updating the package page."
 			# cleanup old notes
 			rm $FILE
 			# force re-creation of package file if there was a note
 			rm -f ${PKG_FILE}
-			process_packages ${FILE:0-10}
+			process_packages ${PKG}
 		else
 			# ... else re-recreate ${PKG_FILE} if it does not contain a link to the note already
 			if ! grep _note.html ${PKG_FILE} > /dev/null 2>&1 ; then
+				echo "note not mentioned in package page, updating it."
 				rm -f ${PKG_FILE}
-				process_packages ${FILE:0-10}
+				process_packages ${PKG}
+			else
+				echo "ok."
 			fi
 		fi
 	done

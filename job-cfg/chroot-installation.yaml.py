@@ -158,7 +158,7 @@ print("""
           fixed: true
           subject: 'Jenkins: $BUILD_STATUS for $JOB_NAME/$BUILD_NUMBER'
           attach-build-log: true
-          body: 'See $BUILD_URL and ${BUILD_URL}console'
+          body: 'See $BUILD_URL and $BUILD_URL/console'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

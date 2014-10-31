@@ -65,14 +65,15 @@ fi
 # only send notifications for valid emails
 if [ "$VALID_MAIL" == "true" ] ; then
 	echo -e "----------\nvalid email\n-----------" >> $LOGFILE
-	echo $JENKINS_JOB | cut -d ":" -f1 >> $LOGFILE
-	echo $SUBJECT >> $LOGFILE
-	echo $MY_LINE >> $LOGFILE
+	date >> $LOGFILE
+	echo "Job:     $JENKINS_JOB" >> $LOGFILE
+	echo "Subject: $SUBJECT" >> $LOGFILE
+	echo "My line: $MY_LINE" >> $LOGFILE
 	# only notify if there is a channel to notify
 	if [ ! -z $CHANNEL ] ; then
 		# log message
 		echo "#$CHANNEL: $SUBJECT. $MY_LINE" >> $LOGFILE
-		MESSAGE="$JENKINS_JOB: $SUBJECT. $MY_LINE"
+		MESSAGE="$SUBJECT. $MY_LINE"
 		# notify kgb
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" && echo "kgb informed successfully." >> $LOGFILE
 		echo >> $LOGFILE

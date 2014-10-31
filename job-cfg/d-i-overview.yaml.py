@@ -61,7 +61,7 @@ for arch in sorted(archs):
           fixed: true
           subject: 'Jenkins: $BUILD_STATUS for $JOB_NAME/$BUILD_NUMBER'
           attach-build-log: true
-          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#%(arch)s' or $BUILD_URL and $BUILD_URL/console'
+          body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#%(arch)s' or $BUILD_URL and ${BUILD_URL}console'
 """ % dict(arch=arch))
 
 print("""

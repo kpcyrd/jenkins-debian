@@ -1061,7 +1061,7 @@ save_logs() {
 	#
 	# copy logs (and continue if some logs cannot be copied)
 	#
-	sudo cp -rv $SYSTEM_MNT/var/log/installer $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( echo "Warning: cannot get logs from installed system." ; echo "Did the installation finish correctly?" ; export FAILURE=true )
+	sudo cp -rv $SYSTEM_MNT/var/log/* $SYSTEM_MNT/etc/fstab $RESULTS/log/ || ( echo "Warning: cannot get logs from installed system." ; echo "Did the installation finish correctly?" ; export FAILURE=true )
 	#
 	# get list of installed packages
 	#

@@ -51,6 +51,7 @@ fi
 
 # finally
 blacklist_packages
+process_packages $PACKAGES
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"

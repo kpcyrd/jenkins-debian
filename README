@@ -102,13 +102,14 @@ Installation tests inside chroot environments.
 ** builds one of the six debian-edu packages ('debian-edu', 'debian-edu-config', 'debian-edu-install', 'debian-edu-doc', 'debian-edu-artwork', 'debian-edu-archive-keyring' on every push to it's git master branch
 ** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ get's updated automatically afterwards too.
 
-=== lintian jobs
+=== qa.debian.org packages related jobs
 
-* Simply build the master branch of the lintian GIT repository on every commit against sid. If that succeeds, the same source will be build on jessie and then on wheezy.
+* Currently there are two types, one for lintian and one for piuparts.
+* The both simply build the master branch of the lintian GIT repository on every commit against sid. If that succeeds, the same source will be build on jessie and then on wheezy. (piuparts will not be build on wheezy as its current build depends do not exists in wheezy.)
 
 === haskell jobs
 
-* FIXME: describe haskell jobs
+* See https://wiki.debian.org/Haskell for more information about those jobs.
 
 === rebootstrap jobs
 

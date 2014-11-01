@@ -7,14 +7,12 @@ base_distros = """
    sid
    """.split()
 
-distro_upgrades = {}
 distro_upgrades = { 'squeeze':  'wheezy',
                     'wheezy':  'jessie',
                     'jessie':  'sid' }
 
 oldstable = 'squeeze'
 
-trigger_times = {}
 # ftp.de.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = { 'squeeze': '30 16 25 * *',
                   'wheezy':  '30 16 4,18 * *',
@@ -189,7 +187,7 @@ for base_distro in sorted(base_distros):
              action = target
         else:
              action = 'install_'+target
-        if base_distro != oldstable:
+        if target == 'housekeeping' or base_distro != oldstable:
             print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s'""" %
@@ -215,16 +213,19 @@ for base_distro in sorted(base_distros):
             shell = '/srv/jenkins/bin/housekeeping.sh chroot-installation_'+base_distro
             prio = 135
             time = trigger_times[base_distro]
-            trigger = 'chroot-installation_'+base_distro+'_bootstrap'
+            if base_distro in distro_upgrades.values():
+                trigger = 'chroot-installation_'+base_distro+'_bootstrap'
+                for item in distro_upgrades.items():
+                    if item[1]==base_distro and base_distro in distro_upgrades:
+                         trigger = trigger+', chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]
+            else:
+                trigger = 'chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]
         elif target == 'bootstrap':
             description = 'Debootstrap '+base_distro+'.'
             shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro
             prio = 131
             time = ''
-            if base_distro in distro_upgrades:
-                trigger = 'chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]
-            else:
-                trigger = ''
+            trigger = ''
             for trigger_target in get_targets_in_distro(base_distro, targets):
                 if trigger_target not in ('housekeeping', 'bootstrap'):
                     if trigger != '':
@@ -240,7 +241,7 @@ for base_distro in sorted(base_distros):
             action = target
         else:
             action = 'install_'+target
-        if base_distro != oldstable:
+        if target == 'housekeeping' or base_distro != oldstable:
             print("""      - '{name}_%(base_distro)s_%(action)s':
             my_shell: '%(shell)s'
             my_prio: '%(prio)s'

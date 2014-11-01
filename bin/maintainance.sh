@@ -60,10 +60,10 @@ report_disk_usage() {
 report_filetype_usage() {
 	OUTPUT=$(mktemp)
 	for JOB in $(cat $WATCHED_JOBS) ; do
-		if [ "$2" != "bak" ] && [ "$2" != "ppm" ] ; then
+		if [ "$2" != "bak" ] && [ "$2" != "png" ] ; then
 			find /var/lib/jenkins/jobs/$JOB -type f -name "*.${2}" ! -path "*/archive/*" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$JOB .$2 files#" >> $OUTPUT
 		else
-			# find archived .bak + .ppm files too
+			# find archived .bak + .png files too
 			find /var/lib/jenkins/jobs/$JOB -type f -name "*.${2}" 2>/dev/null|xargs -r du -sch |grep total |sed -s "s#total#$JOB .$2 files#" >> $OUTPUT
 		fi
 	done
@@ -145,7 +145,7 @@ else
 						echo
 						report_disk_usage $1
 						report_filetype_usage $1 png
-						report_filetype_usage $1 ppm warn
+						report_filetype_usage $1 ppm warn # FIXME: remove this check in 3 days (and add warn to pngs)
 						report_filetype_usage $1 bak warn
 						report_filetype_usage $1 raw warn
 						report_filetype_usage $1 iso warn

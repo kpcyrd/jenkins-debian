@@ -115,23 +115,18 @@ cleanup_all() {
 	( sudo umount -l $IMAGE_MNT && rmdir $IMAGE_MNT ) 2> /dev/null &
 	cd $RESULTS
 	echo -n "Last screenshot: "
-	(ls -t1 snapshot_??????.ppm || true ) | tail -1
+	(ls -t1 snapshot_??????.png || true ) | tail -1
 	#
 	# create video
 	#
 	echo "$(date) - Creating video now. This may take a while.'"
 	TMPFILE=$(mktemp)
-	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > $TMPFILE 2>&1 || cat $TMPFILE
-	rm snapshot_??????.ppm $TMPFILE
-	# rename .bak files back to .ppm
-	if find . -name "*.ppm.bak" > /dev/null ; then
-		for i in $(find * -name "*.ppm.bak") ; do
-			mv $i $(echo $i | sed -s 's#.ppm.bak#.ppm#')
-		done
-		# convert to png (less space and better supported in browsers)
-		for i in $(find * -name "*.ppm") ; do
-			convert $CONVERTOPTS $i ${i%.ppm}.png
-			rm $i
+	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.png --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > $TMPFILE 2>&1 || cat $TMPFILE
+	rm snapshot_??????.png $TMPFILE
+	# rename .bak files back to .png
+	if find . -name "*.png.bak" > /dev/null ; then
+		for i in $(find * -name "*.png.bak") ; do
+			mv $i $(echo $i | sed -s 's#.png.bak#.png#')
 		done
 	fi
 	# finally
@@ -300,7 +295,7 @@ boot_system() {
 
 
 backup_screenshot() {
-	cp snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_NR}.ppm.bak
+	cp snapshot_${PRINTF_NR}.png snapshot_${PRINTF_NR}.png.bak
 }
 
 do_and_report() {
@@ -933,11 +928,11 @@ monitor_system() {
 		PRINTF_NR=$(printf "%06d" $NR)
 		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || true
 		if [ -f snapshot_${PRINTF_NR}.jpg ]; then
-			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.ppm
+			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.png
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "$(date) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
-			convert -size $VIDEOSIZE xc:none -depth 8 snapshot_${PRINTF_NR}.ppm
+			convert -size $VIDEOSIZE xc:none -depth 8 snapshot_${PRINTF_NR}.png
 		fi
 		# give signal we are still running
 		if [ $(($NR % 14)) -eq 0 ] ; then
@@ -952,8 +947,8 @@ monitor_system() {
 			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
 			# gocr likes black background
-			convert -fill black -opaque $VIDEOBGCOLOR snapshot_${PRINTF_NR}.ppm $GOCR.ppm
-			gocr $GOCR.ppm > $GOCR
+			convert -fill black -opaque $VIDEOBGCOLOR snapshot_${PRINTF_NR}.png $GOCR.png
+			gocr $GOCR.png > $GOCR
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
 			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
@@ -962,7 +957,7 @@ monitor_system() {
 			ROOT_PROBLEM=$(egrep "(Giue root password for maintenance|or type Control-D to continue)"  $GOCR || true)
 			BUILD_LTSP_PROBLEM=$(grep "The failing step is: Build LTSP chroot" $GOCR || true)
 			echo >> $GOCR
-			rm $GOCR.ppm
+			rm $GOCR.png
 			if [[ "$LAST_LINE" =~ .*Power\ down.* ]] ||
 			    [[ "$LAST_LINE" =~ .*System\ halted.* ]] ||
 			    [[ "$LAST_LINE" =~ .*Reached\ target\ Shutdown.* ]] ||
@@ -996,15 +991,15 @@ monitor_system() {
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one $TIMEOUT screenshots ago
 			# 400 pixels difference between to images is tolerated, to ignore updating clocks
-			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm /dev/null 2>&1 || true )
+			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png /dev/null 2>&1 || true )
 			# usually this returns an integer, but not always....
 			if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
-				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm"
+				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_OLD}.png"
 				if [ $PIXEL -lt 400 ] ; then
 					# unless TRIGGER_MODE is empty, matching images means its over
 					if [ ! -z "$TRIGGER_MODE" ] ; then
-						echo "Warning: snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm match or almost match, ending installation."
-						ls -la snapshot_${PRINTF_NR}.ppm snapshot_${PRINTF_OLD}.ppm
+						echo "Warning: snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png match or almost match, ending installation."
+						ls -la snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png
 						echo "System in $MODE mode is hanging."
 						if [ "$MODE" = "install" ] ; then
 							# hanging install = broken install
@@ -1020,7 +1015,7 @@ monitor_system() {
 					fi
 				fi
 			else
-				echo "snapshot_${PRINTF_NR}.ppm and snapshot_${PRINTF_OLD}.ppm have different sizes."
+				echo "snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_OLD}.png have different sizes."
 			fi
 		fi
 		# let's drive this further (once/if triggered)
@@ -1046,7 +1041,7 @@ monitor_system() {
 	if [ -f "$RESULTS/qemu_quit" ] ; then
 		rm $RESULTS/qemu_quit
 	fi
-	if [ ! -f snapshot_${PRINTF_NR}.ppm ] ; then
+	if [ ! -f snapshot_${PRINTF_NR}.png ] ; then
 		let NR=NR-1
 		PRINTF_NR=$(printf "%06d" $NR)
 	fi

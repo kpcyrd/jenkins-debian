@@ -15,6 +15,8 @@ clean_workspace() {
 	cd ..
 	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz *_*.buildinfo
 	cd workspace
+	git clean -dfx
+	git reset --hard
 	#
 	# git clone and pull is done by jenkins job
 	#

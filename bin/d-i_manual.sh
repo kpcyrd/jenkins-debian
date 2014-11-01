@@ -7,16 +7,25 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-init_workspace() {
+clean_workspace() {
 	#
 	# clean
 	#
-	rm -fv *.deb *.dsc *_*.build *_*.changes *_*.tar.gz
-
+	cd $WORKSPACE
+	cd ..
+	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz *_*.buildinfo
+	cd workspace
 	#
-	# svn checkout and update is done by jenkins job
+	# git clone and pull is done by jenkins job
 	#
-	svn status
+	if [ -d .git ] ; then
+		echo "git status:"
+		git status
+	elif [ -f .svn ] ; then
+		echo "svn status:"
+		svn status
+	fi
+	echo
 }
 
 pdebuild_package() {
@@ -106,7 +115,7 @@ po_cleanup() {
 	rm -rv manual/$1 manual/integrated
 }
 
-init_workspace
+clean_workspace
 #
 # if $1 is not given, build the whole manual,
 # else just the language $1 in format $2
@@ -129,3 +138,4 @@ else
 		po_cleanup $1
 	fi
 fi
+clean_workspace

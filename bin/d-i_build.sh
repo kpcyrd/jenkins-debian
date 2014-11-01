@@ -7,18 +7,25 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-init_workspace() {
+clean_workspace() {
 	#
 	# clean
 	#
+	cd $WORKSPACE
 	cd ..
-	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz
+	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz *_*.buildinfo
 	cd workspace
 	#
 	# git clone and pull is done by jenkins job
 	#
-	git config -l
-	git status
+	if [ -d .git ] ; then
+		echo "git status:"
+		git status
+	elif [ -f .svn ] ; then
+		echo "svn status:"
+		svn status
+	fi
+	echo
 }
 
 pdebuild_package() {
@@ -70,7 +77,7 @@ pdebuild_package() {
 	sudo dcmd rm /var/cache/pbuilder/result/${SOURCE}_*changes
 }
 
-init_workspace
+clean_workspace
 #
 # if $1 is not given, build the package normally,
 # else...
@@ -80,3 +87,4 @@ if [ "$1" = "" ] ; then
 else
 	echo do something else ; exit 1
 fi
+clean_workspace

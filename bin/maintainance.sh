@@ -95,7 +95,7 @@ wait4idle() {
 	echo "Done waiting: $(date)"
 }
 
-general_housekeeping() {
+general_maintainance() {
 	uptime
 
 	echo
@@ -118,10 +118,10 @@ general_housekeeping() {
 }
 
 #
-# if $1 is empty, we do general housekeeping, else for some subgroup of all jobs
+# if $1 is empty, we do general maintainance, else for some subgroup of all jobs
 #
 if [ -z $1 ] ; then
-	general_housekeeping
+	general_maintainance
 	report_squid_usage brief
 else
 	case $1 in

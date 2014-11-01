@@ -67,7 +67,7 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
 Installation tests inside chroot environments.
 
-* 'chroot-installation_housekeeping_$distro':
+* 'chroot-installation_maintainance_$distro':
 ** make sure chroots have been cleaned up properly
 ** runs daily at 05:00 UTC and triggers the $distro specific bootstrap job on success
 ** wheezy is only triggered on the 4th day and 18th of each month (as it was released on the 4th)

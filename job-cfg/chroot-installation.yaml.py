@@ -20,7 +20,7 @@ trigger_times = { 'squeeze': '30 16 25 * *',
                   'sid':     '30 4 * * *' }
 
 targets = """
-   housekeeping
+   maintainance
    bootstrap
    gnome
    kde
@@ -81,7 +81,7 @@ def get_targets_in_distro(distro, targets):
 # who gets mail for which target
 #
 def get_recipients(target):
-    if target == 'housekeeping':
+    if target == 'maintainance':
         return 'holger@layer-acht.org'	# FIXME: this should be jenkins-maintainers@lists.somewhere
     elif target == 'haskell':
         return 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
@@ -94,7 +94,7 @@ def get_recipients(target):
 # views for different targets
 #
 def get_view(target, distro):
-    if target == 'housekeeping':
+    if target == 'maintainance':
         return 'jenkins.d.n'
     elif target == 'haskell':
         return 'haskell'
@@ -183,17 +183,17 @@ print("""
 """)
 for base_distro in sorted(base_distros):
     for target in sorted(get_targets_in_distro(base_distro, targets)):
-        if target in ('bootstrap', 'housekeeping'):
+        if target in ('bootstrap', 'maintainance'):
              action = target
         else:
              action = 'install_'+target
-        if target == 'housekeeping' or base_distro != oldstable:
+        if target == 'maintainance' or base_distro != oldstable:
             print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s'""" %
              dict(base_distro=base_distro,
                   action=action))
-        if base_distro in distro_upgrades and action != 'housekeeping':
+        if base_distro in distro_upgrades and action != 'maintainance':
              print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s'""" %
@@ -208,9 +208,9 @@ print("""
     jobs:""")
 for base_distro in sorted(base_distros):
     for target in sorted(get_targets_in_distro(base_distro, targets)):
-        if target == 'housekeeping':
-            description = 'Housekeeping job for chroot-installation_'+base_distro+'_* jobs, do some cleanups and monitoring so that there is a predictable environment.'
-            shell = '/srv/jenkins/bin/housekeeping.sh chroot-installation_'+base_distro
+        if target == 'maintainance':
+            description = 'Maintainance job for chroot-installation_'+base_distro+'_* jobs, do some cleanups and monitoring so that there is a predictable environment.'
+            shell = '/srv/jenkins/bin/maintainance.sh chroot-installation_'+base_distro
             prio = 135
             time = trigger_times[base_distro]
             if base_distro in distro_upgrades.values():
@@ -227,7 +227,7 @@ for base_distro in sorted(base_distros):
             time = ''
             trigger = ''
             for trigger_target in get_targets_in_distro(base_distro, targets):
-                if trigger_target not in ('housekeeping', 'bootstrap'):
+                if trigger_target not in ('maintainance', 'bootstrap'):
                     if trigger != '':
                         trigger = trigger+', '
                     trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target
@@ -237,11 +237,11 @@ for base_distro in sorted(base_distros):
             prio = 130
             time = ''
             trigger = ''
-        if target in ('bootstrap', 'housekeeping'):
+        if target in ('bootstrap', 'maintainance'):
             action = target
         else:
             action = 'install_'+target
-        if target == 'housekeeping' or base_distro != oldstable:
+        if target == 'maintainance' or base_distro != oldstable:
             print("""      - '{name}_%(base_distro)s_%(action)s':
             my_shell: '%(shell)s'
             my_prio: '%(prio)s'
@@ -259,13 +259,13 @@ for base_distro in sorted(base_distros):
                   recipients=get_recipients(target),
                   view=get_view(target, base_distro),
                   description=description))
-        if base_distro in distro_upgrades and action != 'housekeeping':
+        if base_distro in distro_upgrades and action != 'maintainance':
             if target == 'bootstrap':
                 shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro+' none '+distro_upgrades[base_distro]
                 description = 'Debootstrap '+base_distro+', then upgrade to '+distro_upgrades[base_distro]+'.'
                 trigger = ''
                 for trigger_target in get_targets_in_distro(base_distro, targets):
-                    if trigger_target not in ('housekeeping', 'bootstrap'):
+                    if trigger_target not in ('maintainance', 'bootstrap'):
                         if trigger != '':
                             trigger = trigger+', '
                         trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]

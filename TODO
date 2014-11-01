@@ -14,12 +14,14 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == Fix user submitted bugs
 
-* See https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org@packages.debian.org
+* See link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org@packages.debian.org[qa.debian.org bugs with usertag 'jenkins'] in the BTS.
 
 == General ToDo
 
+* get rid of FIXMEs in README. Really.
 * turn job-cfg/g-i.yaml into .yaml.py
 * use cucumber+libvirt instead of g-i.sh
+* download .isos once in central place
 * use schroot for chroot-installation
 * build d-i manual in sid
 * build packages using jenkins-debian-glue and not my hacks
@@ -29,8 +31,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === jenkins-job-builder related
 
-* use the package from jessie
 * add support for live screenshot plugin
+* use the package from jessie
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 * support for gitweb in jobs 
 ** needs clean merge of my patches to jenkins-job-builder first...

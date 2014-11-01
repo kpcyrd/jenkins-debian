@@ -104,7 +104,7 @@ Installation tests inside chroot environments.
 
 === lintian jobs
 
-* FIXME: describe lintian jobs
+* Simply build the master branch of the lintian GIT repository on every commit against sid. If that succeeds, the same source will be build on jessie and then on wheezy.
 
 === haskell jobs
 

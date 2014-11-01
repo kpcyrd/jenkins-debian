@@ -214,7 +214,7 @@ for base_distro in sorted(base_distros):
             description = 'Housekeeping job for chroot-installation_'+base_distro+'_* jobs, do some cleanups and monitoring so that there is a predictable environment.'
             shell = '/srv/jenkins/bin/housekeeping.sh chroot-installation_'+base_distro
             prio = 135
-            trigger_times[base_distro]
+            time = trigger_times[base_distro]
             trigger = 'chroot-installation_'+base_distro+'_bootstrap'
         elif target == 'bootstrap':
             description = 'Debootstrap '+base_distro+'.'

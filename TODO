@@ -18,23 +18,20 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
+* turn job-cfg/g-i.yaml into .yaml.py
+* use cucumber+libvirt instead of g-i.sh
+* use schroot for chroot-installation
+* build d-i manual in sid
+* build packages using jenkins-debian-glue and not my hacks
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
-* keep git+svn urls, and use commit hooks. also better for test setups of this setup as well as overall stability.
-* fully automate backup and backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too
+* backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too
 * put kgb-client.conf in git and sed passwords from filesystem into it...
-* push jenkins munin plugins upstream
-
-== Debian Packaging related
-
-* /usr/sbin/jenkins.debian.net-setup needs to be written
-* what update-j.d.n.sh does, needs to be put elsewhere...
-* debian/copyright is incorrect about some licenses: a.) the profitbricks+debian+jenkins logos b.) the preseeding files
 
 === jenkins-job-builder related
 
-* get rid of some reduncacy in job-cfg/*.yaml
+* use the package from jessie
+* add support for live screenshot plugin
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
-* FIXME: sometimes true and some True used in yaml files
 * support for gitweb in jobs 
 ** needs clean merge of my patches to jenkins-job-builder first...
 * cleanup my patches (eg add documentation) and send pull requests on github:
@@ -43,7 +40,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** publisher:imagegallery
 ** svn:scm
 ** properties: sidebar
-* d-i and chroot housekeeping jobs should be kept 365 days
 
 == Improve existing tests
 
@@ -51,7 +47,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * svn:trunk/manual/po triggers the full build, should trigger language specific builds.
 * svn:trunk/manual is all thats needed, not whole svn:trunk
-* inform translators (and debian-boot for the package)
 
 === d-i_build*
 
@@ -62,8 +57,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === chroot-installation_*
 
 * inform debian-devel@
-* "Hash Sum Mismatch" problem with squid, see https://jenkins.debian.net/job/chroot-installation_squeeze_install_developer_upgrade_to_wheezy/13/console
-** pere says this is supposed to be fixed in squid3
 * chroot-installation: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
 *  warn about transitional packages installed (on non-upgrades only)
 
@@ -74,102 +67,55 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 <pabs> h01ger: hmm, doesn't seem to be easy to find that list, but here are a few: ezgo-* med-* science-* junior-* gis-*
 ----
 
-=== webchecks*
+* install all the tasks "instead", thats rather easy nowadays as all task packages are called "task*".
 
-* inform debian-www@ ?
+=== g-i-installation_*
 
-=== g-i-installation_*:
-
-* babelbox.git has a nice langlist
-* $name-preseed.base -> sed .cfg (LANG)
 * for edu: pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
 ** these jobs would not need to do an install, just booting them in rescue mode is probably enough
-* test moar images: debian wheezy+sid cd and dvd images too and use lxde cd for installing lxde + etc
-* use jigdo to download images - but no edu jigdo images.
-* still havent got http://www.os-autoinst.org/ out of my mind
 
 === reproducible
 
-* schedule packages by adding them to a table in the db, to make sure each package is only scheduled once.
-** needs new table: sources_scheduled: name, schedule_date (older=will be scheduled sooner, so its possible to set schedule_date to 1970...
-** schedule (once every hour) if there are less then 300 packages scheduled:
-*** schedule up to 200 new ones
-*** then schedule up to 100 new versions (but not more than 200 in total)
-** if thats less than 200 and in total there are less then 300 scheduled:
-*** schedule up to 100 same versions, older than a week
-*** schedule the oldest FTBFS packages - once every other scheduler run, which is run 24x a day
-** another job: reschedule packages supplied by params (first those initital ones but also on demand, via cli or webgui)
-** dont reschedule packages which 404ed or are blacklisted
-
-* then have other three runner job constantly picking up scheduled packages
-** needs new table: runner_status, id, status (RUNNING, IDLE, STOPPED, START), timestamp
-** if there are more than 30 packages scheduled, take 10, if more than 10, take 3, else 1. if 0, sleep 15m
-** they write a timestamp to runner_status on each started package, so hanging builds can be detected
-** have another job which kills them and marks them killed in db
-** setup script shall cleanup workspaces from workers
-*** killer job is run before setup
-*** scheduler and builder jobs are started after
-
-* bugs
-** add note about notes on every page which has them...
-
-* CSS/HTML
-** use icons within index pages (refactor to get rid of that case statement, use array instead)
-
 * watch: zephyr (debbindiff timeout?)
-* watch: haskell-hsql-odbc (debbindiff error only in jenkins log, not in rbuild log
 * watch: cxxtest: dbd failure should be in rbuild output!
-* watch: android: no debbindiff output?
-* watch: hurd-libfuse: should be not for us
-* new view: issues (show all issues in one page and the packages which are affected.)
+* watch: gnuradio debbindiff crashed, yet the build is classified reproducible...
+* watch: libsys-gamin-perl hangs while building
+* check 0.51-1 is fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html
+* reschedule those with "debbindiff.py crashed" in rbuild.log and watch them build...
+
+I'm done here. ;-)
+
+* cleanup+rename:
+** unschedule_from_db(  	(defined in build.sh...)
+** process_packages()	(defined in common.sh...)
+** force_package_targets() -> set_linktarget
+** STAR?
+* merge reproducible_setup_schroot in schroot-create or delete the latter?
+
+* include no js header in the css
+* one css, not 2
+* graph oldest build age - in days
+* mv untested field in stats table too? (as in csv output...)
+* list removed packages, eg bobot++ (and remove them after a week automatically)
 * generate .json for tracker.d.o
-* reschedule all pkg tested before oct 06 00:00 UTC (we want to know if they generate .buildinfo files)
-* reschedule all files with 0 length .rbuild.log files
-* watch it build :)
 
-=== Test Debian live
-
-* daily build from sid
-* test live images from http://live.debian.net/cdimage/release/current-next and .../current
-
-== Add more tests
-
-=== Test more Debian Edu related things
-
-* manual - by language and full
-* build a cd-image from all edu packages (even (and especially) UNRELEASED ones and do a g-i-installation test with it
-** this probably better is done after the edu packages has been switched to git and when edu cd are (also?) build on pettersson.d.o
-** also because it's probably better to do this with unmodified d-i first :-)
-* test minimal and sugar profile, as well as gnome and lxde
-* test dvd. test amd64 +i386 chroot setup.
-
-=== Test tasks:
-
-* test installations with (at least) more language tasks enabled, though tasksel doesn't work like this:
-
-----
-<h01ger> how do i install a task outside d-i?
-<h01ger> what interesting tasks are there?
-<jcristau> tasksel install <task>
-<daemonkeeper> h01ger:  http://packages.debian.org/source/sid/tasksel
-----
-
-Help explaining how to test tasks (ie all the language tasks) very much welcome!
-
-== Ideas...
-
-=== Test co-installability
-
-----
-<jwilk> Install everything with priority >= optional? These packages are not supposed to conflict with each other. </wishful-thinking>
-<h01ger> jwilk, there are tools to detect these package sets just based on debian/control information. no need to test this every day by installing them :)
-<h01ger> running these tools daily OTOH...
-<h01ger> http://coinst.irill.org/
-----
+== Further ideas...
 
 === Test them all
 
 * build packages from all team repos on alioth with jenkins-debian-glue on team request (eg, via a .txt file in a git.repo) for specific branches (which shall also be automated, eg. to be able to only have squeeze+sid branches build, but not all other branches.)
 
+=== Test Debian live
+
+* daily build from sid
+* test live images from http://live.debian.net/
+
+== Debian Packaging related
+
+This setup should come as a Debian source package...
+
+* /usr/sbin/jenkins.debian.net-setup needs to be written
+* what update-j.d.n.sh does, needs to be put elsewhere...
+* debian/copyright is incorrect about some licenses: a.) the profitbricks+debian+jenkins logos b.) the preseeding files
 
 // vim: set filetype=asciidoc:

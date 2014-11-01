@@ -215,14 +215,14 @@ for base_distro in sorted(base_distros):
             shell = '/srv/jenkins/bin/housekeeping.sh chroot-installation_'+base_distro
             prio = 135
             trigger_times[base_distro]
-            trigger = 'chroot-installation_bootstrap_'+base_distro
+            trigger = 'chroot-installation_'+base_distro+'_bootstrap'
         elif target == 'bootstrap':
             description = 'Debootstrap '+base_distro+'.'
             shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro
             prio = 131
             time = ''
             if base_distro in distro_upgrades:
-                trigger = 'chroot-installation_bootstrap_'+base_distro+'_upgrade_to_'+distro_upgrades[base_distro]
+                trigger = 'chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]
             else:
                 trigger = ''
             for trigger_target in get_targets_in_distro(base_distro, targets):

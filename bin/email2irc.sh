@@ -29,6 +29,11 @@ while read line ; do
 		# catch Subject (to send to IRC later)
 		if [[ $line =~ ^(Subject: .*) ]] ; then
 			SUBJECT=${line:9}
+			# the email-ext plugin sometimes sends multi line subjects..
+			NEXT=read line
+			if [ "${NEXT:1}" = " " ] ; then
+				SUBJECT="${SUBJECT}${NEXT}"
+			fi
 		fi
 		# determine the channel to send notifications to
 		# by parsing the To: line

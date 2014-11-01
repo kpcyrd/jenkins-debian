@@ -215,7 +215,7 @@ for base_distro in sorted(base_distros):
             shell = '/srv/jenkins/bin/housekeeping.sh chroot-installation_'+base_distro
             prio = 135
             trigger_times[base_distro]
-            trigger = 'chroot-installation_bootstrap'+base_distro
+            trigger = 'chroot-installation_bootstrap_'+base_distro
         elif target == 'bootstrap':
             description = 'Debootstrap '+base_distro+'.'
             shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro
@@ -226,9 +226,10 @@ for base_distro in sorted(base_distros):
             else:
                 trigger = ''
             for trigger_target in get_targets_in_distro(base_distro, targets):
-                if trigger != '':
-                    trigger = trigger+', '
-                trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target
+                if trigger_target not in ('housekeeping', 'bootstrap'):
+                    if trigger != '':
+                        trigger = trigger+', '
+                    trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target
         else:
             description = 'Debootstrap '+base_distro+', then install '+get_spoken_name(target)+'.'
             shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro+' '+target
@@ -263,9 +264,10 @@ for base_distro in sorted(base_distros):
                 description = 'Debootstrap '+base_distro+', then upgrade to '+distro_upgrades[base_distro]+'.'
                 trigger = ''
                 for trigger_target in get_targets_in_distro(base_distro, targets):
-                    if trigger != '':
-                        trigger = trigger+', '
-                    trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]
+                    if trigger_target not in ('housekeeping', 'bootstrap'):
+                        if trigger != '':
+                            trigger = trigger+', '
+                        trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]
             else:
                 shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro+' '+target+' '+distro_upgrades[base_distro]
                 description = 'Debootstrap '+base_distro+', then install '+get_spoken_name(target)+', then upgrade to '+distro_upgrades[base_distro]+'.'

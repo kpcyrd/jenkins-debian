@@ -112,7 +112,7 @@ Installation tests inside chroot environments.
 
 === rebootstrap jobs
 
-* FIXME: describe rebootstrap jobs
+* See https://wiki.debian.org/HelmutGrohne/rebootstrap for more information about these jobs.
 
 === reproducible jobs
 

@@ -959,6 +959,7 @@ monitor_system() {
 			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
 			CDROM_PROBLEM=$(grep "There was a problem reading data from the CD-ROM" $GOCR || true)
 			INSTALL_PROBLEM=$(egrep "(nstallation step fail|he failing step i)"  $GOCR || true)
+			ROOT_PROBLEM=$(egrep "(Giue root password for maintenance|or type Control-D to continue)"  $GOCR || true)
 			BUILD_LTSP_PROBLEM=$(grep "The failing step is: Build LTSP chroot" $GOCR || true)
 			echo >> $GOCR
 			rm $GOCR.ppm
@@ -979,6 +980,9 @@ monitor_system() {
 				exit 1
 			elif [ ! -z "$INSTALL_PROBLEM" ] ; then
 				echo "ERROR: An installation step failed." >> $GOCR
+				exit 1
+			elif [ ! -z "$ROOT_PROBLEM" ] ; then
+				echo "ERROR: System is hanging at boot and waiting for root maintainance." >> $GOCR
 				exit 1
 			elif [ ! -z "$BUILD_LTSP_PROBLEM" ] ; then
 				echo "ERROR: The failing step is: Build LTSP chroot." >> $GOCR

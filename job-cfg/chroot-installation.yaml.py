@@ -175,7 +175,7 @@ print("""
       - throttle:
           max-total: 6
           max-per-node: 6
-          enabled: True
+          enabled: true
           option: category
           categories:
             - chroot-installation

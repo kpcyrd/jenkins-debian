@@ -95,7 +95,7 @@
       - throttle:
           max-total: 3
           max-per-node: 3
-          enabled: True
+          enabled: true
           option: category
           categories:
             - reproducible
@@ -110,7 +110,7 @@
     publishers:
       - email:
           recipients: '{my_recipients}'
-          notify-every-unstable-build: False
+          notify-every-unstable-build: false
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'

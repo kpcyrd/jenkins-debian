@@ -45,7 +45,7 @@ print("""
       - throttle:
           max-total: 5
           max-per-node: 5
-          enabled: True
+          enabled: true
           option: category
           categories:
             - rebootstrap

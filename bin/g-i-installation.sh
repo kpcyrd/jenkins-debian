@@ -119,6 +119,7 @@ cleanup_all() {
 	#
 	# create video
 	#
+	echo "$(date) - Creating video now. This may take a while.'"
 	TMPFILE=$(mktemp)
 	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.ppm --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > $TMPFILE 2>&1 || cat $TMPFILE
 	rm snapshot_??????.ppm $TMPFILE
@@ -1056,13 +1057,14 @@ save_logs() {
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
 	FAILURE=false
+	MLOGS=$(mktemp)
 	# FIXME: bugreport guestmount: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	case $NAME in
 		debian-edu_*)			sudo guestmount -a $LV -m /dev/vg_system/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/vg_system/root" ; export FAILURE=true )
-						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var || echo "Not mounting /dev/vg_system/var - it's probably not used in this profile."
-						sudo guestmount -a $LV -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr || echo "Not mounting /dev/vg_system/usr - it's probably not used in this profile."
-						sudo guestmount -a $LV -m /dev/vg_system/var+log -o nonempty --ro $SYSTEM_MNT/var/log || echo "Not mounting /dev/vg_system/var+log - it's probably not used in this profile."
+						sudo guestmount -a $LV -m /dev/vg_system/var -o nonempty --ro $SYSTEM_MNT/var > $MLOGS 2>&1  || echo "Not mounting /dev/vg_system/var - it's probably not used in this profile." >> $MLOGS
+						sudo guestmount -a $LV -m /dev/vg_system/usr -o nonempty --ro $SYSTEM_MNT/usr >> $MLOGS 2>&1 || echo "Not mounting /dev/vg_system/usr - it's probably not used in this profile." >> $MLOGS
+						sudo guestmount -a $LV -m /dev/vg_system/var+log -o nonempty --ro $SYSTEM_MNT/var/log >> $MLOGS 2>&1 || echo "Not mounting /dev/vg_system/var+log - it's probably not used in this profile." >> $MLOGS
 						;;
 		debian_wheezy_*)		sudo guestmount -a $LV -m /dev/debian/root --ro $SYSTEM_MNT || ( echo "Warning: cannot mount /dev/debian/root" ; export FAILURE=true )
 						;;
@@ -1083,7 +1085,7 @@ save_logs() {
 	#	copy LTSP logs and package list
 	#	unmount /opt
 	#
-	case $NAME in debian-edu_*ltsp-server|debian-edu_*combi-server)	sudo guestmount -a $LV -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt || ( echo "Warning: cannot mount /dev/vg_system/opt" ; export FAILURE=true )
+	case $NAME in debian-edu_*ltsp-server|debian-edu_*combi-server)	sudo guestmount -a $LV -m /dev/vg_system/opt -o nonempty --ro $SYSTEM_MNT/opt >> $MLOGS 2>&1 || ( echo "Warning: cannot mount /dev/vg_system/opt" | tee -a $MLOGS ; export FAILURE=true )
 						mkdir -p $RESULTS/log/opt
 						if [ -d $SYSTEM_MNT/opt/ltsp/amd64 ] ; then
 							LTSPARCH="amd64"
@@ -1100,6 +1102,14 @@ save_logs() {
 						;;
 		*)				;;
 	esac
+	#
+	# make log with mounting problems available if it exists
+	#
+	if [ -s $MLOGS ] ; then
+		echo "Preserving log with probably harmless mounting problems in .../log/guessmount-problems"
+		cp -v $MLOGS $RESULTS/log/guessmount-problems
+	fi
+	rm $MLOGS
 	#
 	# umount guests
 	#

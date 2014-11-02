@@ -34,14 +34,14 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * add support for live screenshot plugin
 * use the package from jessie
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
-* support for gitweb in jobs 
-** needs clean merge of my patches to jenkins-job-builder first...
+* needs clean merge of my patches to jenkins-job-builder...
 * cleanup my patches (eg add documentation) and send pull requests on github:
 ** publisher:logparse
 ** publisher:htmlpublisher
 ** publisher:imagegallery
 ** svn:scm
-** properties: sidebar
+** properties:sidebar
+** wrappers:live-screenshot
 
 == Improve existing tests
 
@@ -73,8 +73,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === g-i-installation_*
 
-* for edu: pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
+* pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
 ** these jobs would not need to do an install, just booting them in rescue mode is probably enough
+* for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
+** same usecase:  -monitor none -nographic -serial stdio  
+** same usecase:  -snapshot maybe???
 
 === reproducible
 

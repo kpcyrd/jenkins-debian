@@ -30,6 +30,8 @@
           title: '{my_title}'
           includes: 'results/*.png'
           image-width: 300
+    wrappers:
+      - live-screenshot
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

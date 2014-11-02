@@ -926,13 +926,13 @@ monitor_system() {
 			break
 		fi
 		PRINTF_NR=$(printf "%06d" $NR)
-		vncsnapshot -quiet -allowblank $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || true
+		vncsnapshot -quiet -allowblank -compresslevel 0 $DISPLAY snapshot_${PRINTF_NR}.jpg 2>/dev/null || true
 		if [ -f snapshot_${PRINTF_NR}.jpg ]; then
 			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.png
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "$(date) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
-			convert -size $VIDEOSIZE xc:none -depth 8 snapshot_${PRINTF_NR}.png
+			convert -size $VIDEOSIZE xc:#000000 -depth 8 snapshot_${PRINTF_NR}.png
 		fi
 		# every 100 ticks take a screenshot and preserve and analyse it
 		if [ $(($NR % 100)) -eq 0 ] ; then

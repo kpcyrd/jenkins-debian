@@ -934,15 +934,17 @@ monitor_system() {
 			echo "$(date) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
 			convert -size $VIDEOSIZE xc:none -depth 8 snapshot_${PRINTF_NR}.png
 		fi
-		# give signal we are still running
-		if [ $(($NR % 14)) -eq 0 ] ; then
-			echo "$(date) $PRINTF_NR / $TOKEN"
-		fi
+		# every 100 ticks take a screenshot and preserve and analyse it
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			# press ctrl-key regularily to avoid screensaver kicking in
 			vncdo -s $DISPLAY key ctrl || true
 			# preserve a screenshot for later publishing
 			backup_screenshot
+			# make screenshots available for the live screenshot plugin
+			ln -f $PWD/snapshot_${PRINTF_NR}.png $WORKSPACE/screenshot.png
+			convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.png.new
+			rm -f $WORKSPACE/screenshot-thumb.png
+			mv $WORKSPACE/screenshot-thumb.png.new $WORKSPACE/screenshot-thumb.png
 			#
 			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
@@ -983,6 +985,9 @@ monitor_system() {
 				echo "ERROR: The failing step is: Build LTSP chroot." >> $GOCR
 				exit 1
 			fi
+		elif [ $(($NR % 30)) -eq 0 ] ; then
+			# give signal we are still running
+			echo "$(date) $PRINTF_NR / $TOKEN"
 		fi
 		# every 100 screenshots, starting from the $TIMEOUTth one...
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt $TIMEOUT ] ; then

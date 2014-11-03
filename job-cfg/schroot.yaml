@@ -20,7 +20,7 @@
                 artifactNumToKeep: -1
         publishers:
                 - email:
-                        recipients: jenkins+debian-qa holger@layer-acht.org
+                        recipients: 'jenkins+debian-qa holger@layer-acht.org'
         triggers:
                 - timed: '{my_time}'
         description: 'Create {my_schroot} schroot.<br>{do_not_edit}'
@@ -50,7 +50,7 @@
                 artifactNumToKeep: -1
         publishers:
                 - email:
-                        recipients: jenkins+debian-qa holger@layer-acht.org
+                        recipients: 'jenkins+debian-qa holger@layer-acht.org'
         triggers:
                 - timed: '{my_time}'
         description: 'Upgrade {my_schroot} schroot.<br>{do_not_edit}'

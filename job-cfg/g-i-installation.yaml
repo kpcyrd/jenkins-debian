@@ -72,7 +72,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: 'holger@layer-acht.org'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

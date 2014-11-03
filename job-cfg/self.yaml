@@ -12,7 +12,7 @@
       - shell: '{my_shell}'
     publishers:
       - email:
-          recipients: holger@layer-acht.org
+          recipients: 'holger@layer-acht.org'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

@@ -68,7 +68,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
@@ -121,7 +121,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
@@ -169,7 +169,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
@@ -217,7 +217,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
@@ -261,8 +261,8 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
-## doesnt work, the artifacts reside outside the workspace
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+## FIXME: needs a simple cp: doesnt work, the artifacts reside outside the workspace
 #      - archive:
 #          artifacts: '*_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes'
 #          latest_only: true
@@ -303,7 +303,7 @@
       - pollscm: "*/15 * * * *"
     publishers:
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
 ## doesnt work, the artifacts reside outside the workspace
 #      - archive:
 #          artifacts: '*_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes'
@@ -323,7 +323,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: holger@layer-acht.org
+          recipients: 'holger@layer-acht.org'
 
 - job-template:
     defaults: d-i
@@ -354,7 +354,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: jenkins+debian-boot holger@layer-acht.org
+          recipients: 'jenkins+debian-boot holger@layer-acht.org'
 
 - job-template:
     defaults: d-i-manual-html

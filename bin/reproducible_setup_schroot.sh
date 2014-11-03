@@ -74,6 +74,12 @@ bootstrap $@
 
 trap - INT TERM EXIT
 
+remove_writelock() {
+	# remove the lock
+	rm $DBDCHROOT_WRITELOCK
+}
+
+trap remove_writelock INT TERM EXIT
 # aquire a write lock in any case
 touch $DBDCHROOT_WRITELOCK
 if [ -f $DBDCHROOT_READLOCK ] ; then
@@ -102,7 +108,7 @@ sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
 
 if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ]
 then
-	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand"
+	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand" || ( echo "Warning: $SCHROOT_BASE/${TARGET}-$rand could not be fully removed." ; ls $SCHROOT_BASE/${TARGET}-$rand -la )
 fi
 
 # write the schroot config
@@ -117,6 +123,5 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	union-type=aufs
 	__END__
 
-# remove the lock
-rm $DBDCHROOT_WRITELOCK
-
+trap - INT TERM EXIT
+remove_writelock

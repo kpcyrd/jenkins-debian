@@ -38,6 +38,9 @@ else
 	INITRD=initrd.gz
 fi
 
+echo "Testing $NAME with $URL"
+echo
+
 #
 # define workspace + results
 #
@@ -90,6 +93,7 @@ fetch_if_newer() {
 cleanup_all() {
 	set +x
 	set +e
+	echo
 	#
 	# kill qemu
 	#

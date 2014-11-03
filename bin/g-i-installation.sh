@@ -295,9 +295,15 @@ boot_system() {
 	set +x
 }
 
-
 backup_screenshot() {
+	# after createing the video all .png files are deleted, so we make sure to keep them...
 	cp snapshot_${PRINTF_NR}.png snapshot_${PRINTF_NR}.png.bak
+}
+
+publish_screenshot() {
+	# make screenshots available for the live screenshot plugin
+	ln -f $PWD/snapshot_${PRINTF_NR}.png $WORKSPACE/screenshot.png
+	convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.new
 }
 
 do_and_report() {
@@ -313,6 +319,7 @@ do_and_report() {
 		vncdo -s $DISPLAY "$@"
 	fi
 	backup_screenshot
+	publish_screenshot
 }
 
 rescue_boot() {
@@ -940,13 +947,9 @@ monitor_system() {
 		if [ $(($NR % 100)) -eq 0 ] ; then
 			# press ctrl-key regularily to avoid screensaver kicking in
 			vncdo -s $DISPLAY key ctrl || true
-			# preserve a screenshot for later publishing
+			# preserve a screenshot for later publishing and publish it
 			backup_screenshot
-			# make screenshots available for the live screenshot plugin
-			ln -f $PWD/snapshot_${PRINTF_NR}.png $WORKSPACE/screenshot.png
-			convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.png.new
-			rm -f $WORKSPACE/screenshot-thumb.png
-			mv $WORKSPACE/screenshot-thumb.png.new $WORKSPACE/screenshot-thumb.png
+			publish_screenshot
 			#
 			# search for known text using ocr of screenshot and break out of this loop if certain content is found
 			#
@@ -955,7 +958,7 @@ monitor_system() {
 			gocr $GOCR.png > $GOCR
 			LAST_LINE=$(tail -1 $GOCR |cut -d "]" -f2- || true)
 			STACK_LINE=$(egrep "(Call Trace|end trace)" $GOCR || true)
-			INVALID_SIG_LINE=$(egrep "(Invalid Release signature)" $GOCR || true)
+			INVALID_SIG_LINE=$(grep "Invalid Release signature" $GOCR || true)
 			CDROM_PROBLEM=$(grep "There was a problem reading data from the CD-ROM" $GOCR || true)
 			INSTALL_PROBLEM=$(egrep "(nstallation step fail|he failing step i)"  $GOCR || true)
 			ROOT_PROBLEM=$(egrep "(Giue root password for maintenance|or type Control-D to continue)"  $GOCR || true)
@@ -990,6 +993,7 @@ monitor_system() {
 		elif [ $(($NR % 30)) -eq 0 ] ; then
 			# give signal we are still running
 			echo "$(date) $PRINTF_NR / $TOKEN"
+			publish_screenshot
 		fi
 		# every 100 screenshots, starting from the $TIMEOUTth one...
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt $TIMEOUT ] ; then
@@ -1053,6 +1057,7 @@ monitor_system() {
 		PRINTF_NR=$(printf "%06d" $NR)
 	fi
 	backup_screenshot
+	publish_screenshot
 }
 
 save_logs() {

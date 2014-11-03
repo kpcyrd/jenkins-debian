@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 #
@@ -8,7 +8,14 @@
 # to turn jenkins email notifications into irc announcements with kgb
 # see http://kgb.alioth.debian.org/
 #
-LOGFILE=/var/lib/jenkins/email_log
+LOGFILE=/var/log/jenkins/email.log
+# FIXME: add logrotate rule for /var/log/jenkins/email.log
+
+debug123() {
+	if $DEBUG ; then
+		echo "Debug: $1 $2 $3" >> $LOGFILE
+	fi
+}
 
 #
 # parse email headers to check if they come from jenkins
@@ -47,25 +54,28 @@ while read line ; do
 			JENKINS_JOB=${line:15}
 		fi
 	fi
+	DEBUG=true
 	# catch first line of email body (to send to IRC later)
 	if [ "$HEADER" == "false" ] && [ -z "$MY_LINE" ] ; then
 		MY_LINE=$line
+		debug123 "#1" MY_LINE $MY_LINE
 		# if this is a multipart email it comes from the email extension plugin
-		if [ "${line:0:5}" = "-----" ] ; then
-			read line
-			read line
-			read line
-			MY_LINE=$(echo $line | cut -d " " -f1-2)
+		if [ "${line:0:7}" = "------=" ] ; then
+			debug123 "#2" line $line
+			MY_LINE=""
 		else
-			MY_LINE=$(echo $line | tr -d \< | tr -d \>)
+			debug123 "#3" line $line
+			MY_LINE=$(echo $line | tr -d \< | tr -d \> | cut -d " " -f1-2)
+			debug123 "#4" MY_LINE $MY_LINE
 		fi
 	fi
-
+	DEBUG=false
 done
 # check that it's a valid job
 if [ -z $JENKINS_JOB ] ; then
 	VALID_MAIL=false
 fi	
+debug123 "#5" MY_LINE $MY_LINE
 
 # only send notifications for valid emails
 if [ "$VALID_MAIL" == "true" ] ; then

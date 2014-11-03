@@ -38,7 +38,7 @@ while read line ; do
 			SUBJECT=${line:9}
 			# the email-ext plugin sometimes sends multi line subjects..
 			NEXT=read line
-			if [ "${NEXT:1}" = " " ] ; then
+			if [ "${NEXT:0:1}" = " " ] ; then
 				SUBJECT="${SUBJECT}${NEXT}"
 			fi
 		fi

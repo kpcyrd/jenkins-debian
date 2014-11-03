@@ -58,7 +58,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} html'
     triggers:
-      - pollscm: "*/15 * * * *"
+      - pollscm: '*/15 * * * *'
     publishers:
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
@@ -111,7 +111,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_manual.sh {lang} html po2xml'
     triggers:
-      - pollscm: "*/30 * * * *"
+      - pollscm: '*/30 * * * *'
     publishers:
       - trigger:
           project: 'd-i_manual_{lang}_pdf'
@@ -254,7 +254,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_build.sh'
     triggers:
-      - pollscm: "*/6 * * * *"
+      - pollscm: '*/6 * * * *'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian-installer.rules'
@@ -300,7 +300,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_manual.sh'
     triggers:
-      - pollscm: "*/15 * * * *"
+      - pollscm: '*/15 * * * *'
     publishers:
       - email:
           recipients: 'jenkins+debian-boot holger@layer-acht.org'
@@ -316,7 +316,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_check_jobs.sh'
     triggers:
-      - timed: "23 0 * * *"
+      - timed: '23 0 * * *'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
@@ -345,7 +345,7 @@
       - priority:
          job-prio: '150'
     triggers:
-      - timed: "30 5 * * *"
+      - timed: '30 5 * * *'
     builders:
       - shell: '/srv/jenkins/bin/maintainance.sh {name}'
     publishers:

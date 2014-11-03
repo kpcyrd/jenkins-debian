@@ -87,6 +87,17 @@ cleanup() {
 		publish_changes_to_userContent $CHANGES debian-edu "git ${GIT_COMMIT:0:7}"
 	fi
 
+	#
+	# publish artifacts
+	#
+	if $ARTIFACTS ; then
+		CHANGES=$(ls -1 $CHROOT_TARGET/tmp/*_*.changes 2>/dev/null|| true)
+		dcmd cp $CHANGES $WORKSPACE/
+	fi
+
+	#
+	# actually cleanup
+	#
 	if [ -d $CHROOT_TARGET/proc ]; then
 		sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
 	fi
@@ -96,6 +107,7 @@ cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
 		sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 	fi
+
 }
 trap cleanup INT TERM EXIT
 

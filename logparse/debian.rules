@@ -9,6 +9,11 @@ error /(?i)^error /
 warning /[Ww]arning/
 warning /WARNING/
 
+# catch lintian warnings and errors
+warning /^W: /
+warning /^E: /
+
+
 # create a quick access link to lines in the report containing 'INFO'
 info /INFO/
 

@@ -60,7 +60,7 @@ while read line ; do
 		MY_LINE=$line
 		debug123 "#1" MY_LINE $MY_LINE
 		# if this is a multipart email it comes from the email extension plugin
-		if [ "${line:0:7}" = "------=" ] ; then
+		if [ "${line:0:7}" = "------=" ] || [ "${line:0:9}" = "Content-T" ] ; then
 			debug123 "#2" line $line
 			MY_LINE=""
 		else

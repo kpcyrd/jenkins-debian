@@ -41,9 +41,11 @@ fi
 #
 # define workspace + results
 #
-rm -rf results
+rm -rf results screenshot.png screenshot-thumb.png
 mkdir -p results
-WORKSPACE=$(pwd)
+if [ -z "$WORKSPACE" ] ; then
+	WORKSPACE=$(pwd)
+fi
 RESULTS=$WORKSPACE/results
 mkdir -p $RESULTS/log
 GOCR=$(mktemp)

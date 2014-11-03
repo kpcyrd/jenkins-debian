@@ -34,6 +34,17 @@ chroot_checks() {
 	echo "WARNING: should remove directories in /(s)chroots which are older than a month."
 }
 
+report_old_directories() {
+	# find and warn about old temp directories
+	OLDSTUFF=$(find $1/* -maxdepth 0 -type d -mtime +$2 -exec ls -lad {} \;)
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo "Warning: old temp directories found in $REP_RESULTS"
+		echo "$OLDSTUFF"
+		echo "Please cleanup manually."
+		echo
+	fi
+}
+
 report_disk_usage() {
 	if [ -z "$WATCHED_JOBS" ] ; then
 		echo "File system usage for all ${1} jobs:"
@@ -151,6 +162,8 @@ else
 						report_filetype_usage $1 iso warn
 						echo "WARNING: there is no check / handling on stale lvm volumes"
 						rm $ACTIVE_JOBS $WATCHED_JOBS $RUNNING
+						;;
+		d-i)				report_old_directories /srv/d-i 7
 						;;
 		squid)				report_squid_usage
 						;;

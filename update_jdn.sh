@@ -28,7 +28,7 @@ if ! mountpoint -q /srv/workspace; then
 fi
 
 # make sure needed directories exists
-for directory in  /srv/jenkins /schroots /srv/reproducible-results ; do
+for directory in  /srv/jenkins /schroots /srv/reproducible-results /srv/d-i ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory

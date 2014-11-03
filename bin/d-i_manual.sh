@@ -7,15 +7,14 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-clean_workspace() {
+cleanup_workspace() {
 	#
 	# clean
 	#
 	cd $WORKSPACE
 	cd ..
 	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz *_*.buildinfo
-	cd workspace
-	rm -rf html pdf
+	cd $WORKSPACE
 	#
 	# git clone and pull is done by jenkins job
 	#
@@ -27,7 +26,6 @@ clean_workspace() {
 		svn status
 		svn stat --no-ignore
 	fi
-	echo
 }
 
 pdebuild_package() {
@@ -63,44 +61,45 @@ pdebuild_package() {
 }
 
 po2xml() {
-	cd manual
-	./scripts/merge_xml en
-	./scripts/update_pot
-	./scripts/update_po $1
-	./scripts/revert_pot
-	./scripts/create_xml $1
-	cd ..
+	#
+	# This needs a schroot called jenkins-d-i-sid with the
+	# build-depends for the installation-guide package installed.
+	# The d-i_schroot-sid-create job creates it.
+	#
+	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/merge_xml en
+	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/update_pot
+	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/update_po $1
+	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/revert_pot
+	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/create_xml $1
 }
 
 build_language() {
-	#
-	# this needs apt-get build-dep installation guide installed
-	#
 	FORMAT=$2
-	# if $FORMAT is a directory and it's string length is greater or equal than 3 (so not "." or "..")
-	if [ -d "$FORMAT" ] && [ ${#FORMAT} -ge 3 ]; then
-		rm -rf $FORMAT
-	fi
 	mkdir $FORMAT
+	echo "Building the $FORMAT version of the $1 manual now."
 	cd manual/build
 	ARCHS=$(ls arch-options)
 	for ARCH in $ARCHS ; do
 		# ignore kernel architectures
 		if [ "$ARCH" != "hurd" ] && [ "$ARCH" != "kfreebsd" ] && [ "$ARCH" != "linux" ] ; then
-			make languages=$1 architectures=$ARCH destination=../../$FORMAT/ formats=$FORMAT
+			#
+			# This needs a schroot called jenkins-d-i-sid with the
+			# build-depends for the installation-guide package installed.
+			# The d-i_schroot-sid-create job creates it.
+			#
+			set -x
+			schroot --directory $BUILDDIR/manual/build -c source:jenkins-d-i-sid make languages=$1 architectures=$ARCH destination=$BUILDDIR/manual/build/$FORMAT/ formats=$FORMAT
+			set +x
 			if ( [ "$FORMAT" = "pdf" ] && [ ! -f pdf/$1.$ARCH/install.$1.pdf ] ) || \
 				( [ "$FORMAT" = "html" ] && [ ! -f html/$1.$ARCH/index.html ] ) ; then
 					echo
 					echo "Failed to build $1 $FORMAT for $ARCH, exiting."
 					echo
-					cd ../..
-					svn revert manual -R
 					exit 1
 			fi
 		fi
 	done
 	cd ../..
-	svn revert manual -R
 	# remove directories if they are empty and in the case of pdf, leave a empty pdf
 	# maybe it is indeed better not to create these jobs in the first place...
 	# this is due to "Warning: pdf and ps formats are currently not supported for Chinese, Greek, Japanese and Vietnamese"
@@ -112,12 +111,15 @@ build_language() {
 	echo
 }
 
-po_cleanup() {
-	echo "Cleanup generated files:"
-	rm -rv manual/$1 manual/integrated
+cleanup_srv() {
+	if [ "${BUILDDIR:0:9}" = "/srv/d-i/" ] && [ ${#BUILDDIR} -ge 10 ] ; then
+		echo "Removing $BUILDDIR now."
+		rm -rf $BUILDDIR
+	fi
 }
 
-clean_workspace
+
+cleanup_workspace
 #
 # if $1 is not given, build the whole manual,
 # else just the language $1 in format $2
@@ -128,16 +130,26 @@ clean_workspace
 if [ "$1" = "" ] ; then
 	pdebuild_package
 else
+	rm -rf html pdf
 	if [ "$2" = "" ] ; then
 		echo "Error: need format too."
 		exit 1
 	fi
+	trap cleanup_srv INT TERM EXIT
+	BUILDDIR=$(mktemp -d -p /srv/d-i d-i-manual-XXXX)
+	echo "Copying $WORKSPACE/manual to $BUILDDIR now."
+	cp -r $WORKSPACE/manual $BUILDDIR/
+	cd $BUILDDIR
 	if [ "$3" = "" ] ; then
 		build_language $1 $2
 	else
 		po2xml $1
 		build_language $1 $2
-		po_cleanup $1
 	fi
+	echo "Copying back results from $BUILDDIR/manual/build/$2 to $WORKSPACE/"
+	cp -r $BUILDDIR/manual/build/$2 $WORKSPACE/
+	trap - INT TERM EXIT
+	cleanup_srv
 fi
-clean_workspace
+cleanup_workspace
+

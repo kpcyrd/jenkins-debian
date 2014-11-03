@@ -68,6 +68,15 @@
         defaults: schroot-upgrade
         name: '{name}-sid-upgrade'
 
+- job-template:
+        defaults: schroot-create
+        name: 'd-i_{name}-sid-create'
+
+- job-template:
+        defaults: schroot-upgrade
+        name: 'd-i_{name}-sid-upgrade'
+
+
 - project:
         name: schroot
         do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/schroot.yaml">schroot.yaml</a>.'
@@ -76,8 +85,16 @@
                         my_schroot: sid
                         my_distro: sid
                         my_extra_pkgs: ''
-                        my_time: '0 10 * * 1'
+                        my_time: '0 20 * * 1'
                 - '{name}-sid-upgrade':
                         my_schroot: sid
-                        my_time: '0 14 * * *'
-
+                        my_time: '0 10 * * *'
+                - 'd-i_{name}-sid-create':
+                        my_schroot: d-i-sid
+                        my_distro: sid
+                        my_extra_pkgs: 'build-essential debhelper docbook docbook-xml docbook-xsl xsltproc gawk libhtml-parser-perl w3m poxml jadetex openjade docbook-dsssl ghostscript texlive-lang-cyrillic texlive-lang-czechslovak texlive-lang-european texlive-lang-french texlive-lang-german texlive-lang-greek texlive-lang-italian texlive-lang-other texlive-lang-portuguese texlive-lang-spanish ko.tex-base cm-super'
+                        my_time: '1 1 * * 1'
+                - 'd-i_{name}-sid-upgrade':
+                        my_schroot: d-i-sid
+                        my_time: '0 50 * * *'
+                        # FIXME: ideally this would triggered by schroot-sid-create and not be time-base... etootired

@@ -69,9 +69,10 @@ fi
 #
 # video
 #
-VIDEOBITRATE=1200
 VIDEOSIZE=1024x768
 VIDEOBGCOLOR=gray10
+FRAMERATE=24		# this is the input framerate
+CONVERTOPTS="-gravity center -background $VIDEOBGCOLOR -extent $VIDEOSIZE"
 
 fetch_if_newer() {
 	url="$2"
@@ -123,7 +124,7 @@ cleanup_all() {
 	#
 	echo "$(date) - Creating video now. This may take a while.'"
 	TMPFILE=$(mktemp)
-	ffmpeg2theora --videobitrate $VIDEOBITRATE --no-upscaling snapshot_%06d.png --framerate 12 --max_size $VIDEOSIZE -o g-i-installation-$NAME.ogv > $TMPFILE 2>&1 || cat $TMPFILE
+	avconv -r $FRAMERATE snapshot_%06d.png g-i-installation-$NAME.webm > $TMPFILE 2>&1 || cat $TMPFILE
 	rm snapshot_??????.png $TMPFILE
 	# rename .bak files back to .png
 	if find . -name "*.png.bak" > /dev/null ; then
@@ -164,7 +165,6 @@ bootstrap_system() {
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -no-shutdown -enable-kvm -cpu host"
-	CONVERTOPTS="-gravity center -background $VIDEOBGCOLOR -extent $VIDEOSIZE"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in

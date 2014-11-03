@@ -157,6 +157,7 @@ else
 						report_disk_usage $1
 						report_filetype_usage $1 png
 						report_filetype_usage $1 ppm warn # FIXME: remove this check in 3 days (and add warn to pngs)
+						report_filetype_usage $1 ogv warn # FIXME: remove this check in 7 days
 						report_filetype_usage $1 bak warn
 						report_filetype_usage $1 raw warn
 						report_filetype_usage $1 iso warn

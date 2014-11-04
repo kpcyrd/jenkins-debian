@@ -2,6 +2,8 @@
 
 ok /not really/
 
+ok /Error while decoding stream/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 

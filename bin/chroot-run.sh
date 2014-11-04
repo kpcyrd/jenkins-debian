@@ -8,6 +8,11 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# cp artifacts back into workspace if this is set
+if [ "$ARTIFACTS" != "true" ] ; then
+	ARTIFACTS=false
+fi
+
 # $1 = base distro
 # $2 $3 ... = command to run inside a clean chroot running the distro in $1
 
@@ -90,7 +95,7 @@ cleanup() {
 	#
 	# publish artifacts
 	#
-	if $ARTIFACTS ; then
+	if [ "$ARTIFACTS" = "true" ] ; then
 		CHANGES=$(ls -1 $CHROOT_TARGET/tmp/*_*.changes 2>/dev/null|| true)
 		dcmd cp $CHANGES $WORKSPACE/
 	fi

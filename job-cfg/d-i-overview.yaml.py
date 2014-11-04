@@ -59,7 +59,7 @@ for arch in sorted(archs):
           recipients: 'jenkins+debian-boot holger@layer-acht.org'
           first-failure: true
           fixed: true
-          subject: 'Jenkins: $BUILD_STATUS for $JOB_NAME/$BUILD_NUMBER'
+          subject: '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'
           attach-build-log: true
           body: 'See http://d-i.debian.org/daily-images/daily-build-overview.html#%(arch)s or $BUILD_URL and $BUILD_URL/console'
 """ % dict(arch=arch))

@@ -154,7 +154,7 @@ print("""
           recipients: '{my_recipients}'
           first-failure: true
           fixed: true
-          subject: 'Jenkins: $BUILD_STATUS for $JOB_NAME/$BUILD_NUMBER'
+          subject: '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'
           attach-build-log: true
           body: 'See $BUILD_URL and $BUILD_URL/console'
     properties:

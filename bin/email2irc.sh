@@ -20,6 +20,7 @@ debug123() {
 #
 # parse email headers to check if they come from jenkins
 #
+DEBUG=false
 HEADER=true
 VALID_MAIL=false
 MY_LINE=""
@@ -54,7 +55,6 @@ while read line ; do
 			JENKINS_JOB=${line:15}
 		fi
 	fi
-	DEBUG=true
 	# catch first line of email body (to send to IRC later)
 	if [ "$HEADER" == "false" ] && [ -z "$MY_LINE" ] ; then
 		MY_LINE=$line
@@ -69,7 +69,6 @@ while read line ; do
 			debug123 "#4" MY_LINE $MY_LINE
 		fi
 	fi
-	DEBUG=false
 done
 # check that it's a valid job
 if [ -z $JENKINS_JOB ] ; then

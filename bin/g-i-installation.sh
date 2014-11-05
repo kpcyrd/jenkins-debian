@@ -220,7 +220,7 @@ bootstrap_system() {
 			;;
 		debian-edu*-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
-			EXTRA_APPEND="$EXTRA_APPEND interface=eth0"
+			EXTRA_APPEND="$EXTRA_APPEND interface=eth1"
 			;;
 		*)	;;
 	esac
@@ -292,7 +292,7 @@ boot_system() {
 	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE"
 	case $NAME in
 		debian-edu*main-server|debian-edu*combi-server)
-				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.0.1,dhcpstart=10.0.2.2,dns=10.0.1.1 -net nic,vlan=1 -net user,vlan=1"
+				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.0.1,dhcpstart=10.0.2.2,dns=10.0.1.1 -net nic,vlan=1 -net user,vlan=1 --append interface=eth1"
 				;;
 		*)		QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 				;;

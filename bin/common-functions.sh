@@ -8,6 +8,13 @@ common_cleanup(){
 	rm -f $TTT
 }
 
+#
+# run ourself with the same parameter as we are running
+# but run a copy from /tmp so that the source can be updated
+# (Running shell scripts fail weirdly when overwritten when running,
+#  this hack makes it possible to overwrite long running scripts
+#  anytime...)
+#
 common_init() {
 # check whether this script has been started from /tmp already
 if [ "${0:0:5}" != "/tmp/" ] ; then
@@ -23,14 +30,20 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	# cp $0 to /tmp and run it from there
 	cp $0 $TTT
 	chmod +x $TTT
-	# run ourself with the same parameter as we are running
-	# but run a copy from /tmp so that the source can be updated
-	# (Running shell scripts fail weirdly when overwritten when running,
-	#  this hack makes it possible to overwrite long running scripts
-	#  anytime...)
-	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)
-	echo "$(date) - start running \"$0\" as \"$TTT\" using \"$@\" as arguments."
+	echo "===================================================================================="
 	echo
+	echo "$(date) - running job $JOB_NAME now."
+	echo
+	echo "To understand what this job does, clone git.debian.org/git/qa/jenkins.debian.net.git"
+	echo "and then have a look at bin/$(basename $0)"
+	echo 
+	echo "The script is called using \"$@\" as arguments." 
+	echo
+	echo "===================================================================================="
+	echo
+	echo "$(date) - start running \"$0\" as \"$TTT\"."
+	# this is the "hack": call ourself as a copy in /tmp again
+	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)
 	/srv/jenkins/bin/setsid.py $TTT "$@"
 	exit $?
 	# cleanup is done automatically via trap

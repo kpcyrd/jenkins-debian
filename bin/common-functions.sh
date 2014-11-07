@@ -37,11 +37,11 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo "To understand what this job does, clone git.debian.org/git/qa/jenkins.debian.net.git"
 	echo "and then have a look at bin/$(basename $0)"
 	echo 
-	echo "The script is called using \"$@\" as arguments." 
+	echo "This invocation of the script has been called using \"$@\" as arguments." 
 	echo
 	echo "===================================================================================="
-	echo
 	echo "$(date) - start running \"$0\" as \"$TTT\"."
+	echo
 	# this is the "hack": call ourself as a copy in /tmp again
 	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)
 	/srv/jenkins/bin/setsid.py $TTT "$@"

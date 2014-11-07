@@ -115,7 +115,7 @@ cleanup_all() {
 	# remove lvm volume
 	#
 	case $NAME in
-	#	*standalone_mate)	echo "Warning: not deleting lvm volume $LV"
+	#	*jessie_main-server)	echo "Warning: not deleting lvm volume $LV"
 	#				;;
 		*) 	sudo lvremove -f $LV
 		;;
@@ -218,9 +218,8 @@ bootstrap_system() {
 		debian_*_rescue*)
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
-		debian-edu*-server)
+		debian-edu_*ltsp-server|debian-edu_*combi-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
-			EXTRA_APPEND="$EXTRA_APPEND interface=eth1"
 			;;
 		*)	;;
 	esac
@@ -290,11 +289,12 @@ boot_system() {
 		exit 1
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE"
+	QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	case $NAME in
-		debian-edu*main-server|debian-edu*combi-server)
-				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.0.1,dhcpstart=10.0.2.2,dns=10.0.1.1 -net nic,vlan=1 -net user,vlan=1 --append interface=eth1"
+		debian-edu_*ltsp-server|debian-edu_*combi-server)
+				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
 				;;
-		*)		QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+		*)
 				;;
 	esac
 	echo

@@ -153,6 +153,10 @@
     name: '{name}_html_all_packages'
 
 - job-template:
+    defaults: reproducible
+    name: '{name}_json'
+
+- job-template:
     defaults: reproducible_builder
     name: '{name}_builder_alpha'
 
@@ -218,6 +222,11 @@
         - '{name}_html_all_packages':
             my_description: 'Generates HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'
             my_timed: '12 12 30 12 *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
+            my_recipients: 'holger@layer-acht.org'
+        - '{name}_json':
+            my_description: 'Generates https://jenkins.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
+            my_timed: '1 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_alpha':

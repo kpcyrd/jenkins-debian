@@ -20,18 +20,20 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * get rid of FIXMEs in README. Really.
 * turn job-cfg/g-i.yaml into .yaml.py
+* split etc/schroot/default
 * use cucumber+libvirt instead of g-i.sh
 * download .isos once in central place
 * use schroot for chroot-installation
-* build d-i manual in sid
 * build packages using jenkins-debian-glue and not my hacks
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 * backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too
 * put kgb-client.conf in git and sed passwords from filesystem into it...
+* turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
+* unreproducible-with-buildinfo should really be a state in the DB
 
 === jenkins-job-builder related
 
-* add support for live screenshot plugin
+* fork livescreenshot plugin and send pull request for my bugfix
 * use the package from jessie
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 * needs clean merge of my patches to jenkins-job-builder...

@@ -44,7 +44,7 @@
 
 - project:
     name: self
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/self.yaml">self.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/self.yaml">self.yaml</a>.'
     jobs:
       - '{name}_maintainance':
          my_shell: '/srv/jenkins/bin/maintainance.sh'

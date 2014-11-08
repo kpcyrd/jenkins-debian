@@ -204,7 +204,7 @@ for base_distro in sorted(base_distros):
 print("""
 - project:
     name: chroot-installation
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/chroot-installation.yaml.py">chroot-installation.yaml.py</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/chroot-installation.yaml.py">chroot-installation.yaml.py</a>.'
     jobs:""")
 for base_distro in sorted(base_distros):
     for target in sorted(get_targets_in_distro(base_distro, targets)):

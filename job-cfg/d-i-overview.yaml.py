@@ -67,7 +67,7 @@ for arch in sorted(archs):
 print("""
 - project:
     name: d-i
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/d-i-overview.yaml.py">d-i-overview.yaml.py</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i-overview.yaml.py">d-i-overview.yaml.py</a>.'
     jobs:""")
 for arch in sorted(archs):
     print("""      - '{name}_overview_%(arch)s'"""

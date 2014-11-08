@@ -85,7 +85,7 @@ for arch in sorted(architectures):
 print("""
 - project:
     name: rebootstrap
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/rebootstrap.yaml.py">rebootstrap.yaml.py</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/rebootstrap.yaml.py">rebootstrap.yaml.py</a>.'
     jobs:""")
 for arch in sorted(architectures):
     for gccver in sorted(gcc_versions):

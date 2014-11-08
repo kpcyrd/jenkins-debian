@@ -46,26 +46,31 @@ execute_ctmpfile() {
 prepare_bootstrap() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
+set -x
 mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
 echo "deb-src $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
 apt-get update
+set +x
 EOF
 }
 
 prepare_install_packages() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
+set -x
 apt-get -y install $@
 apt-get clean
+set +x
 EOF
 }
 
 prepare_install_build_depends() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
+set -x
 apt-get -y install build-essential
 apt-get clean
 EOF
@@ -73,12 +78,14 @@ for PACKAGE in $@ ; do
 	echo apt-get -y build-dep $PACKAGE >> $CTMPFILE
 	echo apt-get clean >> $CTMPFILE
 done
+echo "set +x" >> $CTMPFILE
 }
 
 prepare_upgrade2() {
 	cat >> $CTMPFILE <<-EOF
 echo "deb $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
 $SCRIPT_HEADER
+set -x
 apt-get update
 apt-get -y upgrade
 apt-get clean
@@ -87,6 +94,7 @@ apt-get clean
 apt-get -yf dist-upgrade
 apt-get clean
 apt-get -y autoremove
+set +x
 EOF
 }
 

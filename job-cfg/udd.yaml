@@ -1,0 +1,58 @@
+- defaults:
+    name: udd
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/qa.debian.org/
+          text: Jobs for Debian QA related packages
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/job-cfg/udd.yaml">udd.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa holger@layer-acht.org'
+    builders:
+      - shell: '/srv/jenkins/bin/udd-query.sh {my_params}'
+    triggers:
+      - timed: '{my_time}'
+
+- job-template:
+    defaults: udd
+    name: '{name}_wheezy_multiarch_versionskew'
+
+- job-template:
+    defaults: udd
+    name: '{name}_jessie_multiarch_versionskew'
+
+- job-template:
+    defaults: udd
+    name: '{name}_sid_multiarch_versionskew'
+
+- project:
+    name: udd
+    jobs:
+        - '{name}_wheezy_multiarch_versionskew':
+           my_time: '2 8 1 * *'
+           my_params: 'wheezy multiarch_versionskew'
+           my_description: 'Detect multi-arch versions skews in wheezy.'
+        - '{name}_jessie_multiarch_versionskew':
+           my_time: '1 8 * * *'
+           my_params: 'jessie multiarch_versionskew'
+           my_description: 'Detect multi-arch versions skews in jessie.'
+        - '{name}_sid_multiarch_versionskew':
+           my_time: '0 8 * * *'
+           my_params: 'sid multiarch_versionskew'
+           my_description: 'Detect multi-arch versions skews in sid.'
+

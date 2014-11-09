@@ -227,7 +227,7 @@
         - '{name}_json':
             my_description: 'Generates https://jenkins.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
             my_timed: '1 0 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_json.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'

@@ -26,6 +26,11 @@ for LINE in $RESULT ; do
 	PKG=$(echo $LINE | cut -d "|" -f1)
 	VERSION=$(echo $LINE | cut -d "|" -f2)
 	STATUS=$(echo $LINE | cut -d "|" -f3)
+	if [ "$STATUS" = "unreproducible" ] ; then
+	        if [ -f /var/lib/jenkins/userContent/buildinfo/${PKG}_${VERSION}_amd64.buildinfo ] ; then
+			STATUS="$STATUS-with-buildinfo"
+		fi
+	fi
 	write_json "{"
 	write_json "\"package\": \"$PKG\","
 	write_json "\"version\": \"$VERSION\","

@@ -156,7 +156,7 @@ These are jobs for making sure jenkins.debian.net is running smoothly.
 
 === Feedback
 
-I love to get feedback on this! Please send an email to debian-qa@lists.debian.org or just join #debian-qa on irc.debian.org to report bugs or give other feedback there! 
+I love to get feedback on this! Either by sending an email to debian-qa@lists.debian.org or by joining #debian-qa on irc.debian.org and expressing yourself there. The best way is to link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org@packages.debian.org[report bugs], even better if accompanied by patches or pull requests. But really, all feedback is appreciated!
 
 ==== Self signed SSL certificate
 

@@ -189,6 +189,12 @@ bootstrap_system() {
 		*_hurd*)	;;
 		*)		QEMU_OPTS="$QEMU_OPTS -enable-kvm -cpu host" ;;
 	esac
+	QEMU_WEBSERVER=http://10.0.2.1/
+	QEMU_NET_OPTS="-net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+	# preseeding related variables
+	PRESEEDCFG="preseed.cfg"
+	PRESEED_PATH=d-i-preseed-cfgs
+	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
@@ -203,12 +209,7 @@ bootstrap_system() {
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
-	QEMU_WEBSERVER=http://10.0.2.1/
-	# preseeding related variables
-	PRESEEDCFG="preseed.cfg"
-	PRESEED_PATH=d-i-preseed-cfgs
-	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
+	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE $QEMU_NET_OPTS"
 	INST_LOCALE="locale=$DI_LOCALE"
 	INST_KEYMAP="keymap=us"	# always us!
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"

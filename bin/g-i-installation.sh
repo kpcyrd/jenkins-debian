@@ -201,13 +201,30 @@ bootstrap_system() {
 	#
 	# boot configuration
 	#
-	if [ -n "$NETBOOT" ] ; then
+	if [ -n "$NETBOOT" ]; then
+		ARCH="$(ls debian-installer/)"
 		GRUB_CFG="debian-installer/$ARCH/grub.cfg"
+		case $NAME in
+			*_kfreebsd*)	# boot the fourth menu option (Automated Install) after 3 seconds
+					sed -i 's#^set default=.*#set default=3#' $GRUB_CFG
+					sed -i 's#^set timeout=.*#set timeout=2#' $GRUB_CFG
+					# prepend additional options
+					OPTION="preseed/url" ; VALUE="$PRESEED_URL"
+					sed -i "s#kfreebsd .*#set kFreeBSD.$OPTION='$VALUE'\n	\\0#" $GRUB_CFG
+					# redirect d-i syslog to virtual serial port
+					OPTION="preseed/early_command" ; VALUE="sed -ie s/ttyv3/cuau0/ /etc/inittab ; kill -HUP 1"
+					sed -i "s#kfreebsd .*#set kFreeBSD.$OPTION='$VALUE'\n	\\0#" $GRUB_CFG
+					# enable kernel logging to virtual serial port
+					KERNEL_FLAGS="-D"
+					sed -i "s#kfreebsd .*#\0 $KERNEL_FLAGS#" $GRUB_CFG
+					;;
+			*)		;;
+		esac
 		QEMU_NET_OPTS="$QEMU_NET_OPTS,bootfile=grub2pxe,tftp=."
 	elif [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
-			*_kfreebsd)	;;
+			*_kfreebsd*)	;;
 			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
 					;;

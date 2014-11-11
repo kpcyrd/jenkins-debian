@@ -30,7 +30,10 @@ DISKSIZE_IN_GB=$1
 URL=$2
 # $3 and $4 are used below for language setting
 RAMSIZE=1024
-if [ "$(basename $URL)" != "amd64" ] ; then
+if [ "$(basename $URL)" = "netboot.tar.gz" ] ; then
+	# URL is for a PXE netboot installer, rather than a CD .iso
+	NETBOOT=$(pwd)/$(basename $URL)
+elif [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
 	IMAGE_MNT="/media/cd-$NAME.iso"
 else
@@ -195,7 +198,13 @@ bootstrap_system() {
 	PRESEEDCFG="preseed.cfg"
 	PRESEED_PATH=d-i-preseed-cfgs
 	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
-	if [ -n "$IMAGE" ] ; then
+	#
+	# boot configuration
+	#
+	if [ -n "$NETBOOT" ] ; then
+		GRUB_CFG="debian-installer/$ARCH/grub.cfg"
+		QEMU_NET_OPTS="$QEMU_NET_OPTS,bootfile=grub2pxe,tftp=."
+	elif [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
 			*_kfreebsd)	;;
@@ -1156,9 +1165,20 @@ save_logs() {
 trap cleanup_all INT TERM EXIT
 
 #
-# if there is a CD image...
+# install image preparation
 #
-if [ ! -z "$IMAGE" ] ; then
+if [ ! -z "$NETBOOT" ] ; then
+        #
+        # if there is a netboot installer tarball...
+        #
+        fetch_if_newer "$NETBOOT" "$URL"
+        # try to extract, otherwise abort
+        sha256sum "$NETBOOT"
+        tar -zxvf "$NETBOOT" || exit
+elif [ ! -z "$IMAGE" ] ; then
+	#
+	# if there is a CD image...
+	#
 	fetch_if_newer "$IMAGE" "$URL"
 	# is this really an .iso?
 	if [ $(file "$IMAGE" | grep -cE '(ISO 9660|DOS/MBR boot sector)') -eq 1 ] ; then

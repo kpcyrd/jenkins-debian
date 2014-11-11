@@ -183,7 +183,12 @@ bootstrap_system() {
 	sudo qemu-img create -f raw $LV ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY -enable-kvm -cpu host"
+	QEMU_OPTS="-display vnc=$DISPLAY"
+	case $NAME in
+		# nested KVM runs gnumach horribly slowly
+		*_hurd*)	;;
+		*)		QEMU_OPTS="$QEMU_OPTS -enable-kvm -cpu host" ;;
+	esac
 	if [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in

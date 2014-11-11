@@ -77,6 +77,15 @@ VIDEOBGCOLOR=gray10
 FRAMERATE=24		# this is the input framerate
 CONVERTOPTS="-gravity center -background $VIDEOBGCOLOR -extent $VIDEOSIZE"
 
+#
+# Debian Edu -test images usually show a screen with known problems
+# if in EDUTESTMODE we'll acknowledge these
+#
+EDUTESTMODE=false
+if [[ "$NAME" =~ ^debian-edu_.*-test.*$ ]] ; then
+	EDUTESTMODE=true
+fi
+
 fetch_if_newer() {
 	url="$2"
 	file="$1"
@@ -384,12 +393,6 @@ post_install_boot() {
 				# debian-edu installations differ too much, login individually
 				*)	;;
 	esac
-	# Debian Edu -test images usually show a screen with known problems
-	# if in EDUTESTMODE we'll acknowledge these
-	EDUTESTMODE=false
-	if [[ "$NAME" =~ ^debian-edu_.*-test.*$ ]] ; then
-		EDUTESTMODE=true
-	fi
 	#
 	# actions depending on the type of installation
 	#
@@ -839,13 +842,13 @@ post_install_boot() {
 						# debian-edu installations report error found during installation, go forward
 						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
-						0110)	do_and_report type jenkins
+						0150)	do_and_report type jenkins
 							;;
-						0120)	do_and_report key enter
+						0160)	do_and_report key enter
 							;;
-						0130)	do_and_report type insecure
+						0170)	do_and_report type insecure
 							;;
-						0140)	do_and_report key enter
+						0180)	do_and_report key enter
 							;;
 						*)	;;
 					esac

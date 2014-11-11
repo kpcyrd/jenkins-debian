@@ -281,7 +281,7 @@ bootstrap_system() {
 	        case $NAME in
 			*_kfreebsd)	;;
 			*_hurd*)	# Hurd needs multiboot options jenkins can't escape correctly
-					echo -n '-machine kernel_irqchip=off --kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
+					echo -n '--kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
 					;;
 			*)		;;
 		esac
@@ -296,7 +296,12 @@ boot_system() {
 	cd $WORKSPACE
 	echo "Booting system installed with g-i installation test for $NAME."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY -enable-kvm -cpu host"
+	QEMU_OPTS="-display vnc=$DISPLAY"
+	case $NAME in
+		# nested KVM runs gnumach horribly slowly
+		*_hurd*)	;;
+		*)		QEMU_OPTS="$QEMU_OPTS -enable-kvm -cpu host" ;;
+	esac
 	echo "Checking $LV:"
 	FILE=$(sudo file -Ls $LV)
 	if [ $(echo $FILE | grep -E '(x86 boot sector|DOS/MBR boot sector)' | wc -l) -eq 0 ] ; then

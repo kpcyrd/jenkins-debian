@@ -1099,6 +1099,10 @@ monitor_system() {
 		if [ ! -z "$TRIGGER_MODE" ] && [ "$TRIGGER_MODE" = "$NR" ] ; then
 			let TRIGGER_NR=NR
 		fi
+		# find out why hurd hangs
+		if [ $NR -eq 5100 ] && [[ "$NAME" =~ ^debian.*_hurd.*$ ]] ; then
+			do_and_report key alt-f4
+		fi
 		let NR=NR+1
 		sleep 2
 	done

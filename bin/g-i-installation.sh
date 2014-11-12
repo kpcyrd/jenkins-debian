@@ -318,7 +318,11 @@ bootstrap_system() {
 			*)		;;
 		esac
 	fi
-	echo "--append \"$APPEND\"" >> $QEMU_LAUNCHER
+	case $NAME in
+		*_kfreebsd)	# not supported for the --append option
+				;;
+		*)		echo "--append \"$APPEND\"" >> $QEMU_LAUNCHER
+				;;
 	set -x
 	(bash -x $QEMU_LAUNCHER && touch $RESULTS/qemu_quit ) &
 	set +x

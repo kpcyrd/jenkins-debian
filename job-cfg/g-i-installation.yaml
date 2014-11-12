@@ -95,7 +95,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_minimal'
+    name: '{name}_debian-edu_wheezy_minimal'
 
 - job-template:
     defaults: g-i-installation
@@ -115,11 +115,11 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_main-server'
+    name: '{name}_debian-edu_wheezy_main-server'
 
 #- job-template:
 #    defaults: g-i-installation
-#    name: '{name}_debian-edu_wheezy-test_sugar'
+#    name: '{name}_debian-edu_jessie_sugar'
 
 - job-template:
     defaults: g-i-installation
@@ -290,11 +290,11 @@
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
       - '{name}_maintainance'
-      - '{name}_debian-edu_wheezy-test_minimal':
-         my_title: 'Debian Edu (wheezy-test) minimal'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy minimal profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_timed: '23 20 * * 3,7'
+      - '{name}_debian-edu_wheezy_minimal':
+         my_title: 'Debian Edu (wheezy) minimal'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy minimal profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+         my_timed: '23 20 15 * *'
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_wheezy_standalone':
          my_title: 'Debian Edu (wheezy) standalone'
@@ -320,16 +320,16 @@
          my_description: 'Do a fully automated installation of a Debian Edu Wheezy combi-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 0 16 * *'
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_main-server':
-         my_title: 'Debian Edu (wheezy-test) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 30 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+      - '{name}_debian-edu_wheezy_main-server':
+         my_title: 'Debian Edu (wheezy) main-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 30 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_timed: '42 2 16 * *'
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-#      - '{name}_debian-edu_wheezy-test_sugar':
-#         my_title: 'Debian Edu (wheezy-test) sugar'
-#         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-#         my_description: 'Do a fully automated installation of a Debian Edu Wheezy sugar profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_sugar_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+#      - '{name}_debian-edu_jessie_sugar':
+#         my_title: 'Debian Edu (jessie) sugar'
+#         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+#         my_description: 'Do a fully automated installation of a Debian Edu Jessie sugar profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie_sugar_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
 #         my_timed: '42 2 * * 3,7'
 #         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian_wheezy_kde':

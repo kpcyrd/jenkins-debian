@@ -323,6 +323,7 @@ bootstrap_system() {
 				;;
 		*)		echo "--append \"$APPEND\"" >> $QEMU_LAUNCHER
 				;;
+	esac
 	set -x
 	(bash -x $QEMU_LAUNCHER && touch $RESULTS/qemu_quit ) &
 	set +x

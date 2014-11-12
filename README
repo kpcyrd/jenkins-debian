@@ -138,10 +138,12 @@ jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh package1
 
 === dvswitch jobs
 
-* FIXME: describe dvswitch jobs
+* There are three jobs currently:
+** 'dvswitch_sid' and 'dvswitch_jessie' build the master branch of dvswitch against that environment.
+** while 'dvswitch_against_libav_git' builds the master branch of dvswitch using libav also build from it's master branch. This is done in an sid environment.
+** Except for 'dvswitch_jessie' which is triggered by a successful 'dvswitch_sid' run, the jobs are triggered by git commits.
 
-
-=== self jobs
+=== jenkins.d.n jobs
 
 These are jobs for making sure jenkins.debian.net is running smoothly.
 

@@ -30,6 +30,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
 * unreproducible-with-buildinfo should really be a state in the DB
+* replace amd64 in scripts with $HOSTARCH
+* run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
+* reproducible_scheduler should never fail loudly
 
 === jenkins-job-builder related
 

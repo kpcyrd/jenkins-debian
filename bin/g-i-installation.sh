@@ -30,7 +30,10 @@ DISKSIZE_IN_GB=$1
 URL=$2
 # $3 and $4 are used below for language setting
 RAMSIZE=1024
-if [ "$(basename $URL)" != "amd64" ] ; then
+if [ "$(basename $URL)" = "netboot.tar.gz" ] ; then
+	# URL is for a PXE netboot installer, rather than a CD .iso
+	NETBOOT=$(pwd)/$(basename $URL)
+elif [ "$(basename $URL)" != "amd64" ] ; then
 	IMAGE=$(pwd)/$(basename $URL)
 	IMAGE_MNT="/media/cd-$NAME.iso"
 else
@@ -189,10 +192,39 @@ bootstrap_system() {
 		*_hurd*)	;;
 		*)		QEMU_OPTS="$QEMU_OPTS -enable-kvm -cpu host" ;;
 	esac
-	if [ -n "$IMAGE" ] ; then
+	QEMU_WEBSERVER=http://10.0.2.1/
+	QEMU_NET_OPTS="-net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+	# preseeding related variables
+	PRESEEDCFG="preseed.cfg"
+	PRESEED_PATH=d-i-preseed-cfgs
+	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
+	#
+	# boot configuration
+	#
+	if [ -n "$NETBOOT" ]; then
+		ARCH="$(ls debian-installer/)"
+		GRUB_CFG="debian-installer/$ARCH/grub.cfg"
+		case $NAME in
+			*_kfreebsd*)	# boot the fourth menu option (Automated Install) after 3 seconds
+					sed -i 's#^set default=.*#set default=3#' $GRUB_CFG
+					sed -i 's#^set timeout=.*#set timeout=2#' $GRUB_CFG
+					# prepend additional options
+					OPTION="preseed/url" ; VALUE="$PRESEED_URL"
+					sed -i "s#kfreebsd .*#set kFreeBSD.$OPTION='$VALUE'\n	\\0#" $GRUB_CFG
+					# redirect d-i syslog to virtual serial port
+					OPTION="preseed/early_command" ; VALUE="sed -ie s/ttyv3/cuau0/ /etc/inittab ; kill -HUP 1"
+					sed -i "s#kfreebsd .*#set kFreeBSD.$OPTION='$VALUE'\n	\\0#" $GRUB_CFG
+					# enable kernel logging to virtual serial port
+					KERNEL_FLAGS="-D"
+					sed -i "s#kfreebsd .*#\0 $KERNEL_FLAGS#" $GRUB_CFG
+					;;
+			*)		;;
+		esac
+		QEMU_NET_OPTS="$QEMU_NET_OPTS,bootfile=grub2pxe,tftp=."
+	elif [ -n "$IMAGE" ] ; then
 		QEMU_OPTS="$QEMU_OPTS -cdrom $IMAGE -boot d"
 	        case $NAME in
-			*_kfreebsd)	;;
+			*_kfreebsd*)	;;
 			*_hurd*)	QEMU_OPTS="$QEMU_OPTS -vga std"
 					gzip -cd $IMAGE_MNT/boot/kernel/gnumach.gz > $WORKSPACE/gnumach
 					;;
@@ -203,12 +235,7 @@ bootstrap_system() {
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
-	QEMU_WEBSERVER=http://10.0.2.1/
-	# preseeding related variables
-	PRESEEDCFG="preseed.cfg"
-	PRESEED_PATH=d-i-preseed-cfgs
-	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
+	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE $QEMU_NET_OPTS"
 	INST_LOCALE="locale=$DI_LOCALE"
 	INST_KEYMAP="keymap=us"	# always us!
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
@@ -1072,6 +1099,10 @@ monitor_system() {
 		if [ ! -z "$TRIGGER_MODE" ] && [ "$TRIGGER_MODE" = "$NR" ] ; then
 			let TRIGGER_NR=NR
 		fi
+		# find out why hurd hangs
+		if [ $NR -eq 5100 ] && [[ "$NAME" =~ ^debian.*_hurd.*$ ]] ; then
+			do_and_report key alt-f4
+		fi
 		let NR=NR+1
 		sleep 2
 	done
@@ -1155,9 +1186,20 @@ save_logs() {
 trap cleanup_all INT TERM EXIT
 
 #
-# if there is a CD image...
+# install image preparation
 #
-if [ ! -z "$IMAGE" ] ; then
+if [ ! -z "$NETBOOT" ] ; then
+        #
+        # if there is a netboot installer tarball...
+        #
+        fetch_if_newer "$NETBOOT" "$URL"
+        # try to extract, otherwise abort
+        sha256sum "$NETBOOT"
+        tar -zxvf "$NETBOOT" || exit
+elif [ ! -z "$IMAGE" ] ; then
+	#
+	# if there is a CD image...
+	#
 	fetch_if_newer "$IMAGE" "$URL"
 	# is this really an .iso?
 	if [ $(file "$IMAGE" | grep -cE '(ISO 9660|DOS/MBR boot sector)') -eq 1 ] ; then

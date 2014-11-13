@@ -96,7 +96,7 @@ ExtendedStatus On
         Order deny,allow
         Deny from all
         Allow from 127.0.0.1
-	Allow from 46.16.77.49
+	Allow from 46.16.73.183
     </Location>
 </IfModule>
 

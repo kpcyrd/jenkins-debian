@@ -314,6 +314,11 @@ bootstrap_system() {
 			*_kfreebsd)	;;
 			*_hurd*)	# Hurd needs multiboot options jenkins can't escape correctly
 					echo -n '--kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
+                                        # The slow qemu emulation brings IRQ
+                                        # timeouts, so rather avoid them
+                                        # completely, in qemu PIO is actually
+                                        # not slower than DMA anyway.
+					APPEND="hd0=nodma $APPEND"
 					;;
 			*)		;;
 		esac

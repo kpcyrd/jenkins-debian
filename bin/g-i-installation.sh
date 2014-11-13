@@ -318,7 +318,7 @@ bootstrap_system() {
                                         # timeouts, so rather avoid them
                                         # completely, in qemu PIO is actually
                                         # not slower than DMA anyway.
-					APPEND="hd0=nodma $APPEND"
+					APPEND="hd0=nodma console=dom0 $APPEND"
 					;;
 			*)		;;
 		esac

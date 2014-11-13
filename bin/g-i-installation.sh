@@ -235,7 +235,7 @@ bootstrap_system() {
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE $QEMU_NET_OPTS"
+	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -serial file:$RESULTS/serial.log -m $RAMSIZE $QEMU_NET_OPTS"
 	INST_LOCALE="locale=$DI_LOCALE"
 	INST_KEYMAP="keymap=us"	# always us!
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"

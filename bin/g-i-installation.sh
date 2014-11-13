@@ -109,7 +109,16 @@ cleanup_all() {
 	#
 	# kill qemu
 	#
-	sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
+	# use SIGINT for 10 seconds to encourage graceful shutdown
+	for i in $(seq 1 10); do
+		QEMU_PID=$(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}')
+		[ -z "$QEMU_PID" ] && break
+		sudo kill -INT $QEMU_PID
+		sleep 1
+	done
+	# force exit with SIGKILL if still running now
+	QEMU_PID=$(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}')
+	[ -z "$QEMU_PID" ] || sudo kill -KILL $QEMU_PID
 	sleep 0.3s
 	#
 	# save logs if there are any

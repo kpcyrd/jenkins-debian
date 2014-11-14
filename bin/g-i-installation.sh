@@ -206,7 +206,7 @@ bootstrap_system() {
 	# preseeding related variables
 	PRESEEDCFG="preseed.cfg"
 	PRESEED_PATH=d-i-preseed-cfgs
-	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
+	PRESEED_URL="$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
 	#
 	# boot configuration
 	#
@@ -309,7 +309,7 @@ bootstrap_system() {
 		EXTRA_APPEND="$EXTRA_APPEND priority=critical"
 		;;
 	esac
-	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
+	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"

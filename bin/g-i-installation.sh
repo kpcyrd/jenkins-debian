@@ -720,11 +720,11 @@ post_install_boot() {
 							;;
 						0350)	do_and_report type root
 							;;
-						0480)	do_and_report key enter
+						0400)	do_and_report key enter
 							;;
-						0490)	do_and_report type r00tme
+						0410)	do_and_report type r00tme
 							;;
-						0500)	do_and_report key enter
+						0420)	do_and_report key enter
 							;;
 						0550)	do_and_report type ps
 							;;

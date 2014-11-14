@@ -17,7 +17,7 @@ jenkins ALL=  \
 	/bin/mount -o loop*, \
 	/bin/mount --bind *, \
 	/usr/bin/du *, \
-	/bin/kill -9 *, \
+	/bin/kill *, \
 	/usr/bin/file *, \
 	/bin/dd if=/dev/zero of=/dev/jenkins*, \
 	/usr/bin/qemu-system-x86_64 *, \

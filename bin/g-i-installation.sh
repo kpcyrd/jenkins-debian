@@ -188,7 +188,7 @@ bootstrap_system() {
 	if [ "$RELEASE" != "jessie" ] ; then
 		echo "Workaround to remove swap signature from previous installs, see #757818"
 		bs=8192
-		let count="1024*1024*1024*$LV/$bs"
+		let count="1024*1024*1024*${DISKSIZE_IN_GB}/$bs"
 		time sudo dd if=/dev/zero of=$LV bs=$bs count=$count  || true
 	else
 		echo "Release $RELEASE detected, where #757818 should be fixed, thus not applying workaround..."

@@ -160,7 +160,7 @@ if [ $COUNT_SOURCELESS -gt 0 ] ; then
 fi
 set_icon not_for_us
 write_icon
-write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will never be build here"
+write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will not be build here"
 write_page "and those "
 set_icon blacklisted
 write_icon

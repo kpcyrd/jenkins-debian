@@ -36,7 +36,12 @@ chroot_checks() {
 
 report_old_directories() {
 	# find and warn about old temp directories
-	OLDSTUFF=$(find $1/* -maxdepth 0 -type d -mtime +$2 -exec ls -lad {} \;)
+	if [ -z "$3" ] ; then
+		OLDSTUFF=$(find $1/* -maxdepth 0 -type d -mtime +$2 -exec ls -lad {} \;)
+	else
+		# if $3 is given, ignore it
+		OLDSTUFF=$(find $1/* -maxdepth 0 -type d -mtime +$2 ! -path "$3*" -exec ls -lad {} \;)
+	fi
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo "Warning: old temp directories found in $REP_RESULTS"
 		echo "$OLDSTUFF"
@@ -164,7 +169,7 @@ else
 						echo "WARNING: there is no check / handling on stale lvm volumes"
 						rm $ACTIVE_JOBS $WATCHED_JOBS $RUNNING
 						;;
-		d-i)				report_old_directories /srv/d-i 7
+		d-i)				report_old_directories /srv/d-i 7 /srv/d-i/workspace
 						;;
 		squid)				report_squid_usage
 						;;

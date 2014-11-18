@@ -101,6 +101,23 @@ if grep -q '|' $PACKAGES ; then
 fi
 rm $PACKAGES
 
+# find packages which have been removed from sid
+QUERY="SELECT source_packages.name FROM source_packages
+		WHERE source_packages.name NOT IN
+		(SELECT sources.name FROM sources)
+	LIMIT 25"
+PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
+if [ -z "$PACKAGES" ] ; then
+	echo
+	echo "Removing these removed packages from database:"
+	echo $PACKAGES
+	QUERY="DELETE FROM source_packages
+			WHERE source_packages.name NOT IN
+			(SELECT sources.name FROM sources)
+		LIMIT 25"
+	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
+fi
+
 if ! $DIRTY ; then
 	echo "Everything seems to be fine."
 	echo

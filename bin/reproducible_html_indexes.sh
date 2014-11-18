@@ -92,7 +92,7 @@ for VIEW in last_24h last_48h all_abc ; do
 		write_page "<p>"
 		set_icon blacklisted
 		write_icon
-		write_page "$COUNT_BLACKLISTED packages are blacklisted and will never be tested here: <code>"
+		write_page "$COUNT_BLACKLISTED packages are blacklisted and will not be tested here: <code>"
 		link_packages $BLACKLISTED
 		write_page "</code></p>"
 	fi

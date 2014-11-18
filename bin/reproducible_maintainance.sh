@@ -107,10 +107,11 @@ QUERY="SELECT source_packages.name FROM source_packages
 		(SELECT sources.name FROM sources)
 	LIMIT 25"
 PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
-if [ -z "$PACKAGES" ] ; then
+if [ ! -z "$PACKAGES" ] ; then
 	echo
 	echo "Removing these removed packages from database:"
 	echo $PACKAGES
+	echo
 	QUERY="DELETE FROM source_packages
 			WHERE source_packages.name NOT IN
 			(SELECT sources.name FROM sources)

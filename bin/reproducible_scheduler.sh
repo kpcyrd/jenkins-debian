@@ -91,7 +91,7 @@ select_unknown_packages() {
 				WHERE sources.name=source_packages.name)
 			ORDER BY random()
 		LIMIT $1"
-	do_sql_query "never tested before, randomly sorted"
+	do_sql_query "not tested before, randomly sorted"
 }
 
 select_new_versions() {

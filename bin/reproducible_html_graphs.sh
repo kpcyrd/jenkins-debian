@@ -95,7 +95,7 @@ COLOR[1]=4
 COLOR[2]=3
 COLOR[3]=18
 MAINLABEL[0]="Package reproducibility status"
-MAINLABEL[1]="Amout of packages build each day"
+MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
 YLABEL[0]="Amount (total)"
@@ -160,7 +160,7 @@ if [ $COUNT_SOURCELESS -gt 0 ] ; then
 fi
 set_icon not_for_us
 write_icon
-write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will never be build here"
+write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will not be build here"
 write_page "and those "
 set_icon blacklisted
 write_icon

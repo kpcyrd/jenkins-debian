@@ -109,7 +109,16 @@ cleanup_all() {
 	#
 	# kill qemu
 	#
-	sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
+	# use SIGINT for 10 seconds to encourage graceful shutdown
+	for i in $(seq 1 10); do
+		QEMU_PID=$(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}')
+		[ -z "$QEMU_PID" ] && break
+		sudo kill -INT $QEMU_PID
+		sleep 1
+	done
+	# force exit with SIGKILL if still running now
+	QEMU_PID=$(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}')
+	[ -z "$QEMU_PID" ] || sudo kill -KILL $QEMU_PID
 	sleep 0.3s
 	#
 	# save logs if there are any
@@ -178,7 +187,9 @@ bootstrap_system() {
 	RELEASE="$(echo $NAME | cut -d "_" -f2)"
 	if [ "$RELEASE" != "jessie" ] ; then
 		echo "Workaround to remove swap signature from previous installs, see #757818"
-		time sudo dd if=/dev/zero of=$LV bs=4096 || true
+		bs=8192
+		let count="1024*1024*1024*${DISKSIZE_IN_GB}/$bs"
+		time sudo dd if=/dev/zero of=$LV bs=$bs count=$count  || true
 	else
 		echo "Release $RELEASE detected, where #757818 should be fixed, thus not applying workaround..."
 	fi
@@ -197,7 +208,7 @@ bootstrap_system() {
 	# preseeding related variables
 	PRESEEDCFG="preseed.cfg"
 	PRESEED_PATH=d-i-preseed-cfgs
-	PRESEED_URL="url=$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
+	PRESEED_URL="$QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG"
 	#
 	# boot configuration
 	#
@@ -300,7 +311,7 @@ bootstrap_system() {
 		EXTRA_APPEND="$EXTRA_APPEND priority=critical"
 		;;
 	esac
-	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $PRESEED_URL $INST_VIDEO -- quiet"
+	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"
@@ -711,11 +722,11 @@ post_install_boot() {
 							;;
 						0350)	do_and_report type root
 							;;
-						0480)	do_and_report key enter
+						0400)	do_and_report key enter
 							;;
-						0490)	do_and_report type r00tme
+						0410)	do_and_report type r00tme
 							;;
-						0500)	do_and_report key enter
+						0420)	do_and_report key enter
 							;;
 						0550)	do_and_report type ps
 							;;
@@ -1244,7 +1255,7 @@ case $NAME in
 			;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
 			;;
-	*_hurd*|debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200
+	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200
 			;;
 	*)		monitor_system install wait4match
 			;;

@@ -60,7 +60,7 @@ else
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 	# host has only sid in deb-src in sources.list
 	set +e
-	apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+	apt-get --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.

@@ -229,7 +229,7 @@ write_page_footer() {
 }
 
 write_page_meta_sign() {
-	write_page "<p style=\"font-size:0.9em;\">An underlined package is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
+	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a bold font is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
 	if $BUILDINFO_ON_PAGE ; then
 		write_page "A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
 		write_page "And that means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a>."

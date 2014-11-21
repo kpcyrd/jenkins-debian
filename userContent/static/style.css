@@ -47,7 +47,7 @@ a, a.package {
 
 a.noted {
 	color:#0088cc;
-	text-decoration:underline;
+	font-weight: bold;
 }
 
 a:hover, a:focus, a.package:hover, a.package:focus {
@@ -57,7 +57,8 @@ a:hover, a:focus, a.package:hover, a.package:focus {
 
 a.noted:hover, a.noted:focus {
 	color:#005580;
-	text-decoration:none;
+	text-decoration:underline;
+	font-weight: bold;
 }
 
 a.package:visited, a.noted:visited {

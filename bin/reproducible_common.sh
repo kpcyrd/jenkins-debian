@@ -10,16 +10,16 @@
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
 INIT=/var/lib/jenkins/reproducible.init
 if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
-	if [ -f $PACKAGES_DB.lock ] ; then
+	if [ -f ${PACKAGES_DB}.lock ] ; then
 		for i in $(seq 0 100) ; do
 			sleep 15
 			echo "sleeping 15s, $PACKAGES_DB is locked."
-			if [ ! -f $PACKAGES_DB.lock ] ; then
+			if [ ! -f ${PACKAGES_DB}.lock ] ; then
 				break
 			fi
 		done
-		if [ -f $PACKAGES_DB.lock ] ; then
-			echo "$PACKAGES_DB.lock still exist, exiting."
+		if [ -f ${PACKAGES_DB}.lock ] ; then
+			echo "${PACKAGES_DB}.lock still exist, exiting."
 			exit 1
 		fi
 	fi
@@ -95,7 +95,7 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		done_randomness INTEGER,
 		PRIMARY KEY (datum))'
 	# 60 seconds timeout when trying to get a lock
-	cat >/var/lib/jenkins/reproducible.init <<-EOF
+	cat > $INIT <<-EOF
 .timeout 60000
 EOF
 fi

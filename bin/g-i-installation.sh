@@ -124,7 +124,7 @@ cleanup_all() {
 	# save logs if there are any
 	#
 	case $NAME in
-		*_rescue*)	;;
+		*_rescue*|*_presentation)	;;
 		*)		if [ $NR -gt 200 ] ; then
 					save_logs
 				else
@@ -307,6 +307,9 @@ bootstrap_system() {
 		*_speakup)
 			EXTRA_APPEND="$EXTRA_APPEND speakup.synth=soft"
 			;;
+		*_presentation)
+			EXTRA_APPEND="$EXTRA_APPEND url=hands.com classes=talks/fosdem07"
+			;;
 		*)
 		;;
 	esac
@@ -438,6 +441,21 @@ rescue_boot() {
 			;;
 		0220)	do_and_report key enter
 			;;
+		*)	;;
+	esac
+}
+
+presentation_boot() {
+	# boot in presentation mode
+	let MY_NR=NR-TRIGGER_NR
+	TOKEN=$(printf "%04d" $MY_NR)
+	case $TOKEN in
+		#0010)	do_and_report key tab
+		#	;;
+		#0020)	do_and_report key enter
+		#	;;
+		#0100)	do_and_report key tab
+		#	;;
 		*)	;;
 	esac
 }
@@ -1119,6 +1137,8 @@ monitor_system() {
 			case $MODE in
 				rescue)	rescue_boot
 					;;
+				presentation)	presentation_boot
+					;;
 				post_install)	post_install_boot
 					;;
 				*)	;;
@@ -1273,7 +1293,9 @@ fi
 bootstrap_system
 set +x
 case $NAME in
-	*_rescue*) 	monitor_system rescue
+	*_rescue*)	 	monitor_system rescue
+			;;
+	*_presentation)	 			monitor_system presentation
 			;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
 			;;
@@ -1287,7 +1309,7 @@ esac
 #
 let NR=NR+1
 case $NAME in
-	*_rescue*)	# so there are some artifacts to publish
+	*_rescue*|*_presentation)	# so there are some artifacts to publish
 			mkdir -p $RESULTS/log/installer
 			touch $RESULTS/log/dummy $RESULTS/log/installer/dummy
 			;;

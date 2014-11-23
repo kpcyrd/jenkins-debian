@@ -23,6 +23,10 @@
     publishers:
       - email:
           recipients: 'jenkins+debian-qa holger@layer-acht.org'
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
     builders:
       - shell: '/srv/jenkins/bin/udd-query.sh {my_params}'
     triggers:

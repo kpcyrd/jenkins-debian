@@ -46,9 +46,13 @@ multiarch_versionskew() {
 			ORDER BY source ;"
 
 	udd_query
-	cat $UDD
-	# TODO: turn source package names into links
-	# TODO: show versions (per arch) too
+	if [ -s $UDD ] ; then
+		echo "Warning: multi-arch version skew in $DISTRO detected."
+		echo
+		# TODO: turn source package names into links
+		# TODO: show versions (per arch) too
+		cat $UDD
+	fi
 	rm $UDD
 }
 
@@ -65,10 +69,8 @@ orphaned_without_o_bug() {
 
 	udd_query
 	cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
-
 	curl --silent https://qa.debian.org/data/bts/wnpp_rm \
 		| cut -d ' ' -f 1 | tr -d ':' | sort | uniq > "$WNPPRM"
-
 	comm -23 "$SORTED_UDD" "$WNPPRM" > "$RES1"
 
 	# $RES1 now contains all packages that have packages@qa.debian.org as the
@@ -76,30 +78,31 @@ orphaned_without_o_bug() {
 	# (because they are missing a bug)
 	# we have to remove all the packages that appear in experimental but do not
 	# have packages@qa.debian.org as a maintainer (i.e: they found a new one)
-
 	SQL_QUERY="SELECT DISTINCT source
 		FROM sources
 		WHERE maintainer NOT LIKE '%packages@qa.debian.org%'
 		AND release='experimental'
 		ORDER BY source ; "
 	udd_query
-	cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
 
-	echo "The following packages are maintained by packages@qa.debian.org"
-	echo "but are missing a wnpp bug according to https://qa.debian.org/data/bts/wnpp_rm"
-	echo
+	if [ -s $UDD ] ; then
+		cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
 
-	comm -13 "$SORTED_UDD" "$RES1"
+		echo "Warning: The following packages are maintained by packages@qa.debian.org"
+		echo "but are missing a wnpp bug according to https://qa.debian.org/data/bts/wnpp_rm"
+		echo
+		# TODO: turn source package names into links
+		comm -13 "$SORTED_UDD" "$RES1"
+	fi
 
 	rm -f "$UDD" "$WNPPRM" "$RES1" "$SORTED_UDD"
-
 }
 
 #
 # main
 #
 UDD=$(mktemp)
-case QUERY in
+case $1 in
 	orphaned_without_o_bug)
 			orphaned_without_o_bug
 			;;
@@ -110,4 +113,4 @@ case QUERY in
 			echo "unknown query requested, exiting... please provide patches :)"
 			;;
 esac
-
+echo

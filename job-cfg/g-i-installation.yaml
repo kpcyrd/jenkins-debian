@@ -163,6 +163,10 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian_sid_daily_gnome'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_sid_daily_xfce'
 
 - job-template:
@@ -392,6 +396,12 @@
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 19 */2 * *'
+         my_recipients: 'holger@layer-acht.org'
+      - '{name}_debian_sid_daily_gnome':
+         my_title: 'Debian (sid daily build CD) GNOME desktop install'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_timed: '42 8 * * *'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_xfce':
          my_title: 'Debian (sid daily build CD) Xfce desktop install'

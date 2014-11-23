@@ -301,6 +301,14 @@ bootstrap_system() {
 		debian-edu_*)
 			EXTRA_APPEND="$EXTRA_APPEND DEBCONF_DEBUG=developer"
 			;;
+		*_brltty)
+			EXTRA_APPEND="$EXTRA_APPEND brltty=tt,ttyS0,en"
+			;;
+		*_speakup)
+			EXTRA_APPEND="$EXTRA_APPEND speakup.synth=soft"
+			;;
+		*)
+		;;
 	esac
 	case $NAME in
 	    debian-edu_*)
@@ -1156,6 +1164,20 @@ save_logs() {
 	# get list of installed packages
 	#
 	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system, did the installation finish correctly?" ; export FAILURE=true )
+	#
+	# check for must installed packages
+	#
+	case $NAME in
+		*_brltty)
+			grep brltty $RESULTS/dpkg-l || echo "Warning: package brltty not installed."
+			;;
+		*_speakup)
+			grep epeakup RESULTS/dpkg-l || echo "Warning: package espeakup not installed."
+			;;
+		*)
+		;;
+	esac
+
 	#
 	# only on combi-servers and ltsp-servers:
 	#	mount /opt

@@ -457,11 +457,7 @@ presentation_boot() {
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%04d" $MY_NR)
 	case $TOKEN in
-		0100)	do_and_report key enter
-			;;
-		0300)	do_and_report key enter
-			;;
-		0400)	do_and_report key enter
+		0[123456]00)	do_and_report key enter
 			;;
 		*)	;;
 	esac

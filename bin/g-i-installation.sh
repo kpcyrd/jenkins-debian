@@ -457,7 +457,7 @@ presentation_boot() {
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%04d" $MY_NR)
 	case $TOKEN in
-		0020)	do_and_report key enter
+		0100)	do_and_report key enter
 			;;
 		0300)	do_and_report key enter
 			;;
@@ -1302,7 +1302,7 @@ set +x
 case $NAME in
 	*_rescue*)	 			monitor_system rescue
 						;;
-	*_presentation)	 			monitor_system presentation
+	*_presentation)	 			monitor_system presentation 10
 						;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
 						;;

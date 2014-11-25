@@ -322,7 +322,14 @@ bootstrap_system() {
 		EXTRA_APPEND="$EXTRA_APPEND priority=critical"
 		;;
 	esac
-	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
+	case $NAME in
+		*_presentation)
+			APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $INST_VIDEO -- quiet"
+			;;
+		*)
+			APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
+			;;
+	esac
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"
@@ -450,12 +457,12 @@ presentation_boot() {
 	let MY_NR=NR-TRIGGER_NR
 	TOKEN=$(printf "%04d" $MY_NR)
 	case $TOKEN in
-		#0010)	do_and_report key tab
-		#	;;
-		#0020)	do_and_report key enter
-		#	;;
-		#0100)	do_and_report key tab
-		#	;;
+		0020)	do_and_report key enter
+			;;
+		0300)	do_and_report key enter
+			;;
+		0400)	do_and_report key enter
+			;;
 		*)	;;
 	esac
 }
@@ -1135,13 +1142,13 @@ monitor_system() {
 		# let's drive this further (once/if triggered)
 		if [ $TRIGGER_NR -ne 0 ] && [ $TRIGGER_NR -ne $NR ] ; then
 			case $MODE in
-				rescue)	rescue_boot
-					;;
+				rescue)		rescue_boot
+						;;
 				presentation)	presentation_boot
-					;;
+						;;
 				post_install)	post_install_boot
-					;;
-				*)	;;
+						;;
+				*)		;;
 			esac
 		fi
 		# if TRIGGER_MODE matches NR, we are triggered too
@@ -1192,7 +1199,7 @@ save_logs() {
 			grep brltty $RESULTS/dpkg-l || echo "Warning: package brltty not installed."
 			;;
 		*_speakup)
-			grep epeakup RESULTS/dpkg-l || echo "Warning: package espeakup not installed."
+			grep epeakup $RESULTS/dpkg-l || echo "Warning: package espeakup not installed."
 			;;
 		*)
 		;;
@@ -1293,16 +1300,16 @@ fi
 bootstrap_system
 set +x
 case $NAME in
-	*_rescue*)	 	monitor_system rescue
-			;;
+	*_rescue*)	 			monitor_system rescue
+						;;
 	*_presentation)	 			monitor_system presentation
-			;;
+						;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
-			;;
+						;;
 	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200
-			;;
-	*)		monitor_system install wait4match
-			;;
+						;;
+	*)					monitor_system install wait4match
+						;;
 esac
 #
 # boot up installed system
@@ -1316,7 +1323,9 @@ case $NAME in
 	*)		#
 			# kill qemu and image
 			#
+			set -x
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
+			set +x
 			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true
 			fi

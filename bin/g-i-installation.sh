@@ -1113,6 +1113,24 @@ monitor_system() {
 			if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
 				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_OLD}.png"
 				if [ $PIXEL -lt 400 ] ; then
+				    SAME=Y
+				    for INTER in $(seq $OLD $NR); do
+					PRINTF_INTER=$(printf "%06d" $INTER)
+					PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.png snapshot_${PRINTF_INTER}.png /dev/null 2>&1 || true )
+					if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
+						if [ $PIXEL -ge 400 ] ; then
+							echo "but $PIXEL difference between snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_INTER}.png"
+							SAME=N
+							break
+						fi
+					else
+						echo "but snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_INTER}.png have different sizes."
+						SAME=N
+						break
+					fi
+				    done
+				    if [ $SAME = Y ]
+				    then
 					# unless TRIGGER_MODE is empty, matching images means its over
 					if [ ! -z "$TRIGGER_MODE" ] ; then
 						echo "Warning: snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png match or almost match, ending installation."
@@ -1130,6 +1148,7 @@ monitor_system() {
 						# really kick off trigger:
 						let TRIGGER_NR=NR
 					fi
+				    fi
 				fi
 			else
 				echo "snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_OLD}.png have different sizes."

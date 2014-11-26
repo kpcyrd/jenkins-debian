@@ -1114,7 +1114,7 @@ monitor_system() {
 				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_OLD}.png"
 				if [ $PIXEL -lt 400 ] ; then
 				    SAME=Y
-				    for INTER in $(seq $OLD $NR); do
+				    for INTER in $(seq $OLD 10 $NR); do
 					PRINTF_INTER=$(printf "%06d" $INTER)
 					PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.png snapshot_${PRINTF_INTER}.png /dev/null 2>&1 || true )
 					if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then

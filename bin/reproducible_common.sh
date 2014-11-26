@@ -10,16 +10,16 @@
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
 INIT=/var/lib/jenkins/reproducible.init
 if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
-	if [ -f $PACKAGES_DB.lock ] ; then
+	if [ -f ${PACKAGES_DB}.lock ] ; then
 		for i in $(seq 0 100) ; do
 			sleep 15
 			echo "sleeping 15s, $PACKAGES_DB is locked."
-			if [ ! -f $PACKAGES_DB.lock ] ; then
+			if [ ! -f ${PACKAGES_DB}.lock ] ; then
 				break
 			fi
 		done
-		if [ -f $PACKAGES_DB.lock ] ; then
-			echo "$PACKAGES_DB.lock still exist, exiting."
+		if [ -f ${PACKAGES_DB}.lock ] ; then
+			echo "${PACKAGES_DB}.lock still exist, exiting."
 			exit 1
 		fi
 	fi
@@ -95,7 +95,7 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		done_randomness INTEGER,
 		PRIMARY KEY (datum))'
 	# 60 seconds timeout when trying to get a lock
-	cat >/var/lib/jenkins/reproducible.init <<-EOF
+	cat > $INIT <<-EOF
 .timeout 60000
 EOF
 fi
@@ -229,7 +229,7 @@ write_page_footer() {
 }
 
 write_page_meta_sign() {
-	write_page "<p style=\"font-size:0.9em;\">An underlined package is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
+	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a bold font is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
 	if $BUILDINFO_ON_PAGE ; then
 		write_page "A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
 		write_page "And that means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a>."

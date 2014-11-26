@@ -33,6 +33,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * replace amd64 in scripts with $HOSTARCH
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible_scheduler should never fail loudly
+* g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
 
 === jenkins-job-builder related
 

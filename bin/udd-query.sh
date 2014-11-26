@@ -1,64 +1,116 @@
 #!/bin/bash
 
 # Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
-# UDD query by Stuart Prescott <stuart@debian.org>
+# multiarch_versionskew UDD query by Stuart Prescott <stuart@debian.org>
+# orphaned_without_o_bug by Johannes Schauer <j.schauer@email.de>
 # released under the GPLv=2
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-#
-# have all needed params been supplied?
-#
-if [ -z "$2" ] ; then
-	echo "Need at two params, distro + query_name..."
-	exit 1
-fi
+udd_query() {
+	#
+	# Actually query UDD and save result in $UDD file
+	#
+	echo "$(date) - querying UDD using ${SQL_QUERY}"
+	echo
+	PGPASSWORD=public-udd-mirror \
+		psql -U public-udd-mirror \
+		-h public-udd-mirror.xvm.mit.edu -p 5432 \
+		-t \
+		udd -c"${SQL_QUERY}" > $UDD
+}
 
-DISTRO=$1
-declare -A SQL_QUERY
-QUERY=$2
+multiarch_versionskew() {
+	if [ -z "$1" ] ; then
+		echo "Warning: no distro supplied, assuming sid."
+		DISTR=sid
+	else
+		DISTRO=$1
+	fi
+	#
+	# SQL query for detecting multi-arch version skew
+	#
+	SQL_QUERY="SELECT DISTINCT source FROM
+		(SELECT DISTINCT source, package, version
+			FROM packages WHERE
+				release='$DISTRO' AND
+				multi_arch='same' AND
+					architecture IN ('amd64', 'arm64', 'armel', 'armhf', 'i386',
+					'kfreebsd-amd64', 'kfreebsd-i386', 'mips', 'mipsel',
+					'powerpc', 'ppc64el', 's390x')
+				ORDER BY source) AS all_versions
+				GROUP BY source, package
+				HAVING count(*) > 1
+			ORDER BY source ;"
+
+	udd_query
+	if [ -s $UDD ] ; then
+		echo "Warning: multi-arch version skew in $DISTRO detected."
+		echo
+		# TODO: turn source package names into links
+		# TODO: show versions (per arch) too
+		cat $UDD
+	fi
+	rm $UDD
+}
+
+orphaned_without_o_bug() {
+	WNPPRM=$(mktemp)
+	SORTED_UDD=$(mktemp)
+	RES1=$(mktemp)
+
+	SQL_QUERY="SELECT DISTINCT source
+		FROM sources
+		WHERE maintainer LIKE '%packages@qa.debian.org%'
+		AND release='sid'
+		ORDER BY source ; "
+
+	udd_query
+	cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
+	curl --silent https://qa.debian.org/data/bts/wnpp_rm \
+		| cut -d ' ' -f 1 | tr -d ':' | sort | uniq > "$WNPPRM"
+	comm -23 "$SORTED_UDD" "$WNPPRM" > "$RES1"
+
+	# $RES1 now contains all packages that have packages@qa.debian.org as the
+	# maintainer but do not appear on https://qa.debian.org/data/bts/wnpp_rm
+	# (because they are missing a bug)
+	# we have to remove all the packages that appear in experimental but do not
+	# have packages@qa.debian.org as a maintainer (i.e: they found a new one)
+	SQL_QUERY="SELECT DISTINCT source
+		FROM sources
+		WHERE maintainer NOT LIKE '%packages@qa.debian.org%'
+		AND release='experimental'
+		ORDER BY source ; "
+	udd_query
+
+	if [ -s $UDD ] ; then
+		cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
+
+		echo "Warning: The following packages are maintained by packages@qa.debian.org"
+		echo "but are missing a wnpp bug according to https://qa.debian.org/data/bts/wnpp_rm"
+		echo
+		# TODO: turn source package names into links
+		comm -13 "$SORTED_UDD" "$RES1"
+	fi
+
+	rm -f "$UDD" "$WNPPRM" "$RES1" "$SORTED_UDD"
+}
 
 #
-# more to come, hopefully
+# main
 #
-if [ "$QUERY" != "multiarch_versionskew" ] ; then
-	echo "unknown query requested, exiting... please provide patches :)"
-	exit 1
-fi
-
-#
-# SQL query for detecting multi-arch version skew
-#
-SQL_QUERY["multiarch_versionskew"]="
-  SELECT DISTINCT source FROM
-      (SELECT DISTINCT source, package, version
-          FROM packages
-          WHERE
-              release='$DISTRO' AND
-              multi_arch='same' AND
-              architecture IN ('amd64', 'arm64', 'armel', 'armhf', 'i386',
-                      'kfreebsd-amd64', 'kfreebsd-i386', 'mips', 'mipsel',
-                      'powerpc', 'ppc64el', 's390x')
-          ORDER BY source) AS all_versions
-      GROUP BY source, package
-      HAVING count(*) > 1
-      ORDER BY source
-  ;
-"
-
-
-#
-# Actually query UDD
-#
-echo "$(date) - querying UDD using ${SQL_QUERY[$QUERY]}"
+UDD=$(mktemp)
+case $1 in
+	orphaned_without_o_bug)
+			orphaned_without_o_bug
+			;;
+	multiarch_versionskew)
+			multiarch_versionskew $2
+			;;
+	*)
+			echo "unknown query requested, exiting... please provide patches :)"
+			;;
+esac
 echo
-PGPASSWORD=public-udd-mirror \
-  psql -U public-udd-mirror \
-        -h public-udd-mirror.xvm.mit.edu -p 5432 \
-        -t \
-        udd -c"${SQL_QUERY[$QUERY]}"
-
-# TODO: turn source package names into links
-# TODO: show versions (per arch) too

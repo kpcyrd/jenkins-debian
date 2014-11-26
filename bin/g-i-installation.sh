@@ -124,7 +124,7 @@ cleanup_all() {
 	# save logs if there are any
 	#
 	case $NAME in
-		*_rescue*)	;;
+		*_rescue*|*_presentation)	;;
 		*)		if [ $NR -gt 200 ] ; then
 					save_logs
 				else
@@ -301,6 +301,17 @@ bootstrap_system() {
 		debian-edu_*)
 			EXTRA_APPEND="$EXTRA_APPEND DEBCONF_DEBUG=developer"
 			;;
+		*_brltty)
+			EXTRA_APPEND="$EXTRA_APPEND brltty=tt,ttyS0,en"
+			;;
+		*_speakup)
+			EXTRA_APPEND="$EXTRA_APPEND speakup.synth=soft"
+			;;
+		*_presentation)
+			EXTRA_APPEND="$EXTRA_APPEND url=hands.com classes=talks/fosdem07"
+			;;
+		*)
+		;;
 	esac
 	case $NAME in
 	    debian-edu_*)
@@ -311,7 +322,14 @@ bootstrap_system() {
 		EXTRA_APPEND="$EXTRA_APPEND priority=critical"
 		;;
 	esac
-	APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
+	case $NAME in
+		*_presentation)
+			APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP $INST_VIDEO -- quiet"
+			;;
+		*)
+			APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
+			;;
+	esac
 	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"
@@ -429,6 +447,17 @@ rescue_boot() {
 		0210)	do_and_report key down
 			;;
 		0220)	do_and_report key enter
+			;;
+		*)	;;
+	esac
+}
+
+presentation_boot() {
+	# boot in presentation mode
+	let MY_NR=NR-TRIGGER_NR
+	TOKEN=$(printf "%04d" $MY_NR)
+	case $TOKEN in
+		0[123456]00)	do_and_report key enter
 			;;
 		*)	;;
 	esac
@@ -611,7 +640,7 @@ post_install_boot() {
 					*)	;;
 				esac
 				;;
-		debian_*gnome)	case $TOKEN in
+		debian_*gnome*)	case $TOKEN in
 					0150)	do_and_report move 530 420 click 1
 						;;
 					0200)	do_and_report key alt-f2
@@ -1109,11 +1138,13 @@ monitor_system() {
 		# let's drive this further (once/if triggered)
 		if [ $TRIGGER_NR -ne 0 ] && [ $TRIGGER_NR -ne $NR ] ; then
 			case $MODE in
-				rescue)	rescue_boot
-					;;
+				rescue)		rescue_boot
+						;;
+				presentation)	presentation_boot
+						;;
 				post_install)	post_install_boot
-					;;
-				*)	;;
+						;;
+				*)		;;
 			esac
 		fi
 		# if TRIGGER_MODE matches NR, we are triggered too
@@ -1156,6 +1187,20 @@ save_logs() {
 	# get list of installed packages
 	#
 	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system, did the installation finish correctly?" ; export FAILURE=true )
+	#
+	# check for must installed packages
+	#
+	case $NAME in
+		*_brltty)
+			grep brltty $RESULTS/dpkg-l || echo "Warning: package brltty not installed."
+			;;
+		*_speakup)
+			grep epeakup $RESULTS/dpkg-l || echo "Warning: package espeakup not installed."
+			;;
+		*)
+		;;
+	esac
+
 	#
 	# only on combi-servers and ltsp-servers:
 	#	mount /opt
@@ -1251,28 +1296,32 @@ fi
 bootstrap_system
 set +x
 case $NAME in
-	*_rescue*) 	monitor_system rescue
-			;;
+	*_rescue*)	 			monitor_system rescue
+						;;
+	*_presentation)	 			monitor_system presentation 10
+						;;
 	debian-edu_*combi-server)		monitor_system install wait4match 3000
-			;;
+						;;
 	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200
-			;;
-	*)		monitor_system install wait4match
-			;;
+						;;
+	*)					monitor_system install wait4match
+						;;
 esac
 #
 # boot up installed system
 #
 let NR=NR+1
 case $NAME in
-	*_rescue*)	# so there are some artifacts to publish
+	*_rescue*|*_presentation)	# so there are some artifacts to publish
 			mkdir -p $RESULTS/log/installer
 			touch $RESULTS/log/dummy $RESULTS/log/installer/dummy
 			;;
 	*)		#
 			# kill qemu and image
 			#
+			set -x
 			sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
+			set +x
 			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true
 			fi

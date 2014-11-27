@@ -309,7 +309,7 @@ bootstrap_system() {
 			QEMU_OPTS="$QEMU_OPTS -soundhw ac97"
 			;;
 		*_presentation)
-			EXTRA_APPEND="$EXTRA_APPEND url=hands.com classes=talks/fosdem07"
+			EXTRA_APPEND="$EXTRA_APPEND url=hands.com classes=jenkins.debian.org;talks/fosdem07"
 			;;
 		*)
 		;;

@@ -544,7 +544,7 @@ post_install_boot() {
 		debian_*lxde)	case $TOKEN in
 					0200)	do_and_report key alt-f2
 						;;
-					0210)	do_and_report type "iceweasel"
+					0220)	do_and_report type "iceweasel"
 						;;
 					0230)	do_and_report key space
 						;;

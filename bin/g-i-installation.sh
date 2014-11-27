@@ -1026,6 +1026,11 @@ monitor_system() {
 	else
 		TIMEOUT=$3
 	fi
+	if [ -z "$4" ] ; then
+		PIXELDIFF=100
+	else
+		PIXELDIFF=$4
+	fi
 	cd $RESULTS
 	sleep 4	# chosen by fair dice roll
 	hourlimit=16 # hours
@@ -1108,18 +1113,18 @@ monitor_system() {
 			let OLD=NR-$TIMEOUT
 			PRINTF_OLD=$(printf "%06d" $OLD)
 			# test if this screenshot is basically the same as the one $TIMEOUT screenshots ago
-			# 400 pixels difference between to images is tolerated, to ignore updating clocks
+			# $PIXELDIFF pixels difference between to images is tolerated, to ignore updating clocks
 			PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.png snapshot_${PRINTF_OLD}.png /dev/null 2>&1 || true )
 			# usually this returns an integer, but not always....
 			if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
 				echo "$PIXEL pixel difference between snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_OLD}.png"
-				if [ $PIXEL -lt 400 ] ; then
+				if [ $PIXEL -lt $PIXELDIFF ] ; then
 				    SAME=Y
 				    for INTER in $(seq $OLD 10 $NR); do
 					PRINTF_INTER=$(printf "%06d" $INTER)
 					PIXEL=$(compare -metric AE snapshot_${PRINTF_NR}.png snapshot_${PRINTF_INTER}.png /dev/null 2>&1 || true )
 					if [[ "$PIXEL" =~ ^[0-9]+$ ]] ; then
-						if [ $PIXEL -ge 400 ] ; then
+						if [ $PIXEL -ge $PIXELDIFF ] ; then
 							echo "but $PIXEL difference between snapshot_${PRINTF_NR}.png and snapshot_${PRINTF_INTER}.png"
 							SAME=N
 							break
@@ -1320,9 +1325,9 @@ case $NAME in
 						;;
 	*_presentation)	 			monitor_system presentation 10
 						;;
-	debian-edu_*combi-server)		monitor_system install wait4match 3000
+	debian-edu_*combi-server)		monitor_system install wait4match 3000 100
 						;;
-	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200
+	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200 100
 						;;
 	*)					monitor_system install wait4match
 						;;
@@ -1354,7 +1359,7 @@ case $NAME in
 				*)				let START_TRIGGER=NR+200
 								;;
 			esac
-			monitor_system post_install $START_TRIGGER
+			monitor_system post_install $START_TRIGGER 600 1000
 esac
 cleanup_all
 

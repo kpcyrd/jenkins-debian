@@ -306,6 +306,7 @@ bootstrap_system() {
 			;;
 		*_speakup)
 			EXTRA_APPEND="$EXTRA_APPEND speakup.synth=soft"
+			QEMU_OPTS="$QEMU_OPTS -soundhw ac97"
 			;;
 		*_presentation)
 			EXTRA_APPEND="$EXTRA_APPEND url=hands.com classes=talks/fosdem07"

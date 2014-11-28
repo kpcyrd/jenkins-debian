@@ -1356,7 +1356,7 @@ case $NAME in
 			case $NAME in
 				debian-edu_*test*server)	let START_TRIGGER=NR+600
 								;;
-				*)				let START_TRIGGER=NR+200
+				*)				let START_TRIGGER=NR+100
 								;;
 			esac
 			monitor_system post_install $START_TRIGGER 600 1000

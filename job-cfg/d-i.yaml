@@ -411,9 +411,9 @@
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_da_html'
-- job-template:
-    defaults: d-i-manual-pdf-po2xml
-    name: '{name}_manual_el_pdf'
+#- job-template:
+#    defaults: d-i-manual-pdf-po2xml
+#    name: '{name}_manual_el_pdf'
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_el_html'
@@ -435,9 +435,9 @@
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_hu_html'
-- job-template:
-    defaults: d-i-manual-pdf-po2xml
-    name: '{name}_manual_ja_pdf'
+#- job-template:
+#    defaults: d-i-manual-pdf-po2xml
+#    name: '{name}_manual_ja_pdf'
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_ja_html'
@@ -489,21 +489,21 @@
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_tl_html'
-- job-template:
-    defaults: d-i-manual-pdf-po2xml
-    name: '{name}_manual_vi_pdf'
+#- job-template:
+#    defaults: d-i-manual-pdf-po2xml
+#    name: '{name}_manual_vi_pdf'
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_vi_html'
-- job-template:
-    defaults: d-i-manual-pdf-po2xml
-    name: '{name}_manual_zh_CN_pdf'
+#- job-template:
+#    defaults: d-i-manual-pdf-po2xml
+#    name: '{name}_manual_zh_CN_pdf'
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_zh_CN_html'
-- job-template:
-    defaults: d-i-manual-pdf-po2xml
-    name: '{name}_manual_zh_TW_pdf'
+#- job-template:
+#    defaults: d-i-manual-pdf-po2xml
+#    name: '{name}_manual_zh_TW_pdf'
 - job-template:
     defaults: d-i-manual-html-po2xml
     name: '{name}_manual_zh_TW_html'
@@ -854,9 +854,9 @@
       - '{name}_manual_da_html':
          lang: 'da'
          languagename: 'Danish'
-      - '{name}_manual_el_pdf':
-         lang: 'el'
-         languagename: 'Greek'
+#      - '{name}_manual_el_pdf':
+#         lang: 'el'
+#         languagename: 'Greek'
       - '{name}_manual_el_html':
          lang: 'el'
          languagename: 'Greek'
@@ -878,9 +878,9 @@
       - '{name}_manual_hu_html':
          lang: 'hu'
          languagename: 'Hungarian'
-      - '{name}_manual_ja_pdf':
-         lang: 'ja'
-         languagename: 'Japanese'
+#      - '{name}_manual_ja_pdf':
+#         lang: 'ja'
+#         languagename: 'Japanese'
       - '{name}_manual_ja_html':
          lang: 'ja'
          languagename: 'Japanese'
@@ -932,21 +932,21 @@
       - '{name}_manual_tl_html':
          lang: 'tl'
          languagename: 'Tagalog'
-      - '{name}_manual_vi_pdf':
-         lang: 'vi'
-         languagename: 'Vietnamese'
+#      - '{name}_manual_vi_pdf':
+#         lang: 'vi'
+#         languagename: 'Vietnamese'
       - '{name}_manual_vi_html':
          lang: 'vi'
          languagename: 'Vietnamese'
-      - '{name}_manual_zh_CN_pdf':
-         lang: 'zh_CN'
-         languagename: 'Chinese (zh_CN)'
+#      - '{name}_manual_zh_CN_pdf':
+#         lang: 'zh_CN'
+#         languagename: 'Chinese (zh_CN)'
       - '{name}_manual_zh_CN_html':
          lang: 'zh_CN'
          languagename: 'Chinese (zh_CN)'
-      - '{name}_manual_zh_TW_pdf':
-         lang: 'zh_TW'
-         languagename: 'Chinese (zh_TW)'
+#      - '{name}_manual_zh_TW_pdf':
+#         lang: 'zh_TW'
+#         languagename: 'Chinese (zh_TW)'
       - '{name}_manual_zh_TW_html':
          lang: 'zh_TW'
          languagename: 'Chinese (zh_TW)'

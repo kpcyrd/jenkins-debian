@@ -1203,15 +1203,15 @@ save_logs() {
 	FAILURE=false
 	# FIXME: bugreport guestmount: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
-	sudo guestmount -a $LV -i --ro $SYSTEM_MNT || ( echo "Warning: cannot mount filesystems from $LV" ; export FAILURE=true )
+	sudo guestmount -a $LV -i --ro $SYSTEM_MNT || { echo "Warning: cannot mount filesystems from $LV" ; export FAILURE=true ; }
 	#
 	# copy logs (and continue if some logs cannot be copied)
 	#
-	sudo cp -rv $SYSTEM_MNT/var/log $SYSTEM_MNT/etc/fstab $RESULTS/ || ( echo "Warning: cannot get logs from installed system." ; echo "Did the installation finish correctly?" ; export FAILURE=true )
+	sudo cp -rv $SYSTEM_MNT/var/log $SYSTEM_MNT/etc/fstab $RESULTS/ || { echo "Warning: cannot get logs from installed system." ; echo "Did the installation finish correctly?" ; export FAILURE=true ; }
 	#
 	# get list of installed packages
 	#
-	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l || ( echo "Warning: cannot run dpkg inside the installed system, did the installation finish correctly?" ; export FAILURE=true )
+	sudo chroot $SYSTEM_MNT dpkg -l > $RESULTS/dpkg-l || { echo "Warning: cannot run dpkg inside the installed system, did the installation finish correctly?" ; export FAILURE=true ; }
 	#
 	# check for must installed packages
 	#
@@ -1242,7 +1242,7 @@ save_logs() {
 						fi
 						if [ ! -z "$LTSPARCH" ] ; then
 							sudo cp -rv $SYSTEM_MNT/opt/ltsp/$LTSPARCH/var/log $RESULTS/log/opt/
-							sudo chroot $SYSTEM_MNT/opt/ltsp/$LTSPARCH dpkg -l > $RESULTS/log/opt/dpkg-l || ( echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/$LTSPARCH ; export FAILURE=true )
+							sudo chroot $SYSTEM_MNT/opt/ltsp/$LTSPARCH dpkg -l > $RESULTS/log/opt/dpkg-l || { echo "Warning: cannot run dpkg inside the ltsp chroot." ; sudo ls -la $SYSTEM_MNT/opt/ltsp/$LTSPARCH ; export FAILURE=true ; }
 						fi
 						;;
 		*)				;;
@@ -1253,7 +1253,7 @@ save_logs() {
 	#for MP in var/log var/ usr/ boot/ opt/ home/ debianedufreespace/ skole/tjener/home0 var/opt/ltsp/swapfiles skole/backup/ var/spool/squid3/ ; do
 	#	sudo umount -l $SYSTEM_MNT/$MP 2>/dev/null || true
 	#done
-	sudo umount -l $SYSTEM_MNT || ( echo "Warning: cannot un-mount $SYSTEM_MNT" ; export FAILURE=true )
+	sudo umount -l $SYSTEM_MNT || { echo "Warning: cannot un-mount $SYSTEM_MNT" ; export FAILURE=true ; }
 	#
 	# make sure we can read everything after installation
 	#

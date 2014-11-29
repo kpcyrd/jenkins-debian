@@ -382,9 +382,6 @@
     name: '{name}_manual_pt_BR_html'
 - job-template:
     defaults: d-i-manual-pdf
-    name: '{name}_manual_ca_pdf'
-- job-template:
-    defaults: d-i-manual-pdf
     name: '{name}_manual_cs_pdf'
 - job-template:
     defaults: d-i-manual-pdf
@@ -950,9 +947,6 @@
       - '{name}_manual_zh_TW_html':
          lang: 'zh_TW'
          languagename: 'Chinese (zh_TW)'
-      - '{name}_manual_ca_pdf':
-         lang: 'ca'
-         languagename: 'Catalan'
       - '{name}_manual_cs_pdf':
          lang: 'cs'
          languagename: 'Czech'

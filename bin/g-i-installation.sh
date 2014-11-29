@@ -1217,10 +1217,10 @@ save_logs() {
 	#
 	case $NAME in
 		*_brltty)
-			grep brltty $RESULTS/dpkg-l || echo "Warning: package brltty not installed."
+			grep brltty $RESULTS/dpkg-l || { echo "Warning: package brltty not installed." ; export FAILURE=true ; }
 			;;
 		*_speakup)
-			grep epeakup $RESULTS/dpkg-l || echo "Warning: package espeakup not installed."
+			grep epeakup $RESULTS/dpkg-l || { echo "Warning: package espeakup not installed." ; export FAILURE=true ; }
 			;;
 		*)
 		;;

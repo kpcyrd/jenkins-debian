@@ -96,7 +96,7 @@
           icon: /userContent/images/profitbricks-24x24.png
       - priority:
           job-prio: '120'
-    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    description: 'Builds the {languagename} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual/po/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
     scm:
       - svn:
          url: svn://anonscm.debian.org/svn/d-i/trunk
@@ -203,7 +203,7 @@
          url: svn://anonscm.debian.org/svn/d-i/trunk
          basedir: .
          workspaceupdater: update
-         includedRegions: '/trunk/manual/{lang}/.*'
+         includedRegions: '/trunk/manual/po/{lang}/.*'
          excludedRegions: ''
          excludedUsers: ''
          excludedRevprop: ''

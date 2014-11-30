@@ -95,6 +95,12 @@ for DIRECTORY in * ; do
 		continue
 	else
 		for FORMAT in pdf html ; do
+			if [ $FORMAT = pdf ] ; then
+				# Some languages are unsupported in PDF
+				case $DIRECTORY in
+					el|ja|vi|zh_CN|zh_TW) continue ;;
+				esac
+			fi
 			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT} ] ; then
 				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
 				FAIL=true
@@ -127,6 +133,12 @@ for DIRECTORY in * ; do
 		continue
 	else
 		for FORMAT in pdf html ; do
+			if [ $FORMAT = pdf ] ; then
+				# Some languages are unsupported in PDF
+				case $DIRECTORY in
+					el|ja|vi|zh_CN|zh_TW) continue ;;
+				esac
+			fi
 			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT} ] ; then
 				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
 				FAIL=true

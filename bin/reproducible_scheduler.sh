@@ -173,7 +173,7 @@ if [ $TOTAL -le 250 ] ; then
 elif [ $TOTAL -le 450 ] ; then
 	NEW=25
 fi
-echo "Requesting $NEW new packages..."
+echo "Requesting $NEW new versions..."
 select_new_versions $NEW
 let "TOTAL=$TOTAL+$AMOUNT"
 echo "So in total now $TOTAL packages about to be scheduled."
@@ -181,9 +181,9 @@ ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE, $AMOUNT packages with new versions"
 
 if [ $TOTAL -lt 250 ] ; then
+	OLD=200
+elif [ $TOTAL -le 350 ] ; then
 	OLD=100
-elif [ $TOTAL -le 50 ] ; then
-	OLD=5
 else
 	OLD=1
 fi

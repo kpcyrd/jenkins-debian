@@ -88,6 +88,8 @@ def get_recipients(target):
         return 'holger@layer-acht.org'	# FIXME: this should be jenkins-maintainers@lists.somewhere
     elif target == 'haskell':
         return 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
+    elif target == 'gnome':
+        return 'jenkins+debian-qa pkg-gnome-maintainers@lists.alioth.debian.org holger@layer-acht.org'
     elif target == 'cinnamon':
         return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org holger@layer-acht.org'
     elif target[:3] == 'kde' or target[:2] == 'qt':

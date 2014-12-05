@@ -67,6 +67,17 @@ set +x
 EOF
 }
 
+prepare_install_binary_packages() {
+	# install all binary packages build from these source packages
+	cat >> $CTMPFILE <<-EOF
+$SCRIPT_HEADER
+set -x
+apt-cache showsrc $@ | grep ^Binary: | sed -s "s#Binary:##g" | tr -d , | sed -s "s# #\n#g" | sort -u | xargs apt-get install -y
+apt-get clean
+set +x
+EOF
+}
+
 prepare_install_build_depends() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
@@ -116,6 +127,15 @@ install_packages() {
 	prepare_install_packages $@
 	execute_ctmpfile 
 }
+
+install_binary_packages() {
+	echo "Installing extra packages for $1 now, based on a list of source packages."
+	shift
+	# install all binary packages build from these source packages
+	prepare_install_binary_packages $@
+	execute_ctmpfile
+}
+
 
 install_build_depends() {
 	echo "Installing build depends for $1 now."
@@ -167,9 +187,9 @@ if [ "$2" != "" ] ; then
 				;;
 		lxde)		install_packages lxde lxde desktop-base
 				;;
-		qt4)		install_packages qt4 qt4-x11 qtwebkit
+		qt4)		install_binary_packages qt4 qt4-x11 qtwebkit
 				;;
-		qt5)		install_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qt3d-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtquick1-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator
+		qt5)		install_binary_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qt3d-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtquick1-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator
 				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;

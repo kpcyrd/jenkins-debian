@@ -167,6 +167,10 @@ if [ "$2" != "" ] ; then
 				;;
 		lxde)		install_packages lxde lxde desktop-base
 				;;
+		qt4)		install_packages qt4 qt4-x11 qtwebkit
+				;;
+		qt5)		install_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qt3d-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtquick1-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator
+				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;
 		haskell)	install_packages haskell 'haskell-platform.*' 'libghc-.*'

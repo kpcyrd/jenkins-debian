@@ -161,6 +161,8 @@ if [ "$2" != "" ] ; then
 				;;
 		kde-full)	install_packages kde kde-full kde-standard desktop-base
 				;;
+		cinnamon)	install_packages cinnamon cinnamon-core cinnamon-desktop-environment desktop-base
+				;;
 		xfce)		install_packages xfce xfce4 desktop-base
 				;;
 		lxde)		install_packages lxde lxde desktop-base

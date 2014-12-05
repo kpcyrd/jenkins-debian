@@ -25,6 +25,7 @@ targets = """
    gnome
    kde
    kde-full
+   cinnamon
    lxde
    xfce
    full_desktop
@@ -85,6 +86,8 @@ def get_recipients(target):
         return 'holger@layer-acht.org'	# FIXME: this should be jenkins-maintainers@lists.somewhere
     elif target == 'haskell':
         return 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
+    elif target[:8] == 'cinnamon':
+        return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org holger@layer-acht.org'
     elif target[:10] == 'education-':
         return 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
     else:
@@ -113,6 +116,7 @@ spoken_names = {}
 spoken_names = { 'gnome': 'GNOME',
                  'kde': 'KDE plasma desktop',
                  'kde-full': 'complete KDE desktop',
+                 'cinnamon': 'Cinnamon',
                  'lxde': 'LXDE',
                  'xfce': 'Xfce',
                  'full_desktop': 'four desktop environments and the most commonly used applications and packages',

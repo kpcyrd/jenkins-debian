@@ -69,11 +69,11 @@ targets = """
 def get_targets_in_distro(distro, targets):
      targets_in_distro = []
      for target in targets:
-         # haskell and edu tests not in squeeze
-         if distro == 'squeeze' and ( target == 'haskell' or target[:10] == 'education-'):
+         # haskell, cinnamon and edu tests not in squeeze
+         if distro == 'squeeze' and ( target == 'haskell' or target[:10] == 'education-' or target == 'cinnamon' ):
              continue
-         # education-desktop-mate wasn't in wheezy
-         if distro == 'wheezy' and target == 'education-desktop-mate':
+         # education-desktop-mate and cinnamon weren't in wheezy
+         if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' ):
              continue
          targets_in_distro.append(target)
      return targets_in_distro
@@ -86,7 +86,7 @@ def get_recipients(target):
         return 'holger@layer-acht.org'	# FIXME: this should be jenkins-maintainers@lists.somewhere
     elif target == 'haskell':
         return 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
-    elif target[:8] == 'cinnamon':
+    elif target == 'cinnamon':
         return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org holger@layer-acht.org'
     elif target[:3] == 'kde':
         return 'jenkins+debian-qa debian-qt-kde@lists.debian.org holger@layer-acht.org'

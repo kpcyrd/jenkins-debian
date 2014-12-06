@@ -75,7 +75,7 @@ set -x
 apt-get install -y dctrl-tools
 PACKAGES=""
 for PKG in $@ ; do
-	PACKAGES="\$PACKAGES \$(grep-dctrl -S \$PKG /var/lib/apt/lists/*Packages | grep ^Package: | sed -s "s#Package: ##g" | xargs -r echo)"
+	PACKAGES="\$PACKAGES \$(grep-dctrl -S \$PKG /var/lib/apt/lists/*Packages | sed -n -e "s#^Package: ##p" | xargs -r echo)"
 done
 apt-get install -y \$PACKAGES
 apt-get clean

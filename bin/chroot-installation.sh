@@ -72,7 +72,12 @@ prepare_install_binary_packages() {
 	cat >> $CTMPFILE <<-EOF
 $SCRIPT_HEADER
 set -x
-apt-cache showsrc $@ | grep ^Binary: | sed -s "s#Binary:##g" | tr -d , | sed -s "s# #\n#g" | sort -u | xargs apt-get install -y
+apt-get install -y dctrl-tools
+PACKAGES=""
+for PKG in $@ ; do
+	PACKAGES="\$PACKAGES \$(grep-dctrl -S \$PKG /var/lib/apt/lists/*Packages | grep ^Package: | sed -s "s#Package: ##g" | xargs -r echo)"
+done
+apt-get install -y \$PACKAGES
 apt-get clean
 set +x
 EOF

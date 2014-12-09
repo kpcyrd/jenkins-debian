@@ -58,7 +58,7 @@ fi
 # (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
-	build-essential python-setuptools \
+	build-essential python-setuptools molly-guard \
 	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3\
 	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl haveged postgresql-client-9.1
 # debootstrap is affected by #766459 in wheezy

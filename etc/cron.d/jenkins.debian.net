@@ -1,0 +1,10 @@
+# m h dom mon dow (0|7=sun,1=mon)    command
+
+#
+# cron-jobs for jenkins.debian.net
+#
+
+MAILTO=root
+
+0 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-running-kernel            
+2 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-packages

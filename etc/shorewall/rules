@@ -19,11 +19,10 @@
 SECTION NEW
 
 # Drop Ping from the "bad" net zone.. and prevent your log from being flooded..
-
-Ping(DROP)	net		$FW
+#Ping(DROP)	net		$FW
 
 # Permit all ICMP traffic FROM the firewall TO the net zone
-
+ACCEPT		net		$FW		icmp
 ACCEPT		$FW		net		icmp
 
 # incoming http and ssh are allowed

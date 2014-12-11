@@ -14,7 +14,7 @@ common_init "$@"
 if [ "$1" == "" ] ; then
 	echo "need at least one distribution to act on"
 	echo '# $1 = base distro'
-	echo '# $2 = extra component (gnome, kde, xfce, lxce)'
+	echo '# $2 = component to test (gnome, kde, xfce, lxce)'
 	echo '# $3 = upgrade distro'
 	exit 1
 fi

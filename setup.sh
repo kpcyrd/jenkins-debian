@@ -122,8 +122,7 @@ printf "" > result-explicit
 
 # go through those that are interested in an explicit trigger and check them
 # against the packages in their dependency closure which activate it
-#cat interested-explicit | while read pkg ttype iname; do
-echo wims-modules interest wims-reindex | while read pkg ttype iname; do
+cat interested-explicit | while read pkg ttype iname; do
 	echo "working on $pkg..." >&2
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any of

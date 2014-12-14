@@ -23,12 +23,12 @@
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} "apt-get --no-install-recommends -y install {my_pkgs}; {my_shell}"'
     publishers:
-      - email:
-          recipients: '{my_recipients}'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/haskell-package-plan.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
+      - email:
+          recipients: '{my_recipients}'
       - plot:
           - title: Stats
             yaxis: Packages

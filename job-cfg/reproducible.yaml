@@ -25,12 +25,12 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - email:
-          recipients: '{my_recipients}'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
 
 - defaults:
     name: reproducible_notes
@@ -60,12 +60,12 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - email:
-          recipients: '{my_recipients}'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
     scm:
       - git:
           url: '{my_gitrepo}'
@@ -108,13 +108,13 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - email:
-          recipients: '{my_recipients}'
-          notify-every-unstable-build: false
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
+          notify-every-unstable-build: false
 
 - job-template:
     defaults: reproducible

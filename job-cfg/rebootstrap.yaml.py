@@ -63,12 +63,12 @@ print("""
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:
-      - email:
-          recipients: 'jenkins+debian-bootstrap helmutg@debian.org'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
           unstable-on-warning: 'false'
           fail-on-error: 'false'
+      - email:
+          recipients: 'jenkins+debian-bootstrap helmutg@debian.org'
     triggers:
       - pollscm: '*/6 * * * *'
 """)

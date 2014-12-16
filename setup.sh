@@ -16,7 +16,8 @@ set -e
 
 ARCH="amd64"
 DIST="sid"
-MIRROR="http://snapshot.debian.org/archive/debian/20141211T041251Z/"
+MIRROR="http://http.debian.net/debian"
+#MIRROR="http://snapshot.debian.org/archive/debian/20141211T041251Z/"
 DIRECTORY="`pwd`/debian-$DIST-$ARCH"
 
 #FIXME: if the host has more than one arch enabled then those Packages files will be downloaded as well
@@ -31,7 +32,7 @@ APT_OPTS=$APT_OPTS" -o Dir::Etc::SourceList=$DIRECTORY/etc/apt/sources.list"
 APT_OPTS=$APT_OPTS" -o Dir::State=$DIRECTORY/var/lib/apt/"
 APT_OPTS=$APT_OPTS" -o Dir::State::Status=$DIRECTORY/var/lib/dpkg/status"
 APT_OPTS=$APT_OPTS" -o Dir::Cache=$DIRECTORY/var/cache/apt/"
-APT_OPTS=$APT_OPTS" -o Acquire::Check-Valid-Until=false" # because we use snapshot
+#APT_OPTS=$APT_OPTS" -o Acquire::Check-Valid-Until=false" # because we use snapshot
 
 mkdir -p $DIRECTORY
 mkdir -p $DIRECTORY/etc/apt/
@@ -63,13 +64,19 @@ printf "" > interested-explicit
 printf "" > activated-file
 printf "" > activated-explicit
 
-cat control_triggers_packages | while read pkg; do
+# find all binary packages with /triggers$
+curl "http://binarycontrol.debian.net/?q=&path=%2Ftriggers%24&format=pkglist" \
+	| xargs apt-get $APT_OPTS --print-uris download \
+	| sed -ne "s/^'\([^']\+\)'\s\+\([^_]\+\)_.*/\2 \1/p" \
+	| sort \
+	| while read pkg url; do
 	echo "working on $pkg..." >&2
-	apt-get $APT_OPTS download $pkg
-	dpkg-deb --control ${pkg}_*.deb
+	mkdir DEBIAN
+	curl --location --silent "$url" \
+		| ./extract_binary_control.py \
+		| tar -C "DEBIAN" --exclude=./md5sums -xz
 	if [ ! -f DEBIAN/triggers ]; then
 		rm -r DEBIAN
-		rm ${pkg}_*.deb
 		continue
 	fi
 	# find all triggers that are either interest or interest-await
@@ -87,7 +94,6 @@ cat control_triggers_packages | while read pkg; do
 		echo "$pkg $line"
 	done >> activated-explicit
 	rm -r DEBIAN
-	rm ${pkg}_*.deb
 done
 
 printf "" > result-file

@@ -197,12 +197,7 @@ bootstrap_system() {
 	sudo qemu-img create -f raw $LV ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
-	QEMU_OPTS="-display vnc=$DISPLAY"
-	case $NAME in
-		# nested KVM runs gnumach horribly slowly
-		*_hurd*)	;;
-		*)		QEMU_OPTS="$QEMU_OPTS -enable-kvm -cpu host" ;;
-	esac
+	QEMU_OPTS="-display vnc=$DISPLAY -enable-kvm -cpu host"
 	QEMU_WEBSERVER=http://10.0.2.1/
 	QEMU_NET_OPTS="-net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	# preseeding related variables
@@ -344,11 +339,6 @@ bootstrap_system() {
 			*_kfreebsd)	;;
 			*_hurd*)	# Hurd needs multiboot options jenkins can't escape correctly
 					echo -n '--kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
-                                        # The slow qemu emulation brings IRQ
-                                        # timeouts, so rather avoid them
-                                        # completely, in qemu PIO is actually
-                                        # not slower than DMA anyway.
-					APPEND="hd0=nodma console=com0 $APPEND"
 					;;
 			*)		;;
 		esac

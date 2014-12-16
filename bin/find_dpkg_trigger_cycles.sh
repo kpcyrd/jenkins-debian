@@ -96,12 +96,12 @@
 # explicit trigger, the second column is the name of the explicit trigger, the
 # third column is the binary package activating the trigger.
 
-set -e
+DEBUG=false
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
 
 ARCH="amd64"
-DIST="sid"
-MIRROR="http://http.debian.net/debian"
-#MIRROR="http://snapshot.debian.org/archive/debian/20141211T041251Z/"
+DIST="$1"
 DIRECTORY="`pwd`/debian-$DIST-$ARCH"
 
 #FIXME: if the host has more than one arch enabled then those Packages files will be downloaded as well

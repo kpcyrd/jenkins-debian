@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright 2014 Johannes Schauer <j.schauer@email.de>
 #

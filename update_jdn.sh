@@ -65,6 +65,8 @@ sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat dev
 sudo apt-get install -t wheezy-backports qemu debootstrap
 explain "Packages installed."
 
+echo "Also needs python-arpy from jessie..."
+
 #
 # deploy package configuration in /etc
 #

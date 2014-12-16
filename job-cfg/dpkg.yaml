@@ -1,0 +1,46 @@
+- defaults:
+    name: dpkg
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/qa.debian.org/
+          text: Jobs for Debian QA related packages
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/dpkg.yaml">udd.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: 'jenkins+debian-qa holger@layer-acht.org'
+    builders:
+      - shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh {my_params}'
+    triggers:
+      - timed: '{my_time}'
+
+- job-template:
+    defaults: dpkg
+    name: '{name}_sid_find_trigger_cycles'
+
+- project:
+    name: dpkg
+    jobs:
+       - '{name}_sid_find_trigger_cycles':
+           my_time: '0 9 1 * *'
+           my_params: 'sid'
+           my_description: 'Find dpkg trigger cycles in sid.'
+

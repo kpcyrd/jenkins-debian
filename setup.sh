@@ -72,9 +72,9 @@ curl "http://binarycontrol.debian.net/?q=&path=%2Ftriggers%24&format=pkglist" \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
 	mkdir DEBIAN
-	curl --location --silent "$url" \
-		| ./extract_binary_control.py \
-		| tar -C "DEBIAN" --exclude=./md5sums -xz
+	curl --retry 2 --location --silent "$url" \
+		| dpkg-deb --ctrl-tarfile /dev/stdin \
+		| tar -C "DEBIAN" --exclude=./md5sums -x
 	if [ ! -f DEBIAN/triggers ]; then
 		rm -r DEBIAN
 		continue

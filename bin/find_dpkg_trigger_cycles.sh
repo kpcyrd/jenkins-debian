@@ -15,10 +15,10 @@
 # Running
 # =======
 # 
-# Just start `./setup.sh`. It will do the following:
+# Just start `./find_dpkg_trigger_cycles.sh`. It will do the following:
 # 
-# 1. download apt sources and apt-file data for the amd64 Debian sid snapshot at
-#    `20141211T041251Z` and store them in a directory tree rooted at
+# 1. download apt sources and apt-file data for the amd64 Debian
+#     using $1 as distro and store them in a directory tree rooted at
 #    `./debian-sid-amd64`
 # 2. go through all binary packages which have a file `DEBIAN/triggers` in their
 #    control archive (the list is retrieved from binarycontrol.debian.net)

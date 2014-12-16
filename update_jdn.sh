@@ -60,12 +60,18 @@ fi
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
 	build-essential python-setuptools molly-guard \
 	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3 dose-extra apt-file \
-	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl haveged postgresql-client-9.1
+	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl haveged postgresql-client-9.1 xvfb virt-viewer libsikuli-script-java \
+        libxslt1-dev tcpdump unclutter radvd x11-apps syslinux \
+        libcap2-bin devscripts libvirt-ruby ruby-rspec gawk ntp \
+        ruby-json x11vnc xtightvncviewer ffmpeg libavcodec-extra-53 \
+        libvpx1 dnsmasq-base openjdk-7-jr
 # debootstrap is affected by #766459 in wheezy
-sudo apt-get install -t wheezy-backports qemu debootstrap
+sudo apt-get install -t wheezy-backports qemu debootstrap qemu-kvm qemu-system-x86 libvirt0 \
+        libvirt-dev libvirt-bin seabios ruby-rjb ruby-packetfu cucumber
 explain "Packages installed."
 
 echo "Also needs python-arpy from jessie..."
+echo "Also needs ovmf from jessie..."
 
 #
 # deploy package configuration in /etc

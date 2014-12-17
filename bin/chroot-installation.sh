@@ -51,7 +51,7 @@ mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
-echo "deb-src $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
+echo "deb-src $MIRROR $1 main" >> /etc/apt/sources.list
 apt-get update
 set +x
 EOF
@@ -99,7 +99,7 @@ echo "set +x" >> $CTMPFILE
 
 prepare_upgrade2() {
 	cat >> $CTMPFILE <<-EOF
-echo "deb $MIRROR $1 main contrib non-free" >> /etc/apt/sources.list
+echo "deb $MIRROR $1 main" >> /etc/apt/sources.list
 $SCRIPT_HEADER
 set -x
 apt-get update

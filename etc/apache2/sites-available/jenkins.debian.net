@@ -97,6 +97,11 @@ NameVirtualHost *:443
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 
+    RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+    RewriteCond %{REQUEST_URI} ^/$ [or]
+    RewriteCond %{REQUEST_URI} ^/userContent/$
+    RewriteRule ^/(.*)       https://%{HTTP_HOST}/userContent/reproducible.html [R]
+
         ProxyRequests Off
         <Proxy *>
                 Order deny,allow

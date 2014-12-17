@@ -29,12 +29,12 @@ NameVirtualHost *:80
 		SSLOptions +StdEnvVars
 	</Directory>
 
-        ProxyRequests Off
-        <Proxy *>
-                Order deny,allow
-                Allow from all
-        </Proxy>
-        ProxyPreserveHost on
+	ProxyRequests Off
+	<Proxy *>
+		Order deny,allow
+		Allow from all
+	</Proxy>
+	ProxyPreserveHost on
 	AllowEncodedSlashes NoDecode
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 	ProxyPass /server-status !
@@ -97,23 +97,23 @@ NameVirtualHost *:443
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 
-    RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-    RewriteCond %{REQUEST_URI} ^/$ [or]
-    RewriteCond %{REQUEST_URI} ^/userContent/$
-    RewriteRule ^/(.*)       https://%{HTTP_HOST}/userContent/reproducible.html [R]
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/$
+	RewriteRule ^/(.*)       https://%{HTTP_HOST}/userContent/reproducible.html [R]
 
-        ProxyRequests Off
-        <Proxy *>
-                Order deny,allow
-                Allow from all
-        </Proxy>
-        ProxyPreserveHost on
+	ProxyRequests Off
+	<Proxy *>
+		Order deny,allow
+		Allow from all
+	</Proxy>
+	ProxyPreserveHost on
 	AllowEncodedSlashes NoDecode
 	# proxy everything but a few urls
-        ProxyPass /munin !
-       	ProxyPass /server-status !
-       	ProxyPass /visitors-report.html !
-       	ProxyPass /calamaris !
+	ProxyPass /munin !
+	ProxyPass /server-status !
+	ProxyPass /visitors-report.html !
+	ProxyPass /calamaris !
 	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/

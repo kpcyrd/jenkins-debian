@@ -28,7 +28,7 @@ while IFS= read -r LINE ; do
 		if [ "$UPLOADERS" = "$PACKAGE" ] ; then
 			UPLOADERS=""
 		fi
-		write_page "   <a href=\"$JENKINS_URL/userContent/rb-pkg/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
+		write_page "   <a href=\"/userContent/rb-pkg/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
 	else
 		LINE="$(echo $LINE | sed 's#&#\&amp;#g ; s#<#\&lt;#g ; s#>#\&gt;#g')"
 		write_page "$LINE"

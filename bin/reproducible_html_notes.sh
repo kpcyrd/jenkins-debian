@@ -83,7 +83,7 @@ issues_loop() {
 		if [ "${p:0:2}" = "- " ] ; then
 			p="${p:2}"
 		fi
-		write_page "<table class=\"body\"><tr><td>Identifier:</td><td><a href=\"$JENKINS_URL/userContent/issues/${p}_issue.html\" target=\"_parent\">$p</a></tr>"
+		write_page "<table class=\"body\"><tr><td>Identifier:</td><td><a href=\"/userContent/issues/${p}_issue.html\" target=\"_parent\">$p</a></tr>"
 		if [ "${ISSUES_URL[$p]}" != "" ] ; then
 			write_page "<tr><td>URL</td><td><a href=\"${ISSUES_URL[$p]}\" target=\"_blank\">${ISSUES_URL[$p]}</a></td></tr>"
 		fi
@@ -108,7 +108,7 @@ create_pkg_note() {
 	# write_page_header() is not used as it contains the <h2> tag...
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-	write_page "<link href=\"$JENKINS_URL/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
+	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>Notes for $1</title></head>"
 	write_page "<body></header>"
 	write_page "<table class=\"body\">"
@@ -350,7 +350,7 @@ if $VALID_YAML ; then
 	write_page "<tr><th>Identified issues</th></tr>"
 	ISSUES=$(echo ${ISSUES} | sed -s "s# #\n#g" | sort | xargs echo)
 	for ISSUE in ${ISSUES} ; do
-		write_page "<tr><td><a href=\"$JENKINS_URL/userContent/issues/${ISSUE}_issue.html\">${ISSUE}</a></td></tr>"
+		write_page "<tr><td><a href=\"/userContent/issues/${ISSUE}_issue.html\">${ISSUE}</a></td></tr>"
 	done
 	write_page "</table>"
 else

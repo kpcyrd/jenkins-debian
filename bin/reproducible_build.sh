@@ -31,7 +31,7 @@ unschedule_from_db() {
 	touch -d $PREDATE /var/lib/jenkins/userContent/rb-pkg/${SRCPACKAGE}.html
 	process_packages $SRCPACKAGE
 	echo
-	echo "Successfully updated the database and updated $JENKINS_URL/userContent/rb-pkg/$SRCPACKAGE.html"
+	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/userContent/rb-pkg/$SRCPACKAGE.html"
 	echo
 }
 
@@ -162,9 +162,9 @@ else
 			rm -f $DBDCHROOT_READLOCK
 			echo | tee -a ${RBUILDLOG}
 			if [ $RESULT -eq 124 ] ; then
-				echo "$(date) - debbindiff was killed after running into timeouot... maybe there is still $JENKINS_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
+				echo "$(date) - debbindiff was killed after running into timeouot... maybe there is still $REPRODUCIBLE_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
 			elif [ $RESULT -eq 1 ] ; then
-				DEBBINDIFFOUT="debbindiff found issues, please investigate $JENKINS_URL/userContent/dbd/${LOGFILE}"
+				DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/userContent/dbd/${LOGFILE}"
 			fi
 			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1

@@ -171,7 +171,7 @@ for i in 0 1 3 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi
-	write_page " <a href=\"$JENKINS_URL/userContent/${TABLE[$i]}.png\"><img src=\"$JENKINS_URL/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
 	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 		redo_png

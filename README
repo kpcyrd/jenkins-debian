@@ -117,7 +117,7 @@ Installation tests inside chroot environments.
 
 === reproducible jobs
 
-* Several jobs are being to test packages whether they can be build reproducible or not. The result is the website http://reproducible.debian.net which is actually just a collection of html files being served from this host.
+* Several jobs are being to test packages whether they can be build reproducible or not. The result is the website https://reproducible.debian.net which is actually just a collection of html files being served from this host.
 
 * There are three builder job, alpha+beta+gamma which are each started every 2min., and there is a scheduler jobs scheduling builds for them. Several other jobs exist to build the html pages.
 

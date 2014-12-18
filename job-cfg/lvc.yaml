@@ -1,0 +1,42 @@
+- defaults:
+    name: lvc
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/lvc
+          text: Jobs for libvirt and cucumber based tests
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml">lvc.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    publishers:
+      - email:
+          recipients: 'holger@layer-acht.org'
+    builders:
+      - shell: '/srv/jenkins/bin/libvirt_cucumber_tests {my_params}'
+    triggers:
+      - timed: '{my_time}'
+
+- job-template:
+    defaults: lvc
+    name: '{name}_debian-live_squeeze'
+
+- project:
+    name: lvc
+    jobs:
+        - '{name}_debian-live_squeeze':
+           my_time: '23 45 31 12 *'
+           my_params: '--capture lvc_debian-live_squeeze.webm --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso /srv/jenkins/features/apt.feature'
+           my_description: 'Work in progress...'
+

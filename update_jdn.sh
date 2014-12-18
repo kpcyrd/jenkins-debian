@@ -101,7 +101,7 @@ sudo service munin-node force-reload
 # install the heart of jenkins.debian.net
 #
 cd $BASEDIR
-cp -r bin logparse job-cfg /srv/jenkins/
+cp -r bin logparse job-cfg features /srv/jenkins/
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
 cp -pr README INSTALL TODO d-i-preseed-cfgs /var/lib/jenkins/userContent/

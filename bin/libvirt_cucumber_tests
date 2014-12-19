@@ -26,7 +26,7 @@ Options for '@product' features:
   --temp-dir         Directory where various temporary files are written
                      during a test, e.g. VM snapshots and memory dumps,
                      failure screenshots, pcap files and disk images
-                     (default is /tmp/TailsToaster).
+                     (default is /tmp/DebianToaster).
   --view             Shows the test session in a windows. Requires x11vnc
                      and xtightvncviewer.
   --vnc-server-only  Starts a VNC server for the test session. Requires x11vnc.

@@ -1,5 +1,5 @@
 <pool type="dir">
-  <name>TailsToasterStorage</name>
+  <name>DebianToasterStorage</name>
   <target>
     <path></path>
   </target>

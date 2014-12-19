@@ -4,7 +4,7 @@ require "features/support/helpers/misc_helpers.rb"
 # Dynamic
 $tails_iso = ENV['ISO'] || get_newest_iso
 $old_tails_iso = ENV['OLD_ISO'] || get_oldest_iso
-$tmp_dir = ENV['TEMP_DIR'] || "/tmp/TailsToaster"
+$tmp_dir = ENV['TEMP_DIR'] || "/tmp/DebianToaster"
 $vm_xml_path = ENV['VM_XML_PATH']
 $misc_files_dir = "features/misc_files"
 $keep_snapshots = !ENV['KEEP_SNAPSHOTS'].nil?

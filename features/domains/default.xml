@@ -1,5 +1,5 @@
 <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-  <name>TailsToaster</name>
+  <name>DebianToaster</name>
   <memory unit='KiB'>1310720</memory>
   <currentMemory unit='KiB'>1310720</currentMemory>
   <vcpu>1</vcpu>
@@ -37,7 +37,7 @@
     </controller>
     <interface type='network'>
       <mac address='52:54:00:ac:dd:ee'/>
-      <source network='TailsToasterNet'/>
+      <source network='DebianToasterNet'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
       <link state='up'/>

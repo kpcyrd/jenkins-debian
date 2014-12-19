@@ -240,14 +240,6 @@ Given /^I log in to a new session$/ do
   @screen.wait_and_click('TailsGreeterLoginButton.png', 10)
 end
 
-Given /^I enable more Tails Greeter options$/ do
-  next if @skip_steps_while_restoring_background
-  match = @screen.find('TailsGreeterMoreOptions.png')
-  @screen.click(match.getCenter.offset(match.w/2, match.h*2))
-  @screen.wait_and_click('TailsGreeterForward.png', 10)
-  @screen.wait('TailsGreeterLoginButton.png', 20)
-end
-
 Given /^I set sudo password "([^"]*)"$/ do |password|
   @sudo_password = password
   next if @skip_steps_while_restoring_background

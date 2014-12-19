@@ -10,7 +10,6 @@ Feature: Installing packages through APT
     And I capture all network traffic
     And I start the computer
     And the computer boots DebianLive7
-    And I enable more Tails Greeter options
     And I set sudo password "asdf"
     And I log in to a new session
     And GNOME has started

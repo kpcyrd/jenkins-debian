@@ -40,6 +40,6 @@
     jobs:
         - '{name}_debian-live_squeeze':
            my_time: '23 45 31 12 *'
-           my_params: '--capture lvc_debian-live_squeeze.webm --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso apt.feature'
+           my_params: '--capture lvc_debian-live_squeeze.webm --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso DebianLive7/apt.feature'
            my_description: 'Work in progress...'
 

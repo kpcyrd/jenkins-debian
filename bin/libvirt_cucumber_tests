@@ -191,7 +191,7 @@ export RUBYLIB="/srv/jenkins"
 export DISPLAY=${TARGET_DISPLAY}
 check_dependency cucumber
 if [ -z "${*}" ]; then
-    cucumber --format ExtraHooks::Pretty features
+    cucumber --format ExtraHooks::Pretty $RUBYLIB/features
 else
-    cucumber --format ExtraHooks::Pretty features/step_definitions features/support ${*}
+    cucumber --format ExtraHooks::Pretty $RUBYLIB/features/step_definitions $RUBYLIB/features/support ${*}
 fi

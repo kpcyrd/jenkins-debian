@@ -202,7 +202,7 @@ When /^I destroy the computer$/ do
   @vm.destroy
 end
 
-Given /^the computer (re)?boots Tails$/ do |reboot|
+Given /^the computer (re)?boots DebianLive7$/ do |reboot|
   next if @skip_steps_while_restoring_background
 
   case @os_loader
@@ -217,8 +217,8 @@ Given /^the computer (re)?boots Tails$/ do |reboot|
       bootsplash_tab_msg = 'TailsBootSplashTabMsgPostReset.png'
       boot_timeout = 120
     else
-      bootsplash = 'TailsBootSplash.png'
-      bootsplash_tab_msg = 'TailsBootSplashTabMsg.png'
+      bootsplash = 'DebianLive7BootSplash.png'
+      bootsplash_tab_msg = 'DebianLive7BootSplashTabMsg.png'
       boot_timeout = 30
     end
   end

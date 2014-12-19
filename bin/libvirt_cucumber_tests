@@ -187,6 +187,7 @@ fi
 
 export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 export SIKULI_HOME="/usr/share/java"
+export RUBYLIB="/srv/jenkins"
 export DISPLAY=${TARGET_DISPLAY}
 check_dependency cucumber
 if [ -z "${*}" ]; then

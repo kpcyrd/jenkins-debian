@@ -1,5 +1,5 @@
 require 'rubygems'
-require "#{Dir.pwd}/features/support/extra_hooks.rb"
+require "features/support/extra_hooks.rb"
 require 'time'
 require 'rspec'
 

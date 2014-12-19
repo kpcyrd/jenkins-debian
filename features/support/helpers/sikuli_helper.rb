@@ -124,7 +124,7 @@ def sikuli_script_proxy.new(*args)
 end
 
 # Configure sikuli
-java.lang.System.setProperty("SIKULI_IMAGE_PATH", "#{Dir.pwd}/features/images/")
+java.lang.System.setProperty("SIKULI_IMAGE_PATH", "features/images/")
 
 # ruby and rjb doesn't play well together when it comes to static
 # fields (and possibly methods) so we instantiate and access the field

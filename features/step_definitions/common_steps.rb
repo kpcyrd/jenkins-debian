@@ -39,26 +39,27 @@ end
 
 def restore_background
   @vm.restore_snapshot($background_snapshot)
-  @vm.wait_until_remote_shell_is_up
+  #@vm.wait_until_remote_shell_is_up
   post_vm_start_hook
 
   # XXX-9p: See XXX-9p above
   #activate_filesystem_shares
 
+  # debian-TODO: move to tor feature
   # The guest's Tor's circuits' states are likely to get out of sync
   # with the other relays, so we ensure that we have fresh circuits.
   # Time jumps and incorrect clocks also confuses Tor in many ways.
-  if @vm.has_network?
-    if @vm.execute("service tor status").success?
-      @vm.execute("service tor stop")
-      @vm.execute("rm -f /var/log/tor/log")
-      @vm.execute("killall vidalia")
-      @vm.host_to_guest_time_sync
-      @vm.execute("service tor start")
-      wait_until_tor_is_working
-      @vm.spawn("/usr/local/sbin/restart-vidalia")
-    end
-  end
+  #if @vm.has_network?
+  #  if @vm.execute("service tor status").success?
+  #    @vm.execute("service tor stop")
+  #    @vm.execute("rm -f /var/log/tor/log")
+  #    @vm.execute("killall vidalia")
+  #    @vm.host_to_guest_time_sync
+  #    @vm.execute("service tor start")
+  #    wait_until_tor_is_working
+  #    @vm.spawn("/usr/local/sbin/restart-vidalia")
+  #  end
+  #end
 end
 
 Given /^a computer$/ do

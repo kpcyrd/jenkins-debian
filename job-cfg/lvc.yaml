@@ -23,6 +23,9 @@
     publishers:
       - email:
           recipients: 'holger@layer-acht.org'
+      - archive:
+          artifacts: '*.webm'
+          latest_only: false
     builders:
       - shell: '/srv/jenkins/bin/libvirt_cucumber_tests {my_params}'
     triggers:

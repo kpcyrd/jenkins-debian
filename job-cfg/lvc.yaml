@@ -27,7 +27,7 @@
           artifacts: '*.webm'
           latest_only: false
     builders:
-      - shell: '/srv/jenkins/bin/libvirt_cucumber_tests {my_params}'
+      - shell: '/srv/jenkins/bin/lvc/run_test_suite {my_params}'
     triggers:
       - timed: '{my_time}'
 

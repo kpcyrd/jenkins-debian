@@ -244,7 +244,7 @@ end
 Given /^I set sudo password "([^"]*)"$/ do |password|
   @sudo_password = password
   next if @skip_steps_while_restoring_background
-  @screen.wait("TailsGreeterAdminPassword.png", 20)
+  #@screen.wait("TailsGreeterAdminPassword.png", 20)
   @screen.type(@sudo_password)
   @screen.type(Sikuli::Key.TAB)
   @screen.type(@sudo_password)

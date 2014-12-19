@@ -230,7 +230,7 @@ Given /^the computer (re)?boots DebianLive7$/ do |reboot|
 
   @screen.type(" autotest_never_use_this_option #{@boot_options}" +
                Sikuli::Key.ENTER)
-  @screen.wait('TailsGreeter.png', 30*60)
+  @screen.wait('DebianLive7Greeter.png', 30*60)
   @vm.wait_until_remote_shell_is_up
   activate_filesystem_shares
 end

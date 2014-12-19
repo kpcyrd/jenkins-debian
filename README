@@ -175,6 +175,9 @@ There is still a lot of work left, check the current link:https://jenkins.debian
 
 == License
 
-* GPLv2, see link:http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/LICENSE[LICENSE].
+* everything except features and bin/libvirt_cucumber_tests:
+** GPLv2, see link:http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/LICENSE[LICENSE].
+* features and bin/libvirt_cucumber_tests:
+** GPLv3+
 
 // vim: set filetype=asciidoc:

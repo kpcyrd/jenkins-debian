@@ -189,7 +189,7 @@ export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 export SIKULI_HOME="/usr/share/java"
 export SIKULI_IMAGE_PATH="/srv/jenkins/features/images/"
 export RUBYLIB="/srv/jenkins"
-export FEATURE_PATCH="/srv/jenkins/features"
+export FEATURE_PATH="/srv/jenkins/features"
 export VM_XML_PATH="/srv/jenkins/features/domains"
 export DISPLAY=${TARGET_DISPLAY}
 check_dependency cucumber

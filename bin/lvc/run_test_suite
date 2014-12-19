@@ -189,11 +189,16 @@ export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"
 export SIKULI_HOME="/usr/share/java"
 export SIKULI_IMAGE_PATH="/srv/jenkins/features/images/"
 export RUBYLIB="/srv/jenkins"
+export FEATURE_PATCH="/srv/jenkins/features"
 export VM_XML_PATH="/srv/jenkins/features/domains"
 export DISPLAY=${TARGET_DISPLAY}
 check_dependency cucumber
 if [ -z "${*}" ]; then
-    cucumber --format ExtraHooks::Pretty $RUBYLIB/features
+    cucumber --format ExtraHooks::Pretty $FEATURE_PATH
 else
-    cucumber --format ExtraHooks::Pretty $RUBYLIB/features/step_definitions $RUBYLIB/features/support ${*}
+    FEATURES=""
+    for f in ${*} ; do
+	FEATURES="$FEATURES $FEATURE_PATH/$f"
+    done
+    cucumber --format ExtraHooks::Pretty $FEATURE_PATH/step_definitions $FEATURE_PATH/support $FEATURES
 fi

@@ -16,7 +16,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -51,7 +51,7 @@
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 20
@@ -99,7 +99,7 @@
           option: category
           categories:
             - reproducible
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at the <a href="https://jenkins.debian.net/userContent/reproducible.html">reproducible builds overview</a> pages.'
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
     logrotate:
       daysToKeep: 14
       numToKeep: 750
@@ -225,7 +225,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_json':
-            my_description: 'Generates https://jenkins.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
+            my_description: 'Generates https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
             my_timed: '1 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_json.sh'
             my_recipients: 'holger@layer-acht.org'

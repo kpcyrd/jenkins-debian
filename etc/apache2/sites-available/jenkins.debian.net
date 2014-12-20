@@ -97,6 +97,10 @@ NameVirtualHost *:443
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 
+	RewriteCond %{HTTP_HOST} jenkins\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.html$
+	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R,L]
+
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/$

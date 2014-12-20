@@ -14,7 +14,7 @@ end
 
 When /^I update APT using apt-get$/ do
   next if @skip_steps_while_restoring_background
-  Timeout::timeout(30*60) do
+  Timeout::timeout(10*60) do
     cmd = @vm.execute("echo #{@sudo_password} | " +
                       "sudo -S apt-get update", $live_user)
     if !cmd.success?

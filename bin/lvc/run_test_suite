@@ -192,13 +192,14 @@ export RUBYLIB="/srv/jenkins"
 export FEATURE_PATH="/srv/jenkins/features"
 export VM_XML_PATH="/srv/jenkins/features/domains"
 export DISPLAY=${TARGET_DISPLAY}
+CUCUMBEROPTS="--verbose --backtrace --expand"
 check_dependency cucumber
 if [ -z "${*}" ]; then
-    cucumber --format ExtraHooks::Pretty $FEATURE_PATH
+    cucumber $CUCUMBEROPTS --format ExtraHooks::Pretty $FEATURE_PATH
 else
     FEATURES=""
     for f in ${*} ; do
 	FEATURES="$FEATURES $FEATURE_PATH/$f"
     done
-    cucumber --format ExtraHooks::Pretty $FEATURE_PATH/step_definitions $FEATURE_PATH/support $FEATURES
+    cucumber $CUCUMBEROPTS --format ExtraHooks::Pretty $FEATURE_PATH/step_definitions $FEATURE_PATH/support $FEATURES
 fi

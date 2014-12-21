@@ -215,7 +215,7 @@ for base_distro in sorted(base_distros):
                   action=action,
                   second_base=distro_upgrades[base_distro]))
         # upgrade job with upgrading apt+dpkg first
-        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-':
+        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintainance':
              print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first'""" %
@@ -315,7 +315,15 @@ for base_distro in sorted(base_distros):
                   second_base=distro_upgrades[base_distro],
                   description=description))
         # upgrade job with upgrading apt+dpkg first
-        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-':
+        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintainance':
+            description = 'Debootstrap '+base_distro+', then upgrade apt and dpkg to '+distro_upgrades[base_distro]+' and then everything else.'
+            if target == 'bootstrap':
+                trigger = ''
+                for trigger_target in get_targets_in_distro(base_distro, targets):
+                    if trigger_target not in ('maintainance', 'bootstrap'):
+                        if trigger != '':
+                            trigger = trigger+', '
+                        trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]+_aptdpkg_first'
             print("""      - '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first':
             my_shell: '%(shell)s'
             my_prio: '%(prio)s'

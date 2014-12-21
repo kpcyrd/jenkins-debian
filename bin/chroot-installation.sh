@@ -100,7 +100,7 @@ echo "set +x" >> $CTMPFILE
 prepare_upgrade2() {
 	# support _aptdpkg_first type upgrade jobs...
 	if [ "${JOB_NAME: -14}" = "_aptdpkg_first" ] ; then
-		APTDPKGFIRST="apt-get install -y dpkg apt"
+		APTDPKGFIRST="apt-get -y install dpkg apt"
 	else
 		APTDPKGFIRST=""
 	fi

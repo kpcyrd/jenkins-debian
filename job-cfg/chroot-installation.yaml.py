@@ -239,7 +239,7 @@ for base_distro in sorted(base_distros):
                 trigger = 'chroot-installation_'+base_distro+'_bootstrap'
                 for item in distro_upgrades.items():
                     if item[1]==base_distro and base_distro in distro_upgrades:
-                         trigger = trigger+', chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]
+                         trigger = trigger+', chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]+', chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]+'_aptdpkg_first'
             else:
                 trigger = 'chroot-installation_'+base_distro+'_bootstrap_upgrade_to_'+distro_upgrades[base_distro]
         elif target == 'bootstrap':

@@ -324,4 +324,13 @@ for base_distro in sorted(base_distros):
             my_recipients: '%(recipients)s'
             my_view: '%(view)s'
             my_description: '%(description)s'""" %
+             dict(base_distro=base_distro,
+                  action=action,
+                  shell=shell,
+                  prio=prio,
+                  trigger=trigger,
+                  recipients=get_recipients(target),
+                  view=get_view(target, base_distro),
+                  second_base=distro_upgrades[base_distro],
+                  description=description))
 

@@ -38,17 +38,55 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === jenkins-job-builder related
 
-* fork livescreenshot plugin and send pull request for my bugfix
-* use the package from jessie
+* use jessie version plus my patches from kali
+* change of syntax:
+----
+properties:
+  - priority-sorter:
+      priority: 150
+----
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
-* needs clean merge of my patches to jenkins-job-builder...
 * cleanup my patches (eg add documentation) and send pull requests on github:
 ** publisher:logparse
 ** publisher:htmlpublisher
-** publisher:imagegallery
 ** svn:scm
-** properties:sidebar
 ** wrappers:live-screenshot
+
+=== livescreenshot plugin
+
+* publish forked livescreenshot plugin and send pull request for my bugfix
+
+== lvc, work in progress, just started ==
+
+* get iso
+* preserve screenshots: Took screenshot "/tmp/DebianToaster/apt-2014-12-19T02:33:50+00:00.png"
+
+* to debug cucumber: --verbose --backtrace --expand
+
+* can probably go: dhcp.rb firewall_leaks.rb dhcp.feature firewall_leaks.feature
+* more occurances of "the computer boots Tails"
+
+* disabled stuff in common_steps.rb
+** twice: #@vm.wait_until_remote_shell_is_up
+** #if @vm.execute("service tor status").success?
+
+* "I set sudo password" not really needed for DebianLive7, for now just
+** #@screen.wait("TailsGreeterAdminPassword.png", 20)
+
+* $misc_files_dir needed?
+* def sort_isos_by_creation_date
+  Dir.glob("#{Dir.pwd}/*.iso").sort_by {|f| tails_iso_creation_date(f)}
+* search for tails+tor+Tor
+
+* put in update_jdn.sh:
+----
+    addgroup tcpdump
+    dpkg-statoverride --update --add root tcpdump 754 /usr/sbin/tcpdump
+    setcap CAP_NET_RAW+eip /usr/sbin/tcpdump
+    adduser $USER tcpdump
+    adduser $USER libvirt
+    adduser $USER libvirt-qemu
+----
 
 == Improve existing tests
 

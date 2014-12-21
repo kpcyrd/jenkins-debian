@@ -323,7 +323,7 @@ for base_distro in sorted(base_distros):
                     if trigger_target not in ('maintainance', 'bootstrap'):
                         if trigger != '':
                             trigger = trigger+', '
-                        trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]+_aptdpkg_first'
+                        trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]+'_aptdpkg_first'
             print("""      - '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first':
             my_shell: '%(shell)s'
             my_prio: '%(prio)s'

@@ -199,16 +199,26 @@ for base_distro in sorted(base_distros):
              action = target
         else:
              action = 'install_'+target
+        # default job
         if target == 'maintainance' or base_distro != oldstable:
             print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s'""" %
              dict(base_distro=base_distro,
                   action=action))
+        # upgrade job
         if base_distro in distro_upgrades and action != 'maintainance':
              print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s'""" %
+             dict(base_distro=base_distro,
+                  action=action,
+                  second_base=distro_upgrades[base_distro]))
+        # upgrade job with upgrading apt+dpkg first
+        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-':
+             print("""- job-template:
+    defaults: chroot-installation
+    name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first'""" %
              dict(base_distro=base_distro,
                   action=action,
                   second_base=distro_upgrades[base_distro]))
@@ -253,6 +263,7 @@ for base_distro in sorted(base_distros):
             action = target
         else:
             action = 'install_'+target
+        # default job
         if target == 'maintainance' or base_distro != oldstable:
             print("""      - '{name}_%(base_distro)s_%(action)s':
             my_shell: '%(shell)s'
@@ -271,6 +282,7 @@ for base_distro in sorted(base_distros):
                   recipients=get_recipients(target),
                   view=get_view(target, base_distro),
                   description=description))
+        # upgrade job
         if base_distro in distro_upgrades and action != 'maintainance':
             if target == 'bootstrap':
                 shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro+' none '+distro_upgrades[base_distro]
@@ -302,4 +314,14 @@ for base_distro in sorted(base_distros):
                   view=get_view(target, base_distro),
                   second_base=distro_upgrades[base_distro],
                   description=description))
+        # upgrade job with upgrading apt+dpkg first
+        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-':
+            print("""      - '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first':
+            my_shell: '%(shell)s'
+            my_prio: '%(prio)s'
+            my_time: ''
+            my_trigger: '%(trigger)s'
+            my_recipients: '%(recipients)s'
+            my_view: '%(view)s'
+            my_description: '%(description)s'""" %
 

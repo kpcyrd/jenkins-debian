@@ -39,13 +39,27 @@
     defaults: lvc
     name: '{name}_debian-live_wheezy'
 
+- job-template:
+    defaults: lvc
+    name: '{name}_debian-live_standard_wheezy'
+
+- job-template:
+    defaults: lvc
+    name: '{name}_debian-live_gnome_wheezy'
+
 - project:
     name: lvc
     jobs:
-        - '{name}_debian-live_wheezy':
-           my_title: 'Debian Live 7'
+        - '{name}_debian-live_standard_wheezy':
+           my_title: 'Debian Live 7 standard'
            my_time: '23 45 31 12 *'
-           my_params: '--debug --capture lvc_debian-live_wheezy.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso DebianLive7/apt.feature'
+           my_params: '--debug --capture lvc_debian-live_wheezy.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.7.0-amd64-standard.iso DebianLive7/apt.feature'
+           my_pngs: 'apt-*.png'
+           my_description: 'Work in progress...'
+        - '{name}_debian-live_gnome_wheezy':
+           my_title: 'Debian Live 7 GNOME desktop'
+           my_time: '23 45 31 12 *'
+           my_params: '--debug --capture lvc_debian-live_wheezy.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.7.0-amd64-gnome-desktop.iso DebianLive7/apt.feature'
            my_pngs: 'apt-*.png'
            my_description: 'Work in progress...'
 

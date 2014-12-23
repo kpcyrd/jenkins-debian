@@ -45,7 +45,7 @@
         - '{name}_debian-live_squeeze':
            my_title: 'Debian Live 7'
            my_time: '23 45 31 12 *'
-           my_params: '--capture lvc_debian-live_squeeze.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso DebianLive7/apt.feature'
+           my_params: '--debug --capture lvc_debian-live_squeeze.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso DebianLive7/apt.feature'
            my_pngs: 'apt-*.png'
            my_description: 'Work in progress...'
 

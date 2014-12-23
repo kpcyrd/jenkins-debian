@@ -24,8 +24,12 @@
       - email:
           recipients: 'holger@layer-acht.org'
       - archive:
-          artifacts: '*.webm'
+          artifacts: '*.webm, {my_pngs}'
           latest_only: false
+      - imagegallery:
+          title: '{my_title}'
+          includes: '{my_pngs}'
+          image-width: 300
     builders:
       - shell: '/srv/jenkins/bin/lvc/run_test_suite {my_params}'
     triggers:
@@ -39,7 +43,9 @@
     name: lvc
     jobs:
         - '{name}_debian-live_squeeze':
+           my_title: 'Debian Live 7'
            my_time: '23 45 31 12 *'
            my_params: '--capture lvc_debian-live_squeeze.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.6.0-amd64-standard.iso DebianLive7/apt.feature'
+           my_pngs: 'apt-*.png'
            my_description: 'Work in progress...'
 

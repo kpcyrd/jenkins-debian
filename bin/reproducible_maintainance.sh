@@ -33,6 +33,9 @@ if [ ! -f reproducible_$DATE.db.xz ] ; then
 	xz reproducible_$DATE.db
 fi
 
+# provide copy for external backups
+cp -v $PACKAGES_DB /var/lib/jenkins/userContent/
+
 # find and warn about old temp directories
 OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then

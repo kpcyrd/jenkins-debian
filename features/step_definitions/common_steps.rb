@@ -229,7 +229,8 @@ Given /^the computer (re)?boots DebianLive7$/ do |reboot|
   @screen.type(Sikuli::Key.TAB)
   @screen.waitVanish(bootsplash_tab_msg, 1)
 
-  @screen.type(" autotest_never_use_this_option #{@boot_options}" +
+  # add extra boot options here
+  @screen.type(" live-getty console=tty0 console=ttyS0,9600n8 #{@boot_options}" +
                Sikuli::Key.ENTER)
   @screen.wait('DebianLive7Greeter.png', 5*60)
   @vm.wait_until_remote_shell_is_up

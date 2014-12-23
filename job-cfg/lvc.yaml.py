@@ -57,6 +57,8 @@ print("""
           title: '{my_title}'
           includes: '{my_pngs}'
           image-width: 300
+    wrappers:
+      - live-screenshot
     builders:
       - shell: '/srv/jenkins/bin/lvc/run_test_suite {my_params}'
     triggers:

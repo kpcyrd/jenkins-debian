@@ -106,13 +106,19 @@ After('@product') do |scenario|
     base = File.basename(scenario.feature.file, ".feature").to_s
     tmp = @screen.capture.getFilename
     out = "#{$tmp_dir}/#{base}-#{DateTime.now}.png"
+    jenkins_live_screenshot = "#{$tmp_dir}/screenshot.png"
+    jenkins_live_thumb = "#{$tmp_dir}/screenshot-thumb.png"
     FileUtils.mv(tmp, out)
+    FileUtils.cp(out, jenkins_live_screenshot)
     STDERR.puts("Took screenshot \"#{out}\"")
     if $pause_on_fail
       STDERR.puts ""
       STDERR.puts "Press ENTER to continue running the test suite"
       STDIN.gets
     end
+  end
+  unless system("convert #{jenkins_live_screenshot} -adaptive-resize 128x96 #{jenkins_live_thumb}")
+    raise StandardError.new("convert command exited with #{$?}")
   end
   if @sniffer
     @sniffer.stop

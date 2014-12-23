@@ -21,6 +21,7 @@ print("""
 - defaults:
     name: lvc
     project-type: freestyle
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml.py">lvc.yaml.py</a>.'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -34,7 +35,13 @@ print("""
           url: http://www.profitbricks.com
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml.py">lvc.yaml.py</a>.'
+      - throttle:
+          max-total: 1
+          max-per-node: 1
+          enabled: true
+          option: category
+          categories:
+            - lvc
     logrotate:
       daysToKeep: 90
       numToKeep: 20

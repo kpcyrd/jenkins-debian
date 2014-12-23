@@ -77,7 +77,7 @@ echo "Also needs ovmf from jessie..."
 # deploy package configuration in /etc
 #
 cd $BASEDIR
-sudo cp -r etc/* /etc
+sudo cp --preserve=mode,timestamps -r etc/* /etc
 
 #
 # more configuration than a simple cp can do
@@ -101,7 +101,7 @@ sudo service munin-node force-reload
 # install the heart of jenkins.debian.net
 #
 cd $BASEDIR
-cp -r bin logparse job-cfg features /srv/jenkins/
+cp --preserve=mode,timestamps -r bin logparse job-cfg features /srv/jenkins/
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
 cp -pr README INSTALL TODO d-i-preseed-cfgs /var/lib/jenkins/userContent/

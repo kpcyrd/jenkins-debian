@@ -66,7 +66,7 @@ sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat dev
         ruby-json x11vnc xtightvncviewer ffmpeg libavcodec-extra-53 \
         libvpx1 dnsmasq-base openjdk-7-jre
 # debootstrap is affected by #766459 in wheezy
-sudo apt-get install -t wheezy-backports qemu debootstrap qemu-kvm qemu-system-x86 libvirt0 \
+sudo apt-get install -t wheezy-backports qemu debootstrap qemu-kvm qemu-system-x86 libvirt0 qemu-user-static binfmt-support \
         libvirt-dev libvirt-bin seabios ruby-rjb ruby-packetfu cucumber
 explain "Packages installed."
 

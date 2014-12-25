@@ -155,31 +155,31 @@ curl "http://binarycontrol.debian.net/?q=&path=%2Ftriggers%24&format=pkglist" \
 	| sort \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
-	mkdir DEBIAN
+	tmpdir=`mktemp`
 	# FIXME: please revert 9280f1c87 and following as soon as Jenkins run Jessie
 	# this is about the next line:
 	curl --retry 2 --location --silent "$url" \
 		| python -c 'exec("import arpy,sys,gzip,bz2,lzma,StringIO\nar=arpy.Archive(fileobj=sys.stdin)\nfor f in ar:\n\tif f.header.name == \"control.tar.gz\":\n\t\tsys.stdout.write(gzip.GzipFile(fileobj=StringIO.StringIO(f.read())).read())\n\t\tbreak\n\telif f.header.name == \"control.tar\":\n\t\tsys.stdout.write(f.read())\n\t\tbreak\n\telif f.header.name == \"control.tar.bz2\":\n\t\tsys.stdout.write(bz2.BZ2File(fileobj=StringIO.StringIO(f.read())).read())\n\t\tbreak\n\telif f.header.name == \"control.tar.xz\":\n\t\tsys.stdout.write(lzma.LZMAFile(fileobj=StringIO.StringIO(f.read())).read())\n\t\tbreak")' \
-		| tar -C "DEBIAN" --exclude=./md5sums -x
-	if [ ! -f DEBIAN/triggers ]; then
-		rm -r DEBIAN
+		| tar -C "$tmpdir" --exclude=./md5sums -x
+	if [ ! -f "$tmpdir/triggers" ]; then
+		rm -r "$tmpdir"
 		continue
 	fi
 	# find all triggers that are either interest or interest-await
 	# and which are file triggers (start with a slash)
-	egrep "^\s*interest(-await)?\s+/" DEBIAN/triggers | while read line; do
+	egrep "^\s*interest(-await)?\s+/" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
 	done >> interested-file
-	egrep "^\s*interest(-await)?\s+[^/]" DEBIAN/triggers | while read line; do
+	egrep "^\s*interest(-await)?\s+[^/]" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
 	done >> interested-explicit
-	egrep "^\s*activate(-await)?\s+/" DEBIAN/triggers | while read line; do
+	egrep "^\s*activate(-await)?\s+/" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
 	done >> activated-file
-	egrep "^\s*activate(-await)?\s+[^/]" DEBIAN/triggers | while read line; do
+	egrep "^\s*activate(-await)?\s+[^/]" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
 	done >> activated-explicit
-	rm -r DEBIAN
+	rm -r "$tmpdir"
 done
 
 printf "" > result-file

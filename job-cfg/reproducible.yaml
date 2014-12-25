@@ -100,6 +100,9 @@
           categories:
             - reproducible
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    wrappers:
+      - timeout:
+          timeout: 1560
     logrotate:
       daysToKeep: 14
       numToKeep: 750

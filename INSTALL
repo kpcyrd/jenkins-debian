@@ -44,6 +44,7 @@ I would prefer to run a jenkins package from wheezy-backports.
 * Priority Sorter Plugin
 * Throttle Concurrent Builds Plugin
 * Next Executions Plugin
+* Build-timeout Plugin
 * Build Token Root Plugin
 * Embeddable Build Status Plugin
 * Plot Plugin

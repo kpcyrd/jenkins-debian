@@ -191,6 +191,9 @@ print("""
           option: category
           categories:
             - chroot-installation
+    wrappers:
+      - timeout:
+          timeout: 360
 
 """)
 for base_distro in sorted(base_distros):

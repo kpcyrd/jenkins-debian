@@ -32,6 +32,8 @@
           image-width: 300
     wrappers:
       - live-screenshot
+      - timeout:
+          timeout: 360
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

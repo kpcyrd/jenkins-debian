@@ -59,7 +59,7 @@ fi
 #
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
 	build-essential python-setuptools molly-guard \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3 dose-extra apt-file \
+	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3 dose-extra apt-file python-lzma \
 	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl haveged postgresql-client-9.1 xvfb virt-viewer libsikuli-script-java \
         libxslt1-dev tcpdump unclutter radvd x11-apps syslinux \
         libcap2-bin devscripts libvirt-ruby ruby-rspec gawk ntp \

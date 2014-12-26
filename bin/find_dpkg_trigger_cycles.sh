@@ -155,7 +155,7 @@ curl "http://binarycontrol.debian.net/?q=&path=%2Ftriggers%24&format=pkglist" \
 	| sort \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
-	tmpdir=`mktemp`
+	tmpdir=`mktemp -d`
 	# FIXME: please revert 9280f1c87 and following as soon as Jenkins run Jessie
 	# this is about the next line:
 	curl --retry 2 --location --silent "$url" \

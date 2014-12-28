@@ -62,7 +62,9 @@ update_sources_table() {
 	if [ $P_IN_TMPFILE -ne $P_IN_SOURCES ] ; then
 		echo "DEBUG: P_IN_SOURCES = $P_IN_SOURCES"
 		echo "DEBUG: P_IN_TMPFILE = $P_IN_TMPFILE"
-		exit 1
+		RESULT=1
+	else
+		RESULT=0
 	fi
 }
 
@@ -159,7 +161,20 @@ if [ $COUNT_SCHEDULED -gt 250 ] ; then
 else
 	echo "$COUNT_SCHEDULED packages currently scheduled, scheduling some more..."
 fi
-update_sources_table
+
+RESULT=0
+for i in 1 2 3 4 5 ; do
+	# try fives times, before failing the job
+	update_sources_table
+	if [ $RESULT -eq 0 ] ; then
+		break
+	fi
+	sleep 2m
+done
+if [ $RESULT -ne 0 ] ; then
+	echo "failure to update sources table"
+	exit 1
+fi
 
 echo "Requesting 200 unknown packages..."
 select_unknown_packages 200

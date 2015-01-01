@@ -3,6 +3,7 @@
 images = """
     wheezy_standard
     wheezy_gnome-desktop
+    debian_jessie_standalone
    """.split()
 
 features = """
@@ -10,11 +11,13 @@ features = """
    """.split()
 
 files = { 'wheezy_standard': '/var/lib/jenkins/debian-live-7.7.0-amd64-standard.iso',
-          'wheezy_gnome-desktop': '/var/lib/jenkins/debian-live-7.7.0-amd64-gnome-desktop.iso'
+          'wheezy_gnome-desktop': '/var/lib/jenkins/debian-live-7.7.0-amd64-gnome-desktop.iso',
+          'debian_jessie_standalone': '/srv/live-build/results/debian-edu_standalone_live_amd64.iso'
         }
 
 titles = { 'wheezy_standard': 'Debian Live 7 standard',
-           'wheezy_gnome-desktop': 'Debian Live 7 GNOME desktop'
+           'wheezy_gnome-desktop': 'Debian Live 7 GNOME desktop',
+           'debian_jessie_standalone': 'Debian Edu Live 8 Standalone'
          }
 
 print("""
@@ -82,7 +85,7 @@ for image in sorted(images):
         print("""        - '{name}_debian-live_%(image)s_%(feature)s':
            my_title: '%(title)s'
            my_time: '23 45 31 12 *'
-           my_params: '--debug --capture lvc_debian-live_%(image)s_%(feature)s.webm --temp-dir $WORKSPACE --iso %(iso)s DebianLive7/%(feature)s.feature'
+           my_params: '--debug --capture lvc_debian-live_%(image)s_%(feature)s.webm --temp-dir $WORKSPACE --iso %(iso)s DebianLive/%(feature)s.feature'
            my_pngs: '%(feature)s-*.png'
            my_description: 'Work in progress...'
 """ % dict(image=image,

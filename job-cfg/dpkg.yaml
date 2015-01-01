@@ -36,6 +36,10 @@
     defaults: dpkg
     name: '{name}_sid_find_trigger_cycles'
 
+- job-template:
+    defaults: dpkg
+    name: '{name}_setup_schroot'
+
 - project:
     name: dpkg
     jobs:

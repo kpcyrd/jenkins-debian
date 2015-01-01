@@ -7,7 +7,7 @@ Feature: Installing packages through APT
     Given a computer
     And I capture all network traffic
     And I start the computer
-    And the computer boots DebianLive7
+    And the computer boots DebianLive
     And I save the state so the background can be restored next scenario
 
   Scenario: APT sources are configured correctly

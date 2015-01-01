@@ -147,6 +147,17 @@ schedule_packages() {
 	echo
 }
 
+deselect_old_with_buildinfo() {
+	PACKAGES=""
+	for PKG in $1 do ;
+		if [ ! -f /var/lib/jenkins/userContent/buildinfo/${PKG}_.buildinfo ] ; then
+			PACKAGES="$PACKAGES $PKG"
+		else
+			let "AMOUNT=$AMOUNT-1"
+		fi
+	done
+}
+
 #
 # main
 #
@@ -204,10 +215,14 @@ else
 fi
 echo "Requesting $OLD old packages..."
 select_old_versions $OLD
+echo -n "Found $AMOUNT old packages, "
+deselect_old_with_buildinfo $PACKAGES
+echo "kept $AMOUNT old packages without .buildinfo files."
+
 let "TOTAL=$TOTAL+$AMOUNT"
 echo "So in total now $TOTAL packages about to be scheduled."
 ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
-MESSAGE="$MESSAGE and $AMOUNT packages with the same version again, for a total of $TOTAL scheduled packages."
+MESSAGE="$MESSAGE and $AMOUNT packages with the same version (but without .buildinfo files) again, for a total of $TOTAL scheduled packages."
 
 # finally
 schedule_packages

@@ -3,7 +3,7 @@
 images = """
     wheezy_standard
     wheezy_gnome-desktop
-    debian_jessie_standalone
+    debian-edu_jessie_standalone
    """.split()
 
 features = """
@@ -12,12 +12,12 @@ features = """
 
 files = { 'wheezy_standard': '/var/lib/jenkins/debian-live-7.7.0-amd64-standard.iso',
           'wheezy_gnome-desktop': '/var/lib/jenkins/debian-live-7.7.0-amd64-gnome-desktop.iso',
-          'debian_jessie_standalone': '/srv/live-build/results/debian-edu_standalone_live_amd64.iso'
+          'debian-edu_jessie_standalone': '/srv/live-build/results/debian-edu_standalone_live_amd64.iso'
         }
 
 titles = { 'wheezy_standard': 'Debian Live 7 standard',
            'wheezy_gnome-desktop': 'Debian Live 7 GNOME desktop',
-           'debian_jessie_standalone': 'Debian Edu Live 8 Standalone'
+           'debian-edu_jessie_standalone': 'Debian Edu Live 8 Standalone'
          }
 
 print("""

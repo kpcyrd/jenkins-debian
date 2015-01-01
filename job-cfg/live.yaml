@@ -21,10 +21,6 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     publishers:
-      - logparser:
-          parse-rules: '/srv/jenkins/logparse/debian.rules'
-          unstable-on-warning: 'true'
-          fail-on-error: 'true'
       - email:
           recipients: 'holger@layer-acht.org'
     builders:
@@ -34,7 +30,15 @@
 
 - job-template:
     defaults: live
-    name: '{name}_build_edu_jessie_standalone'
+    name: '{name}_build_debian-edu_jessie_standalone'
+
+- job-template:
+    defaults: live
+    name: '{name}_build_debian_jessie_gnome'
+
+- job-template:
+    defaults: live
+    name: '{name}_build_debian_jessie_xfce'
 
 - job-template:
     defaults: live
@@ -43,10 +47,18 @@
 - project:
     name: live
     jobs:
-       - '{name}_build_edu_jessie_standalone':
+       - '{name}_build_debian-edu_jessie_standalone':
            my_description: 'Build Debian Edu Jessie live-image with "standlone" profile.'
            my_time: '0 12 1 * *'
            my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu standalone'
+       - '{name}_build_debian_jessie_gnome':
+           my_description: 'Build Debian Jessie live-image with GNOME desktop.'
+           my_time: '0 13 1 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian gnome'
+       - '{name}_build_debian_jessie_xfce':
+           my_description: 'Build Debian Jessie live-image with Xfce desktop.'
+           my_time: '0 14 1 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian xfce'
        - '{name}_setup_schroot':
            my_description: 'Setup schroot for building live images using live-build in a jessie environment.'
            my_time: '42 10 1 * *'

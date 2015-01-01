@@ -50,8 +50,8 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
-	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see below)
-	for i in 0 1 3 4 5 ; do
+	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and do 3 later)
+	for i in 0 1 4 5 ; do
 		# force regeneration of the image
 		touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
@@ -118,6 +118,7 @@ YLABEL[2]="Age in days"
 YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
+
 redo_png() {
 	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
 	# TABLE[3+4+5] don't have a suite column...

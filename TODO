@@ -29,11 +29,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too /var/lib/jenkins/plugins/*.jpi
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
-* unreproducible-with-buildinfo should really be a state in the DB
 * replace amd64 in scripts with $HOSTARCH
-* run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
-* reproducible_scheduler should never fail loudly
-* reproducible: dont delete userContent/$pkg on build begin..
 * g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
 
 === jenkins-job-builder related
@@ -126,14 +122,13 @@ properties:
 
 === reproducible
 
-* watch: zephyr (debbindiff timeout?)
-* watch: cxxtest: dbd failure should be in rbuild output!
-* watch: gnuradio debbindiff crashed, yet the build is classified reproducible...
-* watch: libsys-gamin-perl hangs while building
-* check 0.51-1 is fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html
+* check 0.52-1 is still not fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html
 * reschedule those with "debbindiff.py crashed" in rbuild.log and watch them build...
 
-I'm done here. ;-)
+* run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
+* reproducible: dont delete userContent/$pkg on build begin..
+
+* cleanup _buildinfo files (without version)
 
 * cleanup+rename:
 ** unschedule_from_db(  	(defined in build.sh...)
@@ -147,7 +142,6 @@ I'm done here. ;-)
 * graph oldest build age - in days
 * mv untested field in stats table too? (as in csv output...)
 * list removed packages, eg bobot++ (and remove them after a week automatically)
-* generate .json for tracker.d.o
 
 == Further ideas...
 

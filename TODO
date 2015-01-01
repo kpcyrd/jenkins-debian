@@ -26,7 +26,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * use schroot for chroot-installation
 * build packages using jenkins-debian-glue and not my hacks
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
-* backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too
+* backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too /var/lib/jenkins/plugins/*.jpi
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
 * unreproducible-with-buildinfo should really be a state in the DB

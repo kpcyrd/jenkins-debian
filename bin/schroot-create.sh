@@ -60,7 +60,7 @@ bootstrap() {
 		for d in proc dev dev/pts ; do
 			sudo mount --bind /$d $CHROOT_TARGET/$d
 		done
-		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "sudo $@"
+		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@" sudo
 		# umount in reverse order
 		for d in dev/pts dev proc ; do
 			sudo umount -l $CHROOT_TARGET/$d

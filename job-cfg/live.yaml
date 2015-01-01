@@ -46,7 +46,7 @@
        - '{name}_build_edu_jessie_standalone':
            my_description: 'Build Debian Edu Jessie live-image with "standlone" profile.'
            my_time: '0 12 1 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build debian-edu standalone'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu standalone'
        - '{name}_setup_schroot':
            my_description: 'Setup schroot for building live images using live-build in a jessie environment.'
            my_time: '42 10 1 * *'

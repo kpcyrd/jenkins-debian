@@ -203,7 +203,7 @@ When /^I destroy the computer$/ do
   @vm.destroy
 end
 
-Given /^the computer (re)?boots DebianLive7$/ do |reboot|
+Given /^the computer (re)?boots DebianLive(|\d+)$/ do |reboot,version|
   next if @skip_steps_while_restoring_background
 
   case @os_loader
@@ -218,8 +218,8 @@ Given /^the computer (re)?boots DebianLive7$/ do |reboot|
       bootsplash_tab_msg = 'TailsBootSplashTabMsgPostReset.png'
       boot_timeout = 120
     else
-      bootsplash = 'DebianLive7BootSplash.png'
-      bootsplash_tab_msg = 'DebianLive7BootSplashTabMsg.png'
+      bootsplash = "DebianLive#{version}BootSplash.png"
+      bootsplash_tab_msg = "DebianLive#{version}BootSplashTabMsg.png"
       boot_timeout = 30
     end
   end
@@ -232,7 +232,7 @@ Given /^the computer (re)?boots DebianLive7$/ do |reboot|
   # add extra boot options here
   @screen.type(" live-getty console=tty0 console=ttyS0,9600n8 #{@boot_options}" +
                Sikuli::Key.ENTER)
-  @screen.wait('DebianLive7Greeter.png', 5*60)
+  @screen.wait("DebianLive#{version}Greeter.png", 5*60)
   @vm.wait_until_remote_shell_is_up
   activate_filesystem_shares
 end

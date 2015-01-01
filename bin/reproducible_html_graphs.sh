@@ -110,8 +110,8 @@ MAINLABEL[0]="Package reproducibility status"
 MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
-MAINLABEL[4]="Packages investigated"
-MAINLABEL[5]="Notes identified"
+MAINLABEL[4]="Packages which have notes"
+MAINLABEL[5]="Identified issues"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
@@ -184,7 +184,7 @@ write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
-for i in 0 4 5 3 1 ; do
+for i in 0 3 4 5 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi

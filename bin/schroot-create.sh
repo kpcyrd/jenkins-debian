@@ -63,7 +63,7 @@ bootstrap() {
 		done
 		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@"
 		for d in $DEVICES ; do
-			sudo umount $CHROOT_TARGET/$d
+			sudo umount -l $CHROOT_TARGET/$d
 		done
 	fi
 }

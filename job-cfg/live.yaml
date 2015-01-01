@@ -50,5 +50,5 @@
        - '{name}_setup_schroot':
            my_description: 'Setup schroot for building live images using live-build in a jessie environment.'
            my_time: '42 10 1 * *'
-           my_shell: '/srv/jenkins/bin/schroot-create.sh live-jessie jessie python live-build'
+           my_shell: '/srv/jenkins/bin/schroot-create.sh live-jessie jessie python sudo live-build'
 

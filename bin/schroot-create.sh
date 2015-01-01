@@ -60,11 +60,15 @@ bootstrap() {
 		for d in proc dev dev/pts ; do
 			sudo mount --bind /$d $CHROOT_TARGET/$d
 		done
-		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@"
+		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "sudo $@"
 		# umount in reverse order
 		for d in dev/pts dev proc ; do
 			sudo umount -l $CHROOT_TARGET/$d
 		done
+		# configure sudo inside just like outside
+		echo "jenkins    ALL=NOPASSWD: ALL" | sudo tee -a $CHROOT_TARGET/etc/sudoers.d/jenkins >/dev/null
+		sudo chroot $CHROOT_TARGET chown root.root /etc/sudoers.d/jenkins
+		sudo chroot $CHROOT_TARGET chmod 700 /etc/sudoers.d/jenkins
 	fi
 }
 

@@ -24,7 +24,7 @@ case "$2" in
 			;;
 	*)		;;
 esac
-lb build
+sudo lb build
 ls -la *.iso || true
 mkdir -p /srv/live-build/results
 cp *.iso /srv/live-build/results

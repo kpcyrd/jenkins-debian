@@ -149,7 +149,7 @@ schedule_packages() {
 
 deselect_old_with_buildinfo() {
 	PACKAGES=""
-	for PKG in $1 do ;
+	for PKG in $1 ; do
 		if [ ! -f /var/lib/jenkins/userContent/buildinfo/${PKG}_.buildinfo ] ; then
 			PACKAGES="$PACKAGES $PKG"
 		else

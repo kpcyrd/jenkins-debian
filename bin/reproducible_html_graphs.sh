@@ -115,7 +115,7 @@ YLABEL[4]="Amounts"
 redo_png() {
 	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
 	# TABLE[3+4] don't have a suite column...
-	if [ $i -ne 3 ] || [ $i -ne 4 ] ; then
+	if [ $i -ne 3 ] && [ $i -ne 4 ] ; then
 		WHERE_SUITE="WHERE suite = '$SUITE'"
 	else
 		WHERE_SUITE=""

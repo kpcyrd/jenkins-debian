@@ -24,6 +24,7 @@ TABLE[1]=stats_builds_per_day
 TABLE[2]=stats_builds_age
 TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
+TABLE[5]=stats_issues
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
 	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) from sources")
@@ -50,15 +51,16 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
 	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see below)
-	for i in 0 1 ; do
+	for i in 0 1 3 4 5 ; do
 		# force regeneration of the image
 		touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
 	# gather notes stats
 	# FIXME: hard-coding another job path is meh
 	NOTES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/packages.yml)
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
 	ISSUES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/issues.yml)
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\", \"$ISSUES\")"
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 fi
 
 # query bts
@@ -96,26 +98,30 @@ FIELDS[3]="datum "
 for TAG in $USERTAGS ; do
 	FIELDS[3]="${FIELDS[3]}, open_$TAG, done_$TAG"
 done
-FIELDS[4]="datum, packages_with_notes, known_issues"
+FIELDS[4]="datum, packages_with_notes"
+FIELDS[5]="datum, known_issues"
 COLOR[0]=5
 COLOR[1]=4
 COLOR[2]=3
 COLOR[3]=18
-COLOR[4]=2
+COLOR[4]=1
+COLOR[5]=1
 MAINLABEL[0]="Package reproducibility status"
 MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
-MAINLABEL[0]="Notes on investigated packages"
+MAINLABEL[4]="Packages investigated"
+MAINLABEL[5]="Notes identified"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
 YLABEL[3]="Amount of bugs"
-YLABEL[4]="Amounts"
+YLABEL[4]="Amount of packages"
+YLABEL[5]="Amount of issues"
 redo_png() {
 	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
-	# TABLE[3+4] don't have a suite column...
-	if [ $i -ne 3 ] && [ $i -ne 4 ] ; then
+	# TABLE[3+4+5] don't have a suite column...
+	if [ $i -ne 3 ] && [ $i -ne 4 ] && [ $i -ne 5 ] ; then
 		WHERE_SUITE="WHERE suite = '$SUITE'"
 	else
 		WHERE_SUITE=""
@@ -177,7 +183,7 @@ write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
-for i in 0 4 3 1 ; do
+for i in 0 4 5 3 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi

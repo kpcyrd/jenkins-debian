@@ -98,6 +98,10 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		CREATE TABLE stats_notes
 		(datum TEXT NOT NULL,
 		packages_with_notes INTEGER,
+		PRIMARY KEY (datum))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_issues
+		(datum TEXT NOT NULL,
 		known_issues INTEGER,
 		PRIMARY KEY (datum))'
 	# 60 seconds timeout when trying to get a lock

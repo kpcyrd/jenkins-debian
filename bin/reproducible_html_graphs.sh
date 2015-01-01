@@ -177,7 +177,7 @@ write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
-for i in 0 1 3 ; do
+for i in 0 4 3 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi

@@ -94,6 +94,12 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		open_randomness INTEGER,
 		done_randomness INTEGER,
 		PRIMARY KEY (datum))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_notes
+		(datum TEXT NOT NULL,
+		packages_with_notes INTEGER,
+		known_issues INTEGER,
+		PRIMARY KEY (datum))'
 	# 60 seconds timeout when trying to get a lock
 	cat > $INIT <<-EOF
 .timeout 60000

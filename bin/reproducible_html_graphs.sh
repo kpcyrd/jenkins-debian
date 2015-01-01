@@ -23,6 +23,7 @@ TABLE[0]=stats_pkg_state
 TABLE[1]=stats_builds_per_day
 TABLE[2]=stats_builds_age
 TABLE[3]=stats_bugs
+TABLE[4]=stats_notes
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
 	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) from sources")
@@ -53,6 +54,11 @@ if [ -z $RESULT ] ; then
 		# force regeneration of the image
 		touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
+	# gather notes stats
+	# FIXME: hard-coding another job path is meh
+	NOTES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/packages.yml)
+	ISSUES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/issues.yml)
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\", \"$ISSUES\")
 fi
 
 # query bts
@@ -90,22 +96,26 @@ FIELDS[3]="datum "
 for TAG in $USERTAGS ; do
 	FIELDS[3]="${FIELDS[3]}, open_$TAG, done_$TAG"
 done
+FIELDS[4]="datum, packages_with_notes, known_issues"
 COLOR[0]=5
 COLOR[1]=4
 COLOR[2]=3
 COLOR[3]=18
+COLOR[4]=2
 MAINLABEL[0]="Package reproducibility status"
 MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
+MAINLABEL[0]="Notes on investigated packages"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
 YLABEL[3]="Amount of bugs"
+YLABEL[4]="Amounts"
 redo_png() {
 	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
-	# TABLE[3] doesn't have a suite column...
-	if [ $i -ne 3 ] ; then
+	# TABLE[3+4] don't have a suite column...
+	if [ $i -ne 3 ] || [ $i -ne 4 ] ; then
 		WHERE_SUITE="WHERE suite = '$SUITE'"
 	else
 		WHERE_SUITE=""

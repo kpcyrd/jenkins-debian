@@ -97,4 +97,4 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	union-type=aufs
 	__END__
 
-
+echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

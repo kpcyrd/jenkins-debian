@@ -8,24 +8,27 @@ DEBUG=false
 common_init "$@"
 
 cleanup_all() {
-	rm -r $TMPDIR
+	sudo rm -rf --one-file-system $TMPDIR
 }
 
 TMPDIR=$(mktemp --tmpdir=/srv/live-build -d)
 trap cleanup_all INT TERM EXIT
 
 cd $TMPDIR
-# build an debian-edu .iso for now...
-# $1 is debian-edu
+
+# $1 is used for the hostname and username
 # $2 is standalone...
-# FIXME: do debian images too
-lb config --distribution jessie --bootappend-live "boot=live config hostname=debian-edu username=debian-edu"
-echo education-standalone > config/package-lists/live.list.chroot
+lb config --distribution jessie --bootappend-live "boot=live config hostname=$1 username=$1"
+case "$2" in
+	standalone)	echo education-standalone > config/package-lists/live.list.chroot
+			;;
+	*)		;;
+esac
 lb build
 ls -la *.iso || true
 mkdir -p /srv/live-build/results
 cp *.iso /srv/live-build/results
-# FIXME: use subdir there... (shared with downloaded .isos?)
+# FIXME: use proper filenames
 
 cleanup_all
 trap - INT TERM EXIT

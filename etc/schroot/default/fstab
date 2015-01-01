@@ -12,7 +12,7 @@
 /srv/reproducible-results	/srv/reproducible-results	none	rw,bind		0	0
 /srv/d-i	/srv/d-i	none	rw,bind		0	0
 /srv/jenkins	/srv/jenkins	none	rw,bind		0	0
-
+/srv/live-build	/srv/live-build	none	rw,bind		0	0
 
 # It may be desirable to have access to /run, especially if you wish
 # to run additional services in the chroot.  However, note that this

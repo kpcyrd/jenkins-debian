@@ -11,7 +11,7 @@ cleanup_all() {
 	rm -r $TMPDIR
 }
 
-TMPDIR=$(mktemp --tmpdir=/srv/workspace -d)
+TMPDIR=$(mktemp --tmpdir=/srv/live-build -d)
 trap cleanup_all INT TERM EXIT
 
 cd $TMPDIR
@@ -21,10 +21,10 @@ cd $TMPDIR
 # FIXME: do debian images too
 lb config --distribution jessie --bootappend-live "boot=live config hostname=debian-edu username=debian-edu"
 echo education-standalone > config/package-lists/live.list.chroot
-# FIXME add serial console
 lb build
 ls -la *.iso || true
-cp *.iso /srv/workspace
+mkdir -p /srv/live-build/results
+cp *.iso /srv/live-build/results
 # FIXME: use subdir there... (shared with downloaded .isos?)
 
 cleanup_all

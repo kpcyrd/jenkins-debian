@@ -1,0 +1,54 @@
+- defaults:
+    name: live
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/qa.debian.org/
+          text: Jobs for Debian QA related packages
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.com
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/live.yaml">live.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/debian.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: 'holger@layer-acht.org'
+    builders:
+      - shell: '{my_shell}'
+    triggers:
+      - timed: '{my_time}'
+
+- job-template:
+    defaults: live
+    name: '{name}_build_edu_jessie_standalone'
+
+- job-template:
+    defaults: live
+    name: '{name}_setup_schroot'
+
+- project:
+    name: live
+    jobs:
+       - '{name}_build_edu_jessie_standalone':
+           my_description: 'Build Debian Edu Jessie live-image with "standlone" profile.'
+           my_time: '0 12 1 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build debian-edu standalone'
+       - '{name}_setup_schroot':
+           my_description: 'Setup schroot for building live images using live-build in a jessie environment.'
+           my_time: '42 10 1 * *'
+           my_shell: '/srv/jenkins/bin/schroot-create.sh live-jessie jessie live-build'
+

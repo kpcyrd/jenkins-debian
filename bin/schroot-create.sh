@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # Copyright      2014 Joachim Breitner <nomeata@debian.org>
 # released under the GPLv=2
@@ -57,7 +57,14 @@ bootstrap() {
 
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then
+		DEVICES="proc dev dev/pts"
+		for d in $DEVICES ; do
+			sudo mount --bind /$d $CHROOT_TARGET/$d
+		done
 		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@"
+		for d in $DEVICES ; do
+			sudo umount $CHROOT_TARGET/$d
+		done
 	fi
 }
 

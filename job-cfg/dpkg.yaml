@@ -28,7 +28,7 @@
       - email:
           recipients: 'jenkins+debian-qa holger@layer-acht.org'
     builders:
-      - shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh {my_params}'
+      - shell: '{my_shell}'
     triggers:
       - timed: '{my_time}'
 
@@ -40,7 +40,11 @@
     name: dpkg
     jobs:
        - '{name}_sid_find_trigger_cycles':
-           my_time: '0 9 1 * *'
-           my_params: 'sid'
            my_description: 'Find dpkg trigger cycles in sid.'
+           my_time: '0 9 1 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh sid'
+        - '{name}_setup_schroot':
+           my_description: 'Setup schroot for running the dpkg_sid_find_trigger_cycles job in a jessie environment.'
+           my_time: '23 8 1 * *'
+           my_shell: '/srv/jenkins/bin/schroot_create.sh dpkg-jessie jessie apt-file dose-extra'
 

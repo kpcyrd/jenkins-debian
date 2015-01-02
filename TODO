@@ -55,7 +55,7 @@ properties:
 == lvc, work in progress, just started ==
 
 * get iso
-* preserve screenshots: Took screenshot "/tmp/DebianToaster/apt-2014-12-19T02:33:50+00:00.png"
+* tables for looping through features: see tails/iuk.git/features/download_target_file/Download_Target_File.feature
 
 * to debug cucumber: --verbose --backtrace --expand
 
@@ -63,15 +63,15 @@ properties:
 * more occurances of "the computer boots Tails"
 
 * disabled stuff in common_steps.rb
-** twice: #@vm.wait_until_remote_shell_is_up
 ** #if @vm.execute("service tor status").success?
 
-* "I set sudo password" not really needed for DebianLive7, for now just
+* "I set sudo password" not needed for debianlive nor debian(edu):
 ** #@screen.wait("TailsGreeterAdminPassword.png", 20)
 
 * $misc_files_dir needed?
 * def sort_isos_by_creation_date
   Dir.glob("#{Dir.pwd}/*.iso").sort_by {|f| tails_iso_creation_date(f)}
+  -> useless for us, purpose is to automatically select the latest iso if none is given
 * search for tails+tor+Tor
 
 * put in update_jdn.sh:

@@ -104,6 +104,17 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		(datum TEXT NOT NULL,
 		known_issues INTEGER,
 		PRIMARY KEY (datum))'
+	sqlite3 ${PACKAGES_DB} '
+		CREATE TABLE stats_meta_pkg_state
+		(datum TEXT NOT NULL,
+		suite TEXT NOT NULL,
+		meta_pkg TEXT NOT NULL,
+		untested INTEGER,
+		reproducible INTEGER,
+		unreproducible INTEGER,
+		FTBFS INTEGER,
+		other INTEGER,
+		PRIMARY KEY (datum, suite, meta_pkg))'
 	# 60 seconds timeout when trying to get a lock
 	cat > $INIT <<-EOF
 .timeout 60000

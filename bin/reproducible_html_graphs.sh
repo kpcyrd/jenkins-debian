@@ -25,6 +25,7 @@ TABLE[2]=stats_builds_age
 TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
 TABLE[5]=stats_issues
+TABLE[6]=stats_meta_pkg_state
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
 	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) from sources")
@@ -51,7 +52,7 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
 	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and do 3 later)
-	for i in 0 1 4 5 ; do
+	for i in 0 1 4 5 6 ; do
 		# force regeneration of the image
 		touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
@@ -61,6 +62,29 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
 	ISSUES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/issues.yml)
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
+fi
+
+# FIXME: work in progress: meta package state graphs
+META_PKG="required"
+RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"$META_PKG\"")
+if [ -z $RESULT ] ; then
+	META_TOTAL=0
+	META_REQUIRED="acl attr base-files base-passwd bash coreutils dash debconf debianutils diffutils dpkg e2fsprogs eglibc findutils gcc-4.7 grep gzip hostname liblocale-gettext-perl libselinux libsepol libtext-charwidth-perl libtext-iconv-perl libtext-wrapi18n-perl lsb mawk ncurses pam perl sed sensible-utils shadow sysvinit tar tzdata util-linux xz-utils zlib"
+	META_WHERE=""
+	for i in $META_REQUIRED ; do
+		if [ -z "$META_WHERE" ] ; then
+			META_WHERE="name in ('$i'"
+		else
+			META_WHERE="$META_WHERE, '$i'"
+		fi
+	done
+	META_WHERE="$META_WHERE)"
+	META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
+	let "META_UNTESTED=META_TOTAL-META_GOOD-META_BAD-META_UGLY-META-REST"
+	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"$META_PKG\", $META_UNTESTED, $META_GOOD, $META_BAD, $META_UGLY, $META_REST)" 
 fi
 
 # query bts
@@ -100,34 +124,41 @@ for TAG in $USERTAGS ; do
 done
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
+FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other, untested"
 COLOR[0]=5
 COLOR[1]=4
 COLOR[2]=3
 COLOR[3]=18
 COLOR[4]=1
 COLOR[5]=1
+COLOR[6]=5
 MAINLABEL[0]="Package reproducibility status"
 MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
+MAINLABEL[6]="Package reproducibility status for $META_PKG packages"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
 YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
+YLABEL[6]="Amount ($META_PKG packages)"
 
 redo_png() {
 	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
 	# TABLE[3+4+5] don't have a suite column...
-	if [ $i -ne 3 ] && [ $i -ne 4 ] && [ $i -ne 5 ] ; then
-		WHERE_SUITE="WHERE suite = '$SUITE'"
+	# 6 is special anyway
+	if [ $i -eq 6 ] ; then
+		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$META_PKG'"
+	elif [ $i -ne 3 ] && [ $i -ne 4 ] && [ $i -ne 5 ] ; then
+		WHERE_EXTRA="WHERE suite = '$SUITE'"
 	else
-		WHERE_SUITE=""
+		WHERE_EXTRA=""
 	fi
-	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$i]} from ${TABLE[$i]} ${WHERE_SUITE} ORDER BY datum" >> ${TABLE[$i]}.csv
+	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$i]} from ${TABLE[$i]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$i]}.csv
 	/srv/jenkins/bin/make_graph.py ${TABLE[$i]}.csv ${TABLE[$i]}.png ${COLOR[$i]} "${MAINLABEL[$i]}" "${YLABEL[$i]}"
 	rm ${TABLE[$i]}.csv
 	mv ${TABLE[$i]}.png /var/lib/jenkins/userContent/
@@ -184,7 +215,7 @@ write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
-for i in 0 3 4 5 1 ; do
+for i in 0 3 4 5 6 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi

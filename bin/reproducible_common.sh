@@ -109,7 +109,6 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		(datum TEXT NOT NULL,
 		suite TEXT NOT NULL,
 		meta_pkg TEXT NOT NULL,
-		untested INTEGER,
 		reproducible INTEGER,
 		unreproducible INTEGER,
 		FTBFS INTEGER,

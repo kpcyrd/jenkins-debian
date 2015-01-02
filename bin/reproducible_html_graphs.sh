@@ -77,6 +77,7 @@ if [ -z $RESULT ] ; then
 		else
 			META_WHERE="$META_WHERE, '$i'"
 		fi
+		let "META_TOTAL=META_TOTAL+1"
 	done
 	META_WHERE="$META_WHERE)"
 	META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")

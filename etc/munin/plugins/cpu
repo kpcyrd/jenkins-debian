@@ -236,7 +236,7 @@ fi
 # to avoid 10e+09 and the like %.0f should do this.
 
 if [ ! -z "$extextextinfo" ]; then
-	awk -v hz=$HZ '/^cpu / { epoch = systime(); printf "user.value %d:%.0f\nnice.value %d:%.0f\nsystem.value %d:%.0f\nidle.value %d:%.0f\niowait.value %d:%.0f\nirq.value %d:%.0f\nsoftirq.value %d:%.0f\nsteal.value %d:%.0f\nguest.value %d:%.0f\n", epoch, $2*100/hz, epoch, $3*100/hz, epoch, $4*100/hz, epoch, $5*100/hz, epoch, $6*100/hz, epoch, $7*100/hz, epoch, $8*100/hz, epoch, $9*100/hz, epoch, $10*100/hz }' < /proc/stat
+	awk -v hz=$HZ '/^cpu / { printf "user.value %.0f\nnice.value %.0f\nsystem.value %.0f\nidle.value %.0f\niowait.value %.0f\nirq.value %.0f\nsoftirq.value %.0f\nsteal.value %.0f\nguest.value %.0f\n", ($2-$10)*100/hz, $3*100/hz, $4*100/hz, $5*100/hz, $6*100/hz, $7*100/hz, $8*100/hz, $9*100/hz, $10*100/hz }' < /proc/stat
 elif [ ! -z "$extextinfo" ]; then
 	awk -v hz=$HZ '/^cpu / { epoch = systime(); printf "user.value %d:%.0f\nnice.value %d:%.0f\nsystem.value %d:%.0f\nidle.value %d:%.0f\niowait.value %d:%.0f\nirq.value %d:%.0f\nsoftirq.value %d:%.0f\nsteal.value %d:%.0f\n", epoch, $2*100/hz, epoch, $3*100/hz, epoch, $4*100/hz, epoch, $5*100/hz, epoch, $6*100/hz, epoch, $7*100/hz, epoch, $8*100/hz, epoch, $9*100/hz }' < /proc/stat
 elif [ ! -z "$extinfo" ]; then

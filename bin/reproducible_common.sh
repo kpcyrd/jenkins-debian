@@ -388,6 +388,9 @@ gather_schedule_stats() {
 	SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM sources_scheduled ORDER BY date_scheduled" | xargs echo)
 	COUNT_SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources_scheduled" | xargs echo)
 	let "COUNT_NOTYET=AMOUNT-COUNT_TOTAL-COUNT_SCHEDULED"
+	if [ $COUNT_NOTYET -le 0 ] ; then
+		COUNT_NOTYET=0
+	fi
 	QUERY="	SELECT count(sources.name) FROM sources,source_packages
 			WHERE sources.name NOT IN
 			(SELECT sources.name FROM sources,sources_scheduled

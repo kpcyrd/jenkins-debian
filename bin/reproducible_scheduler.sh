@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -149,7 +149,7 @@ schedule_packages() {
 
 deselect_old_with_buildinfo() {
 	PACKAGES=""
-	for PKG in $1 ; do
+	for PKG in $@ ; do
 		if [ ! -f /var/lib/jenkins/userContent/buildinfo/${PKG}_.buildinfo ] ; then
 			PACKAGES="$PACKAGES $PKG"
 		else
@@ -161,7 +161,6 @@ deselect_old_with_buildinfo() {
 #
 # main
 #
-set +x
 update_apt
 init_html
 COUNT_SCHEDULED=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources_scheduled')
@@ -207,9 +206,9 @@ ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE, $AMOUNT packages with new versions"
 
 if [ $TOTAL -lt 250 ] ; then
-	OLD=200
+	OLD=300
 elif [ $TOTAL -le 350 ] ; then
-	OLD=100
+	OLD=150
 else
 	OLD=1
 fi

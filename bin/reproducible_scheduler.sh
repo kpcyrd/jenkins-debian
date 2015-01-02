@@ -205,10 +205,12 @@ echo "So in total now $TOTAL packages about to be scheduled."
 ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE, $AMOUNT packages with new versions"
 
-if [ $TOTAL -lt 250 ] ; then
-	OLD=300
+if [ $TOTAL -lt 150 ] ; then
+	OLD=500 # used not to be needed...
+elif [ $TOTAL -lt 250 ] ; then
+	OLD=400	# used to be 200
 elif [ $TOTAL -le 350 ] ; then
-	OLD=150
+	OLD=200 # used to be 100
 else
 	OLD=1
 fi

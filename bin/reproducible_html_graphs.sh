@@ -90,10 +90,9 @@ for i in $(seq 1 ${#META_PKG[@]}) ; do
 		META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
 		META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
 		META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
-		let "META_UNTESTED=META_TOTAL-META_GOOD-META_BAD-META_UGLY-META-REST"
-		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKG[$i]}\", $META_UNTESTED, $META_GOOD, $META_BAD, $META_UGLY, $META_REST)" 
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKG[$i]}\", $META_GOOD, $META_BAD, $META_UGLY, $META_REST)"
+		touch -d "$DATE 00:00" ${TABLE[6]}_${META_PKG[$i]}.png
 	fi
-	# FIXME: touch -d to force re-creation is missing...
 done
 
 # query bts
@@ -133,14 +132,14 @@ for TAG in $USERTAGS ; do
 done
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
-FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other, untested"
+FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
 COLOR[0]=5
 COLOR[1]=4
 COLOR[2]=3
 COLOR[3]=18
 COLOR[4]=1
 COLOR[5]=1
-COLOR[6]=5
+COLOR[6]=4
 MAINLABEL[0]="Package reproducibility status"
 MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"

@@ -20,7 +20,7 @@ TMPFILE=$(mktemp)
 convert_into_source_packages_only() {
 	TMP2=$(mktemp)
 	for PKG in $(cat $TMPFILE) ; do
-		( grep-dctrl -FBinary -sPackage -n $PKG $SOURCES || echo $PKG ) >> $TMP2
+		( grep-dctrl -X -FBinary -sPackage -n $PKG $SOURCES || echo $PKG ) >> $TMP2
 	done
 	sort -u $TMP2 > $TMPFILE
 	rm $TMP2

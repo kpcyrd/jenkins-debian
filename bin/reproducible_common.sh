@@ -137,11 +137,12 @@ mkdir -p $NOTES_PATH $ISSUES_PATH
 mkdir -p /var/lib/jenkins/userContent/rb-pkg/
 
 # known package sets
-META_PKGSET[1]="required"
-META_PKGSET[2]="build-essential"
-META_PKGSET[3]="gnome"
-META_PKGSET[4]="build-depends_gnome"
-META_PKGSET[5]="tails"
+META_PKGSET[1]="essential"
+META_PKGSET[2]="required"
+META_PKGSET[3]="build-essential"
+META_PKGSET[4]="gnome"
+META_PKGSET[5]="build-depends_gnome"
+META_PKGSET[6]="tails"
 
 init_html() {
 	SUITE=sid

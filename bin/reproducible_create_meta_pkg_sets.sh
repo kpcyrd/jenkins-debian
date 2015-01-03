@@ -47,33 +47,38 @@ update_if_similar() {
 }
 
 
-# the essential and required package set
-grep-dctrl -sPackage -n -X \( -FEssential yes --or -FPriority required \) $PACKAGES > $TMPFILE
+# the essential package set
+grep-dctrl -sPackage -n -X -FEssential yes $PACKAGES > $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[1]}.pkgset
+
+# the required package set
+grep-dctrl -sPackage -n -X -FPriority required $PACKAGES > $TMPFILE
+convert_into_source_packages_only
+update_if_similar ${META_PKGSET[2]}.pkgset
 
 # build-essential
 grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
 convert_into_source_packages_only
-update_if_similar ${META_PKGSET[2]}.pkgset
+update_if_similar ${META_PKGSET[3]}.pkgset
 
 # gnome and everything it depends on
 grep-dctrl -FDepends -sPackage -n gnome $PACKAGES > $TMPFILE
 schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install gnome|grep "^Inst "|cut -d " " -f2 > $TMPFILE
 convert_into_source_packages_only
-update_if_similar ${META_PKGSET[3]}.pkgset
+update_if_similar ${META_PKGSET[4]}.pkgset
 
 # all build depends of gnome
-for PKG in $TPATH/${META_PKGSET[3]}.pkgset ; do
+for PKG in $TPATH/${META_PKGSET[4]}.pkgset ; do
 	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
 done
-update_if_similar ${META_PKGSET[4]}.pkgset
+update_if_similar ${META_PKGSET[5]}.pkgset
 
 # tails
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
 convert_into_source_packages_only
-update_if_similar ${META_PKGSET[5]}.pkgset
+update_if_similar ${META_PKGSET[6]}.pkgset
 
 # finally
 echo "All meta package sets created successfully."

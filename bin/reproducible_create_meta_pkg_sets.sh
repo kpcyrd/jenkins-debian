@@ -15,38 +15,59 @@ TMPFILE=$(mktemp)
 PACKAGES=/schroots/reproducible-sid/var/lib/apt/lists/*Packages
 SOURCES=/schroots/reproducible-sid/var/lib/apt/lists/*Sources
 
-# helper function
-turn_tmpfile_into_sources_list() {
+# helper functions
+turn_tmpfile_into_sources() {
 	TMP2=$(mktemp)
 	for PKG in $(cat $TMPFILE) ; do
 		( grep-dctrl -FBinary -sPackage -n $PKG $SOURCES || echo $PKG ) >> $TMP2
 	done
-	mv $TMP2 $TMPFILE
+	sort -u $TMP2 > $TMPFILE
+	rm $TMP2
+}
+update_if_similar() {
+	# this is mostly done to not accidently overwrite the lists
+	# with garbage, eg. when external services are down
+	TARGETPATH=/srv/reproducible-results/meta_pkgsets/$1
+	LENGTH=$(wc -l $TARGET)
+	NEWLEN=$(wc -l $TMPFILE)
+	PERCENT=$(echo "$LENGTH*100/$NEWLEN"|bc)
+	if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
+		mv $TMPFILE $TARGET.new
+		echo 
+		echo diff $TARGET $TARGET.new
+		diff $TARGET $TARGET.new
+		echo
+		echo "Too much difference, aborting. Please investigate and update manually."
+		exit 1
+	fi
+	cp $TMPFILE $TARGET
 }
 
+
 # the required package set
-grep-dctrl -FPriority -sPackage -n required $PACKAGES | sort -u > $TMPFILE
-turn_tmpfile_into_sources_list
-cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[1]}.pkgset
+grep-dctrl -FPriority -sPackage -n required $PACKAGES > $TMPFILE
+convert_into_source_packages_only
+update_if_similar ${META_PKGSET[1]}.pkgset
 
 # build-essential
-grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES | sort -u > $TMPFILE
-turn_tmpfile_into_sources_list
-cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[2]}.pkgset
+grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
+convert_into_source_packages_only
+update_if_similar ${META_PKGSET[2]}.pkgset
 
 # gnome and everything it depends on
-grep-dctrl -FDepends -sPackage -n gnome $PACKAGES | sort -u > $TMPFILE
-turn_tmpfile_into_sources_list
-cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[3]}.pkgset
+grep-dctrl -FDepends -sPackage -n gnome $PACKAGES > $TMPFILE
+convert_into_source_packages_only
+update_if_similar ${META_PKGSET[3]}.pkgset
 
 # all build depends of gnome
-grep-dctrl -FBuild-Depends -sPackage -n gnome $SOURCES | sort -u > /srv/reproducible-results/meta_pkgsets/${META_PKGSET[4]}.pkgset
+grep-dctrl -FBuild-Depends -sPackage -n gnome $SOURCES > $TMPFILE
+update_if_similar ${META_PKGSET[4]}.pkgset
 
 # tails
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
 curl wget http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
-turn_tmpfile_into_sources_list
-cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[5]}.pkgset
+convert_into_source_packages_only
+update_if_similar ${META_PKGSET[5]}.pkgset
 
 # finally
 rm $TMPFILE

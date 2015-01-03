@@ -68,7 +68,6 @@ convert_into_source_packages_only
 update_if_similar ${META_PKGSET[3]}.pkgset
 
 # gnome and everything it depends on
-grep-dctrl -FDepends -sPackage -n gnome $PACKAGES > $TMPFILE
 schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install gnome|grep "^Inst "|cut -d " " -f2 > $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[4]}.pkgset

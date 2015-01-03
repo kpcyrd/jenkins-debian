@@ -182,7 +182,7 @@
     name: reproducible
     jobs:
         - '{name}_maintainance':
-            my_description: 'Do some maintainance, check no old directories are laying around, do backups, etc.'
+            my_description: 'Do some maintainance: check for old directories laying around, do backups, etc.'
             my_timed: '0 12 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintainance.sh'
             my_recipients: 'holger@layer-acht.org'
@@ -197,38 +197,38 @@
             my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid sid debbindiff'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_scheduler':
-            my_description: 'Schedule packages to be tested on reproducible building.'
+            my_description: 'Schedule packages to be tested for reproducibility.'
             my_timed: '42 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_graphs':
-            my_description: 'Generates HTML results (stats with graphs) for reproducible builds.'
+            my_description: 'Generate HTML results (stats with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_indexes':
-            my_description: 'Generates HTML results (indexes) for reproducible builds.'
+            my_description: 'Generate HTML results (indexes) for reproducible builds.'
             my_timed: '59 */2 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_indexes.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_dd_list':
-            my_description: 'Generates HTML results (dd-list) for reproducible builds.'
+            my_description: 'Generate HTML results (dd-list) for reproducible builds.'
             my_timed: '55 23 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_html_notes':
-            my_description: 'Generates HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
+            my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_html_all_packages':
-            my_description: 'Generates HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'
+            my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'
             my_timed: '12 12 30 12 *'
             my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_json':
-            my_description: 'Generates https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
+            my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
             my_timed: '1 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_json.sh'
             my_recipients: 'holger@layer-acht.org'

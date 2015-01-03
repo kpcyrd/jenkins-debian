@@ -196,7 +196,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_setup_schroot':
-            my_description: 'Setup schroot for running debbindiff in a sid environment, this is needed eg to be able to correctly investigate haskell binaries....'
+            my_description: 'Setup schroot for running debbindiff in a sid environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid sid debbindiff'
             my_recipients: 'holger@layer-acht.org'

@@ -96,7 +96,7 @@
 # explicit trigger, the second column is the name of the explicit trigger, the
 # third column is the binary package activating the trigger.
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

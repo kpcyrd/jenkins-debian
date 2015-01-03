@@ -238,7 +238,7 @@
             my_recipients: 'holger@layer-acht.org'
         - '{name}_create_meta_pkg_sets':
             my_description: 'Create meta package sets for later consumption when generating HTML stats.'
-            my_timed: '0 6 * * *'
+            my_timed: '0 6 1 * *'
             my_shell: '/srv/jenkins/bin/reproducible_create_meta_pkg_sets.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_alpha':

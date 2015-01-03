@@ -21,23 +21,25 @@ RESULT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name,version,status FROM sourc
 COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status != \"\"")
 echo "$(date) - processing $COUNT_TOTAL packages to create .json output... this will take a while."
 
+sep=""
 write_json "["
-for LINE in $RESULT ; do
-	PKG=$(echo $LINE | cut -d "|" -f1)
-	VERSION=$(echo $LINE | cut -d "|" -f2)
-	STATUS=$(echo $LINE | cut -d "|" -f3)
+while read LINE ; do
+	PKG=$(echo "$LINE" | cut -d "|" -f1)
+	VERSION=$(echo "$LINE" | cut -d "|" -f2)
+	STATUS=$(echo "$LINE" | cut -d "|" -f3)
 	if [ "$STATUS" = "unreproducible" ] ; then
 	        if [ -f /var/lib/jenkins/userContent/buildinfo/${PKG}_${VERSION}_amd64.buildinfo ] ; then
 			STATUS="$STATUS-with-buildinfo"
 		fi
 	fi
-	write_json "{"
+	write_json "${sep}{"
 	write_json "\"package\": \"$PKG\","
 	write_json "\"version\": \"$VERSION\","
 	write_json "\"status\": \"$STATUS\","
 	write_json "\"suite\": \"sid\""
 	write_json "}"
-done
+    sep=", "
+done < <(echo "$RESULT")
 write_json "]"
 
 echo

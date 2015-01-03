@@ -85,6 +85,10 @@ echo
 cd ~jenkins/jobs/d-i_manual/workspace/manual
 IGNORE="build debian doc README scripts build-stamp doc-base-stamp po"
 for DIRECTORY in * ; do
+	# Some languages are unsupported
+	case $DIRECTORY in
+		eu) continue ;;
+	esac
 	for i in $IGNORE ; do
 		if [ "$DIRECTORY" == "$i" ] ; then
 			DIRECTORY=""

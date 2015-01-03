@@ -29,17 +29,19 @@ update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
 	# with garbage, eg. when external services are down
 	TARGET=$TPATH/$1
-	LENGTH=$(cat $TARGET | wc -w)
-	NEWLEN=$(cat $TMPFILE | wc -w)
-	PERCENT=$(echo "$LENGTH*100/$NEWLEN"|bc)
-	if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
-		mv $TMPFILE $TARGET.new
-		echo 
-		echo diff $TARGET $TARGET.new
-		diff $TARGET $TARGET.new
-		echo
-		echo "Too much difference, aborting. Please investigate and update manually."
-		exit 1
+	if [ -f $TARGET ] ; then
+		LENGTH=$(cat $TARGET | wc -w)
+		NEWLEN=$(cat $TMPFILE | wc -w)
+		PERCENT=$(echo "$LENGTH*100/$NEWLEN"|bc)
+		if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
+			mv $TMPFILE $TARGET.new
+			echo 
+			echo diff $TARGET $TARGET.new
+			diff $TARGET $TARGET.new
+			echo
+			echo "Too much difference, aborting. Please investigate and update manually."
+			exit 1
+		fi
 	fi
 	mv $TMPFILE $TARGET
 }

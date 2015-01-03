@@ -228,8 +228,9 @@ for i in 0 3 4 5 6 1 ; do
 			write_page " <a href=\"/userContent/$PNG\"><img src=\"/userContent/$PNG\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
 			write_page " <br />The package set '${META_PKGSET[$j]}' consists of: "
 			# FIXME: split into good/bad/ugly too
-			force_package_targets ${META_LIST[$j]}
-			link_packages ${META_LIST[$j]}
+			META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$i]}.pkgset)
+			force_package_targets $META_LIST
+			link_packages $META_LIST
 			write_page " </div>"
 			# redo pngs once a day
 			if [ ! -f /var/lib/jenkins/userContent/$PNG ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name $PNG) ] ; then

@@ -63,11 +63,9 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 fi
 
-for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$i]}.pkgset)
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
-	if [ -z $RESULT ] ; then
-		META_TOTAL=0
+gather_meta_stats() {
+	META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$1]}.pkgset)
+	if [ ! -z "$META_LIST" ] ; then
 		META_WHERE=""
 		for PKG in $META_LIST ; do
 			if [ -z "$META_WHERE" ] ; then
@@ -75,14 +73,27 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 			else
 				META_WHERE="$META_WHERE, '$PKG'"
 			fi
-			let "META_TOTAL=META_TOTAL+1"
 		done
 		META_WHERE="$META_WHERE)"
-		META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
-		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $META_GOOD, $META_BAD, $META_UGLY, $META_REST)"
+	else
+		META_WHERE="name = 'meta-name-does-not-exist'"
+	fi
+	COUNT_META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	COUNT_META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	COUNT_META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	COUNT_META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
+	META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name NAME from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
+}
+
+for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+	META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$i]}.pkgset)
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
+	if [ -z $RESULT ] ; then
+		gather_meta_stats $i
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
 		touch -d "$DATE 00:00" ${TABLE[6]}_${META_PKGSET[$i]}.png
 	fi
 done
@@ -146,20 +157,20 @@ YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 
 redo_png() {
-	echo "${FIELDS[$i]}" > ${TABLE[$i]}.csv
+	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
 	# TABLE[3+4+5] don't have a suite column...
 	# 6 is special anyway
-	if [ $i -eq 6 ] ; then
-		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$2'"
-	elif [ $i -ne 3 ] && [ $i -ne 4 ] && [ $i -ne 5 ] ; then
+	if [ $1 -eq 6 ] ; then
+		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
+	elif [ $1 -ne 3 ] && [ $1 -ne 4 ] && [ $1 -ne 5 ] ; then
 		WHERE_EXTRA="WHERE suite = '$SUITE'"
 	else
 		WHERE_EXTRA=""
 	fi
-	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$i]} from ${TABLE[$i]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$i]}.csv
-	/srv/jenkins/bin/make_graph.py ${TABLE[$i]}.csv $1 ${COLOR[$i]} "${MAINLABEL[$i]}" "${YLABEL[$i]}"
-	rm ${TABLE[$i]}.csv
-	mv $1 /var/lib/jenkins/userContent/
+	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+	/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
+	rm ${TABLE[$1]}.csv
+	mv $2 /var/lib/jenkins/userContent/
 }
 
 write_usertag_table() {
@@ -213,40 +224,70 @@ write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
-for i in 0 3 4 5 6 1 ; do
+for i in 0 3 4 5 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi
-	# FIXME: split this out in html_meta_graphs... really.
-	if [ "$i" = "6" ] ; then
-		# FIXME: THIS IS A MESS
-		for j in $(seq 1 ${#META_PKGSET[@]}) ; do
-			MAINLABEL[6]="Package reproducibility status for ${META_PKGSET[$j]} packages"
-			YLABEL[6]="Amount (${META_PKGSET[$j]} packages)"
-			PNG=${TABLE[$i]}_${META_PKGSET[$j]}.png
-			write_page " <div>"
-			write_page " <a href=\"/userContent/$PNG\"><img src=\"/userContent/$PNG\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
-			write_page " <br />The package set '${META_PKGSET[$j]}' consists of: "
-			# FIXME: split into good/bad/ugly too
-			META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$i]}.pkgset)
-			force_package_targets $META_LIST
-			link_packages $META_LIST
-			write_page " </div>"
-			# redo pngs once a day
-			if [ ! -f /var/lib/jenkins/userContent/$PNG ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name $PNG) ] ; then
-				# FIXME: call redo_png differently here.. sux
-				redo_png $PNG ${META_PKGSET[$j]}
-			fi
-		done
-	else
-		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
-		# redo pngs once a day
-		if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
-			redo_png ${TABLE[$i]}.png
-		fi
+	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
+	# redo pngs once a day
+	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+		redo_png $i ${TABLE[$i]}.png
 	fi
 done
 write_page "</p>"
+write_page_footer
+publish_page
+
+VIEW=pkg_sets
+PAGE=index_${VIEW}.html
+echo "$(date) - starting to write $PAGE page."
+write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+	gather_meta_stats $i
+	MAINLABEL[6]="Package reproducibility status for ${META_PKGSET[$i]} packages"
+	YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
+	PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+	# redo pngs once a day
+	if [ ! -f /var/lib/jenkins/userContent/$PNG ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name $PNG) ] ; then
+		# FIXME: call redo_png differently here.. sux
+		redo_png 6 $PNG ${META_PKGSET[$i]}
+	fi
+	write_page "<p><a href=\"/userContent/$PNG\"><img src=\"/userContent/$PNG\" class=\"graph\" alt=\"${MAINLABEL[6]}\"></a>"
+	write_page "<br />The package set '${META_PKGSET[$i]}' consists of: <br />"
+	set_icon reproducible
+	write_icon
+	write_page "$COUNT_META_GOOD packages successfully built reproducibly:"
+	force_package_targets $META_GOOD
+	link_packages $META_GOOD
+	write_page "<br />"
+	set_icon unreproducible with
+	write_icon
+	write_page "$COUNT_META_BAD packages failed to built reproducibly:"
+	force_package_targets $META_BAD
+	link_packages $META_BAD
+	write_page "<br />"
+	if [ $COUNT_META_UGLY -gt 0 ] ; then
+		set_icon FTBFS
+		write_icon
+		write_page "$COUNT_META_UGLY packages failed to build from source:"
+		force_package_targets $META_UGLY
+		link_packages $META_UGLY
+		write_page "<br />"
+	fi
+	if [ $COUNT_META_REST -gt 0 ] ; then
+		set_icon not_for_us
+		write_icon
+		set_icon blacklisted
+		write_icon
+		set_icon 404
+		write_icon
+		write_page "$COUNT_META_REST packages are either blacklisted, not for us or cannot be downloaded:"
+		force_package_targets $META_REST
+		link_packages $META_REST
+		write_page "<br />"
+	fi
+	write_page "</p>"
+done
 write_page_footer
 publish_page
 

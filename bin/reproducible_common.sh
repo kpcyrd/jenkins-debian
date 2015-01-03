@@ -149,7 +149,7 @@ init_html() {
 	SUITE=sid
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
-	ALLVIEWS="issues notes scheduled last_24h last_48h all_abc dd-list stats"
+	ALLVIEWS="issues notes scheduled last_24h last_48h all_abc dd-list stats pkg_sets"
 	SPOKENTARGET["reproducible"]="packages which built reproducibly"
 	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and do not create a .buildinfo file"
 	SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
@@ -165,6 +165,7 @@ init_html() {
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 	SPOKENTARGET["stats"]="various statistics about reproducible builds"
+	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages")
@@ -243,6 +244,8 @@ write_page_header() {
 			SPOKEN_TARGET=$TARGET
 		elif [ "$TARGET" = "scheduled" ] ; then
 			SPOKEN_TARGET="currently scheduled"
+		elif [ "$TARGET" = "pkg_sets" ] ; then
+			SPOKEN_TARGET="package sets stats"
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi
@@ -395,10 +398,6 @@ process_packages() {
 gather_schedule_stats() {
 	SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM sources_scheduled ORDER BY date_scheduled" | xargs echo)
 	COUNT_SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources_scheduled" | xargs echo)
-	let "COUNT_NOTYET=AMOUNT-COUNT_TOTAL-COUNT_SCHEDULED"
-	if [ $COUNT_NOTYET -le 0 ] ; then
-		COUNT_NOTYET=0
-	fi
 	QUERY="	SELECT count(sources.name) FROM sources,source_packages
 			WHERE sources.name NOT IN
 			(SELECT sources.name FROM sources,sources_scheduled
@@ -434,7 +433,6 @@ update_html_schedule() {
 	if [ ${COUNT_NEW_VERSIONS} -ne 0 ] ; then
 		write_page "<p>For ${COUNT_NEW_VERSIONS} packages newer versions are available which have not been tested yet.</p>"
 	fi
-	write_page "<p>${COUNT_NOTYET} packages have not been tested at all.</p>"
 	write_page "<p>${COUNT_SCHEDULED} packages are currently scheduled for testing: <code>"
 	force_package_targets $SCHEDULED
 	link_packages $SCHEDULED

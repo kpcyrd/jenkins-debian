@@ -44,7 +44,7 @@ update_if_similar() {
 		fi
 	fi
 	mv $TMPFILE $TARGET
-	echo "$TARGET updated."
+	echo "$(date) - $TARGET updated."
 }
 
 
@@ -64,18 +64,21 @@ update_if_similar ${META_PKGSET[2]}.pkgset
 
 # build-essential
 grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
+# FIXME this should be done in a cleaner schroot...
+schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install build-essential | grep "^Inst "|cut -d " " -f2 >> $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[3]}.pkgset
 
 # gnome and everything it depends on
-schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install gnome|grep "^Inst "|cut -d " " -f2 > $TMPFILE
+schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install gnome | grep "^Inst "|cut -d " " -f2 > $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[4]}.pkgset
 
 # all build depends of gnome
-for PKG in $TPATH/${META_PKGSET[4]}.pkgset ; do
+for PKG in $(cat $TPATH/${META_PKGSET[4]}.pkgset) ; do
 	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
 done
+convert_into_source_packages_only
 update_if_similar ${META_PKGSET[5]}.pkgset
 
 # tails
@@ -85,9 +88,10 @@ convert_into_source_packages_only
 update_if_similar ${META_PKGSET[6]}.pkgset
 
 # all build depends of tails
-for PKG in $TPATH/${META_PKGSET[6]}.pkgset ; do
+for PKG in $(cat $TPATH/${META_PKGSET[6]}.pkgset) ; do
 	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
 done
+convert_into_source_packages_only
 update_if_similar ${META_PKGSET[7]}.pkgset
 
 # finally

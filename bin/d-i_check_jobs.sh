@@ -87,7 +87,8 @@ IGNORE="build debian doc README scripts build-stamp doc-base-stamp po"
 for DIRECTORY in * ; do
 	# Some languages are unsupported
 	case $DIRECTORY in
-		eu) continue ;;
+		eu)	echo "The manual for the language $DIRECTORY has been disabled."
+			continue ;;
 	esac
 	for i in $IGNORE ; do
 		if [ "$DIRECTORY" == "$i" ] ; then

@@ -370,9 +370,6 @@
     name: '{name}_manual_en_html'
 - job-template:
     defaults: d-i-manual-html
-    name: '{name}_manual_eu_html'
-- job-template:
-    defaults: d-i-manual-html
     name: '{name}_manual_fr_html'
 - job-template:
     defaults: d-i-manual-html
@@ -392,9 +389,6 @@
 - job-template:
     defaults: d-i-manual-pdf
     name: '{name}_manual_en_pdf'
-- job-template:
-    defaults: d-i-manual-pdf
-    name: '{name}_manual_eu_pdf'
 - job-template:
     defaults: d-i-manual-pdf
     name: '{name}_manual_fr_pdf'
@@ -836,9 +830,6 @@
       - '{name}_manual_en_html':
          lang: 'en'
          languagename: 'English'
-      - '{name}_manual_eu_html':
-         lang: 'eu'
-         languagename: 'Basque'
       - '{name}_manual_fr_html':
          lang: 'fr'
          languagename: 'French'
@@ -962,9 +953,6 @@
       - '{name}_manual_en_pdf':
          lang: 'en'
          languagename: 'English'
-      - '{name}_manual_eu_pdf':
-         lang: 'eu'
-         languagename: 'Basque'
       - '{name}_manual_fr_pdf':
          lang: 'fr'
          languagename: 'French'

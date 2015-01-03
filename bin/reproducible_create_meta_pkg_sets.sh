@@ -16,7 +16,7 @@ PACKAGES=/schroots/reproducible-sid/var/lib/apt/lists/*Packages
 SOURCES=/schroots/reproducible-sid/var/lib/apt/lists/*Sources
 
 # helper functions
-turn_tmpfile_into_sources() {
+convert_into_source_packages_only() {
 	TMP2=$(mktemp)
 	for PKG in $(cat $TMPFILE) ; do
 		( grep-dctrl -FBinary -sPackage -n $PKG $SOURCES || echo $PKG ) >> $TMP2
@@ -27,9 +27,9 @@ turn_tmpfile_into_sources() {
 update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
 	# with garbage, eg. when external services are down
-	TARGETPATH=/srv/reproducible-results/meta_pkgsets/$1
-	LENGTH=$(wc -l $TARGET)
-	NEWLEN=$(wc -l $TMPFILE)
+	TARGET=/srv/reproducible-results/meta_pkgsets/$1
+	LENGTH=$(cat $TARGET | wc -w)
+	NEWLEN=$(cat $TMPFILE | wc -w)
 	PERCENT=$(echo "$LENGTH*100/$NEWLEN"|bc)
 	if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
 		mv $TMPFILE $TARGET.new
@@ -65,7 +65,8 @@ update_if_similar ${META_PKGSET[4]}.pkgset
 
 # tails
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
-curl wget http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
+curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
+cat $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[5]}.pkgset
 

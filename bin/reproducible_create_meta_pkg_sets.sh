@@ -12,39 +12,41 @@ common_init "$@"
 
 mkdir -p /srv/reproducible-results/meta_pkgsets
 TMPFILE=$(mktemp)
+PACKAGES=/schroots/reproducible-sid/var/lib/apt/lists/*Packages
+SOURCES=/schroots/reproducible-sid/var/lib/apt/lists/*Sources
 
 # helper function
 turn_tmpfile_into_sources_list() {
 	TMP2=$(mktemp)
 	for PKG in $(cat $TMPFILE) ; do
-		( grep-dctrl -FBinary -sPackage -n $PKG  /schroots/reproducible-sid/var/lib/apt/lists/*Sources || echo $PKG ) >> $TMP2
+		( grep-dctrl -FBinary -sPackage -n $PKG $SOURCES || echo $PKG ) >> $TMP2
 	done
 	mv $TMP2 $TMPFILE
 }
 
 # the required package set
-grep-dctrl -FPriority -sPackage -n required /schroots/reproducible-sid/var/lib/apt/lists/*Packages | sort -u > $TMPFILE
+grep-dctrl -FPriority -sPackage -n required $PACKAGES | sort -u > $TMPFILE
 turn_tmpfile_into_sources_list
 cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[1]}.pkgset
 
 # build-essential
-grep-dctrl -FBuild-Essential -sPackage -n yes /schroots/reproducible-sid/var/lib/apt/lists/*Packages | sort -u > $TMPFILE
+grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES | sort -u > $TMPFILE
 turn_tmpfile_into_sources_list
 cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[2]}.pkgset
 
 # gnome and everything it depends on
-grep-dctrl -FDepends -sPackage -n gnome /schroots/reproducible-sid/var/lib/apt/lists/*Packages | sort -u > $TMPFILE
+grep-dctrl -FDepends -sPackage -n gnome $PACKAGES | sort -u > $TMPFILE
 turn_tmpfile_into_sources_list
 cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[3]}.pkgset
 
 # all build depends of gnome
-grep-dctrl -FBuild-Depends -sPackage -n gnome /schroots/reproducible-sid/var/lib/apt/lists/*Sources | sort -u > /srv/reproducible-results/meta_pkgsets/${META_PKGSET[4]}.pkgset
+grep-dctrl -FBuild-Depends -sPackage -n gnome $SOURCES | sort -u > /srv/reproducible-results/meta_pkgsets/${META_PKGSET[4]}.pkgset
 
 # tails
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
 curl wget http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
 turn_tmpfile_into_sources_list
-cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[4]}.pkgset
+cp $TMPFILE /srv/reproducible-results/meta_pkgsets/${META_PKGSET[5]}.pkgset
 
 # finally
 rm $TMPFILE

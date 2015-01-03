@@ -1097,6 +1097,10 @@ monitor_system() {
 			echo "$(date) $PRINTF_NR / $TOKEN"
 			publish_screenshot
 		fi
+		# in install mode, every 300 ticks preserve an screenshot as artefact
+		if [ "$MODE" = "install" ] && [ $(($NR % 300)) -eq 0 ] ; then
+			backup_screenshot
+		fi
 		# every 100 screenshots, starting from the $TIMEOUTth one...
 		if [ $(($NR % 100)) -eq 0 ] && [ $NR -gt $TIMEOUT ] ; then
 			# from help let: "Exit Status: If the last ARG evaluates to 0, let returns 1; let returns 0 otherwise."
@@ -1134,6 +1138,7 @@ monitor_system() {
 						echo "System in $MODE mode is hanging."
 						if [ "$MODE" = "install" ] ; then
 							# hanging install = broken install
+							backup_screenshot
 							exit 1
 						fi
 						break

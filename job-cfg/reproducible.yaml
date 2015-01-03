@@ -154,6 +154,10 @@
 - job-template:
     defaults: reproducible
     name: '{name}_html_all_packages'
+-
+ job-template:
+    defaults: reproducible
+    name: '{name}_create_meta_pkg_sets'
 
 - job-template:
     defaults: reproducible
@@ -231,6 +235,11 @@
             my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
             my_timed: '1 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_json.sh'
+            my_recipients: 'holger@layer-acht.org'
+        - '{name}_json':
+            my_description: 'Create meta package sets for later consumption when generating HTML stats.'
+            my_timed: '0 6 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_create_meta_pkg_sets.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'

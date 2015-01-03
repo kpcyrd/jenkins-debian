@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 #
@@ -135,6 +135,13 @@ ISSUES_PATH=/var/lib/jenkins/userContent/issues
 mkdir -p $NOTES_PATH $ISSUES_PATH
 # FIXME RB_PATH would also be a good idea
 mkdir -p /var/lib/jenkins/userContent/rb-pkg/
+
+# known package sets
+META_PKGSET[1]="required"
+META_PKGSET[2]="build-essential"
+META_PKGSET[3]="gnome"
+META_PKGSET[4]="build-depends_gnome"
+META_PKGSET[5]="tails"
 
 init_html() {
 	SUITE=sid

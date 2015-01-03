@@ -236,7 +236,7 @@
             my_timed: '1 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_json.sh'
             my_recipients: 'holger@layer-acht.org'
-        - '{name}_json':
+        - '{name}_create_meta_pkg_sets':
             my_description: 'Create meta package sets for later consumption when generating HTML stats.'
             my_timed: '0 6 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_create_meta_pkg_sets.sh'

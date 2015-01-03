@@ -245,6 +245,7 @@ fi
 echo "Requesting $OLD old+failed packages..."
 select_old_failures $OLD
 echo -n "Found $AMOUNT old+failed packages, "
+set -x
 deselect_old_with_buildinfo $PACKAGES
 echo "kept $AMOUNT old packages without .buildinfo files."
 let "TOTAL=$TOTAL+$AMOUNT"

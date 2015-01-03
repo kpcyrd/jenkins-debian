@@ -54,13 +54,23 @@ properties:
 
 == lvc, work in progress, just started ==
 
+* put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
+
+* re-read the docs! 
+
+* generate feature files from templates? to cope with sub-products?
+-> no. detect desktop type and set variables accordingly
+-> simpler: pass an environment variable with the type
+
 * get iso
 * tables for looping through features: see tails/iuk.git/features/download_target_file/Download_Target_File.feature
 
 * to debug cucumber: --verbose --backtrace --expand
 
+* drop / remove
 * can probably go: dhcp.rb firewall_leaks.rb dhcp.feature firewall_leaks.feature
 * more occurances of "the computer boots Tails"
+* @source (only keep product tests)
 
 * disabled stuff in common_steps.rb
 ** #if @vm.execute("service tor status").success?
@@ -121,6 +131,8 @@ properties:
 ** same usecase:  -snapshot maybe???
 
 === reproducible
+
+* here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
 
 * check 0.52-1 is still not fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html
 * reschedule those with "debbindiff.py crashed" in rbuild.log and watch them build...

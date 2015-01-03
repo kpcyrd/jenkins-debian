@@ -243,7 +243,7 @@ PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	gather_meta_stats $i
+	gather_meta_stats $i	# FIXME: this ignores unknown packages...
 	MAINLABEL[6]="Package reproducibility status for ${META_PKGSET[$i]} packages"
 	YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
 	PNG=${TABLE[6]}_${META_PKGSET[$i]}.png

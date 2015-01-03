@@ -50,7 +50,7 @@ bootstrap() {
 
 	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $CHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
 	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
-	echo 'Acquire::http::Proxy "$http_proxy";' | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
+	echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	echo "deb-src $MIRROR $DISTRO main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 	echo "${BACKPORTS}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 	echo "${BACKPORTSSRC}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null

@@ -10,10 +10,11 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-mkdir -p /srv/reproducible-results/meta_pkgsets
-TMPFILE=$(mktemp)
+TPATH=/srv/reproducible-results/meta_pkgsets
+mkdir -p $TPATH
 PACKAGES=/schroots/reproducible-sid/var/lib/apt/lists/*Packages
 SOURCES=/schroots/reproducible-sid/var/lib/apt/lists/*Sources
+TMPFILE=$(mktemp)
 
 # helper functions
 convert_into_source_packages_only() {
@@ -27,7 +28,7 @@ convert_into_source_packages_only() {
 update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
 	# with garbage, eg. when external services are down
-	TARGET=/srv/reproducible-results/meta_pkgsets/$1
+	TARGET=$TPATH/$1
 	LENGTH=$(cat $TARGET | wc -w)
 	NEWLEN=$(cat $TMPFILE | wc -w)
 	PERCENT=$(echo "$LENGTH*100/$NEWLEN"|bc)
@@ -40,12 +41,12 @@ update_if_similar() {
 		echo "Too much difference, aborting. Please investigate and update manually."
 		exit 1
 	fi
-	cp $TMPFILE $TARGET
+	mv $TMPFILE $TARGET
 }
 
 
-# the required package set
-grep-dctrl -FPriority -sPackage -n required $PACKAGES > $TMPFILE
+# the essential and required package set
+grep-dctrl -sPackage -n -X \( -FEssential yes --or -FPriority required \) $PACKAGES > $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[1]}.pkgset
 
@@ -56,21 +57,22 @@ update_if_similar ${META_PKGSET[2]}.pkgset
 
 # gnome and everything it depends on
 grep-dctrl -FDepends -sPackage -n gnome $PACKAGES > $TMPFILE
+schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install gnome|grep "^Inst "|cut -d " " -f2 > $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[3]}.pkgset
 
 # all build depends of gnome
-grep-dctrl -FBuild-Depends -sPackage -n gnome $SOURCES > $TMPFILE
+for PKG in $TPATH/${META_PKGSET[3]}.pkgset ; do
+	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+done
 update_if_similar ${META_PKGSET[4]}.pkgset
 
 # tails
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
-cat $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[5]}.pkgset
 
 # finally
-rm $TMPFILE
 echo "All meta package sets created successfully."
 

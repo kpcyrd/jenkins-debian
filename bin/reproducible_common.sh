@@ -143,6 +143,7 @@ META_PKGSET[3]="build-essential"
 META_PKGSET[4]="gnome"
 META_PKGSET[5]="build-depends_gnome"
 META_PKGSET[6]="tails"
+META_PKGSET[7]="build-depends_tails"
 
 init_html() {
 	SUITE=sid

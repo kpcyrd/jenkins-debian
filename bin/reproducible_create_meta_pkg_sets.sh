@@ -44,8 +44,13 @@ update_if_similar() {
 		fi
 	fi
 	mv $TMPFILE $TARGET
+	echo "$TARGET updated."
 }
 
+
+#
+# main
+#
 
 # the essential package set
 grep-dctrl -sPackage -n -X -FEssential yes $PACKAGES > $TMPFILE
@@ -79,6 +84,12 @@ curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.bin
 curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[6]}.pkgset
+
+# all build depends of tails
+for PKG in $TPATH/${META_PKGSET[6]}.pkgset ; do
+	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+done
+update_if_similar ${META_PKGSET[7]}.pkgset
 
 # finally
 echo "All meta package sets created successfully."

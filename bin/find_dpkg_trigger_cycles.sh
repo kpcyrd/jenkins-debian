@@ -149,7 +149,7 @@ printf "" > activated-file
 printf "" > activated-explicit
 
 # find all binary packages with /triggers$
-curl "http://binarycontrol.debian.net/?q=&path=%2Ftriggers%24&format=pkglist" \
+curl "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
 	| xargs apt-get $APT_OPTS --print-uris download \
 	| sed -ne "s/^'\([^']\+\)'\s\+\([^_]\+\)_.*/\2 \1/p" \
 	| sort \

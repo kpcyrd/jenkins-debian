@@ -49,11 +49,11 @@
     jobs:
        - '{name}_testing_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in Debian testing.'
-           my_time: '0 9 1 * *'
+           my_time: '0 10 * * 1'
            my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh testing'
        - '{name}_sid_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in sid.'
-           my_time: '0 9 1 * *'
+           my_time: '0 12 * * 1'
            my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh unstable'
        - '{name}_setup_schroot':
            my_description: 'Setup schroot for running the dpkg_sid_find_trigger_cycles job in a jessie environment.'

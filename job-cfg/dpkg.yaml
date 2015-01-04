@@ -38,11 +38,19 @@
 
 - job-template:
     defaults: dpkg
+    name: '{name}_testing_find_trigger_cycles'
+
+- job-template:
+    defaults: dpkg
     name: '{name}_setup_schroot'
 
 - project:
     name: dpkg
     jobs:
+       - '{name}_testing_find_trigger_cycles':
+           my_description: 'Find dpkg trigger cycles in Debian testing.'
+           my_time: '0 9 1 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh testing'
        - '{name}_sid_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in sid.'
            my_time: '0 9 1 * *'

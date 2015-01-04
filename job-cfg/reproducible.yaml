@@ -133,6 +133,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_clean_schroot'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_scheduler'
 
 - job-template:
@@ -199,6 +203,11 @@
             my_description: 'Setup schroot for running debbindiff in a sid environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid sid debbindiff'
+            my_recipients: 'holger@layer-acht.org'
+        - '{name}_setup_clean_schroot':
+            my_description: 'Setup clean schroot for create meta package sets.'
+            my_timed: '23 1 1 * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh clean-sid sid'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'

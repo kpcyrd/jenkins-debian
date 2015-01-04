@@ -68,13 +68,12 @@ update_if_similar ${META_PKGSET[2]}.pkgset
 
 # build-essential
 grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
-# FIXME this should be done in a cleaner schroot...
-schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install build-essential | grep "^Inst "|cut -d " " -f2 >> $TMPFILE
+schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install build-essential | grep "^Inst "|cut -d " " -f2 >> $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[3]}.pkgset
 
 # gnome and everything it depends on
-schroot --directory /tmp -c source:jenkins-reproducible-sid -- apt-get -s install gnome | grep "^Inst "|cut -d " " -f2 > $TMPFILE
+schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install gnome | grep "^Inst "|cut -d " " -f2 > $TMPFILE
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[4]}.pkgset
 

@@ -241,7 +241,7 @@ cat interested-explicit | while read pkg ttype iname; do
 done
 
 echo "+----------------------------------------------------------+"
-echo "|                  file based triggers                     |"
+echo "|               file based trigger cycles                  |"
 echo "+----------------------------------------------------------+"
 echo ""
 echo "# Associates binary packages with other binary packages they can form a file"
@@ -255,7 +255,7 @@ cat result-file
 echo ""
 echo ""
 echo "+----------------------------------------------------------+"
-echo "|                  explicit triggers                       |"
+echo "|               explicit trigger cycles                    |"
 echo "+----------------------------------------------------------+"
 echo ""
 echo "# Associates binary packages with other binary packages they can form an explicit"

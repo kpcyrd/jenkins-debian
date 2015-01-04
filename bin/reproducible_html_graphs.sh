@@ -46,7 +46,11 @@ if [ -z $RESULT ] ; then
 	DIFFU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTU');")
 	if [ -z $DIFFU ] ; then DIFFU=0 ; fi
 	let "TOTAL=GOOD+BAD+UGLY+REST"
-	let "UNTESTED=ALL-TOTAL"
+	if [ "$ALL" != "$TOTAL" ] ; then
+		let "UNTESTED=ALL-TOTAL"
+	else
+		UNTESTED=0
+	fi
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"

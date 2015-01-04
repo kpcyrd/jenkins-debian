@@ -35,14 +35,14 @@ def main():
                      "#fcaf3e", "#ce5c00", "#ad7fa8", "#5c3566", \
                      "#e9b96e", "#8f5902", "#8ae234", "#4e9a06", \
                      "#729fcf", "#204a87", "#ef2929", "#a40000", \
-                     "#888a85", "#2e3436"))')
+                     "#888a85", "#2e3436", "#75507b", "#cc0000"))')
     r('v <- t[0:nrow(t),0:'+colors+']')
     # make graph since day 1
     r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')
     if int(colors) < 10:
         r('legend(x="bottom",legend=colnames(t), ncol=2,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     else:
-        r('legend(x="bottom",legend=colnames(t), ncol=9,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
+        r('legend(x="bottom",legend=colnames(t), ncol=10,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     grdevices.dev_off()
 
 if __name__ == "__main__":

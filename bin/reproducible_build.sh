@@ -166,7 +166,7 @@ else
 			elif [ $RESULT -eq 1 ] ; then
 				DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/userContent/dbd/${LOGFILE}"
 			fi
-			if [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
+			if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1
 				figlet ${SRCPACKAGE}
 				echo

@@ -240,4 +240,27 @@ cat interested-explicit | while read pkg ttype iname; do
 		done >> result-explicit
 done
 
-
+echo "+----------------------------------------------------------+"
+echo "|                  file based triggers                     |"
+echo "+----------------------------------------------------------+"
+echo ""
+echo "# Associates binary packages with other binary packages they can form a file"
+echo "# trigger cycle with. The first column is the binary package containing the file"
+echo "# trigger, the second column is the file trigger, the third column is a binary"
+echo "# package providing a path that triggers the binary package in the first column,"
+echo "# the fourth column is the triggering path of provided by the binary package in"
+echo "# the third column."
+echo ""
+cat result-file
+echo ""
+echo ""
+echo "+----------------------------------------------------------+"
+echo "|                  explicit triggers                       |"
+echo "+----------------------------------------------------------+"
+echo ""
+echo "# Associates binary packages with other binary packages they can form an explicit"
+echo "# trigger cycle with. The first column is the binary package interested in the"
+echo "# explicit trigger, the second column is the name of the explicit trigger, the"
+echo "# third column is the binary package activating the trigger."
+echo ""
+cat result-explicit

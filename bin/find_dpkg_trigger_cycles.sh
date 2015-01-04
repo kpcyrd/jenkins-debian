@@ -246,7 +246,7 @@ echo "+----------------------------------------------------------+"
 echo ""
 echo "number of found file based trigger cycles:"
 wc -l result-file
-if [ `wc -l result-file` -ne 0 ]; then
+if [ `wc -l < result-file` -ne 0 ]; then
 	echo "Warning: found file based trigger cycles"
 	echo "number of packages creating file based trigger cycles:"
 	awk '{ print $1 }' result-file | sort | uniq | wc -l
@@ -255,14 +255,14 @@ if [ `wc -l result-file` -ne 0 ]; then
 fi
 echo "number of found explicit trigger cycles:"
 wc -l result-explicit
-if [ `wc -l result-explicit` -ne 0 ]; then
+if [ `wc -l < result-explicit` -ne 0 ]; then
 	echo "Warning: found explicit trigger cycles"
 	echo "number of packages creating explicit trigger cycles:"
 	awk '{ print $1 }' result-explicit | sort | uniq | wc -l
 	echo "unique packages creating explicit trigger cycles:"
 	awk '{ print $1 }' result-explicit | sort | uniq
 fi
-if [ `wc -l result-file` -ne 0 ]; then
+if [ `wc -l < result-file` -ne 0 ]; then
 	echo ""
 	echo ""
 	echo "+----------------------------------------------------------+"
@@ -278,7 +278,7 @@ if [ `wc -l result-file` -ne 0 ]; then
 	echo ""
 	cat result-file
 fi
-if [ `wc -l result-explicit` -ne 0 ]; then
+if [ `wc -l < result-explicit` -ne 0 ]; then
 	echo ""
 	echo ""
 	echo "+----------------------------------------------------------+"

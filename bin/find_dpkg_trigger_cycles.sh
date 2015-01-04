@@ -241,26 +241,54 @@ cat interested-explicit | while read pkg ttype iname; do
 done
 
 echo "+----------------------------------------------------------+"
-echo "|               file based trigger cycles                  |"
+echo "|                     result summary                       |"
 echo "+----------------------------------------------------------+"
 echo ""
-echo "# Associates binary packages with other binary packages they can form a file"
-echo "# trigger cycle with. The first column is the binary package containing the file"
-echo "# trigger, the second column is the file trigger, the third column is a binary"
-echo "# package providing a path that triggers the binary package in the first column,"
-echo "# the fourth column is the triggering path of provided by the binary package in"
-echo "# the third column."
-echo ""
-cat result-file
-echo ""
-echo ""
-echo "+----------------------------------------------------------+"
-echo "|               explicit trigger cycles                    |"
-echo "+----------------------------------------------------------+"
-echo ""
-echo "# Associates binary packages with other binary packages they can form an explicit"
-echo "# trigger cycle with. The first column is the binary package interested in the"
-echo "# explicit trigger, the second column is the name of the explicit trigger, the"
-echo "# third column is the binary package activating the trigger."
-echo ""
-cat result-explicit
+echo "number of found file based trigger cycles:"
+wc -l result-file
+if [ `wc -l result-file` != 0 ]; then
+	echo "Warning: found file based trigger cycles"
+	echo "number of packages creating file based trigger cycles:"
+	awk '{ print $1 }' result-file | sort | uniq | wc -l
+	echo "unique packages creating file based trigger cycles:"
+	awk '{ print $1 }' result-file | sort | uniq
+fi
+echo "number of found explicit trigger cycles:"
+wc -l result-explicit
+if [ `wc -l result-explicit` != 0 ]; then
+	echo "Warning: found explicit trigger cycles"
+	echo "number of packages creating explicit trigger cycles:"
+	awk '{ print $1 }' result-explicit | sort | uniq | wc -l
+	echo "unique packages creating explicit trigger cycles:"
+	awk '{ print $1 }' result-explicit | sort | uniq
+fi
+if [ `wc -l result-file` != 0 ]; then
+	echo ""
+	echo ""
+	echo "+----------------------------------------------------------+"
+	echo "|               file based trigger cycles                  |"
+	echo "+----------------------------------------------------------+"
+	echo ""
+	echo "# Associates binary packages with other binary packages they can form a file"
+	echo "# trigger cycle with. The first column is the binary package containing the file"
+	echo "# trigger, the second column is the file trigger, the third column is a binary"
+	echo "# package providing a path that triggers the binary package in the first column,"
+	echo "# the fourth column is the triggering path of provided by the binary package in"
+	echo "# the third column."
+	echo ""
+	cat result-file
+fi
+if [ `wc -l result-explicit` != 0 ]; then
+	echo ""
+	echo ""
+	echo "+----------------------------------------------------------+"
+	echo "|               explicit trigger cycles                    |"
+	echo "+----------------------------------------------------------+"
+	echo ""
+	echo "# Associates binary packages with other binary packages they can form an explicit"
+	echo "# trigger cycle with. The first column is the binary package interested in the"
+	echo "# explicit trigger, the second column is the name of the explicit trigger, the"
+	echo "# third column is the binary package activating the trigger."
+	echo ""
+	cat result-explicit
+fi

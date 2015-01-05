@@ -12,8 +12,8 @@ common_init "$@"
 
 TPATH=/srv/reproducible-results/meta_pkgsets
 mkdir -p $TPATH
-PACKAGES=/schroots/reproducible-sid/var/lib/apt/lists/*Packages
-SOURCES=/schroots/reproducible-sid/var/lib/apt/lists/*Sources
+PACKAGES=/schroots/clean-sid/var/lib/apt/lists/*Packages
+SOURCES=/schroots/clean-sid/var/lib/apt/lists/*Sources
 TMPFILE=$(mktemp)
 
 # helper functions

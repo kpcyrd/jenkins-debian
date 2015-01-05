@@ -225,9 +225,9 @@ ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE, $AMOUNT packages with new versions"
 
 if [ $TOTAL -lt 150 ] ; then
-	OLD=500 # used not to be needed...
+	OLD=750 # used not to be needed...
 elif [ $TOTAL -lt 250 ] ; then
-	OLD=400	# used to be 200
+	OLD=600	# used to be 200
 elif [ $TOTAL -le 350 ] ; then
 	OLD=200 # used to be 100
 else

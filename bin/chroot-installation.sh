@@ -51,6 +51,14 @@ mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
+cat > /etc/apt/apt.conf.d/80debug << APTEOF
+# solution calculation
+Debug::pkgDepCache::Marker "true";
+Debug::pkgDepCache::AutoInstall "true";
+Debug::pkgProblemResolver "true";
+# installation order
+Debug::pkgPackageManager "true";
+APTEOF
 echo "deb-src $MIRROR $1 main" >> /etc/apt/sources.list
 apt-get update
 set +x

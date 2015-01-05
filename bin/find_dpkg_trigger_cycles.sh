@@ -143,10 +143,10 @@ APT_FILE_OPTS=$APT_FILE_OPTS" --sources-list $DIRECTORY/etc/apt/sources.list"
 
 apt-file $APT_FILE_OPTS update
 
-printf "" > interested-file
-printf "" > interested-explicit
-printf "" > activated-file
-printf "" > activated-explicit
+printf "" > $DIRECTORY/interested-file
+printf "" > $DIRECTORY/interested-explicit
+printf "" > $DIRECTORY/activated-file
+printf "" > $DIRECTORY/activated-explicit
 
 # find all binary packages with /triggers$
 curl "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
@@ -167,24 +167,24 @@ curl "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24
 	# and which are file triggers (start with a slash)
 	egrep "^\s*interest(-await)?\s+/" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
-	done >> interested-file
+	done >> $DIRECTORY/interested-file
 	egrep "^\s*interest(-await)?\s+[^/]" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
-	done >> interested-explicit
+	done >> $DIRECTORY/interested-explicit
 	egrep "^\s*activate(-await)?\s+/" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
-	done >> activated-file
+	done >> $DIRECTORY/activated-file
 	egrep "^\s*activate(-await)?\s+[^/]" "$tmpdir/triggers" | while read line; do
 		echo "$pkg $line"
-	done >> activated-explicit
+	done >> $DIRECTORY/activated-explicit
 	rm -r "$tmpdir"
 done
 
-printf "" > result-file
+printf "" > $DIRECTORY/result-file
 
 # go through those that are interested in a path and check them against the
 # files provided by its dependency closure
-cat interested-file | while read pkg ttype ipath; do
+cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 	echo "working on $pkg..." >&2
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any
@@ -197,12 +197,12 @@ cat interested-file | while read pkg ttype ipath; do
 		| while read dep cpath; do
 			[ "$pkg" != "$dep" ] || continue
 			echo "$pkg $ipath $dep $cpath"
-		done >> result-file
+		done >> $DIRECTORY/result-file
 done
 
 # go through those that are interested in a path and check them against the
 # packages in the dependency closure which activate such a path
-cat interested-file | while read pkg ttype ipath; do
+cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 	echo "working on $pkg..." >&2
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any
@@ -214,17 +214,17 @@ cat interested-file | while read pkg ttype ipath; do
 			[ "$pkg" != "$dep" ] || continue
 			# using the space as sed delimeter because ipath has slashes
 			# a space should work because neither package names nor paths have them
-			sed -ne "s ^$dep\s\+activate\(-await\)\?\s\+\($ipath.*\) \2 p" activated-file | while read cpath; do
+			sed -ne "s ^$dep\s\+activate\(-await\)\?\s\+\($ipath.*\) \2 p" $DIRECTORY/activated-file | while read cpath; do
 				echo "$pkg $ipath $dep $cpath"
 			done
-		done >> result-file
+		done >> $DIRECTORY/result-file
 done
 
-printf "" > result-explicit
+printf "" > $DIRECTORY/result-explicit
 
 # go through those that are interested in an explicit trigger and check them
 # against the packages in their dependency closure which activate it
-cat interested-explicit | while read pkg ttype iname; do
+cat $DIRECTORY/interested-explicit | while read pkg ttype iname; do
 	echo "working on $pkg..." >&2
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any of
@@ -234,10 +234,10 @@ cat interested-explicit | while read pkg ttype iname; do
 		| awk '/^package:/ { print $2 }' \
 		| while read dep; do
 			[ "$pkg" != "$dep" ] || continue
-			if egrep "^$dep\s+activate(-await)?\s+$iname\s*$" activated-explicit > /dev/null; then
+			if egrep "^$dep\s+activate(-await)?\s+$iname\s*$" $DIRECTORY/activated-explicit > /dev/null; then
 				echo "$pkg $iname $dep"
 			fi
-		done >> result-explicit
+		done >> $DIRECTORY/result-explicit
 done
 
 echo "+----------------------------------------------------------+"
@@ -245,24 +245,24 @@ echo "|                     result summary                       |"
 echo "+----------------------------------------------------------+"
 echo ""
 echo "number of found file based trigger cycles:"
-wc -l < result-file
-if [ `wc -l < result-file` -ne 0 ]; then
+wc -l < $DIRECTORY/result-file
+if [ `wc -l < $DIRECTORY/result-file` -ne 0 ]; then
 	echo "Warning: found file based trigger cycles"
 	echo "number of packages creating file based trigger cycles:"
-	awk '{ print $1 }' result-file | sort | uniq | wc -l
+	awk '{ print $1 }' $DIRECTORY/result-file | sort | uniq | wc -l
 	echo "unique packages creating file based trigger cycles:"
-	awk '{ print $1 }' result-file | sort | uniq
+	awk '{ print $1 }' $DIRECTORY/result-file | sort | uniq
 fi
 echo "number of found explicit trigger cycles:"
-wc -l < result-explicit
-if [ `wc -l < result-explicit` -ne 0 ]; then
+wc -l < $DIRECTORY/result-explicit
+if [ `wc -l < $DIRECTORY/result-explicit` -ne 0 ]; then
 	echo "Warning: found explicit trigger cycles"
 	echo "number of packages creating explicit trigger cycles:"
-	awk '{ print $1 }' result-explicit | sort | uniq | wc -l
+	awk '{ print $1 }' $DIRECTORY/result-explicit | sort | uniq | wc -l
 	echo "unique packages creating explicit trigger cycles:"
-	awk '{ print $1 }' result-explicit | sort | uniq
+	awk '{ print $1 }' $DIRECTORY/result-explicit | sort | uniq
 fi
-if [ `wc -l < result-file` -ne 0 ]; then
+if [ `wc -l < $DIRECTORY/result-file` -ne 0 ]; then
 	echo ""
 	echo ""
 	echo "+----------------------------------------------------------+"
@@ -276,9 +276,9 @@ if [ `wc -l < result-file` -ne 0 ]; then
 	echo "# the fourth column is the triggering path of provided by the binary package in"
 	echo "# the third column."
 	echo ""
-	cat result-file
+	cat $DIRECTORY/result-file
 fi
-if [ `wc -l < result-explicit` -ne 0 ]; then
+if [ `wc -l < $DIRECTORY/result-explicit` -ne 0 ]; then
 	echo ""
 	echo ""
 	echo "+----------------------------------------------------------+"
@@ -290,5 +290,5 @@ if [ `wc -l < result-explicit` -ne 0 ]; then
 	echo "# explicit trigger, the second column is the name of the explicit trigger, the"
 	echo "# third column is the binary package activating the trigger."
 	echo ""
-	cat result-explicit
+	cat $DIRECTORY/result-explicit
 fi

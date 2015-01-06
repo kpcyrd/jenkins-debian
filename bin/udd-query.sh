@@ -27,7 +27,13 @@ list_tables() {
 			FROM information_schema.tables
 			ORDER BY table_schema,table_name;"
 	udd_query
-	cat $UDD
+	echo
+	for TABLE in $(cat $UDD | cut -d "|" -f2) ; do
+		SQL_QUERY="SELECT column_name, data_type, character_maximum_length
+			FROM INFORMATION_SCHEMA.COLUMNS where table_name = '$TABLE';"
+		cat $UDD
+		echo
+	done
 	rm $UDD
 }
 

@@ -23,8 +23,8 @@
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
-          unstable-on-warning: 'true'
-          fail-on-error: 'true'
+          unstable-on-warning: '{my_logparser}'
+          fail-on-error: '{my_logparser}'
       - email:
           recipients: 'jenkins+debian-qa holger@layer-acht.org'
     builders:
@@ -63,20 +63,25 @@
            my_time: '15 8 * * 1'
            my_params: 'list_tables'
            my_description: 'Just list all <a href="https://udd.debian.org" target="_blank">UDD</a> tables.'
+           my_logparser: 'false'
         - '{name}_wheezy_multiarch_versionskew':
            my_time: '2 8 1 * *'
            my_params: 'multiarch_versionskew wheezy'
            my_description: 'Detect multi-arch versions skews in wheezy.'
+           my_logparser: 'true'
         - '{name}_jessie_multiarch_versionskew':
            my_time: '1 8 * * *'
            my_params: 'multiarch_versionskew jessie'
            my_description: 'Detect multi-arch versions skews in jessie.'
+           my_logparser: 'true'
         - '{name}_sid_multiarch_versionskew':
            my_time: '0 8 * * *'
            my_params: 'multiarch_versionskew sid'
            my_description: 'Detect multi-arch versions skews in sid.'
+           my_logparser: 'true'
         - '{name}_orphaned_without_o_bug':
            my_time: '3 8 * * *'
            my_params: 'orphaned_without_o_bug'
            my_description: 'Detect orphaned packages with maintainer set to packages@qa.debian.org but without an "Orphaned" bug against the wnpp pseudo-package.'
+           my_logparser: 'true'
 

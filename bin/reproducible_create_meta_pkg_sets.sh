@@ -97,6 +97,11 @@ done
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[7]}.pkgset
 
+# pkg-perl-maintainers
+grep-dctrl -sPackage -n -FMaintainer pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+convert_into_source_packages_only
+update_if_similar ${META_PKGSET[8]}.pkgset
+
 # finally
 echo "All meta package sets created successfully."
 

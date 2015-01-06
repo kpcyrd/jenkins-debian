@@ -31,6 +31,7 @@ list_tables() {
 	for TABLE in $(cat $UDD | cut -d "|" -f2) ; do
 		SQL_QUERY="SELECT column_name, data_type, character_maximum_length
 			FROM INFORMATION_SCHEMA.COLUMNS where table_name = '$TABLE';"
+		udd_query
 		cat $UDD
 		echo
 	done

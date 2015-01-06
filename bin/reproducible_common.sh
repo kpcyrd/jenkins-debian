@@ -149,6 +149,7 @@ META_PKGSET[5]="build-depends_gnome"
 META_PKGSET[6]="tails"
 META_PKGSET[7]="build-depends_tails"
 META_PKGSET[8]="maint_pkg-perl-maintainers"
+META_PKGSET[9]="popcon_top1337-installed-sources"
 
 init_html() {
 	SUITE=sid

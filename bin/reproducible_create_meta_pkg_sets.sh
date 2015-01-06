@@ -102,6 +102,16 @@ grep-dctrl -sPackage -n -FMaintainer pkg-perl-maintainers@lists.alioth.debian.or
 convert_into_source_packages_only
 update_if_similar ${META_PKGSET[8]}.pkgset
 
+# popcon top 1337 installed sources
+SQL_QUERY="SELECT popcon_src.source FROM popcon_src ORDER BY popcon_src.insts DESC LIMIT 1337;"
+PGPASSWORD=public-udd-mirror \
+	psql -U public-udd-mirror \
+	-h public-udd-mirror.xvm.mit.edu -p 5432 \
+	-t \
+	udd -c"${SQL_QUERY}" > $TMPFILE
+update_if_similar ${META_PKGSET[9]}.pkgset
+
+
 # finally
 echo "All meta package sets created successfully."
 

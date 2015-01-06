@@ -36,6 +36,7 @@ list_tables() {
 		echo
 	done
 	rm $UDD
+	echo "Also see https://udd.debian.org/schema/udd.html"
 }
 
 multiarch_versionskew() {

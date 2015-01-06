@@ -34,6 +34,10 @@
 
 - job-template:
     defaults: udd
+    name: '{name}_list_tables'
+
+- job-template:
+    defaults: udd
     name: '{name}_wheezy_multiarch_versionskew'
 
 - job-template:
@@ -55,6 +59,10 @@
 - project:
     name: udd
     jobs:
+        - '{name}_list_tables':
+           my_time: '15 8 * * 1'
+           my_params: 'list_tables'
+           my_description: 'Just list all <a href="https://udd.debian.org" target="_blank">UDD</a> tables.'
         - '{name}_wheezy_multiarch_versionskew':
            my_time: '2 8 1 * *'
            my_params: 'multiarch_versionskew wheezy'

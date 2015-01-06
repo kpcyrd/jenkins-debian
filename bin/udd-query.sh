@@ -22,6 +22,15 @@ udd_query() {
 		udd -c"${SQL_QUERY}" > $UDD
 }
 
+list_tables() {
+	SQL_QUERY="SELECT table_schema,table_name
+			FROM information_schema.tables
+			ORDER BY table_schema,table_name;"
+	udd_query
+	cat $UDD
+	rm $UDD
+}
+
 multiarch_versionskew() {
 	if [ -z "$1" ] ; then
 		echo "Warning: no distro supplied, assuming sid."
@@ -103,6 +112,9 @@ orphaned_without_o_bug() {
 #
 UDD=$(mktemp)
 case $1 in
+	list_tables)
+			list_tables
+			;;
 	orphaned_without_o_bug)
 			orphaned_without_o_bug
 			;;

@@ -20,9 +20,11 @@ TMPFILE=$(mktemp)
 convert_into_source_packages_only() {
 	TMP2=$(mktemp)
 	for PKG in $(cat $TMPFILE) ; do
-		( grep-dctrl -X -FBinary -sPackage -n $PKG $SOURCES || echo $PKG ) >> $TMP2
+		[ -z "$PKG" ] || ( grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES || echo $PKG ) >> $TMP2
 	done
-	sort -u $TMP2 > $TMPFILE
+	# grep-dctrl outpu might include versions (space seperated) and archs (colon seperated)
+	# and duplicates
+	cut -d " " -f1 $TMP2 | cut -d ":" -f1 | sort -u > $TMPFILE
 	rm $TMP2
 }
 update_if_similar() {

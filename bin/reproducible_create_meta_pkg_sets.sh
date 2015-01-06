@@ -20,7 +20,11 @@ TMPFILE=$(mktemp)
 convert_into_source_packages_only() {
 	TMP2=$(mktemp)
 	for PKG in $(cat $TMPFILE) ; do
-		[ -z "$PKG" ] || ( grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES || echo $PKG ) >> $TMP2
+		SRC=""
+		[ -z "$PKG" ] || SRC=$(grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES )
+		[ -z "$PKG" ] || SRC=$(grep-dctrl -X -n -FPackage -sPackage $PKG $PACKAGES )
+		[ -z "$PKG" ] || SRC=$(echo $PKG )
+		echo $PKG >> $TMP2
 	done
 	# grep-dctrl outpu might include versions (space seperated) and archs (colon seperated)
 	# and duplicates

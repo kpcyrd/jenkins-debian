@@ -12,9 +12,21 @@ common_init "$@"
 
 TPATH=/srv/reproducible-results/meta_pkgsets
 mkdir -p $TPATH
-PACKAGES=/schroots/clean-sid/var/lib/apt/lists/*Packages
-SOURCES=/schroots/clean-sid/var/lib/apt/lists/*Sources
+PACKAGES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages`
+SOURCES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources`
 TMPFILE=$(mktemp)
+TMPFILE2=$(mktemp)
+
+ARCH=amd64
+SUITE=sid
+DISTNAME="$SUITE-$ARCH"
+
+# delete possibly existing dist
+rm -rf ~/.chdist/$DISTNAME;
+
+# the "[arch=amd64]" is a workaround until #774685 is fixed
+chdist --arch=$ARCH create $DISTNAME "[arch=amd64]" $MIRROR $SUITE main
+chdist --arch=$ARCH apt-get $DISTNAME update
 
 # helper functions
 convert_into_source_packages_only() {
@@ -32,6 +44,18 @@ convert_into_source_packages_only() {
 	# and duplicates
 	cut -d " " -f1 $TMP2 | cut -d ":" -f1 | sort -u > $TMPFILE
 	rm $TMP2
+}
+
+convert_into_source_packages_only_from_deb822() {
+	# given a Packages file in deb822 format on standard input, the
+	# following perl "oneliner" outputs the associated (unversioned)
+	# source package names, one per line
+	perl -e 'use Dpkg::Control;while(1){$c=Dpkg::Control->new();' \
+		-e 'last if not $c->parse(STDIN);$p=$c->{"Package"};' \
+		-e '$s=$c->{"Source"};if (not defined $s){print "$p\n"}' \
+		-e 'else{$s=~s/\s*([\S]+)\s+.*/\1/;print "$s\n"}}' \
+		> $TMPFILE2 < $TMPFILE
+	sort -u $TMPFILE2 > $TMPFILE
 }
 update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
@@ -66,37 +90,49 @@ update_if_similar() {
 
 # the essential package set
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] ; then
-	grep-dctrl -sPackage -n -X -FEssential yes $PACKAGES > $TMPFILE
-	convert_into_source_packages_only
+	chdist grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE2
+	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	convert_into_source_packages_only_from_deb822
 	update_if_similar ${META_PKGSET[1]}.pkgset
 fi
 
 # the required package set
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] ; then
-	grep-dctrl -sPackage -n -X -FPriority required $PACKAGES > $TMPFILE
-	convert_into_source_packages_only
+	chdist grep-dctrl-packages $DISTNAME -X -FPriority required > $TMPFILE2
+	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	convert_into_source_packages_only_from_deb822
 	update_if_similar ${META_PKGSET[2]}.pkgset
 fi
 
 # build-essential
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] ; then
-	grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
-	schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install build-essential | grep "^Inst "|cut -d " " -f2 >> $TMPFILE
-	convert_into_source_packages_only
+	chdist grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > $TMPFILE2
+	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	convert_into_source_packages_only_from_deb822
 	update_if_similar ${META_PKGSET[3]}.pkgset
 fi
 
 # gnome and everything it depends on
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] ; then
-	schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install gnome | grep "^Inst "|cut -d " " -f2 > $TMPFILE
-	convert_into_source_packages_only
+	chdist grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > $TMPFILE2
+	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	convert_into_source_packages_only_from_deb822
 	update_if_similar ${META_PKGSET[4]}.pkgset
 fi
+
+# The build-depends of X tasks can be solved once dose-ceve is able to read
+# Debian source packages (possible in dose3 git but needs a new dose3 release
+# and upload to unstable)
+#
+# Ignoring parsing issues, the current method is unable to resolve virtual
+# build dependencies
+#
+# The current method also ignores Build-Depends-Indep and Build-Depends-Arch
 
 # all build depends of gnome
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] ; then
 	for PKG in $(cat $TPATH/${META_PKGSET[4]}.pkgset) ; do
-		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
 	done
 	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[5]}.pkgset
@@ -113,7 +149,7 @@ fi
 # all build depends of tails
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] ; then
 	for PKG in $(cat $TPATH/${META_PKGSET[6]}.pkgset) ; do
-		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
 	done
 	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[7]}.pkgset

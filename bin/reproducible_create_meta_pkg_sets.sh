@@ -59,60 +59,77 @@ update_if_similar() {
 #
 
 # the essential package set
-grep-dctrl -sPackage -n -X -FEssential yes $PACKAGES > $TMPFILE
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[1]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] ; then
+	grep-dctrl -sPackage -n -X -FEssential yes $PACKAGES > $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[1]}.pkgset
+fi
 
 # the required package set
-grep-dctrl -sPackage -n -X -FPriority required $PACKAGES > $TMPFILE
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[2]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] ; then
+	grep-dctrl -sPackage -n -X -FPriority required $PACKAGES > $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[2]}.pkgset
+fi
 
 # build-essential
-grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
-schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install build-essential | grep "^Inst "|cut -d " " -f2 >> $TMPFILE
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[3]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] ; then
+	grep-dctrl -FBuild-Essential -sPackage -n yes $PACKAGES > $TMPFILE
+	schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install build-essential | grep "^Inst "|cut -d " " -f2 >> $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[3]}.pkgset
+fi
 
 # gnome and everything it depends on
-schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install gnome | grep "^Inst "|cut -d " " -f2 > $TMPFILE
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[4]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] ; then
+	schroot --directory /tmp -c source:jenkins-clean-sid -- apt-get -s install gnome | grep "^Inst "|cut -d " " -f2 > $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[4]}.pkgset
+fi
 
 # all build depends of gnome
-for PKG in $(cat $TPATH/${META_PKGSET[4]}.pkgset) ; do
-	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
-done
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[5]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] ; then
+	for PKG in $(cat $TPATH/${META_PKGSET[4]}.pkgset) ; do
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+	done
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[5]}.pkgset
+fi
 
 # tails
-curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
-curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[6]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[6]}.pkgset) ] ; then
+	curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
+	curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[6]}.pkgset
+fi
 
 # all build depends of tails
-for PKG in $(cat $TPATH/${META_PKGSET[6]}.pkgset) ; do
-	grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
-done
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[7]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] ; then
+	for PKG in $(cat $TPATH/${META_PKGSET[6]}.pkgset) ; do
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG  /schroots/sid/var/lib/apt/lists/*Sources | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+	done
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[7]}.pkgset
+fi
 
 # pkg-perl-maintainers
-grep-dctrl -sPackage -n -FMaintainer pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-convert_into_source_packages_only
-update_if_similar ${META_PKGSET[8]}.pkgset
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[8]}.pkgset) ] ; then
+	grep-dctrl -sPackage -n -FMaintainer pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[8]}.pkgset
+fi
 
 # popcon top 1337 installed sources
-SQL_QUERY="SELECT popcon_src.source FROM popcon_src ORDER BY popcon_src.insts DESC LIMIT 1337;"
-PGPASSWORD=public-udd-mirror \
-	psql -U public-udd-mirror \
-	-h public-udd-mirror.xvm.mit.edu -p 5432 \
-	-t \
-	udd -c"${SQL_QUERY}" > $TMPFILE
-update_if_similar ${META_PKGSET[9]}.pkgset
-
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[9]}.pkgset) ] ; then
+	SQL_QUERY="SELECT popcon_src.source FROM popcon_src ORDER BY popcon_src.insts DESC LIMIT 1337;"
+	PGPASSWORD=public-udd-mirror \
+		psql -U public-udd-mirror \
+		-h public-udd-mirror.xvm.mit.edu -p 5432 \
+		-t \
+		udd -c"${SQL_QUERY}" > $TMPFILE
+	update_if_similar ${META_PKGSET[9]}.pkgset
+fi
 
 # finally
 echo "All meta package sets created successfully."

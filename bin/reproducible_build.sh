@@ -164,7 +164,7 @@ else
 			if [ $RESULT -eq 124 ] ; then
 				echo "$(date) - debbindiff was killed after running into timeout... maybe there is still $REPRODUCIBLE_URL/userContent/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
 				if [ ! -s ./${LOGFILE} ] ; then
-					echo "$(date) - debbindiff produced no output and was killed after running into timeout..."
+					echo "$(date) - debbindiff produced no output and was killed after running into timeout..." >> ${LOGFILE}
 				fi
 			elif [ $RESULT -eq 1 ] ; then
 				DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/userContent/dbd/${LOGFILE}"

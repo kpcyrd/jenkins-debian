@@ -299,6 +299,8 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		write_page "</p>"
 	fi
 done
+BUILDINFO_ON_PAGE=true
+write_page_meta_sign
 write_page_footer
 publish_page
 

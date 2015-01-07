@@ -20,11 +20,11 @@ trap cleanup_all INT TERM EXIT
 # $3 is choosing the flavor
 lb config --distribution $2 --bootappend-live "boot=live config hostname=$1 username=$1"
 case "$3" in
-	standalone)	echo education-standalone > config/package-lists/live.list.chroot
+	standalone)	echo education-standalone >> config/package-lists/live.list.chroot
 			;;
-	gnome)		echo gnome > config/package-lists/live.list.chroot
+	gnome)		echo gnome >> config/package-lists/live.list.chroot
 			;;
-	xfce)		echo xfce4 > config/package-lists/live.list.chroot
+	xfce)		echo xfce4 >> config/package-lists/live.list.chroot
 			;;
 	*)		;;
 esac

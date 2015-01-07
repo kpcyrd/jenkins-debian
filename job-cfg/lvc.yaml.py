@@ -18,7 +18,7 @@ files = { 'wheezy_standard': '/var/lib/jenkins/debian-live-7.7.0-amd64-standard.
           'debian-edu_jessie_standalone': '/srv/live-build/results/debian-edu_jessie_standalone_live_amd64.iso',
           'debian_jessie_gnome': '/srv/live-build/results/debian_jessie_gnome_live_amd64.iso',
           'debian_jessie_xfce': '/srv/live-build/results/debian_jessie_xfce_live_amd64.iso',
-          'debian_jessie_xfce': '/srv/live-build/results/debian_sid_xfce_live_amd64.iso'
+          'debian_sid_xfce': '/srv/live-build/results/debian_sid_xfce_live_amd64.iso'
         }
 
 titles = { 'wheezy_standard': 'Debian Live 7 standard',

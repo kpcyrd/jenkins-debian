@@ -74,7 +74,7 @@ def load_notes():
     """
     with open(NOTES) as fd:
         notes = yaml.load(fd)
-    logging.debug("notes loaded. There are " + str(len(notes)) +
+    log.debug("notes loaded. There are " + str(len(notes)) +
                   " package listed")
     return notes
 
@@ -86,7 +86,7 @@ def load_issues():
     """
     with open(ISSUES) as fd:
         issues = yaml.load(fd)
-    logging.debug("issues loaded. There are " + str(len(issues)) +
+    log.debug("issues loaded. There are " + str(len(issues)) +
                   " issues listed")
     return issues
 
@@ -100,7 +100,7 @@ def fill_issue_in_note(issue):
         desc = details['description'].replace('\n', '<br />')
         html += note_issue_html_desc.substitute(description=desc)
     else:
-        logging.warning("The issue " + issue + " misses a description")
+        log.warning("The issue " + issue + " misses a description")
     return note_issue_html.substitute(issue=issue, issue_info=html)
 
 
@@ -138,7 +138,7 @@ def gen_html_note(note):
     try:
         return note_html.substitute(version=str(note['version']), infos=infos)
     except KeyError:
-        logging.warning('You should really include a version in the ' +
+        log.warning('You should really include a version in the ' +
               str(note['package']) + ' note')
         return note_html.substitute(version='N/A', infos=infos)
 
@@ -162,7 +162,7 @@ def gen_html_issue(issue):
     try:
         desc = issues[issue]['description']
     except KeyError:
-        logging.warning('You should really include a description in the ' +
+        log.warning('You should really include a description in the ' +
               issue + ' issue')
         desc = 'N/A'
     desc = url2html.sub(r'<a href="\1">\1</a>', desc)
@@ -174,10 +174,10 @@ def iterate_over_notes(notes):
     num_notes = str(len(notes))
     i = 0
     for package in sorted(notes):
-        logging.debug('iterating over notes... ' + str(i) + '/' + num_notes)
+        log.debug('iterating over notes... ' + str(i) + '/' + num_notes)
         note = notes[package]
         note['package'] = package
-        logging.debug('\t' + str(note))
+        log.debug('\t' + str(note))
         html = gen_html_note(note)
 
         title = 'Notes for ' + package + ' - reproducible builds result'
@@ -186,15 +186,15 @@ def iterate_over_notes(notes):
                         noheader=True, nofooter=True)
 
         desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
-        #logging.info("you can now see your notes at " + desturl)
+        log.info("you can now see your notes at " + desturl)
         i = i + 1
 
 def iterate_over_issues(issues):
     num_issues = str(len(issues))
     i = 0
     for issue in sorted(issues):
-        logging.debug('iterating over issues... ' + str(i) + '/' + num_issues)
-        logging.debug('\t' + str(issue))
+        log.debug('iterating over issues... ' + str(i) + '/' + num_issues)
+        log.debug('\t' + str(issue))
         html = gen_html_issue(issue)
 
         title = 'Notes about issue ' + issue
@@ -202,7 +202,7 @@ def iterate_over_issues(issues):
         write_html_page(title=title, body=html, destfile=destfile)
 
         desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + issue + '_issue.html'
-        #logging.info("you can now see the issue at " +desturl)
+        log.info("you can now see the issue at " +desturl)
         i = i + 1
 
 def index_issues(issues):
@@ -217,7 +217,7 @@ def index_issues(issues):
     destfile = BASE + '/userContent/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/userContent/index_issues.html'
     write_html_page(title=title, body=html, destfile=destfile, nofooter=True)
-    logging.info('Issues index now available at ' + desturl)
+    log.info('Issues index now available at ' + desturl)
 
 if __name__ == '__main__':
     issues_count = {}

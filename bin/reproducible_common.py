@@ -45,20 +45,25 @@ if args.debug or DEBUG:
     log_level = logging.DEBUG
 if args.quiet or QUIET:
     log_level = logging.ERROR
-logging.basicConfig(level=log_level)
+log = logging.getLogger(__name__)
+log.setLevel(log_level)
+sh = logging.StreamHandler()
+sh.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+log.addHandler(sh)
 
-logging.debug("BIN_PATH:\t" + BIN_PATH)
-logging.debug("BASE:\t" + BASE)
-logging.debug("NOTES_URI:\t" + NOTES_URI)
-logging.debug("ISSUES_URI:\t" + ISSUES_URI)
-logging.debug("NOTES_PATH:\t" + NOTES_PATH)
-logging.debug("ISSUES_PATH:\t" + ISSUES_PATH)
-logging.debug("RB_PKG_URI:\t" + RB_PKG_URI)
-logging.debug("RB_PKG_PATH:\t" + RB_PKG_PATH)
-logging.debug("REPRODUCIBLE_DB:\t" + REPRODUCIBLE_DB)
-logging.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
-logging.debug("JENKINS_URL:\t\t" + JENKINS_URL)
-logging.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
+
+log.debug("BIN_PATH:\t" + BIN_PATH)
+log.debug("BASE:\t" + BASE)
+log.debug("NOTES_URI:\t" + NOTES_URI)
+log.debug("ISSUES_URI:\t" + ISSUES_URI)
+log.debug("NOTES_PATH:\t" + NOTES_PATH)
+log.debug("ISSUES_PATH:\t" + ISSUES_PATH)
+log.debug("RB_PKG_URI:\t" + RB_PKG_URI)
+log.debug("RB_PKG_PATH:\t" + RB_PKG_PATH)
+log.debug("REPRODUCIBLE_DB:\t" + REPRODUCIBLE_DB)
+log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
+log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
+log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
 
 html_header = Template("""<!DOCTYPE html>
 <html>\n<head>
@@ -181,10 +186,10 @@ count_good = int(query_db(
  'SELECT COUNT(name) FROM source_packages WHERE status="reproducible"')[0][0])
 percent_total = round(((count_total/amount)*100), 2)
 percent_good = round(((count_good/count_total)*100), 2)
-logging.info('Total packages in Sid:\t' + str(amount))
-logging.info('Total tested packages:\t' + str(count_total))
-logging.info('Total reproducible packages:\t' + str(count_good))
-logging.info('That means that out of the ' + str(percent_total) + '% of ' +
+log.info('Total packages in Sid:\t' + str(amount))
+log.info('Total tested packages:\t' + str(count_total))
+log.info('Total reproducible packages:\t' + str(count_good))
+log.info('That means that out of the ' + str(percent_total) + '% of ' +
              'the Sid tested packages the ' + str(percent_good) + '% are ' +
              'reproducible!')
 

@@ -6,6 +6,7 @@ images = """
     debian-edu_jessie_standalone
     debian_jessie_gnome
     debian_jessie_xfce
+    debian_sid_xfce
    """.split()
 
 features = """
@@ -14,16 +15,18 @@ features = """
 
 files = { 'wheezy_standard': '/var/lib/jenkins/debian-live-7.7.0-amd64-standard.iso',
           'wheezy_gnome-desktop': '/var/lib/jenkins/debian-live-7.7.0-amd64-gnome-desktop.iso',
-          'debian-edu_jessie_standalone': '/srv/live-build/results/debian-edu_standalone_live_amd64.iso',
-          'debian_jessie_gnome': '/srv/live-build/results/debian_gnome_live_amd64.iso',
-          'debian_jessie_xfce': '/srv/live-build/results/debian_xfce_live_amd64.iso'
+          'debian-edu_jessie_standalone': '/srv/live-build/results/debian-edu_jessie_standalone_live_amd64.iso',
+          'debian_jessie_gnome': '/srv/live-build/results/debian_jessie_gnome_live_amd64.iso',
+          'debian_jessie_xfce': '/srv/live-build/results/debian_jessie_xfce_live_amd64.iso',
+          'debian_jessie_xfce': '/srv/live-build/results/debian_sid_xfce_live_amd64.iso'
         }
 
 titles = { 'wheezy_standard': 'Debian Live 7 standard',
            'wheezy_gnome-desktop': 'Debian Live 7 GNOME desktop',
            'debian-edu_jessie_standalone': 'Debian Edu Live 8 Standalone',
-           'debian_jessie_gnome': 'Debian Edu Live 8 GNOME Desktop',
-           'debian_jessie_xfce': 'Debian Edu Live 8 Xfce Desktop'
+           'debian_jessie_gnome': 'Debian Live 8 GNOME Desktop',
+           'debian_jessie_xfce': 'Debian Live 8 Xfce Desktop',
+           'debian_sid_xfce': 'Debian Live Sid Xfce Desktop',
          }
 
 print("""

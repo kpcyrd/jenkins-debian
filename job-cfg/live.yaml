@@ -42,6 +42,10 @@
 
 - job-template:
     defaults: live
+    name: '{name}_build_debian_sid_xfce'
+
+- job-template:
+    defaults: live
     name: '{name}_setup_schroot'
 
 - project:
@@ -50,15 +54,19 @@
        - '{name}_build_debian-edu_jessie_standalone':
            my_description: 'Build Debian Edu Jessie live-image with "standlone" profile.'
            my_time: '0 12 1 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu standalone'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu jessie standalone'
        - '{name}_build_debian_jessie_gnome':
            my_description: 'Build Debian Jessie live-image with GNOME desktop.'
            my_time: '0 13 1 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian gnome'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian jessie gnome'
        - '{name}_build_debian_jessie_xfce':
            my_description: 'Build Debian Jessie live-image with Xfce desktop.'
            my_time: '0 14 1 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian xfce'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian jessie xfce'
+       - '{name}_build_debian_sid_xfce':
+           my_description: 'Build Debian Sid live-image with Xfce desktop.'
+           my_time: '0 14 2 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian sid xfce'
        - '{name}_setup_schroot':
            my_description: 'Setup schroot for building live images using live-build in a jessie environment.'
            my_time: '42 10 1 * *'

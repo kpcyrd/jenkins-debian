@@ -22,8 +22,8 @@ convert_into_source_packages_only() {
 	for PKG in $(cat $TMPFILE) ; do
 		SRC=""
 		if [ ! -z "$PKG" ] ; then
-			SRC=$(grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES )
-			[ ! -z "$SRC" ] || SRC=$(grep-dctrl -X -n -FPackage -sPackage $PKG $PACKAGES )
+			SRC=$(grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES || true )
+			[ ! -z "$SRC" ] || SRC=$(grep-dctrl -X -n -FPackage -sPackage $PKG $PACKAGES || true)
 		fi
 		[ ! -z "$SRC" ] || SRC=$(echo $PKG )
 		echo $SRC >> $TMP2

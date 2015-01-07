@@ -132,6 +132,7 @@ properties:
 
 === reproducible
 
+* new pkg set: packages which had a dsa
 * here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
 
 * check 0.52-1 is still not fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html

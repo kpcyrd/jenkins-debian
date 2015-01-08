@@ -82,7 +82,7 @@ properties:
 * def sort_isos_by_creation_date
   Dir.glob("#{Dir.pwd}/*.iso").sort_by {|f| tails_iso_creation_date(f)}
   -> useless for us, purpose is to automatically select the latest iso if none is given
-* search for tails+tor+Tor
+* search case-in-sensitive for tails+tor+amnesia
 
 * put in update_jdn.sh:
 ----

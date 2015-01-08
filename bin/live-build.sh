@@ -21,7 +21,8 @@ trap cleanup_all INT TERM EXIT
 lb config --distribution $2 --bootappend-live "boot=live config hostname=$1 username=$1"
 case "$3" in
 	standalone)	echo education-standalone >> config/package-lists/live.list.chroot
-			;;
+			echo education-desktop-xfce >> config/package-lists/live.list.chroot
+	;;
 	gnome)		echo task-gnome-desktop >> config/package-lists/live.list.chroot
 			;;
 	xfce)		echo task-xfce-desktop >> config/package-lists/live.list.chroot

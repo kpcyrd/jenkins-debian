@@ -19,6 +19,7 @@ trap cleanup_all INT TERM EXIT
 # $2 is used for the suite
 # $3 is choosing the flavor
 lb config --distribution $2 --bootappend-live "boot=live config hostname=$1 username=$1"
+cp -rv /srv/jenkins/live/config .
 case "$3" in
 	standalone)	echo education-standalone >> config/package-lists/live.list.chroot
 			echo education-desktop-xfce >> config/package-lists/live.list.chroot

@@ -65,86 +65,95 @@ log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
 log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
 log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
 
-html_header = Template("""<!DOCTYPE html>
-<html>\n<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link href="/userContent/static/style.css" type="text/css" rel="stylesheet" />
-<title>$page_title</title>\n</head>
-<body>
-""")
-html_footer = Template("""<hr /><p style="font-size:0.9em;">There is more
-information <a href="%s/userContent/about.html">about jenkins.debian.net</a>
-and about <a href="https://wiki.debian.org/ReproducibleBuilds"> reproducible
-builds of Debian</a> available elsewhere. Last update: $date.
-Copyright 2014-%s <a href="mailto:holger@layer-acht.org">Holger Levsen</a>,
-GPL-2 licensed. The weather icons are public domain and have been taken from
-the <a href=http://tango.freedesktop.org/Tango_Icon_Library target=_blank>Tango
-Icon Library</a>.</p>
-</body></html>""" % (JENKINS_URL, datetime.datetime.now().strftime('%Y')))
 
-html_head_page = Template("""<header>
-<h2>$page_title</h2>
-<p>$count_total packages have been attempted to be build so far, that's
-$percent_total% of $amount source packages in Debian sid
-currently. Out of these, $count_good packagea ($percent_good%)
-<a href="https://wiki.debian.org/ReproducibleBuilds">could be built
-reproducible!</a></p>
-<ul>
+tab = '  '
+
+html_header = Template("""<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <link href="/userContent/static/style.css" type="text/css" rel="stylesheet" />
+      <title>$page_title</title>
+  </head>
+  <body>""")
+html_footer = Template("""
+    <hr />
+    <p style="font-size:0.9em;">
+      There is more information <a href="%s/userContent/about.html">about
+      jenkins.debian.net</a> and about
+      <a href="https://wiki.debian.org/ReproducibleBuilds"> reproducible builds
+      of Debian</a> available elsewhere. Last update: $date.
+      Copyright 2014-%s <a href="mailto:holger@layer-acht.org">Holger Levsen</a>,
+      GPL-2 licensed. The weather icons are public domain and have been taken
+      from the <a href=http://tango.freedesktop.org/Tango_Icon_Library target=_blank>
+      Tango Icon Library</a>.
+     </p>
+  </body>
+</html>""" % (JENKINS_URL, datetime.datetime.now().strftime('%Y')))
+
+html_head_page = Template((tab*2).join("""
+<header>
+  <h2>$page_title</h2>
+  <p>$count_total packages have been attempted to be build so far, that's
+  $percent_total% of $amount source packages in Debian sid
+  currently. Out of these, $count_good packagea ($percent_good%)
+  <a href="https://wiki.debian.org/ReproducibleBuilds">could be built
+  reproducible!</a></p>
+  <ul>
     <li>Have a look at:</li>
     <li>
-        <a href="/userContent/index_reproducible.html" target="_parent">
-        <img src="/userContent/static/weather-clear.png"
-                                                alt="reproducible icon" /></a>
+      <a href="/userContent/index_reproducible.html" target="_parent">
+        <img src="/userContent/static/weather-clear.png" alt="reproducible icon" />
+      </a>
     </li>
     <li>
-        <a href="/userContent/index_FTBR_with_buildinfo.html" target="_parent">
-        <img src="/userContent/static/weather-showers-scattered.png"
-                                        alt="FTBR_with_buildinfo icon" /></a>
+      <a href="/userContent/index_FTBR_with_buildinfo.html" target="_parent">
+        <img src="/userContent/static/weather-showers-scattered.png" alt="FTBR_with_buildinfo icon" />
+      </a>
     </li>
     <li>
-        <a href="/userContent/index_FTBR.html" target="_parent">
+      <a href="/userContent/index_FTBR.html" target="_parent">
         <img src="/userContent/static/weather-showers.png" alt="FTBR icon" />
-        </a>
+      </a>
     </li>
     <li>
-        <a href="/userContent/index_FTBFS.html" target="_parent">
+      <a href="/userContent/index_FTBFS.html" target="_parent">
         <img src="/userContent/static/weather-storm.png" alt="FTBFS icon" />
-        </a>
+      </a>
     </li>
     <li>
-        <a href="/userContent/index_404.html" target="_parent">
-        <img src="/userContent/static/weather-severe-alert.png"
-                                                    alt="404 icon" /></a>
+      <a href="/userContent/index_404.html" target="_parent">
+        <img src="/userContent/static/weather-severe-alert.png" alt="404 icon" />
+      </a>
     </li>
     <li>
-        <a href="/userContent/index_not_for_us.html" target="_parent">
-        <img src="/userContent/static/weather-few-clouds-night.png"
-                                            alt="not_for_us icon" /></a>
+      <a href="/userContent/index_not_for_us.html" target="_parent">
+        <img src="/userContent/static/weather-few-clouds-night.png" alt="not_for_us icon" />
+      </a>
     </li>
     <li>
-        <a href="/userContent/index_blacklisted.html" target="_parent">
-            <img src="/userContent/static/error.png" alt="blacklisted icon" />
-        </a>
+      <a href="/userContent/index_blacklisted.html" target="_parent">
+        <img src="/userContent/static/error.png" alt="blacklisted icon" />
+      </a>
     </li>
-    <li><a href="/userContent/index_issues.html">issues</a></li
-    <li><li><a href="/userContent/index_notes.html">packages with notes</a></li></li>
+    <li><a href="/userContent/index_issues.html">issues</a></li>
+    <li><a href="/userContent/index_notes.html">packages with notes</a></li>
     <li><a href="/userContent/index_scheduled.html">currently scheduled</a></li>
-    <li><a href="/userContent/index_last_24h.html">packages tested in the last
-                                                            24h</a></li>
-    <li><a href="/userContent/index_last_48h.html">packages tested in the last
-                                                                48h</a></li>
-    <li><a href="/userContent/index_all_abc.html">all tested packages (sorted
-                                                    alphabetically)</a></li>
-    <li><a href="/userContent/index_dd-list.html">maintainers of unreproducible
-                                                            packages</a></li>
+    <li><a href="/userContent/index_last_24h.html">packages tested in the last 24h</a></li>
+    <li><a href="/userContent/index_last_48h.html">packages tested in the last 48h</a></li>
+    <li><a href="/userContent/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
+    <li><a href="/userContent/index_dd-list.html">maintainers of unreproducible packages</a></li>
     <li><a href="/userContent/index_stats.html">stats</a></li>
     <li><a href="/userContent/index_pkg_sets.html">package sets stats</a></li>
-</ul></header>""")
+  </ul>
+</header>""".splitlines(keepends=True)))
 
-html_foot_page = Template("""
-<p style="font-size:0.9em;">A package name displayed with a bold font is an 
-indication that this package has a note. Visited packages are linked in green,
-those which have not been visited are linked in blue.</p>""")
+html_foot_page = Template((tab*2).join("""
+<p style="font-size:0.9em;">
+  A package name displayed with a bold font is an indication that this
+  package has a note. Visited packages are linked in green, those which
+  have not been visited are linked in blue.
+</p>""".splitlines(keepends=True)))
 
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')

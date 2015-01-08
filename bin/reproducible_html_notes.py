@@ -13,58 +13,127 @@ from reproducible_common import *
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
 
-note_html = Template("""<table class="body">
-<tr>
+note_html = Template((tab*2).join("""
+<table class="body">
+  <tr>
     <td>Version annotated:</td>
     <td>$version</td>
-</tr>
-$infos
-<tr>
+  </tr>
+  $infos
+  <tr>
     <td colspan="2">&nbsp;</td>
-</tr>
-<tr>
+  </tr>
+  <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
-        <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>
+      <p>
+        Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.
+      </p>
     </td>
-</tr>
-</table>""")
-note_issues_html = Template("<tr><td>Identified issues:</td><td>$issues</td></tr>")
-note_bugs_html = Template("<tr><td>Bugs noted:</td><td>$bugs</td></tr>")
-note_comments_html = Template("<tr><td>Comments:</td><td>$comments</td></tr>")
-
-note_issue_html_url = Template("""<tr><td>URL</td>
-    <td><a href="$url" target="_blank">$url</a></td></tr>""")
-note_issue_html_desc = Template("""<tr><td>Description</td>
-    <td>$description</td></tr>""")
-note_issue_html = Template("""<table class="body">
+  </tr>
+</table>""".splitlines(keepends=True)))
+note_issues_html = Template((tab*3).join("""
 <tr>
-    <td>Identifier:</td>
-    <td><a href="%s/${issue}_issue.html" target="_parent">$issue</a>
-</tr>
-$issue_info
+  <td>
+    Identified issues:
+  </td>
+  <td>
+    $issues
+  </td>
+</tr>""".splitlines(keepends=True)))
+note_bugs_html = Template((tab*4).join("""
+<tr>
+  <td>
+    Bugs noted:
+  </td>
+  <td>
+     $bugs
+  </td>
+</tr>""".splitlines(keepends=True)))
+note_comments_html = Template((tab*3).join("""
+<tr>
+  <td>
+    Comments:
+  </td>
+  <td>
+    $comments
+  </td>
+</tr>""".splitlines(keepends=True)))
+
+note_issue_html_url = Template((tab*6).join("""
+<tr>
+  <td>
+    URL
+  </td>
+  <td>
+    <a href="$url" target="_blank">$url</a>
+  </td>
+</tr>""".splitlines(keepends=True)))
+note_issue_html_desc = Template((tab*6).join("""
+<tr>
+  <td>
+    Description
+  </td>
+  <td>
+     $description
+  </td>
+</tr>""".splitlines(keepends=True)))
+note_issue_html = Template((tab*5).join(("""
+<table class="body">
+  <tr>
+    <td>
+      Identifier:
+    </td>
+    <td>
+      <a href="%s/${issue}_issue.html" target="_parent">$issue</a>
+    </td>
+  </tr>
+  $issue_info
 </table>
-""" % ISSUES_URI)
+""" % ISSUES_URI).splitlines(keepends=True)))
 
-issue_html_url = Template("""<tr><td>URL:</td><td><a href="$url">$url</a>
-    </td></tr>""")
-issue_html = Template("""<table class="body">
+issue_html_url = Template((tab*4).join("""
 <tr>
-    <td>Identifier:</td>
-    <th>$issue</th>
-</tr>
-$urls
-<tr>
-    <td>Description:</td>
-    <td>$description</td>
-</tr>
-<tr>
-    <td>Packages known to be affected by this issue:</td>
-    <td>$affected_pkgs</td>
-</tr>
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:right; font-size:0.9em;">
-<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>
-</td></tr></table>""")
+  <td>
+    URL:
+  </td>
+  <td>
+    <a href="$url">$url</a>
+  </td>
+</tr>""".splitlines(keepends=True)))
+issue_html = Template((tab*3).join("""
+<table class="body">
+  <tr>
+    <td>
+      Identifier:
+    </td>
+    <th>
+      $issue
+    </th>
+  </tr>
+    $urls
+  <tr>
+    <td>
+      Description:
+    </td>
+    <td>
+      $description
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Packages known to be affected by this issue:
+    </td>
+    <td>
+$affected_pkgs
+    </td>
+  </tr>
+  <tr><td colspan="2">&nbsp;</td></tr>
+  <tr>
+    <td colspan="2" style="text-align:right; font-size:0.9em;">
+      <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>
+    </td>
+  </tr>
+</table>""".splitlines(keepends=True)))
 
 
 def load_notes():
@@ -156,7 +225,7 @@ def gen_html_issue(issue):
     # add affected packages:
     affected = ''
     for pkg in sorted(issues_count[issue]):
-        affected += '<a href="%s/%s.html" class="noted">%s</a>\n' % (
+        affected += tab*6 + '<a href="%s/%s.html" class="noted">%s</a>\n' % (
                      RB_PKG_URI, pkg, pkg)
     # check for description:
     try:
@@ -216,13 +285,14 @@ def iterate_over_issues(issues):
         i = i + 1
 
 def index_issues(issues):
-    html  = '<table class="body">'
-    html += '<tr><th>Identified issues</th></tr>'
+    templ = "\n<table class=\"body\">\n" + tab + "<tr>\n" + tab*2 + "<th>\n" \
+          + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
+    html = (tab*2).join(templ.splitlines(keepends=True))
     for issue in sorted(issues):
-        html += '<tr><td><a href="' + ISSUES_URI + '/' + issue + \
-                '_issue.html">' + issue + '</a></td></tr>'
-    html += '</table>'
-    html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
+        html += tab*3 + '<tr><td><a href="' + ISSUES_URI + '/' + issue + \
+                '_issue.html">' + issue + '</a></td></tr>\n'
+    html += tab*2 + '</table>\n'
+    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
     title = 'Overview of known issues related to reproducible builds'
     destfile = BASE + '/userContent/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/userContent/index_issues.html'

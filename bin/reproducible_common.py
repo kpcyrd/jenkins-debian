@@ -146,14 +146,14 @@ html_head_page = Template((tab*2).join("""
     <li><a href="/userContent/index_stats.html">stats</a></li>
     <li><a href="/userContent/index_pkg_sets.html">package sets stats</a></li>
   </ul>
-</header>""".splitlines(keepends=True)))
+</header>""".splitlines(True)))
 
 html_foot_page = Template((tab*2).join("""
 <p style="font-size:0.9em;">
   A package name displayed with a bold font is an indication that this
   package has a note. Visited packages are linked in green, those which
   have not been visited are linked in blue.
-</p>""".splitlines(keepends=True)))
+</p>""".splitlines(True)))
 
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')

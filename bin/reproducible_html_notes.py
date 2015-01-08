@@ -30,7 +30,7 @@ note_html = Template((tab*2).join("""
       </p>
     </td>
   </tr>
-</table>""".splitlines(keepends=True)))
+</table>""".splitlines(True)))
 note_issues_html = Template((tab*3).join("""
 <tr>
   <td>
@@ -39,7 +39,7 @@ note_issues_html = Template((tab*3).join("""
   <td>
     $issues
   </td>
-</tr>""".splitlines(keepends=True)))
+</tr>""".splitlines(True)))
 note_bugs_html = Template((tab*4).join("""
 <tr>
   <td>
@@ -48,7 +48,7 @@ note_bugs_html = Template((tab*4).join("""
   <td>
      $bugs
   </td>
-</tr>""".splitlines(keepends=True)))
+</tr>""".splitlines(True)))
 note_comments_html = Template((tab*3).join("""
 <tr>
   <td>
@@ -57,7 +57,7 @@ note_comments_html = Template((tab*3).join("""
   <td>
     $comments
   </td>
-</tr>""".splitlines(keepends=True)))
+</tr>""".splitlines(True)))
 
 note_issue_html_url = Template((tab*6).join("""
 <tr>
@@ -67,7 +67,7 @@ note_issue_html_url = Template((tab*6).join("""
   <td>
     <a href="$url" target="_blank">$url</a>
   </td>
-</tr>""".splitlines(keepends=True)))
+</tr>""".splitlines(True)))
 note_issue_html_desc = Template((tab*6).join("""
 <tr>
   <td>
@@ -76,7 +76,7 @@ note_issue_html_desc = Template((tab*6).join("""
   <td>
      $description
   </td>
-</tr>""".splitlines(keepends=True)))
+</tr>""".splitlines(True)))
 note_issue_html = Template((tab*5).join(("""
 <table class="body">
   <tr>
@@ -89,7 +89,7 @@ note_issue_html = Template((tab*5).join(("""
   </tr>
   $issue_info
 </table>
-""" % ISSUES_URI).splitlines(keepends=True)))
+""" % ISSUES_URI).splitlines(True)))
 
 issue_html_url = Template((tab*4).join("""
 <tr>
@@ -99,7 +99,7 @@ issue_html_url = Template((tab*4).join("""
   <td>
     <a href="$url">$url</a>
   </td>
-</tr>""".splitlines(keepends=True)))
+</tr>""".splitlines(True)))
 issue_html = Template((tab*3).join("""
 <table class="body">
   <tr>
@@ -133,7 +133,7 @@ $affected_pkgs
       <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>
     </td>
   </tr>
-</table>""".splitlines(keepends=True)))
+</table>""".splitlines(True)))
 
 
 def load_notes():
@@ -287,7 +287,7 @@ def iterate_over_issues(issues):
 def index_issues(issues):
     templ = "\n<table class=\"body\">\n" + tab + "<tr>\n" + tab*2 + "<th>\n" \
           + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
-    html = (tab*2).join(templ.splitlines(keepends=True))
+    html = (tab*2).join(templ.splitlines(True))
     for issue in sorted(issues):
         html += tab*3 + '<tr><td><a href="' + ISSUES_URI + '/' + issue + \
                 '_issue.html">' + issue + '</a></td></tr>\n'

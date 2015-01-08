@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 BASEDIR=/root/jenkins.debian.net
@@ -64,7 +64,7 @@ sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat dev
         libxslt1-dev tcpdump unclutter radvd x11-apps syslinux \
         libcap2-bin devscripts libvirt-ruby ruby-rspec gawk ntp \
         ruby-json x11vnc xtightvncviewer ffmpeg libavcodec-extra-53 \
-        libvpx1 dnsmasq-base openjdk-7-jre
+        libvpx1 dnsmasq-base openjdk-7-jre python3-yaml
 # debootstrap is affected by #766459 in wheezy
 sudo apt-get install -t wheezy-backports qemu debootstrap qemu-kvm qemu-system-x86 libvirt0 qemu-user-static binfmt-support \
         libvirt-dev libvirt-bin seabios ruby-rjb ruby-packetfu cucumber

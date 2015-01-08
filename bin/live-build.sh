@@ -30,7 +30,7 @@ case "$3" in
 esac
 sudo lb build
 mkdir -p /srv/live-build/results
-cp -v live-image-amd64.hybrid.iso /srv/live-build/results/$1_$2_$3_live_amd64.iso
+sudo cp -v live-image-amd64.hybrid.iso /srv/live-build/results/$1_$2_$3_live_amd64.iso
 
 cleanup_all
 trap - INT TERM EXIT

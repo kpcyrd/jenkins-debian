@@ -10,6 +10,7 @@ jenkins ALL=  \
 	/bin/rm -rf --one-file-system /chroots/*, \
 	/bin/rm -rf --one-file-system /schroots/*, \
 	/bin/rm -rf --one-file-system /srv/live-build/*, \
+	/bin/cp -v *.iso /srv/live-build/results/*, \
 	/bin/mv /chroots/* /schroots/*, \
 	/bin/mv /schroots/* /schroots/*, \
 	/bin/umount -l /chroots/*, \

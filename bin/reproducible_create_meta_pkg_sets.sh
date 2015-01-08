@@ -12,14 +12,15 @@ common_init "$@"
 
 TPATH=/srv/reproducible-results/meta_pkgsets
 mkdir -p $TPATH
-PACKAGES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages`
-SOURCES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources`
-TMPFILE=$(mktemp)
-TMPFILE2=$(mktemp)
 
 ARCH=amd64
 SUITE=sid
 DISTNAME="$SUITE-$ARCH"
+
+PACKAGES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages`
+SOURCES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources`
+TMPFILE=$(mktemp)
+TMPFILE2=$(mktemp)
 
 # delete possibly existing dist
 rm -rf ~/.chdist/$DISTNAME;

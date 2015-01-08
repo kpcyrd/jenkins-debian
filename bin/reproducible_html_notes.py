@@ -224,9 +224,12 @@ def gen_html_issue(issue):
         url = ''
     # add affected packages:
     affected = ''
-    for pkg in sorted(issues_count[issue]):
-        affected += tab*6 + '<a href="%s/%s.html" class="noted">%s</a>\n' % (
-                     RB_PKG_URI, pkg, pkg)
+    try:
+        for pkg in sorted(issues_count[issue]):
+            affected += tab*6 + '<a href="%s/%s.html" class="noted">%s</a>\n' \
+                        % (RB_PKG_URI, pkg, pkg)
+    except KeyError:    # The note is not listed in any package, that is
+        affected = '<i>None</i>'
     # check for description:
     try:
         desc = issues[issue]['description']

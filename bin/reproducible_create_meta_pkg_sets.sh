@@ -46,7 +46,7 @@ convert_into_source_packages_only() {
 	rm $TMP2
 }
 
-convert_into_source_packages_only_from_deb822() {
+convert_from_deb822_into_source_packages_only() {
 	# given a Packages file in deb822 format on standard input, the
 	# following perl "oneliner" outputs the associated (unversioned)
 	# source package names, one per line
@@ -92,7 +92,7 @@ update_if_similar() {
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE2
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
-	convert_into_source_packages_only_from_deb822
+	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[1]}.pkgset
 fi
 
@@ -100,7 +100,7 @@ fi
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X -FPriority required > $TMPFILE2
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
-	convert_into_source_packages_only_from_deb822
+	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[2]}.pkgset
 fi
 
@@ -108,7 +108,7 @@ fi
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > $TMPFILE2
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
-	convert_into_source_packages_only_from_deb822
+	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[3]}.pkgset
 fi
 
@@ -116,7 +116,7 @@ fi
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > $TMPFILE2
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
-	convert_into_source_packages_only_from_deb822
+	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[4]}.pkgset
 fi
 
@@ -130,6 +130,7 @@ fi
 # The current method also ignores Build-Depends-Indep and Build-Depends-Arch
 
 # all build depends of gnome
+rm -f $TMPFILE
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] ; then
 	for PKG in $(cat $TPATH/${META_PKGSET[4]}.pkgset) ; do
 		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
@@ -147,6 +148,7 @@ if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[6]}.pkgset) ] ; 
 fi
 
 # all build depends of tails
+rm -f $TMPFILE
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] ; then
 	for PKG in $(cat $TPATH/${META_PKGSET[6]}.pkgset) ; do
 		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE

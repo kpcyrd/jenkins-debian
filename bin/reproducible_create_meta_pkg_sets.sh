@@ -32,7 +32,7 @@ chdist --arch=$ARCH apt-get $DISTNAME update
 # helper functions
 convert_into_source_packages_only() {
 	TMP2=$(mktemp)
-	for PKG in $(cat $TMPFILE | sed "s#([^)]*)##g; s#,##g" |sort -u ) ; do
+	for PKG in $(cat $TMPFILE | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" |sort -u ) ; do
 		SRC=""
 		if [ ! -z "$PKG" ] ; then
 			SRC=$(grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES || true )
@@ -134,7 +134,7 @@ fi
 rm -f $TMPFILE
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] ; then
 	for PKG in $(cat $TPATH/${META_PKGSET[4]}.pkgset) ; do
-		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 	done
 	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[5]}.pkgset
@@ -152,7 +152,7 @@ fi
 rm -f $TMPFILE
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] ; then
 	for PKG in $(cat $TPATH/${META_PKGSET[6]}.pkgset) ; do
-		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^)]*)##g; s#,##g" >> $TMPFILE
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 	done
 	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[7]}.pkgset

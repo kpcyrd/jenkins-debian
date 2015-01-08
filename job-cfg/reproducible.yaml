@@ -224,7 +224,7 @@
             my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
-            my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_html_notes.py'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_html_all_packages':
             my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'

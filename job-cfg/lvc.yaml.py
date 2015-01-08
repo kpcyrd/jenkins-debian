@@ -72,7 +72,7 @@ print("""
     wrappers:
       - live-screenshot
     builders:
-      - shell: 'rm $WORKSPACE/*.png -f ; /srv/jenkins/bin/lvc/run_test_suite {my_params}'
+      - shell: 'rm $WORKSPACE/*.png -f >/dev/null; /srv/jenkins/bin/lvc/run_test_suite {my_params}'
     triggers:
       - timed: '{my_time}'
 """)

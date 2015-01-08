@@ -230,7 +230,7 @@ write_page_header() {
 	if [ "$1" = "$MAINVIEW" ] ; then
 		write_page "<p>These pages contain results obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine it's running on!</p>"
 	fi
-	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $COUNT_GOOD packagea ($PERCENT_GOOD%) <a href=\"https://wiki.debian.org/ReproducibleBuilds\">could be built reproducible!</a>"
+	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $COUNT_GOOD packages ($PERCENT_GOOD%) <a href=\"https://wiki.debian.org/ReproducibleBuilds\">could be built reproducible!</a>"
 	if [ "${1:0:3}" = "all" ] || [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
 		write_page " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
 	fi

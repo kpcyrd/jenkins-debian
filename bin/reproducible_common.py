@@ -96,7 +96,7 @@ html_head_page = Template((tab*2).join("""
   <h2>$page_title</h2>
   <p>$count_total packages have been attempted to be build so far, that's
   $percent_total% of $amount source packages in Debian sid
-  currently. Out of these, $count_good packagea ($percent_good%)
+  currently. Out of these, $count_good packages ($percent_good%)
   <a href="https://wiki.debian.org/ReproducibleBuilds">could be built
   reproducible!</a></p>
   <ul>

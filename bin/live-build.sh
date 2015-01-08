@@ -22,9 +22,9 @@ lb config --distribution $2 --bootappend-live "boot=live config hostname=$1 user
 case "$3" in
 	standalone)	echo education-standalone >> config/package-lists/live.list.chroot
 			;;
-	gnome)		echo gnome >> config/package-lists/live.list.chroot
+	gnome)		echo task-gnome-desktop >> config/package-lists/live.list.chroot
 			;;
-	xfce)		echo xfce4 >> config/package-lists/live.list.chroot
+	xfce)		echo task-xfce-desktop >> config/package-lists/live.list.chroot
 			;;
 	*)		;;
 esac

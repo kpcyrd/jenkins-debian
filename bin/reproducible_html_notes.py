@@ -170,6 +170,16 @@ def gen_html_issue(issue):
     return issue_html.substitute(issue=issue, urls=url, description=desc,
                                    affected_pkgs=affected)
 
+
+def purge_old_notes(notes):
+    presents = os.listdir(NOTES_PATH)
+    for page in presents:
+        pkg = page.rsplit('_')[0]
+        log.debug('checking if ' + page + ' (from ' + pkg + ') is still needed')
+        if pkg not in notes:
+            log.info('There are no notes for ' + pkg + '. Removing old page.')
+            os.remove(NOTES_PATH + '/' + page)
+
 def iterate_over_notes(notes):
     num_notes = str(len(notes))
     i = 0
@@ -226,4 +236,4 @@ if __name__ == '__main__':
     iterate_over_notes(notes)
     iterate_over_issues(issues)
     index_issues(issues)
-        
+    purge_old_notes(notes)

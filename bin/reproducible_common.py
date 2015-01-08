@@ -27,7 +27,7 @@ REPRODUCIBLE_JSON = BASE + '/userContent/reproducible.json'
 
 NOTES_URI = '/userContent/notes'
 ISSUES_URI = '/userContent/issues'
-RB_PKG_URI = '/usrtContent/rb-pkg'
+RB_PKG_URI = '/userContent/rb-pkg'
 NOTES_PATH = BASE + NOTES_URI
 ISSUES_PATH = BASE + ISSUES_URI
 RB_PKG_PATH = BASE + RB_PKG_URI

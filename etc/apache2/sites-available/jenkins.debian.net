@@ -53,8 +53,8 @@ NameVirtualHost *:80
 NameVirtualHost *:443
 <VirtualHost *:443>
 	SSLEngine on
-	SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
-	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	SSLCertificateFile /etc/apache2/ssl/jenkins.debian.net.pem
+	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
 
 	ServerName jenkins.debian.net
 	ServerAdmin holger@layer-acht.org

@@ -182,7 +182,7 @@ if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] ;
 	# (so far it was a manual "dpkg --get-selections" on all machines
 	# converted into a list of source packages...)
 	cat /srv/jenkins/bin/reproducible_installed_on_debian.org > $TMPFILE
-	update_if_similar ${META_PKGSET[9]}.pkgset
+	update_if_similar ${META_PKGSET[10]}.pkgset
 fi
 
 # finally

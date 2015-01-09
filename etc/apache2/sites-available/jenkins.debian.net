@@ -69,6 +69,7 @@ NameVirtualHost *:443
 		AllowOverride None
 		Order allow,deny
 		allow from all
+		AddType text/plain .log
 	</Directory>
 
 	Alias /userContent /var/lib/jenkins/userContent
@@ -104,7 +105,17 @@ NameVirtualHost *:443
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/$
-	RewriteRule ^/(.*)       https://%{HTTP_HOST}/userContent/reproducible.html [R]
+	RewriteRule ^/(.*) /reproducible.html [R,L]
+
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} !^/userContent
+	RewriteRule ^(.*)$ /userContent/$1 [L]
+
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/userContent
+	RewriteRule ^/userContent/(.*)$ /$1 [R]
 
 	ProxyRequests Off
 	<Proxy *>

@@ -149,9 +149,8 @@ NameVirtualHost *:443
 
 <VirtualHost reproducible.debian.net:443>
 	SSLEngine on
-	#SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
-	SSLCertificateFile    /etc/ssl/certs/ssl-cert-snakeoil.pem
-	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
+	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
 
 	ServerName reproducible.debian.net
 	ServerAdmin holger@layer-acht.org

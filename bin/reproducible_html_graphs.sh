@@ -250,7 +250,14 @@ VIEW=pkg_sets
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+write_page "<ul><li>Tracked package sets: </li>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+	write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
+done
+write_page "</ul>"
+for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+	write_page "<hr /><a name=\"${META_PKGSET[$i]}\"></a>"
+	BUILDINFO_SIGNS=true
 	META_RESULT=true
 	gather_meta_stats $i	# FIXME: this ignores unknown packages...
 	if $META_RESULT ; then
@@ -298,9 +305,8 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		fi
 		write_page "</p>"
 	fi
+	write_page_meta_sign
 done
-BUILDINFO_ON_PAGE=true
-write_page_meta_sign
 write_page_footer
 publish_page
 

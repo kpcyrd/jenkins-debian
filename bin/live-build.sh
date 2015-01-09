@@ -22,7 +22,7 @@ lb config --distribution $2 --bootappend-live "boot=live config hostname=$1 user
 cp -rv /srv/jenkins/live/config .
 case "$3" in
 	standalone)	echo education-standalone >> config/package-lists/live.list.chroot
-			echo education-desktop-xfce >> config/package-lists/live.list.chroot
+			echo education-desktop-kde >> config/package-lists/live.list.chroot
 			echo education-laptop >> config/package-lists/live.list.chroot
 			;;
 	gnome)		echo task-gnome-desktop >> config/package-lists/live.list.chroot

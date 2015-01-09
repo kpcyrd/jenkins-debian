@@ -223,7 +223,7 @@ write_page_header() {
 	rm -f $PAGE
 	BUILDINFO_ON_PAGE=false
 	write_page "<!DOCTYPE html><html><head>"
-	write_page "<meta name="globalsign-domain-verification" content="Ri3secINNIbMrZ7EE0iXDs3Fe05MUAO56jZC5lde43" />" # FIXME: remove this oncewe got the cert...
+	write_page "<meta name=\"globalsign-domain-verification\" content=\"Ri3secINNIbMrZ7EE0iXDs3Fe05MUAO56jZC5lde43\" />" # FIXME: remove this oncewe got the cert...
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>$2</title></head>"

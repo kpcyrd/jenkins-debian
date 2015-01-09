@@ -252,7 +252,9 @@ echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 write_page "<ul><li>Tracked package sets: </li>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
+	if [ -f /var/lib/jenkins/userContent/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
+		write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
+	fi
 done
 write_page "</ul>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do

@@ -216,7 +216,7 @@ set_icon() {
 
 write_icon() {
 	# ICON and STATE_TARGET_NAME are set by set_icon()
-	write_page "<a href=\"/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
+	write_page "<a href=\"/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
 }
 
 write_page_header() {
@@ -256,7 +256,7 @@ write_page_header() {
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi
-		write_page "<li><a href=\"/userContent/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
+		write_page "<li><a href=\"/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 	done
 	write_page "</ul>"
 	write_page "</header>"
@@ -282,7 +282,7 @@ publish_page() {
 		cp $PAGE /var/lib/jenkins/userContent/reproducible.html
 	fi
 	rm $PAGE
-	echo "Enjoy $REPRODUCIBLE_URL/userContent/$PAGE"
+	echo "Enjoy $REPRODUCIBLE_URL/$PAGE"
 }
 
 set_package_star() {
@@ -332,7 +332,7 @@ init_pkg_page() {
 	echo "<title>$1 - reproducible builds results</title></head>" >> ${PKG_FILE}
 	echo "<body><table class=\"head\"><tr><td><span style=\"font-size:1.2em;\">$1</span> $2" >> ${PKG_FILE}
 	set_icon "$3" $5 # this sets $STATE_TARGET_NAME and $ICON
-	echo "<a href=\"/userContent/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> ${PKG_FILE}
+	echo "<a href=\"/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>" >> ${PKG_FILE}
 	echo "<span style=\"font-size:0.9em;\">at $4:</span> " >> ${PKG_FILE}
 }
 
@@ -341,7 +341,7 @@ append2pkg_page() {
 }
 
 finish_pkg_page() {
-	echo "</td><td style=\"text-align:right; font-size:0.9em;\"><a href=\"/userContent/reproducible.html\" target=\"_parent\">reproducible builds</a></td></tr></table>" >> ${PKG_FILE}
+	echo "</td><td style=\"text-align:right; font-size:0.9em;\"><a href=\"/reproducible.html\" target=\"_parent\">reproducible builds</a></td></tr></table>" >> ${PKG_FILE}
 	echo "<iframe name=\"main\" src=\"$1\" width=\"100%\" height=\"98%\" frameborder=\"0\">" >> ${PKG_FILE}
 	echo "<p>Your browser does not support iframes. Use a different one or follow the links above.</p>" >> ${PKG_FILE}
 	echo "</iframe>" >> ${PKG_FILE}
@@ -364,7 +364,7 @@ process_packages() {
 			MAINLINK=""
 			NOTES_LINK=""
 			if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
-				NOTES_LINK=" <a href=\"/userContent/notes/${PKG}_note.html\" target=\"main\">notes</a> "
+				NOTES_LINK=" <a href=\"/notes/${PKG}_note.html\" target=\"main\">notes</a> "
 			fi
 			set_package_star
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
@@ -374,19 +374,19 @@ process_packages() {
 			init_pkg_page "$PKG" "$VERSION" "$STATUS" "$BUILD_DATE" "$STAR"
 			append2pkg_page "${NOTES_LINK}"
 			if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo" ] ; then
-				append2pkg_page " <a href=\"/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
-				MAINLINK="/userContent/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
+				append2pkg_page " <a href=\"/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo\" target=\"main\">buildinfo</a> "
+				MAINLINK="/buildinfo/${PKG}_${EVERSION}_amd64.buildinfo"
 			fi
 			if [ -f "/var/lib/jenkins/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html" ] ; then
-				append2pkg_page " <a href=\"/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
-				MAINLINK="/userContent/dbd/${PKG}_${EVERSION}.debbindiff.html"
+				append2pkg_page " <a href=\"/dbd/${PKG}_${EVERSION}.debbindiff.html\" target=\"main\">debbindiff</a> "
+				MAINLINK="/dbd/${PKG}_${EVERSION}.debbindiff.html"
 			fi
 			RBUILD_LOG="rbuild/${PKG}_${EVERSION}.rbuild.log"
 			if [ -f "/var/lib/jenkins/userContent/${RBUILD_LOG}" ] ; then
 				SIZE=$(du -sh "/var/lib/jenkins/userContent/${RBUILD_LOG}" |cut -f1)
-				append2pkg_page " <a href=\"/userContent/${RBUILD_LOG}\" target=\"main\">rbuild ($SIZE)</a> "
+				append2pkg_page " <a href=\"/${RBUILD_LOG}\" target=\"main\">rbuild ($SIZE)</a> "
 				if [ "$MAINLINK" = "" ] ; then
-					MAINLINK="/userContent/${RBUILD_LOG}"
+					MAINLINK="/${RBUILD_LOG}"
 				fi
 			fi
 			append2pkg_page " <a href=\"https://packages.qa.debian.org/${PKG}\" target=\"main\">PTS</a> "
@@ -395,7 +395,7 @@ process_packages() {
 			append2pkg_page " <a href=\"https://sources.debian.net/src/${PKG}/${VERSION}/debian/rules\" target=\"main\">debian/rules</a> "
 
 			if [ ! -z "${NOTES_LINK}" ] ; then
-				MAINLINK="/userContent/notes/${PKG}_note.html"
+				MAINLINK="/notes/${PKG}_note.html"
 			fi
 			finish_pkg_page "$MAINLINK"
 		fi

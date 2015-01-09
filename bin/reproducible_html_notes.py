@@ -297,8 +297,8 @@ def index_issues(issues):
     html += tab*2 + '</table>\n'
     html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
     title = 'Overview of known issues related to reproducible builds'
-    destfile = BASE + '/userContent/index_issues.html'
-    desturl = REPRODUCIBLE_URL + '/userContent/index_issues.html'
+    destfile = BASE + '/index_issues.html'
+    desturl = REPRODUCIBLE_URL + '/index_issues.html'
     write_html_page(title=title, body=html, destfile=destfile, nofooter=True)
     log.info('Issues index now available at ' + desturl)
 

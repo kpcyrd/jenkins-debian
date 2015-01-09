@@ -20,14 +20,14 @@ DEBUG = False
 QUIET = False
 
 BIN_PATH = '/srv/jenkins/bin'
-BASE = '/var/lib/jenkins'
+BASE = '/var/lib/jenkins/userContent'
 
-REPRODUCIBLE_DB = BASE + '/userContent/reproducible.db'
-REPRODUCIBLE_JSON = BASE + '/userContent/reproducible.json'
+REPRODUCIBLE_DB = BASE + '/reproducible.db'
+REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 
-NOTES_URI = '/userContent/notes'
-ISSUES_URI = '/userContent/issues'
-RB_PKG_URI = '/userContent/rb-pkg'
+NOTES_URI = '/notes'
+ISSUES_URI = 'issues'
+RB_PKG_URI = '/rb-pkg'
 NOTES_PATH = BASE + NOTES_URI
 ISSUES_PATH = BASE + ISSUES_URI
 RB_PKG_PATH = BASE + RB_PKG_URI
@@ -102,49 +102,49 @@ html_head_page = Template((tab*2).join("""
   <ul>
     <li>Have a look at:</li>
     <li>
-      <a href="/userContent/index_reproducible.html" target="_parent">
+      <a href="/index_reproducible.html" target="_parent">
         <img src="/userContent/static/weather-clear.png" alt="reproducible icon" />
       </a>
     </li>
     <li>
-      <a href="/userContent/index_FTBR_with_buildinfo.html" target="_parent">
+      <a href="/index_FTBR_with_buildinfo.html" target="_parent">
         <img src="/userContent/static/weather-showers-scattered.png" alt="FTBR_with_buildinfo icon" />
       </a>
     </li>
     <li>
-      <a href="/userContent/index_FTBR.html" target="_parent">
+      <a href="/index_FTBR.html" target="_parent">
         <img src="/userContent/static/weather-showers.png" alt="FTBR icon" />
       </a>
     </li>
     <li>
-      <a href="/userContent/index_FTBFS.html" target="_parent">
+      <a href="/index_FTBFS.html" target="_parent">
         <img src="/userContent/static/weather-storm.png" alt="FTBFS icon" />
       </a>
     </li>
     <li>
-      <a href="/userContent/index_404.html" target="_parent">
+      <a href="/index_404.html" target="_parent">
         <img src="/userContent/static/weather-severe-alert.png" alt="404 icon" />
       </a>
     </li>
     <li>
-      <a href="/userContent/index_not_for_us.html" target="_parent">
+      <a href="/index_not_for_us.html" target="_parent">
         <img src="/userContent/static/weather-few-clouds-night.png" alt="not_for_us icon" />
       </a>
     </li>
     <li>
-      <a href="/userContent/index_blacklisted.html" target="_parent">
+      <a href="/index_blacklisted.html" target="_parent">
         <img src="/userContent/static/error.png" alt="blacklisted icon" />
       </a>
     </li>
-    <li><a href="/userContent/index_issues.html">issues</a></li>
-    <li><a href="/userContent/index_notes.html">packages with notes</a></li>
-    <li><a href="/userContent/index_scheduled.html">currently scheduled</a></li>
-    <li><a href="/userContent/index_last_24h.html">packages tested in the last 24h</a></li>
-    <li><a href="/userContent/index_last_48h.html">packages tested in the last 48h</a></li>
-    <li><a href="/userContent/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
-    <li><a href="/userContent/index_dd-list.html">maintainers of unreproducible packages</a></li>
-    <li><a href="/userContent/index_stats.html">stats</a></li>
-    <li><a href="/userContent/index_pkg_sets.html">package sets stats</a></li>
+    <li><a href="/index_issues.html">issues</a></li>
+    <li><a href="/index_notes.html">packages with notes</a></li>
+    <li><a href="/index_scheduled.html">currently scheduled</a></li>
+    <li><a href="/index_last_24h.html">packages tested in the last 24h</a></li>
+    <li><a href="/index_last_48h.html">packages tested in the last 48h</a></li>
+    <li><a href="/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
+    <li><a href="/index_dd-list.html">maintainers of unreproducible packages</a></li>
+    <li><a href="/index_stats.html">stats</a></li>
+    <li><a href="/index_pkg_sets.html">package sets stats</a></li>
   </ul>
 </header>""".splitlines(True)))
 

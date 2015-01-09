@@ -43,6 +43,6 @@ done < <(echo "$RESULT")
 write_json "]"
 
 echo
-echo "$(date) - $REPRODUCIBLE_URL/userContent/reproducible.json has been updated."
+echo "$(date) - $REPRODUCIBLE_URL/reproducible.json has been updated."
 mv $JSON /var/lib/jenkins/userContent/reproducible.json
 chmod 755 /var/lib/jenkins/userContent/reproducible.json

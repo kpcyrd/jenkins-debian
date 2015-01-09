@@ -89,7 +89,7 @@ html_footer = Template("""
       Tango Icon Library</a>.
      </p>
   </body>
-</html>""")
+</html>""" % (JENKINS_URL))
 
 html_head_page = Template((tab*2).join("""
 <header>

@@ -25,12 +25,18 @@ BASE = '/var/lib/jenkins/userContent'
 REPRODUCIBLE_DB = BASE + '/reproducible.db'
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 
+DBD_URI = '/dbd'
 NOTES_URI = '/notes'
 ISSUES_URI = 'issues'
 RB_PKG_URI = '/rb-pkg'
+RBUILD_URI = '/rbuild'
+BUILDINFO_URI = '/buildinfo'
+DBD_PATH = BASE + DBD_URI
 NOTES_PATH = BASE + NOTES_URI
 ISSUES_PATH = BASE + ISSUES_URI
 RB_PKG_PATH = BASE + RB_PKG_URI
+RBUILD_PATH = BASE + RBUILD_URI
+BUILDINFO_PATH = BASE + BUILDINFO_URI
 
 REPRODUCIBLE_URL = 'https://reproducible.debian.net'
 JENKINS_URL = 'https://jenkins.debian.net'
@@ -53,13 +59,19 @@ log.addHandler(sh)
 
 
 log.debug("BIN_PATH:\t" + BIN_PATH)
-log.debug("BASE:\t" + BASE)
+log.debug("BASE:\t\t" + BASE)
+log.debug("DBD_URI:\t\t" + DBD_URI)
+log.debug("DBD_PATH:\t" + DBD_PATH)
 log.debug("NOTES_URI:\t" + NOTES_URI)
 log.debug("ISSUES_URI:\t" + ISSUES_URI)
 log.debug("NOTES_PATH:\t" + NOTES_PATH)
 log.debug("ISSUES_PATH:\t" + ISSUES_PATH)
 log.debug("RB_PKG_URI:\t" + RB_PKG_URI)
 log.debug("RB_PKG_PATH:\t" + RB_PKG_PATH)
+log.debug("RBUILD_URI:\t" + RBUILD_URI)
+log.debug("RBUILD_PATH:\t" + RBUILD_PATH)
+log.debug("BUILDINFO_URI:\t" + BUILDINFO_URI)
+log.debug("BUILDINFO_PATH:\t" + BUILDINFO_PATH)
 log.debug("REPRODUCIBLE_DB:\t" + REPRODUCIBLE_DB)
 log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
 log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
@@ -195,8 +207,8 @@ count_good = int(query_db(
  'SELECT COUNT(name) FROM source_packages WHERE status="reproducible"')[0][0])
 percent_total = round(((count_total/amount)*100), 1)
 percent_good = round(((count_good/count_total)*100), 1)
-log.info('Total packages in Sid:\t' + str(amount))
-log.info('Total tested packages:\t' + str(count_total))
+log.info('Total packages in Sid:\t\t' + str(amount))
+log.info('Total tested packages:\t\t' + str(count_total))
 log.info('Total reproducible packages:\t' + str(count_good))
 log.info('That means that out of the ' + str(percent_total) + '% of ' +
              'the Sid tested packages the ' + str(percent_good) + '% are ' +

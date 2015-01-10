@@ -18,6 +18,12 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
+[20:27] < weasel>  Header always add Strict-Transport-Security "max-age=15552000"
+[20:27] < weasel> add this to your vhost config.
+[20:27] < weasel> a2enmod headers
+[20:27] < weasel> reload.
+
+
 * get rid of FIXMEs in README. Really.
 * turn job-cfg/g-i.yaml into .yaml.py
 * split etc/schroot/default

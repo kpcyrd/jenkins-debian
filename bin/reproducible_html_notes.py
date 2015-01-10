@@ -9,6 +9,7 @@
 
 import yaml
 from reproducible_common import *
+from reproducible_html_packages import process_packages
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -270,6 +271,7 @@ def iterate_over_notes(notes):
         desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
         log.info("you can now see your notes at " + desturl)
         i = i + 1
+    process_packages(notes) # regenerate all rb-pkg/ pages
 
 def iterate_over_issues(issues):
     num_issues = str(len(issues))

@@ -42,8 +42,11 @@ $links
 
 
 def sizeof_fmt(num):
-    for unit in ['B','KB','MB','GB','TB','PB','EB','ZB']:
+    for unit in ['B','KB','MB','GB']:
         if abs(num) < 1024.0:
+            if unit == 'GB':
+                log.error('The size of this file is bigger than 1 GB!')
+                log.error('Please check')
             return str(int(round(float("%3f" % num), 0))) + "%s" % (unit)
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')

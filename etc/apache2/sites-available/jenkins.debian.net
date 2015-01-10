@@ -42,6 +42,7 @@ NameVirtualHost *:443
 
 	RequestHeader set X-Forwarded-Proto "https"
 	RequestHeader set X-Forwarded-Port "443"
+	Header always add Strict-Transport-Security "max-age=15552000"
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 

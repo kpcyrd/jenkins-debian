@@ -27,7 +27,7 @@ REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 
 DBD_URI = '/dbd'
 NOTES_URI = '/notes'
-ISSUES_URI = 'issues'
+ISSUES_URI = '/issues'
 RB_PKG_URI = '/rb-pkg'
 RBUILD_URI = '/rbuild'
 BUILDINFO_URI = '/buildinfo'

@@ -171,7 +171,7 @@ html_foot_page = Template((tab*2).join("""
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 
-def write_html_page(title, body, destfile, noheader=False, nofooter=False):
+def write_html_page(title, body, destfile, noheader=False, nofooter=False, noendpage=False):
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     html += html_header.substitute(page_title=title)
@@ -186,7 +186,10 @@ def write_html_page(title, body, destfile, noheader=False, nofooter=False):
     html += body
     if not nofooter:
         html += html_foot_page.substitute()
-    html += html_footer.substitute(date=now)
+    if not noendpage:
+        html += html_footer.substitute(date=now)
+    else:
+        html += '</body>\n</html>'
     os.makedirs(destfile.rsplit('/', 1)[0], exist_ok=True)
     with open(destfile, 'w') as fd:
         fd.write(html)

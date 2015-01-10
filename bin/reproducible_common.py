@@ -202,6 +202,30 @@ def query_db(query):
     cursor.execute(query)
     return cursor.fetchall()
 
+def join_status_icon(status, package=None, version=None):
+    table = {'reproducible' : 'weather-clear.png',
+             'FTBFS': 'weather-storm.png',
+             'FTBR' : 'weather-showers.png',
+             'FTBR_with_buildinfo': 'weather-showers-scattered.png',
+             '404': 'weather-severe-alert.png',
+             'not for us': 'weather-few-clouds-night.png',
+             'not_for_us': 'weather-few-clouds-night.png',
+             'blacklisted': 'error.png'}
+    if status == 'unreproducible':
+        if os.access(BUILDINFO_PATH + '/' + str(package) + '_' + str(version) + '_amd64.buildinfo', os.R_OK):
+            status = 'FTBR_with_buildinfo'
+        else:
+            status = 'FTBR'
+    log.debug('Linking status ⇔ icon. package: ' + str(package) + ' @ ' +
+              str(version) + ' status: ' + status)
+    try:
+        return (status, table[status])
+    except KeyError:
+        log.error('Status of package ' + package + ' (' + status +
+                  ') not recognized')
+        return (status, '')
+
+
 # do the db querying
 conn = init_conn()
 amount = int(query_db('SELECT count(name) FROM sources')[0][0])

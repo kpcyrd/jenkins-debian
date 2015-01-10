@@ -158,7 +158,7 @@ NameVirtualHost *:443
 </VirtualHost>
 
 
-<VirtualHost reproducible.debian.net:443>
+<VirtualHost *:443>
 	SSLEngine on
 	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
 	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt

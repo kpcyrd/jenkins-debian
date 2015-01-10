@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# clean-notes: sort and clean the notes stored in notes.git
+#
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2+
 #
 # Depends: python3
+#
+# This is included by all reproducible_*.py scripts, it cotains common functions
 
 import os
 import re

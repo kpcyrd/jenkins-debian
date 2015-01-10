@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# clean-notes: sort and clean the notes stored in notes.git
+#
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2+
 #
 # Depends: python3
+#
+# Build rb-pkg pages (the pages that describe the package status)
 
 
 from reproducible_common import *
@@ -99,7 +100,7 @@ def gen_extra_links(package, version):
     else:
         log.debug('buildinfo not detected at ' + buildinfo)
     return (links, default_view)
- 
+
 
 def process_packages(packages):
     """
@@ -113,7 +114,7 @@ def process_packages(packages):
         status, version, build_date = check_package_status(pkg)
         log.info('Generating the page of ' + pkg + ' ' + version +
                  ' builded at ' + build_date)
-        
+
         rbuild = RBUILD_PATH + '/' + pkg + '_' + version + '.rbuild.log'
         links, default_view = gen_extra_links(pkg, version)
 

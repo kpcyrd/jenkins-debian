@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
-# clean-notes: sort and clean the notes stored in notes.git
+#
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2+
 #
 # Depends: python3 python3-yaml
+#
+# Build html pages based on the content of the notes.git repository
 
 import yaml
 from reproducible_common import *

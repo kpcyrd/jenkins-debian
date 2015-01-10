@@ -51,7 +51,7 @@ NameVirtualHost *:80
 </VirtualHost>
 
 NameVirtualHost *:443
-<VirtualHost jenkins.debian.net:443>
+<VirtualHost *:443>
 	SSLEngine on
 	SSLCertificateFile /etc/apache2/ssl/jenkins.debian.net.pem
 	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
@@ -98,24 +98,33 @@ NameVirtualHost *:443
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 
+	# a bunch of redirect to point people to https:reproducible.debian.net
 	RewriteCond %{HTTP_HOST} jenkins\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.html$
-	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R,L]
-
-	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/$ [or]
-	RewriteCond %{REQUEST_URI} ^/userContent/$
-	RewriteRule ^/(.*) /reproducible.html [R,L]
-
-	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} !^/userContent
-	RewriteRule ^(.*)$ /userContent/$1 [L]
-
-	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/userContent
-	RewriteRule ^/userContent/(.*)$ /$1 [R]
+	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.json$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_issues.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_notess.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_schedule.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_last_24h.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_last_48h.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_all_abc.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_dd-list.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_stats.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_pkg_sets.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_reproducible.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_FTBR_with_buildinfo.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_FTBR.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_FTBFS.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_404.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_not_for_us.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_blacklisted.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/rb-pkg/ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/buildinfo/ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/dbd/ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/issues/ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/notes/ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/rbuild/
+	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
 	ProxyRequests Off
 	<Proxy *>
@@ -135,6 +144,7 @@ NameVirtualHost *:443
 	ProxyPass /userContent !
 	ProxyPass / http://localhost:8080/ nocanon
 	ProxyPassReverse  / http://localhost:8080/
+
 	RequestHeader set X-Forwarded-Proto "https"
 	RequestHeader set X-Forwarded-Port "443"
 
@@ -147,6 +157,7 @@ NameVirtualHost *:443
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 
+
 <VirtualHost reproducible.debian.net:443>
 	SSLEngine on
 	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
@@ -155,20 +166,12 @@ NameVirtualHost *:443
 	ServerName reproducible.debian.net
 	ServerAdmin holger@layer-acht.org
 
-	DocumentRoot /var/www
+	DocumentRoot /var/lib/jenkins/userContent
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None
 	</Directory>
-	<Directory /var/www/>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-		AddType text/plain .log
-	</Directory>
 
-	Alias /userContent /var/lib/jenkins/userContent
 	<Directory /var/lib/jenkins/userContent>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
@@ -186,51 +189,18 @@ NameVirtualHost *:443
 		SSLOptions +StdEnvVars
 	</Directory>
 
-	# allow certain params only from alioth (token is used to trigger builds)
-	RewriteEngine on
-	RewriteCond %{REMOTE_ADDR} !5\.153\.231\.21
-	# this is git.d.o which is really moszumanska.d.o
-	# etc/cron.daily/jenkins checks for changes in this IP address, so root will be notified and can adopt this...
-	RewriteCond %{QUERY_STRING} token
-	RewriteRule ^ - [F]
-
-	RewriteCond %{HTTP_HOST} jenkins\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.html$
-	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R,L]
-
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/$ [or]
-	RewriteCond %{REQUEST_URI} ^/userContent/$
+	RewriteCond %{REQUEST_URI} ^/$
 	RewriteRule ^/(.*) /reproducible.html [R,L]
 
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} !^/userContent
-	RewriteRule ^(.*)$ /userContent/$1 [L]
-
-	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/userContent
-	RewriteRule ^/userContent/(.*)$ /$1 [R]
+	RewriteRule ^/userContent/(.*)$ /$1 [R=301,L]
 
 	ProxyRequests Off
-	<Proxy *>
-		Order deny,allow
-		Allow from all
-	</Proxy>
-	ProxyPreserveHost on
-	AllowEncodedSlashes NoDecode
-	# proxy everything but a few urls
-	ProxyPass /munin !
-	ProxyPass /server-status !
-	ProxyPass /visitors-report.html !
-	ProxyPass /calamaris !
-	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt
-	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
-	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
-	ProxyPass /userContent !
-	ProxyPass / http://localhost:8080/ nocanon
-	ProxyPassReverse  / http://localhost:8080/
+
 	RequestHeader set X-Forwarded-Proto "https"
 	RequestHeader set X-Forwarded-Port "443"
 

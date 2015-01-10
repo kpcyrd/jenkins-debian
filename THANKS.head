@@ -1,0 +1,14 @@
+== Thanks a lot
+
+=== Sponsors
+
+ * The (virtualized) hardware is sponsored since October 2012 by http://www.profitbricks.com - currently it's using 15 cores and 50 GB memory, thanks a lot!
+ * link:https://globalsign.com["GlobalSign"] in January 2015 kindly provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
+
+=== Contributors
+
+link:https://jenkins.debian.net/["jenkins.debian.net"] would not be possible without these contributors:
+
+
+----
+

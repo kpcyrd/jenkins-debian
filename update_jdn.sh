@@ -107,12 +107,19 @@ cp --preserve=mode,timestamps -r bin logparse job-cfg features live /srv/jenkins
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
 cp -pr README INSTALL TODO d-i-preseed-cfgs /var/lib/jenkins/userContent/
+TMPFILE=$(mktemp)
+git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
+echo "----" >> $TMPFILE
+cat THANKS.head $TMPFILE > /var/lib/jenkins/userContent/THANKS
+rm THANKS.head $TMPFILE
 cp -pr userContent /var/lib/jenkins/
 cd /var/lib/jenkins/userContent/
 ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(pwd)/theme/debian-asciidoc.css"
 [ about.html -nt README ] || asciidoc $ASCIIDOC_PARAMS -o about.html README
 [ todo.html -nt TODO ] || asciidoc $ASCIIDOC_PARAMS -o todo.html TODO
 [ setup.html -nt INSTALL ] || asciidoc $ASCIIDOC_PARAMS -o setup.html INSTALL
+diff THANKS .THANKS >/dev/null || asciidoc $ASCIIDOC_PARAMS -o thanks.html THANKS
+mv THANKS .THANKS
 rm TODO README INSTALL
 chown -R jenkins.jenkins /var/lib/jenkins/userContent
 explain "Updated user content for Jenkins."

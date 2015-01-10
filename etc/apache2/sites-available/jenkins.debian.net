@@ -1,65 +1,23 @@
 NameVirtualHost *:80
-<VirtualHost *:80>
-	RewriteEngine On
-	RewriteCond %{HTTPS} !=on
-	RewriteCond %{REMOTE_ADDR} !127.0.0.1
-	RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
-
-	ServerName jenkins.debian.net
-	ServerAdmin holger@layer-acht.org
-
-	DocumentRoot /var/www
-	<Directory />
-		Options FollowSymLinks
-		AllowOverride None
-	</Directory>
-	<Directory /var/www/>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-	</Directory>
-
-	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-	<Directory "/usr/lib/cgi-bin">
-		AllowOverride None
-		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-		Order allow,deny
-		Allow from all
-		SSLOptions +StdEnvVars
-	</Directory>
-
-	ProxyRequests Off
-	<Proxy *>
-		Order deny,allow
-		Allow from all
-	</Proxy>
-	ProxyPreserveHost on
-	AllowEncodedSlashes NoDecode
-	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
-	ProxyPass /server-status !
-	ProxyPass / http://localhost:8080/
-	ProxyPassReverse / http://localhost:8080/ nocanon
-
-	ErrorLog ${APACHE_LOG_DIR}/error.log
-
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel warn
-
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-
 NameVirtualHost *:443
-<VirtualHost *:443>
+
+<Macro common-debian-service-https-redirect $name>
+	<VirtualHost *:80>
+		ServerName $name
+		ServerAdmin holger@layer-acht.org
+		CustomLog /var/log/apache2/access.log combined
+		ErrorLog /var/log/apache2/error.log
+		Redirect permanent / https://$name/
+	</VirtualHost>
+</Macro>
+
+<Macro common-directives $name>
 	SSLEngine on
-	SSLCertificateFile /etc/apache2/ssl/jenkins.debian.net.pem
 	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
 
-	ServerName jenkins.debian.net
+	ServerName $name
 	ServerAdmin holger@layer-acht.org
 
-	DocumentRoot /var/www
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None
@@ -71,8 +29,6 @@ NameVirtualHost *:443
 		allow from all
 		AddType text/plain .log
 	</Directory>
-
-	Alias /userContent /var/lib/jenkins/userContent
 	<Directory /var/lib/jenkins/userContent>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
@@ -81,17 +37,32 @@ NameVirtualHost *:443
 		AddType text/plain .log
 	</Directory>
 
-	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-	<Directory "/usr/lib/cgi-bin">
-		AllowOverride None
-		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-		Order allow,deny
-		Allow from all
-		SSLOptions +StdEnvVars
-	</Directory>
+	RewriteEngine on
+	ProxyRequests Off
+
+	RequestHeader set X-Forwarded-Proto "https"
+	RequestHeader set X-Forwarded-Port "443"
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</Macro>
+
+
+Use common-debian-service-https-redirect jenkins.debian.net
+Use common-debian-service-https-redirect reproducible.debian.net
+
+<VirtualHost *:443>
+	Use common-directives jenkins.debian.net
+	SSLCertificateFile /etc/apache2/ssl/jenkins.debian.net.pem
+
+	DocumentRoot /var/www
 
 	# allow certain params only from alioth (token is used to trigger builds)
-	RewriteEngine on
 	RewriteCond %{REMOTE_ADDR} !5\.153\.231\.21
 	# this is git.d.o which is really moszumanska.d.o
 	# etc/cron.daily/jenkins checks for changes in this IP address, so root will be notified and can adopt this...
@@ -126,7 +97,6 @@ NameVirtualHost *:443
 	RewriteCond %{REQUEST_URI} ^/userContent/rbuild/
 	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
-	ProxyRequests Off
 	<Proxy *>
 		Order deny,allow
 		Allow from all
@@ -144,50 +114,14 @@ NameVirtualHost *:443
 	ProxyPass /userContent !
 	ProxyPass / http://localhost:8080/ nocanon
 	ProxyPassReverse  / http://localhost:8080/
-
-	RequestHeader set X-Forwarded-Proto "https"
-	RequestHeader set X-Forwarded-Port "443"
-
-	ErrorLog ${APACHE_LOG_DIR}/error.log
-
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel warn
-
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 
 
 <VirtualHost *:443>
-	SSLEngine on
+	Use common-directives reproducible.debian.net
 	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
-	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
-
-	ServerName reproducible.debian.net
-	ServerAdmin holger@layer-acht.org
 
 	DocumentRoot /var/lib/jenkins/userContent
-	<Directory />
-		Options FollowSymLinks
-		AllowOverride None
-	</Directory>
-
-	<Directory /var/lib/jenkins/userContent>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-		AddType text/plain .log
-	</Directory>
-
-	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-	<Directory "/usr/lib/cgi-bin">
-		AllowOverride None
-		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-		Order allow,deny
-		Allow from all
-		SSLOptions +StdEnvVars
-	</Directory>
 
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/$
@@ -198,17 +132,4 @@ NameVirtualHost *:443
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} ^/userContent
 	RewriteRule ^/userContent/(.*)$ /$1 [R=301,L]
-
-	ProxyRequests Off
-
-	RequestHeader set X-Forwarded-Proto "https"
-	RequestHeader set X-Forwarded-Port "443"
-
-	ErrorLog ${APACHE_LOG_DIR}/error.log
-
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel warn
-
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>

@@ -59,7 +59,7 @@ fi
 #
 sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
 	build-essential python-setuptools molly-guard \
-	debootstrap sudo figlet graphviz apache2 python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3 dose-extra apt-file python-lzma bc \
+	debootstrap sudo figlet graphviz apache2 libapache2-mod-macro python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3 dose-extra apt-file python-lzma bc \
 	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl haveged postgresql-client-9.1 xvfb virt-viewer libsikuli-script-java \
         libxslt1-dev tcpdump unclutter radvd x11-apps syslinux \
         libcap2-bin devscripts libvirt-ruby ruby-rspec gawk ntp \
@@ -88,6 +88,7 @@ if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 	sudo a2enmod rewrite
 	sudo a2enmod ssl
 	sudo a2enmod headers
+	sudo a2enmod macro
 fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default

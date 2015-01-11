@@ -115,7 +115,7 @@ def process_packages(packages):
         log.info('Generating the page of ' + pkg + ' ' + version +
                  ' builded at ' + build_date)
 
-        rbuild = RBUILD_PATH + '/' + pkg + '_' + version + '.rbuild.log'
+        rbuild = RBUILD_PATH + '/' + pkg + '_' + strip_epoch(version) + '.rbuild.log'
         links, default_view = gen_extra_links(pkg, version)
 
         if not default_view: # this is only possible only if there are no notes,

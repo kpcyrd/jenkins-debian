@@ -123,7 +123,7 @@ def process_packages(packages):
             default_view = RBUILD_URI + '/' + pkg + '_' + version + '.rbuild.log'
         try:
             log_size = os.stat(rbuild).st_size
-        except FileNotFoundError:
+        except OSError:
             log.warning('The package ' + pkg +
                         ' did not produce any buildlog! Check ' + rbuild)
             log_size = 0

@@ -6,7 +6,7 @@
 #
 # Depends: python3
 #
-# This is included by all reproducible_*.py scripts, it cotains common functions
+# This is included by all reproducible_*.py scripts, it contains common functions
 
 import os
 import re

@@ -21,7 +21,6 @@ html_package_page = Template((tab*2).join(("""
             </a>
             <span style="font-size:0.9em;">at $build_time:</span>
 $links
-            <a href="/userContent/rbuild/${package}_$version.rbuild.log" target="main">rbuild ($rbuild_size)</a>
             <a href="https://packages.qa.debian.org/$package" target="main">PTS</a>
             <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
             <a href="https://sources.debian.net/src/$package/" target="main">sources</a>
@@ -73,6 +72,7 @@ def check_package_status(package):
 
 def gen_extra_links(package, version):
     notes = NOTES_PATH + '/' + package + '_note.html'
+    rbuild = RBUILD_PATH + '/' + package + '_' + strip_epoch(version) + '.rbuild.log'
     buildinfo = BUILDINFO_PATH + '/' + package + '_' + version + '_amd64.buildinfo'
     dbd = DBD_PATH + '/' + package + '_' + version + '.debbindiff.html'
 
@@ -99,6 +99,16 @@ def gen_extra_links(package, version):
             default_view = url
     else:
         log.debug('buildinfo not detected at ' + buildinfo)
+    if os.access(rbuild, os.R_OK):
+        url = RBUILD_URI + '/' + package + '_' + strip_epoch(version) + '.rbuild.log'
+        log_size = os.stat(rbuild).st_size
+        links +='<a href="' + url + '" target="main">rbuild (' + \
+                sizeof_fmt(log_size) + ')</a>\n'
+        if not default_view:
+            default_view = url
+    else:
+        log.warning('The package ' + package +
+                    ' did not produce any buildlog! Check ' + rbuild)
     return (links, default_view)
 
 
@@ -115,31 +125,19 @@ def process_packages(packages):
         log.info('Generating the page of ' + pkg + ' ' + version +
                  ' builded at ' + build_date)
 
-        rbuild = RBUILD_PATH + '/' + pkg + '_' + strip_epoch(version) + '.rbuild.log'
         links, default_view = gen_extra_links(pkg, version)
-
-        if not default_view: # this is only possible only if there are no notes,
-                             # debbindiff or buildinfo files
-            default_view = RBUILD_URI + '/' + pkg + '_' + version + '.rbuild.log'
-        try:
-            log_size = os.stat(rbuild).st_size
-        except OSError:
-            log.warning('The package ' + pkg +
-                        ' did not produce any buildlog! Check ' + rbuild)
-            log_size = 0
-            pass
         status, icon = join_status_icon(status, pkg, version)
+
         html = html_package_page.substitute(package=pkg,
                                             status=status,
                                             version=version,
                                             build_time=build_date,
                                             icon=icon,
                                             links=links,
-                                            rbuild_size=sizeof_fmt(log_size),
                                             default_view=default_view)
         destfile = RB_PKG_PATH + '/' + pkg + '.html'
         desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + pkg + '.html'
-        title = pkg + ' reproducible build results'
+        title = pkg + ' - reproducible build results'
         write_html_page(title=title, body=html, destfile=destfile,
                         noheader=True, nofooter=True, noendpage=True)
         log.info("Package page generated at " + desturl)

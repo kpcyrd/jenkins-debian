@@ -226,6 +226,21 @@ def join_status_icon(status, package=None, version=None):
                   ') not recognized')
         return (status, '')
 
+def strip_epoch(version):
+    """
+    Stip the epoch out of the version string. Some file (e.g. buildlogs, debs)
+    do not have epoch in their filenames.
+    This recognize a epoch if there is a colon in the second or third character
+    of the version.
+    """
+    try:
+        if version[1] == ':' or version[2] == ':':
+            return version.split(':', 1)[1]
+        else:
+            return version
+    except IndexError:
+        return version
+
 
 # do the db querying
 conn = init_conn()

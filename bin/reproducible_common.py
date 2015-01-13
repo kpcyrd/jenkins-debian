@@ -23,8 +23,8 @@ QUIET = False
 BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent'
 
-REPRODUCIBLE_DB = BASE + '/reproducible.db'
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
+REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
 
 DBD_URI = '/dbd'
 NOTES_URI = '/notes'

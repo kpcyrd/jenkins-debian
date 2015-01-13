@@ -112,7 +112,7 @@ TMPFILE=$(mktemp)
 git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
 echo "----" >> $TMPFILE
 cat THANKS.head $TMPFILE > /var/lib/jenkins/userContent/THANKS
-rm THANKS.head $TMPFILE
+rm $TMPFILE
 cp -pr userContent /var/lib/jenkins/
 cd /var/lib/jenkins/userContent/
 ASCIIDOC_PARAMS="-a numbered -a data-uri -a iconsdir=/etc/asciidoc/images/icons -a scriptsdir=/etc/asciidoc/javascripts -b html5 -a toc -a toclevels=4 -a icons -a stylesheet=$(pwd)/theme/debian-asciidoc.css"

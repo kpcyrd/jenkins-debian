@@ -328,16 +328,22 @@ link_packages() {
 }
 
 process_packages() {
-	string='['
-	delimiter=''
-	for PKG in $@ ; do
-		string+="${delimiter}\"${PKG}\""
-		delimiter=','
-	done
-	string+=']'
 	CWD=$(pwd)
 	cd /srv/jenkins/bin
-	python3 -c "from reproducible_html_packages import process_packages; process_packages(${string})"
+	for (( i=1; i<$#+1; i=i+100 )) ; do
+		string='['
+		delimiter=''
+		for (( j=0; j<100; j++)) ; do
+			item=$(( $j+$i ))
+			if (( $item < $#+1 )) ; then
+				string+="${delimiter}\"${!item}\""
+				delimiter=','
+			fi
+		done
+		string+=']'
+		python3 -c "from reproducible_html_packages import process_packages; process_packages(${string}, no_clean=True)"
+	done
+	python3 -c "from reproducible_html_packages import purge_old_pages; purge_old_pages()"
 	cd "$CWD"
 }
 

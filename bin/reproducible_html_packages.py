@@ -112,7 +112,7 @@ def gen_extra_links(package, version):
     return (links, default_view)
 
 
-def process_packages(packages):
+def process_packages(packages, no_clean=False):
     """
     generate the /rb-pkg/package.html page
     packages should be a list
@@ -141,7 +141,8 @@ def process_packages(packages):
         write_html_page(title=title, body=html, destfile=destfile,
                         noheader=True, nofooter=True, noendpage=True)
         log.info("Package page generated at " + desturl)
-    purge_old_pages() # housekeep is always good
+    if not no_clean:
+        purge_old_pages() # housekeep is always good
 
 
 def purge_old_pages():

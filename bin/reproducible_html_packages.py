@@ -17,7 +17,7 @@ html_package_page = Template((tab*2).join(("""
         <td>
             <span style="font-size:1.2em;">$package</span> $version
             <a href="/index_$status.html" target="_parent" title="$status">
-                <img src="/userContent/static/$icon" alt="$status" />
+                <img src="/static/$icon" alt="$status" />
             </a>
             <span style="font-size:0.9em;">at $build_time:</span>
 $links
@@ -33,7 +33,7 @@ $links
         </td>
     </tr>
 </table>
-<iframe name="main" src="${default_view}" width="100%%" height="98%%" frameborder="0">
+<iframe name="main" src="${default_view}">
     <p>
         Your browser does not support iframes.
         Use a different one or follow the links above.

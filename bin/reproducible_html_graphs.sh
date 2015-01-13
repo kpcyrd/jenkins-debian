@@ -201,7 +201,7 @@ write_usertag_table() {
 			else
 				write_page "<td>$VALUE</td>"
 				let "TOTAL=TOTAL+VALUE"
-				write_page "<td>$VALUE</td></tr>"
+				write_page "<td>$TOTAL</td></tr>"
 			fi
 		done
 		write_page "</table>"

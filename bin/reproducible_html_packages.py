@@ -33,7 +33,7 @@ $links
         </td>
     </tr>
 </table>
-<iframe name="main" src="${default_view}">
+<iframe id="main" name="main" src="${default_view}">
     <p>
         Your browser does not support iframes.
         Use a different one or follow the links above.

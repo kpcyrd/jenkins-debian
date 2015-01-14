@@ -195,8 +195,7 @@ fi
 
 # grml
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] ; then
-	# FIXME: this needs updating when grml64-full_2014.11 ain't the latest release anymore...
-	curl http://grml.org/files/grml64-full_2014.11/dpkg.selections | cut -f1 > $TMPFILE
+	curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
 	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[12]}.pkgset
 fi

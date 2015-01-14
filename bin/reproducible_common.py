@@ -213,7 +213,8 @@ def join_status_icon(status, package=None, version=None):
              'not_for_us': 'weather-few-clouds-night.png',
              'blacklisted': 'error.png'}
     if status == 'unreproducible':
-        if os.access(BUILDINFO_PATH + '/' + str(package) + '_' + str(version) + '_amd64.buildinfo', os.R_OK):
+        if os.access(BUILDINFO_PATH + '/' + str(package) + '_' + \
+           strip_epoch(str(version)) + '_amd64.buildinfo', os.R_OK):
             status = 'FTBR_with_buildinfo'
         else:
             status = 'FTBR'

@@ -92,7 +92,7 @@ def gen_extra_links(package, version):
             default_view = url
     else:
         log.debug('debbindiff not detetected at ' + dbd)
-    if os.access(buildinfo, os.R_OK):
+    if pkg_has_buildinfo(package, version):
         url = BUILDINFO_URI + '/' + package + '_' + strip_epoch(version) + '_amd64.buildinfo'
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:

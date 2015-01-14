@@ -223,8 +223,11 @@ def join_status_icon(status, package=None, version=None):
              'not_for_us': 'weather-few-clouds-night.png',
              'blacklisted': 'error.png'}
     if status == 'unreproducible':
-        if os.access(BUILDINFO_PATH + '/' + str(package) + '_' + \
-           strip_epoch(str(version)) + '_amd64.buildinfo', os.R_OK):
+        if not package:
+            log.error('Could not determinate the real state of package None. '
+                      + 'Returning a generic "FTBR"')
+            status = 'FTBR'
+        elif pkg_has_buildinfo(package, version):
             status = 'FTBR_with_buildinfo'
         else:
             status = 'FTBR'
@@ -252,6 +255,20 @@ def strip_epoch(version):
     except IndexError:
         return version
 
+def pkg_has_buildinfo(package, version=False):
+    """
+    if there is no version specified it will use the version listed in
+    reproducible.db
+    """
+    if not version:
+        query = 'SELECT version FROM source_packages WHERE name="%s"' % package
+        version = str(query_db(query)[0][0])
+    buildinfo = BUILDINFO_PATH + '/' + package + '_' + \
+                strip_epoch(version) + '_amd64.buildinfo'
+    if os.access(buildinfo, os.R_OK):
+        return True
+    else:
+        return False
 
 # do the db querying
 conn = init_conn()

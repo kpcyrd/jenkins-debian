@@ -132,26 +132,6 @@ select_old_versions() {
 	do_sql_query "tested at least two weeks ago, no new version available, sorted by last test date"
 }
 
-select_old_failures() {
-	# old failures older than two weeks only
-	QUERY="
-		SELECT DISTINCT sources.name FROM sources,source_packages
-			WHERE sources.name NOT IN
-			(SELECT sources.name FROM sources,sources_scheduled
-				WHERE sources.name=sources_scheduled.name)
-			AND sources.name IN
-			(SELECT sources.name FROM sources,source_packages
-				WHERE sources.name=source_packages.name
-				AND sources.version=source_packages.version
-				AND source_packages.status!='blacklisted'
-				AND source_packages.status!='reproducible')
-			AND sources.name=source_packages.name
-			AND source_packages.build_date < datetime('now', '-2 day')
-			ORDER BY source_packages.build_date
-		LIMIT $1"
-	do_sql_query "tested at least two days ago, not reproducible, no new version available, sorted by last test date"
-}
-
 schedule_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	TMPFILE=$(mktemp)
@@ -164,17 +144,6 @@ schedule_packages() {
 	echo "The following $TOTAL source packages have been scheduled: $ALL_PACKAGES"
 	echo "============================================================================="
 	echo
-}
-
-deselect_old_with_buildinfo() {
-	PACKAGES=""
-	for PKG in $@ ; do
-		if [ ! -f /var/lib/jenkins/userContent/buildinfo/${PKG}_.buildinfo ] ; then
-			PACKAGES="$PACKAGES $PKG"
-		else
-			let "AMOUNT=$AMOUNT-1" || AMOUNT=0
-		fi
-	done
 }
 
 #
@@ -224,30 +193,16 @@ echo "So in total now $TOTAL packages about to be scheduled."
 ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 MESSAGE="$MESSAGE, $AMOUNT packages with new versions"
 
-if [ $TOTAL -lt 150 ] ; then
-	OLD=750 # used not to be needed...
-elif [ $TOTAL -lt 250 ] ; then
-	OLD=600	# used to be 200
+if [ $TOTAL -lt 250 ] ; then
+	OLD=200
 elif [ $TOTAL -le 350 ] ; then
-	OLD=200 # used to be 100
+	OLD=100
 else
 	OLD=1
 fi
-# pointless atm
-#echo "Requesting $OLD old packages..."
-#select_old_versions $OLD
-#echo -n "Found $AMOUNT old packages, "
-#deselect_old_with_buildinfo $PACKAGES
-#echo "kept $AMOUNT old packages without .buildinfo files."
-#let "TOTAL=$TOTAL+$AMOUNT"
-#ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
-
-echo "Requesting $OLD old+failed packages..."
-select_old_failures $OLD
-echo -n "Found $AMOUNT old+failed packages, "
-set -x
-deselect_old_with_buildinfo $PACKAGES
-echo "kept $AMOUNT old packages without .buildinfo files."
+echo "Requesting $OLD old packages..."
+select_old_versions $OLD
+echo -n "Found $AMOUNT old packages, "
 let "TOTAL=$TOTAL+$AMOUNT"
 ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 

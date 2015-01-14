@@ -267,7 +267,7 @@ def iterate_over_notes(notes):
         title = 'Notes for ' + package + ' - reproducible builds result'
         destfile = NOTES_PATH + '/' + package + '_note.html'
         write_html_page(title=title, body=html, destfile=destfile,
-                        noheader=True, nofooter=True)
+                        noheader=True)
 
         desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
         log.info("you can now see your notes at " + desturl)
@@ -284,7 +284,8 @@ def iterate_over_issues(issues):
 
         title = 'Notes about issue ' + issue
         destfile = ISSUES_PATH + '/' + issue + '_issue.html'
-        write_html_page(title=title, body=html, destfile=destfile)
+        write_html_page(title=title, body=html, destfile=destfile,
+                        style_note=True)
 
         desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + issue + '_issue.html'
         log.info("you can now see the issue at " + desturl)
@@ -302,7 +303,7 @@ def index_issues(issues):
     title = 'Overview of known issues related to reproducible builds'
     destfile = BASE + '/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/index_issues.html'
-    write_html_page(title=title, body=html, destfile=destfile, nofooter=True)
+    write_html_page(title=title, body=html, destfile=destfile)
     log.info('Issues index now available at ' + desturl)
 
 if __name__ == '__main__':

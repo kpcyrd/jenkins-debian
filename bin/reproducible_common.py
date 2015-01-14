@@ -161,18 +161,24 @@ html_head_page = Template((tab*2).join("""
   </ul>
 </header>""".splitlines(True)))
 
-html_foot_page = Template((tab*2).join("""
+html_foot_page_style_note = Template((tab*2).join("""
 <p style="font-size:0.9em;">
   A package name displayed with a bold font is an indication that this
   package has a note. Visited packages are linked in green, those which
   have not been visited are linked in blue.
+""".splitlines(True)))
+html_foot_page_buildinfo_note = Template((tab*2).join("""  <br />
+  A &beta; sign after a package which is unreproducible indicates that a
+  .buildinfo file was generated. And that means the
+  <a href="https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible">
+  basics for building packages reproducibly are covered</a>.
 </p>""".splitlines(True)))
 
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 
-def write_html_page(title, body, destfile, noheader=False, nofooter=False, noendpage=False):
+def write_html_page(title, body, destfile, noheader=False, style_note=False, buildinfo_note=False, noendpage=False):
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     html += html_header.substitute(page_title=title)
@@ -185,8 +191,12 @@ def write_html_page(title, body, destfile, noheader=False, nofooter=False, noend
             count_good=count_good,
             percent_good=percent_good)
     html += body
-    if not nofooter:
-        html += html_foot_page.substitute()
+    if style_note:
+        html += html_foot_page_style_note.substitute()
+    if buildinfo_note:
+        html += html_foot_page_buildinfo_note.substitute()
+    else:
+        html += (tab*2) + '</p>'
     if not noendpage:
         html += html_footer.substitute(date=now)
     else:

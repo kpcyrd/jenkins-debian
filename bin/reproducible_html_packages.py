@@ -139,7 +139,7 @@ def process_packages(packages, no_clean=False):
         desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + pkg + '.html'
         title = pkg + ' - reproducible build results'
         write_html_page(title=title, body=html, destfile=destfile,
-                        noheader=True, nofooter=True, noendpage=True)
+                        noheader=True, noendpage=True)
         log.info("Package page generated at " + desturl)
     if not no_clean:
         purge_old_pages() # housekeep is always good

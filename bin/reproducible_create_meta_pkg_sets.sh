@@ -55,8 +55,8 @@ convert_from_deb822_into_source_packages_only() {
 		-e 'last if not $c->parse(STDIN);$p=$c->{"Package"};' \
 		-e '$s=$c->{"Source"};if (not defined $s){print "$p\n"}' \
 		-e 'else{$s=~s/\s*([\S]+)\s+.*/\1/;print "$s\n"}}' \
-		> $TMPFILE2 < $TMPFILE
-	sort -u $TMPFILE2 > $TMPFILE
+		> ${TMPFILE2} < $TMPFILE
+	sort -u ${TMPFILE2} > $TMPFILE
 }
 update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
@@ -91,32 +91,32 @@ update_if_similar() {
 
 # the essential package set
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE2
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	chdist grep-dctrl-packages $DISTNAME -X -FEssential yes > ${TMPFILE2}
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[1]}.pkgset
 fi
 
 # the required package set
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X -FPriority required > $TMPFILE2
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	chdist grep-dctrl-packages $DISTNAME -X -FPriority required > ${TMPFILE2}
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[2]}.pkgset
 fi
 
 # build-essential
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > $TMPFILE2
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	chdist grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[3]}.pkgset
 fi
 
 # gnome and everything it depends on
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > $TMPFILE2
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=$TMPFILE2 > $TMPFILE
+	chdist grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[4]}.pkgset
 fi
@@ -187,12 +187,12 @@ fi
 
 # packages which had a DSA
 if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] ; then
-	svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list $TMPFILE2
-	grep DSA $TMPFILE2 | cut -d " " -f5|sort -u > $TMPFILE
+	svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
+	grep DSA ${TMPFILE2} | cut -d " " -f5|sort -u > $TMPFILE
 	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[11]}.pkgset
 fi
 
 # finally
+rm -f $TMPFILE ${TMPFILE2}
 echo "All meta package sets created successfully."
-

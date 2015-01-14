@@ -205,7 +205,7 @@ write_usertag_table() {
 				let "TOTAL=TOTAL+VALUE"
 				let "TDONE=TDONE+VALUE"
 				write_page "<td>$TOTAL</td></tr>"
-				let "TTOTAL=TTOTAL+VALUE"
+				let "TTOTAL=TTOTAL+TOTAL"
 			fi
 		done
 		write_page "<tr><td>All usertagged bugs for reproducible-builds@lists.alioth.debian.org</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"

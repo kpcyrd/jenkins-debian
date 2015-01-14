@@ -193,6 +193,25 @@ if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] ;
 	update_if_similar ${META_PKGSET[11]}.pkgset
 fi
 
+# grml
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] ; then
+	# FIXME: this needs updating when grml64-full_2014.11 ain't the latest release anymore...
+	curl http://grml.org/files/grml64-full_2014.11/dpkg.selections | cut -f1 > $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[12]}.pkgset
+fi
+
+# all build depends of grml
+rm -f $TMPFILE
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] ; then
+	for PKG in $(cat $TPATH/${META_PKGSET[12]}.pkgset) ; do
+		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
+	done
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[13]}.pkgset
+fi
+
+
 # finally
 rm -f $TMPFILE ${TMPFILE2}
 echo "All meta package sets created successfully."

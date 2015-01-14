@@ -152,6 +152,8 @@ META_PKGSET[8]="maint_pkg-perl-maintainers"
 META_PKGSET[9]="popcon_top1337-installed-sources"
 META_PKGSET[10]="installed_on_debian.org"
 META_PKGSET[11]="had_a_DSA"
+META_PKGSET[12]="grml"
+META_PKGSET[13]="grml_build-depends"
 
 init_html() {
 	SUITE=sid

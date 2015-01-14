@@ -32,7 +32,7 @@ chdist --arch=$ARCH apt-get $DISTNAME update
 # helper functions
 convert_into_source_packages_only() {
 	rm -f ${TMPFILE2}
-	for PKG in $(cat $TMPFILE | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" |sort -u ) ; do
+	for PKG in $(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" |sort -u ) ; do
 		SRC=""
 		if [ ! -z "$PKG" ] ; then
 			SRC=$(grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES || true )

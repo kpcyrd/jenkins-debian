@@ -185,6 +185,14 @@ if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] ;
 	update_if_similar ${META_PKGSET[10]}.pkgset
 fi
 
+# packages which had a DSA
+if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] ; then
+	svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list $TMPFILE2
+	grep DSA $TMPFILE2 | cut -d " " -f5|sort -u > $TMPFILE
+	convert_into_source_packages_only
+	update_if_similar ${META_PKGSET[11]}.pkgset
+fi
+
 # finally
 echo "All meta package sets created successfully."
 

@@ -151,6 +151,7 @@ META_PKGSET[7]="tails_build-depends"
 META_PKGSET[8]="maint_pkg-perl-maintainers"
 META_PKGSET[9]="popcon_top1337-installed-sources"
 META_PKGSET[10]="installed_on_debian.org"
+META_PKGSET[11]="had_a_DSA"
 
 init_html() {
 	SUITE=sid

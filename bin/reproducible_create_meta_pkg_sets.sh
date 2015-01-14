@@ -31,7 +31,7 @@ chdist --arch=$ARCH apt-get $DISTNAME update
 
 # helper functions
 convert_into_source_packages_only() {
-	TMP2=$(mktemp)
+	rm -f ${TMPFILE2}
 	for PKG in $(cat $TMPFILE | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" |sort -u ) ; do
 		SRC=""
 		if [ ! -z "$PKG" ] ; then
@@ -39,12 +39,12 @@ convert_into_source_packages_only() {
 			[ ! -z "$SRC" ] || SRC=$(grep-dctrl -X -n -FPackage -sPackage $PKG $PACKAGES || true)
 		fi
 		[ ! -z "$SRC" ] || SRC=$(echo $PKG )
-		echo $SRC >> $TMP2
+		echo $SRC >> ${TMPFILE2}
 	done
 	# grep-dctrl output might include versions (space seperated) and archs (colon seperated)
 	# and duplicates
-	cut -d " " -f1 $TMP2 | cut -d ":" -f1 | sort -u > $TMPFILE
-	rm $TMP2
+	cut -d " " -f1 ${TMPFILE2} | cut -d ":" -f1 | sort -u > $TMPFILE
+	rm ${TMPFILE2}
 }
 
 convert_from_deb822_into_source_packages_only() {

@@ -73,7 +73,7 @@ def check_package_status(package):
 def gen_extra_links(package, version):
     notes = NOTES_PATH + '/' + package + '_note.html'
     rbuild = RBUILD_PATH + '/' + package + '_' + strip_epoch(version) + '.rbuild.log'
-    buildinfo = BUILDINFO_PATH + '/' + package + '_' + version + '_amd64.buildinfo'
+    buildinfo = BUILDINFO_PATH + '/' + package + '_' + strip_epoch(version) + '_amd64.buildinfo'
     dbd = DBD_PATH + '/' + package + '_' + version + '.debbindiff.html'
 
     links = ''
@@ -93,7 +93,7 @@ def gen_extra_links(package, version):
     else:
         log.debug('debbindiff not detetected at ' + dbd)
     if os.access(buildinfo, os.R_OK):
-        url = BUILDINFO_URI + '/' + package + '_' + version + '_amd64.buildinfo'
+        url = BUILDINFO_URI + '/' + package + '_' + strip_epoch(version) + '_amd64.buildinfo'
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:
             default_view = url

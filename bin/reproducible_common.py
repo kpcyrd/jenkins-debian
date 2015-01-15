@@ -86,7 +86,7 @@ html_header = Template("""<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <link href="/userContent/static/style.css" type="text/css" rel="stylesheet" />
+      <link href="/static/style.css" type="text/css" rel="stylesheet" />
       <title>$page_title</title>
   </head>
   <body>""")
@@ -117,32 +117,32 @@ html_head_page = Template((tab*2).join("""
     <li>Have a look at:</li>
     <li>
       <a href="/index_reproducible.html" target="_parent">
-        <img src="/userContent/static/weather-clear.png" alt="reproducible icon" />
+        <img src="/static/weather-clear.png" alt="reproducible icon" />
       </a>
     </li>
     <li>
       <a href="/index_FTBR.html" target="_parent">
-        <img src="/userContent/static/weather-showers-scattered.png" alt="FTBR icon" />
+        <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
       </a>
     </li>
     <li>
       <a href="/index_FTBFS.html" target="_parent">
-        <img src="/userContent/static/weather-storm.png" alt="FTBFS icon" />
+        <img src="/static/weather-storm.png" alt="FTBFS icon" />
       </a>
     </li>
     <li>
       <a href="/index_404.html" target="_parent">
-        <img src="/userContent/static/weather-severe-alert.png" alt="404 icon" />
+        <img src="/static/weather-severe-alert.png" alt="404 icon" />
       </a>
     </li>
     <li>
       <a href="/index_not_for_us.html" target="_parent">
-        <img src="/userContent/static/weather-few-clouds-night.png" alt="not_for_us icon" />
+        <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
       </a>
     </li>
     <li>
       <a href="/index_blacklisted.html" target="_parent">
-        <img src="/userContent/static/error.png" alt="blacklisted icon" />
+        <img src="/static/error.png" alt="blacklisted icon" />
       </a>
     </li>
     <li><a href="/index_issues.html">issues</a></li>

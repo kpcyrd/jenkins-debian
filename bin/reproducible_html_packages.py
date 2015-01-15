@@ -126,7 +126,7 @@ def gen_bugs_links(package, bugs):
                 html += ' bug-patch'
             html += '">#' + str(bug) + '</a> '
             print(package + html)
-        return html
+    return html
 
 
 def process_packages(packages, no_clean=False):

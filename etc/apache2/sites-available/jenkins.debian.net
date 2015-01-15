@@ -133,4 +133,10 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} ^/userContent
 	RewriteRule ^/userContent/(.*)$ /$1 [R=301,L]
+
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond /var/lib/jenkins/userContent/rb-pkg/$1.html -f
+	RewriteRule ^/([a-z0-9.+-]+) /rb-pkg/$1.html [R=302,L]
 </VirtualHost>

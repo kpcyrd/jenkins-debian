@@ -293,11 +293,12 @@ def iterate_over_issues(issues):
 
 def index_issues(issues):
     templ = "\n<table class=\"body\">\n" + tab + "<tr>\n" + tab*2 + "<th>\n" \
-          + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
+          + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n" \
+          + tab*3 + "Affected packages\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
     html = (tab*2).join(templ.splitlines(True))
     for issue in sorted(issues):
         html += tab*3 + '<tr><td><a href="' + ISSUES_URI + '/' + issue + \
-                '_issue.html">' + issue + '</a></td></tr>\n'
+                '_issue.html">' + issue + '</a></td><td>' + issues_count[issue] + '</td></tr>\n'
     html += tab*2 + '</table>\n'
     html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
     title = 'Overview of known issues related to reproducible builds'

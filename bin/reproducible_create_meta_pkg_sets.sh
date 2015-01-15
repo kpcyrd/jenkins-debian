@@ -93,7 +93,7 @@ update_if_similar() {
 # the essential package set
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X -FEssential yes > ${TMPFILE2}
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[1]}.pkgset
 fi
@@ -101,7 +101,7 @@ fi
 # the required package set
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[2]}.pkgset ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X -FPriority required > ${TMPFILE2}
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[2]}.pkgset
 fi
@@ -109,7 +109,7 @@ fi
 # build-essential
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[3]}.pkgset
 fi
@@ -145,7 +145,7 @@ fi
 # gnome and everything it depends on
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[7]}.pkgset ] ; then
 	chdist grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[7]}.pkgset
 fi

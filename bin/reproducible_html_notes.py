@@ -244,7 +244,6 @@ def gen_html_issue(issue):
     return issue_html.substitute(issue=issue, urls=url, description=desc,
                                    affected_pkgs=affected)
 
-
 def purge_old_notes(notes):
     presents = sorted(os.listdir(NOTES_PATH))
     for page in presents:
@@ -307,14 +306,28 @@ def index_issues(issues):
     write_html_page(title=title, body=html, destfile=destfile)
     log.info('Issues index now available at ' + desturl)
 
+def get_trailing_icon(package, bugs):
+    html = ''
+    if package in bugs:
+        for bug in bugs[package]:
+            html += '<span class="'
+            if bugs[package][bug]['done']:
+                html += 'bug-done">#</span>'
+            elif bugs[package][bug]['patch']:
+                html += 'bug-patch">+</span>'
+            print(package + ' ' + html)
+    return html
+
 def index_notes(notes):
+    bugs = get_bugs()
     log.debug('Building the index_notes page...')
     html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.<p>\n'
     html += '<p>\n' + tab + '<code>\n'
     html = (tab*2).join(html.splitlines(True))
     for pkg in sorted(notes):
         url = RB_PKG_URI + '/' + pkg + '.html'
-        html += tab*4 + '<a href="' + url + '" class="noted">' + pkg + '</a>\n'
+        html += tab*4 + '<a href="' + url + '" class="noted">' + pkg + '</a>'
+        html += get_trailing_icon(pkg, bugs) + '\n'
     html += tab*3 + '</code>\n'
     html += tab*2 + '</p>\n'
     html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'

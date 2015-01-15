@@ -155,13 +155,24 @@ tr:nth-child(odd) {
 }
 
 a.bug-patch:after {
-	content: "p";
+	content: "+";
 	color: red;
 	font-weight: bold;
 }
 
 a.bug-done {
 	text-decoration: line-through;
+}
+
+span.bug-patch {
+	color: red;
+	font-weight: bold;
+}
+
+span.bug-done {
+	text-decoration: line-through;
+	font-weight: bold;
+	color: black;
 }
 
 td, th {

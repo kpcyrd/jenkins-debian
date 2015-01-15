@@ -4,10 +4,11 @@
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2+
 #
-# Depends: python3
+# Depends: python3 python3-psycopg2
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
+import psycopg2
 
 from reproducible_common import *
 
@@ -25,6 +26,9 @@ $links
             <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
             <a href="https://sources.debian.net/src/$package/" target="main">sources</a>
             <a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">debian/rules</a>
+        </td>
+        <td>
+${bugs_links}
         </td>
         <td style="text-align:right; font-size:0.9em;">
             <a href="%s" target="_parent">
@@ -51,6 +55,58 @@ def sizeof_fmt(num):
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
+def start_udd_connection():
+    username = "public-udd-mirror"
+    password = "public-udd-mirror"
+    host = "public-udd-mirror.xvm.mit.edu"
+    port = 5432
+    db = "udd"
+    try:
+        log.debug("Starting connection to the UDD database")
+        conn = psycopg2.connect("dbname=" + db +
+                               " user=" + username +
+                               " host=" + host +
+                               " password=" + password)
+    except:
+        log.error("Erorr connecting to the UDD database replica")
+        raise
+    conn.set_client_encoding('utf8')
+    return conn
+
+def query_udd(query):
+    cursor = conn.cursor()
+    cursor.execute(query)
+    return cursor.fetchall()
+
+def is_virtual_package(package):
+    rows = query_udd("""SELECT source FROM sources WHERE source='%s'""" % package)
+    if len(rows) > 0:
+            return False
+    return True
+
+def bug_has_patch(bug):
+    query = """SELECT id FROM bugs_tags WHERE id=%s AND tag='patch'""" % bug
+    if len(query_udd(query)) > 0:
+        return True
+    return False
+
+def get_bugs():
+    query = """
+        SELECT bugs.id, bugs.source, bugs.done
+        FROM bugs JOIN bugs_tags on bugs.id = bugs_tags.id
+                  JOIN bugs_usertags on bugs_tags.id = bugs_usertags.id
+        WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
+        AND bugs.id NOT IN (
+            SELECT id
+            FROM bugs_usertags
+            WHERE email = 'reproducible-builds@lists.alioth.debian.org'
+            AND (
+                bugs_usertags.tag = 'toolchain'
+                OR bugs_usertags.tag = 'infrastructure')
+            )
+    """
+    # returns a list of tuples [(id, source, done)]
+    return query_udd(query)
 
 def check_package_status(package):
     """
@@ -111,12 +167,59 @@ def gen_extra_links(package, version):
                     ' did not produce any buildlog! Check ' + rbuild)
     return (links, default_view)
 
+def parse_bugs(bugs):
+    """
+    This function returns a dict:
+    { "package_name": {
+        bug1: {patch: True, done: False},
+        bug2: {patch: False, done: False},
+       }
+    }
+
+    The `bugs` argument is the list of tuples returned by the get_bugs() above
+    """
+    log.info("finding out which usertagged bugs have been closed or at least have patches")
+    packages = {}
+
+    for bug in bugs:
+        if bug[1] not in packages:
+            packages[bug[1]] = {}
+        # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done
+        if is_virtual_package(bug[1]):
+            continue
+        packages[bug[1]][bug[0]] = {'done': False, 'patch': False}
+        if bug[2]: # if the bug is done
+            packages[bug[1]][bug[0]]['done'] = True
+        try:
+            if bug_has_patch(bug[0]):
+                packages[bug[1]][bug[0]]['patch'] = True
+        except KeyError:
+            log.error('item: ' + str(bug))
+    return packages
+
+
+
+def gen_bugs_links(package, bugs):
+    html = ''
+    if package in bugs:
+        for bug in bugs[package]:
+            html += '<a href="https://bugs.debian.org/' + str(bug) + \
+                    '" target="main" class="'
+            if bugs[package][bug]['done']:
+                html += 'bug-done '
+            if bugs[package][bug]['patch']:
+                html += ' bug-patch'
+            html += '">#' + str(bug) + '</a> '
+            print(package + html)
+        return html
+
 
 def process_packages(packages, no_clean=False):
     """
     generate the /rb-pkg/package.html page
     packages should be a list
     """
+    bugs = parse_bugs(get_bugs())
     total = len(packages)
     log.info('Generating the pages of ' + str(total) + ' package(s)')
     for pkg in sorted(packages):
@@ -126,6 +229,7 @@ def process_packages(packages, no_clean=False):
                  ' builded at ' + build_date)
 
         links, default_view = gen_extra_links(pkg, version)
+        bugs_links = gen_bugs_links(pkg, bugs)
         status, icon = join_status_icon(status, pkg, version)
 
         html = html_package_page.substitute(package=pkg,
@@ -134,6 +238,7 @@ def process_packages(packages, no_clean=False):
                                             build_time=build_date,
                                             icon=icon,
                                             links=links,
+                                            bugs_links=bugs_links,
                                             default_view=default_view)
         destfile = RB_PKG_PATH + '/' + pkg + '.html'
         desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + pkg + '.html'
@@ -156,3 +261,9 @@ def purge_old_pages():
             log.info('There is no package named ' + pkg + ' in the database.' +
                      ' Removing old page.')
             os.remove(RB_PKG_PATH + '/' + page)
+
+
+try:
+    conn = start_udd_connection()
+except:
+    raise

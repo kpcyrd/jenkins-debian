@@ -154,6 +154,16 @@ tr:nth-child(odd) {
 	background-color: #fafafa;
 }
 
+a.bug-patch:after {
+	content: "p";
+	color: red;
+	font-weight: bold;
+}
+
+a.bug-done {
+	text-decoration: line-through;
+}
+
 td, th {
 	text-align: left;
 	padding: 0.25em 0.5em;

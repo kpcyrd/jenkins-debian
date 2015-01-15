@@ -11,23 +11,26 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 TPATH=/srv/reproducible-results/meta_pkgsets
-mkdir -p $TPATH
+CHPATH=/srv/reproducible-results/chdist
+mkdir -p $TPATH $CHPATH
 
 ARCH=amd64
 SUITE=sid
 DISTNAME="$SUITE-$ARCH"
 
-PACKAGES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages`
-SOURCES=`echo ~/.chdist/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources`
+PACKAGES=`echo $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages`
+SOURCES=`echo $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources`
 TMPFILE=$(mktemp)
 TMPFILE2=$(mktemp)
 
 # delete possibly existing dist
-rm -rf ~/.chdist/$DISTNAME;
+cd $CHPATH
+rm -rf $DISTNAME
+cd -
 
 # the "[arch=amd64]" is a workaround until #774685 is fixed
-chdist --arch=$ARCH create $DISTNAME "[arch=amd64]" $MIRROR $SUITE main
-chdist --arch=$ARCH apt-get $DISTNAME update
+chdist --data-dir=$CHPATH --arch=$ARCH create $DISTNAME "[arch=amd64]" $MIRROR $SUITE main
+chdist --data-dir=$CHPATH --arch=$ARCH apt-get $DISTNAME update
 
 # helper functions
 convert_into_source_packages_only() {
@@ -92,7 +95,7 @@ update_if_similar() {
 
 # the essential package set
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X -FEssential yes > ${TMPFILE2}
+	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > ${TMPFILE2}
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[1]}.pkgset
@@ -100,7 +103,7 @@ fi
 
 # the required package set
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[2]}.pkgset ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X -FPriority required > ${TMPFILE2}
+	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FPriority required > ${TMPFILE2}
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[2]}.pkgset
@@ -108,7 +111,7 @@ fi
 
 # build-essential
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
+	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[3]}.pkgset
@@ -144,7 +147,7 @@ fi
 
 # gnome and everything it depends on
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[7]}.pkgset ] ; then
-	chdist grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
+	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[7]}.pkgset

@@ -289,7 +289,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		force_package_targets $META_GOOD
 		link_packages $META_GOOD
 		write_page "<br />"
-		set_icon unreproducible with
+		set_icon unreproducible
 		write_icon
 		write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
 		force_package_targets $META_BAD

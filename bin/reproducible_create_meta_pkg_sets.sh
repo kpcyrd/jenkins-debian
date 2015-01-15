@@ -18,24 +18,25 @@ ARCH=amd64
 SUITE=sid
 DISTNAME="$SUITE-$ARCH"
 
-PACKAGES=`echo $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages`
-SOURCES=`echo $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources`
-TMPFILE=$(mktemp)
-TMPFILE2=$(mktemp)
 
 # delete possibly existing dist
 cd $CHPATH
 rm -rf $DISTNAME
 cd -
 
-# the "[arch=amd64]" is a workaround until #774685 is fixed
-chdist --data-dir=$CHPATH --arch=$ARCH create $DISTNAME "[arch=amd64]" $MIRROR $SUITE main
+# the "[arch=$ARCH]" is a workaround until #774685 is fixed
+chdist --data-dir=$CHPATH --arch=$ARCH create $DISTNAME "[arch=$ARCH]" $MIRROR $SUITE main
 chdist --data-dir=$CHPATH --arch=$ARCH apt-get $DISTNAME update
+
+PACKAGES=$(ls $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages)
+SOURCES=$(ls $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources)
+TMPFILE=$(mktemp)
+TMPFILE2=$(mktemp)
 
 # helper functions
 convert_into_source_packages_only() {
 	rm -f ${TMPFILE2}
-	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" |sort -u )
+	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u )
 	for PKG in $ALL_PKGS ; do
 		SRC=""
 		if [ ! -z "$PKG" ] ; then
@@ -95,16 +96,14 @@ update_if_similar() {
 
 # the essential package set
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
-	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > ${TMPFILE2}
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[1]}.pkgset
 fi
 
 # the required package set
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[2]}.pkgset ] ; then
-	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FPriority required > ${TMPFILE2}
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FPriority required > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[2]}.pkgset
 fi
@@ -112,6 +111,7 @@ fi
 # build-essential
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
 	chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
+	# here we want the installable set:
 	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	convert_from_deb822_into_source_packages_only
 	update_if_similar ${META_PKGSET[3]}.pkgset
@@ -210,7 +210,6 @@ fi
 # pkg-perl-maintainers
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
 	grep-dctrl -sPackage -n -FMaintainer pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-	convert_into_source_packages_only
 	update_if_similar ${META_PKGSET[13]}.pkgset
 fi
 

@@ -133,20 +133,17 @@ properties:
 === reproducible
 
 * here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
+** curl http://bootstrap.debian.net/source/stats_min.json | sed -s "s#,#\n#g" |grep src:|cut -d ":" -f2|tr -d \" | sort -u
 
 * check 0.52-1 is still not fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html
-* reschedule those with "debbindiff.py crashed" in rbuild.log and watch them build...
 
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
-
-* cleanup _buildinfo files (without version)
 
 * cleanup+rename:
 ** unschedule_from_db(  	(defined in build.sh...)
 ** process_packages()	(defined in common.sh...)
 ** force_package_targets() -> set_linktarget
-** STAR?
 * merge reproducible_setup_schroot in schroot-create or delete the latter?
 
 * include no js header in the css
@@ -154,6 +151,8 @@ properties:
 * graph oldest build age - in days
 * mv untested field in stats table too? (as in csv output...)
 * list removed packages, eg bobot++ (and remove them after a week automatically)
+** needs new job to find them...
+** root@jenkins:/var/lib/jenkins/userContent# for i in bobot++ lcms libjboss-aop-java libjboss-cache2-java pgf ptex-jisfonts ; do find . -name "${i}_*" ; done
 
 == Further ideas...
 

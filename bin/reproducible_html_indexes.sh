@@ -57,8 +57,6 @@ for VIEW in last_24h last_48h all_abc ; do
 		FINISH=", from $SHORTER_SPOKENTARGET these were:"
 	fi
 	write_page "<p>"
-	set_icon unreproducible with
-	write_icon
 	set_icon unreproducible
 	write_icon
 	write_page "$COUNT_BAD packages ($PERCENT_BAD% of $COUNT_TOTAL) failed to built reproducibly in total$FINISH <code>"

@@ -221,8 +221,6 @@ write_page "<p>"
 set_icon reproducible
 write_icon
 write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly."
-set_icon unreproducible with
-write_icon
 set_icon unreproducible
 write_icon
 write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."

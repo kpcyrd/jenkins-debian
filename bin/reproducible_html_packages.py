@@ -55,59 +55,6 @@ def sizeof_fmt(num):
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
-def start_udd_connection():
-    username = "public-udd-mirror"
-    password = "public-udd-mirror"
-    host = "public-udd-mirror.xvm.mit.edu"
-    port = 5432
-    db = "udd"
-    try:
-        log.debug("Starting connection to the UDD database")
-        conn = psycopg2.connect("dbname=" + db +
-                               " user=" + username +
-                               " host=" + host +
-                               " password=" + password)
-    except:
-        log.error("Erorr connecting to the UDD database replica")
-        raise
-    conn.set_client_encoding('utf8')
-    return conn
-
-def query_udd(query):
-    cursor = conn.cursor()
-    cursor.execute(query)
-    return cursor.fetchall()
-
-def is_virtual_package(package):
-    rows = query_udd("""SELECT source FROM sources WHERE source='%s'""" % package)
-    if len(rows) > 0:
-            return False
-    return True
-
-def bug_has_patch(bug):
-    query = """SELECT id FROM bugs_tags WHERE id=%s AND tag='patch'""" % bug
-    if len(query_udd(query)) > 0:
-        return True
-    return False
-
-def get_bugs():
-    query = """
-        SELECT bugs.id, bugs.source, bugs.done
-        FROM bugs JOIN bugs_tags on bugs.id = bugs_tags.id
-                  JOIN bugs_usertags on bugs_tags.id = bugs_usertags.id
-        WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
-        AND bugs.id NOT IN (
-            SELECT id
-            FROM bugs_usertags
-            WHERE email = 'reproducible-builds@lists.alioth.debian.org'
-            AND (
-                bugs_usertags.tag = 'toolchain'
-                OR bugs_usertags.tag = 'infrastructure')
-            )
-    """
-    # returns a list of tuples [(id, source, done)]
-    return query_udd(query)
-
 def check_package_status(package):
     """
     This returns a tuple containing status, version and build_date of the last
@@ -167,38 +114,6 @@ def gen_extra_links(package, version):
                     ' did not produce any buildlog! Check ' + rbuild)
     return (links, default_view)
 
-def parse_bugs(bugs):
-    """
-    This function returns a dict:
-    { "package_name": {
-        bug1: {patch: True, done: False},
-        bug2: {patch: False, done: False},
-       }
-    }
-
-    The `bugs` argument is the list of tuples returned by the get_bugs() above
-    """
-    log.info("finding out which usertagged bugs have been closed or at least have patches")
-    packages = {}
-
-    for bug in bugs:
-        if bug[1] not in packages:
-            packages[bug[1]] = {}
-        # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done
-        if is_virtual_package(bug[1]):
-            continue
-        packages[bug[1]][bug[0]] = {'done': False, 'patch': False}
-        if bug[2]: # if the bug is done
-            packages[bug[1]][bug[0]]['done'] = True
-        try:
-            if bug_has_patch(bug[0]):
-                packages[bug[1]][bug[0]]['patch'] = True
-        except KeyError:
-            log.error('item: ' + str(bug))
-    return packages
-
-
-
 def gen_bugs_links(package, bugs):
     html = ''
     if package in bugs:
@@ -219,7 +134,8 @@ def process_packages(packages, no_clean=False):
     generate the /rb-pkg/package.html page
     packages should be a list
     """
-    bugs = parse_bugs(get_bugs())
+    bugs = get_bugs()
+    log.debug(str(len(bugs)) + ' bugs found: ' + str(bugs))
     total = len(packages)
     log.info('Generating the pages of ' + str(total) + ' package(s)')
     for pkg in sorted(packages):
@@ -268,8 +184,3 @@ def purge_old_pages():
                      ' Removing old page.')
             os.remove(RB_PKG_PATH + '/' + page)
 
-
-try:
-    conn = start_udd_connection()
-except:
-    raise

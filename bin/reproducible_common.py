@@ -191,13 +191,48 @@ def write_html_page(title, body, destfile, noheader=False, style_note=False, noe
     with open(destfile, 'w') as fd:
         fd.write(html)
 
-def init_conn():
+def start_db_connection():
     return sqlite3.connect(REPRODUCIBLE_DB)
 
 def query_db(query):
-    cursor = conn.cursor()
+    cursor = conn_db.cursor()
     cursor.execute(query)
     return cursor.fetchall()
+
+def start_udd_connection():
+    username = "public-udd-mirror"
+    password = "public-udd-mirror"
+    host = "public-udd-mirror.xvm.mit.edu"
+    port = 5432
+    db = "udd"
+    try:
+        log.debug("Starting connection to the UDD database")
+        conn = psycopg2.connect("dbname=" + db +
+                               " user=" + username +
+                               " host=" + host +
+                               " password=" + password)
+    except:
+        log.error("Erorr connecting to the UDD database replica")
+        raise
+    conn.set_client_encoding('utf8')
+    return conn
+
+def query_udd(query):
+    cursor = conn_udd.cursor()
+    cursor.execute(query)
+    return cursor.fetchall()
+
+def is_virtual_package(package):
+    rows = query_udd("""SELECT source FROM sources WHERE source='%s'""" % package)
+    if len(rows) > 0:
+            return False
+    return True
+
+def bug_has_patch(bug):
+    query = """SELECT id FROM bugs_tags WHERE id=%s AND tag='patch'""" % bug
+    if len(query_udd(query)) > 0:
+        return True
+    return False
 
 def join_status_icon(status, package=None, version=None):
     table = {'reproducible' : 'weather-clear.png',
@@ -253,8 +288,55 @@ def pkg_has_buildinfo(package, version=False):
     else:
         return False
 
+def get_bugs():
+    """
+    This function returns a dict:
+    { "package_name": {
+        bug1: {patch: True, done: False},
+        bug2: {patch: False, done: False},
+       }
+    }
+    """
+    query = """
+        SELECT bugs.id, bugs.source, bugs.done
+        FROM bugs JOIN bugs_tags on bugs.id = bugs_tags.id
+                  JOIN bugs_usertags on bugs_tags.id = bugs_usertags.id
+        WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
+        AND bugs.id NOT IN (
+            SELECT id
+            FROM bugs_usertags
+            WHERE email = 'reproducible-builds@lists.alioth.debian.org'
+            AND (
+                bugs_usertags.tag = 'toolchain'
+                OR bugs_usertags.tag = 'infrastructure')
+            )
+    """
+    # returns a list of tuples [(id, source, done)]
+    rows = query_udd(query)
+    log.info("finding out which usertagged bugs have been closed or at least have patches")
+    packages = {}
+
+    for bug in rows:
+        if bug[1] not in packages:
+            packages[bug[1]] = {}
+        # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done
+        if is_virtual_package(bug[1]):
+            continue
+        packages[bug[1]][bug[0]] = {'done': False, 'patch': False}
+        if bug[2]: # if the bug is done
+            packages[bug[1]][bug[0]]['done'] = True
+        try:
+            if bug_has_patch(bug[0]):
+                packages[bug[1]][bug[0]]['patch'] = True
+        except KeyError:
+            log.error('item: ' + str(bug))
+    return packages
+
+# init the databases connections
+conn_db = start_db_connection() # the local sqlite3 reproducible db
+conn_udd = start_udd_connection()
+
 # do the db querying
-conn = init_conn()
 amount = int(query_db('SELECT count(name) FROM sources')[0][0])
 count_total = int(query_db('SELECT COUNT(name) FROM source_packages')[0][0])
 count_good = int(query_db(

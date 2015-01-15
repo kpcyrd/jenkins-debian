@@ -249,6 +249,12 @@ def process_packages(packages, no_clean=False):
     if not no_clean:
         purge_old_pages() # housekeep is always good
 
+def gen_all_rb_pkg_pages(no_clean=False):
+    query = 'SELECT name FROM source_packages WHERE status != ""'
+    rows = query_db(query)
+    pkgs = [str(i[0]) for i in rows]
+    log.info('Processing all the package pages, ' + str(len(pkgs)))
+    process_packages(pkgs, no_clean)
 
 def purge_old_pages():
     presents = sorted(os.listdir(RB_PKG_PATH))

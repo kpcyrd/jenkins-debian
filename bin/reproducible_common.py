@@ -4,7 +4,7 @@
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2+
 #
-# Depends: python3
+# Depends: python3 python3-psycopg2
 #
 # This is included by all reproducible_*.py scripts, it contains common functions
 
@@ -15,6 +15,7 @@ import sqlite3
 import logging
 import argparse
 import datetime
+import psycopg2
 from string import Template
 
 DEBUG = False

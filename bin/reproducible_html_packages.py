@@ -4,11 +4,9 @@
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2+
 #
-# Depends: python3 python3-psycopg2
+# Depends: python3
 #
 # Build rb-pkg pages (the pages that describe the package status)
-
-import psycopg2
 
 from reproducible_common import *
 

@@ -158,11 +158,10 @@ META_PKGSET[13]="maint_pkg-perl-maintainers"
 init_html() {
 	SUITE=sid
 	MAINVIEW="stats"
-	ALLSTATES="reproducible FTBR_with_buildinfo FTBR FTBFS 404 not_for_us blacklisted"
+	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes scheduled last_24h last_48h all_abc dd-list stats pkg_sets"
 	SPOKENTARGET["reproducible"]="packages which built reproducibly"
-	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly and do not create a .buildinfo file"
-	SPOKENTARGET["FTBR_with_buildinfo"]="packages which failed to build reproducibly and create a .buildinfo file"
+	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
 	SPOKENTARGET["FTBFS"]="packages which failed to build from source"
 	SPOKENTARGET["404"]="packages where the sources failed to download"
 	SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
@@ -182,7 +181,6 @@ init_html() {
 	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"reproducible\"")
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
-	BUILDINFO_SIGNS=true
 }
 
 write_page() {
@@ -196,13 +194,7 @@ set_icon() {
 	case "$1" in
 		reproducible)		ICON=weather-clear.png
 					;;
-		unreproducible|FTBR*)	if [ "$2" != "" ] ; then
-						ICON=weather-showers-scattered.png
-						STATE_TARGET_NAME=FTBR_with_buildinfo
-					else
-						ICON=weather-showers.png
-						STATE_TARGET_NAME=FTBR
-					fi
+		unreproducible|FTBR)	ICON=weather-showers-scattered.png
 					;;
 		FTBFS)			ICON=weather-storm.png
 					;;
@@ -224,7 +216,6 @@ write_icon() {
 
 write_page_header() {
 	rm -f $PAGE
-	BUILDINFO_ON_PAGE=false
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
@@ -240,11 +231,7 @@ write_page_header() {
 	write_page "</p>"
 	write_page "<ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do
-		WITH=""
-		if [ "$MY_STATE" = "FTBR_with_buildinfo" ] ; then
-			WITH="YES"
-		fi
-		set_icon $MY_STATE $WITH
+		set_icon $MY_STATE
 		write_page "<li>"
 		write_icon
 		write_page "</li>"
@@ -271,12 +258,7 @@ write_page_footer() {
 }
 
 write_page_meta_sign() {
-	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a bold font is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue."
-	if $BUILDINFO_ON_PAGE ; then
-		write_page "A &beta; sign after a package which is unreproducible indicates that a .buildinfo file was generated."
-		write_page "And that means the <a href=\"https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible\">basics for building packages reproducibly are covered</a>."
-	fi
-	write_page "</p>"
+	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a bold font is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue.</p>"
 }
 
 publish_page() {
@@ -286,14 +268,6 @@ publish_page() {
 	fi
 	rm $PAGE
 	echo "Enjoy $REPRODUCIBLE_URL/$PAGE"
-}
-
-set_package_star() {
-	if [ -f "/var/lib/jenkins/userContent/buildinfo/${PKG}_*.buildinfo" ] ; then
-		STAR="<span class=\"beta\">&beta;</span>" # used to be a star...
-	else
-		STAR=""
-	fi
 }
 
 set_package_class() {
@@ -316,16 +290,8 @@ force_package_targets() {
 }
 
 link_packages() {
-	STAR=""
 	for PKG in $@ ; do
-		if $BUILDINFO_SIGNS ; then
-			set_package_star
-			if ! $BUILDINFO_ON_PAGE && [ ! -z "$STAR" ] ; then
-				BUILDINFO_ON_PAGE=true
-			fi
-
-		fi
-		write_page " ${LINKTARGET[$PKG]}$STAR"
+		write_page " ${LINKTARGET[$PKG]}"
 	done
 }
 
@@ -379,7 +345,6 @@ gather_stats() {
 
 update_html_schedule() {
 	VIEW=scheduled
-	BUILDINFO_SIGNS=true
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"

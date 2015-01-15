@@ -272,7 +272,6 @@ done
 write_page "</ul>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	write_page "<hr /><a name=\"${META_PKGSET[$i]}\"></a>"
-	BUILDINFO_SIGNS=true
 	META_RESULT=true
 	gather_meta_stats $i	# FIXME: this ignores unknown packages...
 	if $META_RESULT ; then

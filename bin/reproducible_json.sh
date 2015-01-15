@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -27,11 +27,6 @@ while read LINE ; do
 	PKG=$(echo "$LINE" | cut -d "|" -f1)
 	VERSION=$(echo "$LINE" | cut -d "|" -f2)
 	STATUS=$(echo "$LINE" | cut -d "|" -f3)
-	if [ "$STATUS" = "unreproducible" ] ; then
-	        if [ -f /var/lib/jenkins/userContent/buildinfo/${PKG}_${VERSION}_amd64.buildinfo ] ; then
-			STATUS="$STATUS-with-buildinfo"
-		fi
-	fi
 	write_json "${sep}{"
 	write_json "\"package\": \"$PKG\","
 	write_json "\"version\": \"$VERSION\","

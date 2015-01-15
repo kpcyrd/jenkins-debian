@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -47,7 +47,6 @@ force_package_targets ${BAD["all"]}
 force_package_targets ${UGLY["all"]} ${GOOD["all"]} ${SOURCELESS["all"]} ${NOTFORUS["all"]} $BLACKLISTED
 
 for VIEW in last_24h last_48h all_abc ; do
-	BUILDINFO_SIGNS=true
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds of ${SPOKENTARGET[$VIEW]}"
@@ -100,7 +99,6 @@ for VIEW in last_24h last_48h all_abc ; do
 	set_icon reproducible
 	write_icon
 	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly$FINISH <code>"
-	BUILDINFO_SIGNS=false
 	link_packages ${GOOD[$VIEW]}
 	write_page "</code></p>"
 	write_page_meta_sign
@@ -114,7 +112,6 @@ count_packages() {
 }
 
 for STATE in $ALLSTATES ; do
-	BUILDINFO_SIGNS=false
 	PAGE=index_${STATE}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $STATE "Overview of ${SPOKENTARGET[$STATE]}"
@@ -122,26 +119,7 @@ for STATE in $ALLSTATES ; do
 	case "$STATE" in
 		reproducible)	PACKAGES=${GOOD["all"]}
 				;;
-		FTBR)		CANDIDATES=${BAD["all"]}
-				PACKAGES=""
-				for PKG in $CANDIDATES ; do
-					set_package_star
-					if [ "$STAR" = "" ] ; then
-						PACKAGES="$PACKAGES $PKG"
-					fi
-				done
-				;;
-		FTBR_with_buildinfo)
-				BUILDINFO_SIGNS=true
-				CANDIDATES=${BAD["all"]}
-				PACKAGES=""
-				for PKG in $CANDIDATES ; do
-					set_package_star
-					if [ "$STAR" != "" ] ; then
-						PACKAGES="$PACKAGES $PKG"
-					fi
-				done
-				WITH="YES"
+		FTBR)		PACKAGES=${BAD["all"]}
 				;;
 		FTBFS)		PACKAGES=${UGLY["all"]}
 				;;

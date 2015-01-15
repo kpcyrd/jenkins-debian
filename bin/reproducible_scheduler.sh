@@ -207,7 +207,7 @@ let "TOTAL=$TOTAL+$AMOUNT"
 ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 
 echo "So in total now $TOTAL packages about to be scheduled."
-MESSAGE="$MESSAGE and $AMOUNT packages with the same version (but without .buildinfo files) again, for a total of $TOTAL scheduled packages."
+MESSAGE="$MESSAGE and $AMOUNT packages with the same version again, for a total of $TOTAL scheduled packages."
 
 # finally
 schedule_packages

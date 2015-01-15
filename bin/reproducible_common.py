@@ -120,13 +120,8 @@ html_head_page = Template((tab*2).join("""
       </a>
     </li>
     <li>
-      <a href="/index_FTBR_with_buildinfo.html" target="_parent">
-        <img src="/userContent/static/weather-showers-scattered.png" alt="FTBR_with_buildinfo icon" />
-      </a>
-    </li>
-    <li>
       <a href="/index_FTBR.html" target="_parent">
-        <img src="/userContent/static/weather-showers.png" alt="FTBR icon" />
+        <img src="/userContent/static/weather-showers-scattered.png" alt="FTBR icon" />
       </a>
     </li>
     <li>
@@ -167,18 +162,12 @@ html_foot_page_style_note = Template((tab*2).join("""
   package has a note. Visited packages are linked in green, those which
   have not been visited are linked in blue.
 """.splitlines(True)))
-html_foot_page_buildinfo_note = Template((tab*2).join("""  <br />
-  A &beta; sign after a package which is unreproducible indicates that a
-  .buildinfo file was generated. And that means the
-  <a href="https://wiki.debian.org/ReproducibleBuilds#The_basics_for_making_packages_build_reproducible">
-  basics for building packages reproducibly are covered</a>.
-</p>""".splitlines(True)))
 
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 
-def write_html_page(title, body, destfile, noheader=False, style_note=False, buildinfo_note=False, noendpage=False):
+def write_html_page(title, body, destfile, noheader=False, style_note=False, noendpage=False):
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     html += html_header.substitute(page_title=title)
@@ -193,10 +182,7 @@ def write_html_page(title, body, destfile, noheader=False, style_note=False, bui
     html += body
     if style_note:
         html += html_foot_page_style_note.substitute()
-    if buildinfo_note:
-        html += html_foot_page_buildinfo_note.substitute()
-    else:
-        html += (tab*2) + '</p>'
+    html += (tab*2) + '</p>'
     if not noendpage:
         html += html_footer.substitute(date=now)
     else:
@@ -216,8 +202,7 @@ def query_db(query):
 def join_status_icon(status, package=None, version=None):
     table = {'reproducible' : 'weather-clear.png',
              'FTBFS': 'weather-storm.png',
-             'FTBR' : 'weather-showers.png',
-             'FTBR_with_buildinfo': 'weather-showers-scattered.png',
+             'FTBR' : 'weather-showers-scattered.png',
              '404': 'weather-severe-alert.png',
              'not for us': 'weather-few-clouds-night.png',
              'not_for_us': 'weather-few-clouds-night.png',
@@ -227,8 +212,6 @@ def join_status_icon(status, package=None, version=None):
             log.error('Could not determinate the real state of package None. '
                       + 'Returning a generic "FTBR"')
             status = 'FTBR'
-        elif pkg_has_buildinfo(package, version):
-            status = 'FTBR_with_buildinfo'
         else:
             status = 'FTBR'
     log.debug('Linking status ⇔ icon. package: ' + str(package) + ' @ ' +

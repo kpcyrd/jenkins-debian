@@ -313,10 +313,7 @@ def index_notes(notes):
     html = (tab*2).join(html.splitlines(True))
     for pkg in sorted(notes):
         url = RB_PKG_URI + '/' + pkg + '.html'
-        html += tab*4 + '<a href="' + url + '" class="noted">' + pkg + '</a>'
-        if pkg_has_buildinfo(pkg):
-            html += '<span class="beta">&beta;</span>'
-        html += '\n'
+        html += tab*4 + '<a href="' + url + '" class="noted">' + pkg + '</a>\n'
     html += tab*3 + '</code>\n'
     html += tab*2 + '</p>\n'
     html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
@@ -324,7 +321,7 @@ def index_notes(notes):
     destfile = BASE + '/index_notes.html'
     desturl = REPRODUCIBLE_URL + '/index_notes.html'
     write_html_page(title=title, body=html, destfile=destfile,
-                    style_note=True, buildinfo_note=True)
+                    style_note=True)
     log.info('Notes index now available at ' + desturl)
 
 

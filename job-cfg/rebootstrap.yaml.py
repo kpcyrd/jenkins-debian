@@ -14,7 +14,7 @@ mono_architectures = """
     armel armhf arm64
     alpha
     m68k
-    powerpcspe ppc64el
+    powerpcel powerpcspe ppc64el
     or1k
     sh4
     """.split()

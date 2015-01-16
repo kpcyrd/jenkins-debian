@@ -19,6 +19,14 @@ mono_architectures = """
     sh4
     """.split()
 
+release_architectures = """
+    armel armhf arm64
+    i386
+    mips mipsel
+    powerpc ppc64el
+    s390x
+    """.split()
+
 architectures += mono_architectures
 
 gcc_versions = """4.9""".split()
@@ -76,11 +84,17 @@ print("""
 for arch in sorted(architectures):
     for gccver in sorted(gcc_versions):
         for nobiarch in ["", "_nobiarch"]:
-            print("""
+            if nobiarch and arch in mono_architectures:
+                continue
+            for supported in ["", "_supported"]:
+                for debbindiff in ["", "_debbindiff"]:
+                    if debbindiff and arch not in release_architectures:
+                        continue
+                    print("""
 - job-template:
     defaults: rebootstrap
-    name: '{name}_%(arch)s_gcc%(gccshortver)s%(nobiarch)s'""" %
-    dict(arch=arch, gccshortver=gccver.replace(".", ""), nobiarch=nobiarch))
+    name: '{name}_%(arch)s_gcc%(gccshortver)s%(nobiarch)s%(supported)s%(debbindiff)s'""" %
+    dict(arch=arch, gccshortver=gccver.replace(".", ""), nobiarch=nobiarch, supported=supported, debbindiff=debbindiff))
 
 print("""
 - project:
@@ -89,15 +103,25 @@ print("""
     jobs:""")
 for arch in sorted(architectures):
     for gccver in sorted(gcc_versions):
-        for nobiarch in (False,) if arch in mono_architectures else (False, True):
-            print(
+        for nobiarch in (False, True):
+            if nobiarch and arch in mono_architectures:
+                continue
+            for supported in (False, True):
+                for debbindiff in (False, True):
+                    if debbindiff and arch not in release_architectures:
+                        continue
+                    print(
 """        - '{name}_%(suffix)s':
             my_arch: '%(arch)s'
-            my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s'
-            my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s'
+            my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DEBBINDIFF=%(debbindiff_value)s'
+            my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s%(supported_comment)s%(debbindiff_comment)s'
             my_branchname: 'jenkins_%(suffix)s'""" %
                 dict(arch=arch,
-                     suffix=arch + "_gcc" + gccver.replace(".", "") + ("_nobiarch" if nobiarch else ""),
+                     suffix=arch + "_gcc" + gccver.replace(".", "") + ("_nobiarch" if nobiarch else "") + ("_supported" if supported else "") + ("_debbindiff" if debbindiff else ""),
                      gccver=gccver,
                      multilib_value="no" if nobiarch else "yes",
-                     nobiarch_comment=" without multilib" if nobiarch else ""))
+                     nobiarch_comment=" without multilib" if nobiarch else "",
+                     multiarch_gcc_value="no" if supported else "yes",
+                     supported_comment=" using the supported method" if supported else "",
+                     debbindiff_value="yes" if debbindiff else "no",
+                     debbindiff_comment=" showing debbindiffs" if debbindiff else ""))

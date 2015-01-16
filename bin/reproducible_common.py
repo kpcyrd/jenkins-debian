@@ -161,8 +161,11 @@ html_foot_page_style_note = Template((tab*2).join("""
 <p style="font-size:0.9em;">
   A package name displayed with a bold font is an indication that this
   package has a note. Visited packages are linked in green, those which
-  have not been visited are linked in blue.
-""".splitlines(True)))
+  have not been visited are linked in blue.<br />
+  A <code>&#35;</code> sign after the name of a package indicates that a bug is
+  filed aginst it. Likewise, a <code>&#43;</code> means that there is bug with a
+  patch attached. In case of more than one bug, the simble is repeated.
+</p>""".splitlines(True)))
 
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
@@ -183,7 +186,6 @@ def write_html_page(title, body, destfile, noheader=False, style_note=False, noe
     html += body
     if style_note:
         html += html_foot_page_style_note.substitute()
-    html += (tab*2) + '</p>'
     if not noendpage:
         html += html_footer.substitute(date=now)
     else:

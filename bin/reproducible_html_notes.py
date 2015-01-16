@@ -312,9 +312,11 @@ def get_trailing_icon(package, bugs):
         for bug in bugs[package]:
             html += '<span class="'
             if bugs[package][bug]['done']:
-                html += 'bug-done">#</span>'
+                html += 'bug-done" title="#' + str(bug) + ', done">#</span>'
             elif bugs[package][bug]['patch']:
-                html += 'bug-patch">+</span>'
+                html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
+            else:
+                html += '" title="#' + str(bug) + '">+</span>'
             print(package + ' ' + html)
     return html
 

@@ -295,7 +295,7 @@ def index_issues(issues):
           + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n" \
           + tab*3 + "Affected packages\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
     html = (tab*2).join(templ.splitlines(True))
-    for issue in sorted(issues, key=lambda x: len(issues_count[x]), reverse=True):
+    for issue in sorted(issues, key=lambda x: (-len(issues_count[x]), x)):
         html += tab*3 + '<tr>\n'
         html += tab*4 + '<td><a href="' + ISSUES_URI + '/' + issue + \
                 '_issue.html">' + issue + '</a></td>\n'

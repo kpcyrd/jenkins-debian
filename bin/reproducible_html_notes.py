@@ -290,18 +290,27 @@ def iterate_over_issues(issues):
         log.info("you can now see the issue at " + desturl)
         i = i + 1
 
+def sort_issues(issue):
+    try:
+        return (-len(issues_count[issue]), issue)
+    except KeyError:    # there are no packages affected by this issue
+        return (0, issue)
+
 def index_issues(issues):
     templ = "\n<table class=\"body\">\n" + tab + "<tr>\n" + tab*2 + "<th>\n" \
           + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n" \
           + tab*3 + "Affected packages\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
     html = (tab*2).join(templ.splitlines(True))
-    for issue in sorted(issues, key=lambda x: (-len(issues_count[x]), x)):
+    for issue in sorted(issues, key=sort_issues):
         html += tab*3 + '<tr>\n'
         html += tab*4 + '<td><a href="' + ISSUES_URI + '/' + issue + \
                 '_issue.html">' + issue + '</a></td>\n'
         html += tab*4 + '<td>\n'
-        html += tab*5 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'
-        html += tab*5 + ', '.join(issues_count[issue]) + '\n'
+        try:
+            html += tab*5 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'
+            html += tab*5 + ', '.join(issues_count[issue]) + '\n'
+        except KeyError:    # there are no packages affected by this issue
+            html += tab*5 + '<b>0</b>\n'
         html += tab*4 + '</td>\n'
         html += tab*3 + '</tr>\n'
     html += tab*2 + '</table>\n'

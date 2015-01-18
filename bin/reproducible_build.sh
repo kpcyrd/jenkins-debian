@@ -14,7 +14,7 @@ common_init "$@"
 mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/rbuild/
 
 cleanup_all() {
-	rm -r $TMPDIR
+	rm -r $TMPDIR $TMPCFG
 }
 
 cleanup_userContent() {
@@ -36,6 +36,7 @@ unschedule_from_db() {
 }
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
+TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name,date_scheduled FROM sources_scheduled WHERE date_build_started = '' ORDER BY date_scheduled LIMIT 1")
@@ -114,7 +115,8 @@ else
 		set +e
 		set -x
 		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-		( timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee -a ${RBUILDLOG}
+		printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
+		( timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee -a ${RBUILDLOG}
 		set +x
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
@@ -123,11 +125,12 @@ else
 			# so first delete files from .dsc, then from .changes file
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
+			printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
 			echo "============================================================================="
 			echo "Re-building ${SRCPACKAGE} now."
 			echo "============================================================================="
 			set -x
-			timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" LANG="fr_CH.UTF-8" LC_ALL="fr_CH.UTF-8" pbuilder --build --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
+			timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" LANG="fr_CH.UTF-8" LC_ALL="fr_CH.UTF-8" pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
 			set +x
 			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
 			# and again (see comment 5 lines above)

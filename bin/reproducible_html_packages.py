@@ -123,7 +123,6 @@ def gen_bugs_links(package, bugs):
             if bugs[package][bug]['patch']:
                 html += ' bug-patch'
             html += '">#' + str(bug) + '</a> '
-            print(package + html)
     return html
 
 

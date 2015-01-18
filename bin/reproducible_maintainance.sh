@@ -61,10 +61,13 @@ fi
 # find processes which should not be there
 HAYSTACK=$(mktemp)
 RESULT=$(mktemp)
+PBUIDS="1234 1111 2222"
 ps axo pid,user,size,pcpu,cmd > $HAYSTACK
-for ZOMBIE in $(pgrep -u 1234 -P 1 || true) ; do
-	# faked-sysv comes and goes...
-	grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null || true
+for i in $PBUIDS ; do
+	for ZOMBIE in $(pgrep -u $i -P 1 || true) ; do
+		# faked-sysv comes and goes...
+		grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null || true
+	done
 done
 if [ -s $RESULT ] ; then
 	echo

@@ -171,6 +171,12 @@ html_foot_page_style_note = Template((tab*2).join("""
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 
+def print_critical_message(msg):
+    print('\n\n\n')
+    for line in msg.splitlines():
+        log.critical(line)
+    print('\n\n\n')
+
 def write_html_page(title, body, destfile, noheader=False, style_note=False, noendpage=False):
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
@@ -215,7 +221,7 @@ def start_udd_connection():
                                " host=" + host +
                                " password=" + password)
     except:
-        log.error("Erorr connecting to the UDD database replica")
+        print_critical_message("Erorr connecting to the UDD database replica")
         raise
     conn.set_client_encoding('utf8')
     return conn

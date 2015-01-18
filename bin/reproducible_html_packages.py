@@ -64,7 +64,9 @@ def check_package_status(package):
                 'WHERE name="%s"' % package
         result = query_db(query)[0]
     except IndexError:
-        log.critical('The query produces no results. The query: ' + query)
+        print_critical_message('This query produces no results: ' + query +
+                '\nThis means there is no tested package with the name ' +
+                package + '.')
         raise
     status = str(result[0])
     version = str(result[1])

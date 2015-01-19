@@ -67,7 +67,8 @@ sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat dev
         libvpx1 dnsmasq-base openjdk-7-jre python3-yaml python3-psycopg2
 # debootstrap is affected by #766459 in wheezy
 sudo apt-get install -t wheezy-backports qemu debootstrap qemu-kvm qemu-system-x86 libvirt0 qemu-user-static binfmt-support \
-        libvirt-dev libvirt-bin seabios ruby-rjb ruby-packetfu cucumber
+        libvirt-dev libvirt-bin seabios ruby-rjb ruby-packetfu cucumber \
+	linux-image-3.16.0-0.bpo.4-amd64
 explain "Packages installed."
 
 echo "Also needs python-arpy from jessie..."

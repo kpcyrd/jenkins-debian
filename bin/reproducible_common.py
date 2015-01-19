@@ -176,8 +176,11 @@ url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 def print_critical_message(msg):
     print('\n\n\n')
-    for line in msg.splitlines():
-        log.critical(line)
+    try:
+        for line in msg.splitlines():
+            log.critical(line)
+    except AttributeError:
+        log.critical(msg)
     print('\n\n\n')
 
 def write_html_page(title, body, destfile, noheader=False, style_note=False, noendpage=False):

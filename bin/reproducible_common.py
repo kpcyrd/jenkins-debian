@@ -373,6 +373,22 @@ def get_bugs():
             log.error('item: ' + str(bug))
     return packages
 
+def get_trailing_icon(package, bugs):
+    html = ''
+    if package in bugs:
+        for bug in bugs[package]:
+            html += '<span class="'
+            if bugs[package][bug]['done']:
+                html += 'bug-done" title="#' + str(bug) + ', done">#</span>'
+            elif bugs[package][bug]['patch']:
+                html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
+            else:
+                html += '" title="#' + str(bug) + '">+</span>'
+    if html:
+        print(html)
+    return html
+
+
 # init the databases connections
 conn_db = start_db_connection() # the local sqlite3 reproducible db
 conn_udd = start_udd_connection()

@@ -340,18 +340,6 @@ def index_issues(issues):
     write_html_page(title=title, body=html, destfile=destfile)
     log.info('Issues index now available at ' + desturl)
 
-def get_trailing_icon(package, bugs):
-    html = ''
-    if package in bugs:
-        for bug in bugs[package]:
-            html += '<span class="'
-            if bugs[package][bug]['done']:
-                html += 'bug-done" title="#' + str(bug) + ', done">#</span>'
-            elif bugs[package][bug]['patch']:
-                html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
-            else:
-                html += '" title="#' + str(bug) + '">+</span>'
-    return html
 
 def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')

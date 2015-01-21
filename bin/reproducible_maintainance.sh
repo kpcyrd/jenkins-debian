@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -123,6 +123,11 @@ if [ ! -z "$PACKAGES" ] ; then
 			(SELECT sources.name FROM sources)
 		LIMIT 25"
 	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
+	cd /var/lib/jenkins/userContent
+	for i in PACKAGES ; do
+		find rb-pkg/ rbuild/ notes/ dbd/ -name "${i}_*" -exec rm -v {} \;
+	done
+	cd -
 fi
 
 if ! $DIRTY ; then

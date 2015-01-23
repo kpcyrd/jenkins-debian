@@ -140,6 +140,8 @@ properties:
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
 
+* missing tests: variation in kernel and date
+
 * cleanup+rename:
 ** unschedule_from_db(  	(defined in build.sh...)
 ** process_packages()	(defined in common.sh...)
@@ -150,9 +152,6 @@ properties:
 * one css, not 2
 * graph oldest build age - in days
 * mv untested field in stats table too? (as in csv output...)
-* list removed packages, eg bobot++ (and remove them after a week automatically)
-** needs new job to find them...
-** root@jenkins:/var/lib/jenkins/userContent# for i in bobot++ lcms libjboss-aop-java libjboss-cache2-java pgf ptex-jisfonts ; do find . -name "${i}_*" ; done
 
 == Further ideas...
 

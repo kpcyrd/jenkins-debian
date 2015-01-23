@@ -141,6 +141,17 @@ properties:
 * reproducible: dont delete userContent/$pkg on build begin..
 
 * missing tests: variation in kernel and date
+** http://www.bstern.org/libuname/ - add "-ldl" to the linker flags...
+** lunar suggests to use qemu with -r and -cpu and -rtc flags
+** https://wiki.debian.org/qemubuilder - part of cowdancer
+		< Lunar^> I would rather say we do not do full uname and CPU variation that use an unreliable LD_PRELOAD
+		< Lunar^> because as soon as the package unset or reset the variable it won't be there anymore
+		       * | h01ger nods. its also ok to leave some variations for when we go "for real" (aka rebuilds in the field)
+		<h01ger> | Lunar^: if that happens. if that doesnt we still get some more variations
+		<h01ger> | so i'd say such an LD_PRELOAD would be useful, even though it wouldnt be complete
+		<h01ger> | but we will find more problems "before going into the fields"
+		       * | h01ger guesstimates that we would go from 300-600 builds per day to 100-200 with qemubuilder
+		<h01ger> | but those qemubuilders would only get 4 or 8gb ram... maybe 6. and that will have a huge impact
 
 * cleanup+rename:
 ** unschedule_from_db(  	(defined in build.sh...)

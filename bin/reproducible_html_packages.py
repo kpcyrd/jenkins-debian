@@ -70,7 +70,7 @@ def check_package_status(package):
         raise
     status = str(result[0])
     version = str(result[1])
-    build_date = str(result[2])
+    build_date = str(result[2])+" UTC"
     return (status, version, build_date)
 
 def gen_extra_links(package, version):

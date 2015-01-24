@@ -34,6 +34,10 @@
 
 - job-template:
     defaults: live
+    name: '{name}_build_debian-edu_jessie_workstation'
+
+- job-template:
+    defaults: live
     name: '{name}_build_debian_jessie_gnome'
 
 - job-template:
@@ -55,6 +59,10 @@
            my_description: 'Build Debian Edu Jessie live-image with "standlone" profile.'
            my_time: '0 12 1 * *'
            my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu jessie standalone'
+       - '{name}_build_debian-edu_jessie_workstation':
+           my_description: 'Build Debian Edu Jessie live-image with "workstation" profile.'
+           my_time: '0 12 1 * *'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu jessie workstation'
        - '{name}_build_debian_jessie_gnome':
            my_description: 'Build Debian Jessie live-image with GNOME desktop.'
            my_time: '0 13 1 * *'

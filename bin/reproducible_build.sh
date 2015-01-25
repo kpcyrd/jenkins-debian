@@ -181,8 +181,9 @@ else
 		set -x
 		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 		FTBFS=1
+		TMPLOG=$(mktemp)
 		printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
-		( timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee -a ${RBUILDLOG}
+		( timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc ) 2>&1 | tee ${TMPLOG}
 		set +x
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 			mkdir b1 b2
@@ -196,7 +197,7 @@ else
 			echo "Re-building ${SRCPACKAGE} now."
 			echo "============================================================================="
 			set -x
-			timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" LANG="fr_CH.UTF-8" LC_ALL="fr_CH.UTF-8" unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
+			( timeout 12h nice ionice -c 3 sudo DEB_BUILD_OPTIONS="parallel=$NUM_CPU" LANG="fr_CH.UTF-8" LC_ALL="fr_CH.UTF-8" unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc ) 2>&1 | tee -a ${RBUILDLOG}
 			set +x
 			if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
 				FTBFS=0
@@ -206,8 +207,13 @@ else
 				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 				cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee -a ${RBUILDLOG}
 				call_debbindiff
+			else
+				echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
 			fi
+		else
+			cat ${TMPLOG} >> ${RBUILDLOG}
 		fi
+		rm ${TMPLOG}
 		if [ $FTBFS -eq 1 ] ; then
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."

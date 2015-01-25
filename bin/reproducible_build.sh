@@ -35,6 +35,71 @@ unschedule_from_db() {
 	echo
 }
 
+call_debbindiff() {
+	LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
+	LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
+	BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
+	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
+	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
+		for i in $(seq 0 100) ; do
+			sleep 15
+			echo "sleeping 15s, debbindiff schroot is locked."
+			if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then
+				break
+			fi
+		done
+		if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ]  ; then
+			echo "Warning: lock $DBDCHROOT_WRITELOCK or [ -f $DBDCHROOT_READLOCK ] still exists, exiting."
+			exit 1
+		fi
+	else
+		# we create (more) read-lock(s) but stop on write locks...
+		# write locks are only done by the schroot setup job
+		touch $DBDCHROOT_READLOCK
+	fi
+	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --version) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
+	( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
+	RESULT=$?
+	set +x
+	set -e
+	rm -f $DBDCHROOT_READLOCK
+	echo | tee -a ${RBUILDLOG}
+	if [ $RESULT -eq 124 ] ; then
+		echo "$(date) - debbindiff was killed after running into timeout... maybe there is still $REPRODUCIBLE_URL/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
+		if [ ! -s ./${LOGFILE} ] ; then
+			echo "$(date) - debbindiff produced no output and was killed after running into timeout..." >> ${LOGFILE}
+		fi
+	elif [ $RESULT -eq 1 ] ; then
+		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${LOGFILE}"
+	fi
+	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
+		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1
+		figlet ${SRCPACKAGE}
+		echo
+		echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
+		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
+		unschedule_from_db
+	else
+		echo | tee -a ${RBUILDLOG}
+		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
+		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1 || true
+		if [ -f ./${LOGFILE} ] ; then
+			echo -n "$DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
+			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
+		else
+			echo -n ", debbindiff produced no output (which is strange)"
+		fi
+		if [ ! -f b1/${BUILDINFO} ] ; then
+			echo " and a .buildinfo file is missing." | tee -a ${RBUILDLOG}
+		else
+			echo "." | tee -a ${RBUILDLOG}
+		fi
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
+		unschedule_from_db
+	fi
+}
+
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
@@ -137,68 +202,7 @@ else
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee -a ${RBUILDLOG}
-			LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
-			LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
-			BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
-			# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
-			if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
-				for i in $(seq 0 100) ; do
-					sleep 15
-					echo "sleeping 15s, debbindiff schroot is locked."
-					if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then
-						break
-					fi
-				done
-				if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ]  ; then
-					echo "Warning: lock $DBDCHROOT_WRITELOCK or [ -f $DBDCHROOT_READLOCK ] still exists, exiting."
-					exit 1
-				fi
-			else
-				# we create (more) read-lock(s) but stop on write locks...
-				# write locks are only done by the schroot setup job
-				touch $DBDCHROOT_READLOCK
-			fi
-			echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --version) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-			( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
-			RESULT=$?
-			set +x
-			set -e
-			rm -f $DBDCHROOT_READLOCK
-			echo | tee -a ${RBUILDLOG}
-			if [ $RESULT -eq 124 ] ; then
-				echo "$(date) - debbindiff was killed after running into timeout... maybe there is still $REPRODUCIBLE_URL/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
-				if [ ! -s ./${LOGFILE} ] ; then
-					echo "$(date) - debbindiff produced no output and was killed after running into timeout..." >> ${LOGFILE}
-				fi
-			elif [ $RESULT -eq 1 ] ; then
-				DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${LOGFILE}"
-			fi
-			if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1
-				figlet ${SRCPACKAGE}
-				echo
-				echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
-				echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
-				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
-				unschedule_from_db
-			else
-				echo | tee -a ${RBUILDLOG}
-				echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
-				cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1 || true
-				if [ -f ./${LOGFILE} ] ; then
-					echo -n "$DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
-					mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
-				else
-					echo -n ", debbindiff produced no output (which is strange)"
-				fi
-				if [ ! -f b1/${BUILDINFO} ] ; then
-					echo " and a .buildinfo file is missing." | tee -a ${RBUILDLOG}
-				else
-					echo "." | tee -a ${RBUILDLOG}
-				fi
-				sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
-				unschedule_from_db
-			fi
+			call_debbindiff
 		else
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."

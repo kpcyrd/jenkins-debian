@@ -26,8 +26,10 @@ sleep $SLEEP
 export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-installation-$1.XXXXXXXXX)
 export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
+export TMPLOG=$(mktemp)
 
 cleanup_all() {
+	echo "Doing cleanup now."
 	# test if $CHROOT_TARGET starts with /chroots/
 	if [ "${CHROOT_TARGET:0:9}" != "/chroots/" ] ; then
 		echo "HALP. CHROOT_TARGET = $CHROOT_TARGET"
@@ -35,11 +37,19 @@ cleanup_all() {
 	fi
 	sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
 	sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
+	rm -f $TMPLOG
 }
 
 execute_ctmpfile() {
 	chmod +x $CTMPFILE
-	sudo chroot $CHROOT_TARGET $TMPFILE
+	sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG
+	RESULT=$(egrep "Failed to fetch.*Unable to connect to" $TMPLOG)
+	if [ ! -z "$RESULT" ] ; then
+		echo
+		echo "Trying to workaround temporarily failure fetching packages, trying again..."
+		echo
+		sudo chroot $CHROOT_TARGET $TMPFILE
+	fi
 	rm $CTMPFILE
 }
 

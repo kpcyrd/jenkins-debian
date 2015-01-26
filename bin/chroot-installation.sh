@@ -43,7 +43,7 @@ cleanup_all() {
 execute_ctmpfile() {
 	chmod +x $CTMPFILE
 	sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG
-	RESULT=$(egrep "Failed to fetch.*Unable to connect to" $TMPLOG)
+	RESULT=$(egrep "Failed to fetch.*Unable to connect to" $TMPLOG || true)
 	if [ ! -z "$RESULT" ] ; then
 		echo
 		echo "Trying to workaround temporarily failure fetching packages, trying again..."

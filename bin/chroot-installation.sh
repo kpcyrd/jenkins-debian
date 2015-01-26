@@ -3,7 +3,7 @@
 # Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -38,6 +38,11 @@ cleanup_all() {
 	sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
 	sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 	rm -f $TMPLOG
+	if [ "$1" = "good" ] ; then
+		exit 0
+	else
+		exit 1
+	fi
 }
 
 execute_ctmpfile() {
@@ -245,6 +250,6 @@ if [ "$3" != "" ] ; then
 	esac
 fi
 
-cleanup_all
 trap - INT TERM EXIT
+cleanup_all good
 

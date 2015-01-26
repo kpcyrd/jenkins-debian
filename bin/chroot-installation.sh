@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -59,7 +59,7 @@ Debug::pkgProblemResolver "true";
 # installation order
 Debug::pkgPackageManager "true";
 APTEOF
-echo "deb-src $MIRROR $1 main" >> /etc/apt/sources.list
+echo "deb-src $MIRROR $1 main" > /etc/apt/sources.list.d/$1-src.list
 apt-get update
 set +x
 EOF
@@ -113,7 +113,7 @@ prepare_upgrade2() {
 		APTDPKGFIRST=""
 	fi
 	cat >> $CTMPFILE <<-EOF
-echo "deb $MIRROR $1 main" >> /etc/apt/sources.list
+echo "deb $MIRROR $1 main" > /etc/apt/sources.list.d/$1.list
 $SCRIPT_HEADER
 set -x
 apt-get update

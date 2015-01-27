@@ -193,7 +193,7 @@ cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
 		| awk '/^package:/ { print $2 }' \
 		| apt-file $APT_FILE_OPTS show -F --from-file - \
-		| sed -ne "s ^\([^:]\+\):\s\+\(${ipath}\) \1\t\2 p" \
+		| sed -ne "s ^\([^:]\+\):\s\+\(${ipath}\(\$\|/.*\)\) \1\t\2 p" \
 		| while read dep cpath; do
 			[ "$pkg" != "$dep" ] || continue
 			echo "$pkg $ipath $dep $cpath"

@@ -57,6 +57,7 @@ properties:
 * put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
 
 * re-read the docs! 
+** http://live.debian.net/manual/stable/html/live-manual.en.html#321
 
 * generate feature files from templates? to cope with sub-products?
 -> no. detect desktop type and set variables accordingly
@@ -134,6 +135,8 @@ properties:
 
 * here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
 ** curl http://bootstrap.debian.net/source/stats_min.json | sed -s "s#,#\n#g" |grep src:|cut -d ":" -f2|tr -d \" | sort -u
+
+* meta pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
 
 * check 0.52-1 is still not fixed: https://jenkins.debian.net/userContent/rb-pkg/debian-edu-artwork.html
 

@@ -6,6 +6,7 @@
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
+set -e
 
 # $1 = base distro
 # $2 = extra component

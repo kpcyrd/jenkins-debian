@@ -87,6 +87,8 @@ for arch in sorted(architectures):
             if nobiarch and arch in mono_architectures:
                 continue
             for supported in ["", "_supported"]:
+                if nobiarch and supported:
+                    continue
                 for debbindiff in ["", "_debbindiff"]:
                     if debbindiff and arch not in release_architectures:
                         continue
@@ -107,6 +109,8 @@ for arch in sorted(architectures):
             if nobiarch and arch in mono_architectures:
                 continue
             for supported in (False, True):
+                if nobiarch and supported:
+                    continue
                 for debbindiff in (False, True):
                     if debbindiff and arch not in release_architectures:
                         continue

@@ -245,6 +245,7 @@ def gen_html_issue(issue):
                                    affected_pkgs=affected)
 
 def purge_old_notes(notes):
+    removed_pages = []
     presents = sorted(os.listdir(NOTES_PATH))
     for page in presents:
         pkg = page.rsplit('_', 1)[0]
@@ -252,6 +253,9 @@ def purge_old_notes(notes):
         if pkg not in notes:
             log.info('There are no notes for ' + pkg + '. Removing old page.')
             os.remove(NOTES_PATH + '/' + page)
+            removed_pages.append(pkg)
+    if removed_pages:
+        process_packages(removed_pages)
 
 def iterate_over_notes(notes):
     num_notes = str(len(notes))
@@ -271,7 +275,6 @@ def iterate_over_notes(notes):
         desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
         log.info("you can now see your notes at " + desturl)
         i = i + 1
-    process_packages(notes) # regenerate all rb-pkg/ pages
 
 def iterate_over_issues(issues):
     num_issues = str(len(issues))
@@ -366,3 +369,4 @@ if __name__ == '__main__':
     index_issues(issues)
     index_notes(notes)
     purge_old_notes(notes)
+    process_packages(notes) # regenerate all rb-pkg/ pages

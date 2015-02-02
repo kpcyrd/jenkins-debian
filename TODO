@@ -18,7 +18,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
-
+* g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
 * get rid of FIXMEs in README. Really.
 * turn job-cfg/g-i.yaml into .yaml.py
 * split etc/schroot/default

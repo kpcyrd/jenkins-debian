@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -96,4 +96,4 @@ setup_pbuilder() {
 	echo
 }
 
-setup_pbuilder base-reproducible dpkg dpkg-dev debhelper discount
+setup_pbuilder base-reproducible dpkg dpkg-dev debhelper

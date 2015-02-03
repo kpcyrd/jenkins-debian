@@ -156,7 +156,7 @@ curl --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ft
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
 	tmpdir=`mktemp -d`
-	curl --retry 2 --location --silent "$url" \
+	( curl --retry 2 --location --silent "$url" || echo "curl failed">&2 ) \
 		| dpkg-deb --ctrl-tarfile /dev/stdin \
 		| tar -C "$tmpdir" --exclude=./md5sums -x
 	if [ ! -f "$tmpdir/triggers" ]; then

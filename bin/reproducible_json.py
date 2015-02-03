@@ -12,15 +12,16 @@ from reproducible_common import *
 
 import json
 
-result = sorted(query_db('SELECT name, version, status FROM source_packages' +
-                         ' WHERE status != ""'))
+result = sorted(query_db('SELECT name, version, status , build_date ' +
+                         'FROM source_packages ' +
+                         'WHERE status != ""'))
 count = int(query_db('SELECT COUNT(name) FROM source_packages ' +
                            'WHERE status != ""')[0][0])
 
 log.info('processing ' + str(count) + ' package to create .json output')
 
 all_pkgs = []
-keys = ['package', 'version', 'status']
+keys = ['package', 'version', 'status', 'build_date']
 for row in result:
     pkg = dict(zip(keys, row))
     pkg['suite'] = 'sid'

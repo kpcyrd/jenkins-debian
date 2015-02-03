@@ -97,7 +97,7 @@ html_footer = Template("""
       jenkins.debian.net</a> and about
       <a href="https://wiki.debian.org/ReproducibleBuilds"> reproducible builds
       of Debian</a> available elsewhere. Last update: $date.
-      Copyright 2014-2015 <a href="mailto:holger@layer-acht.org">Holger Levsen</a>,
+      Copyright 2014-2015 <a href="mailto:holger@layer-acht.org">Holger Levsen</a> and others,
       GPL-2 licensed. The weather icons are public domain and have been taken
       from the <a href=http://tango.freedesktop.org/Tango_Icon_Library target=_blank>
       Tango Icon Library</a>.

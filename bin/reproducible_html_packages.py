@@ -20,7 +20,7 @@ html_package_page = Template((tab*2).join(("""
             </a>
             <span style="font-size:0.9em;">at $build_time:</span>
 $links
-            <a href="https://packages.qa.debian.org/$package" target="main">PTS</a>
+            <a href="https://tracker.debian.org/$package" target="main">PTS</a>
             <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
             <a href="https://sources.debian.net/src/$package/" target="main">sources</a>
             <a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">debian/rules</a>

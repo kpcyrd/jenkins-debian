@@ -28,10 +28,10 @@ export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-installation-$1.XXXXXXXXX)
 export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 export TMPLOG=$(mktemp)
-SUCCESS=false
 
 cleanup_all() {
 	echo "Doing cleanup now."
+	set -x
 	# test if $CHROOT_TARGET starts with /chroots/
 	if [ "${CHROOT_TARGET:0:9}" != "/chroots/" ] ; then
 		echo "HALP. CHROOT_TARGET = $CHROOT_TARGET"
@@ -40,8 +40,11 @@ cleanup_all() {
 	sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
 	sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 	rm -f $TMPLOG
-	if ! $SUCCESS ; then
+	echo "\$1 = $1"
+	if [ "$1" != "fine" ] ; then
 		exit 1
+	else
+		echo "Exiting cleanly."
 	fi
 }
 
@@ -251,6 +254,5 @@ if [ "$3" != "" ] ; then
 fi
 
 trap - INT TERM EXIT
-SUCCESS=true
-cleanup_all
+cleanup_all fine
 

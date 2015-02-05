@@ -59,6 +59,7 @@ execute_ctmpfile() {
 		sudo chroot $CHROOT_TARGET $TMPFILE
 	fi
 	rm $CTMPFILE
+	echo "Debug: This should only be printed on success."
 }
 
 prepare_bootstrap() {
@@ -253,6 +254,8 @@ if [ "$3" != "" ] ; then
 	esac
 fi
 
+echo "Debug: Removing trap."
 trap - INT TERM EXIT
+echo "Debug: Cleanup fine"
 cleanup_all fine
 

@@ -49,6 +49,7 @@ cleanup_all() {
 }
 
 execute_ctmpfile() {
+	set -x
 	chmod +x $CTMPFILE
 	set -o pipefail		# see eg http://petereisentraut.blogspot.com/2010/11/pipefail.html
 	if ! $(sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG) ; then
@@ -63,6 +64,8 @@ execute_ctmpfile() {
 		fi
 	fi
 	rm $CTMPFILE
+	set +o pipefail
+	set +x
 	echo "Debug: This should only be printed on success."
 }
 

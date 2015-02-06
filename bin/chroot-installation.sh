@@ -49,9 +49,9 @@ cleanup_all() {
 }
 
 execute_ctmpfile() {
-	sudo chroot $CHROOT_TARGET $TMPFILE
 	#set -x
-	#chmod +x $CTMPFILE
+	chmod +x $CTMPFILE
+	sudo chroot $CHROOT_TARGET $TMPFILE
 	#set -o pipefail		# see eg http://petereisentraut.blogspot.com/2010/11/pipefail.html
 	#if ! $(sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG) ; then
 	#	RESULT=$(egrep "Failed to fetch.*Unable to connect to" $TMPLOG || true)

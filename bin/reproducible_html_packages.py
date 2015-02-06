@@ -141,7 +141,7 @@ def process_packages(packages, no_clean=False):
         pkg = str(pkg)
         status, version, build_date = check_package_status(pkg)
         log.info('Generating the page of ' + pkg + ' ' + version +
-                 ' builded at ' + build_date)
+                 ' built at ' + build_date)
 
         links, default_view = gen_extra_links(pkg, version)
         bugs_links = gen_bugs_links(pkg, bugs)

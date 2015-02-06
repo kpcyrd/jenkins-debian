@@ -151,7 +151,7 @@ apt-get -yf dist-upgrade
 apt-get clean
 apt-get -yf dist-upgrade
 apt-get clean
-apt-get -y autoremove
+apt-get --dry-run autoremove
 set +x
 EOF
 }

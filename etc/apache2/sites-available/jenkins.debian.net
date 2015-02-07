@@ -94,16 +94,15 @@ NameVirtualHost *:443
 	RewriteEngine on
 	ProxyRequests Off
 
+	# HSTS
 	RequestHeader set X-Forwarded-Proto "https"
 	RequestHeader set X-Forwarded-Port "443"
 	Header always add Strict-Transport-Security "max-age=15552000"
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
-
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
 	LogLevel warn
-
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </Macro>
 
@@ -124,7 +123,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{QUERY_STRING} token
 	RewriteRule ^ - [F]
 
-	# a bunch of redirect to point people to https:reproducible.debian.net
+	# a bunch of redirects to point people to https://reproducible.debian.net
 	RewriteCond %{HTTP_HOST} jenkins\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.json$ [or]
@@ -178,16 +177,19 @@ Use common-debian-service-https-redirect reproducible.debian.net
 
 	DocumentRoot /var/lib/jenkins/userContent
 
+	# use reproducible.html as "home page"
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/$
 	RewriteRule ^/(.*) /reproducible.html [R,L]
 
+	# drop the (old|ugly) /userContent/ directory from the url
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} ^/userContent
 	RewriteRule ^/userContent/(.*)$ /$1 [R=301,L]
 
+	# redirect rb.d.n/$PKG → rb.d.n/rb-pkg/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d

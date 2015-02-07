@@ -174,8 +174,8 @@ cleanup_all() {
 
 show_preseed() {
 	qemu_url="$1"
-	jenkins_url="$(echo $url|sed -s 's#10\.0\.2\.1#127.0.0.1#g')"
-	outside_url="$(echo $url|sed -s 's#10\.0\.2\.1#jenkins.debian.net#g')"
+	jenkins_url="$(echo $qemu_url|sed -s 's#10\.0\.2\.1#127.0.0.1#g')"
+	outside_url="$(echo $qemu_url|sed -s 's#10\.0\.2\.1#jenkins.debian.net#g')"
 	echo "Preseeding from $outside_url:"
 	echo
 	curl -s "$jenkins_url" | grep -v ^# | grep -v "^$"

@@ -1,59 +1,27 @@
 NameVirtualHost *:80
 NameVirtualHost *:443
 
-<VirtualHost 127.0.0.1:80>
-		ServerName 127.0.0.1
+<Macro localhost-directives $ipaddress>
+	<VirtualHost $ipaddress:80>
+		ServerName $ipaddress
 		ServerAdmin holger@layer-acht.org
 		CustomLog /var/log/apache2/access.log combined
 		ErrorLog /var/log/apache2/error.log
-	<Directory /var/lib/jenkins/userContent>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-		AddType text/plain .log
-	</Directory>
-	<Proxy *>
-		Order deny,allow
-		Allow from all
-	</Proxy>
-	ProxyPreserveHost on
-	AllowEncodedSlashes NoDecode
-	# proxy everything but a few urls
-	ProxyPass /server-status !
-	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
-	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
-	ProxyPass /userContent !
-	ProxyPass / http://localhost:8080/ nocanon
-	ProxyPassReverse  / http://localhost:8080/
-</VirtualHost>
-<VirtualHost 10.0.2.1:80>
-		ServerName 10.0.2.1
-		ServerAdmin holger@layer-acht.org
-		CustomLog /var/log/apache2/access.log combined
-		ErrorLog /var/log/apache2/error.log
-	<Directory /var/lib/jenkins/userContent>
-		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
-		Order allow,deny
-		allow from all
-		AddType text/plain .log
-	</Directory>
-	<Proxy *>
-		Order deny,allow
-		Allow from all
-	</Proxy>
-	ProxyPreserveHost on
-	AllowEncodedSlashes NoDecode
-	# proxy everything but a few urls
-	ProxyPass /server-status !
-	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
-	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
-	ProxyPass /userContent !
-	ProxyPass / http://localhost:8080/ nocanon
-	ProxyPassReverse  / http://localhost:8080/
-</VirtualHost>
-
+		<Proxy *>
+			Order deny,allow
+			Allow from all
+		</Proxy>
+		ProxyPreserveHost on
+		AllowEncodedSlashes NoDecode
+		# proxy everything but a few urls
+		ProxyPass /server-status !
+		# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
+		ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
+		ProxyPass /userContent !
+		ProxyPass / http://localhost:8080/ nocanon
+		ProxyPassReverse  / http://localhost:8080/
+	</VirtualHost>
+</Macro>
 
 <Macro common-debian-service-https-redirect $name>
 	<VirtualHost *:80>
@@ -106,6 +74,8 @@ NameVirtualHost *:443
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </Macro>
 
+Use localhost-directives 127.0.0.1
+Use localhost-directives 10.0.2.1
 
 Use common-debian-service-https-redirect jenkins.debian.net
 Use common-debian-service-https-redirect reproducible.debian.net

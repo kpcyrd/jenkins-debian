@@ -117,11 +117,17 @@ Installation tests inside chroot environments.
 
 === reproducible jobs
 
-* Several jobs are being to test packages whether they can be build reproducible or not. The result is the website https://reproducible.debian.net which is actually just a collection of html files being served from this host.
+* See https://wiki.debian.org/ReproducibleBuilds to learn more about "Reproducible Builds" in Debian and beyond.
 
-* There are three builder job, alpha+beta+gamma which are each started every 2min., and there is a scheduler jobs scheduling builds for them. Several other jobs exist to build the html pages.
+* Several jobs are being used to test whether packages be build reproducible or not. The result is the website https://reproducible.debian.net which is actually just a collection of html files being served from this host.
 
-* The reproducible build jobs use their own pbuilder base.tgz, which has the reproducible apt repo added. And there another sid schroot is being used, where debbindiff (which has lots of depends installed) is run from
+* There are three builder jobs, alpha+beta+gamma which are each started every 2min., and there is a scheduler jobs scheduling builds for them.
+
+* Several other jobs exist to build the html pages, to create a JSON file which can be downloaded from https://reproducible.debian.net/reproducible.json.
+
+* The SQLite database used can be downloaded from https://reproducible.debian.net/reproducible.db.
+
+* The reproducible build jobs use their own pbuilder base.tgz, which has the reproducible apt repo added. And there another sid schroot is being used, where debbindiff (which has lots of depends installed) is run from.
 
 * Manual rescheduling of packages is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
 

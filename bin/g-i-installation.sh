@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -173,10 +173,12 @@ cleanup_all() {
 }
 
 show_preseed() {
-	url="$1"
-	echo "Preseeding from $url:"
+	qemu_url="$1"
+	jenkins_url="$(echo $url|sed -s 's#10\.0\.2\.1#127.0.0.1#g')"
+	outside_url="$(echo $url|sed -s 's#10\.0\.2\.1#jenkins.debian.net#g')"
+	echo "Preseeding from $outside_url:"
 	echo
-	curl -s "$url" | grep -v ^# | grep -v "^$"
+	curl -s "$jenkins_url" | grep -v ^# | grep -v "^$"
 }
 
 bootstrap_system() {
@@ -326,7 +328,7 @@ bootstrap_system() {
 			APPEND="auto=true $EXTRA_APPEND $INST_LOCALE $INST_KEYMAP url=$PRESEED_URL $INST_VIDEO -- quiet"
 			;;
 	esac
-	show_preseed $(hostname -f)/$PRESEED_PATH/${NAME}_$PRESEEDCFG
+	show_preseed $QEMU_WEBSERVER/$PRESEED_PATH/${NAME}_$PRESEEDCFG
 	echo
 	echo "Starting QEMU now:"
 	QEMU_LAUNCHER=$(mktemp)

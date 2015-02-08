@@ -227,7 +227,6 @@ def start_udd_connection():
     return conn
 
 def query_udd(query):
-    conn_udd = start_udd_connection()
     cursor = conn_udd.cursor()
     cursor.execute(query)
     return cursor.fetchall()
@@ -344,6 +343,8 @@ def get_bugs():
 
 # init the databases connections
 conn_db = start_db_connection() # the local sqlite3 reproducible db
+try:
+    conn_udd = start_udd_connection()
 
 # do the db querying
 amount = int(query_db('SELECT count(name) FROM sources')[0][0])

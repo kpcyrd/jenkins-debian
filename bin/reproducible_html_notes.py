@@ -29,7 +29,7 @@ note_html = Template((tab*2).join("""
   <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
       <p>
-        Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.
+        Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.
       </p>
     </td>
   </tr>
@@ -133,7 +133,7 @@ $affected_pkgs
   <tr><td colspan="2">&nbsp;</td></tr>
   <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
-      <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>
+      <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>
     </td>
   </tr>
 </table>""".splitlines(True)))
@@ -199,7 +199,7 @@ def gen_html_note(note):
         bugurls = ''
         for bug in note['bugs']:
             bugurls += '<a href="https://bugs.debian.org/' + str(bug) + \
-                       '">' + str(bug) + '</a><br />'
+                       '" target="_parent">' + str(bug) + '</a><br />'
         infos += note_bugs_html.substitute(bugs=bugurls)
     # check for comments:
     if 'comments' in note:
@@ -320,7 +320,7 @@ def index_issues(issues):
     html += tab*2 + '</table>\n'
     html += tab*2 + '<p>For a total of <b>' + str(len(notes)) + '</b> packages' \
             + ' categorized in <b>' + str(len(issues)) + '</b> issues.</p>'
-    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
+    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     title = 'Overview of known issues related to reproducible builds'
     destfile = BASE + '/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/index_issues.html'
@@ -352,7 +352,7 @@ def index_notes(notes):
         html += get_trailing_icon(pkg, bugs) + '\n'
     html += tab*3 + '</code>\n'
     html += tab*2 + '</p>\n'
-    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git">notes.git</a>.</p>'
+    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     title = 'Overview of packages with notes'
     destfile = BASE + '/index_notes.html'
     desturl = REPRODUCIBLE_URL + '/index_notes.html'

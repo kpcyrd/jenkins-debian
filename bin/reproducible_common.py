@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
-# Licensed under GPL-2+
+# Based on the reproducible_common.sh by © 2014 Holger Levsen <holger@layer-acht.org>
+# Licensed under GPL-2
 #
 # Depends: python3 python3-psycopg2
 #

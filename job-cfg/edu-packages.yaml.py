@@ -18,7 +18,7 @@ print("""
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
+          text: 'About  jenkins.debian.net'
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar:
           url: https://jenkins.debian.net/view/edu_devel

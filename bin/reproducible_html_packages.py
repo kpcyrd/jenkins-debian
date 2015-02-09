@@ -133,9 +133,8 @@ def process_packages(packages, no_clean=False):
     generate the /rb-pkg/package.html page
     packages should be a list
     """
-    try:
-        bugs = get_bugs()
-        log.debug(str(len(bugs)) + ' bugs found: ' + str(bugs))
+    bugs = get_bugs()
+    log.debug(str(len(bugs)) + ' bugs found: ' + str(bugs))
     total = len(packages)
     log.info('Generating the pages of ' + str(total) + ' package(s)')
     for pkg in sorted(packages):
@@ -145,10 +144,7 @@ def process_packages(packages, no_clean=False):
                  ' built at ' + build_date)
 
         links, default_view = gen_extra_links(pkg, version)
-        try:
-            bugs_links = gen_bugs_links(pkg, bugs)
-        else
-            bugs_links = ""
+        bugs_links = gen_bugs_links(pkg, bugs)
         status, icon = join_status_icon(status, pkg, version)
 
         html = html_package_page.substitute(package=pkg,

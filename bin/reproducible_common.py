@@ -343,8 +343,7 @@ def get_bugs():
 
 # init the databases connections
 conn_db = start_db_connection() # the local sqlite3 reproducible db
-try:
-    conn_udd = start_udd_connection()
+conn_udd = start_udd_connection()
 
 # do the db querying
 amount = int(query_db('SELECT count(name) FROM sources')[0][0])

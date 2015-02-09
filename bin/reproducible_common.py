@@ -16,6 +16,7 @@ import logging
 import argparse
 import datetime
 import psycopg2
+from traceback import print_exception
 from string import Template
 
 DEBUG = False
@@ -221,14 +222,32 @@ def start_udd_connection():
                                " host=" + host +
                                " password=" + password)
     except:
-        print_critical_message("Erorr connecting to the UDD database replica")
-        raise
+        log.error('Erorr connecting to the UDD database replica.' +
+                  'The full error is:')
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        print_exception(exc_type, exc_value, exc_traceback)
+        log.error('Failing nicely anyway, all queries will return an empty ' +
+                  'response.')
+        return None
     conn.set_client_encoding('utf8')
     return conn
 
 def query_udd(query):
+    if not conn_udd:
+        log.error('There has been an error connecting to the UDD database. ' +
+                  'Please look for a previous error for more information.')
+        log.error('Failing nicely anyway, returning an empty response.')
+        return []
     cursor = conn_udd.cursor()
-    cursor.execute(query)
+    try:
+        cursor.execute(query)
+    except:
+        log.error('The UDD server encountered a issue while executing the ' +
+                  'query. The full error is:')
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        print_exception(exc_type, exc_value, exc_traceback)
+        log.error('Failing nicely anyway, returning an empty response.')
+        return []
     return cursor.fetchall()
 
 def is_virtual_package(package):

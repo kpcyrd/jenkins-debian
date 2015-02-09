@@ -19,7 +19,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 == General ToDo
 
 * g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
-* get rid of FIXMEs in README. Really.
 * turn job-cfg/g-i.yaml into .yaml.py
 * split etc/schroot/default
 * download .isos once in central place
@@ -31,6 +30,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
 * replace amd64 in scripts with $HOSTARCH
 * g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
+* move this setup to jenkis.d.o and start real team maintaince of jenkins.d.o
+** set up a mailinglist 
 
 === jenkins-job-builder related
 

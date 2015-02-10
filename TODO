@@ -134,7 +134,7 @@ properties:
 
 === reproducible
 
-* graph new usertag "signature"
+* graph new usertag "signatures"
 * new job+page: "packages different from sid in our toolchain", not sure yet where to link that...
 
 * here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json

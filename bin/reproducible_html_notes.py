@@ -148,6 +148,17 @@ def load_notes():
         notes = yaml.load(fd)
     log.debug("notes loaded. There are " + str(len(notes)) +
                   " package listed")
+    for package in notes:   # check if every pacakge listed on the notes
+        try:                # actually have been tested
+            query = 'SELECT name ' + \
+                    'FROM source_packages ' + \
+                    'WHERE name="%s"' % package
+            result = query_db(query)[0]
+        except IndexError:
+            print_critical_message('This query produces no results: ' + query +
+                    '\nThis means there is no tested package with the name ' +
+                    package + '.')
+            raise
     return notes
 
 

@@ -184,17 +184,8 @@ show_preseed() {
 bootstrap_system() {
 	cd $WORKSPACE
 	echo "Creating throw-away logical volume with ${DISKSIZE_IN_GB} GiB now."
-	sudo lvcreate -L${DISKSIZE_IN_GB}G -n $NAME $VG
-	# FIXME: the following will become unneeded / simpler once wheezy is not tested anymore
-	RELEASE="$(echo $NAME | cut -d "_" -f2)"
-	if [ "$RELEASE" != "jessie" ] ; then
-		echo "Workaround to remove swap signature from previous installs, see #757818"
-		bs=8192
-		let count="1024*1024*1024*${DISKSIZE_IN_GB}/$bs"
-		time sudo dd if=/dev/zero of=$LV bs=$bs count=$count  || true
-	else
-		echo "Release $RELEASE detected, where #757818 should be fixed, thus not applying workaround..."
-	fi
+	# FIXME: the --virtualsize option will not be needed once wheezy is not tested anymore
+	sudo lvcreate --virtualsize ${DISKSIZE_IN_GB}G -L${DISKSIZE_IN_GB}G -n $NAME $VG
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	sudo qemu-img create -f raw $LV ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."

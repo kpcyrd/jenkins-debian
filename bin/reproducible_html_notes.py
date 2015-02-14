@@ -354,7 +354,7 @@ def get_trailing_icon(package, bugs):
 def index_notes(notes):
     bugs = get_bugs()
     log.debug('Building the index_notes page...')
-    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.<p>\n'
+    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
     html += '<p>\n' + tab + '<code>\n'
     html = (tab*2).join(html.splitlines(True))
     for pkg in sorted(notes):

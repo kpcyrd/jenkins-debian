@@ -351,8 +351,7 @@ def get_trailing_icon(package, bugs):
                 html += '" title="#' + str(bug) + '">+</span>'
     return html
 
-def index_notes(notes):
-    bugs = get_bugs()
+def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')
     html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
     html += '<p>\n' + tab + '<code>\n'
@@ -374,11 +373,12 @@ def index_notes(notes):
 
 if __name__ == '__main__':
     issues_count = {}
+    bugs = get_bugs()
     notes = load_notes()
     issues = load_issues()
     iterate_over_notes(notes)
     iterate_over_issues(issues)
     index_issues(issues)
-    index_notes(notes)
+    index_notes(notes, bugs)
     purge_old_notes(notes)
     process_packages(notes) # regenerate all rb-pkg/ pages

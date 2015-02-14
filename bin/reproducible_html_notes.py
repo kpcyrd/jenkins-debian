@@ -373,6 +373,31 @@ def index_notes(notes, bugs):
     log.info('Notes index now available at ' + desturl)
 
 
+def index_no_notes(notes, bugs):
+    log.debug('Building the index_no_notes page...')
+    all_pkgs = query_db('SELECT name FROM source_packages ' +
+                        'WHERE status = "unreproducible" OR status = "FTBFS"')
+    without_notes = [x[0] for x in all_pkgs if x[0] not in notes]
+    html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
+           + 'packages without notes.<br />This are package that nobody has ' \
+           + 'has even looked at yet.</p>\n'
+    html += '<p>\n' + tab + '<code>\n'
+    html = (tab*2).join(html.splitlines(True))
+    for pkg in sorted(without_notes):
+        url = RB_PKG_URI + '/' + pkg + '.html'
+        html += tab*4 + '<a href="' + url + '">' + pkg + '</a>'
+        html += get_trailing_icon(pkg, bugs) + '\n'
+    html += tab*3 + '</code>\n'
+    html += tab*2 + '</p>\n'
+    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
+    title = 'Overview of packages without notes'
+    destfile = BASE + '/index_no_notes.html'
+    desturl = REPRODUCIBLE_URL + '/index_no_notes.html'
+    write_html_page(title=title, body=html, destfile=destfile,
+                    style_note=True)
+    log.info('Packages without notes index now available at ' + desturl)
+
+
 if __name__ == '__main__':
     issues_count = {}
     bugs = get_bugs()
@@ -382,5 +407,6 @@ if __name__ == '__main__':
     iterate_over_issues(issues)
     index_issues(issues)
     index_notes(notes, bugs)
+    index_no_notes(notes, bugs)
     purge_old_notes(notes)
     process_packages(notes) # regenerate all rb-pkg/ pages

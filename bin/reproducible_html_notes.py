@@ -376,7 +376,8 @@ def index_notes(notes, bugs):
 def index_no_notes(notes, bugs):
     log.debug('Building the index_no_notes page...')
     all_pkgs = query_db('SELECT name FROM source_packages ' +
-                        'WHERE status = "unreproducible" OR status = "FTBFS"')
+                        'WHERE status = "unreproducible" OR status = "FTBFS"' +
+                        'ORDER BY build_date DESC')
     without_notes = [x[0] for x in all_pkgs if x[0] not in notes]
     html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
            + 'packages without notes. These are the packages with failures ' \

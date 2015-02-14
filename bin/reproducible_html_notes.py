@@ -375,7 +375,7 @@ def index_no_notes(notes, bugs):
     html = (tab*2).join(html.splitlines(True))
     for pkg in without_notes:
         url = RB_PKG_URI + '/' + pkg + '.html'
-        html += tab*4 + '<a href="' + url + '">' + pkg + '</a>'
+        html += tab*4 + '<a href="' + url + '" class="package">' + pkg + '</a>'
         html += get_trailing_icon(pkg, bugs) + '\n'
     html += tab*3 + '</code>\n'
     html += tab*2 + '</p>\n'

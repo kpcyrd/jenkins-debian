@@ -379,7 +379,7 @@ def index_no_notes(notes, bugs):
                         'WHERE status = "unreproducible" OR status = "FTBFS"')
     without_notes = [x[0] for x in all_pkgs if x[0] not in notes]
     html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
-           + 'packages without notes. So these are the packages with failures ' \
+           + 'packages without notes. These are the packages with failures ' \
            + 'that still need to be investigated: </p>\n'
     html += '<p>\n' + tab + '<code>\n'
     html = (tab*2).join(html.splitlines(True))

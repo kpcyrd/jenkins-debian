@@ -168,6 +168,7 @@ init_html() {
 	SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
 	SPOKENTARGET["issues"]="known issues related to reproducible builds"
 	SPOKENTARGET["notes"]="packages with notes"
+	SPOKENTARGET["no_notes"]="packages without notes"
 	SPOKENTARGET["scheduled"]="packages currently scheduled for testing for build reproducibility"
 	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"

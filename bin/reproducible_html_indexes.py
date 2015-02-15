@@ -313,5 +313,6 @@ def build_page(page):
 
 if __name__ == '__main__':
     bugs = get_bugs()
+    print(bugs)
     for page in pages.keys():
         build_page(page)

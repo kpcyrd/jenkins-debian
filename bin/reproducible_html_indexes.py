@@ -26,6 +26,12 @@ Reference doc for the folowing lists:
       packages to show
     - `text` a string.Template instance with $tot (total of packages listed)
       and $percent (percentual on all sid packages)
+    - `timely`: boolean value to enable to add $count and $count_total to the
+      text, where:
+      * $percent becomes count/count_total
+      * $count_total being the number of all tested packages
+      * $count being the len() of the query indicated by `query2`
+    - `query2`: useful only if `timely` is True.
 
 Technically speaking, a package can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
@@ -307,6 +313,5 @@ def build_page(page):
 
 if __name__ == '__main__':
     bugs = get_bugs()
-    print(bugs)
     for page in pages.keys():
         build_page(page)

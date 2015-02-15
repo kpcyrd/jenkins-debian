@@ -32,6 +32,7 @@ section must have at least a `query` defining what to file in.
 """
 
 queries = {
+    'scheduled': 'SELECT name FROM sources_scheduled ORDER BY date_scheduled',
     'reproducible_all': 'SELECT name FROM source_packages WHERE status = "reproducible" ORDER BY build_date DESC',
     'reproducible_last24h': 'SELECT name FROM source_packages WHERE status = "reproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
     'reproducible_last48h': 'SELECT name FROM source_packages WHERE status = "reproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
@@ -59,7 +60,7 @@ pages = {
                 'icon_status': 'reproducible',
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_all',
-                'text': Template('$tot ($percent%) packages which built reproducibly.')
+                'text': Template('$tot ($percent%) packages which built reproducibly:')
             }
         ]
     },
@@ -69,7 +70,7 @@ pages = {
             {
                 'icon_status': 'FTBR',
                 'query': 'FTBR_all',
-                'text': Template('$tot ($percent%) packages which failed to build reproducibly.')
+                'text': Template('$tot ($percent%) packages which failed to build reproducibly:')
             }
         ]
     },
@@ -79,7 +80,7 @@ pages = {
             {
                 'icon_status': 'FTBFS',
                 'query': 'FTBFS_all',
-                'text': Template('$tot ($percent%) packages where the sources failed to download.')
+                'text': Template('$tot ($percent%) packages where the sources failed to download:')
             }
         ]
     },
@@ -89,7 +90,7 @@ pages = {
             {
                 'icon_status': '404',
                 'query': '404_all',
-                'text': Template('$tot ($percent%) packages which failed to build from source.')
+                'text': Template('$tot ($percent%) packages which failed to build from source:')
             }
         ]
     },
@@ -99,7 +100,7 @@ pages = {
             {
                 'icon_status': 'not_for_us',
                 'query': 'not_for_us_all',
-                'text': Template('$tot ($percent%) packages which should not be build on "amd64".')
+                'text': Template('$tot ($percent%) packages which should not be build on "amd64":')
             }
         ]
     },
@@ -109,8 +110,122 @@ pages = {
             {
                 'icon_status': 'blacklisted',
                 'query': 'blacklisted_all',
-                'text': Template('$tot ($percent%) packages which have been blacklisted.')
+                'text': Template('$tot ($percent%) packages which have been blacklisted:')
             }
+        ]
+    },
+    'schduled': {
+        'title': 'Overview of packages currently scheduled for testing for build reproducibility',
+        'body': [
+            {
+                'query': 'scheduled',
+                'text': Template('$tot packages are currently scheduled for testing:')
+            }
+        ]
+    },
+    'all_abc': {
+        'title': 'Overview of reproducible builds of all tested packages (sorted alphabetically)',
+        'body': [
+            {
+                'icon_status': 'FTBR',
+                'icon_link': '/index_unreproducible.html',
+                'query': 'FTBR_all_abc',
+                'text': Template('$tot packages ($percent%) failed to built reproducibly in total:')
+            },
+            {
+                'icon_status': 'FTBFS',
+                'icon_link': '/index_FTBFS.html',
+                'query': 'FTBFS_all_abc',
+                'text': Template('$tot packages ($percent%) failed to built from source in total:')
+            },
+            {
+                'icon_status': 'not_for_us',
+                'icon_link': '/index_not_for_us.html',
+                'query': 'not_for_us_all_abc',
+                'text': Template('$tot ($percent%) packages which are neither Architecture: "any", "all", "amd64", "linux-any", "linux-amd64" nor "any-amd64":')
+            },
+            {
+                'icon_status': '404',
+                'icon_link': '/index_404.html',
+                'query': '404_all_abc',
+                'text': Template('$tot ($percent%) source packages could not be downloaded:')
+            },
+            {
+                'icon_status': 'blacklisted',
+                'icon_link': '/index_blacklisted.html',
+                'query': 'blacklisted_all',
+                'text': Template('$tot ($percent%) packages are blacklisted and will not be tested here:')
+            },
+            {
+                'icon_status': 'reproducible',
+                'icon_link': '/index_reproducible.html',
+                'query': 'reproducible_all_abc',
+                'text': Template('$tot ($percent%) packages successfully built reproducibly:')
+            },
+        ]
+    },
+    'last_24h': {
+        'title': 'Overview of reproducible builds of packages tested in the last 24h',
+        'body': [
+            {
+                'icon_status': 'FTBR',
+                'icon_link': '/index_unreproducible.html',
+                'query': 'FTBR_last24h',
+                'query2': 'FTBR_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                                 'failed to built reproducibly in total, $tot of them in the last 24h:'),
+                'timely': True
+            },
+            {
+                'icon_status': 'FTBFS',
+                'icon_link': '/index_FTBFS.html',
+                'query': 'FTBFS_last24h',
+                'query2': 'FTBFS_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                                 'failed to built from source in total, $tot of them  in the last 24h:'),
+                'timely': True
+            },
+            {
+                'icon_status': 'reproducible',
+                'icon_link': '/index_reproducible.html',
+                'query': 'reproducible_last24h',
+                'query2': 'reproducible_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                                 'successfully built reproducibly in total, $tot of them in the last 24h:'),
+                'timely': True
+            },
+        ]
+    },
+    'last_48h': {
+        'title': 'Overview of reproducible builds of packages tested in the last 48h',
+        'body': [
+            {
+                'icon_status': 'FTBR',
+                'icon_link': '/index_unreproducible.html',
+                'query': 'FTBR_last48h',
+                'query2': 'FTBR_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                                 'failed to built reproducibly in total, $tot of them in the last 48h:'),
+                'timely': True
+            },
+            {
+                'icon_status': 'FTBFS',
+                'icon_link': '/index_FTBFS.html',
+                'query': 'FTBFS_last48h',
+                'query2': 'FTBFS_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                                 'failed to built from source in total, $tot of them  in the last 48h:'),
+                'timely': True
+            },
+            {
+                'icon_status': 'reproducible',
+                'icon_link': '/index_reproducible.html',
+                'query': 'reproducible_last48h',
+                'query2': 'reproducible_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                                 'successfully built reproducibly in total, $tot of them in the last 48h:'),
+                'timely': True
+            },
         ]
     }
 }

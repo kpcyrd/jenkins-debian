@@ -119,8 +119,8 @@ pages = {
 def build_leading_text_section(section, rows):
     html = '<p>\n' + tab
     total = len(rows)
-    percent = round(((total/amount)*100), 1)  # amount is defined in common
-    try:
+    percent = round(((total/count_total)*100), 1)  # count_total is
+    try:                                           # defined in common
         html += '<a href="' + section['icon_link'] + '" target="_parent">'
         no_icon_link = False
     except KeyError:

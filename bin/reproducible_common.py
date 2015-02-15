@@ -166,7 +166,7 @@ html_foot_page_style_note = Template((tab*2).join("""
   package has a note. Visited packages are linked in green, those which
   have not been visited are linked in blue.<br />
   A <code>&#35;</code> sign after the name of a package indicates that a bug is
-  filed aginst it. Likewise, a <code>&#43;</code> means that there is bug with a
+  filed against it. Likewise, a <code>&#43;</code> means that there is bug with a
   patch attached. In case of more than one bug, the symbol is repeated.
 </p>""".splitlines(True)))
 

@@ -394,7 +394,7 @@ def get_bugs():
         if bug[2]: # if the bug is done
             packages[bug[1]][bug[0]]['done'] = True
         try:
-            if (bug,) in bugs_patches:
+            if (bug[0],) in bugs_patches:
                 packages[bug[1]][bug[0]]['patch'] = True
         except KeyError:
             log.error('item: ' + str(bug))

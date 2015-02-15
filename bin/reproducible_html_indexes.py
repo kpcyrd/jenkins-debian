@@ -155,6 +155,8 @@ def build_page_section(section):
         print_critical_message('A query failed: ' + queries[section['query']])
         raise
     html = ''
+    if not rows:     # there are no package in this set
+        return html  # do not output anything on the page.
     html += build_leading_text_section(section, rows)
     html += '<p>\n' + tab + '<code>\n'
     for pkg in rows:

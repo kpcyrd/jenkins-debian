@@ -36,13 +36,12 @@ fi
 # provide copy for external backups
 cp -v $PACKAGES_DB /var/lib/jenkins/userContent/
 
-# find and warn about old temp directories
+# delete old temp directories
 OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old temp directories found in $REP_RESULTS"
-	echo "$OLDSTUFF"
-	echo "Please cleanup manually."
+	find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec rm -rv {} \;
 	echo
 	DIRTY=true
 fi

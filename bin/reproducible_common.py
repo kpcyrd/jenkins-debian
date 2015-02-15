@@ -411,8 +411,6 @@ def get_trailing_icon(package, bugs):
                 html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
             else:
                 html += '" title="#' + str(bug) + '">+</span>'
-    if html:
-        print(html)
     return html
 
 

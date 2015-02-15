@@ -132,9 +132,15 @@ def build_leading_text_section(section, rows):
     if not no_icon_link:
         html += '</a>'
     html += '\n' + tab
-    try:
+    if section.get('text') and section.get('timely') and section['timely']:
+        count = len(query_db(queries[section['query2']]))
+        percent = round(((count/count_total)*100), 1)
+        html += section['text'].substitute(tot=total, percent=percent,
+                                           count_total=count_total,
+                                           count=count)
+    elif section.get('text'):
         html += section['text'].substitute(tot=total, percent=percent)
-    except KeyError:
+    else:
         log.warning('There is no text for this section')
     html += '\n</p>\n'
     return html

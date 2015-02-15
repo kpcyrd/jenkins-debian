@@ -85,14 +85,14 @@ QUERY="
 	SELECT * FROM sources_scheduled
 		WHERE date_scheduled != ''
 		AND date_build_started != ''
-		AND date_build_started < datetime('now', '-1 day')
+		AND date_build_started < datetime('now', '-36 hours')
 		ORDER BY date_scheduled
 	"
 PACKAGES=$(mktemp)
 sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
 if grep -q '|' $PACKAGES ; then
 	echo
-	echo "Warning: packages found where the build was started more than 24h ago:"
+	echo "Warning: packages found where the build was started more than 36h ago:"
 	echo "name|date_scheduled|date_build_started"
 	echo
 	cat $PACKAGES

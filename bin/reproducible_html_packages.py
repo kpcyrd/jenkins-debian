@@ -24,8 +24,8 @@ $links
             <a href="https://tracker.debian.org/$package" target="main">PTS</a>
             <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
             <a href="https://sources.debian.net/src/$package/" target="main">sources</a>
-            <a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">debian/changelog</a>
-            <a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">debian/rules</a>
+            debian/{<a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a>,
+            <a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a>}
         </td>
         <td>
 ${bugs_links}

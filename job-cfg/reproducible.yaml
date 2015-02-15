@@ -187,7 +187,7 @@
     jobs:
         - '{name}_maintainance':
             my_description: 'Do some maintainance: check for old directories laying around, do backups, etc.'
-            my_timed: '0 12 * * *'
+            my_timed: '5 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintainance.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_pbuilder':

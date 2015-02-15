@@ -85,7 +85,7 @@ def get_targets_in_distro(distro, targets):
 #
 def get_recipients(target):
     if target == 'maintainance':
-        return 'holger@layer-acht.org'	# FIXME: this should be jenkins-maintainers@lists.somewhere
+        return 'holger@layer-acht.org'
     elif target == 'haskell':
         return 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
     elif target == 'gnome':

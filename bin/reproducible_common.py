@@ -261,11 +261,31 @@ def is_virtual_package(package):
             return False
     return True
 
+
+def are_virtual_packages(packages):
+    pkgs = "source='" + "' OR source='".join(packages) + "'"
+    query = 'SELECT source FROM sources WHERE %s' % pkgs
+    rows = query_udd(query)
+    result = {x: False for x in packages if (x,) in rows}
+    result.update({x: True for x in packages if (x,) not in rows})
+    return result
+
+
 def bug_has_patch(bug):
     query = """SELECT id FROM bugs_tags WHERE id=%s AND tag='patch'""" % bug
     if len(query_udd(query)) > 0:
         return True
     return False
+
+
+def bugs_have_patches(bugs):
+    '''
+    This returns a list of tuples where every tuple has a bug with patch
+    '''
+    bugs = 'id=' + ' OR id='.join(bugs)
+    query = """SELECT id FROM bugs_tags WHERE (%s) AND tag='patch'""" % bugs
+    return query_udd(query)
+
 
 def package_has_notes(package):
     # not a really serious check, it'd be better to check the yaml file
@@ -274,6 +294,7 @@ def package_has_notes(package):
         return True
     else:
         return False
+
 
 def join_status_icon(status, package=None, version=None):
     table = {'reproducible' : 'weather-clear.png',
@@ -357,17 +378,23 @@ def get_bugs():
     log.info("finding out which usertagged bugs have been closed or at least have patches")
     packages = {}
 
+    bugs = [str(x[0]) for x in rows]
+    bugs_patches = bugs_have_patches(bugs)
+
+    pkgs = [str(x[1]) for x in rows]
+    pkgs_real = are_virtual_packages(pkgs)
+
     for bug in rows:
         if bug[1] not in packages:
             packages[bug[1]] = {}
         # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done
-        if is_virtual_package(bug[1]):
-            continue
+        if pkgs_real[str(bug[1])]:
+            continue  # package is virtual, I don't care about virtual pkgs
         packages[bug[1]][bug[0]] = {'done': False, 'patch': False}
         if bug[2]: # if the bug is done
             packages[bug[1]][bug[0]]['done'] = True
         try:
-            if bug_has_patch(bug[0]):
+            if (bug,) in bugs_patches:
                 packages[bug[1]][bug[0]]['patch'] = True
         except KeyError:
             log.error('item: ' + str(bug))
@@ -406,5 +433,3 @@ log.info('Total reproducible packages:\t' + str(count_good))
 log.info('That means that out of the ' + str(percent_total) + '% of ' +
              'the Sid tested packages the ' + str(percent_good) + '% are ' +
              'reproducible!')
-
-

@@ -34,21 +34,29 @@ chroot_checks() {
 	echo "WARNING: should remove directories in /(s)chroots which are older than a month."
 }
 
+compress_old_jenkins_logs() {
+	local COMPRESSED
+	# compress logs to save space
+	COMPRESSED=$(find /var/lib/jenkins/jobs/*/builds/ -maxdepth 2 -mindepth 2 -mtime +1 -name log -exec pigz -9 -v {} \;)
+	if [ ! -z "$COMPRESSED" ] ; then
+		echo "Logs have been compressed:"
+		echo
+		echo "$COMPRESSED"
+		echo
+	fi
+}
+
 remove_old_rebootstrap_logs() {
-	local OLDSTUFF COMPRESSED
+	local OLDSTUFF
 	# delete old html logs to save space
 	OLDSTUFF=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 3 -mtime +7 -name log_content.html  -exec rm -v {} \;)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo "Old html logs have been deleted:"
+		echo
 		echo "$OLDSTUFF"
-	fi
-	COMPRESSED=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 3 -mindepth 3 -mtime +1 -name log -exec pigz -9 -v {} \;)
-	if [ ! -z "$COMPRESSED" ] ; then
-		echo "Logs have been compressed:"
-		echo "$COMPRESSED"
+		echo
 	fi
 }
-
 
 report_old_directories() {
 	# find and warn about old temp directories
@@ -60,6 +68,7 @@ report_old_directories() {
 	fi
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo "Warning: old temp directories found in $REP_RESULTS"
+		echo
 		echo "$OLDSTUFF"
 		echo "Please cleanup manually."
 		echo
@@ -154,6 +163,7 @@ general_maintainance() {
 #
 if [ -z $1 ] ; then
 	general_maintainance
+	compress_old_jenkins_logs
 	report_squid_usage brief
 else
 	case $1 in

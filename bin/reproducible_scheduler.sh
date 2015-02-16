@@ -150,10 +150,9 @@ schedule_packages() {
 # main
 #
 update_apt
-init_html
 COUNT_SCHEDULED=$(sqlite3 ${PACKAGES_DB} 'SELECT count(name) FROM sources_scheduled')
 if [ $COUNT_SCHEDULED -gt 250 ] ; then
-	update_html_schedule
+	python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
 	echo "$COUNT_SCHEDULED packages scheduled, nothing to do."
 	exit 0
 else
@@ -211,7 +210,7 @@ MESSAGE="$MESSAGE and $AMOUNT packages with the same version again, for a total 
 
 # finally
 schedule_packages
-update_html_schedule
+python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"

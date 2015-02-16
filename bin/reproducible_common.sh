@@ -347,21 +347,3 @@ gather_stats() {
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
 	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 }
-
-update_html_schedule() {
-	VIEW=scheduled
-	PAGE=index_${VIEW}.html
-	echo "$(date) - starting to write $PAGE page."
-	write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
-	gather_schedule_stats
-	if [ ${COUNT_NEW_VERSIONS} -ne 0 ] ; then
-		write_page "<p>For ${COUNT_NEW_VERSIONS} packages newer versions are available which have not been tested yet.</p>"
-	fi
-	write_page "<p>${COUNT_SCHEDULED} packages are currently scheduled for testing: <code>"
-	force_package_targets $SCHEDULED
-	link_packages $SCHEDULED
-	write_page "</code></p>"
-	write_page_meta_sign
-	write_page_footer
-	publish_page
-}

@@ -42,6 +42,16 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old temp directories found in $REP_RESULTS"
 	find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec rm -rv {} \;
+	echo "These old directories have been deleted."
+	echo
+	DIRTY=true
+fi
+
+# find old schroots
+OLDSTUFF=$(find /schroots/ -type d -name "reproducible*" -mtime +2 -exec ls -lad {} \;)
+if [ ! -z "$OLDSTUFF" ] ; then
+	echo
+	echo "Warning: old temp directories found in $REP_RESULTS"
 	echo
 	DIRTY=true
 fi

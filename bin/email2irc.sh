@@ -9,7 +9,6 @@
 # see http://kgb.alioth.debian.org/
 #
 LOGFILE=/var/log/jenkins/email.log
-# FIXME: add logrotate rule for /var/log/jenkins/email.log
 
 debug123() {
 	if $DEBUG ; then

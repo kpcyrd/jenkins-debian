@@ -120,7 +120,7 @@ pages = {
             }
         ]
     },
-    'schduled': {
+    'scheduled': {
         'title': 'Overview of packages currently scheduled for testing for build reproducibility',
         'body': [
             {

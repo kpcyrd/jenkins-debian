@@ -97,6 +97,10 @@ elif [ ! -f ${PACKAGES_DB} ] ; then
 		done_buildinfo INTEGER,
 		open_cpu INTEGER,
 		done_cpu INTEGER,
+		open_signatures INTEGER,
+		done_signatures INTEGER,
+		open_environment INTEGER,
+		done_environment INTEGER,
 		PRIMARY KEY (datum))'
 	sqlite3 ${PACKAGES_DB} '
 		CREATE TABLE stats_notes

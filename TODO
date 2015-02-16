@@ -134,7 +134,6 @@ properties:
 
 === reproducible
 
-* graph new usertags: "signatures" + "environment"
 * new job+page: "packages different from sid in our toolchain", not sure yet where to link that...
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..

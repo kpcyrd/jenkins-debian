@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2009-2014 Holger Levsen (holger@layer-acht.org)
+# Copyright 2009-2015 Holger Levsen (holger@layer-acht.org)
 #
 # based on similar code taken from piuparts-reports.py written by me
 
@@ -36,7 +36,8 @@ def main():
                      "#e9b96e", "#8f5902", "#8ae234", "#4e9a06", \
                      "#729fcf", "#204a87", "#ef2929", "#a40000", \
                      "#888a85", "#2e3436", "#75507b", "#cc0000", \
-                     "#ce5c00", "#73d216"))')
+                     "#ce5c00", "#73d216", "#edd400", "#f57900", \
+                     "#c17d11", "#3465a4"))')
     r('v <- t[0:nrow(t),0:'+colors+']')
     # make graph since day 1
     r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')

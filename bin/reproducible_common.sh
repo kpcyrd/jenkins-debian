@@ -159,7 +159,7 @@ init_html() {
 	SUITE=sid
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list stats pkg_sets"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets stats"
 	SPOKENTARGET["reproducible"]="packages which built reproducibly"
 	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
 	SPOKENTARGET["FTBFS"]="packages which failed to build from source"

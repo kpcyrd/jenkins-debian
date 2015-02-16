@@ -85,7 +85,7 @@ call_debbindiff() {
 		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1 || true
 		if [ -f ./${LOGFILE} ] ; then
-			echo -n "$DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
+			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
 		else
 			echo -n ", debbindiff produced no output (which is strange)"

@@ -420,12 +420,26 @@ conn_db = start_db_connection() # the local sqlite3 reproducible db
 conn_udd = start_udd_connection()
 
 # do the db querying
-amount = int(query_db('SELECT count(name) FROM sources')[0][0])
-count_total = int(query_db('SELECT COUNT(name) FROM source_packages')[0][0])
-count_good = int(query_db(
- 'SELECT COUNT(name) FROM source_packages WHERE status="reproducible"')[0][0])
-percent_total = round(((count_total/amount)*100), 1)
-percent_good = round(((count_good/count_total)*100), 1)
+try:
+    amount = int(query_db('SELECT count(name) FROM sources')[0][0])
+    count_total = int(query_db('SELECT COUNT(name) FROM source_packages')[0][0])
+    count_good = int(query_db('SELECT COUNT(name) FROM source_packages ' + \
+                              'WHERE status="reproducible"')[0][0])
+except sqlite3.OperationalError:
+    log.critical('Error performing basic queries. You have to setup the ' + \
+                 'database to successfully continue after this point.')
+    log.critical('Continuing anyway, hoping for the best!')
+    amount = 0
+    count_total = 0
+    count_good = 0
+try:
+    percent_total = round(((count_total/amount)*100), 1)
+    percent_good = round(((count_good/count_total)*100), 1)
+except ZeroDivisionError:
+    log.error('Looks like there are either no tested package or no packages' + \
+              ' available at all. Maybe it\'s a new database?')
+    percent_total = 0.0
+    percent_good = 0.0
 log.info('Total packages in Sid:\t\t' + str(amount))
 log.info('Total tested packages:\t\t' + str(count_total))
 log.info('Total reproducible packages:\t' + str(count_good))

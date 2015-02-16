@@ -212,6 +212,7 @@ def start_db_connection():
 def query_db(query):
     cursor = conn_db.cursor()
     cursor.execute(query)
+    conn_db.commit()
     return cursor.fetchall()
 
 def start_udd_connection():

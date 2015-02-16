@@ -130,7 +130,7 @@ fi
 
 # installed on one or more .debian.org machines
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[5]}.pkgset ] ; then
-	# FIXME: get a proper data provider from DSA... 
+	# one day we will get a proper data provider from DSA... 
 	# (so far it was a manual "dpkg --get-selections" on all machines
 	# converted into a list of source packages...)
 	cat /srv/jenkins/bin/reproducible_installed_on_debian.org > $TMPFILE

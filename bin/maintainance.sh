@@ -37,7 +37,7 @@ chroot_checks() {
 compress_old_jenkins_logs() {
 	local COMPRESSED
 	# compress logs to save space
-	COMPRESSED=$(find /var/lib/jenkins/jobs/*/builds/ -maxdepth 2 -mindepth 2 -mtime +1 -name log -exec pigz -9 -v {} \;)
+	COMPRESSED=$(find /var/lib/jenkins/jobs/*/builds/ -maxdepth 2 -mindepth 2 -mtime +1 -name log -exec gzip -9 -v {} \;)
 	if [ ! -z "$COMPRESSED" ] ; then
 		echo "Logs have been compressed:"
 		echo

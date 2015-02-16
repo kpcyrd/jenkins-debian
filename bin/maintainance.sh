@@ -35,11 +35,17 @@ chroot_checks() {
 }
 
 remove_old_rebootstrap_logs() {
+	local OLDSTUFF COMPRESSED
 	# delete old html logs to save space
 	OLDSTUFF=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 3 -mtime +7 -name log_content.html  -exec rm -v {} \;)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo "Old html logs have been deleted:"
 		echo "$OLDSTUFF"
+	fi
+	COMPRESSED=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 3 -mindepth 3 -mtime +1 -name log -exec gzip -9 -v {} \;)
+	if [ ! -z "$COMPRESSED" ] ; then
+		echo "Logs have been compressed:"
+		echo "$COMPRESSED"
 	fi
 }
 

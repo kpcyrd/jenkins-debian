@@ -150,7 +150,7 @@ properties:
 * reproducible: dont delete userContent/$pkg on build begin..
 
 * db schema 2.0
-** add support for suites, we soon want to test wheezy,jessie,stretch,sid,experimental
+** add support for suites, we soon want to test jessie,stretch,sid,experimental
 ** extra table to record build times (forever, so we get relevant data)
 ** cleanup some field names (which?!?)
 

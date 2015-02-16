@@ -147,6 +147,7 @@ properties:
 
 * db schema 2.0
 ** add support for suites, we soon want to test jessie,stretch,sid,experimental
+** add support for archs, one day we'll want to rebuild all the packages on all the archs too!
 ** extra table to record build times (forever, so we get relevant data)
 ** cleanup some field names (which?!?)
 

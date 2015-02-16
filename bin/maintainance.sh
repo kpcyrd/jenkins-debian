@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -33,6 +33,17 @@ chroot_checks() {
 	report_disk_usage /schroots
 	echo "WARNING: should remove directories in /(s)chroots which are older than a month."
 }
+
+remove_old_rebootstrap_logs() {
+	# find and warn about old temp directories
+	OLDSTUFF=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 0 -mtime +7 -name log_content.html  -exec rm -v {} \;)
+	fi
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo "Old html logs have been deleted:"
+		echo "$OLDSTUFF"
+	fi
+}
+
 
 report_old_directories() {
 	# find and warn about old temp directories
@@ -170,6 +181,8 @@ else
 		d-i)				report_old_directories /srv/d-i 7 /srv/d-i/workspace
 						;;
 		squid)				report_squid_usage
+						;;
+		rebootstrap)			remove_old_rebootstrap_logs
 						;;
 		*)				;;
 	esac

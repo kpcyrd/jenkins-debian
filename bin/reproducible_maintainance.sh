@@ -67,6 +67,22 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	DIRTY=true
 fi
 
+# find failed builds due to network problems and reschedule them
+# only grep through the last 5h (300 minutes) of builds...
+# this job runs every 4h
+FAILED_BUILDS=$(find /var/lib/jenkins/userContent/rbuild -type f ! -mmin +300 -exec egrep -l -e "E: Failed to fetch.*Connection failed" -e "E: Failed to fetch.*Size mismatch" {} \;)
+if [ ! -z "$FAILED_BUILDS" ] ; then
+	echo
+	echo "Warning: the following failed builds have been found"
+	echo "$FAILED_BUILDS"
+	echo
+	echo "Rescheduling packages: "
+	( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | cut -d "_" -f1) ; do echo $PKG ; done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh
+	echo
+	DIRTY=true
+fi
+
+
 # find processes which should not be there
 HAYSTACK=$(mktemp)
 RESULT=$(mktemp)

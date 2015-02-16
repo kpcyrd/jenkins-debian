@@ -371,7 +371,7 @@
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian KDE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_timed: '42 15 2,9,16,23 * *'
-         my_recipients: 'holger@layer-acht.org'  # FIXME readd jenkins+debian-boot here and for other jobs - once we made this more stable
+         my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_wheezy_xfce':
          my_title: 'Debian (wheezy) Xfce desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'

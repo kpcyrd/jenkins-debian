@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -71,6 +71,8 @@ call_debbindiff() {
 		fi
 	elif [ $RESULT -eq 1 ] ; then
 		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${LOGFILE}"
+	elif [ $RESULT -eq 2 ] ; then
+		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 	fi
 	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1

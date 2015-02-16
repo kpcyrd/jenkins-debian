@@ -104,8 +104,6 @@ ARCH="amd64"
 DIST="$1"
 DIRECTORY="`pwd`/debian-$DIST-$ARCH"
 
-#FIXME: if the host has more than one arch enabled then those Packages files will be downloaded as well
-
 APT_OPTS="-y"
 APT_OPTS=$APT_OPTS" -o Apt::Architecture=$ARCH"
 APT_OPTS=$APT_OPTS" -o Dir::Etc::TrustedParts=$DIRECTORY/etc/apt/trusted.gpg.d"

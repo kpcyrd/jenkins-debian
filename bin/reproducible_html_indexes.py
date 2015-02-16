@@ -311,7 +311,9 @@ def build_page(page):
     log.info('"' + title + '" now available at ' + desturl)
 
 
+bugs = get_bugs()
+
+
 if __name__ == '__main__':
-    bugs = get_bugs()
     for page in pages.keys():
         build_page(page)

@@ -137,6 +137,8 @@ properties:
 * graph new usertags: "signatures" + "environment"
 * new job+page: "packages different from sid in our toolchain", not sure yet where to link that...
 
+* new package set: kde/plasma
+
 * here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
 ** curl http://bootstrap.debian.net/source/stats_min.json | sed -s "s#,#\n#g" |grep src:|cut -d ":" -f2|tr -d \" | sort -u
 
@@ -146,6 +148,11 @@ properties:
 
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
+
+* db schema 2.0
+** add support for suites, we soon want to test wheezy,jessie,stretch,sid,experimental
+** extra table to record build times (forever, so we get relevant data)
+** cleanup some field names (which?!?)
 
 * missing tests: variation in kernel and date
 ** http://www.bstern.org/libuname/ - add "-ldl" to the linker flags...
@@ -167,7 +174,7 @@ properties:
 * merge reproducible_setup_schroot in schroot-create or delete the latter?
 
 * include no js header in the css
-* one css, not 2
+* use one css for all, not two minimally different ones
 * graph oldest build age - in days
 * mv untested field in stats table too? (as in csv output...)
 

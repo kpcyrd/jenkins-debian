@@ -42,7 +42,7 @@ remove_old_rebootstrap_logs() {
 		echo "Old html logs have been deleted:"
 		echo "$OLDSTUFF"
 	fi
-	COMPRESSED=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 3 -mindepth 3 -mtime +1 -name log -exec gzip -9 -v {} \;)
+	COMPRESSED=$(find /var/lib/jenkins/jobs/rebootstrap_* -maxdepth 3 -mindepth 3 -mtime +1 -name log -exec pigz -9 -v {} \;)
 	if [ ! -z "$COMPRESSED" ] ; then
 		echo "Logs have been compressed:"
 		echo "$COMPRESSED"

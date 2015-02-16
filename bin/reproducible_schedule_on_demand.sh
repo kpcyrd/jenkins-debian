@@ -56,7 +56,7 @@ MESSAGE="$TOTAL package(s) manually (re-)scheduled for immediate testing: ${PACK
 
 # finally
 schedule_packages
-python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
+/srv/jenkins/bin/reproducible_html_indexes.py
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"

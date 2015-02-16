@@ -16,7 +16,7 @@ gather_stats
 #
 # create stats
 #
-# FIXME?: we only do stats up until yesterday... we also could do today too but not update the db yet...
+# we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 TABLE[0]=stats_pkg_state
 TABLE[1]=stats_builds_per_day

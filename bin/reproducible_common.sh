@@ -138,11 +138,11 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 declare -A LINKTARGET
+
 NOTES_PATH=/var/lib/jenkins/userContent/notes
 ISSUES_PATH=/var/lib/jenkins/userContent/issues
-mkdir -p $NOTES_PATH $ISSUES_PATH
-# FIXME RB_PATH would also be a good idea
-mkdir -p /var/lib/jenkins/userContent/rb-pkg/
+RB_PATH=/var/lib/jenkins/userContent/rb-pkg/
+mkdir -p $NOTES_PATH $ISSUES_PATH $RB_PATH
 
 # known package sets
 META_PKGSET[1]="essential"
@@ -285,7 +285,7 @@ set_package_class() {
 
 force_package_targets() {
 	for PKG in $@ ; do
-		if [ -f /var/lib/jenkins/userContent/rb-pkg/$PKG.html ] ; then
+		if [ -f $RB_PATH/$PKG.html ] ; then
 			set_package_class
 			LINKTARGET[$PKG]="<a href=\"/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>"
 		else

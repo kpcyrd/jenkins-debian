@@ -48,10 +48,10 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # find old schroots
-OLDSTUFF=$(find /schroots/ -type d -name "reproducible*" -mtime +2 -exec ls -lad {} \;)
+OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -name "reproducible*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Warning: old temp directories found in $REP_RESULTS"
+	echo "Warning: old schroots found in $REP_RESULTS"
 	echo
 	DIRTY=true
 fi

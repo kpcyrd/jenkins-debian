@@ -88,12 +88,15 @@ init_html() {
 	SPOKENTARGET["repo_stats"]="statistics about the reproducible builds apt repository"
 	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets"
 	SPOKENTARGET["stats"]="various statistics about reproducible builds"
-	# query some data we need everywhere
-	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources")
-	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages")
-	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status = \"reproducible\"")
+	# query some data we need everywhere (relative to sid, we care only about sid here)
+	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
+	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
+	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
+
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
+	if [ -z "${PERCENT_TOTAL}" ]; then PERCENT_TOTAL=0; fi
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
+	if [ -z "${PERCENT_GOOD}" ]; then PERCENT_GOOD=0; fi
 }
 
 write_page() {

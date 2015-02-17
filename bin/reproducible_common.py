@@ -427,12 +427,18 @@ def get_trailing_icon(package, bugs):
 conn_db = start_db_connection() # the local sqlite3 reproducible db
 conn_udd = start_udd_connection()
 
-# do the db querying
+# query some data we need everywhere (relative to sid, we care only about sid here)
 try:
-    amount = int(query_db('SELECT count(name) FROM sources')[0][0])
-    count_total = int(query_db('SELECT COUNT(name) FROM source_packages')[0][0])
-    count_good = int(query_db('SELECT COUNT(name) FROM source_packages ' + \
-                              'WHERE status="reproducible"')[0][0])
+    amount = int(query_db('SELECT count(*) FROM sources WHERE suite="sid"')[0][0])
+    count_total = int(query_db('''SELECT COUNT(*)
+                                  FROM results AS r JOIN sources AS s
+                                  ON r.package_id=s.id
+                                  WHERE s.suite="sid"''')[0][0])
+    count_good = int(query_db('''SELECT COUNT(*)
+                                 FROM results AS r JOIN sources AS s
+                                 ON r.package_id=s.id
+                                 WHERE s.suite="sid"
+                                 AND r.status="reproducible"''')[0][0])
 except sqlite3.OperationalError:
     log.critical('Error performing basic queries. You have to setup the ' + \
                  'database to successfully continue after this point.')

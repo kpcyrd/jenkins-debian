@@ -150,6 +150,7 @@ properties:
 ** add support for archs, one day we'll want to rebuild all the packages on all the archs too!
 ** extra table to record build times (forever, so we get relevant data)
 ** cleanup some field names (which?!?)
+** add boolean field to sources_scheduled: temporarily_publish_results, so we can manually schedule packages, which provide the binary packages somewhere for inspection
 
 * missing tests: variation in kernel and date
 ** http://www.bstern.org/libuname/ - add "-ldl" to the linker flags...

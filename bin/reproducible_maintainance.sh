@@ -37,11 +37,11 @@ fi
 cp -v $PACKAGES_DB /var/lib/jenkins/userContent/
 
 # delete old temp directories
-OLDSTUFF=$(find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
+OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old temp directories found in $REP_RESULTS"
-	find $REP_RESULTS -type d -name "tmp.*" -mtime +2 -exec rm -rv {} \;
+	find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec rm -rv {} \;
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
@@ -51,7 +51,9 @@ fi
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -name "reproducible*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Warning: old schroots found in $REP_RESULTS"
+	echo "Warning: old schroots found in /schroots"
+	echo $OLDSTUFF
+	echo "TODO: automatically delete them, please cleanup manually for now..."
 	echo
 	DIRTY=true
 fi
@@ -82,7 +84,6 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
 	DIRTY=true
 fi
-
 
 # find processes which should not be there
 HAYSTACK=$(mktemp)

@@ -150,10 +150,10 @@ def load_notes():
                   " package listed")
     for package in notes:   # check if every pacakge listed on the notes
         try:                # actually have been tested
-            query = 'SELECT name ' + \
-                    'FROM source_packages ' + \
-                    'WHERE name="%s"' % package
-            result = query_db(query)[0]
+            query = 'SELECT s.name ' + \
+                    'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+                    'WHERE s.name="{pkg}" AND r.status != ""'
+            result = query_db(query.format(pkg=package))[0]
         except IndexError:
             print_critical_message('This query produces no results: ' + query +
                     '\nThis means there is no tested package with the name ' +
@@ -344,8 +344,9 @@ def index_issues(issues):
 
 def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')
-    all_pkgs = query_db('SELECT name, status FROM source_packages ' +
-                        'ORDER BY name')
+    all_pkgs = query_db('SELECT s.name, r.status ' +
+                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
+                        'WHERE s.suite="sid" ORDER BY s.name')
     with_notes = [x for x in all_pkgs if x[0] in notes]
     html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.<br />\n'
     html += 'In particular:</p>\n'
@@ -377,9 +378,11 @@ def index_notes(notes, bugs):
 
 def index_no_notes(notes, bugs):
     log.debug('Building the index_no_notes page...')
-    all_pkgs = query_db('SELECT name, status FROM source_packages ' +
-                        'WHERE status = "unreproducible" OR status = "FTBFS"' +
-                        'ORDER BY build_date DESC')
+    all_pkgs = query_db('SELECT s.name, r.status ' +
+                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
+                        'WHERE r.status = "unreproducible" OR r.status = "FTBFS"' +
+                        'AND s.suite="sid" ' +
+                        'ORDER BY r.build_date DESC')
     without_notes = [x for x in all_pkgs if x[0] not in notes]
     html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
            + 'packages without notes. These are the packages with failures ' \

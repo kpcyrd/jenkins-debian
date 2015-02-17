@@ -233,7 +233,7 @@
             my_recipients: 'holger@layer-acht.org'
         - '{name}_json':
             my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
-            my_timed: '1 0 * * *'
+            my_timed: '1 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_json.py'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_create_meta_pkg_sets':

@@ -344,16 +344,29 @@ def index_issues(issues):
 
 def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')
-    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
-    html += '<p>\n' + tab + '<code>\n'
+    all_pkgs = query_db('SELECT name, status FROM source_packages ' +
+                        'ORDER BY name')
+    with_notes = [x for x in all_pkgs if x[0] in notes]
+    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.<br />\n'
+    html += 'In particular:</p>\n'
+    for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
+        pkgs = [x[0] for x in with_notes if x[1] == status]
+        if not pkgs:
+            continue
+        html += '<p>\n'
+        html += tab + '<img src="/static/' + join_status_icon(status)[1] + '"'
+        html += ' alt="' + status + ' icon" />\n'
+        pkgs = [x[0] for x in with_notes if x[1] == status]
+        html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
+        html += tab + '<code>\n'
+        for pkg in pkgs:
+            url = RB_PKG_URI + '/' + pkg + '.html'
+            html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
+            html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
+        html += tab + '</code>\n'
+        html += '</p>\n'
+    html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     html = (tab*2).join(html.splitlines(True))
-    for pkg in sorted(notes):
-        url = RB_PKG_URI + '/' + pkg + '.html'
-        html += tab*4 + '<a href="' + url + '" class="noted">' + pkg + '</a>'
-        html += get_trailing_icon(pkg, bugs) + '\n'
-    html += tab*3 + '</code>\n'
-    html += tab*2 + '</p>\n'
-    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     title = 'Overview of packages with notes'
     destfile = BASE + '/index_notes.html'
     desturl = REPRODUCIBLE_URL + '/index_notes.html'
@@ -364,22 +377,31 @@ def index_notes(notes, bugs):
 
 def index_no_notes(notes, bugs):
     log.debug('Building the index_no_notes page...')
-    all_pkgs = query_db('SELECT name FROM source_packages ' +
+    all_pkgs = query_db('SELECT name, status FROM source_packages ' +
                         'WHERE status = "unreproducible" OR status = "FTBFS"' +
                         'ORDER BY build_date DESC')
-    without_notes = [x[0] for x in all_pkgs if x[0] not in notes]
+    without_notes = [x for x in all_pkgs if x[0] not in notes]
     html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
            + 'packages without notes. These are the packages with failures ' \
-           + 'that still need to be investigated: </p>\n'
-    html += '<p>\n' + tab + '<code>\n'
+           + 'that still need to be investigated.<br />\n'
+    html += 'In particular:</p>\n'
+    for status in ['unreproducible', 'FTBFS']:
+        pkgs = [x[0] for x in without_notes if x[1] == status]
+        if not pkgs:
+            continue
+        html += '<p>\n'
+        html += tab + '<img src="/static/' + join_status_icon(status)[1] + '"'
+        html += ' alt="' + status + ' icon" />\n'
+        html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
+        html += tab + '<code>\n'
+        for pkg in pkgs:
+            url = RB_PKG_URI + '/' + pkg + '.html'
+            html += tab*2 + '<a href="' + url + '" class="package">' + pkg
+            html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
+        html += tab + '</code>\n'
+        html += '</p>\n'
+    html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     html = (tab*2).join(html.splitlines(True))
-    for pkg in without_notes:
-        url = RB_PKG_URI + '/' + pkg + '.html'
-        html += tab*4 + '<a href="' + url + '" class="package">' + pkg + '</a>'
-        html += get_trailing_icon(pkg, bugs) + '\n'
-    html += tab*3 + '</code>\n'
-    html += tab*2 + '</p>\n'
-    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     title = 'Overview of packages without notes'
     destfile = BASE + '/index_no_notes.html'
     desturl = REPRODUCIBLE_URL + '/index_no_notes.html'

@@ -211,7 +211,11 @@ def start_db_connection():
 
 def query_db(query):
     cursor = conn_db.cursor()
-    cursor.execute(query)
+    try:
+        cursor.execute(query)
+    except:
+        print_critical_message('Error execting this query:\n' + query)
+        raise
     conn_db.commit()
     return cursor.fetchall()
 

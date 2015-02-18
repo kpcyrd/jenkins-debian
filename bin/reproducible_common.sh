@@ -39,6 +39,9 @@ DBDCHROOT_WRITELOCK=/var/lib/jenkins/reproducible-dbdchroot.writelock
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
 
+# tested suites
+SUITES="sid"
+
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 declare -A LINKTARGET

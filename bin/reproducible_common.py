@@ -23,6 +23,9 @@ from string import Template
 DEBUG = False
 QUIET = False
 
+# tested suites
+SUITES = ['sid']
+
 BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent'
 

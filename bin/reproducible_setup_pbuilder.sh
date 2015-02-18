@@ -10,17 +10,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-set +x
-# blacklist some packages
-for PKG in cups zurl openclipart eigen3 xmds2 ; do
-	RESULT=$(sqlite3 -init $INIT $PACKAGES_DB " SELECT name FROM source_packages WHERE status = 'blacklisted' AND name = '$PKG'")
-	if [ "$RESULT" = "" ] ; then
-		set -x
-		sqlite3 -init $INIT $PACKAGES_DB "REPLACE into source_packages VALUES ('$PKG','0','blacklisted',date('now'))"
-		set +x
-	fi
-done
-
 #
 # create script to configure a pbuilder chroot
 #

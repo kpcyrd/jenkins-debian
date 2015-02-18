@@ -99,7 +99,7 @@ call_debbindiff() {
 		fi
 		OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name=\"${SRCPACKAGE}\"")
 		if [ "${OLD_STATUS}" == "reproducible" ]; then
-			MESSAGE="${SRCPACKAGE} became unreproducible while it has been successfully built reproducibly in the past. Please investigate ${REPRODUCIBLE_URL}/${SRCPACKAGE}"
+			MESSAGE="${SRCPACKAGE} became unreproducible while it has been successfully built reproducibly in the past. ${REPRODUCIBLE_URL}/${SRCPACKAGE}"
 			kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"

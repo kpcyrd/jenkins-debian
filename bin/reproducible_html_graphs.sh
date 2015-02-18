@@ -59,11 +59,22 @@ if [ -z $RESULT ] ; then
 		# force regeneration of the image
 		touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
+	#
 	# gather notes stats
-	# FIXME: hard-coding another job path is meh
-	NOTES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/packages.yml)
+	#
+	NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
+	if [ ! -d ${NOTES_GIT_PATH} ] ; then
+		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
+		echo "Please investigate and fix!"
+		exit 1
+	elif [ ! -f ${NOTES_GIT_PATH}/packages.yaml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yaml ] ; then
+		echo "Warning: ${NOTES_GIT_PATH}/packages.yaml or issues.yaml does not exist, something has changed in notes.git it seems."
+		echo "Please investigate and fix!"
+		exit 1
+	fi
+	NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
-	ISSUES=$(grep -c -v "^ " /var/lib/jenkins/jobs/reproducible_html_notes/workspace/issues.yml)
+	ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 fi
 

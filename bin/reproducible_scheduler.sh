@@ -206,7 +206,7 @@ let "TOTAL=$TOTAL+$AMOUNT"
 ALL_PACKAGES="$ALL_PACKAGES $PACKAGES"
 
 echo "So in total now $TOTAL packages about to be scheduled."
-MESSAGE="$MESSAGE and $AMOUNT packages with the same version again (total: $TOTAL)"
+MESSAGE="$MESSAGE and $AMOUNT packages with the same version (total: $TOTAL)"
 
 # finally
 schedule_packages

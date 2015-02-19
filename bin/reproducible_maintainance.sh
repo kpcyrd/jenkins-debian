@@ -90,7 +90,6 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
 	echo "Rescheduling packages: "
 	( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | cut -d "_" -f1) ; do echo $PKG ; done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh
-	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "This manual rescheduling was automatically done for you by $BUILD_URL"
 	echo
 	DIRTY=true
 fi

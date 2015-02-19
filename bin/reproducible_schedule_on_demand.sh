@@ -60,7 +60,11 @@ if [ ${#PACKAGES} -gt 256 ] ; then
 	BLABLABLA="..."
 fi
 PACKAGES=$(echo $PACKAGES)
-MESSAGE="$TOTAL $PACKAGES_TXT manually scheduled: ${PACKAGES:0:256}$BLABLABLA"
+ACTION="manually rescheduled"
+if [ -n "${BUILD_URL:-}" ] ; then
+	ACTION="rescheduled by $BUILD_URL"
+fi
+MESSAGE="$TOTAL $PACKAGES_TXT $ACTION: ${PACKAGES:0:256}$BLABLABLA"
 
 # finally
 schedule_packages

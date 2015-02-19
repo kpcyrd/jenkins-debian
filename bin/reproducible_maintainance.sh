@@ -100,6 +100,8 @@ if [ -s $RESULT ] ; then
 	echo "Warning: processes found which should not be there:"
 	cat $RESULT
 	echo
+	ZOMBIES=$(echo $RESULT | cut -d " " -f1 | xargs echo)
+	echo "kill -9 $ZOMBIS"
 	echo "Please cleanup manually."
 	echo
 	DIRTY=true

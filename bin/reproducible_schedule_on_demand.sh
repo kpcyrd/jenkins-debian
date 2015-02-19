@@ -60,7 +60,7 @@ if [ ${#PACKAGES} -gt 256 ] ; then
 	BLABLABLA="..."
 fi
 PACKAGES=$(echo $PACKAGES)
-MESSAGE="$TOTAL $PACKAGES_TXT manually scheduled for immediate testing: ${PACKAGES:0:256}$BLABLABLA"
+MESSAGE="$TOTAL $PACKAGES_TXT manually scheduled: ${PACKAGES:0:256}$BLABLABLA"
 
 # finally
 schedule_packages

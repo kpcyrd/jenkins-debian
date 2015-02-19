@@ -67,8 +67,8 @@ if [ -z $RESULT ] ; then
 		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
 		echo "Please investigate and fix!"
 		exit 1
-	elif [ ! -f ${NOTES_GIT_PATH}/packages.yaml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yaml ] ; then
-		echo "Warning: ${NOTES_GIT_PATH}/packages.yaml or issues.yaml does not exist, something has changed in notes.git it seems."
+	elif [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
+		echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
 		echo "Please investigate and fix!"
 		exit 1
 	fi

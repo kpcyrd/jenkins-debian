@@ -125,11 +125,11 @@ if grep -q '|' $PACKAGES ; then
 	echo
 	cat $PACKAGES
 	echo
-	echo "To fix:"
-	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
 		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\""
+		sqlite3 -init $INIT ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\"
 	done
+	echo "Packages have been removed from scheduling."
 	echo
 	DIRTY=true
 fi

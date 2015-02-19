@@ -36,10 +36,18 @@ check_candidates() {
 			let "TOTAL+=1"
 		fi
 	done
-	if [ $TOTAL -eq 0 ] ; then
+	case $TOTAL in
+	0)
 		echo "No packages to schedule, exiting."
 		exit 0
-	fi
+		;;
+	1)
+		PACKAGES_TXT="package"
+		;;
+	*)
+		PACKAGES_TXT="packages"
+		;;
+	esac
 }
 
 #
@@ -52,7 +60,7 @@ if [ ${#PACKAGES} -gt 256 ] ; then
 	BLABLABLA="..."
 fi
 PACKAGES=$(echo $PACKAGES)
-MESSAGE="$TOTAL package(s) manually (re-)scheduled for immediate testing: ${PACKAGES:0:256}$BLABLABLA"
+MESSAGE="$TOTAL $PACKAGES_TXT manually (re-)scheduled for immediate testing: ${PACKAGES:0:256}$BLABLABLA"
 
 # finally
 schedule_packages

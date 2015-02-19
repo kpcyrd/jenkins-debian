@@ -25,6 +25,10 @@ TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
+
+#
+# gather package + build stats
+#
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
 	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) from sources")
@@ -59,9 +63,13 @@ if [ -z $RESULT ] ; then
 		# force regeneration of the image
 		touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
-	#
-	# gather notes stats
-	#
+fi
+
+#
+# gather notes stats
+#
+RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
+if [ -z $RESULT ] ; then
 	NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 	if [ ! -d ${NOTES_GIT_PATH} ] ; then
 		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
@@ -78,6 +86,9 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 fi
 
+#
+# gather meta pkg stats
+#
 gather_meta_stats() {
 	if [ -f /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$1]}.pkgset ] ; then
 		META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$1]}.pkgset)
@@ -122,7 +133,9 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	fi
 done
 
-# query bts
+#
+# gather bugs stats
+#
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment"
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
 if [ -z $RESULT ] ; then

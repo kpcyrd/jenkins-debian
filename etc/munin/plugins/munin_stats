@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 # -*- perl -*-
-# FIXME: this copy of the munin_stats munin plugin includes the fix for #767032
 # Copyright (C) 2006-2009 Rodolphe Quiedeville <rodolphe@quiedeville.org>
 #
 # This program is free software; you can redistribute it and/or

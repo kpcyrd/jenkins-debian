@@ -57,7 +57,7 @@ fi
 # install packages we need
 # (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
-sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges munin munin-plugins-extra calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
+sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat devscripts bash-completion shorewall shorewall6 cron-apt apt-listchanges calamaris visitors procmail libjson-rpc-perl libfile-touch-perl zutils ip2host pigz \
 	build-essential python-setuptools molly-guard \
 	debootstrap sudo figlet graphviz apache2 libapache2-mod-macro python-yaml python-pip mr subversion subversion-tools vnstat poxml vncsnapshot imagemagick libav-tools python-twisted python-imaging gocr guestmount schroot sqlite3 dose-extra apt-file python-lzma bc \
 	unzip python-hachoir-metadata ghc python-rpy2 libsoap-lite-perl haveged postgresql-client-9.1 xvfb virt-viewer libsikuli-script-java \
@@ -68,7 +68,8 @@ sudo apt-get install vim screen less etckeeper moreutils curl mtr-tiny dstat dev
 # debootstrap is affected by #766459 in wheezy
 sudo apt-get install -t wheezy-backports qemu debootstrap qemu-kvm qemu-system-x86 libvirt0 qemu-user-static binfmt-support \
         libvirt-dev libvirt-bin seabios ruby-rjb ruby-packetfu cucumber \
-	linux-image-amd64
+	linux-image-amd64 \
+	munin munin-plugins-extra
 explain "Packages installed."
 
 echo "Also needs python-arpy from jessie..."

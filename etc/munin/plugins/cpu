@@ -1,5 +1,9 @@
 #!/bin/sh
 #
+# -- unfinished WORK IN PROGRESS --
+#
+# includes modifications trying to fix #767100
+#
 : <<=cut
 
 =head1 NAME

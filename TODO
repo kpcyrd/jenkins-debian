@@ -33,10 +33,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * move this setup to jenkis.d.o and start real team maintaince of jenkins.d.o
 ** set up a mailinglist 
 
-=== to do once jenkins.d.n runs jessie
+=== To be done once jenkins.d.n runs jessie
 
 * replace with bin/setsid.py workaround with setsid from the util-linux package from jessie
 * etc/pbuilderrc: remove /run/shm bindmount once we are running jessie - this is a workaround for #700591
+* bin/g-i-installation: use lvcreate without --virtualsize
 
 === jenkins-job-builder related
 

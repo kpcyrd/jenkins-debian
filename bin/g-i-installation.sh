@@ -184,7 +184,7 @@ show_preseed() {
 bootstrap_system() {
 	cd $WORKSPACE
 	echo "Creating throw-away logical volume with ${DISKSIZE_IN_GB} GiB now."
-	# FIXME: the --virtualsize option will not be needed once wheezy is not tested anymore
+	# the --virtualsize option will not be needed once wheezy is not tested anymore
 	sudo lvcreate --virtualsize ${DISKSIZE_IN_GB}G -L${DISKSIZE_IN_GB}G -n $NAME $VG
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
 	sudo qemu-img create -f raw $LV ${DISKSIZE_IN_GB}G

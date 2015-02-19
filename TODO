@@ -41,9 +41,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === To be done once bugs are fixed
 
-* etc/munin/plugins/munin_stats includes the proposed fix for #767032
 * bin/d-i_build.sh includes a workaround for #767260 (console-setup doesn't support parallel build)
-
+* etc/munin/plugins/munin_stats includes the proposed fix for #767032
+* etc/munin/plugins/cpu includes work in progress for #767100
 
 === jenkins-job-builder related
 

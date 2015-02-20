@@ -77,8 +77,7 @@
                         my_schroot: d-i-sid
                         my_distro: sid
                         my_extra_pkgs: 'build-essential debhelper docbook docbook-xml docbook-xsl xsltproc gawk libhtml-parser-perl w3m poxml jadetex openjade docbook-dsssl ghostscript texlive-lang-cyrillic texlive-lang-czechslovak texlive-lang-european texlive-lang-french texlive-lang-german texlive-lang-greek texlive-lang-italian texlive-lang-other texlive-lang-portuguese texlive-lang-spanish ko.tex-base cm-super'
-                        my_time: '1 1 * * 1'
+                        my_time: '1 1 * * 1'    # create it weekly
                 - 'd-i_{name}-sid-upgrade':
                         my_schroot: d-i-sid
-                        my_time: '0 50 * * *'
-                        # FIXME: ideally this would triggered by schroot-sid-create and not be time-base... etootired
+                        my_time: '0 1 * * *'    # upgrade it daily

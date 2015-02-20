@@ -174,11 +174,10 @@ fi
 
 # delete jenkins html logs from reproducible_builder_* jobs as they are mostly redundant
 # (they only provide the extended value of parsed console output, which we dont need here.)
-OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime +0 -name log_content.html  -exec rm -v {} \;)
+OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime +0 -name log_content.html  -exec rm -v {} \; | wc -l)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Cleaning jenkins html logs:"
-	echo "$OLDSTUFF"
+	echo "Removed $OLDSTUFF jenkins html logs."
 	echo
 fi
 

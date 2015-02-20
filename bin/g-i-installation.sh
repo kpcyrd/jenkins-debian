@@ -1189,7 +1189,7 @@ save_logs() {
 	SYSTEM_MNT=/media/$NAME
 	sudo mkdir -p $SYSTEM_MNT
 	FAILURE=false
-	# FIXME: bugreport guestmount: -o uid doesnt work:
+	# workaround problem in guestmount in wheezy: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
 	sudo guestmount -a $LV -i --ro $SYSTEM_MNT || { echo "Warning: cannot mount filesystems from $LV" ; export FAILURE=true ; }
 	#

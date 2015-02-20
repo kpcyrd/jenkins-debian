@@ -59,12 +59,26 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # find and warn about pbuild leftovers
-OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +0 -exec ls -lad {} \;)
+OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
-	echo
-	echo "Warning: old files or directories found in /var/cache/pbuilder/result/"
-	echo "$OLDSTUFF"
-	echo "Please cleanup manually."
+	# delete known files
+	echo "Attempting file detection..."
+	cd /var/cache/pbuilder/result/
+	for i in $(find . -maxdepth 1 -mtime +1 -type f) ; do
+		case $i in
+			stderr|stdout)	rm -v $i
+					;;
+			*)		;;
+		esac
+	done
+	cd -
+	# report the rest
+	OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo "Warning: old files or directories found in /var/cache/pbuilder/result/"
+		echo "$OLDSTUFF"
+		echo "Please cleanup manually."
+	fi
 	echo
 	DIRTY=true
 fi

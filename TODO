@@ -10,11 +10,11 @@ ToDo for jenkins.debian.net
 
 == About jenkins.debian.net
 
-See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"].
+See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"] for a general description of the setup. Below is the current TODO list, which is long and probably incomplete too. The best way to contribute is to actually send patches via pull requests.
 
 == Fix user submitted bugs
 
-* See link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org%40packages.debian.org["bugs filed against the pseudopackage 'qa.debian.org' with usertag 'jenkins'"] in the BTS.
+* There are  link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org%40packages.debian.org["bugs filed against the pseudopackage 'qa.debian.org' with usertag 'jenkins'"] in the BTS which would be nice to be fixed soon, as some people actually care.
 
 == General ToDo
 
@@ -112,40 +112,6 @@ properties:
 
 == Improve existing tests
 
-=== d-i_manual*
-
-* svn:trunk/manual/po triggers the full build, should trigger language specific builds.
-* svn:trunk/manual is all thats needed, not whole svn:trunk
-
-=== d-i_build*
-
-* run scripts/digress/ ?
-* bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
-* build branches? (which?)
-
-=== chroot-installation_*
-
-* inform debian-devel@
-* chroot-installation: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
-*  warn about transitional packages installed (on non-upgrades only)
-
-----
-<pabs> h01ger: how about all of the blends?
-<h01ger> pabs, if you could give me concrete (meta-)package names to install, that would be great+very helpful
-<h01ger> for ^education* and ^debian-edu* i can find them myself
-<pabs> h01ger: hmm, doesn't seem to be easy to find that list, but here are a few: ezgo-* med-* science-* junior-* gis-*
-----
-
-* install all the tasks "instead", thats rather easy nowadays as all task packages are called "task*".
-
-=== g-i-installation_*
-
-* pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
-** these jobs would not need to do an install, just booting them in rescue mode is probably enough
-* for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
-** same usecase:  -monitor none -nographic -serial stdio  
-** same usecase:  -snapshot maybe???
-
 === reproducible
 
 * new job+page: "packages different from sid in our toolchain", not sure yet where to link that...
@@ -189,6 +155,40 @@ properties:
 * use one css for all, not two minimally different ones
 * graph oldest build age - in days
 * mv untested field in stats table too? (as in csv output...)
+
+=== d-i_manual*
+
+* svn:trunk/manual/po triggers the full build, should trigger language specific builds.
+* svn:trunk/manual is all thats needed, not whole svn:trunk
+
+=== d-i_build*
+
+* run scripts/digress/ ?
+* bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
+* build branches? (which?)
+
+=== chroot-installation_*
+
+* inform debian-devel@l.d.o or -qa@?
+* chroot-installation: only trigger (=really run) jobs if available+used packages have changed (save packages in db and compare)
+*  warn about transitional packages installed (on non-upgrades only)
+
+----
+<pabs> h01ger: how about all of the blends?
+<h01ger> pabs, if you could give me concrete (meta-)package names to install, that would be great+very helpful
+<h01ger> for ^education* and ^debian-edu* i can find them myself
+<pabs> h01ger: hmm, doesn't seem to be easy to find that list, but here are a few: ezgo-* med-* science-* junior-* gis-*
+----
+
+* install all the tasks "instead", thats rather easy nowadays as all task packages are called "task*".
+
+=== g-i-installation_*
+
+* pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
+** these jobs would not need to do an install, just booting them in rescue mode is probably enough
+* for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
+** same usecase:  -monitor none -nographic -serial stdio  
+** same usecase:  -snapshot maybe???
 
 == Further ideas...
 

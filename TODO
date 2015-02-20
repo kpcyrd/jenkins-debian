@@ -14,7 +14,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == Fix user submitted bugs
 
-* See link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org@packages.debian.org[qa.debian.org bugs with usertag 'jenkins'] in the BTS.
+* See link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org@packages.debian.org["qa.debian.org bugs with usertag 'jenkins'"] in the BTS.
 
 == General ToDo
 

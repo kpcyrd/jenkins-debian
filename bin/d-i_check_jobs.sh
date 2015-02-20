@@ -184,9 +184,8 @@ elif [ -s $CLEANUP ] ; then
 	cat $CLEANUP
 	echo
 	echo "Jobs need to be deleted from job-cfg/d-i.yaml first, before deleting them with jenkins-jobs, cause else they will be recreated and then builds will be attempted, which will fail and cause notifications..."
-	# FIXME: adopt this text once job-cfg/d-i.yaml.py generates job-cfg/d-i.yaml
 else
-	figlet ok
+	echo "Everything ok."
 fi
 rm -f $CLEANUP
 echo

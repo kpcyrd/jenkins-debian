@@ -58,10 +58,10 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
-	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and do 3 later) and 6 is special anyway
-	for i in 0 1 4 5 ; do
-		# force regeneration of the image
-		touch -d "$DATE 00:00" ${TABLE[$i]}.png
+	# we do 3 later and 6 is special anyway...
+	for i in 0 1 2 4 5 ; do
+		# force regeneration of the image if it exists
+		[ ! -f ${TABLE[$i]}.png ] || touch -d "$DATE 00:00" ${TABLE[$i]}.png
 	done
 fi
 
@@ -194,6 +194,9 @@ YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 
 redo_png() {
+	# $1 = id of the stats table
+	# $2 = image file name
+	# $3 = meta package set, only sensible if $1=6
 	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
 	# TABLE[3+4+5] don't have a suite column...
 	# 6 is special anyway
@@ -266,7 +269,7 @@ set_icon blacklisted
 write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
-# FIXME: we don't do 2 / stats_builds_age.png yet :/ (also see above)
+# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 is special anyway)
 for i in 0 3 4 5 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
@@ -302,7 +305,6 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 		# redo pngs once a day
 		if [ ! -f /var/lib/jenkins/userContent/$PNG ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name $PNG) ] ; then
-			# FIXME: call redo_png differently here.. sux
 			redo_png 6 $PNG ${META_PKGSET[$i]}
 		fi
 		write_page "<p><a href=\"/userContent/$PNG\"><img src=\"/userContent/$PNG\" class=\"graph\" alt=\"${MAINLABEL[6]}\"></a>"

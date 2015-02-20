@@ -232,7 +232,7 @@ explain "Jenkins jobs updated."
 # crappy tests for checking that jenkins-job-builder works correctly
 #
 #wc -m counts one byte too many, so we substract one
-let DEFINED_MY_TRIGGERS=$(grep my_trigger: *.yaml|wc -l)+$(grep my_trigger: *.yaml|grep , |xargs -r echo | sed 's/[^,]//g'| wc -m)-1
+let DEFINED_MY_TRIGGERS=$(grep my_trigger: *.yaml|grep -v "my_trigger: ''"|wc -l)+$(grep my_trigger: *.yaml|grep , |xargs -r echo | sed 's/[^,]//g'| wc -m)-1
 DEFINED_DI_TRIGGERS=$(grep "defaults: d-i-manual-html" d-i.yaml|wc -l)
 #DEFINED_REPRODUCIBLE_TRIGGERS=$(grep "^    defaults: reproducible$" reproducible.yaml|wc -l)
 let DEFINED_TRIGGERS=DEFINED_MY_TRIGGERS+DEFINED_DI_TRIGGERS

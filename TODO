@@ -18,20 +18,21 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
-* g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
-* turn job-cfg/g-i.yaml into .yaml.py
-* split etc/schroot/default
-* download .isos once in central place
-* use schroot for chroot-installation
+* build, deploy and link CONTRIBUTING from TODO
+* replace amd64 in scripts with $HOSTARCH
+* put kgb-client.conf in git and sed passwords from filesystem into it...
+* set up a dedicated mailinglist, or maybe even two, one for discussion and one for commits.
+* move this setup to jenkins.d.o and start real team maintaince of jenkins.d.o
 * build packages using jenkins-debian-glue and not my hacks
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
-* backup /var/lib/jenkins/jobs /var/lib/munin /var/log /root/ /var/lib/jenkins/reproducible.db too /var/lib/jenkins/plugins/*.jpi
-* put kgb-client.conf in git and sed passwords from filesystem into it...
-* turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
-* replace amd64 in scripts with $HOSTARCH
-* g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
-* move this setup to jenkis.d.o and start real team maintaince of jenkins.d.o
-** set up a mailinglist 
+* *backup*:
+** '/var/lib/jenkins/jobs' (the results - the configs are in .git)
+** '/var/lib/munin'
+** '/var/log'
+** '/root/' (contains etckeeper.git)
+** '/var/lib/jenkins/reproducible.db' (is backed up manually)
+** '/srv/jenkins.debian.net-scm-sync.git' (is backed up manually)
+** '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
 
 === To be done once jenkins.d.n runs jessie
 
@@ -67,7 +68,7 @@ properties:
 
 * publish forked livescreenshot plugin and send pull request for my bugfix
 
-== lvc, work in progress, just started ==
+== lvc, work in progress, just started
 
 * put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
 
@@ -148,10 +149,18 @@ properties:
 
 
 * misc
+** turn job-cfg/g-i.yaml into .yaml.py
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
+** "fork" etc/schroot/default into etc/schroot/reproducible
 ** include no js header in the css
 ** use one css for all, not two minimally different ones
 ** graph oldest build age - in days
+
+=== qa.debian.org*
+
+* turn off notifications on unstable results for udd-versionskew
+* turn off notifications on unstable results for orphaned-without-a-bug
+* turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
 
 === d-i_manual*
 
@@ -165,6 +174,8 @@ properties:
 
 === chroot-installation_*
 
+* use schroot for chroot-installation, stop using plain chroot everywhere
+* split etc/schroot/default
 * inform debian-devel@l.d.o or -qa@?
 * warn about transitional packages installed (on non-upgrades only)
 * install all the tasks "instead", thats rather easy nowadays as all task packages are called "task*".
@@ -172,7 +183,15 @@ properties:
 
 === g-i-installation_*
 
-Development of these tests has stopped. In future the 'lvc*' tests should replace them. This is the old list, still useful as inspiration:
+Development of these tests has stopped. In future the 'lvc*' tests should replace them.
+
+These small changes are probably still worth doing anyway:
+
+* g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
+* download .isos once in central place
+* g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
+
+The following ideas should really only be implemented for the new 'lvc*' tests.... (but are kept here for now)
 
 * pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
 ** these jobs would not need to do an install, just booting them in rescue mode is probably enough

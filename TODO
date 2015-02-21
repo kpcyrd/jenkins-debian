@@ -146,11 +146,12 @@ properties:
 		<h01ger> | but those qemubuilders would only get 4 or 8gb ram... maybe 6. and that will have a huge impact
 
 
-* merge reproducible_setup_schroot in schroot-create or delete the latter?
-* include no js header in the css
-* use one css for all, not two minimally different ones
-* graph oldest build age - in days
-* mv untested field in stats table too? (as in csv output...)
+* misc
+** merge reproducible_setup_schroot in schroot-create or delete the latter?
+** include no js header in the css
+** use one css for all, not two minimally different ones
+** graph oldest build age - in days
+** mv untested field in stats table too? (as in csv output...)
 
 === d-i_manual*
 

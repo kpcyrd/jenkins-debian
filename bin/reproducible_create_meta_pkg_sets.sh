@@ -193,8 +193,12 @@ fi
 # grml
 if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
 	curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
-	convert_into_source_packages_only
-	update_if_similar ${META_PKGSET[11]}.pkgset
+	if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+		convert_into_source_packages_only
+		update_if_similar ${META_PKGSET[11]}.pkgset
+	else
+		echo "Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
+	fi
 fi
 
 # all build depends of grml

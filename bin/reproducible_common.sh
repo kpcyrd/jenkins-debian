@@ -283,7 +283,7 @@ set_package_class() {
 	fi
 }
 
-force_package_targets() {
+set_linktarget() {
 	for PKG in $@ ; do
 		if [ -f $RB_PATH/$PKG.html ] ; then
 			set_package_class

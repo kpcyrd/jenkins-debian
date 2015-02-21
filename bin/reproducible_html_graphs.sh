@@ -312,20 +312,20 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		set_icon reproducible
 		write_icon
 		write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
-		force_package_targets $META_GOOD
+		set_linktarget $META_GOOD
 		link_packages $META_GOOD
 		write_page "<br />"
 		set_icon unreproducible
 		write_icon
 		write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
-		force_package_targets $META_BAD
+		set_linktarget $META_BAD
 		link_packages $META_BAD
 		write_page "<br />"
 		if [ $COUNT_META_UGLY -gt 0 ] ; then
 			set_icon FTBFS
 			write_icon
 			write_page "$COUNT_META_UGLY ($PERCENT_META_UGLY%) packages failed to build from source:"
-			force_package_targets $META_UGLY
+			set_linktarget $META_UGLY
 			link_packages $META_UGLY
 			write_page "<br />"
 		fi
@@ -337,7 +337,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 			set_icon 404
 			write_icon
 			write_page "$COUNT_META_REST ($PERCENT_META_REST%) packages are either blacklisted, not for us or cannot be downloaded:"
-			force_package_targets $META_REST
+			set_linktarget $META_REST
 			link_packages $META_REST
 			write_page "<br />"
 		fi

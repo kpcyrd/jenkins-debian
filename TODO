@@ -148,7 +148,6 @@ properties:
 * cleanup+rename:
 ** unschedule_from_db(  	(defined in build.sh...)
 ** process_packages()	(defined in common.sh...)
-** force_package_targets() -> set_linktarget
 * merge reproducible_setup_schroot in schroot-create or delete the latter?
 
 * include no js header in the css

@@ -23,11 +23,14 @@ cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
-unschedule_from_db() {
+update_db_and_html() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources_scheduled WHERE name = '$SRCPACKAGE';"
 	set +x
-	# (force) update html page for package (only really needed for long building packages where a note updates the page during build....)
+	# (force) update html page for package
+	# (This should normally not be needed except for long building packages
+	# where the page was already updated after the build started, probably
+	#  through notes being updated.)
 	touch -d $PREDATE /var/lib/jenkins/userContent/rb-pkg/${SRCPACKAGE}.html
 	process_packages $SRCPACKAGE
 	echo
@@ -81,7 +84,7 @@ call_debbindiff() {
 		echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
-		unschedule_from_db
+		update_db_and_html
 	else
 		echo | tee -a ${RBUILDLOG}
 		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
@@ -103,7 +106,7 @@ call_debbindiff() {
 			kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
-		unschedule_from_db
+		update_db_and_html
 	fi
 }
 
@@ -151,7 +154,7 @@ else
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
 		set +x
 		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
-		unschedule_from_db
+		update_db_and_html
 		exit 0
 	else
 		set -e
@@ -181,7 +184,7 @@ else
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
 			set +x
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
-			unschedule_from_db
+			update_db_and_html
 			exit 0
 		fi
 		set +e
@@ -225,7 +228,7 @@ else
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
-			unschedule_from_db
+			update_db_and_html
 		fi
 	fi
 

@@ -146,7 +146,6 @@ properties:
 		<h01ger> | but those qemubuilders would only get 4 or 8gb ram... maybe 6. and that will have a huge impact
 
 * cleanup+rename:
-** unschedule_from_db(  	(defined in build.sh...)
 ** process_packages()	(defined in common.sh...)
 * merge reproducible_setup_schroot in schroot-create or delete the latter?
 

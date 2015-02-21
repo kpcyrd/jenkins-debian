@@ -11,7 +11,7 @@
 
 import yaml
 from reproducible_common import *
-from reproducible_html_packages import process_packages
+from reproducible_html_packages import gen_packages_html
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -268,7 +268,7 @@ def purge_old_notes(notes):
             os.remove(NOTES_PATH + '/' + page)
             removed_pages.append(pkg)
     if removed_pages:
-        process_packages(removed_pages)
+        gen_packages_html(removed_pages)
 
 def iterate_over_notes(notes):
     num_notes = str(len(notes))
@@ -421,4 +421,4 @@ if __name__ == '__main__':
     index_notes(notes, bugs)
     index_no_notes(notes, bugs)
     purge_old_notes(notes)
-    process_packages(notes) # regenerate all rb-pkg/ pages
+    gen_packages_html(notes) # regenerate all rb-pkg/ pages

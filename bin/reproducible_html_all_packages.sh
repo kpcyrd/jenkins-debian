@@ -21,5 +21,5 @@ init_html
 PACKAGES=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM source_packages WHERE status != \"\"")
 COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages WHERE status != \"\"")
 echo "$(date) - processing $COUNT_TOTAL packages... this will take a while."
-process_packages ${PACKAGES}
+gen_packages_html ${PACKAGES}
 

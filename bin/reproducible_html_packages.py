@@ -131,7 +131,7 @@ def gen_bugs_links(package, bugs):
     return html
 
 
-def process_packages(packages, no_clean=False):
+def gen_packages_html(packages, no_clean=False):
     """
     generate the /rb-pkg/package.html page
     packages should be a list
@@ -172,7 +172,7 @@ def gen_all_rb_pkg_pages(no_clean=False):
     rows = query_db(query)
     pkgs = [str(i[0]) for i in rows]
     log.info('Processing all the package pages, ' + str(len(pkgs)))
-    process_packages(pkgs, no_clean)
+    gen_packages_html(pkgs, no_clean)
 
 def purge_old_pages():
     presents = sorted(os.listdir(RB_PKG_PATH))

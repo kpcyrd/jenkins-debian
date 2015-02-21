@@ -32,7 +32,7 @@ update_db_and_html() {
 	# where the page was already updated after the build started, probably
 	#  through notes being updated.)
 	touch -d $PREDATE /var/lib/jenkins/userContent/rb-pkg/${SRCPACKAGE}.html
-	process_packages $SRCPACKAGE
+	gen_packages_html $SRCPACKAGE
 	echo
 	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/$SRCPACKAGE.html"
 	echo

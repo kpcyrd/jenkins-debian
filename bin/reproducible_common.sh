@@ -300,7 +300,7 @@ link_packages() {
 	done
 }
 
-process_packages() {
+gen_packages_html() {
 	CWD=$(pwd)
 	cd /srv/jenkins/bin
 	for (( i=1; i<$#+1; i=i+100 )) ; do
@@ -314,7 +314,7 @@ process_packages() {
 			fi
 		done
 		string+=']'
-		python3 -c "from reproducible_html_packages import process_packages; process_packages(${string}, no_clean=True)"
+		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, no_clean=True)"
 	done
 	python3 -c "from reproducible_html_packages import purge_old_pages; purge_old_pages()"
 	cd "$CWD"

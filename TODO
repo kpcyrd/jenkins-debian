@@ -145,10 +145,8 @@ properties:
 		       * | h01ger guesstimates that we would go from 300-600 builds per day to 100-200 with qemubuilder
 		<h01ger> | but those qemubuilders would only get 4 or 8gb ram... maybe 6. and that will have a huge impact
 
-* cleanup+rename:
-** process_packages()	(defined in common.sh...)
-* merge reproducible_setup_schroot in schroot-create or delete the latter?
 
+* merge reproducible_setup_schroot in schroot-create or delete the latter?
 * include no js header in the css
 * use one css for all, not two minimally different ones
 * graph oldest build age - in days

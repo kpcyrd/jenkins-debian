@@ -130,7 +130,6 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	# proxy everything but a few urls
 	ProxyPass /munin !
 	ProxyPass /server-status !
-	ProxyPass /visitors-report.html !
 	ProxyPass /calamaris !
 	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs

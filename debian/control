@@ -11,7 +11,7 @@ Vcs-Browser: http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git
 Package: jenkins.debian.net-setup
 Architecture: all
 Depends: ${misc:Depends}, jenkins.debian.net-bin, 
- vim, screen, less, etckeeper, moreutils, curl, mtr-tiny, dstat, devscripts, bash-completion, shorewall, shorewall6, cron-apt, apt-listchanges, munin, calamaris, visitors, procmail, libjson-rpc-perl, libfile-touch-perl, zutils, ip2host, apache2, python-yaml, python-pip,
+ vim, screen, less, etckeeper, moreutils, curl, mtr-tiny, dstat, devscripts, bash-completion, shorewall, shorewall6, cron-apt, apt-listchanges, munin, calamaris, procmail, libjson-rpc-perl, libfile-touch-perl, zutils, ip2host, apache2, python-yaml, python-pip,
  build-essential, python-setuptools
 Recommends: jenkins-job-builder
 Description: Stuff to setup a jenkins.debian.net instance

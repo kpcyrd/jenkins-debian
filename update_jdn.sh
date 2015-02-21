@@ -72,7 +72,6 @@ sudo apt-get install 	vim \
 			cron-apt \
 			apt-listchanges \
 			calamaris \
-			visitors \
 			procmail \
 			libjson-rpc-perl \
 			libfile-touch-perl \

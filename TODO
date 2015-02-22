@@ -10,7 +10,7 @@ ToDo for jenkins.debian.net
 
 == About jenkins.debian.net
 
-See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"] for a general description of the setup. Below is the current TODO list, which is long and probably incomplete too. The best way to contribute is to actually send patches via pull requests.
+See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian.net"] for a general description of the setup. Below is the current TODO list, which is long and probably incomplete too. The links:https://jenkins.debian.net/userContent/contributing.html[the preferred form of contributions] are patches via pull requests.
 
 == Fix user submitted bugs
 
@@ -18,7 +18,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
-* build, deploy and link CONTRIBUTING from TODO
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * set up a dedicated mailinglist, or maybe even two, one for discussion and one for commits.

@@ -21,7 +21,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * set up a dedicated mailinglist, or maybe even two, one for discussion and one for commits.
-* move this setup to jenkins.d.o and start real team maintaince of jenkins.d.o
+* move this setup to jenkins.d.o
+** needs replacement of all chroot jobs with schroot
 * build packages using jenkins-debian-glue and not my hacks
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 * *backup*:

@@ -50,7 +50,7 @@ for PKG in $SOURCES ; do
 			if [ ! -z "$CRUFT" ] ; then
 				WARN=true
 			fi
-			$CRUFT="$CRUFT ${VERSION}"
+			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
 	if $WARN ; then

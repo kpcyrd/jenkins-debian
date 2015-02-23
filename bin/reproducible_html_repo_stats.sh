@@ -18,11 +18,7 @@ PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
-TMPSCRIPT=$(mktemp)
-echo "cat /var/lib/apt/lists/reproducible.alioth.debian.org_debian_._Packages" > $TMPSCRIPT
-sudo pbuilder --execute --basetgz /var/cache/pbuilder/base-reproducible.tgz $TMPSCRIPT > $TMPFILE
-grep -v ^I:\  $TMPFILE > $TMPSCRIPT
-mv $TMPSCRIPT $TMPFILE
+curl http://reproducible.alioth.debian.org/debian/Packages > $TMPFILE
 
 write_page "<p>These source packages are different from sid in our toolchain. They are available in an apt repository on alioth which is accessable with these sources.lists entries:<pre>"
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"

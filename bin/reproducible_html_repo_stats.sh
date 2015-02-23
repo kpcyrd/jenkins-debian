@@ -45,7 +45,7 @@ for PKG in $SOURCES ; do
 		fi
 	done
 	write_page "<td>$BET</td>"
-	SID=$(apt-cache showsrc $PKG | grep "^Version: "|cut -d " " -f2|xargs echo|sed 's# #<br />#g')
+	SID=$(rmadison -s sid $PKG | cut -d "|" -f2|xargs echo|sed 's# #<br />#g')
 	write_page "<td>$SID</td>"
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then

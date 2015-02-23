@@ -154,8 +154,12 @@
 - job-template:
     defaults: reproducible
     name: '{name}_html_all_packages'
--
- job-template:
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_repo_stats'
+
+- job-template:
     defaults: reproducible
     name: '{name}_create_meta_pkg_sets'
 
@@ -230,6 +234,11 @@
             my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'
             my_timed: '12 12 30 12 *'
             my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.sh'
+            my_recipients: 'holger@layer-acht.org'
+        - '{name}_html_repo_stats':
+            my_description: 'Generate HTML results (repo_stats) for reproducible builds.'
+            my_timed: '0 1 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_repo_stats.sh'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_json':
             my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'

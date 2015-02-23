@@ -163,7 +163,7 @@ init_html() {
 	SUITE=sid
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list repo_stats pkg_sets stats"
 	SPOKENTARGET["reproducible"]="packages which built reproducibly"
 	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
 	SPOKENTARGET["FTBFS"]="packages which failed to build from source"
@@ -178,8 +178,9 @@ init_html() {
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
-	SPOKENTARGET["stats"]="various statistics about reproducible builds"
+	SPOKENTARGET["repo_stats"]="statistics about the reproducible builds apt repository"
 	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets"
+	SPOKENTARGET["stats"]="various statistics about reproducible builds"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(name) FROM source_packages")
@@ -248,6 +249,8 @@ write_page_header() {
 			SPOKEN_TARGET="currently scheduled"
 		elif [ "$TARGET" = "pkg_sets" ] ; then
 			SPOKEN_TARGET="package sets stats"
+		elif [ "$TARGET" = "repo_stats" ] ; then
+			SPOKEN_TARGET="apt repository stats"
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi

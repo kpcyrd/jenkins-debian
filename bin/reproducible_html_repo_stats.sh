@@ -33,6 +33,8 @@ SOURCES=$(grep-dctrl -n -s source -FArchitecture amd64 -o -FArchitecture all $TM
 for PKG in $SOURCES ; do
 	write_page "<tr><td>$PKG</td><td>"
 	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
+	CRUFT=""
+	WARN=false
 	BET=""
 	for VERSION in ${VERSIONS} ; do
 		if [ "$BET" = "" ] ; then
@@ -43,13 +45,9 @@ for PKG in $SOURCES ; do
 		fi
 	done
 	write_page "<em>$BET</em>"
-	CRUFT=""
-	WARN=false
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
-			if [ ! -z "$CRUFT" ] ; then
-				WARN=true
-			fi
+			WARN=true
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done

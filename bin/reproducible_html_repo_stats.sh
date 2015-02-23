@@ -24,14 +24,14 @@ sudo pbuilder --execute --basetgz /var/cache/pbuilder/base-reproducible.tgz $TMP
 grep -v ^I:\  $TMPFILE > $TMPSCRIPT
 mv $TMPSCRIPT $TMPFILE
 
-write_page "<p>The source packages are different from sid in our toolchain. They are available in an apt repository on alioth which is accessable with these sources.lists entries:"
+write_page "<p>The source packages are different from sid in our toolchain. They are available in an apt repository on alioth which is accessable with these sources.lists entries:<pre>"
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><th>source package</th><th>version(s)</th>"
+write_page "<p><table><tr><th>source package</th><th>version(s)</th></tr>"
 SOURCES=$(grep-dctrl -n -s source -FArchitecture amd64 -o -FArchitecture all $TMPFILE | sort -u)
 for PKG in $SOURCES ; do
-	write_page "<tr>td>$PKG</td><td>"
+	write_page "<tr><td>$PKG</td><td>"
 	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
 	BET=""
 	for VERSION in ${VERSIONS} ; do
@@ -42,16 +42,21 @@ for PKG in $SOURCES ; do
 			BET=${VERSION}
 		fi
 	done
-	write_page "$BET<br>"
-	WARNED=false
+	write_page "<em>$BET</em>"
+	CRUFT=""
+	WARN=false
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
-			write_page "${VERSION}<br>"
-		elif ! $WARNED ; then
-			echo "Warning: more than one version of $PKG available in our repo, please clean up."
-			WARNED=true
+			if [ ! -z "$CRUFT" ] ; then
+				WARN=true
+			fi
+			$CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
+	if $WARN ; then
+		echo "Warning: more than one version of $PKG available in our repo, please clean up."
+		write_page "<br />cruft: $CRUFT"
+	fi
 	write_page "</td></tr>"
 done
 write_page "</table></p>"

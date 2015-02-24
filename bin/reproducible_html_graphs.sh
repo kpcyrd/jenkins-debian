@@ -13,6 +13,8 @@ common_init "$@"
 init_html
 gather_stats
 
+SUITE="sid"  # we only care about sid status here (for now)
+
 #
 # create stats
 #
@@ -31,18 +33,18 @@ TABLE[6]=stats_meta_pkg_state
 #
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
-	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) from sources")
-	GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE';")
-	GOOAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)='$DATE';")
-	BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE';")
-	BAAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)='$DATE';")
-	UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE';")
-	UGLDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)='$DATE';")
-	REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE';")
-	RESDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)='$DATE';")
-	OLDESTG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT build_date FROM source_packages WHERE status = 'reproducible' AND NOT date(build_date)>='$DATE' ORDER BY build_date LIMIT 1;")
-	OLDESTB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT build_date FROM source_packages WHERE status = 'unreproducible' AND NOT date(build_date)>='$DATE' ORDER BY build_date LIMIT 1;")
-	OLDESTU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT build_date FROM source_packages WHERE status = 'FTBFS' AND NOT date(build_date)>='$DATE' ORDER BY build_date LIMIT 1;")
+	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) FROM sources WHERE suite='${SUITE}'")
+	GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE';")
+	GOOAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)='$DATE';")
+	BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE';")
+	BAAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)='$DATE';")
+	UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE';")
+	UGLDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)='$DATE';")
+	REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND date(r.build_date)<='$DATE';")
+	RESDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND date(r.build_date)='$DATE';")
+	OLDESTG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status = 'reproducible' AND s.suite='$SUITE' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
+	OLDESTB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
+	OLDESTU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 	DIFFG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTG');")
 	if [ -z $DIFFG ] ; then DIFFG=0 ; fi
 	DIFFB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTB');")
@@ -96,7 +98,7 @@ gather_meta_stats() {
 			META_WHERE=""
 			for PKG in $META_LIST ; do
 				if [ -z "$META_WHERE" ] ; then
-					META_WHERE="name in ('$PKG'"
+					META_WHERE="s.name in ('$PKG'"
 				else
 					META_WHERE="$META_WHERE, '$PKG'"
 				fi
@@ -105,19 +107,19 @@ gather_meta_stats() {
 		else
 			META_WHERE="name = 'meta-name-does-not-exist'"
 		fi
-		COUNT_META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		COUNT_META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		COUNT_META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		COUNT_META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(status) from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
+		COUNT_META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
+		COUNT_META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
+		COUNT_META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
+		COUNT_META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND date(r.build_date)<='$DATE' AND $META_WHERE;")
 		let META_ALL=COUNT_META_GOOD+COUNT_META_BAD+COUNT_META_UGLY+COUNT_META_REST
 		PERCENT_META_GOOD=$(echo "scale=1 ; ($COUNT_META_GOOD*100/$META_ALL)" | bc)
 		PERCENT_META_BAD=$(echo "scale=1 ; ($COUNT_META_BAD*100/$META_ALL)" | bc)
 		PERCENT_META_UGLY=$(echo "scale=1 ; ($COUNT_META_UGLY*100/$META_ALL)" | bc)
 		PERCENT_META_REST=$(echo "scale=1 ; ($COUNT_META_REST*100/$META_ALL)" | bc)
-		META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name from source_packages WHERE status = 'reproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name from source_packages WHERE status = 'unreproducible' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name from source_packages WHERE status = 'FTBFS' AND date(build_date)<='$DATE' AND $META_WHERE;")
-		META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT name NAME from source_packages WHERE (status != 'FTBFS' AND status != 'unreproducible' AND status != 'reproducible') AND date(build_date)<='$DATE' AND $META_WHERE;")
+		META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' r.status = 'reproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
+		META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
+		META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
+		META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name AS NAME FROM results AS r JOIN sources AS s ON r.package_id=s.i WHERE s.suite='$SUITE' AND (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND date(r.build_date)<='$DATE' AND $META_WHERE;")
 	else
 		META_RESULT=false
 	fi

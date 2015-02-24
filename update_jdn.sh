@@ -233,7 +233,7 @@ explain "Jenkins jobs updated."
 #
 #wc -m counts one byte too many, so we substract one
 let DEFINED_MY_TRIGGERS=$(grep -v \# *.yaml | grep my_trigger: | grep -v "my_trigger: ''"|wc -l)+$(grep my_trigger: *.yaml|grep , |xargs -r echo | sed 's/[^,]//g'| wc -m)-1
-let DEFINED_DI_TRIGGERS=$(grep "defaults: d-i-manual-html" d-i.yaml|wc -l)-5 # 5 need to be substracted because 5 d-i_manual_pdf jobs dont exist, yet their html pendants trigger them...
+let DEFINED_DI_TRIGGERS=$(grep "defaults: d-i-manual-html" d-i.yaml|wc -l)
 #DEFINED_REPRODUCIBLE_TRIGGERS=$(grep "^    defaults: reproducible$" reproducible.yaml|wc -l)
 let DEFINED_TRIGGERS=DEFINED_MY_TRIGGERS+DEFINED_DI_TRIGGERS
 #let DEFINED_TRIGGERS=DEFINED_TRIGGERS+DEFINED_REPRODUCIBLE_TRIGGERS

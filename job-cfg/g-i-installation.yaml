@@ -9,10 +9,11 @@
       artifactNumToKeep: -1
     triggers:
       - timed: "{my_time}"
-      - timed: "{my_trigger}"
     builders:
       - shell: "{my_shell}"
     publishers:
+      - trigger:
+          project: '{my_trigger}'
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: 'true'
@@ -443,42 +444,42 @@
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_time: '42 19 */2 * *'
-         my_trigger: ''
+         my_trigger: 'g-i-installation_debian_jessie_gnome_brltty, g-i-installation_debian_jessie_gnome_speakup'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_jessie_gnome_brltty':
          my_title: 'Debian (jessie) GNOME desktop install with braille display support'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian GNOME desktop with braille display support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_brltty_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_time: ''
-         my_trigger: 'g-i-installation_debian_jessie_gnome'
+         my_trigger: ''
          my_recipients: 'holger@layer-acht.org debian-accessibility@lists.debian.org'
       - '{name}_debian_jessie_gnome_speakup':
          my_title: 'Debian (jessie) GNOME desktop install with Speakup support'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
          my_description: 'Do a fully automated installation of Debian GNOME desktop with Speakup support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_speakup_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_time: ''
-         my_trigger: 'g-i-installation_debian_jessie_gnome'
+         my_trigger: ''
          my_recipients: 'holger@layer-acht.org debian-accessibility@lists.debian.org'
       - '{name}_debian_sid_daily_gnome':
          my_title: 'Debian (sid daily build CD) GNOME desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_time: '42 8 * * *'
-         my_trigger: ''
+         my_trigger: 'g-i-installation_debian_sid_gnome_brltty, g-i-installation_debian_sid_gnome_speakup'
          my_recipients: 'holger@layer-acht.org'
       - '{name}_debian_sid_daily_gnome_brltty':
          my_title: 'Debian (sid daily build CD) GNOME desktop install with braille display support'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian GNOME desktop with braille display support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_brltty_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_time: ''
-         my_trigger: 'g-i-installation_debian_sid_gnome'
+         my_trigger: ''
          my_recipients: 'holger@layer-acht.org debian-accessibility@lists.debian.org'
       - '{name}_debian_sid_daily_gnome_speakup':
          my_title: 'Debian (sid daily build CD) GNOME desktop install with Speakup support'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
          my_description: 'Do a fully automated installation of Debian GNOME desktop with Speakup support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_speakup_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
          my_time: ''
-         my_trigger: 'g-i-installation_debian_sid_gnome'
+         my_trigger: ''
          my_recipients: 'holger@layer-acht.org debian-accessibility@lists.debian.org'
       - '{name}_debian_sid_daily_xfce':
          my_title: 'Debian (sid daily build CD) Xfce desktop install'

@@ -11,3 +11,11 @@ export http_proxy="http://localhost:3128"
 COMPRESSPROG="pigz"
 # remove /run/shm bindmount once we are running jessie - this is a workaround for #700591
 BINDMOUNTS="$BINDMOUNTS /run/shm /dev/shm"
+
+if [ "$(readlink /proc/1/ns/uts)" = "$(readlink /proc/self/ns/uts)" ]; then
+	# regular build
+	umask 0022
+else
+	# modified build
+	umask 0002
+fi

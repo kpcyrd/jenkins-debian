@@ -115,7 +115,7 @@ if [ -s $RESULT ] ; then
 	cat $RESULT
 	echo
 	ZOMBIES=$(echo $RESULT | cut -d " " -f1 | xargs echo)
-	echo "kill -9 $ZOMBIS"
+	echo "kill -9 $ZOMBIES"
 	echo "Please cleanup manually."
 	echo
 	DIRTY=true

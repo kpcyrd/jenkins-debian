@@ -38,24 +38,24 @@ section must have at least a `query` defining what to file in.
 """
 
 queries = {
-    'scheduled': 'SELECT name FROM sources_scheduled ORDER BY date_scheduled',
-    'reproducible_all': 'SELECT name FROM source_packages WHERE status = "reproducible" ORDER BY build_date DESC',
-    'reproducible_last24h': 'SELECT name FROM source_packages WHERE status = "reproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'reproducible_last48h': 'SELECT name FROM source_packages WHERE status = "reproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'reproducible_all_abc': 'SELECT name FROM source_packages WHERE status = "reproducible" ORDER BY name',
-    'FTBR_all': 'SELECT name FROM source_packages WHERE status = "unreproducible" ORDER BY build_date DESC',
-    'FTBR_last24h': 'SELECT name FROM source_packages WHERE status = "unreproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'FTBR_last48h': 'SELECT name FROM source_packages WHERE status = "unreproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBR_all_abc': 'SELECT name FROM source_packages WHERE status = "unreproducible" ORDER BY name',
-    'FTBFS_all': 'SELECT name FROM source_packages WHERE status = "FTBFS" ORDER BY build_date DESC',
-    'FTBFS_last24h': 'SELECT name FROM source_packages WHERE status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'FTBFS_last48h': 'SELECT name FROM source_packages WHERE status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBFS_all_abc': 'SELECT name FROM source_packages WHERE status = "FTBFS" ORDER BY name',
-    '404_all': 'SELECT name FROM source_packages WHERE status = "404" ORDER BY build_date DESC',
-    '404_all_abc': 'SELECT name FROM source_packages WHERE status = "404" ORDER BY name',
-    'not_for_us_all': 'SELECT name FROM source_packages WHERE status = "not for us" ORDER BY build_date DESC',
-    'not_for_us_all_abc': 'SELECT name FROM source_packages WHERE status = "not for us" ORDER BY name',
-    'blacklisted_all': 'SELECT name FROM source_packages WHERE status = "blacklisted" ORDER BY name'
+    'scheduled': 'SELECT sources.name FROM schedule JOIN sources ON schedule.package_id=sources.id ORDER BY schedule.date_scheduled',
+    'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" ORDER BY r.build_date DESC',
+    'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
+    'reproducible_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
+    'reproducible_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" ORDER BY name',
+    'FTBR_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" ORDER BY build_date DESC',
+    'FTBR_last24h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
+    'FTBR_last48h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
+    'FTBR_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" ORDER BY name',
+    'FTBFS_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" ORDER BY build_date DESC',
+    'FTBFS_last24h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
+    'FTBFS_last48h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
+    'FTBFS_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" ORDER BY name',
+    '404_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "404" ORDER BY build_date DESC',
+    '404_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "404" ORDER BY name',
+    'not_for_us_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "not for us" ORDER BY build_date DESC',
+    'not_for_us_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "not for us" ORDER BY name',
+    'blacklisted_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "blacklisted" ORDER BY name'
 }
 
 pages = {
@@ -259,7 +259,7 @@ def build_leading_text_section(section, rows):
         html += '</a>'
     html += '\n' + tab
     if section.get('text') and section.get('timely') and section['timely']:
-        count = len(query_db(queries[section['query2']]))
+        count = len(query_db(queries[section['query2']].format(suite=suite)))
         percent = round(((count/count_total)*100), 1)
         html += section['text'].substitute(tot=total, percent=percent,
                                            count_total=count_total,
@@ -274,7 +274,7 @@ def build_leading_text_section(section, rows):
 
 def build_page_section(section):
     try:
-        rows = query_db(queries[section['query']])
+        rows = query_db(queries[section['query']].format(suite=suite))
         # remember: this is a list of tuples! so while looping the package
         # name will be pkg[0] and not simply pkg.
     except:
@@ -317,7 +317,7 @@ def build_page(page):
 
 
 bugs = get_bugs()
-
+suite = 'sid'
 
 if __name__ == '__main__':
     for page in pages.keys():

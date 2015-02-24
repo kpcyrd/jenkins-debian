@@ -13,23 +13,24 @@ from reproducible_common import *
 
 import json
 
-result = sorted(query_db('SELECT name, version, status , build_date ' +
-                         'FROM source_packages ' +
-                         'WHERE status != ""'))
-count = int(query_db('SELECT COUNT(name) FROM source_packages ' +
-                           'WHERE status != ""')[0][0])
+output = []
 
-log.info('processing ' + str(count) + ' package to create .json output')
+log.info('Creating json dump of current reproducible status')
 
-all_pkgs = []
-keys = ['package', 'version', 'status', 'build_date']
+query = 'SELECT s.name, r.version, s.suite, r.status, r.build_date ' + \
+        'FROM results AS r JOIN sources AS s ON r.package_id = s.id '+ \
+        'WHERE status != ""'
+result = sorted(query_db(query))
+log.info('\tprocessing ' + str(len(result)))
+
+keys = ['package', 'version', 'suite', 'status', 'build_date']
 for row in result:
     pkg = dict(zip(keys, row))
-    pkg['suite'] = 'sid'
-    all_pkgs.append(pkg)
+    log.debug(pkg)
+    output.append(pkg)
 
 with open(REPRODUCIBLE_JSON, 'w') as fd:
-    json.dump(all_pkgs, fd, indent=4, sort_keys=True)
+    json.dump(output, fd, indent=4, sort_keys=True)
 
 log.info(REPRODUCIBLE_URL + '/reproducible.json has been updated.')
 

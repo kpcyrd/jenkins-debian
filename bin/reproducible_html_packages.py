@@ -56,15 +56,16 @@ def sizeof_fmt(num):
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
-def check_package_status(package):
+def check_package_status(package, suite):
     """
     This returns a tuple containing status, version and build_date of the last
     version of the package built by jenkins CI
     """
     try:
-        query = 'SELECT status,version,build_date ' + \
-                'FROM source_packages ' + \
-                'WHERE name="%s"' % package
+        query = ('SELECT r.status, r.version, r.build_date ' +
+                 'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
+                 'WHERE s.name="{pkg}" ' +
+                 'AND s.suite="{suite}"').format(pkg=package, suite=suite)
         result = query_db(query)[0]
     except IndexError:
         print_critical_message('This query produces no results: ' + query +
@@ -131,7 +132,7 @@ def gen_bugs_links(package, bugs):
     return html
 
 
-def gen_packages_html(packages, no_clean=False):
+def gen_packages_html(packages, suite='sid', no_clean=False):
     """
     generate the /rb-pkg/package.html page
     packages should be a list
@@ -142,7 +143,7 @@ def gen_packages_html(packages, no_clean=False):
     log.info('Generating the pages of ' + str(total) + ' package(s)')
     for pkg in sorted(packages):
         pkg = str(pkg)
-        status, version, build_date = check_package_status(pkg)
+        status, version, build_date = check_package_status(pkg, suite)
         log.info('Generating the page of ' + pkg + ' ' + version +
                  ' built at ' + build_date)
 
@@ -167,19 +168,23 @@ def gen_packages_html(packages, no_clean=False):
     if not no_clean:
         purge_old_pages() # housekeep is always good
 
-def gen_all_rb_pkg_pages(no_clean=False):
-    query = 'SELECT name FROM source_packages WHERE status != ""'
+def gen_all_rb_pkg_pages(suite='sid', no_clean=False):
+    query = 'SELECT s.name ' + \
+            'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+            'WHERE r.status !="" AND s.suite="%s"' % suite
     rows = query_db(query)
     pkgs = [str(i[0]) for i in rows]
     log.info('Processing all the package pages, ' + str(len(pkgs)))
-    gen_packages_html(pkgs, no_clean)
+    gen_packages_html(pkgs, suite, no_clean)
 
 def purge_old_pages():
     presents = sorted(os.listdir(RB_PKG_PATH))
     for page in presents:
         pkg = page.rsplit('.', 1)[0]
         log.debug('Checking if ' + page + ' (from ' + pkg + ') is still needed')
-        query = 'SELECT name FROM source_packages WHERE name="%s"' % pkg
+        query = 'SELECT s.name ' + \
+                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+                'WHERE s.name="%s" AND r.status != "" AND s.suite="sid"' % pkg
         result = query_db(query)
         if not result: # actually, the query produces no results
             log.info('There is no package named ' + pkg + ' in the database.' +

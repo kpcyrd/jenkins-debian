@@ -11,26 +11,22 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 schedule_packages() {
-	# these packages are manually scheduled, so should have high prio
+	# these packages are manually scheduled, so should have high priority,
 	# so schedule them in the past, so they are picked earlier :)
 	DATE="2014-10-01 00:23"
 	TMPFILE=$(mktemp)
 	for PKG in $PACKAGES ; do
-		echo "REPLACE INTO sources_scheduled VALUES ('$PKG','$DATE','');" >> $TMPFILE
+		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$PKG', '$DATE', '');" >> $TMPFILE
 	done
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE
-	echo "============================================================================="
-	echo "The following $TOTAL source packages have been (re-)scheduled: $PACKAGES"
-	echo "============================================================================="
-	echo
 }
 
 check_candidates() {
 	PACKAGES=""
 	TOTAL=0
 	for PKG in $CANDIDATES ; do
-		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name from sources WHERE name = '$PKG';")
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id from sources WHERE name='$PKG' AND suite='$SUITE';")
 		if [ ! -z "$RESULT" ] ; then
 			PACKAGES="$PACKAGES $RESULT"
 			let "TOTAL+=1"
@@ -54,6 +50,8 @@ check_candidates() {
 # main
 #
 set +x
+SUITE="$1"
+shift
 CANDIDATES="$@"
 check_candidates
 if [ ${#PACKAGES} -gt 256 ] ; then
@@ -72,4 +70,7 @@ schedule_packages
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
+echo "============================================================================="
+echo "The following $TOTAL source $PACKAGES_TXT $ACTION: $PACKAGES"
+echo "============================================================================="
 echo

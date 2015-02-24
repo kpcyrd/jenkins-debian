@@ -3,7 +3,7 @@
 # Copyright 2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -30,11 +30,13 @@ check_candidates() {
 	PACKAGES=""
 	TOTAL=0
 	for PKG in $CANDIDATES ; do
+		echo "checking $PKG"
 		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name from sources WHERE name = '$PKG';")
 		if [ ! -z "$RESULT" ] ; then
 			PACKAGES="$PACKAGES $RESULT"
 			let "TOTAL+=1"
 		fi
+		echo "Debug: $PKG $RESULT"
 	done
 	case $TOTAL in
 	0)

@@ -13,6 +13,9 @@ common_init "$@"
 # create dirs for results
 mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/rbuild/
 
+# for now we have actual support only for sid
+SUITE="sid"
+
 cleanup_all() {
 	rm -r $TMPDIR $TMPCFG
 }
@@ -25,7 +28,7 @@ cleanup_userContent() {
 
 update_db_and_html() {
 	# unmark build as properly finished
-	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM sources_scheduled WHERE name = '$SRCPACKAGE';"
+	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	set +x
 	# (force) update html page for package
 	# (This should normally not be needed except for long building packages
@@ -83,11 +86,12 @@ call_debbindiff() {
 		echo
 		echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"reproducible\",  \"$DATE\")"
+		# FIXME calculate build_duration and push it to the db
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE')"
 		update_db_and_html
 	else
 		echo | tee -a ${RBUILDLOG}
-		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly " | tee -a ${RBUILDLOG}
+		echo -n "$(date) - ${SRCPACKAGE}/${SUITE} failed to build reproducibly " | tee -a ${RBUILDLOG}
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1 || true
 		if [ -f ./${LOGFILE} ] ; then
 			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
@@ -100,12 +104,14 @@ call_debbindiff() {
 		else
 			echo "." | tee -a ${RBUILDLOG}
 		fi
-		OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM source_packages WHERE name=\"${SRCPACKAGE}\"")
+		OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 		if [ "${OLD_STATUS}" == "reproducible" ]; then
 			MESSAGE="${SRCPACKAGE}: status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SRCPACKAGE}"
+			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"unreproducible\", \"$DATE\")"
+		# FIXME calculate build_duration and push it to the db
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE')"
 		update_db_and_html
 	fi
 }
@@ -114,44 +120,45 @@ TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
-RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name,date_scheduled FROM sources_scheduled WHERE date_build_started = '' ORDER BY date_scheduled LIMIT 1")
+RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.id, s.name, sch.date_scheduled FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' AND s.suite = '$SUITE' ORDER BY date_scheduled LIMIT 1")
 if [ -z "$RESULT" ] ; then
 	echo "No packages scheduled, sleeping 30m."
 	sleep 30m
 else
 	set +x
-	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f1)
-	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f2)
+	SRCPKGID=$(echo $RESULT|cut -d "|" -f1)
+	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f2)
+	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f3)
 	echo "============================================================================="
-	echo "Trying to build ${SRCPACKAGE} reproducibly now."
+	echo "Trying to build ${SRCPACKAGE}/${SUITE} reproducibly now."
 	echo "============================================================================="
 	set -x
 	PREDATE=$(date -d "1 minute ago" +'%Y-%m-%d %H:%M')
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	# mark build attempt
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO sources_scheduled VALUES ('$SRCPACKAGE','$SCHEDULED_DATE','$DATE');"
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
-	echo "Starting to build ${SRCPACKAGE} on $DATE" | tee ${RBUILDLOG}
+	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
-	# host has only sid in deb-src in sources.list
 	set +e
-	apt-get --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+	apt-get source --download-only --only-source --target-release ${SUITE} ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		echo "Download of ${SRCPACKAGE} sources failed." | tee -a ${RBUILDLOG}
+		echo "Download of ${SRCPACKAGE}/${SUITE} sources failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+		apt-get source --download-only --only-source --target-release ${SUITE} ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] ; then
-		echo "Warning: Download of ${SRCPACKAGE} sources failed." | tee -a ${RBUILDLOG}
+		echo "Warning: Download of ${SRCPACKAGE}/${SUITE} sources failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"None\", \"404\", \"$DATE\")"
+		# FIXME calculate build_duration and push it to the db
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', 'None', '404', '$DATE')"
 		set +x
 		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
 		update_db_and_html
@@ -181,7 +188,8 @@ else
 		done
 		if ! $SUITABLE ; then
 			set -x
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"not for us\", \"$DATE\")"
+			# FIXME calculate build_duration and push it to the db
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE')"
 			set +x
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
 			update_db_and_html
@@ -196,7 +204,7 @@ else
 		( timeout 12h nice ionice -c 3 sudo \
 		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
 		  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
-		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
+		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
 		) 2>&1 | tee ${TMPLOG}
 		set +x
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
@@ -207,7 +215,7 @@ else
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
 			echo "============================================================================="
-			echo "Re-building ${SRCPACKAGE} now."
+			echo "Re-building ${SRCPACKAGE}/${SUITE} now."
 			echo "============================================================================="
 			set -x
 			printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
@@ -217,7 +225,7 @@ else
 			  LANG="fr_CH.UTF-8" \
 			  LC_ALL="fr_CH.UTF-8" \
 			  unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \
-			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_${EVERSION}.dsc
+			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
 			) 2>&1 | tee -a ${RBUILDLOG}
 			set +x
 			if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
@@ -238,7 +246,8 @@ else
 		if [ $FTBFS -eq 1 ] ; then
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO source_packages VALUES (\"${SRCPACKAGE}\", \"${VERSION}\", \"FTBFS\", \"$DATE\")"
+			# FIXME calculate build_duration and push it to the db
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE')"
 			update_db_and_html
 		fi
 	fi

@@ -28,7 +28,6 @@ write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
 SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
 for PKG in $SOURCES ; do
-	write_page "<tr><td>$PKG</td>"
 	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
 	CRUFT=""
 	WARN=false
@@ -76,15 +75,24 @@ for PKG in $SOURCES ; do
 		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
 	fi
 	if [ ! -z "$EXP" ] ; then
-		EXP="$(echo $EXP|sed 's# #<br />#g')"
+		CEXP=""
+		if [ "${PKG:0:3}" == "lib" ] ; then
+			PREFIX=${PKG:0:4}
+		else
+			PREFIX=${PKG:0:1}
+		fi
+		for i in $EXP ; do
+			CEXP="$CEXP<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+		done
 	fi
 	#
 	# write output
 	#
+	write_page "<tr><td>$PKG</td>"
 	write_page "<td>$BET</td>"
 	write_page "<td>$CSID</td>"
 	write_page "<td>$CRUFT</td>"
-	write_page "<td>$EXP</td>"
+	write_page "<td>$CEXP</td>"
 	write_page "</tr>"
 done
 write_page "</table></p>"

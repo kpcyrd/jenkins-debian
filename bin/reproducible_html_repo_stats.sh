@@ -56,17 +56,17 @@ for PKG in $SOURCES ; do
 	CSID=""
 	for i in $SID ; do
 		if dpkg --compare-versions "$i" gt "$BET" ; then
-			CSID="$CSID<span class=\"orange\">$i</span><br />"
-			BET=""
+			CSID="$CSID<span class=\"green\">$i</span><br />"
 			if [ ! -z "$BET" ] ; then
 				CRUFT="$BET $CRUFT"
+				BET=""
 			fi
 		else
 			CSID="$CSID$i<br />"
 		fi
 	done
 	if [ ! -z "$BET" ] ; then
-		BET="<span class=\"green\">$BET</span>"
+		BET="<span class=\"purple\">$BET</span>"
 	else
 		BET="&nbsp;"
 	fi

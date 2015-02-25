@@ -195,6 +195,7 @@ else
 		printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
 		( timeout 12h nice ionice -c 3 sudo \
 		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
+		  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
 		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution sid ${SRCPACKAGE}_*.dsc
 		) 2>&1 | tee ${TMPLOG}
 		set +x
@@ -212,6 +213,7 @@ else
 			printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
 			( timeout 12h nice ionice -c 3 sudo \
 			  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
+			  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
 			  LANG="fr_CH.UTF-8" \
 			  LC_ALL="fr_CH.UTF-8" \
 			  unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \

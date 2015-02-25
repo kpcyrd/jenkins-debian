@@ -149,6 +149,7 @@ properties:
 
 
 * misc
+** show package status (briefly) on https://reproducible.debian.net/issues/*html
 ** turn job-cfg/g-i.yaml into .yaml.py
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible

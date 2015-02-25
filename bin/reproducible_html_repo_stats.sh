@@ -43,7 +43,7 @@ for PKG in $SOURCES ; do
 			BET=${VERSION}
 		fi
 	done
-	SID=$(rmadison -s sid $PKG | cut -d "|" -f2|xargs echo|sed 's# #<br />#g')
+	SID=$(rmadison -s sid $PKG | cut -d "|" -f2|xargs echo)
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
 			WARN=true
@@ -51,18 +51,18 @@ for PKG in $SOURCES ; do
 		fi
 	done
 	#
-	# colorize output
+	# format output
 	#
 	CSID=""
 	for i in $SID ; do
 		if dpkg --compare-versions "$i" gt "$BET" ; then
-			CSID="$CSID <span class=\"orange\">$i</span>"
+			CSID="$CSID<span class=\"orange\">$i</span><br />"
 			BET=""
 			if [ ! -z "$BET" ] ; then
 				CRUFT="$BET $CRUFT"
 			fi
 		else
-			CSID="$CSID $I"
+			CSID="$CSID$i<br />"
 		fi
 	done
 	if [ ! -z "$BET" ] ; then
@@ -70,17 +70,15 @@ for PKG in $SOURCES ; do
 	else
 		BET="&nbsp;"
 	fi
+	if [ ! -z "$CRUFT" ] ; then
+		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
+	fi
 	#
 	# write output
 	#
 	write_page "<td>$BET</td>"
 	write_page "<td>$CSID</td>"
-	if $WARN ; then
-		echo "Warning: more than one version of $PKG available in our repo, please clean up."
-		write_page "<td>$(echo $CRUFT|sed 's# #<br />#g')</td>"
-	else
-		write_page "<td>&nbsp;</td>"
-	fi
+	write_page "<td>$CRUFT</td>"
 	write_page "</tr>"
 done
 write_page "</table></p>"

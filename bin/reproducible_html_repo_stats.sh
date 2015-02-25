@@ -50,7 +50,7 @@ for PKG in $SOURCES ; do
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
-	EXP=$(rmadison -s experimental $PKG | cut -d "|" -f2|xargs echo)
+	EXPERIMENTAL=$(rmadison -s experimental $PKG | cut -d "|" -f2|xargs echo)
 	#
 	# format output
 	#
@@ -74,16 +74,17 @@ for PKG in $SOURCES ; do
 	if [ ! -z "$CRUFT" ] ; then
 		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
 	fi
-	if [ ! -z "$EXP" ] ; then
+	if [ ! -z "$EXPERIMENTAL" ] ; then
 		CEXP=""
 		if [ "${PKG:0:3}" == "lib" ] ; then
 			PREFIX=${PKG:0:4}
 		else
 			PREFIX=${PKG:0:1}
 		fi
-		for i in $EXP ; do
+		for i in $EXPERIMENTAL ; do
 			CEXP="$CEXP<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
 		done
+		EXPERIMENTAL=$CEXP
 	fi
 	#
 	# write output
@@ -92,7 +93,7 @@ for PKG in $SOURCES ; do
 	write_page "<td>$BET</td>"
 	write_page "<td>$CSID</td>"
 	write_page "<td>$CRUFT</td>"
-	write_page "<td>$CEXP</td>"
+	write_page "<td>$EXPERIMENTAL</td>"
 	write_page "</tr>"
 done
 write_page "</table></p>"

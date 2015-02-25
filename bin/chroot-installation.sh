@@ -49,25 +49,29 @@ cleanup_all() {
 }
 
 execute_ctmpfile() {
+	echo "echo xxxxxSUCCESSxxxxx" >> $CTMPFILE
 	set -x
 	chmod +x $CTMPFILE
-	#sudo chroot $CHROOT_TARGET $TMPFILE
 	set -o pipefail		# see eg http://petereisentraut.blogspot.com/2010/11/pipefail.html
-	if ! $(sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG) ; then
+	(sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG) || true
+	RESULT=$(grep "xxxxxSUCCESSxxxxx" $TMPLOG || true)
+	if [ -z "$RESULT" ] ; then
 		RESULT=$(egrep "Failed to fetch.*Unable to connect to" $TMPLOG || true)
 		if [ ! -z "$RESULT" ] ; then
 			echo
+			echo "Warning: Network problem detected."
 			echo "Trying to workaround temporarily failure fetching packages, trying again..."
+			kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "h01ger: check $BUILD_URL for 'Trying to workaround'..."
 			echo
 			sudo chroot $CHROOT_TARGET $TMPFILE
 		else
+			echo "Failed to run $TMPFILE in $CHROOT_TARGET."
 			exit 1
 		fi
 	fi
 	rm $CTMPFILE
 	set +o pipefail
 	set +x
-	echo "Debug: This should only be printed on success."
 }
 
 prepare_bootstrap() {

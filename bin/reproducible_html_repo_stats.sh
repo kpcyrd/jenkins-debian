@@ -24,7 +24,7 @@ write_page "<p>These source packages are different from sid in our apt repositor
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions our repo<br />(needed for reproducing old builds)</th></tr>"
+write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions in our repo<br />(needed for reproducing old builds)</th></tr>"
 SOURCES=$(grep-dctrl -n -s source -FArchitecture amd64 -o -FArchitecture all $TMPFILE | sort -u)
 for PKG in $SOURCES ; do
 	write_page "<tr><td>$PKG</td>"

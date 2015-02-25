@@ -18,6 +18,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
+* rename maintainance jobs into maintenance jobs
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * set up a dedicated mailinglist, or maybe even two, one for discussion and one for commits.

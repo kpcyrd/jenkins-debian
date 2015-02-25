@@ -24,7 +24,7 @@ write_page "<p>These source packages are different from sid in our apt repositor
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions in our repo<br />(needed for reproducing old builds)</th></tr>"
+write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in experimental</br /(not relevant for reproducible.debian.net <em>yet</em>)</tr>"
 SOURCES=$(grep-dctrl -n -s source -FArchitecture amd64 -o -FArchitecture all $TMPFILE | sort -u)
 for PKG in $SOURCES ; do
 	write_page "<tr><td>$PKG</td>"
@@ -50,6 +50,7 @@ for PKG in $SOURCES ; do
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
+	EXP=$(rmadison -s experimental $PKG | cut -d "|" -f2|xargs echo)
 	#
 	# format output
 	#
@@ -73,12 +74,16 @@ for PKG in $SOURCES ; do
 	if [ ! -z "$CRUFT" ] ; then
 		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
 	fi
+	if [ ! -z "$EXP" ] ; then
+		EXP="$(echo $EXP|sed 's# #<br />#g')"
+	fi
 	#
 	# write output
 	#
 	write_page "<td>$BET</td>"
 	write_page "<td>$CSID</td>"
 	write_page "<td>$CRUFT</td>"
+	write_page "<td>$EXP</td>"
 	write_page "</tr>"
 done
 write_page "</table></p>"

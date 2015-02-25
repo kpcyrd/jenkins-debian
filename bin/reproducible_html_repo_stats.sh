@@ -20,11 +20,11 @@ write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
 curl http://reproducible.alioth.debian.org/debian/Packages > $TMPFILE
 
-write_page "<p>These source packages are different from sid in our toolchain. They are available in an apt repository on alioth which is accessable with these sources.lists entries:<pre>"
+write_page "<p>These source packages are different from sid in our apt repository on alioth. They are available for testing using these sources.lists entries:<pre>"
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>cruft in our repo (if any)</th></tr>"
+write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions our repo<br />(needed for reproducing old builds)</th></tr>"
 SOURCES=$(grep-dctrl -n -s source -FArchitecture amd64 -o -FArchitecture all $TMPFILE | sort -u)
 for PKG in $SOURCES ; do
 	write_page "<tr><td>$PKG</td>"
@@ -32,6 +32,9 @@ for PKG in $SOURCES ; do
 	CRUFT=""
 	WARN=false
 	BET=""
+	#
+	# gather versions of a package
+	#
 	for VERSION in ${VERSIONS} ; do
 		if [ "$BET" = "" ] ; then
 			BET=${VERSION}
@@ -40,15 +43,38 @@ for PKG in $SOURCES ; do
 			BET=${VERSION}
 		fi
 	done
-	write_page "<td>$BET</td>"
 	SID=$(rmadison -s sid $PKG | cut -d "|" -f2|xargs echo|sed 's# #<br />#g')
-	write_page "<td>$SID</td>"
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
 			WARN=true
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
+	#
+	# colorize output
+	#
+	CSID=""
+	for i in $SID ; do
+		if dpkg --compare-versions "$i" gt "$BET" ; then
+			CSID="$CSID <span class=\"orange\">$i</span>"
+			BET=""
+			if [ ! -z "$BET" ] ; then
+				CRUFT="$BET $CRUFT"
+			fi
+		else
+			CSID="$CSID $I"
+		fi
+	done
+	if [ ! -z "$BET" ] ; then
+		BET="<span class=\"green\">$BET</span>"
+	else
+		BET="&nbsp;"
+	fi
+	#
+	# write output
+	#
+	write_page "<td>$BET</td>"
+	write_page "<td>$CSID</td>"
 	if $WARN ; then
 		echo "Warning: more than one version of $PKG available in our repo, please clean up."
 		write_page "<td>$(echo $CRUFT|sed 's# #<br />#g')</td>"

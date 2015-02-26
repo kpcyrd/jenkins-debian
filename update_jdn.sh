@@ -149,6 +149,7 @@ sudo apt-get install -t wheezy-backports \
 			linux-image-amd64 \
 			munin \
 			munin-plugins-extra \
+			python3-debian \
 			qemu \
 			qemu-kvm \
 			qemu-system-x86 \

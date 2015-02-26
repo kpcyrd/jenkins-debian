@@ -64,8 +64,8 @@ call_debbindiff() {
 		# write locks are only done by the schroot setup job
 		touch $DBDCHROOT_READLOCK
 	fi
-	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --version) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-	( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
+	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --version) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
+	( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
 	set -e

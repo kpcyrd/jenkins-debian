@@ -129,7 +129,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot'
+    name: '{name}_setup_schroot_sid_debbindiff'
 
 - job-template:
     defaults: reproducible
@@ -199,10 +199,10 @@
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
-        - '{name}_setup_schroot':
+        - '{name}_setup_schroot_sid_debbindiff':
             my_description: 'Setup schroot for running debbindiff in a sid environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid sid debbindiff'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid-debbindiff sid debbindiff'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'

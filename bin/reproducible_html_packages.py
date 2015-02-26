@@ -78,10 +78,11 @@ def check_package_status(package, suite):
     return (status, version, build_date)
 
 def gen_extra_links(package, version):
+    eversion = strip_epoch(version)
     notes = NOTES_PATH + '/' + package + '_note.html'
-    rbuild = RBUILD_PATH + '/' + package + '_' + strip_epoch(version) + '.rbuild.log'
-    buildinfo = BUILDINFO_PATH + '/' + package + '_' + strip_epoch(version) + '_amd64.buildinfo'
-    dbd = DBD_PATH + '/' + package + '_' + strip_epoch(version) + '.debbindiff.html'
+    rbuild = RBUILD_PATH + '/' + package + '_' + eversion + '.rbuild.log'
+    buildinfo = BUILDINFO_PATH + '/' + package + '_' + eversion + '_amd64.buildinfo'
+    dbd = DBD_PATH + '/' + package + '_' + eversion + '.debbindiff.html'
 
     links = ''
     default_view = False
@@ -93,21 +94,21 @@ def gen_extra_links(package, version):
     else:
         log.debug('notes not detected at ' + notes)
     if os.access(dbd, os.R_OK):
-        url = DBD_URI + '/' + package + '_' + strip_epoch(version) + '.debbindiff.html'
+        url = DBD_URI + '/' + package + '_' + eversion + '.debbindiff.html'
         links += '<a href="' + url + '" target="main">debbindiff</a>\n'
         if not default_view:
             default_view = url
     else:
         log.debug('debbindiff not detetected at ' + dbd)
     if pkg_has_buildinfo(package, version):
-        url = BUILDINFO_URI + '/' + package + '_' + strip_epoch(version) + '_amd64.buildinfo'
+        url = BUILDINFO_URI + '/' + package + '_' + eversion + '_amd64.buildinfo'
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:
             default_view = url
     else:
         log.debug('buildinfo not detected at ' + buildinfo)
     if os.access(rbuild, os.R_OK):
-        url = RBUILD_URI + '/' + package + '_' + strip_epoch(version) + '.rbuild.log'
+        url = RBUILD_URI + '/' + package + '_' + eversion + '.rbuild.log'
         log_size = os.stat(rbuild).st_size
         links +='<a href="' + url + '" target="main">rbuild (' + \
                 sizeof_fmt(log_size) + ')</a>\n'

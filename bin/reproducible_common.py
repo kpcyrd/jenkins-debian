@@ -351,13 +351,16 @@ def strip_epoch(version):
     except IndexError:
         return version
 
-def pkg_has_buildinfo(package, version=False):
+def pkg_has_buildinfo(package, version=False, suite='sid', arch='amd64'):
     """
     if there is no version specified it will use the version listed in
     reproducible.db
     """
     if not version:
-        query = 'SELECT version FROM source_packages WHERE name="%s"' % package
+        query = 'SELECT r.version ' + \
+                'FROM results AS r JOIN sources AS s on r.package_id=s.id ' + \
+                'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
+        query = query.format(package, suite, arch)
         version = str(query_db(query)[0][0])
     buildinfo = BUILDINFO_PATH + '/' + package + '_' + \
                 strip_epoch(version) + '_amd64.buildinfo'

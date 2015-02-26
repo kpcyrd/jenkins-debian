@@ -49,7 +49,6 @@ fi
 #
 add_repokey() {
 	TMPFILE=$1
-	shift
 	cat > $TMPFILE <<- EOF
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -81,6 +80,8 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 =X8YA
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 EOF
+	echo $TMPFILE
+	ls -la $TMPFILE
 }
 
 bootstrap() {
@@ -100,7 +101,7 @@ bootstrap() {
 	if [ "$1" == "reproducible" ] ; then
 		TMPFILE=$(mktemp -u)
 		add_repokey $CHROOT_TARGET/$TMPFILE
-		sudo chroot $CHROOT_TARGET $TMPFILE
+		sudo chroot $CHROOT_TARGET bash $TMPFILE
 		rm $TMPFILE
 		shift
 	fi

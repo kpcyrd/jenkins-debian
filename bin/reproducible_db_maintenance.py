@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
-# Based on variuos reproducible_* files © 2014 Holger Levsen <holger@layer-acht.org>
+# Based on various reproducible_* files © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
 # Depends: python3

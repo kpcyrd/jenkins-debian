@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
-# Based on various reproducible_* files © 2014 Holger Levsen <holger@layer-acht.org>
+# Based on various reproducible_* files © 2014-2015 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
 # Depends: python3
 #
-# Track the database schema and changes to it. plus allow a simple creation
+# Track the database schema and changes to it. Also allow simple creation
 # and migration of it.
 
 from reproducible_common import *
@@ -141,7 +141,7 @@ db_schema = [
     }
 ]
 
-# and here there are a list of queries, split by update, that can be used to
+# and here are some queries, split by update, that can be used to
 # update the live schema
 schema_updates = {
     1: ['INSERT INTO rb_schema VALUES ("1", "' + now + '")'],
@@ -215,7 +215,7 @@ schema_updates = {
 
 def db_create_tables():
     """
-    Check wheter all tables are present, and, if not, create them.
+    Check whether all tables are present, and create them if not.
     The check is done against sqlite_master, a reserved sqlite table
     containing all database metadata.
     """
@@ -232,9 +232,9 @@ def db_create_tables():
 def db_update():
     """
     Update the database schema.
-    It get a list of query to perform from schema_updates, and (if needed)
+    Get a list of queries to perform from schema_updates, and (if needed)
     some python code from the above run_update_code().
-    The need for an update is detect by checking the biggest value in the
+    The need for an update is detected by checking the biggest value in the
     rb_schema table against the biggest value in the schema_updates dictionary
     """
     current = query_db('SELECT MAX(version) FROM rb_schema')[0][0]

@@ -55,108 +55,108 @@ fi
 
 #
 # install packages we need
-# (more or less grouped into more-then-nice-to-have, needed-while-things-are-new, needed)
 #
-sudo apt-get install 	vim \
-			screen \
-			less \
-			etckeeper \
-			moreutils \
-			curl \
-			mtr-tiny \
-			dstat \
-			devscripts \
+sudo apt-get install	apache2 \
+			apt-file \
+			apt-listchanges \
 			bash-completion \
+			bc \
+			build-essential \
+			calamaris \
+			cron-apt \
+			curl \
+			debootstrap \
+			devscripts \
+			devscripts \
+			dnsmasq-base \
+			dose-extra \
+			dstat \
+			etckeeper \
+			ffmpeg \
+			figlet \
+			gawk \
+			ghc \
+			gocr \
+			graphviz \
+			guestmount \
+			haveged \
+			imagemagick \
+			ip2host \
+			less \
+			libapache2-mod-macro \
+			libav-tools \
+			libavcodec-extra-53 \
+			libcap2-bin \
+			libfile-touch-perl \
+			libjson-rpc-perl \
+			libsikuli-script-java \
+			libsoap-lite-perl \
+			libvirt-ruby \
+			libvpx1 \
+			libxslt1-dev \
+			molly-guard \
+			moreutils \
+			mr \
+			mtr-tiny \
+			ntp \
+			openjdk-7-jre \
+			pigz \
+			postgresql-client-9.1 \
+			poxml \
+			procmail \
+			python-hachoir-metadata \
+			python-imaging \
+			python-lzma \
+			python-pip \
+			python-rpy2 \
+			python-setuptools \
+			python-twisted \
+			python-yaml \
+			python3-psycopg2 \
+			python3-yaml \
+			radvd \
+			ruby-json \
+			ruby-rspec \
+			schroot \
+			screen \
 			shorewall \
 			shorewall6 \
-			cron-apt \
-			apt-listchanges \
-			calamaris \
-			procmail \
-			libjson-rpc-perl \
-			libfile-touch-perl \
-			zutils \
-			ip2host \
-			pigz \
-			build-essential \
-			python-setuptools \
-			molly-guard \
-			debootstrap \
-			sudo \
-			figlet \
-			graphviz \
-			apache2 \
-			libapache2-mod-macro \
-			python-yaml \
-			python-pip \
-			mr \
+			sqlite3 \
 			subversion \
 			subversion-tools \
-			vnstat \
-			poxml \
-			vncsnapshot \
-			imagemagick \
-			libav-tools \
-			python-twisted \
-			python-imaging \
-			gocr \
-			guestmount \
-			schroot \
-			sqlite3 \
-			dose-extra \
-			apt-file \
-			python-lzma \
-			bc \
-			unzip \
-			python-hachoir-metadata \
-			ghc \
-			python-rpy2 \
-			libsoap-lite-perl \
-			haveged \
-			postgresql-client-9.1 \
-			xvfb \
-			virt-viewer \
-			libsikuli-script-java \
-			libxslt1-dev \
+			sudo \
+			syslinux \
 			tcpdump \
 			unclutter \
-			radvd \
+			unzip \
+			vim \
+			virt-viewer \
+			vncsnapshot \
+			vnstat \
 			x11-apps \
-			syslinux \
-			libcap2-bin \
-			devscripts \
-			libvirt-ruby \
-			ruby-rspec \
-			gawk \
-			ntp \
-			ruby-json \
 			x11vnc \
 			xtightvncviewer \
-			ffmpeg \
-			libavcodec-extra-53 \
-			libvpx1 \
-			dnsmasq-base \
-			openjdk-7-jre \
-			python3-yaml \
-			python3-psycopg2
-# debootstrap is affected by #766459 in wheezy
+			xvfb \
+			zutils
+
 sudo apt-get install -t wheezy-backports \
-			qemu \
-			debootstrap \
-			qemu-kvm \
-			qemu-system-x86 \
-			libvirt0 \
-			qemu-user-static \
 			binfmt-support \
-			libvirt-dev \
-			libvirt-bin \
-			seabios \
-			ruby-rjb \
-			ruby-packetfu \
 			cucumber \
+			debootstrap \
+			libvirt-bin \
+			libvirt-dev \
+			libvirt0 \
 			linux-image-amd64 \
 			munin \
-			munin-plugins-extra
+			munin-plugins-extra \
+			qemu \
+			qemu-kvm \
+			qemu-system-x86 \
+			qemu-user-static \
+			ruby-packetfu \
+			ruby-rjb \
+			seabios
+
 explain "Packages installed."
 
 echo "Also needs python-arpy from jessie..."

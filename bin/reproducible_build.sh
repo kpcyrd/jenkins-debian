@@ -11,15 +11,17 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-# create dirs for results
-mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/rbuild/
-
 # support different suites
 if [ -z "$1" ] ; then
 	SUITE="sid"
 else
 	SUITE="$1"
 fi
+
+# create dirs for results
+mkdir -p /var/lib/jenkins/userContent/dbd/
+mkdir -p /var/lib/jenkins/userContent/rbuild/
+mkdir -p /var/lib/jenkins/userContent/buildinfo/
 
 cleanup_all() {
 	rm -r $TMPDIR $TMPCFG

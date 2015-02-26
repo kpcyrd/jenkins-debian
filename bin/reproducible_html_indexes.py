@@ -15,6 +15,8 @@ from reproducible_common import *
 Reference doc for the folowing lists:
 
 * queries is just a list of queries. They are referred further below.
+  + every query return the following tuple:
+    (package_name, suite, architecture)
 * pages is just a list of pages. It is actually a dictionary, where every
   element is a page. Every page has:
   + `title`: The page title
@@ -38,24 +40,24 @@ section must have at least a `query` defining what to file in.
 """
 
 queries = {
-    'scheduled': 'SELECT sources.name FROM schedule JOIN sources ON schedule.package_id=sources.id ORDER BY schedule.date_scheduled',
-    'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" ORDER BY r.build_date DESC',
-    'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
-    'reproducible_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
-    'reproducible_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" ORDER BY name',
-    'FTBR_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" ORDER BY build_date DESC',
-    'FTBR_last24h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'FTBR_last48h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBR_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" ORDER BY name',
-    'FTBFS_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" ORDER BY build_date DESC',
-    'FTBFS_last24h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'FTBFS_last48h': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBFS_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" ORDER BY name',
-    '404_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "404" ORDER BY build_date DESC',
-    '404_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "404" ORDER BY name',
-    'not_for_us_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "not for us" ORDER BY build_date DESC',
-    'not_for_us_all_abc': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "not for us" ORDER BY name',
-    'blacklisted_all': 'SELECT name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "blacklisted" ORDER BY name'
+    'scheduled': 'SELECT sources.name, sources.suite, sources.architecture FROM schedule JOIN sources ON schedule.package_id=sources.id ORDER BY schedule.date_scheduled',
+    'reproducible_all': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" ORDER BY r.build_date DESC',
+    'reproducible_last24h': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
+    'reproducible_last48h': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
+    'reproducible_all_abc': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND r.status="reproducible" ORDER BY name',
+    'FTBR_all': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" ORDER BY build_date DESC',
+    'FTBR_last24h': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
+    'FTBR_last48h': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
+    'FTBR_all_abc': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "unreproducible" ORDER BY name',
+    'FTBFS_all': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" ORDER BY build_date DESC',
+    'FTBFS_last24h': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
+    'FTBFS_last48h': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
+    'FTBFS_all_abc': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "FTBFS" ORDER BY name',
+    '404_all': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "404" ORDER BY build_date DESC',
+    '404_all_abc': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "404" ORDER BY name',
+    'not_for_us_all': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "not for us" ORDER BY build_date DESC',
+    'not_for_us_all_abc': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "not for us" ORDER BY name',
+    'blacklisted_all': 'SELECT s.name, s.suite, s.architecture FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND status = "blacklisted" ORDER BY name'
 }
 
 pages = {
@@ -285,15 +287,18 @@ def build_page_section(section):
         return html  # do not output anything on the page.
     html += build_leading_text_section(section, rows)
     html += '<p>\n' + tab + '<code>\n'
-    for pkg in rows:
-        url = RB_PKG_URI + '/' + pkg[0] + '.html'
+    for row in rows:
+        pkg = row[0]
+        #suite = row[1]  # FIXME currently we build indexes pages only for sid
+        arch = row[2]
+        url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
         html += tab*2 + '<a href="' + url + '" class="'
-        if package_has_notes(pkg[0]):
+        if package_has_notes(pkg):
             html += 'noted'
         else:
             html += 'package'
-        html += '">' + pkg[0] + '</a>'
-        html += get_trailing_icon(pkg[0], bugs) + '\n'
+        html += '">' + pkg + '</a>'
+        html += get_trailing_icon(pkg, bugs) + '\n'
     html += tab + '</code>\n'
     html += '</p>'
     html = (tab*2).join(html.splitlines(True))

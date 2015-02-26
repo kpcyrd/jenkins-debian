@@ -242,7 +242,8 @@ def gen_html_issue(issue):
     try:
         affected += tab*4 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'
         for pkg in sorted(issues_count[issue]):
-            affected += tab*7 + '<a href="%s/%s.html" class="noted">%s</a>\n' \
+            # FIXME we currently consider notes only for sid
+            affected += tab*7 + '<a href="%s/sid/%s.html" class="noted">%s</a>\n' \
                         % (RB_PKG_URI, pkg, pkg)
     except KeyError:    # The note is not listed in any package, that is
         affected = '<i>None</i>'
@@ -373,7 +374,8 @@ def index_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            url = RB_PKG_URI + '/' + pkg + '.html'
+            # FIXME we currently consider notes only for sid
+            url = RB_PKG_URI + '/sid/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
         html += tab + '</code>\n'
@@ -410,7 +412,8 @@ def index_no_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            url = RB_PKG_URI + '/' + pkg + '.html'
+            # FIXME we currently consider notes only for sid
+            url = RB_PKG_URI + '/sid/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="package">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
         html += tab + '</code>\n'

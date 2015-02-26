@@ -166,8 +166,9 @@ def gen_packages_html(packages, suite='sid', arch='amd64', no_clean=False):
                                             links=links,
                                             bugs_links=bugs_links,
                                             default_view=default_view)
-        destfile = RB_PKG_PATH + '/' + pkg + '.html'
-        desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + pkg + '.html'
+        destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
+        desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + '/' + \
+                  arch + '/' + pkg + '.html'
         title = pkg + ' - reproducible build results'
         write_html_page(title=title, body=html, destfile=destfile,
                         noheader=True, noendpage=True)
@@ -185,16 +186,24 @@ def gen_all_rb_pkg_pages(suite='sid', arch='amd64', no_clean=False):
     gen_packages_html(pkgs, suite=suite, arch=arch, no_clean=no_clean)
 
 def purge_old_pages():
-    presents = sorted(os.listdir(RB_PKG_PATH))
-    for page in presents:
-        pkg = page.rsplit('.', 1)[0]
-        log.debug('Checking if ' + page + ' (from ' + pkg + ') is still needed')
-        query = 'SELECT s.name ' + \
-                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                'WHERE s.name="%s" AND r.status != "" AND s.suite="sid"' % pkg
-        result = query_db(query)
-        if not result: # actually, the query produces no results
-            log.info('There is no package named ' + pkg + ' in the database.' +
-                     ' Removing old page.')
-            os.remove(RB_PKG_PATH + '/' + page)
+    for suite in SUITES:
+        for arch in ARCHES:
+            log.info('Removing old pages from ' + suite + '...')
+            presents = sorted(os.listdir(RB_PKG_PATH + '/' + suite + '/' +
+                              arch))
+            for page in presents:
+                pkg = page.rsplit('.', 1)[0]
+                query = 'SELECT s.name ' + \
+                    'FROM results AS r ' + \
+                    'JOIN sources AS s ON r.package_id=s.id ' + \
+                    'WHERE s.name="{name}" AND r.status != "" ' + \
+                    'AND s.suite="{suite}" AND s.architecture="{arch}"'
+                query = query.format(name=pkg, suite=suite, arch=arch)
+                result = query_db(query)
+                if not result: # actually, the query produces no results
+                    log.info('There is no package named ' + pkg + ' from ' +
+                             suite + '/' + arch + ' in the database. ' +
+                             'Removing old page.')
+                    os.remove(RB_PKG_PATH + '/' + suite + '/' + arch + '/' +
+                              page)
 

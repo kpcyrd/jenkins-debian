@@ -199,10 +199,14 @@ set_package_class() {
 }
 
 set_linktarget() {
+	local SUITE="$1"
+	local ARCH="$2"
+	shift
+	shift
 	for PKG in $@ ; do
-		if [ -f $RB_PATH/$PKG.html ] ; then
+		if [ -f $RB_PATH/$SUITE/$PKG.html ] ; then
 			set_package_class
-			LINKTARGET[$PKG]="<a href=\"/userContent/rb-pkg/$PKG.html\" $CLASS>$PKG</a>"
+			LINKTARGET[$PKG]="<a href=\"/userContent/rb-pkg/$SUITE/$ARCH/$PKG.html\" $CLASS>$PKG</a>"
 		else
 			LINKTARGET[$PKG]="$PKG"
 		fi

@@ -15,7 +15,7 @@ common_init "$@"
 ARCH="amd64"
 
 create_results_dirs() {
-	mkdir -p /var/lib/jenkins/userContent/dbd/
+	mkdir -p /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}
 	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}
 	mkdir -p /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}
 }
@@ -26,7 +26,7 @@ cleanup_all() {
 
 cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
-	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
@@ -75,12 +75,12 @@ call_debbindiff() {
 	rm -f $DBDCHROOT_READLOCK
 	echo | tee -a ${RBUILDLOG}
 	if [ $RESULT -eq 124 ] ; then
-		echo "$(date) - debbindiff was killed after running into timeout... maybe there is still $REPRODUCIBLE_URL/dbd/${LOGFILE}" | tee -a ${RBUILDLOG}
+		echo "$(date) - debbindiff was killed after running into timeout... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}" | tee -a ${RBUILDLOG}
 		if [ ! -s ./${LOGFILE} ] ; then
 			echo "$(date) - debbindiff produced no output and was killed after running into timeout..." >> ${LOGFILE}
 		fi
 	elif [ $RESULT -eq 1 ] ; then
-		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${LOGFILE}"
+		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}"
 	elif [ $RESULT -eq 2 ] ; then
 		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 	fi
@@ -99,7 +99,7 @@ call_debbindiff() {
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
 		if [ -f ./${LOGFILE} ] ; then
 			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
-			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/
+			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
 		else
 			echo -n ", debbindiff produced no output (which is strange)"
 		fi

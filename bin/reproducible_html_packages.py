@@ -84,7 +84,8 @@ def gen_extra_links(package, version, suite, arch):
              eversion + '.rbuild.log'
     buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
                 '_' + eversion + '_amd64.buildinfo'
-    dbd = DBD_PATH + '/' + package + '_' + eversion + '.debbindiff.html'
+    dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
+          eversion + '.debbindiff.html'
 
     links = ''
     default_view = False
@@ -96,7 +97,8 @@ def gen_extra_links(package, version, suite, arch):
     else:
         log.debug('notes not detected at ' + notes)
     if os.access(dbd, os.R_OK):
-        url = DBD_URI + '/' + package + '_' + eversion + '.debbindiff.html'
+        url = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+              eversion + '.debbindiff.html'
         links += '<a href="' + url + '" target="main">debbindiff</a>\n'
         if not default_view:
             default_view = url

@@ -37,11 +37,6 @@ update_db_and_html() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	set +x
-	# (force) update html page for package
-	# (This should normally not be needed except for long building packages
-	# where the page was already updated after the build started, probably
-	#  through notes being updated.)
-	touch -d $PREDATE /var/lib/jenkins/userContent/rb-pkg/${SRCPACKAGE}.html
 	gen_packages_html $SRCPACKAGE
 	echo
 	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/$SRCPACKAGE.html"
@@ -140,7 +135,6 @@ else
 	echo "Trying to build ${SRCPACKAGE}/${SUITE} reproducibly now."
 	echo "============================================================================="
 	set -x
-	PREDATE=$(date -d "1 minute ago" +'%Y-%m-%d %H:%M')
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"

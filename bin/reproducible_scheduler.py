@@ -80,6 +80,7 @@ def update_sources_tables(suite):
             result = query_db(query)[0]
         except IndexError:  # new package
             pkgs_to_add.append((pkg[0], pkg[1], pkg[2], 'amd64'))
+            continue
         pkg_id = result[0]
         old_version = result[1]
         if version_compare(pkg[1], old_version) > 0:

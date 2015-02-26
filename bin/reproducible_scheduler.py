@@ -56,11 +56,11 @@ def update_sources_tables(suite):
     mirror = 'http://ftp.de.debian.org/debian'
     remotefile = mirror + '/dists/' + suite + '/main/source/Sources.gz'
     log.info('Downloading sources file for ' + suite + ': ' + remotefile)
-    sources = gzip.decompress(urlopen(remotefile).read()).decode()
+    sources = gzip.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
     # extract relevant info (package name and version) from the sources file
     new_pkgs = []
-    for src in deb822.Sources.iter_paragraphs(sources):
+    for src in deb822.Sources.iter_paragraphs(sources.split('\n')):
         pkg = (src['Package'], src['Version'], suite)
         new_pkgs.append(pkg)
     # get the current packages in the database

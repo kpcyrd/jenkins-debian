@@ -93,7 +93,8 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo "$FAILED_BUILDS"
 	echo
 	echo "Rescheduling packages: "
-	( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | cut -d "_" -f1) ; do echo $PKG ; done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh
+	# FIXME the suite got hardcoded here, a way to recognize the original suite must be found
+	( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | cut -d "_" -f1) ; do echo $PKG ; done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh sid
 	echo
 	DIRTY=true
 fi
@@ -124,24 +125,25 @@ rm $HAYSTACK $RESULT
 
 # find packages which build didnt end correctly
 QUERY="
-	SELECT * FROM sources_scheduled
-		WHERE date_scheduled != ''
-		AND date_build_started != ''
-		AND date_build_started < datetime('now', '-36 hours')
-		ORDER BY date_scheduled
+	SELECT s.id, s.name, p.date_scheduled, p.date_build_started
+		FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
+		WHERE p.date_scheduled != ''
+		AND p.date_build_started != ''
+		AND p.date_build_started < datetime('now', '-36 hours')
+		ORDER BY p.date_scheduled
 	"
 PACKAGES=$(mktemp)
 sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
 if grep -q '|' $PACKAGES ; then
 	echo
 	echo "Warning: packages found where the build was started more than 36h ago:"
-	echo "name|date_scheduled|date_build_started"
+	echo "pkg_id|name|date_scheduled|date_build_started"
 	echo
 	cat $PACKAGES
 	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
-		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\""
-		sqlite3 -init $INIT ${PACKAGES_DB}  \"DELETE FROM sources_scheduled WHERE name = '$PKG';\"
+		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
+		sqlite3 -init $INIT ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\"
 	done
 	echo "Packages have been removed from scheduling."
 	echo
@@ -150,11 +152,13 @@ fi
 rm $PACKAGES
 
 # find packages which have been removed from sid
+# commented out for now. This can't be done using the database anymore
 QUERY="SELECT source_packages.name FROM source_packages
 		WHERE source_packages.name NOT IN
 		(SELECT sources.name FROM sources)
 	LIMIT 25"
-PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
+#PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
+PACKAGES=''
 if [ ! -z "$PACKAGES" ] ; then
 	echo
 	echo "Removing these removed packages from database:"

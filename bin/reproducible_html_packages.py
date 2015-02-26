@@ -77,10 +77,11 @@ def check_package_status(package, suite):
     build_date = str(result[2])+" UTC"
     return (status, version, build_date)
 
-def gen_extra_links(package, version):
+def gen_extra_links(package, version, suite, arch):
     eversion = strip_epoch(version)
     notes = NOTES_PATH + '/' + package + '_note.html'
-    rbuild = RBUILD_PATH + '/' + package + '_' + eversion + '.rbuild.log'
+    rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
+             eversion + '.rbuild.log'
     buildinfo = BUILDINFO_PATH + '/' + package + '_' + eversion + '_amd64.buildinfo'
     dbd = DBD_PATH + '/' + package + '_' + eversion + '.debbindiff.html'
 
@@ -108,7 +109,8 @@ def gen_extra_links(package, version):
     else:
         log.debug('buildinfo not detected at ' + buildinfo)
     if os.access(rbuild, os.R_OK):
-        url = RBUILD_URI + '/' + package + '_' + eversion + '.rbuild.log'
+        url = RBUILD_URI + '/' + suite + '/' + suite + '/' + package + '_' + \
+              eversion + '.rbuild.log'
         log_size = os.stat(rbuild).st_size
         links +='<a href="' + url + '" target="main">rbuild (' + \
                 sizeof_fmt(log_size) + ')</a>\n'
@@ -133,7 +135,7 @@ def gen_bugs_links(package, bugs):
     return html
 
 
-def gen_packages_html(packages, suite='sid', no_clean=False):
+def gen_packages_html(packages, suite='sid', arch='amd64', no_clean=False):
     """
     generate the /rb-pkg/package.html page
     packages should be a list
@@ -148,7 +150,7 @@ def gen_packages_html(packages, suite='sid', no_clean=False):
         log.info('Generating the page of ' + pkg + ' ' + version +
                  ' built at ' + build_date)
 
-        links, default_view = gen_extra_links(pkg, version)
+        links, default_view = gen_extra_links(pkg, version, suite, arch)
         bugs_links = gen_bugs_links(pkg, bugs)
         status, icon = join_status_icon(status, pkg, version)
 
@@ -169,14 +171,14 @@ def gen_packages_html(packages, suite='sid', no_clean=False):
     if not no_clean:
         purge_old_pages() # housekeep is always good
 
-def gen_all_rb_pkg_pages(suite='sid', no_clean=False):
+def gen_all_rb_pkg_pages(suite='sid', arch='amd64', no_clean=False):
     query = 'SELECT s.name ' + \
             'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
             'WHERE r.status !="" AND s.suite="%s"' % suite
     rows = query_db(query)
     pkgs = [str(i[0]) for i in rows]
     log.info('Processing all the package pages, ' + str(len(pkgs)))
-    gen_packages_html(pkgs, suite, no_clean)
+    gen_packages_html(pkgs, suite=suite, arch=arch, no_clean=no_clean)
 
 def purge_old_pages():
     presents = sorted(os.listdir(RB_PKG_PATH))

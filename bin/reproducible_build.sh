@@ -11,17 +11,21 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-# create dirs for results
-mkdir -p /var/lib/jenkins/userContent/dbd/
-mkdir -p /var/lib/jenkins/userContent/rbuild/
-mkdir -p /var/lib/jenkins/userContent/buildinfo/
+# support for different architectures (we have actual support only for amd64)
+ARCH="amd64"
+
+create_results_dirs() {
+	mkdir -p /var/lib/jenkins/userContent/dbd/
+	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}
+	mkdir -p /var/lib/jenkins/userContent/buildinfo/
+}
 
 cleanup_all() {
 	rm -r $TMPDIR $TMPCFG
 }
 
 cleanup_userContent() {
-	rm -f /var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
@@ -78,7 +82,7 @@ call_debbindiff() {
 	elif [ $RESULT -eq 1 ] ; then
 		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${LOGFILE}"
 	elif [ $RESULT -eq 2 ] ; then
-		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log"
+		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 	fi
 	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1
@@ -150,8 +154,9 @@ else
 	DURATION=0
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
+	create_results_dirs
 
-	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_None.rbuild.log
+	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 	set +e
@@ -185,7 +190,7 @@ else
 		TMPLOG=$(mktemp)
 		mv ${RBUILDLOG} ${TMPLOG}
 		cleanup_userContent
-		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SRCPACKAGE}_${EVERSION}.rbuild.log
+		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}
 		cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 		# check whether the package is not for us...

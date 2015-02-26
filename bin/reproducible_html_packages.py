@@ -82,7 +82,8 @@ def gen_extra_links(package, version, suite, arch):
     notes = NOTES_PATH + '/' + package + '_note.html'
     rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
              eversion + '.rbuild.log'
-    buildinfo = BUILDINFO_PATH + '/' + package + '_' + eversion + '_amd64.buildinfo'
+    buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
+                '_' + eversion + '_amd64.buildinfo'
     dbd = DBD_PATH + '/' + package + '_' + eversion + '.debbindiff.html'
 
     links = ''
@@ -101,8 +102,9 @@ def gen_extra_links(package, version, suite, arch):
             default_view = url
     else:
         log.debug('debbindiff not detetected at ' + dbd)
-    if pkg_has_buildinfo(package, version):
-        url = BUILDINFO_URI + '/' + package + '_' + eversion + '_amd64.buildinfo'
+    if pkg_has_buildinfo(package, version, suite):
+        url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
+              '_' + eversion + '_amd64.buildinfo'
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:
             default_view = url

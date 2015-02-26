@@ -17,7 +17,7 @@ ARCH="amd64"
 create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/dbd/
 	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}
-	mkdir -p /var/lib/jenkins/userContent/buildinfo/
+	mkdir -p /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}
 }
 
 cleanup_all() {
@@ -27,7 +27,7 @@ cleanup_all() {
 cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
 	rm -f /var/lib/jenkins/userContent/dbd/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
-	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
+	rm -f /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
 calculate_build_duration() {
@@ -85,7 +85,7 @@ call_debbindiff() {
 		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 	fi
 	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
-		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1
+		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
 		echo
 		echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
@@ -96,7 +96,7 @@ call_debbindiff() {
 	else
 		echo | tee -a ${RBUILDLOG}
 		echo -n "$(date) - ${SRCPACKAGE}/${SUITE} failed to build reproducibly " | tee -a ${RBUILDLOG}
-		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/ > /dev/null 2>&1 || true
+		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
 		if [ -f ./${LOGFILE} ] ; then
 			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/

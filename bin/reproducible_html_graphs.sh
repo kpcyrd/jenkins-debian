@@ -180,7 +180,7 @@ COLOR[3]=26
 COLOR[4]=1
 COLOR[5]=1
 COLOR[6]=4
-MAINLABEL[0]="Package reproducibility status"
+MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
 MAINLABEL[1]="Amount of packages build each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
@@ -300,7 +300,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	META_RESULT=true
 	gather_meta_stats $i	# FIXME: this ignores unknown packages...
 	if $META_RESULT ; then
-		MAINLABEL[6]="Package reproducibility status for ${META_PKGSET[$i]} packages"
+		MAINLABEL[6]="Reproducibility status for packages from '$SUITE' in ${META_PKGSET[$i]}"
 		YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
 		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 		# redo pngs once a day

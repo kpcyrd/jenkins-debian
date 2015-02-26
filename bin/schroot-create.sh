@@ -25,9 +25,12 @@ DISTRO="$1"
 shift
 
 if [ "$1" == "backports" ] ; then
-	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
-	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
+	EXTRA_PACKAGES="deb $MIRROR ${DISTRO}-backports main"
+	EXTRA_SOURCES="deb-src $MIRROR ${DISTRO}-backports main"
 	shift
+elif [ "$1" == "reproducible" ] ; then
+	EXTRA_PACKAGES="deb http://reproducible.alioth.debian.org/debian/ ./"
+	EXTRA_SOURCES="deb-src http://reproducible.alioth.debian.org/debian/ ./"
 fi
 
 if [ ! -d "$CHROOT_BASE" ]; then
@@ -52,8 +55,8 @@ bootstrap() {
 	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
 	echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	echo "deb-src $MIRROR $DISTRO main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
-	echo "${BACKPORTS}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
-	echo "${BACKPORTSSRC}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
+	echo "${EXTRA_PACKAGES}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
+	echo "${EXTRA_SOURCES}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then

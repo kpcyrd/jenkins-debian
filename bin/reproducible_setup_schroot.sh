@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # Copyright      2014 Joachim Breitner <nomeata@debian.org>
 # released under the GPLv=2
@@ -27,12 +27,6 @@ shift
 DISTRO="$1"
 shift
 
-if [ "$1" == "backports" ] ; then
-	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
-	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
-	shift
-fi
-
 if [ ! -d "$CHROOT_BASE" ]; then
 	echo "Directory $CHROOT_BASE does not exist, aborting."
 	exit 1
@@ -55,8 +49,6 @@ bootstrap() {
 	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
 	echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	echo "deb-src $MIRROR $DISTRO main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
-	echo "${BACKPORTS}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
-	echo "${BACKPORTSSRC}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then

@@ -99,7 +99,6 @@ sudo apt-get install 	vim \
 			libav-tools \
 			python-twisted \
 			python-imaging \
-			python-lzma \
 			gocr \
 			guestmount \
 			schroot \

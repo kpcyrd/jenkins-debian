@@ -10,7 +10,7 @@
 # Schedule packages to be build.
 
 import sys
-import lzma
+import gzip
 import deb822
 import aptsources.sourceslist
 from time import sleep
@@ -54,9 +54,9 @@ def check_suite_avail(suite):
 def update_sources_tables(suite):
     # download the sources file for this suite
     mirror = 'http://ftp.de.debian.org/debian'
-    remotefile = mirror + '/dists/' + suite + '/main/source/Sources.xz'
+    remotefile = mirror + '/dists/' + suite + '/main/source/Sources.gz'
     log.info('Downloading sources file for ' + suite + ': ' + remotefile)
-    sources = lzma.decompress(urlopen(remotefile).read()).decode()
+    sources = gzip.decompress(urlopen(remotefile).read()).decode()
     log.debug('\tdownloaded')
     # extract relevant info (package name and version) from the sources file
     new_pkgs = []

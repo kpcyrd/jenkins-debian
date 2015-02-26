@@ -207,8 +207,8 @@
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'
             my_timed: '42 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_scheduler.sh'
-            my_recipients: 'holger@layer-acht.org'
+            my_shell: '/srv/jenkins/bin/reproducible_scheduler.py'
+            my_recipients: 'holger@layer-acht.org mattia@mapreri.org'
         - '{name}_html_graphs':
             my_description: 'Generate HTML results (stats with graphs) for reproducible builds.'
             my_timed: '0 * * * *'

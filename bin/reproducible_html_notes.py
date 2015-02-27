@@ -260,6 +260,7 @@ def gen_html_issue(issue):
 
 def purge_old_notes(notes):
     removed_pages = []
+    to_rebuild = []
     presents = sorted(os.listdir(NOTES_PATH))
     for page in presents:
         pkg = page.rsplit('_', 1)[0]
@@ -268,8 +269,18 @@ def purge_old_notes(notes):
             log.info('There are no notes for ' + pkg + '. Removing old page.')
             os.remove(NOTES_PATH + '/' + page)
             removed_pages.append(pkg)
-    if removed_pages:
-        gen_packages_html(removed_pages)
+    for pkg in removed_pages:
+        try:
+            query = 'SELECT s.name ' + \
+                    'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+                    'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="sid"'
+            query = query.format(pkg=pkg)
+            to_rebuild.append(query_db(query)[0][0])
+        except IndexError:  # the package is not tested. this can happen if
+            pass            # a package got removed from the archive
+    if to_rebuild:
+        gen_packages_html(to_rebuild)
+
 
 def iterate_over_notes(notes):
     num_notes = str(len(notes))

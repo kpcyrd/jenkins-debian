@@ -61,7 +61,6 @@ execute_ctmpfile() {
 			echo
 			echo "Warning: Network problem detected."
 			echo "Trying to workaround temporarily failure fetching packages, trying again..."
-			kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "h01ger: check $BUILD_URL for 'Trying to workaround'..."
 			echo
 			sudo chroot $CHROOT_TARGET $TMPFILE
 		else

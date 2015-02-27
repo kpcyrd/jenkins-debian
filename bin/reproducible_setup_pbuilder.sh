@@ -23,6 +23,11 @@ fi
 create_setup_tmpfile() {
 	TMPFILE=$1
 	shift
+	if [ "$1" = "experimental" ] ; then
+		EXTRA="echo 'deb $MIRROR experimental main' > /etc/apt/sources.list.d/experimental.list
+echo 'deb-src $MIRROR experimental main' >> /etc/apt/sources.list.d/experimental.list"
+		shift
+	fi
 	cat > $TMPFILE <<- EOF
 #
 # this script is run within the pbuilder environment to further customize it
@@ -57,7 +62,8 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 =X8YA
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
-apt-get update
+$EXTRA
+apt-gt update
 apt-get install -y $@
 echo
 dpkg -l
@@ -66,6 +72,7 @@ for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison 
 echo
 EOF
 }
+
 
 #
 # setup pbuilder for reproducible builds
@@ -79,6 +86,10 @@ setup_pbuilder() {
 	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp)
 	LOG=$(mktemp)
+	if [ "$SUITE" == "experimental" ] ; then
+		SUITE=sid
+		PACKAGES="experimental $PACKAGES"
+	fi
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
 	sudo pbuilder --create --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
 	sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
@@ -95,5 +106,4 @@ setup_pbuilder() {
 }
 
 # FIXME: base-reproducible should be renamed to include the suite
-# FIXME: SUITE=experimental needs sid as base distro
 setup_pbuilder $SUITE base-reproducible dpkg dpkg-dev debhelper

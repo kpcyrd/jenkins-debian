@@ -8,7 +8,7 @@ DEBUG=false
 common_init "$@"
 
 # convert param to variables
-if [ "$1" == "" ] ; then
+if [ "$1" = "" ] ; then
 	echo "need an Archicture to act on"
 	exit 1
 fi

@@ -107,7 +107,7 @@ call_debbindiff() {
 			echo "." | tee -a ${RBUILDLOG}
 		fi
 		OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
-		if [ "${OLD_STATUS}" == "reproducible" ]; then
+		if [ "${OLD_STATUS}" = "reproducible" ]; then
 			MESSAGE="${SRCPACKAGE}: status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SRCPACKAGE}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			#kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job

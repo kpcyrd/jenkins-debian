@@ -76,7 +76,7 @@ for PKG in $SOURCES ; do
 	fi
 	if [ ! -z "$EXPERIMENTAL" ] ; then
 		CEXP=""
-		if [ "${PKG:0:3}" == "lib" ] ; then
+		if [ "${PKG:0:3}" = "lib" ] ; then
 			PREFIX=${PKG:0:4}
 		else
 			PREFIX=${PKG:0:1}

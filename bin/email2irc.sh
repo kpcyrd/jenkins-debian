@@ -24,7 +24,7 @@ HEADER=true
 VALID_MAIL=false
 MY_LINE=""
 while read line ; do
-	if [ "$HEADER" == "true" ] ; then
+	if [ "$HEADER" = "true" ] ; then
 		# check if email header ends
 		if [[ $line =~ ^$ ]] ; then
 			HEADER=false
@@ -55,7 +55,7 @@ while read line ; do
 		fi
 	fi
 	# catch first line of email body (to send to IRC later)
-	if [ "$HEADER" == "false" ] && [ -z "$MY_LINE" ] ; then
+	if [ "$HEADER" = "false" ] && [ -z "$MY_LINE" ] ; then
 		MY_LINE=$line
 		debug123 "#1" MY_LINE $MY_LINE
 		# if this is a multipart email it comes from the email extension plugin
@@ -76,7 +76,7 @@ fi
 debug123 "#5" MY_LINE $MY_LINE
 
 # only send notifications for valid emails
-if [ "$VALID_MAIL" == "true" ] ; then
+if [ "$VALID_MAIL" = "true" ] ; then
 	echo -e "----------\nvalid email\n-----------" >> $LOGFILE
 	date >> $LOGFILE
 	echo "Job:     $JENKINS_JOB" >> $LOGFILE

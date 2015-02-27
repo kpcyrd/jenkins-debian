@@ -24,13 +24,13 @@ fi
 DISTRO="$1"
 shift
 
-if [ "$1" == "backports" ] ; then
+if [ "$1" = "backports" ] ; then
 	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
 	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
 	shift
 fi
 
-if [ "$1" == "minimal" ] ; then
+if [ "$1" = "minimal" ] ; then
 	MINIMAL=yes
 	BOOTSTRAP_OPTIONS=--variant=minbase
 	shift

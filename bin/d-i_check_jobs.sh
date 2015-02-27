@@ -91,12 +91,12 @@ for DIRECTORY in * ; do
 			continue ;;
 	esac
 	for i in $IGNORE ; do
-		if [ "$DIRECTORY" == "$i" ] ; then
+		if [ "$DIRECTORY" = "$i" ] ; then
 			DIRECTORY=""
 			break
 		fi
 	done
-	if [ "$DIRECTORY" == "" ] ; then
+	if [ "$DIRECTORY" = "" ] ; then
 		continue
 	else
 		for FORMAT in pdf html ; do
@@ -129,12 +129,12 @@ cd po
 IGNORE="pot README"
 for DIRECTORY in * ; do
 	for i in $IGNORE ; do
-		if [ "$DIRECTORY" == "$i" ] ; then
+		if [ "$DIRECTORY" = "$i" ] ; then
 			DIRECTORY=""
 			break
 		fi
 	done
-	if [ "$DIRECTORY" == "" ] ; then
+	if [ "$DIRECTORY" = "" ] ; then
 		continue
 	else
 		for FORMAT in pdf html ; do

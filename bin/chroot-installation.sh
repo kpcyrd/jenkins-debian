@@ -12,7 +12,7 @@ set -e
 # $2 = extra component
 # $3 = upgrade distro
 
-if [ "$1" == "" ] ; then
+if [ "$1" = "" ] ; then
 	echo "need at least one distribution to act on"
 	echo '# $1 = base distro'
 	echo '# $2 = component to test (gnome, kde, xfce, lxce)'

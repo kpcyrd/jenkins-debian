@@ -24,18 +24,18 @@ shift
 DISTRO="$1"
 shift
 
-if [ "$DISTRO" == "experimental" ] ; then
+if [ "$DISTRO" = "experimental" ] ; then
 	# experimental cannot be bootstrapped
 	DISTRO=sid
 	EXTRA_PACKAGES="deb $MIRROR experimental main"
 	EXTRA_SOURCES="deb-src $MIRROR experimental main"
 fi
 
-if [ "$1" == "backports" ] ; then
+if [ "$1" = "backports" ] ; then
 	EXTRA_PACKAGES="deb $MIRROR ${DISTRO}-backports main"
 	EXTRA_SOURCES="deb-src $MIRROR ${DISTRO}-backports main"
 	shift
-elif [ "$1" == "reproducible" ] ; then
+elif [ "$1" = "reproducible" ] ; then
 	EXTRA_PACKAGES="deb http://reproducible.alioth.debian.org/debian/ ./"
 	EXTRA_SOURCES="deb-src http://reproducible.alioth.debian.org/debian/ ./"
 fi
@@ -102,7 +102,7 @@ bootstrap() {
 	echo "${EXTRA_PACKAGES}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 	echo "${EXTRA_SOURCES}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 
-	if [ "$1" == "reproducible" ] ; then
+	if [ "$1" = "reproducible" ] ; then
 		TMPFILE=$(mktemp -u)
 		add_repokey $CHROOT_TARGET/$TMPFILE
 		sudo chroot $CHROOT_TARGET bash $TMPFILE

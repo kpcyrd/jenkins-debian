@@ -86,7 +86,7 @@ setup_pbuilder() {
 	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp)
 	LOG=$(mktemp)
-	if [ "$SUITE" == "experimental" ] ; then
+	if [ "$SUITE" = "experimental" ] ; then
 		SUITE=sid
 		PACKAGES="experimental $PACKAGES"
 	fi

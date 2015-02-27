@@ -25,11 +25,13 @@ schedule_packages() {
 
 check_candidates() {
 	PACKAGES=""
+	PACKAGES_NAMES=""
 	TOTAL=0
 	for PKG in $CANDIDATES ; do
-		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id from sources WHERE name='$PKG' AND suite='$SUITE';")
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id, name from sources WHERE name='$PKG' AND suite='$SUITE';")
 		if [ ! -z "$RESULT" ] ; then
-			PACKAGES="$PACKAGES $RESULT"
+			PACKAGES="$PACKAGES $(echo $RESULT|cut -d '|' -f 1)"
+			PACKAGES_NAMES="$PACKAGES_NAMES $(echo $RESULT|cut -d '|' -f 2)"
 			let "TOTAL+=1"
 		fi
 	done
@@ -63,7 +65,7 @@ ACTION="manually rescheduled"
 if [ -n "${BUILD_URL:-}" ] ; then
 	ACTION="rescheduled by $BUILD_URL"
 fi
-MESSAGE="$TOTAL $PACKAGES_TXT $ACTION: ${PACKAGES:0:256}$BLABLABLA"
+MESSAGE="$TOTAL $PACKAGES_TXT $ACTION for $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
 
 # finally
 schedule_packages
@@ -72,6 +74,6 @@ echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
 echo "============================================================================="
-echo "The following $TOTAL source $PACKAGES_TXT $ACTION: $PACKAGES"
+echo "The following $TOTAL source $PACKAGES_TXT $ACTION for $SUITE: $PACKAGES_NAMES"
 echo "============================================================================="
 echo

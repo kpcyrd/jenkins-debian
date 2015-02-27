@@ -10,6 +10,13 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+# support different suites
+if [ -z "$1" ] ; then
+	SUITE="sid"
+else
+	SUITE="$1"
+fi
+
 #
 # create script to configure a pbuilder chroot
 #
@@ -64,7 +71,7 @@ EOF
 # setup pbuilder for reproducible builds
 #
 setup_pbuilder() {
-	DISTRO=$1
+	SUITE=$1
 	shift
 	NAME=$1
 	shift
@@ -73,7 +80,7 @@ setup_pbuilder() {
 	TMPFILE=$(mktemp)
 	LOG=$(mktemp)
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
-	sudo pbuilder --create --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $DISTRO
+	sudo pbuilder --create --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
 	sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
 	echo
 	echo "Now let's see whether the correct packages where installed..."
@@ -87,8 +94,6 @@ setup_pbuilder() {
 	echo
 }
 
-for SUITE in $SUITES ; do
-	# FIXME: base-reproducible should be renamed to include the suite
-	# FIXME: DISTRO=experimental needs sid as base distro
-	setup_pbuilder $SUITE base-reproducible dpkg dpkg-dev debhelper
-done
+# FIXME: base-reproducible should be renamed to include the suite
+# FIXME: SUITE=experimental needs sid as base distro
+setup_pbuilder $SUITE base-reproducible dpkg dpkg-dev debhelper

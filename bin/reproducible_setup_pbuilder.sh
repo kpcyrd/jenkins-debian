@@ -63,7 +63,7 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
 $EXTRA
-apt-gt update
+apt-get update
 apt-get install -y $@
 echo
 dpkg -l

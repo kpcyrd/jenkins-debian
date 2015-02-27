@@ -139,7 +139,7 @@ done
 #
 # gather bugs stats
 #
-USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment"
+USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
 if [ -z $RESULT ] ; then
 	declare -a DONE
@@ -179,7 +179,7 @@ FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
 COLOR[0]=5
 COLOR[1]=4
 COLOR[2]=3
-COLOR[3]=26
+COLOR[3]=28
 COLOR[4]=1
 COLOR[5]=1
 COLOR[6]=4

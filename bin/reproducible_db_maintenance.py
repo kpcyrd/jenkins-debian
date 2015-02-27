@@ -214,6 +214,10 @@ schema_updates = {
             build_duration TEXT NOT NULL,
             UNIQUE (name, version, suite, architecture, build_date))''',
         'INSERT INTO rb_schema VALUES ("2", "' + now + '")']
+    3: [ # add columns to stats_bugs for new usertag umask
+        '''ALTER TABLE stats_bugs ADD COLUMN open_umask INTEGER''',
+        '''ALTER TABLE stats_bugs ADD COLUMN done_umask INTEGER''',
+        'INSERT INTO rb_schema VALUES ("3", "' + now + '")'],
 }
 
 

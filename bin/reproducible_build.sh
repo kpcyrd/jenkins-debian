@@ -205,7 +205,7 @@ else
 		( timeout 12h nice ionice -c 3 sudo \
 		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
 		  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
-		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
+		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
 		) 2>&1 | tee ${TMPLOG}
 		set +x
 		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
@@ -226,7 +226,7 @@ else
 			  LANG="fr_CH.UTF-8" \
 			  LC_ALL="fr_CH.UTF-8" \
 			  unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \
-			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/base-reproducible.tgz --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
+			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
 			) 2>&1 | tee -a ${RBUILDLOG}
 			set +x
 			if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then

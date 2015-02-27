@@ -106,7 +106,7 @@ bootstrap() {
 		TMPFILE=$(mktemp -u)
 		add_repokey $CHROOT_TARGET/$TMPFILE
 		sudo chroot $CHROOT_TARGET bash $TMPFILE
-		rm $TMPFILE
+		rm $CHROOT_TARGET/$TMPFILE
 		shift
 	fi
 

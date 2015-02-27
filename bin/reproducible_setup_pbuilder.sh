@@ -23,11 +23,6 @@ fi
 create_setup_tmpfile() {
 	TMPFILE=$1
 	shift
-	if [ "$1" = "experimental" ] ; then
-		EXTRA="echo 'deb $MIRROR experimental main' > /etc/apt/sources.list.d/experimental.list
-echo 'deb-src $MIRROR experimental main' >> /etc/apt/sources.list.d/experimental.list"
-		shift
-	fi
 	cat > $TMPFILE <<- EOF
 #
 # this script is run within the pbuilder environment to further customize it
@@ -62,7 +57,6 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 =X8YA
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
-$EXTRA
 apt-get update
 apt-get install -y $@
 echo
@@ -88,7 +82,8 @@ setup_pbuilder() {
 	LOG=$(mktemp)
 	if [ "$SUITE" = "experimental" ] ; then
 		SUITE=sid
-		PACKAGES="experimental $PACKAGES"
+		echo "echo 'deb $MIRROR experimental main' > /etc/apt/sources.list.d/experimental.list" > ${TMPFILE}
+		echo "echo 'deb-src $MIRROR experimental main' >> /etc/apt/sources.list.d/experimental.list" >> ${TMPFILE}
 	fi
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
 	sudo pbuilder --create --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE

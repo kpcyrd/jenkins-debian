@@ -232,7 +232,7 @@ write_usertag_table() {
 				let "TOPEN=TOPEN+VALUE"
 			else
 				write_page "<td>$VALUE</td>"
-				let "TOTAL=TOTAL+VALUE"
+				let "TOTAL=TOTAL+VALUE" || true # let FOO=0+0 returns error in bash...
 				let "TDONE=TDONE+VALUE"
 				write_page "<td>$TOTAL</td></tr>"
 				let "TTOTAL=TTOTAL+TOTAL"

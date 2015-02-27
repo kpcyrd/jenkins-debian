@@ -105,5 +105,4 @@ setup_pbuilder() {
 	echo
 }
 
-# FIXME: base-reproducible should be renamed to include the suite
-setup_pbuilder $SUITE base-reproducible dpkg dpkg-dev debhelper
+setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev debhelper

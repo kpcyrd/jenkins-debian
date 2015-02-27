@@ -143,10 +143,7 @@ else
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 	set +e
-	# host has only sid in deb-src in sources.list
-	# FIXME: this shall be fixed using schroots
-	# also see 10 lines below for the same code...
-	apt-get --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 	RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
@@ -155,8 +152,7 @@ else
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		# host has only sid in deb-src in sources.list
-		apt-get source --download-only --only-source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
 		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] ; then

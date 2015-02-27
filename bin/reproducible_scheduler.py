@@ -35,22 +35,6 @@ def call_apt_update():
     sys.exit(1)
 
 
-def check_suite_avail(suite):
-    log.debug('Checking wheter the suite ' + suite + ' is listed in your ' +
-              'sources.list file')
-    listall = aptsources.sourceslist.SourcesList()
-    splittedlist = [x.str() for x in listall]
-    for line in splittedlist:
-        if line[0][0] == '#':
-            continue
-        if 'deb-src' not in line:
-            continue
-        if suite in line:
-            log.debug('\tyes, it is')
-            return True
-    return False
-
-
 def update_sources_tables(suite):
     # download the sources file for this suite
     mirror = 'http://ftp.de.debian.org/debian'
@@ -278,10 +262,5 @@ def scheduler(suite):
 if __name__ == '__main__':
     call_apt_update()
     for suite in SUITES:
-# for now we need entries for whatever suite we want to test in sources.list
-        if not check_suite_avail(suite):
-            print_critical_message('Please add a deb-src entry for ' + suite +
-                                   ' in your sources.list file')
-            raise ValueError
         update_sources_tables(suite)
         scheduler(suite)

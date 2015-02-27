@@ -222,12 +222,12 @@
             my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_schroot_sid':
             my_description: 'Setup sid schroot for fetching source packages for the builder jobs.'
-            my_timed: '23 1 * * *'
+            my_timed: '23 1 * * 0'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-sid sid reproducible'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_schroot_experimental':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
-            my_timed: '23 1 * * *'
+            my_timed: '23 1 * * 0'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-experimental experimental reproducible'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_update_schroot_sid':

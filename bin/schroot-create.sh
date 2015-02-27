@@ -107,6 +107,7 @@ bootstrap() {
 
 	if [ "$1" == "reproducible" ] ; then
 		TMPFILE=$(mktemp -u)
+		echo $TMPFILE
 		add_repokey $CHROOT_TARGET/$TMPFILE
 		ls -la $CHROOT_TARGET/$TMPFILE
 		sudo chroot $CHROOT_TARGET bash -- $TMPFILE

@@ -23,7 +23,7 @@ fi
 create_setup_tmpfile() {
 	TMPFILE=$1
 	shift
-	cat > $TMPFILE <<- EOF
+	cat >> $TMPFILE <<- EOF
 #
 # this script is run within the pbuilder environment to further customize it
 #

@@ -5,7 +5,7 @@
 # Copyright      2014 Joachim Breitner <nomeata@debian.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -55,8 +55,7 @@ fi
 # create script to add key for reproducible repo
 #
 add_repokey() {
-	TMPFILE=$1
-	cat > $TMPFILE <<- EOF
+	cat > $1 <<- EOF
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -87,8 +86,6 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 =X8YA
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 EOF
-	echo $TMPFILE
-	ls -la $TMPFILE
 }
 
 bootstrap() {
@@ -107,10 +104,8 @@ bootstrap() {
 
 	if [ "$1" == "reproducible" ] ; then
 		TMPFILE=$(mktemp -u)
-		echo $TMPFILE
 		add_repokey $CHROOT_TARGET/$TMPFILE
-		ls -la $CHROOT_TARGET/$TMPFILE
-		sudo chroot $CHROOT_TARGET bash -- $TMPFILE
+		sudo chroot $CHROOT_TARGET bash $TMPFILE
 		rm $TMPFILE
 		shift
 	fi

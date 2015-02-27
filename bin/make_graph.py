@@ -37,7 +37,7 @@ def main():
                      "#729fcf", "#204a87", "#ef2929", "#a40000", \
                      "#888a85", "#2e3436", "#75507b", "#cc0000", \
                      "#ce5c00", "#73d216", "#edd400", "#f57900", \
-                     "#c17d11", "#3465a4", "#666666", "#AAAAAA", ))')
+                     "#c17d11", "#3465a4", "#666666", "#AAAAAA" ))')
     r('v <- t[0:nrow(t),0:'+colors+']')
     # make graph since day 1
     r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')

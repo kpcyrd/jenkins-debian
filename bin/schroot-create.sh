@@ -24,6 +24,13 @@ shift
 DISTRO="$1"
 shift
 
+if [ "$DISTRO" == "experimental" ] ; then
+	# experimental cannot be bootstrapped
+	DISTRO=sid
+	EXTRA_PACKAGES="deb $MIRROR experimental main"
+	EXTRA_SOURCES="deb-src $MIRROR experimental main"
+fi
+
 if [ "$1" == "backports" ] ; then
 	EXTRA_PACKAGES="deb $MIRROR ${DISTRO}-backports main"
 	EXTRA_SOURCES="deb-src $MIRROR ${DISTRO}-backports main"

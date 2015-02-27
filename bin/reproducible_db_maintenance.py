@@ -111,6 +111,10 @@ db_schema = [
                       done_buildinfo INTEGER,
                       open_cpu INTEGER,
                       done_cpu INTEGER,
+                      open_signatures INTEGER,
+                      done_signatures INTEGER,
+                      open_environment INTEGER,
+                      one_environment INTEGER,
                       PRIMARY KEY (datum))''']
     },
     {

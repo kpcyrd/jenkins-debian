@@ -152,8 +152,9 @@ def load_notes():
         try:                # actually have been tested
             query = 'SELECT s.name ' + \
                     'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                    'WHERE s.name="{pkg}" AND r.status != ""'
-            result = query_db(query.format(pkg=package))[0]
+                    'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="sid"'
+            query = query.format(pkg=package)
+            result = query_db(query)[0]
         except IndexError:
             print_critical_message('This query produces no results: ' + query +
                     '\nThis means there is no tested package with the name ' +

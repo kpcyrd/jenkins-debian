@@ -11,13 +11,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-# support different suites
-if [ -z "$1" ] ; then
-	SUITE="sid"
-else
-	SUITE="$1"
-fi
-
 # create dirs for results
 mkdir -p /var/lib/jenkins/userContent/dbd/
 mkdir -p /var/lib/jenkins/userContent/rbuild/
@@ -122,15 +115,27 @@ TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
-RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.id, s.name, sch.date_scheduled FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' AND s.suite = '$SUITE' ORDER BY date_scheduled LIMIT 1")
+
+SQL_SUITES=""
+for i in $SUITES ; do
+	if [ -n "$SQL_SUITES" ] ; then
+		SQL_SUITES="$SQL_SUITES, '$i'"
+	else
+		SQL_SUITES="('$i'"
+	fi
+done
+SQL_SUITES="$SQL_SUITES)"
+
+RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' AND s.suite IN $SQL_SUITES ORDER BY date_scheduled LIMIT 1")
 if [ -z "$RESULT" ] ; then
 	echo "No packages scheduled, sleeping 30m."
 	sleep 30m
 else
 	set +x
-	SRCPKGID=$(echo $RESULT|cut -d "|" -f1)
-	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f2)
-	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f3)
+	SUITE=$(echo $RESULT|cut -d "|" -f1)
+	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
+	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
+	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	echo "============================================================================="
 	echo "Trying to build ${SRCPACKAGE}/${SUITE} reproducibly now."
 	echo "============================================================================="

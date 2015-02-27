@@ -5,7 +5,7 @@
 # Copyright      2014 Joachim Breitner <nomeata@debian.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -101,7 +101,8 @@ bootstrap() {
 	if [ "$1" == "reproducible" ] ; then
 		TMPFILE=$(mktemp -u)
 		add_repokey $CHROOT_TARGET/$TMPFILE
-		sudo chroot $CHROOT_TARGET bash $TMPFILE
+		ls -la $CHROOT_TARGET/$TMPFILE
+		sudo chroot $CHROOT_TARGET bash -- $TMPFILE
 		rm $TMPFILE
 		shift
 	fi

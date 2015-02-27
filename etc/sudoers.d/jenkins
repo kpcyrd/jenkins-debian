@@ -31,9 +31,9 @@ jenkins ALL=  \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	SETENV: NOPASSWD: /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
-	/bin/mv /var/cache/pbuilder/base*.tgz /var/cache/pbuilder/base*.tgz, \
-	/bin/rm /var/cache/pbuilder/base*.tgz, \
-	/bin/rm -v /var/cache/pbuilder/base*.tgz, \
+	/bin/mv /var/cache/pbuilder/*base*.tgz /var/cache/pbuilder/*base*.tgz, \
+	/bin/rm /var/cache/pbuilder/*base*.tgz, \
+	/bin/rm -v /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm /var/cache/pbuilder/result/*, \
 	/usr/bin/dcmd rm *.changes, \
 	/usr/bin/dcmd rm *.dsc, \

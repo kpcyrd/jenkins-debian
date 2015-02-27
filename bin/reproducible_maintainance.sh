@@ -143,7 +143,7 @@ if grep -q '|' $PACKAGES ; then
 	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
 		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
-		sqlite3 -init $INIT ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\"
+		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id = '$PKG';"
 	done
 	echo "Packages have been removed from scheduling."
 	echo

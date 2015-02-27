@@ -14,8 +14,12 @@ common_init "$@"
 # create dirs for results
 mkdir -p /var/lib/jenkins/userContent/dbd/ /var/lib/jenkins/userContent/buildinfo/ /var/lib/jenkins/userContent/rbuild/
 
-# for now we have actual support only for sid
-SUITE="sid"
+# support different suites
+if [ -z "$1" ] ; then
+	SUITE="sid"
+else
+	SUITE="$1"
+fi
 
 cleanup_all() {
 	rm -r $TMPDIR $TMPCFG

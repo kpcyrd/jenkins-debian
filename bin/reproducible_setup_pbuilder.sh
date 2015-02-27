@@ -60,6 +60,8 @@ echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.l
 apt-get update
 apt-get install -y $@
 echo
+apt-cache policy
+echo
 dpkg -l
 echo
 for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org || true  ; done

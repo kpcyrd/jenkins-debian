@@ -15,16 +15,16 @@ common_init "$@"
 # bootstraps a new chroot for schroot, and then moves it into the right location
 
 # $1 = schroot name
-# $2 = base distro
+# $2 = base distro/suite
 # $3 $4 ... = extra packages to install
 
 if [ $# -lt 2 ]; then
-	echo "usage: $0 TARGET DISTRO [backports] CMD [ARG1 ARG2 ...]"
+	echo "usage: $0 TARGET SUITE [backports] CMD [ARG1 ARG2 ...]"
 	exit 1
 fi
 TARGET="$1"
 shift
-DISTRO="$1"
+SUITE="$1"
 shift
 
 if [ ! -d "$CHROOT_BASE" ]; then
@@ -42,13 +42,13 @@ bootstrap() {
 	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
-	echo "Bootstraping $DISTRO into $CHROOT_TARGET now."
-	sudo debootstrap $DISTRO $CHROOT_TARGET $MIRROR
+	echo "Bootstraping $SUITE into $CHROOT_TARGET now."
+	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR
 
 	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $CHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
 	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
 	echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
-	echo "deb-src $MIRROR $DISTRO main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
+	echo "deb-src $MIRROR $SUITE main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then

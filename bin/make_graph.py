@@ -44,7 +44,7 @@ def main():
     if int(colors) < 10:
         r('legend(x="bottom",legend=colnames(t), ncol=2,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     else:
-        r('legend(x="bottom",legend=colnames(t), ncol=6,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
+        r('legend(x="bottom",legend=colnames(t), ncol=7,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     grdevices.dev_off()
 
 if __name__ == "__main__":

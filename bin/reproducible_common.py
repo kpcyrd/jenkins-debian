@@ -25,6 +25,8 @@ QUIET = False
 
 # tested suites
 SUITES = ['sid']
+# tested arches
+ARCHES = ['amd64']
 
 BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent'

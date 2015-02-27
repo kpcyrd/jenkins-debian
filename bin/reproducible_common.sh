@@ -41,6 +41,8 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 
 # tested suites
 SUITES="sid"
+# tested arches
+ARCHES="amd64"
 
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET

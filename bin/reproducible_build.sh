@@ -48,7 +48,7 @@ update_db_and_html() {
 call_debbindiff() {
 	LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 	LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
-	BUILDINFO=${SRCPACKAGE}_${EVERSION}_amd64.buildinfo
+	BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
 		for i in $(seq 0 100) ; do
@@ -68,7 +68,7 @@ call_debbindiff() {
 		touch $DBDCHROOT_READLOCK
 	fi
 	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --version) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-	( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_amd64.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_amd64.changes ) 2>&1 >> ${RBUILDLOG}
+	( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
 	set -e
@@ -197,8 +197,8 @@ else
 		SUITABLE=false
 		ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 		set +x
-		for ARCH in ${ARCHITECTURES} ; do
-			if [ "$ARCH" = "any" ] || [ "$ARCH" = "all" ] || [ "$ARCH" = "amd64" ] || [ "$ARCH" = "linux-any" ] || [ "$ARCH" = "linux-amd64" ] || [ "$ARCH" = "any-amd64" ] ; then
+		for arch in ${ARCHITECTURES} ; do
+			if [ "$arch" = "any" ] || [ "$arch" = "all" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
 				SUITABLE=true
 				break
 			fi
@@ -223,13 +223,13 @@ else
 		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
 		) 2>&1 | tee ${TMPLOG}
 		set +x
-		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
+		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			mkdir b1 b2
-			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b1
+			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes b1
 			# the .changes file might not contain the original sources archive
 			# so first delete files from .dsc, then from .changes file
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
-			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
+			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
 			echo "============================================================================="
 			echo "Re-building ${SRCPACKAGE}/${SUITE} now."
 			echo "============================================================================="
@@ -244,13 +244,13 @@ else
 			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
 			) 2>&1 | tee -a ${RBUILDLOG}
 			set +x
-			if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes ] ; then
+			if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 				FTBFS=0
-				dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes b2
+				dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes b2
 				# and again (see comment 5 lines above)
 				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
-				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_amd64.changes
-				cat b1/${SRCPACKAGE}_${EVERSION}_amd64.changes | tee -a ${RBUILDLOG}
+				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
+				cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
 				call_debbindiff
 			else
 				echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}

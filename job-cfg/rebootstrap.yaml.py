@@ -29,7 +29,7 @@ release_architectures = """
 
 architectures += mono_architectures
 
-gcc_versions = """4.9""".split()
+gcc_versions = """4.9 5""".split()
 
 print("""
 - defaults:
@@ -90,7 +90,7 @@ for arch in sorted(architectures):
                 if nobiarch and supported:
                     continue
                 for debbindiff in ["", "_debbindiff"]:
-                    if debbindiff and arch not in release_architectures:
+                    if debbindiff and (arch not in release_architectures or gccver != "4.9"):
                         continue
                     print("""
 - job-template:
@@ -112,7 +112,7 @@ for arch in sorted(architectures):
                 if nobiarch and supported:
                     continue
                 for debbindiff in (False, True):
-                    if debbindiff and arch not in release_architectures:
+                    if debbindiff and (arch not in release_architectures or gccver != "4.9"):
                         continue
                     print(
 """        - '{name}_%(suffix)s':

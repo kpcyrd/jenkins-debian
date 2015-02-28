@@ -27,7 +27,7 @@ def call_apt_update(suite):
     # try three times, before failing the job
     for i in [1, 2, 3]:
         if not call(['schroot', '--directory', '/root', '-u', 'root', \
-                     '-c', 'source:jenkins-'+suite, '--', \
+                     '-c', 'source:jenkins-reproducible-'+suite, '--', \
                      'apt-get', 'update']):
             return
         else:

@@ -31,9 +31,11 @@ def call_apt_update(suite):
                      'apt-get', 'update']):
             return
         else:
-            log.warning('`apt-get update` failed. Retrying another ' + 3-i + ' times.')
+            log.warning('`apt-get update` failed. Retrying another ' + str(3-i)
+                        + ' times.')
             sleep(randint(1, 70) + 30)
-    print_critical_message('`apt-get update` for suite '+suite+' failed three times in a row, giving up.')
+    print_critical_message('`apt-get update` for suite ' + suite +
+                           ' failed three times in a row, giving up.')
     sys.exit(1)
 
 

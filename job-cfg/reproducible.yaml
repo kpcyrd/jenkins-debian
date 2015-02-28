@@ -145,14 +145,6 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_update_schroot_sid'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_update_schroot_experimental'
-
-- job-template:
-    defaults: reproducible
     name: '{name}_scheduler'
 
 - job-template:
@@ -231,23 +223,13 @@
             my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_schroot_sid':
             my_description: 'Setup sid schroot for fetching source packages for the builder jobs.'
-            my_timed: '23 1 * * 0'
+            my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-sid sid reproducible'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_schroot_experimental':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
-            my_timed: '23 1 * * 0'
+            my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-experimental experimental reproducible'
-            my_recipients: 'holger@layer-acht.org'
-        - '{name}_update_schroot_sid':
-            my_description: 'Update sid schroot for fetching source packages for the builder jobs.'
-            my_timed: '23 5,10,16,22 * * *'      # ftp.de.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
-            my_shell: '/srv/jenkins/bin/reproducible_update_schroot.sh reproducible-sid'
-            my_recipients: 'holger@layer-acht.org'
-        - '{name}_update_schroot_experimental':
-            my_description: 'Update experimental schroot for fetching source packages for the builder jobs.'
-            my_timed: '23 4,10,16,22 * * *'      # ftp.de.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
-            my_shell: '/srv/jenkins/bin/reproducible_update_schroot.sh reproducible-experimental'
             my_recipients: 'holger@layer-acht.org'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'

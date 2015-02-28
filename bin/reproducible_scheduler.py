@@ -23,15 +23,17 @@ from reproducible_common import *
 from reproducible_html_indexes import build_page
 
 
-def call_apt_update():
+def call_apt_update(suite):
     # try three times, before failing the job
     for i in [1, 2, 3]:
-        if not call(['sudo', 'apt-get', 'update']):
+        if not call(['schroot', '--directory', '/root', '-u', 'root', \
+                     '-c', 'source:jenkins-'+suite, '--', \
+                     'apt-get', 'update']):
             return
         else:
-            log.warning('apt failed. retring another ' + 3-i + ' times')
+            log.warning('`apt-get update` failed. Retrying another ' + 3-i + ' times.')
             sleep(randint(1, 70) + 30)
-    print_critical_message('`apt-get update` failed for three times in a row')
+    print_critical_message('`apt-get update` for suite '+suite+' failed three times in a row, giving up.')
     sys.exit(1)
 
 
@@ -259,7 +261,7 @@ def scheduler(suite):
 
 
 if __name__ == '__main__':
-    call_apt_update()
     for suite in SUITES:
+        call_apt_update(suite)
         update_sources_tables(suite)
         scheduler(suite)

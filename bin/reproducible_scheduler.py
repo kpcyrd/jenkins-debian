@@ -243,9 +243,8 @@ def scheduler(suite):
               str(len(old)) + ' with the same version (total: ' + \
               str(total) + ')'
     kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
-           '--relay-msg', '"']
+           '--relay-msg']
     kgb.extend(message.split())
-    kgb.append('"')
 
     # finally
     all_scheduled_pkgs = []

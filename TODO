@@ -117,6 +117,7 @@ properties:
 
 === reproducible
 
+* scheduler.py calls "apt-get update" on the host, should do so in the schroots. once this happens, remove the update schroot script and jobs again
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
 

@@ -26,6 +26,11 @@ cleanup_userContent() {
 	rm -f /var/lib/jenkins/userContent/buildinfo/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
+calculate_build_duration() {
+	END=$(date +'%s')
+	DURATION=$(( $END - $START ))
+}
+
 update_db_and_html() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
@@ -81,8 +86,8 @@ call_debbindiff() {
 		echo
 		echo "debbindiff found no differences in the changes files, and a .buildinfo file also exist." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
-		# FIXME calculate build_duration and push it to the db
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE')"
+		calculate_build_duration
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
 		update_db_and_html
 	else
 		echo | tee -a ${RBUILDLOG}
@@ -105,8 +110,8 @@ call_debbindiff() {
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			#kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
-		# FIXME calculate build_duration and push it to the db
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE')"
+		calculate_build_duration
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
 		update_db_and_html
 	fi
 }
@@ -141,6 +146,8 @@ else
 	echo "============================================================================="
 	set -x
 	DATE=$(date +'%Y-%m-%d %H:%M')
+	START=$(date +'%s')
+	DURATION=0
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 
@@ -163,8 +170,7 @@ else
 	if [ $RESULT != 0 ] ; then
 		echo "Warning: Download of ${SRCPACKAGE}/${SUITE} sources failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		# FIXME calculate build_duration and push it to the db
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', 'None', '404', '$DATE')"
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
 		set +x
 		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
 		update_db_and_html
@@ -194,8 +200,7 @@ else
 		done
 		if ! $SUITABLE ; then
 			set -x
-			# FIXME calculate build_duration and push it to the db
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE')"
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"
 			set +x
 			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
 			update_db_and_html
@@ -252,8 +257,8 @@ else
 		if [ $FTBFS -eq 1 ] ; then
 			set +x
 			echo "${SRCPACKAGE} failed to build from source."
-			# FIXME calculate build_duration and push it to the db
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE')"
+			calculate_build_duration
+			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
 			update_db_and_html
 		fi
 	fi

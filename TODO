@@ -130,7 +130,6 @@ properties:
 * db schema 2.0
 ** actually add support for suites in the code, the db is fine now.
 ** actually add support for archs, the db is fine now. One day we'll want to rebuild all the packages on all the archs too!
-** record build times in the results table.
 ** record build stats in the new stats_build table (forever, so we get relevant data)
 ** add support for the save_artifacts field in the schedule table, so we can manually schedule packages, which provide the binary packages somewhere for inspection
 ** move "untested" field in stats table too? (as in csv output...)

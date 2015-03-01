@@ -19,8 +19,11 @@ PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
+SOURCES=$(mktemp)
+schroot -c source:jenkins-reproducible-sid cat /var/lib/apt/lists/*_source_Sources > $SOURCES || \
+    wget ${MIRROR}/dists/sid/main/source/Sources.xz -O - | xzcat > $SOURCES
 BAD=$(sqlite3 -init $INIT $PACKAGES_DB 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status="unreproducible" AND s.suite="sid" ORDER BY r.build_date DESC' | xargs echo)
-echo "${BAD}" | dd-list -i > $TMPFILE || true
+echo "${BAD}" | dd-list --stdin --sources $SOURCES > $TMPFILE || true
 write_page "<p>The following maintainers and uploaders are listed for packages within Sid which have built unreproducibly:</p><p><pre>"
 while IFS= read -r LINE ; do
 	if [ "${LINE:0:3}" = "   " ] ; then
@@ -37,6 +40,7 @@ while IFS= read -r LINE ; do
 done < $TMPFILE
 write_page "</pre></p>"
 rm $TMPFILE
+rm $SOURCES
 write_page_footer
 publish_page
 

@@ -362,7 +362,7 @@ def pkg_has_buildinfo(package, version=False, suite='sid', arch='amd64'):
                 'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
         query = query.format(package, suite, arch)
         version = str(query_db(query)[0][0])
-    buildinfo = BUILDINFO_PATH + '/' + suite + '/' + suite + '/' + package + \
+    buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
                 '_' + strip_epoch(version) + '_amd64.buildinfo'
     if os.access(buildinfo, os.R_OK):
         return True

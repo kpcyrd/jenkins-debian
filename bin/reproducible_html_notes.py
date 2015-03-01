@@ -374,8 +374,8 @@ def index_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            # FIXME we currently consider notes only for sid
-            url = RB_PKG_URI + '/sid/' + pkg + '.html'
+            # FIXME we currently consider notes only for sid/amd64
+            url = RB_PKG_URI + '/sid/amd64/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
         html += tab + '</code>\n'
@@ -412,8 +412,8 @@ def index_no_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            # FIXME we currently consider notes only for sid
-            url = RB_PKG_URI + '/sid/' + pkg + '.html'
+            # FIXME we currently consider notes only for sid/amd64
+            url = RB_PKG_URI + '/sid/amd64/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="package">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
         html += tab + '</code>\n'

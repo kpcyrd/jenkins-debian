@@ -245,7 +245,7 @@ def scheduler(suite):
     message = 'Scheduled ' + str(len(unknown)) + ' unknown package, ' + \
               str(len(new)) + ' packages with new versions and ' + \
               str(len(old)) + ' with the same version (total: ' + \
-              str(total) + 'in ' + suite')'
+              str(total) + 'in ' + suite + ')'
     kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
            '--relay-msg']
     kgb.extend(message.split())

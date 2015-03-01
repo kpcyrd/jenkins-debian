@@ -78,14 +78,14 @@ def update_sources_tables(suite):
     # Now actually update the database:
     cursor = conn_db.cursor()
     # updated packages
-    log.debug('Pusing updated packages to the database...')
+    log.debug('Pusing ' + str(len(updated_pkgs)) + ' updated packages to the database...')
     cursor.executemany('REPLACE INTO sources ' +
                        '(id, name, version, suite, architecture) ' +
                        'VALUES (?, ?, ?, ?, "{arch}")'.format(arch='amd64'),
                        updated_pkgs)
     conn_db.commit()
     # new packages
-    log.info('Now inserting the new sources in the database: ' +
+    log.info('Now inserting ' + str(len(pkgs_to_add)) + ' new sources in the database: ' +
              str(pkgs_to_add))
     cursor.executemany('INSERT INTO sources ' +
                        '(name, version, suite, architecture) ' +
@@ -95,7 +95,7 @@ def update_sources_tables(suite):
     cur_pkgs_name = [x[0] for x in cur_pkgs]
     new_pkgs_name = [x[0] for x in new_pkgs]
     rmed_pkgs = [x for x in cur_pkgs_name if x not in new_pkgs_name]
-    log.info('Now deleting removed packages: ' + str(rmed_pkgs))
+    log.info('Now deleting ' + str(len(rmed_pkgs)) + ' removed packages: ' + str(rmed_pkgs))
     rmed_pkgs_id = []
     for pkg in rmed_pkgs:
         result = query_db(('SELECT id FROM sources ' +
@@ -250,7 +250,7 @@ def scheduler(suite):
     message = 'Scheduled ' + str(len(unknown)) + ' unknown package, ' + \
               str(len(new)) + ' packages with new versions and ' + \
               str(len(old)) + ' with the same version (total: ' + \
-              str(total) + 'in ' + suite + ')'
+              str(total) + ' in ' + suite + ')'
     kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
            '--relay-msg']
     kgb.extend(message.split())

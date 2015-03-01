@@ -200,14 +200,19 @@ def scheduler_old_versions(suite, limit):
 
 
 def scheduler(suite):
-    total = int(query_db('SELECT count(*) FROM schedule')[0][0])
+    query = 'SELECT count(*) ' + \
+            'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
+            'WHERE s.suite="{suite}"'.format(suite=suite)
+    total = int(query_db(query)[0][0])
     log.debug('current scheduled packages: ' + str(total))
     if total > 250:
         build_page('scheduled')  # from reproducible_html_indexes
-        log.info(str(total) + ' packages already scheduled, nothing to do.')
+        log.info(str(total) + ' packages already scheduled in ' + suite +
+                 ', nothing to do here.')
         return
     else:
-        log.info(str(total) + ' packages already scheduled, scheduling some more...')
+        log.info(str(total) + ' packages already scheduled in ' + suite +
+                 ', scheduling some more...')
     # unknown packages
     log.info('Requesting 200 unknown packages...')
     unknown = scheduler_unknown_packages(suite, 200)
@@ -263,7 +268,16 @@ def scheduler(suite):
 
 
 if __name__ == '__main__':
+    overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
+    if overall > 800:
+        build_page('scheduled')  # from reproducible_html_indexes
+        log.info(str(overall) + ' packages already scheduled, nothing to do.')
+        sys.exit()
+    else:
+        log.info(str(overall) + ' packages already scheduled, scheduling some more...')
     for suite in SUITES:
         call_apt_update(suite)
         update_sources_tables(suite)
         scheduler(suite)
+    overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
+    log.info(str(overall) + ' packages scheduled at the end, in all suites.')

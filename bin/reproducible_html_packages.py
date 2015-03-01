@@ -113,8 +113,8 @@ def gen_extra_links(package, version, suite, arch):
     else:
         log.debug('buildinfo not detected at ' + buildinfo)
     if os.access(rbuild, os.R_OK):
-        url = RBUILD_URI + '/' + suite + '/' + package + '_' + eversion + \
-              '.rbuild.log'
+        url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
+              eversion + '.rbuild.log'
         log_size = os.stat(rbuild).st_size
         links +='<a href="' + url + '" target="main">rbuild (' + \
                 sizeof_fmt(log_size) + ')</a>\n'

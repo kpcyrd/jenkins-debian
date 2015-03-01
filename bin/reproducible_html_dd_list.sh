@@ -20,7 +20,7 @@ echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
 TMPFILE=$(mktemp)
 SOURCES=$(mktemp)
-schroot --directory / -c source:jenkins-reproducible-sid cat /var/lib/apt/lists/*_source_Sources > $SOURCES || \
+schroot --directory /tmp -c source:jenkins-reproducible-sid cat /var/lib/apt/lists/*_source_Sources > $SOURCES || \
     wget ${MIRROR}/dists/sid/main/source/Sources.xz -O - | xzcat > $SOURCES
 BAD=$(sqlite3 -init $INIT $PACKAGES_DB 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status="unreproducible" AND s.suite="sid" ORDER BY r.build_date DESC' | xargs echo)
 echo "${BAD}" | dd-list --stdin --sources $SOURCES > $TMPFILE || true

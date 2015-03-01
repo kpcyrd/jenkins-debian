@@ -170,24 +170,24 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond /var/lib/jenkins/userContent/rb-pkg/sid/amd64/$1 -f
-	RewriteRule ^/rb-pkg/([a-z0-9.+-]+) /rb-pkg/sid/am64/$1 [R=302,L]
+	RewriteRule ^/rb-pkg/([a-z0-9.+-]+) /rb-pkg/sid/amd64/$1 [R=302,L]
 	# the same for /dbd/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond /var/lib/jenkins/userContent/dbd/sid/amd64/$1 -f
-	RewriteRule ^/dbd/([a-z0-9.+-]+) /dbd/sid/am64/$1 [R=302,L]
+	RewriteRule ^/dbd/([a-z0-9.+-_]+) /dbd/sid/amd64/$1 [R=302,L]
 	# the same for /rbuild/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond /var/lib/jenkins/userContent/rbuild/sid/amd64/$1 -f
-	RewriteRule ^/rbuild/([a-z0-9.+-]+) /rbuild/sid/am64/$1 [R=302,L]
+	RewriteRule ^/rbuild/([a-z0-9.+-_]+) /rbuild/sid/amd64/$1 [R=302,L]
 	# the same for /buildinfo/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond /var/lib/jenkins/userContent/buildinfo/sid/amd64/$1 -f
-	RewriteRule ^/buildinfo/([a-z0-9.+-]+) /buildinfo/sid/am64/$1 [R=302,L]
+	RewriteRule ^/buildinfo/([a-z0-9.+-_]+) /buildinfo/sid/amd64/$1 [R=302,L]
 
 </VirtualHost>

@@ -12,6 +12,7 @@
 import os
 import re
 import sys
+import errno
 import sqlite3
 import logging
 import argparse
@@ -208,7 +209,11 @@ def write_html_page(title, body, destfile, noheader=False, style_note=False, noe
         html += html_footer.substitute(date=now)
     else:
         html += '</body>\n</html>'
-    os.makedirs(destfile.rsplit('/', 1)[0], exist_ok=True)
+    try:
+        os.makedirs(destfile.rsplit('/', 1)[0], exist_ok=True)
+    except OSError as e:
+        if e.errno != errno.EEXIST:  # that's 'File exists' error (errno 17)
+            raise
     with open(destfile, 'w') as fd:
         fd.write(html)
 

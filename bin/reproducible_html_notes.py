@@ -242,9 +242,9 @@ def gen_html_issue(issue):
     try:
         affected += tab*4 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'
         for pkg in sorted(issues_count[issue]):
-            # FIXME we currently consider notes only for sid
-            affected += tab*7 + '<a href="%s/sid/%s.html" class="noted">%s</a>\n' \
-                        % (RB_PKG_URI, pkg, pkg)
+            # FIXME we currently consider notes only for sid/amd64
+            affected += tab*7 + '<a href="%s/sid/amd64/%s.html" ' + \
+                        'class="noted">%s</a>\n' % (RB_PKG_URI, pkg, pkg)
     except KeyError:    # The note is not listed in any package, that is
         affected = '<i>None</i>'
     # check for description:

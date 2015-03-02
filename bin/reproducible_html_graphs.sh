@@ -392,6 +392,6 @@ for i in 3 4 5 1 ; do
 done
 write_page "</p>"
 write_page_footer
-publish_page $SUITE
+publish_page
 
 

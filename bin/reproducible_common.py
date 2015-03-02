@@ -164,7 +164,7 @@ html_head_page = Template((tab*2).join("""
     <li><a href="/index_pkg_sets.html">package sets stats</a></li>
     <li><a href="index_suite_stats.html">sid stats</a></li>
     <li><a href="/index_repo_stats.html">repositories overview</a></li>
-    <li><a href="/reproducible_stats.html">reproducible stats</a></li>
+    <li><a href="/reproducible.html">reproducible stats</a></li>
   </ul>
 </header>""".splitlines(True)))
 

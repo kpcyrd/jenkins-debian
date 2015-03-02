@@ -188,13 +188,15 @@ def gen_all_rb_pkg_pages(suite='sid', arch='amd64', no_clean=False):
 def purge_old_pages():
     for suite in SUITES:
         for arch in ARCHES:
-            log.info('Removing old pages from ' + suite + '...')
+            log.info('Removing old pages from ' + suite + '/' + arch + '...')
             try:
                 presents = sorted(os.listdir(RB_PKG_PATH + '/' + suite + '/' +
                                   arch))
             except OSError as e:
                 if e.errno != errno.ENOENT:  # that's 'No such file or
                     raise                    # directory' error (errno 17)
+                presents = []
+            log.debug('page presents: ' + str(presents))
             for page in presents:
                 pkg = page.rsplit('.', 1)[0]
                 query = 'SELECT s.name ' + \

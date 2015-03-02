@@ -24,7 +24,7 @@ for SUITE in $SUITES ; do
 	SOURCES=$(mktemp)
 	schroot --directory /tmp -c source:jenkins-reproducible-$SUITE cat /var/lib/apt/lists/*_source_Sources > $SOURCES || \
 	    wget ${MIRROR}/dists/$SUITE/main/source/Sources.xz -O - | xzcat > $SOURCES
-	BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status="unreproducible" AND s.suite='$SUITE' ORDER BY r.build_date DESC" | xargs echo)
+	BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status='unreproducible' AND s.suite='$SUITE' ORDER BY r.build_date DESC" | xargs echo)
 	echo "${BAD}" | dd-list --stdin --sources $SOURCES > $TMPFILE || true
 	write_page "<p>The following maintainers and uploaders are listed for packages in $SUITE which have built unreproducibly:</p><p><pre>"
 	while IFS= read -r LINE ; do

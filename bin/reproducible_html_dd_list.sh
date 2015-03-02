@@ -16,7 +16,7 @@ ARCH="amd64"
 init_html
 
 VIEW=dd-list
-for $SUITE in $SUITES ; do
+for SUITE in $SUITES ; do
 	PAGE=$SUITE/index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of maintainers of unreproducible packages in $SUITE"

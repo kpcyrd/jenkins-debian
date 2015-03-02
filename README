@@ -121,7 +121,7 @@ Installation tests inside chroot environments.
 
 * Several jobs are being used to test whether packages be build reproducible or not. The result is the website https://reproducible.debian.net which is actually just a collection of html files being served from this host.
 
-* There are three builder jobs, alpha+beta+gamma which are each started every 2min., and there is a scheduler jobs scheduling builds for them.
+* There are three builder jobs, alpha+beta+gamma which are each started every 2min.. There is a scheduler jobs scheduling builds for them, and job to setup and update the pbuilder base.tgz archives for the different suites.
 
 * Several other jobs exist to build the html pages, to create a JSON file which can be downloaded from https://reproducible.debian.net/reproducible.json.
 

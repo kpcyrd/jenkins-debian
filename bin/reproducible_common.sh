@@ -76,8 +76,8 @@ META_PKGSET[13]="maint_pkg-perl-maintainers"
 init_html() {
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list repo_stats pkg_sets stats"
-	GLOBALVIEWS="issues notes no_notes repo_stats pkg_sets stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repo_stats stats"
+	GLOBALVIEWS="issues notes no_notes pkg_sets repo_stats stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
 	SPOKENTARGET["no_notes"]="packages without notes"
@@ -86,9 +86,10 @@ init_html() {
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
-	SPOKENTARGET["repo_stats"]="apt repository stats"
 	SPOKENTARGET["pkg_sets"]="package sets stats"
-	SPOKENTARGET["stats"]="$SUITE stats"
+	SPOKENTARGET["suite_stats"]="$SUITE stats"
+	SPOKENTARGET["repo_stats"]="repositories overview"
+	SPOKENTARGET["stats"]="reproducible stats"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
@@ -166,10 +167,12 @@ write_page_header() {
 			continue
 		fi
 		write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
-	done
-	for i in $SUITES ; do
-		if [ "$i" != "$SUITE" ] ; then
-			write_page "<li><a href=\"/$i\">suite: $i</a></li>"
+		if [ "$TARGET" = "suite_stats" ] ; then
+			for i in $SUITES ; do
+				if [ "$i" != "$SUITE" ] ; then
+					write_page "<li><a href=\"/$i\">suite: $i</a></li>"
+				fi
+			done
 		fi
 	done
 	write_page "</ul>"

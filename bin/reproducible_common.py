@@ -161,9 +161,10 @@ html_head_page = Template((tab*2).join("""
     <li><a href="index_last_48h.html">packages tested in the last 48h</a></li>
     <li><a href="index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     <li><a href="index_dd-list.html">maintainers of unreproducible packages</a></li>
-    <li><a href="/index_repo_stats.html">apt repository stats</a></li>
     <li><a href="/index_pkg_sets.html">package sets stats</a></li>
-    <li><a href="/index_stats.html">stats</a></li>
+    <li><a href="index_suite_stats.html">\$suite stats</a></li>
+    <li><a href="/index_repo_stats.html">repositories overview</a></li>
+    <li><a href="/reproducible_stats.html">reproducible stats</a></li>
   </ul>
 </header>""".splitlines(True)))
 

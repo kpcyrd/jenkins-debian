@@ -208,6 +208,7 @@ def purge_old_pages():
                     log.info('There is no package named ' + pkg + ' from ' +
                              suite + '/' + arch + ' in the database. ' +
                              'Removing old page.')
-                    os.remove(RB_PKG_PATH + '/' + suite + '/' + arch + '/' +
-                              page)
+                    pkg_file=RB_PKG_PATH + '/' + suite + '/' + arch + '/' + page
+                    if os.path.isfile(pkg_file):
+                        os.remove(pkg_file)
 

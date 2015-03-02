@@ -223,10 +223,11 @@ redo_png() {
 	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
-		mkdir -p $(dirname $2)
+		DIR=$(dirname $2)
+		mkdir -p $DIR
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 /var/lib/jenkins/userContent/$SUITE
-		rmdir --ignore-fail-on-non-empty $(dirname $2)
+		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi
 	rm ${TABLE[$1]}.csv
 }

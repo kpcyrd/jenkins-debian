@@ -124,42 +124,42 @@ html_head_page = Template((tab*2).join("""
   <ul>
     <li>Have a look at:</li>
     <li>
-      <a href="/index_reproducible.html" target="_parent">
+      <a href="index_reproducible.html" target="_parent">
         <img src="/static/weather-clear.png" alt="reproducible icon" />
       </a>
     </li>
     <li>
-      <a href="/index_FTBR.html" target="_parent">
+      <a href="index_FTBR.html" target="_parent">
         <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
       </a>
     </li>
     <li>
-      <a href="/index_FTBFS.html" target="_parent">
+      <a href="index_FTBFS.html" target="_parent">
         <img src="/static/weather-storm.png" alt="FTBFS icon" />
       </a>
     </li>
     <li>
-      <a href="/index_404.html" target="_parent">
+      <a href="index_404.html" target="_parent">
         <img src="/static/weather-severe-alert.png" alt="404 icon" />
       </a>
     </li>
     <li>
-      <a href="/index_not_for_us.html" target="_parent">
+      <a href="index_not_for_us.html" target="_parent">
         <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
       </a>
     </li>
     <li>
-      <a href="/index_blacklisted.html" target="_parent">
+      <a href="index_blacklisted.html" target="_parent">
         <img src="/static/error.png" alt="blacklisted icon" />
       </a>
     </li>
     <li><a href="/index_issues.html">issues</a></li>
     <li><a href="/index_notes.html">packages with notes</a></li>
     <li><a href="/index_no_notes.html">package without notes</a></li>
-    <li><a href="/index_scheduled.html">currently scheduled</a></li>
-    <li><a href="/index_last_24h.html">packages tested in the last 24h</a></li>
-    <li><a href="/index_last_48h.html">packages tested in the last 48h</a></li>
-    <li><a href="/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
+    <li><a href="index_scheduled.html">currently scheduled</a></li>
+    <li><a href="index_last_24h.html">packages tested in the last 24h</a></li>
+    <li><a href="index_last_48h.html">packages tested in the last 48h</a></li>
+    <li><a href="index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     <li><a href="/index_dd-list.html">maintainers of unreproducible packages</a></li>
     <li><a href="/index_repo_stats.html">apt repository stats</a></li>
     <li><a href="/index_pkg_sets.html">package sets stats</a></li>

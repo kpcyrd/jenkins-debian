@@ -364,7 +364,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	write_page_meta_sign
 done
 write_page_footer
-publish_page
+publish_page $SUITE
 
 if [ "$SUITE" != "sid" ] ; then
 	# stop here if not called with no arguments...

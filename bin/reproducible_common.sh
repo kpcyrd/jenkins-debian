@@ -186,12 +186,17 @@ write_page_meta_sign() {
 }
 
 publish_page() {
-	cp $PAGE /var/lib/jenkins/userContent/$1/
-	if [ "$VIEW" = "$MAINVIEW" ] ; then
-		cp $PAGE /var/lib/jenkins/userContent/reproducible.html
+	if [ "$1" = "" ] ; then
+		TARGET=$PAGE
+		if [ "$VIEW" = "$MAINVIEW" ] ; then
+			cp $PAGE /var/lib/jenkins/userContent/reproducible.html
+		fi
+	else
+		TARGET=$1/$PAGE
 	fi
+	cp $PAGE /var/lib/jenkins/userContent/$TARGET
 	rm $PAGE
-	echo "Enjoy $REPRODUCIBLE_URL/$PAGE"
+	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
 }
 
 set_package_class() {

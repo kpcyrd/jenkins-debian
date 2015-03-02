@@ -131,15 +131,18 @@ gather_meta_stats() {
 	fi
 }
 
-for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
-	if [ -z $RESULT ] ; then
-		META_RESULT=true
-		gather_meta_stats $i
-		! $META_RESULT || sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-		touch -d "$DATE 00:00" ${TABLE[6]}_${META_PKGSET[$i]}.png
-	fi
-done
+if [ "$SUITE" != "experimental" ] ; then
+	# no meta pkg sets in experimental
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
+		if [ -z $RESULT ] ; then
+			META_RESULT=true
+			gather_meta_stats $i
+			! $META_RESULT || sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
+			touch -d "$DATE 00:00" ${TABLE[6]}_${META_PKGSET[$i]}.png
+		fi
+	done
+fi
 
 #
 # gather bugs stats

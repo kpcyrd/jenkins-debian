@@ -57,7 +57,7 @@ if [ -z $RESULT ] ; then
 	if [ -z $DIFFB ] ; then DIFFB=0 ; fi
 	DIFFU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTU');")
 	if [ -z $DIFFU ] ; then DIFFU=0 ; fi
-	let "TOTAL=GOOD+BAD+UGLY+REST"
+	let "TOTAL=GOOD+BAD+UGLY+REST" || true # let FOO=0+0 returns error in bash...
 	if [ "$ALL" != "$TOTAL" ] ; then
 		let "UNTESTED=ALL-TOTAL"
 	else

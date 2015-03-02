@@ -119,6 +119,7 @@ properties:
 
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
+* move all content into /var/lib/userContent/reproducible/
 
 * pkg sets related:
 ** new package set: kde/plasma

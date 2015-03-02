@@ -222,7 +222,7 @@ redo_png() {
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
-		mv $2 /var/lib/jenkins/userContent/
+		mv $2 /var/lib/jenkins/userContent/$SUITE
 	fi
 	rm ${TABLE[$1]}.csv
 }
@@ -261,7 +261,7 @@ write_page_header $VIEW "Overview of various statistics about reproducible build
 write_page "<p>"
 set_icon reproducible
 write_icon
-write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly."
+write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE."
 set_icon unreproducible
 write_icon
 write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."
@@ -286,10 +286,14 @@ write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 is special anyway)
 for i in 0 3 4 5 1 ; do
+	if [ $i -ne 0 ] && [ "$SUITE" != "sid" ] ; then
+		# do most stats only for sid
+		continue
+	fi
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi
-	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/$SUITE/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
 	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 		redo_png $i ${TABLE[$i]}.png
@@ -326,7 +330,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		if [ ! -f /var/lib/jenkins/userContent/$PNG ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 			redo_png 6 $PNG ${META_PKGSET[$i]}
 		fi
-		write_page "<p><a href=\"/userContent/$PNG\"><img src=\"/userContent/$PNG\" class=\"graph\" alt=\"${MAINLABEL[6]}\"></a>"
+		write_page "<p><a href=\"/userContent/$PNG\"><img src=\"/userContent/$SUITE/$PNG\" class=\"graph\" alt=\"${MAINLABEL[6]}\"></a>"
 		write_page "<br />The package set '${META_PKGSET[$i]}' consists of: <br />"
 		set_icon reproducible
 		write_icon

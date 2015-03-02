@@ -69,7 +69,6 @@ META_PKGSET[12]="grml_build-depends"
 META_PKGSET[13]="maint_pkg-perl-maintainers"
 
 init_html() {
-	SUITE=sid
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list repo_stats pkg_sets stats"
@@ -90,7 +89,7 @@ init_html() {
 	SPOKENTARGET["repo_stats"]="statistics about the reproducible builds apt repository"
 	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets"
 	SPOKENTARGET["stats"]="various statistics about reproducible builds"
-	# query some data we need everywhere (relative to sid, we care only about sid here)
+	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
 	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
@@ -182,7 +181,7 @@ write_page_meta_sign() {
 }
 
 publish_page() {
-	cp $PAGE /var/lib/jenkins/userContent/
+	cp $PAGE /var/lib/jenkins/userContent/$1/
 	if [ "$VIEW" = "$MAINVIEW" ] ; then
 		cp $PAGE /var/lib/jenkins/userContent/reproducible.html
 	fi

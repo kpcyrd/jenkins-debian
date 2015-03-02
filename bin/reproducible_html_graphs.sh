@@ -291,8 +291,12 @@ for i in 0 3 4 5 1 ; do
 done
 write_page "</p>"
 write_page_footer
-publish_page
+publish_page $SUITE
 
+if [ "$SUITE" = "experimental" ] ; then
+	# no package sets page for experimental
+	exit 0
+fi
 VIEW=pkg_sets
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."

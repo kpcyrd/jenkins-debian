@@ -161,7 +161,7 @@ write_page_header() {
 				BASEURL=""
 			fi
 		done
-		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experiemental" ] ; then
+		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then
 			# no pkg_sets are tested in experimental
 			continue
 		fi

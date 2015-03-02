@@ -78,6 +78,7 @@ init_html() {
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repo_stats stats"
 	GLOBALVIEWS="issues notes no_notes pkg_sets repo_stats stats"
+	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
 	SPOKENTARGET["no_notes"]="packages without notes"
@@ -156,10 +157,15 @@ write_page_header() {
 	done
 	for TARGET in $ALLVIEWS ; do
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
-		BASEURL="/$SUITE"
+		BASEURL="/$SUITE/$ARCH"
 		for i in $GLOBALVIEWS ; do
 			if [ "$TARGET" = "$i" ] ; then
 				BASEURL=""
+			fi
+		done
+		for i in ${SUITEVIEWS} ; do
+			if [ "$TARGET" = "$i" ] ; then
+				BASEURL="/$SUITE"
 			fi
 		done
 		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then

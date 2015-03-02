@@ -129,6 +129,7 @@ properties:
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA
 
 * db schema 2.0
+** maybe results.build_duration should be type integer, so ORDER BY works as it should.
 ** actually add support for suites in the code, the db is fine now.
 ** actually add support for archs, the db is fine now. One day we'll want to rebuild all the packages on all the archs too!
 ** record build stats in the new stats_build table (forever, so we get relevant data)

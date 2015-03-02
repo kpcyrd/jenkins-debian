@@ -183,7 +183,7 @@ pages = {
                 'icon_link': '/index_unreproducible.html',
                 'query': 'FTBR_last24h',
                 'query2': 'FTBR_all',
-                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'failed to built reproducibly in total, $tot of them in the last 24h in $suite/$arch:'),
                 'timely': True
             },
@@ -192,7 +192,7 @@ pages = {
                 'icon_link': '/index_FTBFS.html',
                 'query': 'FTBFS_last24h',
                 'query2': 'FTBFS_all',
-                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'failed to built from source in total, $tot of them  in the last 24h in $suite/$arch:'),
                 'timely': True
             },
@@ -201,7 +201,7 @@ pages = {
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_last24h',
                 'query2': 'reproducible_all',
-                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'successfully built reproducibly in total, $tot of them in the last 24h in $suite/$arch:'),
                 'timely': True
             },
@@ -215,7 +215,7 @@ pages = {
                 'icon_link': '/index_unreproducible.html',
                 'query': 'FTBR_last48h',
                 'query2': 'FTBR_all',
-                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'failed to built reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
                 'timely': True
             },
@@ -224,7 +224,7 @@ pages = {
                 'icon_link': '/index_FTBFS.html',
                 'query': 'FTBFS_last48h',
                 'query2': 'FTBFS_all',
-                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'failed to built from source in total, $tot of them  in the last 48h in $suite/$arch:'),
                 'timely': True
             },
@@ -233,7 +233,7 @@ pages = {
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_last48h',
                 'query2': 'reproducible_all',
-                'text': Template('$count packages ($percent% of ${count_total}) ' + \
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'successfully built reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
                 'timely': True
             },
@@ -260,7 +260,7 @@ def build_leading_text_section(section, rows, suite, arch):
     try:
         percent = round(((total/count_total)*100), 1)  # count_total is
     except ZeroDivisionError:                          # defined in common
-        log.error('Looks like there are either no tested package or no ' + \
+        log.error('Looks like there are either no tested package or no ' +
                   'packages available at all. Maybe it\'s a new database?')
         percent = 0.0
     try:

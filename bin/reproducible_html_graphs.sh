@@ -287,7 +287,7 @@ write_page "<p>"
 write_page " <a href=\"/userContent/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"graph\" alt=\"${MAINLABEL[0]}\"></a>"
 # redo png once a day
 if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
-		redo_png $i ${TABLE[0]}.png
+		redo_png 0 ${TABLE[0]}.png
 	fi
 write_page "</p>"
 write_page_footer

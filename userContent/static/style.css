@@ -27,9 +27,7 @@ img {
 }
 
 img.overview {
-	vertical-align: middle;
-	max-width: 40%;
-	height: auto;
+	max-width: 49%;
 }
 
 .beta {

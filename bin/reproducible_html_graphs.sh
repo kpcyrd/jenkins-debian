@@ -374,11 +374,11 @@ VIEW=stats
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of various statistics about reproducible builds"
-write_page "<p><table><tr>"
+write_page "<p>"
 for i in $SUITES ; do
-	write_page " <td><a href=\"/userContent/$i/${TABLE[0]}.png\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"${MAINLABEL[0]}\"></a></td>"
+	write_page " <a href=\"/userContent/$i\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"$i stats\"></a>"
 done
-write_page "</tr></table></p><p>"
+write_page "</p><p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
 for i in 3 4 5 1 ; do
 	if [ "$i" = "3" ] ; then

@@ -23,7 +23,7 @@ write_page "<p>These source packages are different from sid in our apt repositor
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in experimental</br />(not relevant for reproducible.debian.net <em>yet</em>)</tr>"
+write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in experimental</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
 SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)

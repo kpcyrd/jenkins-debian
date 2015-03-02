@@ -226,7 +226,7 @@ redo_png() {
 		mkdir -p $(dirname $2)
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 /var/lib/jenkins/userContent/$SUITE
-		rmdir $(dirname $2)
+		rmdir --ignore-fail-on-non-empty $(dirname $2)
 	fi
 	rm ${TABLE[$1]}.csv
 }

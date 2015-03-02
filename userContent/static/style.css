@@ -26,13 +26,11 @@ img {
 	height: auto;
 }
 
-/*
- *
- * img.graph {
- *	width: 100%;
- * }
- *
- */
+img.overview {
+	vertical-align: middle;
+	max-width: 40%;
+	height: auto;
+}
 
 .beta {
 	color:#555555;

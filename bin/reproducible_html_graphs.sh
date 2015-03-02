@@ -286,7 +286,7 @@ set_icon blacklisted
 write_icon
 write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
-write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"graph\" alt=\"${MAINLABEL[0]}\"></a>"
+write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 # redo png once a day
 if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
 		redo_png 0 $SUITE/${TABLE[0]}.png
@@ -322,7 +322,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$PNG ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 			redo_png 6 $SUITE/$PNG ${META_PKGSET[$i]}
 		fi
-		write_page "<p><a href=\"/userContent/$SUITE/$PNG\"><img src=\"/userContent/$SUITE/$PNG\" class=\"graph\" alt=\"${MAINLABEL[6]}\"></a>"
+		write_page "<p><a href=\"/userContent/$SUITE/$PNG\"><img src=\"/userContent/$SUITE/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
 		write_page "<br />The package set '${META_PKGSET[$i]}' consists of: <br />"
 		set_icon reproducible
 		write_icon
@@ -373,7 +373,7 @@ echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of various statistics about reproducible builds"
 write_page "<p><table><tr>"
 for $i in $SUITES ; do
-	write_page "<td></td>"
+	write_page " <td><a href=\"/userContent/$i/${TABLE[0]}.png\"><img src=\"/userContent/$i/${TABLE[$0]}.png\" class=\"overview\" alt=\"${MAINLABEL[$0]}\"></a></td>"
 done
 write_page "</tr></table></p><p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
@@ -381,7 +381,7 @@ for i in 3 4 5 1 ; do
 	if [ "$i" = "3" ] ; then
 		write_usertag_table
 	fi
-	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class=\"graph\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
 	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 		redo_png $i ${TABLE[$i]}.png

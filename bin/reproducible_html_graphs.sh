@@ -257,7 +257,7 @@ write_usertag_table() {
 VIEW=stats
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
 write_page "<p>"
 set_icon reproducible
 write_icon
@@ -306,7 +306,7 @@ fi
 VIEW=pkg_sets
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Overview of ${SPOKENTARGET[$VIEW]}"
+write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE"
 write_page "<ul><li>Tracked package sets: </li>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	if [ -f /var/lib/jenkins/userContent/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then

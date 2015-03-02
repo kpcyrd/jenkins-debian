@@ -78,23 +78,17 @@ init_html() {
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list repo_stats pkg_sets stats"
 	GLOBALVIEWS="issues notes no_notes repo_stats pkg_sets stats"
-	SPOKENTARGET["reproducible"]="packages in $SUITE which built reproducibly"
-	SPOKENTARGET["FTBR"]="packages in $SUITE which failed to build reproducibly"
-	SPOKENTARGET["FTBFS"]="packages in $SUITE which failed to build from source"
-	SPOKENTARGET["404"]="packages in $SUITE where the sources failed to download"
-	SPOKENTARGET["not_for_us"]="packages in $SUITE which should not be build on 'amd64'"
-	SPOKENTARGET["blacklisted"]="packages in $SUITE which have been blacklisted"
-	SPOKENTARGET["issues"]="known issues related to reproducible builds"
+	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
 	SPOKENTARGET["no_notes"]="packages without notes"
-	SPOKENTARGET["scheduled"]="packages in $SUITE currently scheduled for testing for build reproducibility"
-	SPOKENTARGET["last_24h"]="packages in $SUITE tested in the last 24h"
-	SPOKENTARGET["last_48h"]="packages in $SUITE tested in the last 48h"
-	SPOKENTARGET["all_abc"]="all tested packages in $SUITE (sorted alphabetically)"
-	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages in $SUITE"
-	SPOKENTARGET["repo_stats"]="statistics about the reproducible builds apt repository"
-	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets in $SUITE"
-	SPOKENTARGET["stats"]="various statistics about reproducible builds for $SUITE"
+	SPOKENTARGET["scheduled"]="currently scheduled"
+	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
+	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
+	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
+	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
+	SPOKENTARGET["repo_stats"]="apt repository stats"
+	SPOKENTARGET["pkg_sets"]="package sets stats"
+	SPOKENTARGET["stats"]="stats"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
@@ -160,17 +154,7 @@ write_page_header() {
 		write_page "</li>"
 	done
 	for TARGET in $ALLVIEWS ; do
-		if [ "$TARGET" = "issues" ] || [ "$TARGET" = "stats" ] ; then
-			SPOKEN_TARGET=$TARGET
-		elif [ "$TARGET" = "scheduled" ] ; then
-			SPOKEN_TARGET="currently scheduled"
-		elif [ "$TARGET" = "pkg_sets" ] ; then
-			SPOKEN_TARGET="package sets stats"
-		elif [ "$TARGET" = "repo_stats" ] ; then
-			SPOKEN_TARGET="apt repository stats"
-		else
-			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
-		fi
+		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		BASEURL="/$SUITE"
 		for i in $GLOBALVIEWS ; do
 			if [ "$TARGET" = "$i" ] ; then

@@ -170,7 +170,7 @@ def gen_packages_html(packages, suite='sid', arch='amd64', no_clean=False):
         desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + '/' + \
                   arch + '/' + pkg + '.html'
         title = pkg + ' - reproducible build results'
-        write_html_page(title=title, body=html, destfile=destfile,
+        write_html_page(title=title, body=html, destfile=destfile, suite=suite,
                         noheader=True, noendpage=True)
         log.info("Package page generated at " + desturl)
     if not no_clean:

@@ -163,6 +163,11 @@ write_page_header() {
 		done
 		write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 	done
+	for i in $SUITES ; do
+		if [ "$i" != "$SUITE" ] ; then
+			write_page "<li><a href=\"$i\">suite: $i</a></li>"
+		fi
+	done
 	write_page "</ul>"
 	write_page "</header>"
 }

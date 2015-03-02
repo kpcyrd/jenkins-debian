@@ -14,7 +14,11 @@ common_init "$@"
 init_html
 gather_stats
 
-SUITE="sid"  # we only care about sid status here (for now)
+if [ -n "$1" ] ; then
+	SUITE="$1"
+else
+	SUITE="sid"
+fi
 ARCH="amd64"  # we only care about amd64 status here (for now)
 
 #

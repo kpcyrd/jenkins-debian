@@ -88,7 +88,7 @@ init_html() {
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 	SPOKENTARGET["repo_stats"]="apt repository stats"
 	SPOKENTARGET["pkg_sets"]="package sets stats"
-	SPOKENTARGET["stats"]="stats"
+	SPOKENTARGET["stats"]="$SUITE stats"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")

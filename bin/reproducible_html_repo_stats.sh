@@ -10,7 +10,8 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-set +x
+SUITE="sid"
+ARCH="amd64"
 init_html
 
 VIEW=repo_stats

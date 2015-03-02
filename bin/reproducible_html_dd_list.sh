@@ -11,7 +11,8 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-set +x
+SUITE="sid"
+ARCH="amd64"
 init_html
 
 VIEW=dd-list
@@ -33,7 +34,7 @@ for $SUITE in $SUITES ; do
 			if [ "$UPLOADERS" = "$PACKAGE" ] ; then
 				UPLOADERS=""
 			fi
-			write_page "   <a href=\"/rb-pkg/$SUITE/amd64/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
+			write_page "   <a href=\"/rb-pkg/$SUITE/$ARCH/$PACKAGE.html\">$PACKAGE</a> $UPLOADERS"
 		else
 			LINE="$(echo $LINE | sed 's#&#\&amp;#g ; s#<#\&lt;#g ; s#>#\&gt;#g')"
 			write_page "$LINE"

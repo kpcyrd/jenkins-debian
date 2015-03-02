@@ -77,23 +77,24 @@ init_html() {
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list repo_stats pkg_sets stats"
-	SPOKENTARGET["reproducible"]="packages which built reproducibly"
-	SPOKENTARGET["FTBR"]="packages which failed to build reproducibly"
-	SPOKENTARGET["FTBFS"]="packages which failed to build from source"
-	SPOKENTARGET["404"]="packages where the sources failed to download"
-	SPOKENTARGET["not_for_us"]="packages which should not be build on 'amd64'"
-	SPOKENTARGET["blacklisted"]="packages which have been blacklisted"
+	GLOBALVIEWS="issues notes no_notes repo_stats pkg_sets stats"
+	SPOKENTARGET["reproducible"]="packages in $SUITE which built reproducibly"
+	SPOKENTARGET["FTBR"]="packages in $SUITE which failed to build reproducibly"
+	SPOKENTARGET["FTBFS"]="packages in $SUITE which failed to build from source"
+	SPOKENTARGET["404"]="packages in $SUITE where the sources failed to download"
+	SPOKENTARGET["not_for_us"]="packages in $SUITE which should not be build on 'amd64'"
+	SPOKENTARGET["blacklisted"]="packages in $SUITE which have been blacklisted"
 	SPOKENTARGET["issues"]="known issues related to reproducible builds"
 	SPOKENTARGET["notes"]="packages with notes"
 	SPOKENTARGET["no_notes"]="packages without notes"
-	SPOKENTARGET["scheduled"]="packages currently scheduled for testing for build reproducibility"
-	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
-	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
-	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
-	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
+	SPOKENTARGET["scheduled"]="packages in $SUITE currently scheduled for testing for build reproducibility"
+	SPOKENTARGET["last_24h"]="packages in $SUITE tested in the last 24h"
+	SPOKENTARGET["last_48h"]="packages in $SUITE tested in the last 48h"
+	SPOKENTARGET["all_abc"]="all tested packages in $SUITE (sorted alphabetically)"
+	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages in $SUITE"
 	SPOKENTARGET["repo_stats"]="statistics about the reproducible builds apt repository"
-	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets"
-	SPOKENTARGET["stats"]="various statistics about reproducible builds"
+	SPOKENTARGET["pkg_sets"]="statistics about reproducible builds of specific package sets in $SUITE"
+	SPOKENTARGET["stats"]="various statistics about reproducible builds for $SUITE"
 	# query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
@@ -133,7 +134,7 @@ set_icon() {
 
 write_icon() {
 	# ICON and STATE_TARGET_NAME are set by set_icon()
-	write_page "<a href=\"/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
+	write_page "<a href=\"/$SUITE/$ARCH/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
 }
 
 write_page_header() {
@@ -170,7 +171,13 @@ write_page_header() {
 		else
 			SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		fi
-		write_page "<li><a href=\"/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
+		BASEURL="/$SUITE"
+		for i in $GLOBALVIEWS ; do
+			if [ "$TARGET" = "$i" ] ; then
+				BASEURL=""
+			fi
+		done
+		write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 	done
 	write_page "</ul>"
 	write_page "</header>"
@@ -208,12 +215,8 @@ set_package_class() {
 }
 
 set_linktarget() {
-	local SUITE="$1"
-	local ARCH="$2"
-	shift
-	shift
 	for PKG in $@ ; do
-		if [ -f $RB_PATH/$SUITE/$PKG.html ] ; then
+		if [ -f $RB_PATH/$SUITE/$ARCH/$PKG.html ] ; then
 			set_package_class
 			LINKTARGET[$PKG]="<a href=\"/userContent/rb-pkg/$SUITE/$ARCH/$PKG.html\" $CLASS>$PKG</a>"
 		else

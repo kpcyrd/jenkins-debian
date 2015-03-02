@@ -65,7 +65,7 @@ queries = {
 
 pages = {
     'reproducible': {
-        'title': 'Overview of packages which built reproducibly',
+        'title': 'Overview of packages in which built reproducibly',
         'body': [
             {
                 'icon_status': 'reproducible',

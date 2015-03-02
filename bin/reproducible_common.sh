@@ -165,7 +165,7 @@ write_page_header() {
 	done
 	for i in $SUITES ; do
 		if [ "$i" != "$SUITE" ] ; then
-			write_page "<li><a href=\"$i\">suite: $i</a></li>"
+			write_page "<li><a href=\"/$i\">suite: $i</a></li>"
 		fi
 	done
 	write_page "</ul>"

@@ -361,8 +361,7 @@ def index_notes(notes, bugs):
                         'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
                         'WHERE s.suite="sid" ORDER BY s.name')
     with_notes = [x for x in all_pkgs if x[0] in notes]
-    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.<br />\n'
-    html += 'In particular:</p>\n'
+    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
     for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
         pkgs = [x[0] for x in with_notes if x[1] == status]
         if not pkgs:

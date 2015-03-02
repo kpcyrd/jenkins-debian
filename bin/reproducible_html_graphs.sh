@@ -219,7 +219,8 @@ redo_png() {
 		WHERE_EXTRA=""
 	fi
 	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
-	if [ -n "$(cat ${TABLE[$1]}.csv)" ] ; then
+	# only generate graph is the query returned data
+	if [ -n "$(tail -1 ${TABLE[$1]}.csv)" ] ; then
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 /var/lib/jenkins/userContent/
 	fi

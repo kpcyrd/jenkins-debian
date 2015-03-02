@@ -200,7 +200,7 @@ def write_html_page(title, body, destfile, suite=None, noheader=False, style_not
         suite_links = ""
         for i in SUITES:
                if i != suite:
-                    suite_links += '<li><a href="' + i +'">suite: ' + i + '</a></li>'
+                    suite_links += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
         html += html_head_page.substitute(
             page_title=title,
             count_total=count_total,

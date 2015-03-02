@@ -184,7 +184,7 @@ write_page_meta_sign() {
 publish_page() {
 	if [ "$1" = "" ] ; then
 		TARGET=$PAGE
-		if [ "$VIEW" = "$MAINVIEW" ] ; then
+		if [ "$SUITE" = "sid" ] && [ "$VIEW" = "$MAINVIEW" ] ; then
 			cp $PAGE /var/lib/jenkins/userContent/reproducible.html
 		fi
 	else

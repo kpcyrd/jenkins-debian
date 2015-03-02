@@ -218,6 +218,23 @@ schema_updates = {
         '''ALTER TABLE stats_bugs ADD COLUMN open_umask INTEGER''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_umask INTEGER''',
         'INSERT INTO rb_schema VALUES ("3", "' + now + '")'],
+    4: [ # stats_pkg_state needs (datum, suite) as primary key
+        '''CREATE TABLE stats_pkg_state_tmp
+           (datum TEXT NOT NULL,
+            suite TEXT NOT NULL,
+            untested INTEGER,
+            reproducible INTEGER,
+            unreproducible INTEGER,
+            FTBFS INTEGER,
+            other INTEGER,
+            PRIMARY KEY (datum, suite))''',
+        '''INSERT INTO stats_pkg_state_tmp (datum, suite, untested,
+            reproducible, unreproducible, FTBFS, other)
+            SELECT datum, suite, untested, reproducible, unreproducible,
+            FTBFS, other FROM stats_pkg_state;''',
+        '''DROP TABLE stats_pkg_state;''',
+        '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
+        'INSERT INTO rb_schema VALUES ("4", "' + now + '")'],
 }
 
 

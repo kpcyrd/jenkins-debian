@@ -24,20 +24,21 @@ shift
 SUITE="$1"
 shift
 
+declare -a EXTRA_SOURCES
 if [ "$SUITE" = "experimental" ] ; then
 	# experimental cannot be bootstrapped
 	SUITE=sid
-	EXTRA_PACKAGES="deb $MIRROR experimental main"
-	EXTRA_SOURCES="deb-src $MIRROR experimental main"
+	EXTRA_SOURCES[0]="deb $MIRROR experimental main"
+	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
 fi
 
 if [ "$1" = "backports" ] ; then
-	EXTRA_PACKAGES="deb $MIRROR ${SUITE}-backports main"
-	EXTRA_SOURCES="deb-src $MIRROR ${SUITE}-backports main"
+	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main"
+	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main"
 	shift
 elif [ "$1" = "reproducible" ] ; then
-	EXTRA_PACKAGES="deb http://reproducible.alioth.debian.org/debian/ ./"
-	EXTRA_SOURCES="deb-src http://reproducible.alioth.debian.org/debian/ ./"
+	EXTRA_SOURCES[4]="deb http://reproducible.alioth.debian.org/debian/ ./"
+	EXTRA_SOURCES[5]="deb-src http://reproducible.alioth.debian.org/debian/ ./"
 fi
 
 if [ ! -d "$CHROOT_BASE" ]; then
@@ -99,8 +100,9 @@ bootstrap() {
 	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
 	echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	echo "deb-src $MIRROR $SUITE main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
-	echo "${EXTRA_PACKAGES}"                        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
-	echo "${EXTRA_SOURCES}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
+	for i in $(seq 0 5) ; do
+		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
+	done
 
 	if [ "$1" = "reproducible" ] ; then
 		TMPFILE=$(mktemp -u)

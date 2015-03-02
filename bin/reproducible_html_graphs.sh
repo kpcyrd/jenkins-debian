@@ -374,7 +374,7 @@ PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of various statistics about reproducible builds"
 write_page "<p><table><tr>"
-for $i in $SUITES ; do
+for i in $SUITES ; do
 	write_page " <td><a href=\"/userContent/$i/${TABLE[0]}.png\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"${MAINLABEL[0]}\"></a></td>"
 done
 write_page "</tr></table></p><p>"

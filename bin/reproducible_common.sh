@@ -219,6 +219,8 @@ link_packages() {
 }
 
 gen_packages_html() {
+	local suite="$1"
+	shift
 	CWD=$(pwd)
 	cd /srv/jenkins/bin
 	for (( i=1; i<$#+1; i=i+100 )) ; do
@@ -232,7 +234,7 @@ gen_packages_html() {
 			fi
 		done
 		string+=']'
-		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, no_clean=True)"
+		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, suite=\"${suite}\" no_clean=True)"
 	done
 	python3 -c "from reproducible_html_packages import purge_old_pages; purge_old_pages()"
 	cd "$CWD"

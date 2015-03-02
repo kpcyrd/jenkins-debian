@@ -39,7 +39,7 @@ update_db_and_html() {
 	# unmark build as properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	set +x
-	gen_packages_html $SRCPACKAGE
+	gen_packages_html $SUITE $SRCPACKAGE
 	echo
 	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/$SRCPACKAGE.html"
 	echo

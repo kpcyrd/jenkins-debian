@@ -98,8 +98,34 @@ setup_pbuilder() {
 			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; exit 1 )
 	done
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
+	# create stamp file to record initial creation date
+	touch /var/log/jenkins/${NAME}.tgz.stamp
 	rm ${TMPFILE}
-	echo
 }
 
-setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev debhelper
+#
+# update pbuilder for reproducible builds
+#
+update_pbuilder() {
+	NAME=$1
+	sudo pbuilder --update --basetgz /var/cache/pbuilder/${NAME}.tgz
+}
+
+#
+# main
+#
+BASETGZ=/var/cache/pbuilder/$SUITE-reproducible-base.tgz
+STAMP=/var/log/jenkins/$SUITE-reproducible-base.tgz.stamp
+OLDSTAMP=$(find $STAMP -mtime +1 -exec ls -lad {} \;)
+if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
+	if [ ! -f $BASETGZ ] ; then
+		echo "No $BASETGZ exists, creating a new one..."
+	else
+		echo "$BASETGZ outdated, creating a new one..."
+	fi
+	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev debhelper
+else
+	echo "Updating $BASETGZ..."
+	update_pbuilder $SUITE-reproducible-base
+fi
+echo

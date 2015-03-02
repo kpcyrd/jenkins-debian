@@ -212,12 +212,12 @@
             my_recipients: 'holger@layer-acht.org'
         - '{name}_setup_pbuilder_sid':
             my_description: 'Setup pbuilder for reproducible builds of packages from sid as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '23 0 * * *'
+            my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh sid'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_setup_pbuilder_experimental':
             my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '23 0 * * *'
+            my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental'
             my_recipients: 'jenkins+debian-reproducible holger@layer-acht.org'
         - '{name}_setup_schroot_sid_debbindiff':

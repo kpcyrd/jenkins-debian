@@ -161,6 +161,10 @@ write_page_header() {
 				BASEURL=""
 			fi
 		done
+		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experiemental" ] ; then
+			# no pkg_sets are tested in experimental
+			continue
+		fi
 		write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 	done
 	for i in $SUITES ; do

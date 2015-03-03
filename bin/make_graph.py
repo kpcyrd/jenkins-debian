@@ -28,7 +28,7 @@ def main():
     r('t <- (read.table("'+countsfile+'",sep=",",header=1,row.names=1))')
     r('cname <- c("date",rep(colnames(t)))')
     # thanks to http://tango.freedesktop.org/Generic_Icon_Theme_Guidelines for those nice colors
-    if int(colors) < 10:
+    if int(colors) < 9:
         r('palette(c("#4e9a06", "#f57900", "#cc0000", "#2e3436", "#888a85"))')
     else:
         r('palette(c("#fce94f", "#c4a000", "#eeeeec", "#babdb6", \

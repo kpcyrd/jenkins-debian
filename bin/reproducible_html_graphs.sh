@@ -177,7 +177,12 @@ fi
 
 # used for redo_png (but only needed to define once)
 FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
-FIELDS[1]="datum, reproducible, unreproducible, FTBFS, other"
+FIELDS[1]="datum"
+for i in reproducible unreproducible FTBFS other ; do
+	for j in $SUITES ; do
+		FIELDS[1]="$FIELDS[1], ${i}_${j}"
+	done
+done
 FIELDS[2]="datum, oldest_reproducible, oldest_unreproducible, oldest_FTBFS"
 FIELDS[3]="datum "
 for TAG in $USERTAGS ; do
@@ -186,7 +191,7 @@ done
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
 FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
-COLOR[0]=5
+COLOR[0]=9
 COLOR[1]=4
 COLOR[2]=3
 COLOR[3]=28
@@ -220,7 +225,20 @@ redo_png() {
 	else
 		WHERE_EXTRA=""
 	fi
-	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+	if [ $1 -ne 1 ] ; then
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+	else
+		# FIXME: also generate this query for stretch and buster and beyond :)
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "select s.datum,
+			 s.reproducible as 'reproducible_sid',
+			 COALESCE((SELECT e.reproducible FROM stats_pkg_state AS e where s.datum=e.datum and suite='experimental'),'') as 'reproducible_experimental', 
+			 s.unreproducible as 'unreproducible_sid',
+			 (SELECT e.unreproducible FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
+			 s.FTBFS as 'FTBFS_sid',
+			 (SELECT e.FTBFS FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
+			 s.other as 'other_sid',
+			 (SELECT e.other FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental from stats_pkg_state as s where s.suite='sid' group by s.datum" >> ${TABLE[$1]}.csv
+	fi
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
 		DIR=$(dirname $2)

@@ -152,7 +152,7 @@ def load_notes():
         try:                # actually have been tested
             query = 'SELECT s.name ' + \
                     'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                    'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="sid"'
+                    'WHERE s.name="{pkg}" AND r.status != ""'
             query = query.format(pkg=package)
             result = query_db(query)[0]
         except IndexError:

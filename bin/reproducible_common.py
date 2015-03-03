@@ -318,11 +318,6 @@ def join_status_icon(status, package=None, version=None):
              'not_for_us': 'weather-few-clouds-night.png',
              'blacklisted': 'error.png'}
     if status == 'unreproducible':
-        if not package:
-            log.error('Could not determinate the real state of package None. '
-                      + 'Returning a generic "FTBR"')
-            status = 'FTBR'
-        else:
             status = 'FTBR'
     log.debug('Linking status ⇔ icon. package: ' + str(package) + ' @ ' +
               str(version) + ' status: ' + status)

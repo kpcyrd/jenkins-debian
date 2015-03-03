@@ -56,7 +56,7 @@ def sizeof_fmt(num):
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
-def check_package_status(package, suite):
+def check_package_status(package, suite, nocheck=False):
     """
     This returns a tuple containing status, version and build_date of the last
     version of the package built by jenkins CI
@@ -68,6 +68,8 @@ def check_package_status(package, suite):
                  'AND s.suite="{suite}"').format(pkg=package, suite=suite)
         result = query_db(query)[0]
     except IndexError:
+        if nocheck:
+            return False
         print_critical_message('This query produces no results: ' + query +
                 '\nThis means there is no tested package with the name ' +
                 package + '.')
@@ -139,19 +141,31 @@ def gen_bugs_links(package, bugs):
     return html
 
 
-def gen_packages_html(packages, suite='sid', arch='amd64', no_clean=False):
+def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=False):
     """
     generate the /rb-pkg/package.html page
     packages should be a list
+    If suite and/or arch is not passed, then build that packages for all suites
+    nocheck is for internal use
     """
     bugs = get_bugs()
     log.debug(str(len(bugs)) + ' bugs found: ' + str(bugs))
     total = len(packages)
     log.info('Generating the pages of ' + str(total) + ' package(s)')
+    if not nocheck and not suite and not arch:
+        nocheck = True
+    if nocheck and not suite and not arch:
+        for lsuite in SUITES:
+            for larch in ARCHES:
+                gen_packages_html(packages, lsuite, larch, no_clean, True)
+        return
     for pkg in sorted(packages):
         pkg = str(pkg)
-        status, version, build_date = check_package_status(pkg, suite)
-        log.info('Generating the page of ' + pkg + ' ' + version +
+        try:
+            status, version, build_date = check_package_status(pkg, suite, nocheck)
+        except TypeError:  # the package is not in the checked suite
+            continue
+        log.info('Generating the page of ' + pkg + '/' + suite + '@' + version +
                  ' built at ' + build_date)
 
         links, default_view = gen_extra_links(pkg, version, suite, arch)

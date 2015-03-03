@@ -180,7 +180,7 @@ FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
 FIELDS[1]="datum"
 for i in reproducible unreproducible FTBFS other ; do
 	for j in $SUITES ; do
-		FIELDS[1]="$FIELDS[1], ${i}_${j}"
+		FIELDS[1]="${FIELDS[1]}, ${i}_${j}"
 	done
 done
 FIELDS[2]="datum, oldest_reproducible, oldest_unreproducible, oldest_FTBFS"

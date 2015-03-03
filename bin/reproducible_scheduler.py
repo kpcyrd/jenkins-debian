@@ -201,7 +201,7 @@ def scheduler_old_versions(suite, limit):
 
 def scheduler():
     query = 'SELECT count(*) ' + \
-            'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
+            'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id '
     total = int(query_db(query)[0][0])
     log.debug('current scheduled packages in all suites: ' + str(total))
     if total > 250:

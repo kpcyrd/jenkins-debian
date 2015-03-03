@@ -244,7 +244,7 @@ redo_png() {
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
-		mv $2 /var/lib/jenkins/userContent/$SUITE
+		mv $2 /var/lib/jenkins/userContent/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi
 	rm ${TABLE[$1]}.csv

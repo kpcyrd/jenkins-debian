@@ -69,9 +69,9 @@ if [ -z $RESULT ] ; then
 	# we do 3 later and 6 is special anyway...
 	for i in 0 1 2 4 5 ; do
 		# force regeneration of the image if it exists
-		# FIXME: 0 needs $SUITE
+		# FIXME: 0 needs $SUITE, 1 2 4 5 are fine
 		# FIXME: some other queries above need *not* to refer to $SUITE... but rather $SUITES
-		[ ! -f ${TABLE[$i]}.png ] || touch -d "$DATE 00:00" ${TABLE[$i]}.png
+		[ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || touch -d "$DATE 00:00" /var/lib/jenkins/userContent/${TABLE[$i]}.png
 	done
 fi
 
@@ -141,7 +141,7 @@ if [ "$SUITE" != "experimental" ] ; then
 			META_RESULT=true
 			gather_meta_stats $i
 			! $META_RESULT || sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-			touch -d "$DATE 00:00" $SUITE/${TABLE[6]}_${META_PKGSET[$i]}.png
+			touch -d "$DATE 00:00" /var/lib/jenkins/userContent/$SUITE/${TABLE[6]}_${META_PKGSET[$i]}.png
 		fi
 	done
 fi
@@ -172,7 +172,7 @@ if [ -z $RESULT ] ; then
 	echo $SQL
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
 	# force regeneration of the image
-	touch -d "$DATE 00:00" $SUITE/${TABLE[3]}.png
+	touch -d "$DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
 fi
 
 # used for redo_png (but only needed to define once)

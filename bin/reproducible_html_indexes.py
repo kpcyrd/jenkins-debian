@@ -15,7 +15,7 @@ from reproducible_common import *
 Reference doc for the folowing lists:
 
 * queries is just a list of queries. They are referred further below.
-  + every query must return only a list of package names
+  + every query must return only a list of package names (excpet count_total)
 * pages is just a list of pages. It is actually a dictionary, where every
   element is a page. Every page has:
   + `title`: The page title
@@ -43,6 +43,7 @@ section must have at least a `query` defining what to file in.
 """
 
 queries = {
+    'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"'
     'scheduled': 'SELECT s.name FROM schedule AS p JOIN sources AS s ON p.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" ORDER BY p.date_scheduled',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',
     'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
@@ -257,9 +258,10 @@ global_pages = {
 def build_leading_text_section(section, rows, suite, arch):
     html = '<p>\n' + tab
     total = len(rows)
+    count_total = int(query_db(queries['count_total'])[0][0])
     try:
-        percent = round(((total/count_total)*100), 1)  # count_total is
-    except ZeroDivisionError:                          # defined in common
+        percent = round(((total/count_total)*100), 1)
+    except ZeroDivisionError:
         log.error('Looks like there are either no tested package or no ' +
                   'packages available at all. Maybe it\'s a new database?')
         percent = 0.0

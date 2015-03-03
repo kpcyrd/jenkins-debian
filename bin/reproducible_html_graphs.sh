@@ -192,7 +192,7 @@ FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
 FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
 COLOR[0]=5
-COLOR[1]=8
+COLOR[1]=9
 COLOR[2]=3
 COLOR[3]=28
 COLOR[4]=1
@@ -229,7 +229,7 @@ redo_png() {
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else
 		# FIXME: also generate this query for stretch and buster and beyond :)
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "select s.datum,
+		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,
 			 s.reproducible as 'reproducible_sid',
 			 COALESCE((SELECT e.reproducible FROM stats_pkg_state AS e where s.datum=e.datum and suite='experimental'),'') as 'reproducible_experimental', 
 			 s.unreproducible as 'unreproducible_sid',

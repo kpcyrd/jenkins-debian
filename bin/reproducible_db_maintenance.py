@@ -262,7 +262,7 @@ schema_updates = {
         '''INSERT INTO stats_builds_age_tmp (datum, suite,
             oldest_reproducible, oldest_unreproducible, oldest_FTBFS)
             SELECT datum, suite, oldest_reproducible, oldest_unreproducible,
-            FTBFS FROM stats_builds_age;''',
+            oldest_FTBFS FROM stats_builds_age;''',
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
         'INSERT INTO rb_schema VALUES ("6", "' + now + '")'],

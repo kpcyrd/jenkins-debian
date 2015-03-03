@@ -151,7 +151,7 @@ def schedule_packages(packages):
     log.info('==============================================================')
 
 
-def scheduler_unknown_packages(suite, limit):
+def scheduler_untested_packages(suite, limit):
     criteria = 'not tested before, randomly sorted'
     query = """SELECT DISTINCT sources.id, sources.name FROM sources
                WHERE sources.suite='{suite}'
@@ -199,28 +199,29 @@ def scheduler_old_versions(suite, limit):
     return packages
 
 
-def scheduler(suite):
+def scheduler():
     query = 'SELECT count(*) ' + \
             'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
-            'WHERE s.suite="{suite}"'.format(suite=suite)
     total = int(query_db(query)[0][0])
-    log.debug('current scheduled packages: ' + str(total))
+    log.debug('current scheduled packages in all suites: ' + str(total))
     if total > 250:
         build_page('scheduled')  # from reproducible_html_indexes
-        log.info(str(total) + ' packages already scheduled in ' + suite +
+        log.info(str(total) + ' packages already scheduled' +
                  ', nothing to do here.')
         return
     else:
-        log.info(str(total) + ' packages already scheduled in ' + suite +
+        log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
-    # unknown packages
-    log.info('Requesting 200 unknown packages...')
-    unknown = scheduler_unknown_packages(suite, 200)
-    total += len(unknown)
-    log.info('So, in total now ' + str(total) + ' packages about to be ' +
-             'scheduled for ' + suite + '.')
+    # untested packages
+    untested = []
+    for suite in SUITES:
+        log.info('Requesting 200 untested packages...')
+        untested[suite] = scheduler_untested_packages(suite, 200)
+        total += len(untested[suite])
+        log.info('About to schedule ' + len(untested[suite]) + ' untested packages in ' + suite + '.')
 
     # packages with new versions
+    new = []
     if total <= 250:
         many_new = 50
     elif total <= 450:
@@ -228,12 +229,13 @@ def scheduler(suite):
     else:
         many_new = 0
     log.info('Requesting ' + str(many_new) + ' new versions...')
-    new = scheduler_new_versions(suite, many_new)
-    total += len(new)
-    log.info('So, in total now ' + str(total) + ' packages about to be ' +
-             'scheduled for ' + suite + '.')
+    for suite in SUITES:
+        new[suite] = scheduler_new_versions(suite, many_new)
+        total += len(new[suite])
+        log.info('About to schedule ' + len(new[suite]) + ' new packages in ' + suite + '.')
 
     # old packages
+    old = []
     if total <= 250:
         many_old = 200
     elif total <= 350:
@@ -241,25 +243,26 @@ def scheduler(suite):
     else:
         many_old = 1
     log.info('Requesting ' + str(many_old) + ' old packages...')
-    old = scheduler_old_versions(suite, many_old)
-    total += len(old)
-    log.info('So, in total now ' + str(total) + ' packages about to be ' +
-             'scheduled for ' + suite + '.')
+    for suite in SUITES:
+        old[suite] = scheduler_old_versions(suite, many_old)
+        total += len(old[old])
+        log.info('About to schedule ' + len(old[suite]) + ' old packages in ' + suite + '.')
 
-    # build the final message text
-    message = 'Scheduled ' + str(len(unknown)) + ' unknown package, ' + \
-              str(len(new)) + ' packages with new versions and ' + \
-              str(len(old)) + ' with the same version (total: ' + \
-              str(total) + ' in ' + suite + ')'
-    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
-           '--relay-msg']
-    kgb.extend(message.split())
-
-    # finally
     all_scheduled_pkgs = []
-    all_scheduled_pkgs.extend(unknown)
-    all_scheduled_pkgs.extend(new)
-    all_scheduled_pkgs.extend(old)
+    for suite in SUITES:
+        # build the final message text
+        message = 'Scheduled in ' + suite + ':' + str(len(untested[suite])) + ' untested packages, ' + \
+              str(len(new[suite])) + ' packages with new versions and ' + \
+              str(len(old[suite])) + ' with the same version (total: ' + \
+              str(total)+')'
+        kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
+           '--relay-msg']
+        kgb.extend(message.split())
+        # schedule...
+        all_scheduled_pkgs.extend(untested[suite])
+        all_scheduled_pkgs.extend(new[suite])
+        all_scheduled_pkgs.extend(old[suite])
+    # finally
     schedule_packages(all_scheduled_pkgs)
     build_page('scheduled')  # from reproducible_html_indexes
     log.info('\n\n\n')
@@ -269,7 +272,7 @@ def scheduler(suite):
 
 if __name__ == '__main__':
     overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
-    if overall > 800:
+    if overall > 400:
         build_page('scheduled')  # from reproducible_html_indexes
         log.info(str(overall) + ' packages already scheduled, nothing to do.')
         sys.exit()
@@ -278,6 +281,6 @@ if __name__ == '__main__':
     for suite in SUITES:
         call_apt_update(suite)
         update_sources_tables(suite)
-        scheduler(suite)
+    scheduler()
     overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
     log.info(str(overall) + ' packages scheduled at the end, in all suites.')

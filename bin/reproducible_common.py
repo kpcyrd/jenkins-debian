@@ -434,36 +434,3 @@ def get_trailing_icon(package, bugs):
 conn_db = start_db_connection() # the local sqlite3 reproducible db
 conn_udd = start_udd_connection()
 
-# query some data we need everywhere (relative to sid, we care only about sid here)
-try:
-    amount = int(query_db('SELECT count(*) FROM sources WHERE suite="sid"')[0][0])
-    count_total = int(query_db('''SELECT COUNT(*)
-                                  FROM results AS r JOIN sources AS s
-                                  ON r.package_id=s.id
-                                  WHERE s.suite="sid"''')[0][0])
-    count_good = int(query_db('''SELECT COUNT(*)
-                                 FROM results AS r JOIN sources AS s
-                                 ON r.package_id=s.id
-                                 WHERE s.suite="sid"
-                                 AND r.status="reproducible"''')[0][0])
-except sqlite3.OperationalError:
-    log.critical('Error performing basic queries. You have to setup the ' + \
-                 'database to successfully continue after this point.')
-    log.critical('Continuing anyway, hoping for the best!')
-    amount = 0
-    count_total = 0
-    count_good = 0
-try:
-    percent_total = round(((count_total/amount)*100), 1)
-    percent_good = round(((count_good/count_total)*100), 1)
-except ZeroDivisionError:
-    log.error('Looks like there are either no tested package or no packages' + \
-              ' available at all. Maybe it\'s a new database?')
-    percent_total = 0.0
-    percent_good = 0.0
-log.info('Total packages in Sid:\t\t' + str(amount))
-log.info('Total tested packages:\t\t' + str(count_total))
-log.info('Total reproducible packages:\t' + str(count_good))
-log.info('That means that out of the ' + str(percent_total) + '% of ' +
-             'the Sid tested packages the ' + str(percent_good) + '% are ' +
-             'reproducible!')

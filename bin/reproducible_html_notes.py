@@ -272,6 +272,7 @@ def purge_old_notes(notes):
             removed_pages.append(pkg)
     for pkg in removed_pages:
         try:
+            # FIXME: this needs to be s_suite in suites
             query = 'SELECT s.name ' + \
                     'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
                     'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="sid"'
@@ -359,7 +360,7 @@ def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')
     all_pkgs = query_db('SELECT s.name, r.status ' +
                         'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
-                        'WHERE s.suite="sid" ORDER BY s.name')
+                        'ORDER BY s.name')
     with_notes = [x for x in all_pkgs if x[0] in notes]
     html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
     for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
@@ -373,7 +374,7 @@ def index_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            # FIXME we currently consider notes only for sid/amd64
+            # for now always link to the sid/amd64 url of a package
             url = RB_PKG_URI + '/sid/amd64/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'

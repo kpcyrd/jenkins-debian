@@ -92,7 +92,6 @@ call_debbindiff() {
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 		calculate_build_duration
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_builds (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
 		update_db_and_html
 	else
 		echo | tee -a ${RBUILDLOG}
@@ -117,7 +116,6 @@ call_debbindiff() {
 		fi
 		calculate_build_duration
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_builds (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
 		update_db_and_html
 	fi
 }
@@ -266,7 +264,6 @@ else
 			echo "${SRCPACKAGE} failed to build from source."
 			calculate_build_duration
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
-			sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_builds (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
 			update_db_and_html
 		fi
 	fi

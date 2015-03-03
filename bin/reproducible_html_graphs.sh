@@ -228,7 +228,7 @@ redo_png() {
 	if [ $1 -ne 1 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else
-		# FIXME: also generate this query for stretch and buster and beyond :)
+		# not sure if it's worth to generate the following query...
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,
 			 s.reproducible as 'reproducible_sid',
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental', 
@@ -237,7 +237,8 @@ redo_png() {
 			 s.FTBFS as 'FTBFS_sid',
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
 			 s.other as 'other_sid',
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental from stats_builds_per_day as s where s.suite='sid' group by s.datum" >> ${TABLE[$1]}.csv
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
+			 FROM stats_builds_per_day AS s WHERE s.suite='sid' GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	fi
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then

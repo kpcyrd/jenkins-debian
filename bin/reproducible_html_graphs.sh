@@ -306,7 +306,7 @@ VIEW=pkg_sets
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE"
-write_page "<ul><li>Tracked package sets: </li>"
+write_page "<ul><li>Tracked package sets in $SUITE: </li>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	if [ -f /var/lib/jenkins/userContent/$SUITE/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
 		write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"

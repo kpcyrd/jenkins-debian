@@ -235,6 +235,22 @@ schema_updates = {
         '''DROP TABLE stats_pkg_state;''',
         '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
         'INSERT INTO rb_schema VALUES ("4", "' + now + '")'],
+    5: [ # stats_builds_per_day needs (datum, suite) as primary key
+        '''CREATE TABLE stats_builds_per_day_tmp
+                     (datum TEXT NOT NULL,
+                      suite TEXT NOT NULL,
+                      reproducible INTEGER,
+                      unreproducible INTEGER,
+                      FTBFS INTEGER,
+                      other INTEGER,
+                      PRIMARY KEY (datum, suite))''',
+        '''INSERT INTO stats_builds_per_day_tmp (datum, suite,
+            reproducible, unreproducible, FTBFS, other)
+            SELECT datum, suite, reproducible, unreproducible,
+            FTBFS, other FROM stats_builds_per_day;''',
+        '''DROP TABLE stats_builds_per_day;''',
+        '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
+        'INSERT INTO rb_schema VALUES ("5", "' + now + '")'],
 }
 
 

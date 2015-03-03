@@ -231,7 +231,7 @@ redo_png() {
 		# FIXME: also generate this query for stretch and buster and beyond :)
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,
 			 s.reproducible as 'reproducible_sid',
-			 COALESCE((SELECT e.reproducible FROM stats_pkg_state AS e where s.datum=e.datum and suite='experimental'),'') as 'reproducible_experimental', 
+			 COALESCE((SELECT e.reproducible FROM stats_pkg_state AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental', 
 			 s.unreproducible as 'unreproducible_sid',
 			 (SELECT e.unreproducible FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
 			 s.FTBFS as 'FTBFS_sid',

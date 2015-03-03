@@ -260,6 +260,7 @@ write_usertag_table() {
 }
 
 VIEW=suite_stats
+gather_stats	# FIXME: this script should be run in a loop (and rewritten)
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"

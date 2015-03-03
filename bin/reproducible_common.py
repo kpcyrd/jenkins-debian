@@ -116,11 +116,6 @@ html_footer = Template("""
 html_head_page = Template((tab*2).join("""
 <header>
   <h2>$page_title</h2>
-  <p>$count_total packages have been attempted to be build so far, that's
-  $percent_total% of $amount source packages in Debian sid
-  currently. Out of these, $count_good packages ($percent_good%)
-  <a href="https://wiki.debian.org/ReproducibleBuilds">could be built
-  reproducible!</a></p>
   <ul>
     <li>Have a look at:</li>
     <li>
@@ -203,11 +198,6 @@ def write_html_page(title, body, destfile, suite=None, noheader=False, style_not
                     suite_links += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
         html += html_head_page.substitute(
             page_title=title,
-            count_total=count_total,
-            amount=amount,
-            percent_total=percent_total,
-            count_good=count_good,
-            percent_good=percent_good,
             suite_links=suite_links)
     html += body
     if style_note:

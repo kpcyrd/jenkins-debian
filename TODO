@@ -120,6 +120,9 @@ properties:
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
 * move all content into /var/lib/userContent/reproducible/
+* index_scheduled could contain:
+** information how many packages in other suites are in front of the first package in queue of this suite
+** information when new scheduling was done the last time for this suite
 
 * pkg sets related:
 ** new package set: kde/plasma

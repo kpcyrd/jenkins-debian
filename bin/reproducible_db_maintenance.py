@@ -251,6 +251,21 @@ schema_updates = {
         '''DROP TABLE stats_builds_per_day;''',
         '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
         'INSERT INTO rb_schema VALUES ("5", "' + now + '")'],
+    6: [ # stats_builds_age needs (datum, suite) as primary key
+        '''CREATE TABLE stats_builds_age_tmp
+                     (datum TEXT NOT NULL,
+                      suite TEXT NOT NULL,
+                      oldest_reproducible REAL,
+                      oldest_unreproducible REAL,
+                      oldest_FTBFS REAL,
+                      PRIMARY KEY (datum, suite))''',
+        '''INSERT INTO stats_builds_age_tmp (datum, suite,
+            oldest_reproducible, oldest_unreproducible, oldest_FTBFS)
+            SELECT datum, suite, oldest_reproducible, oldest_unreproducible,
+            FTBFS FROM stats_builds_age;''',
+        '''DROP TABLE stats_builds_age;''',
+        '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
+        'INSERT INTO rb_schema VALUES ("6", "' + now + '")'],
 }
 
 

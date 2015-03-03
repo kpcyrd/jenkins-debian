@@ -43,7 +43,7 @@ section must have at least a `query` defining what to file in.
 """
 
 queries = {
-    'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"'
+    'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
     'scheduled': 'SELECT s.name FROM schedule AS p JOIN sources AS s ON p.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" ORDER BY p.date_scheduled',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',
     'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
@@ -258,7 +258,7 @@ global_pages = {
 def build_leading_text_section(section, rows, suite, arch):
     html = '<p>\n' + tab
     total = len(rows)
-    count_total = int(query_db(queries['count_total'])[0][0])
+    count_total = int(query_db(queries['count_total'].format(suite=suite, arch=arch))[0][0])
     try:
         percent = round(((total/count_total)*100), 1)
     except ZeroDivisionError:

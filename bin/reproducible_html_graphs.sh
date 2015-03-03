@@ -231,13 +231,13 @@ redo_png() {
 		# FIXME: also generate this query for stretch and buster and beyond :)
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,
 			 s.reproducible as 'reproducible_sid',
-			 COALESCE((SELECT e.reproducible FROM stats_pkg_state AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental', 
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental', 
 			 s.unreproducible as 'unreproducible_sid',
-			 (SELECT e.unreproducible FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
 			 s.FTBFS as 'FTBFS_sid',
-			 (SELECT e.FTBFS FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
 			 s.other as 'other_sid',
-			 (SELECT e.other FROM stats_pkg_state e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental from stats_pkg_state as s where s.suite='sid' group by s.datum" >> ${TABLE[$1]}.csv
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental from stats_builds_per_day as s where s.suite='sid' group by s.datum" >> ${TABLE[$1]}.csv
 	fi
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then

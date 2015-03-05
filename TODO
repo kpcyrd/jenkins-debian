@@ -119,23 +119,22 @@ properties:
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
 * move all content into /var/lib/userContent/reproducible/
-* index_scheduled could contain:
-** information how many packages in other suites are in front of the first package in queue of this suite
+* (the general) index_scheduled could contain:
+** information how many packages in other suites are in front of the first package in queue of this suite (so show a table of package, build_scheduled info and not just package names)
 ** information when new scheduling was done the last time for this suite
 * once experimental is fully tested, the scheduler should schedule 10% as many packages from experimental as from other suites, as all other suites are ten times as big
+* graph average build duration by day
 
 * pkg sets related:
 ** new package set: kde/plasma
 ** here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
 *** curl http://bootstrap.debian.net/source/stats_min.json | sed -s "s#,#\n#g" |grep src:|cut -d ":" -f2|tr -d \" | sort -u
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
+*** actually those links to packages are broken atm...
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA
 
 * db schema 2.0
 ** maybe results.build_duration should be type integer, so ORDER BY works as it should.
-** actually add support for suites in the code, the db is fine now.
-** actually add support for archs, the db is fine now. One day we'll want to rebuild all the packages on all the archs too!
-** record build stats in the new stats_build table (forever, so we get relevant data)
 ** add support for the save_artifacts field in the schedule table, so we can manually schedule packages, which provide the binary packages somewhere for inspection
 ** move "untested" field in stats table too? (as in csv output...)
 

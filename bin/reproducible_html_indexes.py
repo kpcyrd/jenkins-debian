@@ -131,10 +131,8 @@ pages = {
         'body': [
             {
                 'query': 'scheduled',
-                'text': Template('$tot packages are currently scheduled for testing in $suite/$arch:')
-            },
-            {
-                'text': Template('A <a href="/index_scheduled.html">full scheduling overview</a> is also available.')
+                'text': Template('$tot packages are currently scheduled for testing in $suite/$arch:'),
+                'bottom': 'A <a href="/index_scheduled.html">full scheduling overview</a> is also available.'
             }
         ]
     },
@@ -318,6 +316,8 @@ def build_page_section(section, suite, arch):
         html += get_trailing_icon(pkg, bugs) + '\n'
     html += tab + '</code>\n'
     html += '</p>'
+    if section.get('bottom'):
+        html += section['bottom']
     html = (tab*2).join(html.splitlines(True))
     return html
 

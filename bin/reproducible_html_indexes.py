@@ -293,15 +293,15 @@ def build_leading_text_section(section, rows, suite, arch):
     return html
 
 
-def build_page_section(section, suite, arch):
+def build_page_section(page, section, suite, arch):
     try:
         rows = query_db(queries[section['query']].format(suite=suite, arch=arch))
     except:
         print_critical_message('A query failed: ' + queries[section['query']])
         raise
     html = ''
-    if not rows:     # there are no package in this set
-        return html  # do not output anything on the page.
+    if not rows and page != 'scheduled':  # there are no package in this set
+        return html                       # do not output anything on the page.
     html += build_leading_text_section(section, rows, suite, arch)
     html += '<p>\n' + tab + '<code>\n'
     for row in rows:
@@ -333,9 +333,9 @@ def build_page(page, suite=None, arch=None):
         if not suite:  # global page
             for lsuite in SUITES:
                 for larch in ARCHES:
-                    html += build_page_section(section, lsuite, larch)
+                    html += build_page_section(page, section, lsuite, larch)
         else:
-            html += build_page_section(section, suite, arch)
+            html += build_page_section(page, section, suite, arch)
     try:
         title = pages[page]['title']
     except KeyError:

@@ -91,7 +91,7 @@ init_html() {
 	SPOKENTARGET["suite_stats"]="$SUITE stats"
 	SPOKENTARGET["repo_stats"]="repositories overview"
 	SPOKENTARGET["stats"]="reproducible stats"
-	# query some data we need everywhere
+	# FIXME: this can probably all go into html_graph.sh now...: query some data we need everywhere
 	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
 	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
 	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
@@ -140,12 +140,11 @@ write_page_header() {
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>$2</title></head>"
 	write_page "<body><header><h2>$2</h2>"
-	if [ "$1" = "$MAINVIEW" ] || [ "$1" = "suite_stats" ] ; then
-		write_page "<p>These pages contain results obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
+	if [ "$1" = "$MAINVIEW" ] ; then
+		write_page "<p>These pages are showing the prospects of <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds of Debian packages</a>. The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
 	fi
-	if [ "${1:0:3}" = "all" ] || [ "$1" = "dd-list" ] || [ "$1" = "stats" ] || [ "$1" = "suite_stats" ] ; then
-		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $COUNT_GOOD packages ($PERCENT_GOOD%) <a href=\"https://wiki.debian.org/ReproducibleBuilds\">could be built reproducible!</a>"
-		write_page " Join <code>#debian-reproducible</code> on OFTC to get support for making sure your packages build reproducibly too!"
+	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
+		write_page " Join <code>#debian-reproducible</code> on OFTC or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a> to get support for making sure your packages build reproducibly too!"
 		write_page "</p>"
 	fi
 	write_page "<ul><li>Have a look at:</li>"

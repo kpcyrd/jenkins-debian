@@ -282,8 +282,8 @@ VIEW=suite_stats
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
-if [ $PERCENT_TOTAL -lt 98 ] ; then
-	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently. Out of these, $COUNT_GOOD packages ($PERCENT_GOOD%) <a href=\"https://wiki.debian.org/ReproducibleBuilds\">could be built reproducible!</a>"
+if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
+	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently.</p>"
 fi
 write_page "<p>"
 set_icon reproducible

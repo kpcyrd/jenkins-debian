@@ -24,6 +24,8 @@ If you notice some jobs has problems and you want to find out why, read <<debug,
 
 There are two types of notifications being used: email and IRC. At the end of each builds console log it says to where notifcations has been send. An adress of the form 'jenkins-foo' means an IRC notification has been send to the #foo IRC channel.
 
+All job result notifications should be sent to https://lists.alioth.debian.org/mailman/listinfo/qa-jenkins-scm and optionally to other recipients as well.
+
 == Jobs being run
 
 There are over 400 jobs being run currently. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!

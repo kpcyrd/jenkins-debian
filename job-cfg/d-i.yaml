@@ -68,7 +68,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
@@ -121,7 +121,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
           artifacts: 'html/**/*.*'
           latest_only: true
@@ -169,7 +169,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
@@ -217,7 +217,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
           artifacts: 'pdf/**/*.*'
           latest_only: true
@@ -261,7 +261,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
 
 - job-template:
     defaults: d-i
@@ -299,7 +299,7 @@
       - pollscm: '*/15 * * * *'
     publishers:
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
 ## doesnt work, the artifacts reside outside the workspace
 #      - archive:
 #          artifacts: '*_*.dsc *_*.tar.* *_*_*.deb *_*_*.build *_*_*.changes'
@@ -319,7 +319,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'holger@layer-acht.org'
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 - job-template:
     defaults: d-i
@@ -350,7 +350,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
 
 - job-template:
     defaults: d-i-manual-html

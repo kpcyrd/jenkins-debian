@@ -64,7 +64,7 @@ print("""
       artifactNumToKeep: -1
     publishers:
       - email:
-          recipients: 'holger@layer-acht.org'
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
           artifacts: '*.webm, {my_pngs}'
           latest_only: false

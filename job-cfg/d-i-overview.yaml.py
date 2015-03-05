@@ -56,7 +56,7 @@ for arch in sorted(archs):
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email-ext:
-          recipients: 'jenkins+debian-boot holger@layer-acht.org'
+          recipients: 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'
           first-failure: true
           fixed: true
           subject: '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'

@@ -85,19 +85,19 @@ def get_targets_in_distro(distro, targets):
 #
 def get_recipients(target):
     if target == 'maintainance':
-        return 'holger@layer-acht.org'
+        return 'qa-jenkins-scm@lists.alioth.debian.org'
     elif target == 'haskell':
-        return 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
+        return 'jenkins+debian-haskell qa-jenkins-scm@lists.alioth.debian.org pkg-haskell-maintainers@lists.alioth.debian.org'
     elif target == 'gnome':
-        return 'jenkins+debian-qa pkg-gnome-maintainers@lists.alioth.debian.org holger@layer-acht.org'
+        return 'jenkins+debian-qa pkg-gnome-maintainers@lists.alioth.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target == 'cinnamon':
-        return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org holger@layer-acht.org'
+        return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target[:3] == 'kde' or target[:2] == 'qt':
-        return 'jenkins+debian-qa debian-qt-kde@lists.debian.org holger@layer-acht.org'
+        return 'jenkins+debian-qa debian-qt-kde@lists.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target[:10] == 'education-':
         return 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
     else:
-        return 'jenkins+debian-qa holger@layer-acht.org'
+        return 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org'
 
 #
 # views for different targets

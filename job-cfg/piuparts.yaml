@@ -31,7 +31,7 @@
     name: '{name}_testsuite_jessie'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org piuparts-devel@lists.alioth.debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -42,7 +42,7 @@
       - pollscm: '*/6 * * * *'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org piuparts-devel@lists.alioth.debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - trigger:
           project: '{my_trigger}'
     builders:
@@ -53,7 +53,7 @@
     name: '{name}_build_jessie'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org piuparts-devel@lists.alioth.debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
           latest_only: true
@@ -65,7 +65,7 @@
     name: '{name}_build_sid'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org piuparts-devel@lists.alioth.debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - trigger:
           project: '{my_trigger}'
       - archive:

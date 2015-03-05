@@ -70,4 +70,4 @@
             my_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
             my_shell: 'export http_proxy=http://localhost:3129; cabal update ; ./test-packages.pl' # h-p-p doesnt work with squid3, see https://github.com/haskell/HTTP/issues/68
             my_description: 'Haskell Metadata sanity checks'
-            my_recipients: 'jenkins+debian-haskell holger@layer-acht.org pkg-haskell-maintainers@lists.alioth.debian.org'
+            my_recipients: 'jenkins+debian-haskell qa-jenkins-scm@lists.alioth.debian.org pkg-haskell-maintainers@lists.alioth.debian.org'

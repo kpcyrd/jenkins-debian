@@ -33,14 +33,14 @@
     name: '{name}_wheezy'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org lintian-maint@debian.org'
 
 - job-template:
     defaults: lintian-tests
     name: '{name}_jessie'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org lintian-maint@debian.org'
       - trigger:
           project: '{my_trigger}'
 
@@ -51,7 +51,7 @@
       - pollscm: '*/6 * * * *'
     publishers:
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org lintian-maint@debian.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org lintian-maint@debian.org'
       - trigger:
           project: '{my_trigger}'
 

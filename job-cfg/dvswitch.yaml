@@ -33,7 +33,7 @@
     name: '{name}_jessie'
     publishers:
       - email:
-          recipients: 'jenkins+dvswitch holger@layer-acht.org dvswitch-maint@debian.org'
+          recipients: 'jenkins+dvswitch qa-jenkins-scm@lists.alioth.debian.org dvswitch-maint@debian.org'
       - trigger:
           project: '{my_trigger}'
 
@@ -44,7 +44,7 @@
       - pollscm: '*/6 * * * *'
     publishers:
       - email:
-          recipients: 'jenkins+dvswitch holger@layer-acht.org wouter@debian.org'
+          recipients: 'jenkins+dvswitch qa-jenkins-scm@lists.alioth.debian.org wouter@debian.org'
       - trigger:
           project: '{my_trigger}'
 
@@ -55,7 +55,7 @@
       - timed: '0 1 * * *'    # every day at 01:00 UTC
     publishers:
       - email:
-          recipients: 'jenkins+dvswitch holger@layer-acht.org wouter@debian.org'
+          recipients: 'jenkins+dvswitch qa-jenkins-scm@lists.alioth.debian.org wouter@debian.org'
     scm:
       - git:
           url: 'git://git.libav.org/libav.git'

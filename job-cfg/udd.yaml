@@ -26,7 +26,7 @@
           unstable-on-warning: '{my_logparser}'
           fail-on-error: '{my_logparser}'
       - email:
-          recipients: 'jenkins+debian-qa holger@layer-acht.org'
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org'
     builders:
       - shell: '/srv/jenkins/bin/udd-query.sh {my_params}'
     triggers:

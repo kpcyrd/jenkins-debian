@@ -326,12 +326,14 @@ def build_page_section(page, section, suite, arch):
 def build_page(page, suite=None, arch=None):
     if not suite:  # global page
         log.info('Building the ' + page + ' global index page...')
+        page_sections = global_pages[page]['body']
     else:
         log.info('Building the ' + page + ' index page for ' + suite + '/' +
                  arch + '...')
+        page_sections = pages[page]['body']
     html = ''
     footnote = False
-    for section in pages[page]['body']:
+    for section in page_sections:
         if not suite:  # global page
             for lsuite in SUITES:
                 for larch in ARCHES:

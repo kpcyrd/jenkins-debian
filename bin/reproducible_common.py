@@ -156,7 +156,7 @@ html_head_page = Template((tab*2).join("""
     <li><a href="index_last_48h.html">packages tested in the last 48h</a></li>
     <li><a href="index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     <li><a href="index_dd-list.html">maintainers of unreproducible packages</a></li>
-    <li><a href="index_pkg_sets.html">package sets stats</a></li>
+$pkgset_link
 $suite_links
     <li><a href="/index_repo_stats.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>
@@ -192,8 +192,12 @@ def write_html_page(title, body, destfile, suite=None, noheader=False, style_not
     html = ''
     html += html_header.substitute(page_title=title)
     if not noheader:
+        pkgset_link = ''
         if suite:
             suite_links = '<li><a href="/' + suite +'">suite: ' + suite + '</a></li>'
+            if suite != 'experimental':
+                pkgset_link = '<li><a href="/' + suite + 'index_pkg_sets.html">package sets stats</a></li>'
+
         else:
             suite_links = ''
         for i in SUITES:
@@ -201,6 +205,7 @@ def write_html_page(title, body, destfile, suite=None, noheader=False, style_not
                     suite_links += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
         html += html_head_page.substitute(
             page_title=title,
+            pkgset_link=pkgset_link,
             suite_links=suite_links)
     html += body
     if style_note:

@@ -401,6 +401,12 @@ for i in $SUITES ; do
 	write_page " <a href=\"/userContent/$i\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"$i stats\"></a>"
 done
 write_page "</p><p>"
+for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+	PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+	LABEL="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
+	write_page "<a href=\"/userContent/$SUITE/amd64/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+done
+write_page "</p><p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
 for i in 3 4 5 1 ; do
 	if [ "$i" = "3" ] ; then

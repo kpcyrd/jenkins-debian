@@ -30,6 +30,11 @@ img.overview {
 	max-width: 49%;
 }
 
+img.metaoverview {
+	max-width: 7%;
+}
+
+
 .beta {
 	color:#555555;
 	font-size:0.8em;

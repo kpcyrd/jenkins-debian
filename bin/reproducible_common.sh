@@ -88,7 +88,7 @@ init_html() {
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 	SPOKENTARGET["pkg_sets"]="package sets stats"
-	SPOKENTARGET["suite_stats"]="$SUITE stats"
+	SPOKENTARGET["suite_stats"]="suite: $SUITE"
 	SPOKENTARGET["repo_stats"]="repositories overview"
 	SPOKENTARGET["stats"]="reproducible stats"
 	# FIXME: this can probably all go into html_graph.sh now...: query some data we need everywhere

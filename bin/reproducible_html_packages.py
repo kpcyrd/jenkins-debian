@@ -29,6 +29,7 @@ $links
             --><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a>}
         </td>
         <td>
+${suites_links}
 ${bugs_links}
         </td>
         <td style="text-align:right; font-size:0.9em;">
@@ -127,6 +128,27 @@ def gen_extra_links(package, version, suite, arch):
                     ' did not produce any buildlog! Check ' + rbuild)
     return (links, default_view)
 
+
+def gen_suites_links(package, suite):
+    html = ''
+    query = 'SELECT s.suite, s.architecture ' + \
+            'FROM sources AS s JOIN results AS r ON r.package_id=s.id ' + \
+            'WHERE s.name="{pkg}"'.format(pkg=package)
+    results = query_db(query)
+    if len(results) < 1:
+        print_critical_message('This query produces 0 results:\n' + query)
+        raise ValueError
+    if len(results) == 1:
+        return html
+    for i in results:
+        # i[0]: suite, i[1]: arch
+        if i[0] == suite:
+            continue
+        html += '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + '/' + \
+                str(package) + '.html" target="_parent">' + i[0] + '</a>\n'
+    return html
+
+
 def gen_bugs_links(package, bugs):
     html = ''
     if package in bugs:
@@ -170,6 +192,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
 
         links, default_view = gen_extra_links(pkg, version, suite, arch)
         bugs_links = gen_bugs_links(pkg, bugs)
+        suites_links = gen_suites_links(pkg, suite)
         status, icon = join_status_icon(status, pkg, version)
 
         html = html_package_page.substitute(package=pkg,
@@ -178,6 +201,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
                                             build_time=build_date,
                                             icon=icon,
                                             links=links,
+                                            suites_links=suites_links,
                                             bugs_links=bugs_links,
                                             default_view=default_view)
         destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'

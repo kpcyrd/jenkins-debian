@@ -300,8 +300,9 @@ def build_page_section(page, section, suite, arch):
         print_critical_message('A query failed: ' + queries[section['query']])
         raise
     html = ''
+    footnote = True if rows else False
     if not rows and page != 'scheduled':  # there are no package in this set
-        return html                       # do not output anything on the page.
+        return (html, footnote)           # do not output anything on the page.
     html += build_leading_text_section(section, rows, suite, arch)
     html += '<p>\n' + tab + '<code>\n'
     for row in rows:
@@ -319,7 +320,7 @@ def build_page_section(page, section, suite, arch):
     if section.get('bottom'):
         html += section['bottom']
     html = (tab*2).join(html.splitlines(True))
-    return html
+    return (html, footnote)
 
 
 def build_page(page, suite=None, arch=None):
@@ -329,13 +330,17 @@ def build_page(page, suite=None, arch=None):
         log.info('Building the ' + page + ' index page for ' + suite + '/' +
                  arch + '...')
     html = ''
+    footnote = False
     for section in pages[page]['body']:
         if not suite:  # global page
             for lsuite in SUITES:
                 for larch in ARCHES:
-                    html += build_page_section(page, section, lsuite, larch)
+                    html += build_page_section(page, section, lsuite, larch)[0]
+            footnote = True
         else:
-            html += build_page_section(page, section, suite, arch)
+            html1, footnote1 = build_page_section(page, section, suite, arch)
+            html += html1
+            footnote = True if footnote1 else footnote
     try:
         title = pages[page]['title']
     except KeyError:
@@ -347,7 +352,7 @@ def build_page(page, suite=None, arch=None):
         destfile = BASE + '/' + suite + '/' + arch + '/index_' + page + '.html'
         desturl = REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/index_' + \
                   page + '.html'
-    write_html_page(title=title, body=html, destfile=destfile, suite=suite, style_note=True)
+    write_html_page(title=title, body=html, destfile=destfile, suite=suite, style_note=footnote)
     log.info('"' + title + '" now available at ' + desturl)
 
 

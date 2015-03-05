@@ -327,10 +327,12 @@ def build_page(page, suite=None, arch=None):
     if not suite:  # global page
         log.info('Building the ' + page + ' global index page...')
         page_sections = global_pages[page]['body']
+        title = global_pages[page]['title']
     else:
         log.info('Building the ' + page + ' index page for ' + suite + '/' +
                  arch + '...')
         page_sections = pages[page]['body']
+        title = pages[page]['title']
     html = ''
     footnote = False
     for section in page_sections:
@@ -343,10 +345,6 @@ def build_page(page, suite=None, arch=None):
             html1, footnote1 = build_page_section(page, section, suite, arch)
             html += html1
             footnote = True if footnote1 else footnote
-    try:
-        title = pages[page]['title']
-    except KeyError:
-        title = page
     if not suite:  # global page
         destfile = BASE + '/index_' + page + '.html'
         desturl = REPRODUCIBLE_URL + '/index_' + page + '.html'

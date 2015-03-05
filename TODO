@@ -122,6 +122,7 @@ properties:
 * index_scheduled could contain:
 ** information how many packages in other suites are in front of the first package in queue of this suite
 ** information when new scheduling was done the last time for this suite
+* once experimental is fully tested, the scheduler should schedule 10% as many packages from experimental as from other suites, as all other suites are ten times as big
 
 * pkg sets related:
 ** new package set: kde/plasma

@@ -264,10 +264,12 @@ def scheduler():
         all_scheduled_pkgs.extend(old[suite])
     # finally
     schedule_packages(all_scheduled_pkgs)
+    for suite in SUITES:
+        call(kgb)
+        log.info(message)
     build_page('scheduled')  # from reproducible_html_indexes
     log.info('\n\n\n')
     log.info(message)
-    call(kgb)
 
 
 if __name__ == '__main__':

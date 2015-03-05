@@ -132,7 +132,7 @@ pages = {
             {
                 'query': 'scheduled',
                 'text': Template('$tot packages are currently scheduled for testing in $suite/$arch:')
-            }
+            },
             {
                 'text': Template('A <a href="/index_scheduled.html">full scheduling overview</a> is also available.')
             }

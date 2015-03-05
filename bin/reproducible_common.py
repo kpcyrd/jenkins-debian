@@ -161,6 +161,7 @@ html_head_page = Template((tab*2).join("""
 $suite_links
     <li><a href="/index_repo_stats.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>
+    <li><a href="https://wiki.debian.org/ReproducibleBuilds">wiki</a></li>
   </ul>
 </header>""".splitlines(True)))
 

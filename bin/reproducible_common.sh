@@ -180,6 +180,7 @@ write_page_header() {
 				fi
 			done
 		fi
+		write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\">wiki</a></li>"
 	done
 	write_page "</ul>"
 	write_page "</header>"

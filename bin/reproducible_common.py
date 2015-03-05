@@ -156,8 +156,7 @@ html_head_page = Template((tab*2).join("""
     <li><a href="index_last_48h.html">packages tested in the last 48h</a></li>
     <li><a href="index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     <li><a href="index_dd-list.html">maintainers of unreproducible packages</a></li>
-$pkgset_link
-$suite_links
+$links
     <li><a href="/index_repo_stats.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
@@ -187,27 +186,32 @@ def print_critical_message(msg):
         log.critical(msg)
     print('\n\n\n')
 
+
+def _gen_links(suite, arch):
+    links = ''
+    if suite and suite != 'experimental':
+        link += '<li><a href="/' + suite + '/' + arch + \
+                '/index_pkg_sets.html">package sets stats</a></li>'
+    if suite and suite == 'experimental':
+        link += '<li><a href="/sid/' + arch + \
+                '/index_pkg_sets.html">package sets stats</a></li>'
+    if suite:
+        suite_links += '<li><a href="/' + suite +'">suite: ' + suite + '</a></li>'
+    for i in SUITES:
+           if i != suite:
+                suite_links += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
+    return suite_links
+
+
 def write_html_page(title, body, destfile, suite=None, noheader=False, style_note=False, noendpage=False):
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     html += html_header.substitute(page_title=title)
     if not noheader:
-        pkgset_link = ''
-        if suite:
-            suite_links = '<li><a href="/' + suite +'">suite: ' + suite + '</a></li>'
-            if suite != 'experimental':
-                pkgset_link = '<li><a href="/' + suite + '/amd64/index_pkg_sets.html">package sets stats</a></li>'
-
-        else:
-            suite_links = ''
-            pkgset_link = '<li><a href="/sid/amd64/index_pkg_sets.html">package sets stats</a></li>'
-        for i in SUITES:
-               if i != suite:
-                    suite_links += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
+        links = _gen_links(suite, 'amd64')  # FIXME let's unhardcode amd64...
         html += html_head_page.substitute(
             page_title=title,
-            pkgset_link=pkgset_link,
-            suite_links=suite_links)
+            links=links)
     html += body
     if style_note:
         html += html_foot_page_style_note.substitute()

@@ -237,9 +237,9 @@ def scheduler():
     # old packages
     old = []
     if total <= 250:
-        many_old = 200
+        many_old = 20
     elif total <= 350:
-        many_old = 250
+        many_old = 25
     else:
         many_old = 1
     log.info('Requesting ' + str(many_old) + ' old packages...')

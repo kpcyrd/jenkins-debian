@@ -62,9 +62,9 @@ fi
 OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	# delete known files
-	echo "Attempting file detection..."
 	cd /var/cache/pbuilder/result/
-	for i in $(find . -maxdepth 1 -mtime +1 -type f) ; do
+	echo "Attempting file detection..."
+	for i in $(find . -maxdepth 1 -mtime +1 -type f -basename {} \;) ; do
 		case $i in
 			stderr|stdout)	rm -v $i
 					;;

@@ -179,8 +179,8 @@ write_page_header() {
 				fi
 			done
 		fi
-		write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
 	done
+	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
 	write_page "</ul>"
 	write_page "</header>"
 }

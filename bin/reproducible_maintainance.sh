@@ -68,6 +68,8 @@ if [ ! -z "$OLDSTUFF" ] ; then
 		case $i in
 			stderr|stdout)	rm -v $i
 					;;
+			seqan-*.bed)	rm -v $i	# leftovers reported in #766741
+					;;
 			*)		;;
 		esac
 	done

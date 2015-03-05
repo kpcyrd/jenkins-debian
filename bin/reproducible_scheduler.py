@@ -213,15 +213,15 @@ def scheduler():
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
     # untested packages
-    untested = []
+    untested = {}
     for suite in SUITES:
         log.info('Requesting 200 untested packages...')
         untested[suite] = scheduler_untested_packages(suite, 200)
         total += len(untested[suite])
-        log.info('About to schedule ' + len(untested[suite]) + ' untested packages in ' + suite + '.')
+        log.info('About to schedule ' + str(len(untested[suite])) + ' untested packages in ' + suite + '.')
 
     # packages with new versions
-    new = []
+    new = {}
     if total <= 250:
         many_new = 50
     elif total <= 450:
@@ -232,10 +232,10 @@ def scheduler():
     for suite in SUITES:
         new[suite] = scheduler_new_versions(suite, many_new)
         total += len(new[suite])
-        log.info('About to schedule ' + len(new[suite]) + ' new packages in ' + suite + '.')
+        log.info('About to schedule ' + str(len(new[suite])) + ' new packages in ' + suite + '.')
 
     # old packages
-    old = []
+    old = {}
     if total <= 250:
         many_old = 20
     elif total <= 350:
@@ -245,8 +245,8 @@ def scheduler():
     log.info('Requesting ' + str(many_old) + ' old packages...')
     for suite in SUITES:
         old[suite] = scheduler_old_versions(suite, many_old)
-        total += len(old[old])
-        log.info('About to schedule ' + len(old[suite]) + ' old packages in ' + suite + '.')
+        total += len(old[suite])
+        log.info('About to schedule ' + str(len(old[suite])) + ' old packages in ' + suite + '.')
 
     all_scheduled_pkgs = []
     for suite in SUITES:

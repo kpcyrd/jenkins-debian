@@ -248,8 +248,8 @@ def scheduler():
         total += len(old[suite])
         log.info('About to schedule ' + str(len(old[suite])) + ' old packages in ' + suite + '.')
 
-    all_scheduled_pkgs = []
     for suite in SUITES:
+        all_scheduled_pkgs = []
         # build the final message text
         message = 'Scheduled in ' + suite + ':' + str(len(untested[suite])) + ' untested packages, ' + \
               str(len(new[suite])) + ' packages with new versions and ' + \
@@ -262,12 +262,12 @@ def scheduler():
         all_scheduled_pkgs.extend(untested[suite])
         all_scheduled_pkgs.extend(new[suite])
         all_scheduled_pkgs.extend(old[suite])
-    # finally
-    schedule_packages(all_scheduled_pkgs)
-    for suite in SUITES:
+        # finally
+        schedule_packages(all_scheduled_pkgs)
         call(kgb)
         log.info(message)
-    build_page('scheduled')  # from reproducible_html_indexes
+        build_page('scheduled', suite)  # from reproducible_html_indexes, build suite specific page
+    build_page('scheduled')             # from reproducible_html_indexes, build global page
     log.info('\n\n\n')
     log.info(message)
 

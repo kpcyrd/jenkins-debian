@@ -30,7 +30,6 @@ $links
         </td>
         <td>
 ${suites_links}
-${bugs_links}
         </td>
         <td style="text-align:right; font-size:0.9em;">
             <a href="%s" target="_parent">
@@ -159,20 +158,6 @@ def gen_suites_links(package, suite):
     return html
 
 
-def gen_bugs_links(package, bugs):
-    html = ''
-    if package in bugs:
-        for bug in bugs[package]:
-            html += '<a href="https://bugs.debian.org/' + str(bug) + \
-                    '" target="main" class="'
-            if bugs[package][bug]['done']:
-                html += 'bug-done '
-            if bugs[package][bug]['patch']:
-                html += ' bug-patch'
-            html += '">#' + str(bug) + '</a> '
-    return html
-
-
 def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=False):
     """
     generate the /rb-pkg/package.html page
@@ -180,8 +165,6 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
     If suite and/or arch is not passed, then build that packages for all suites
     nocheck is for internal use
     """
-    bugs = get_bugs()
-    log.debug(str(len(bugs)) + ' bugs found: ' + str(bugs))
     total = len(packages)
     log.info('Generating the pages of ' + str(total) + ' package(s)')
     if not nocheck and (not suite or not arch):
@@ -201,7 +184,6 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
                  ' built at ' + build_date)
 
         links, default_view = gen_extra_links(pkg, version, suite, arch)
-        bugs_links = gen_bugs_links(pkg, bugs)
         suites_links = gen_suites_links(pkg, suite)
         status, icon = join_status_icon(status, pkg, version)
 
@@ -212,7 +194,6 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
                                             icon=icon,
                                             links=links,
                                             suites_links=suites_links,
-                                            bugs_links=bugs_links,
                                             default_view=default_view)
         destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
         desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + '/' + \

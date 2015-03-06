@@ -141,7 +141,7 @@ if [ "$SUITE" != "experimental" ] ; then
 			META_RESULT=true
 			gather_meta_stats $i
 			! $META_RESULT || sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-			touch -d "$DATE 00:00" /var/lib/jenkins/userContent/$SUITE/${TABLE[6]}_${META_PKGSET[$i]}.png
+			touch -d "$DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
 		fi
 	done
 fi
@@ -327,10 +327,10 @@ fi
 VIEW=pkg_sets
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE"
+write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
 write_page "<ul><li>Tracked package sets in $SUITE: </li>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	if [ -f /var/lib/jenkins/userContent/$SUITE/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
+	if [ -f /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
 		write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
 	fi
 done
@@ -344,11 +344,11 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
 		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 		# redo pngs once a day
-		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$PNG ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name $PNG) ] ; then
-			redo_png 6 $SUITE/$PNG ${META_PKGSET[$i]}
+		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
+			redo_png 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
 		fi
-		write_page "<p><a href=\"/userContent/$SUITE/$PNG\"><img src=\"/userContent/$SUITE/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
-		write_page "<br />The package set '${META_PKGSET[$i]}' consists of: <br />"
+		write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
+		write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
 		set_icon reproducible
 		write_icon
 		write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
@@ -403,8 +403,8 @@ done
 write_page "</p><p>"
 for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 	PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
-	LABEL="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
-	write_page "<a href=\"/$SUITE/amd64/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+	LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+	write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 done
 write_page "</p><p>"
 # FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)

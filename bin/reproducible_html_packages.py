@@ -19,7 +19,7 @@ html_package_page = Template((tab*2).join(("""
             <a href="/index_$status.html" target="_parent" title="$status">
                 <img src="/static/$icon" alt="$status" />
             </a>
-            <span style="font-size:0.9em;">at $build_time:</span>
+            <span style="font-size:0.9em;">$build_time:</span>
 $links
             <a href="https://tracker.debian.org/$package" target="main">PTS</a>
             <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
@@ -69,15 +69,25 @@ def check_package_status(package, suite, nocheck=False):
                  'AND s.suite="{suite}"').format(pkg=package, suite=suite)
         result = query_db(query)[0]
     except IndexError:
-        if nocheck:
-            return False
-        print_critical_message('This query produces no results: ' + query +
-                '\nThis means there is no tested package with the name ' +
-                package + '.')
-        raise
+        query = 'SELECT version FROM sources WHERE name="{pkg}" AND suite="{suite}"'
+        query = query.format(pkg=package, suite=suite)
+        try:
+            result = query_db(query)[0][0]
+            if result:
+                result = ('untested', str(result), False)
+        except IndexError:
+            if nocheck:
+                return False
+            print_critical_message('This query produces no results: ' + query +
+                    '\nThis means there is no available package with the name '
+                    + package + '.')
+            raise
     status = str(result[0])
     version = str(result[1])
-    build_date = str(result[2])+" UTC"
+    if result[2]:
+        build_date = 'at ' + str(result[2]) + ' UTC'
+    else:
+        build_date = '<span style="color:red;font-weight:bold;">UNTESTED</span>'
     return (status, version, build_date)
 
 def gen_extra_links(package, version, suite, arch):
@@ -132,7 +142,7 @@ def gen_extra_links(package, version, suite, arch):
 def gen_suites_links(package, suite):
     html = ''
     query = 'SELECT s.suite, s.architecture ' + \
-            'FROM sources AS s JOIN results AS r ON r.package_id=s.id ' + \
+            'FROM sources AS s ' + \
             'WHERE s.name="{pkg}"'.format(pkg=package)
     results = query_db(query)
     if len(results) < 1:
@@ -215,9 +225,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         purge_old_pages() # housekeep is always good
 
 def gen_all_rb_pkg_pages(suite='sid', arch='amd64', no_clean=False):
-    query = 'SELECT s.name ' + \
-            'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-            'WHERE r.status !="" AND s.suite="%s"' % suite
+    query = 'SELECT name FROM sources WHERE suite="%s" AND architecture="%s"' % (suite, arch)
     rows = query_db(query)
     pkgs = [str(i[0]) for i in rows]
     log.info('Processing all the package pages, ' + str(len(pkgs)))
@@ -238,9 +246,8 @@ def purge_old_pages():
             for page in presents:
                 pkg = page.rsplit('.', 1)[0]
                 query = 'SELECT s.name ' + \
-                    'FROM results AS r ' + \
-                    'JOIN sources AS s ON r.package_id=s.id ' + \
-                    'WHERE s.name="{name}" AND r.status != "" ' + \
+                    'FROM sources AS s ' + \
+                    'WHERE s.name="{name}" ' + \
                     'AND s.suite="{suite}" AND s.architecture="{arch}"'
                 query = query.format(name=pkg, suite=suite, arch=arch)
                 result = query_db(query)

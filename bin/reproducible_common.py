@@ -336,6 +336,7 @@ def join_status_icon(status, package=None, version=None):
              '404': 'weather-severe-alert.png',
              'not for us': 'weather-few-clouds-night.png',
              'not_for_us': 'weather-few-clouds-night.png',
+             'untested': 'weather-clear-night.png',
              'blacklisted': 'error.png'}
     if status == 'unreproducible':
             status = 'FTBR'

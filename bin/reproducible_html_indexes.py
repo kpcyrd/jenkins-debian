@@ -66,7 +66,7 @@ queries = {
 
 pages = {
     'reproducible': {
-        'title': 'Packages in $suite/$arch which built reproducibly',
+        'title': 'Packages in {suite}/{arch} which built reproducibly',
         'body': [
             {
                 'icon_status': 'reproducible',
@@ -77,7 +77,7 @@ pages = {
         ]
     },
     'FTBR': {
-        'title': 'Packages in $suite/$arch which failed to build reproducibly',
+        'title': 'Packages in {suite}/{arch} which failed to build reproducibly',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -87,7 +87,7 @@ pages = {
         ]
     },
     'FTBFS': {
-        'title': 'Packages in $suite/$arch which failed to build from source',
+        'title': 'Packages in {suite}/{arch} which failed to build from source',
         'body': [
             {
                 'icon_status': 'FTBFS',
@@ -97,7 +97,7 @@ pages = {
         ]
     },
     '404': {
-        'title': 'Packages in $suite/$arch where the sources failed to download',
+        'title': 'Packages in {suite}/{arch} where the sources failed to download',
         'body': [
             {
                 'icon_status': '404',
@@ -107,7 +107,7 @@ pages = {
         ]
     },
     'not_for_us': {
-        'title': 'Packages in $suite/$arch which should not be build on "amd64"',
+        'title': 'Packages in {suite}/{arch} which should not be build on "amd64"',
         'body': [
             {
                 'icon_status': 'not_for_us',
@@ -117,7 +117,7 @@ pages = {
         ]
     },
     'blacklisted': {
-        'title': 'Packages in $suite/$arch which have been blacklisted',
+        'title': 'Packages in {suite}/{arch} which have been blacklisted',
         'body': [
             {
                 'icon_status': 'blacklisted',
@@ -127,7 +127,7 @@ pages = {
         ]
     },
     'scheduled': {
-        'title': 'Packages in $suite/$arch currently scheduled for testing for build reproducibility',
+        'title': 'Packages in {suite}/{arch} currently scheduled for testing for build reproducibility',
         'body': [
             {
                 'query': 'scheduled',
@@ -137,7 +137,7 @@ pages = {
         ]
     },
     'all_abc': {
-        'title': 'Overview of reproducible builds in $suite/$arch of all tested packages (sorted alphabetically)',
+        'title': 'Overview of reproducible builds in {suite}/{arch} of all tested packages (sorted alphabetically)',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -178,7 +178,7 @@ pages = {
         ]
     },
     'last_24h': {
-        'title': 'Packages in $suite/$arch tested in the last 24h for build reproducibility',
+        'title': 'Packages in {suite}/{arch} tested in the last 24h for build reproducibility',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -210,7 +210,7 @@ pages = {
         ]
     },
     'last_48h': {
-        'title': 'Packages in $suite/$arch tested in the last 48h for build reproducibility',
+        'title': 'Packages in {suite}/{arch} tested in the last 48h for build reproducibility',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -332,7 +332,7 @@ def build_page(page, suite=None, arch=None):
         log.info('Building the ' + page + ' index page for ' + suite + '/' +
                  arch + '...')
         page_sections = pages[page]['body']
-        title = pages[page]['title'].substitute(suite=suite, arch=amd64)
+        title = pages[page]['title'].format(suite=suite, arch=arch)
     html = ''
     footnote = False
     for section in page_sections:

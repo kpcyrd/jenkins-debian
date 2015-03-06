@@ -134,7 +134,6 @@ properties:
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA
 
 * db schema 2.0
-** maybe results.build_duration should be type integer, so ORDER BY works as it should.
 ** add support for the save_artifacts field in the schedule table, so we can manually schedule packages, which provide the binary packages somewhere for inspection
 ** move "untested" field in stats table too? (as in csv output...)
 

@@ -266,6 +266,33 @@ schema_updates = {
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
         'INSERT INTO rb_schema VALUES ("6", "' + now + '")'],
+    7: [ # change build_duration field in results and stats_build from str to int
+        '''CREATE TABLE stats_build_tmp
+           (id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            version TEXT NOT NULL,
+            suite TEXT NOT NULL,
+            architecture TEXT NOT NULL,
+            status TEXT NOT NULL,
+            build_date TEXT NOT NULL,
+            build_duration INTEGER NOT NULL,
+            UNIQUE (name, version, suite, architecture, build_date))''',
+        'INSERT INTO stats_build_tmp SELECT * FROM stats_build',
+        'DROP TABLE stats_build',
+        'ALTER TABLE stats_build_tmp RENAME TO stats_build',
+        '''CREATE TABLE results_tmp
+           (id INTEGER PRIMARY KEY,
+            package_id INTEGER NOT NULL,
+            version TEXT NOT NULL,
+            status TEXT,
+            build_date TEXT,
+            build_duration INTEGER DEFAULT '0',
+            UNIQUE (package_id)
+            FOREIGN KEY(package_id) REFERENCES sources(id))''',
+        'INSERT INTO results_tmp SELECT * FROM results',
+        'DROP TABLE results',
+        'ALTER TABLE results_tmp RENAME TO results',
+        'INSERT INTO rb_schema VALUES ("7", "' + now + '")'],
 }
 
 

@@ -254,18 +254,19 @@ def scheduler():
 
     for suite in SUITES:
         all_scheduled_pkgs = []
-        # build the final message text
-        message = 'Scheduled in ' + suite + ':' + str(len(untested[suite])) + ' untested packages, ' + \
-              str(len(new[suite])) + ' packages with new versions and ' + \
-              str(len(old[suite])) + ' with the same version (total: ' + \
-              str(total)+')'
-        kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
-           '--relay-msg']
-        kgb.extend(message.split())
-        # schedule...
         all_scheduled_pkgs.extend(untested[suite])
         all_scheduled_pkgs.extend(new[suite])
         all_scheduled_pkgs.extend(old[suite])
+        # build the final message text
+        message = 'Scheduled in ' + suite + ': ' + \
+                  str(len(untested[suite])) + ' untested packages, ' + \
+                  str(len(new[suite])) + ' packages with new versions and ' + \
+                  str(len(old[suite])) + ' with the same version ' + \
+                  '(total: ' + str(total) + ' of which ' + \
+                  str(len(all_scheduled_pkgs)) + ' in ' + suite + ')'
+        kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
+           '--relay-msg']
+        kgb.extend(message.split())
         # finally
         schedule_packages(all_scheduled_pkgs)
         call(kgb)

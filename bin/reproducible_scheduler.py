@@ -21,6 +21,7 @@ from urllib.request import urlopen
 
 from reproducible_common import *
 from reproducible_html_indexes import build_page
+from reproducible_html_packages import gen_packages_html
 
 
 def call_apt_update(suite):
@@ -121,6 +122,9 @@ def update_sources_tables(suite):
         log.critical('source in the reproducible db for the ' + suite +
                      ' suite:' + str(pkgs_end[0][0]))
         sys.exit(1)
+    if pkgs_to_add:
+        log.info('Building pages for the new packages')
+        gen_packages_html(pkgs_to_add, no_clean=True)
 
 
 def print_schedule_result(suite, criteria, packages):

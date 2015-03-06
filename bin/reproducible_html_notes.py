@@ -188,7 +188,7 @@ def fill_issue_in_note(issue):
     return note_issue_html.substitute(issue=issue, issue_info=html)
 
 
-def gen_html_note(note):
+def gen_html_note(package, note):
     """
     Given a note as input (as a dict:
     {"package_name": {"version": "0.0.0", "comments": "blablabla",
@@ -211,7 +211,8 @@ def gen_html_note(note):
         bugurls = ''
         for bug in note['bugs']:
             bugurls += '<a href="https://bugs.debian.org/' + str(bug) + \
-                       '" target="_parent">' + str(bug) + '</a><br />'
+                       '" target="_parent">' + str(bug) + '</a>' + \
+                       get_trailing_bug_icon(bug, bugs, package) + '<br />'
         infos += note_bugs_html.substitute(bugs=bugurls)
     # check for comments:
     if 'comments' in note:
@@ -292,7 +293,7 @@ def iterate_over_notes(notes):
         note = notes[package]
         note['package'] = package
         log.debug('\t' + str(note))
-        html = gen_html_note(note)
+        html = gen_html_note(package, note)
 
         title = 'Notes for ' + package + ' - reproducible builds result'
         destfile = NOTES_PATH + '/' + package + '_note.html'

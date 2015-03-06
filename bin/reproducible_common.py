@@ -151,17 +151,13 @@ html_head_page = Template((tab*2).join("""
     <li><a href="/index_issues.html">issues</a></li>
     <li><a href="/index_notes.html">packages with notes</a></li>
     <li><a href="/index_no_notes.html">package without notes</a></li>
-    <li><a href="index_scheduled.html">currently scheduled</a></li>
-    <li><a href="index_last_24h.html">packages tested in the last 24h</a></li>
-    <li><a href="index_last_48h.html">packages tested in the last 48h</a></li>
-    <li><a href="index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
-    <li><a href="index_dd-list.html">maintainers of unreproducible packages</a></li>
 $links
     <li><a href="/index_repo_stats.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
   </ul>
 </header>""".splitlines(True)))
+
 
 html_foot_page_style_note = Template((tab*2).join("""
 <p style="font-size:0.9em;">
@@ -188,19 +184,30 @@ def print_critical_message(msg):
 
 
 def _gen_links(suite, arch):
-    links = ''
-    if suite and suite != 'experimental':
-        link += '<li><a href="/' + suite + '/' + arch + \
-                '/index_pkg_sets.html">package sets stats</a></li>'
-    if suite and suite == 'experimental':
-        link += '<li><a href="/sid/' + arch + \
-                '/index_pkg_sets.html">package sets stats</a></li>'
-    if suite:
-        suite_links += '<li><a href="/' + suite +'">suite: ' + suite + '</a></li>'
-    for i in SUITES:
+    links = [
+        ('scheduled', '<li><a href="/{suite}/{arch}/index_scheduled.html">currently scheduled</a></li>'),
+        ('last_24h', '<li><a href="/{suite}/{arch}/index_last_24h.html">packages tested in the last 24h</a></li>'),
+        ('last_48h', '<li><a href="/{suite}/{arch}/index_last_48h.html">packages tested in the last 48h</a></li>'),
+        ('all_abc', '<li><a href="/{suite}/{arch}/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>'),
+        ('dd-list', '<li><a href="/{suite}/{arch}/index_dd-list.html">maintainers of unreproducible packages</a></li>'),
+        ('pkg_sets', '<li><a href="/{suite}/{arch}/index_pkg_sets.html">package sets stats</a></li>')
+    ]
+    html = ''
+    for link in links:
+        if link[0] == 'pkg_sets' and suite and suite == 'experimental':
+            html += link[1].format(suite='sid', arch=arch) + '\n'
+            continue
+        if suite:
+            html += link[1].format(suite=suite, arch=arch) + '\n'
+        if not suite:
+            html += link[1].format(suite='sid', arch=arch) + '\n'
+    if suite:  # suite stats
+        html += '<li><a href="/' + suite + \
+                '/index_suite_stats.html">suite: ' + suite + '</a></li>'
+    for i in SUITES:  # suite links
            if i != suite:
-                suite_links += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
-    return suite_links
+                html += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
+    return html
 
 
 def write_html_page(title, body, destfile, suite=None, noheader=False, style_note=False, noendpage=False):

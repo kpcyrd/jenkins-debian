@@ -266,8 +266,8 @@ def scheduler():
         schedule_packages(all_scheduled_pkgs)
         call(kgb)
         log.info(message)
-        build_page('scheduled', suite)  # from reproducible_html_indexes, build suite specific page
-    build_page('scheduled')             # from reproducible_html_indexes, build global page
+        build_page('scheduled', suite, 'amd64')  # build suite specific page. FIXME unhardcode amd64
+    build_page('scheduled')  # from reproducible_html_indexes, build global page
     log.info('\n\n\n')
     log.info(message)
 

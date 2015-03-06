@@ -324,6 +324,10 @@ def build_page_section(page, section, suite, arch):
 
 
 def build_page(page, suite=None, arch=None):
+    if suite and not arch:
+        print_critical_message('The architecture was not specified while ' +
+                               'building a suite-specific page.')
+        sys.exit(1)
     if not suite:  # global page
         log.info('Building the ' + page + ' global index page...')
         page_sections = global_pages[page]['body']

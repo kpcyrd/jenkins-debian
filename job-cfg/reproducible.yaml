@@ -239,7 +239,7 @@
             my_description: 'Schedule packages to be tested for reproducibility.'
             my_timed: '42 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.py'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org mattia@mapreri.org'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_graphs':
             my_description: 'Generate HTML results (stats with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
@@ -265,7 +265,7 @@
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.py'
-            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org mattia@mapreri.org'
+            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_all_packages':
             my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is normally not needed and only run once a year.'
             my_timed: '12 12 30 12 *'

@@ -68,10 +68,12 @@ if [ -z $RESULT ] ; then
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
 	# we do 3 later and 6 is special anyway...
 	for i in 0 1 2 4 5 ; do
+		PREFIX=""
 		# force regeneration of the image if it exists
-		# FIXME: 0 needs $SUITE, 1 2 4 5 are fine
-		# FIXME: some other queries above need *not* to refer to $SUITE... but rather $SUITES
-		[ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || touch -d "$DATE 00:00" /var/lib/jenkins/userContent/${TABLE[$i]}.png
+		if [ $i -eq 0 ] ; then
+			PREFIX=$SUITE
+		fi
+		[ ! -f /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png ] || touch -d "$DATE 00:00" /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png
 	done
 fi
 
@@ -288,7 +290,7 @@ fi
 write_page "<p>"
 set_icon reproducible
 write_icon
-write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE."
+write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH."
 set_icon unreproducible
 write_icon
 write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."

@@ -26,6 +26,7 @@ gather_stats
 #
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
+FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
 TABLE[0]=stats_pkg_state
 TABLE[1]=stats_builds_per_day
 TABLE[2]=stats_builds_age
@@ -39,6 +40,7 @@ TABLE[6]=stats_meta_pkg_state
 #
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
+	echo "Updating packages and builds stats for $SUITE on $DATE."
 	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) FROM sources WHERE suite='${SUITE}'")
 	GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE';")
 	GOOAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)='$DATE';")
@@ -69,11 +71,14 @@ if [ -z $RESULT ] ; then
 	# we do 3 later and 6 is special anyway...
 	for i in 0 1 2 4 5 ; do
 		PREFIX=""
-		# force regeneration of the image if it exists
 		if [ $i -eq 0 ] ; then
 			PREFIX=$SUITE
 		fi
-		[ ! -f /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png ] || touch -d "$DATE 00:00" /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png
+		# force regeneration of the image if it exists
+		if [ -f /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png ] ; then
+			echo "Touching $PREFIX/${TABLE[$i]}.png..."
+			touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png
+		fi
 	done
 fi
 
@@ -82,6 +87,7 @@ fi
 #
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
 if [ -z $RESULT ] ; then
+	echo "Updating notes stats for $DATE."
 	NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 	if [ ! -d ${NOTES_GIT_PATH} ] ; then
 		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
@@ -142,8 +148,12 @@ if [ "$SUITE" != "experimental" ] ; then
 		if [ -z $RESULT ] ; then
 			META_RESULT=true
 			gather_meta_stats $i
-			! $META_RESULT || sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-			touch -d "$DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
+			if $META_RESULT ; then
+				 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
+				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
+			fi
+			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
+			touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
 		fi
 	done
 fi
@@ -154,6 +164,7 @@ fi
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
 if [ -z $RESULT ] ; then
+	echo "Updating bug stats for $DATE."
 	declare -a DONE
 	declare -a OPEN
 	SQL="INSERT INTO ${TABLE[3]} VALUES (\"$DATE\" "
@@ -174,7 +185,8 @@ if [ -z $RESULT ] ; then
 	echo $SQL
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
 	# force regeneration of the image
-	touch -d "$DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
+	echo "Touching ${TABLE[3]}.png..."
+	touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
 fi
 
 # used for redo_png (but only needed to define once)
@@ -214,6 +226,7 @@ YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 
 redo_png() {
+	echo "Checking whether to update $2..."
 	# $1 = id of the stats table
 	# $2 = image file name
 	# $3 = meta package set, only sensible if $1=6
@@ -244,8 +257,10 @@ redo_png() {
 	fi
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
+		echo "Updating $2..."
 		DIR=$(dirname $2)
 		mkdir -p $DIR
+		echo "Generating $2."
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 /var/lib/jenkins/userContent/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
@@ -315,9 +330,9 @@ write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 write_page "<p>"
 write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 # redo png once a day
-if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
-		redo_png 0 $SUITE/${TABLE[0]}.png
-	fi
+if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
+	redo_png 0 $SUITE/${TABLE[0]}.png
+fi
 write_page "</p>"
 write_page_footer
 publish_page $SUITE
@@ -346,7 +361,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
 		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 		# redo pngs once a day
-		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
+		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 			redo_png 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
 		fi
 		write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
@@ -416,7 +431,7 @@ for i in 3 4 5 1 ; do
 	fi
 	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
-	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 		redo_png $i ${TABLE[$i]}.png
 	fi
 done

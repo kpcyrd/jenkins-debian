@@ -100,7 +100,7 @@ def gen_extra_links(package, version, suite, arch):
           eversion + '.debbindiff.html'
 
     links = ''
-    default_view = False
+    default_view = '/index.html'
     # check whether there are notes available for this package
     if os.access(notes, os.R_OK):
         url = NOTES_URI + '/' + package + '_note.html'

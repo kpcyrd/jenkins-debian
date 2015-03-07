@@ -257,13 +257,17 @@ def scheduler():
         all_scheduled_pkgs.extend(untested[suite])
         all_scheduled_pkgs.extend(new[suite])
         all_scheduled_pkgs.extend(old[suite])
+        query = 'SELECT count(*) ' + \
+                'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
+                'WHERE s.suite="{suite}"'.format(suite=suite)
+        now_queued_here = int(query_db(query)[0][0]) + len(all_scheduled_pkgs)
         # build the final message text
         message = 'Scheduled in ' + suite + ': ' + \
                   str(len(untested[suite])) + ' untested packages, ' + \
                   str(len(new[suite])) + ' packages with new versions and ' + \
                   str(len(old[suite])) + ' with the same version ' + \
                   '(total: ' + str(total) + ' of which ' + \
-                  str(len(all_scheduled_pkgs)) + ' in ' + suite + ')'
+                  str(now_queued_here) + ' in ' + suite + ')'
         kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
            '--relay-msg']
         kgb.extend(message.split())

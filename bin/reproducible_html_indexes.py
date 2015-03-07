@@ -102,7 +102,7 @@ pages = {
             {
                 'icon_status': '404',
                 'query': '404_all',
-                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch:')
+                'text': Template('$tot ($percent%) packages where the sources failed to download in $suite/$arch:')
             }
         ]
     },

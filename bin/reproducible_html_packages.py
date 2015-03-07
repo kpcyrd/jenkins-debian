@@ -151,8 +151,8 @@ def gen_extra_links(package, version, suite, arch):
 
 def gen_suites_links(package, suite):
     html = ''
-    query = 'SELECT s.suite, s.architecture ' + \
-            'FROM sources AS s ' + \
+    query = 'SELECT s.suite, s.architecture, r.status ' + \
+            'FROM sources AS s LEFT JOIN results AS r ON r.package_id=s.id ' + \
             'WHERE s.name="{pkg}"'.format(pkg=package)
     results = query_db(query)
     if len(results) < 1:
@@ -161,12 +161,15 @@ def gen_suites_links(package, suite):
     if len(results) == 1:
         return html
     for i in results:
-        # i[0]: suite, i[1]: arch
+        # i[0]: suite, i[1]: arch, i[2]: status (NULL if untested)
         if i[0] == suite:
             continue
+        status = 'untested' if not i[2] else i[2]
+        icon = '<img src="/static/{icon}" alt="{status}" title="{status}"/>\n'
+        html += icon.format(icon=join_status_icon(status)[1], status=status)
         html += '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + '/' + \
-                str(package) + '.html" target="_parent">' + i[0] + '</a>\n'
-    return html
+                str(package) + '.html" target="_parent">' + i[0] + '</a>'
+    return tab*5 + (tab*7).join(html.splitlines(True))
 
 
 def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=False):

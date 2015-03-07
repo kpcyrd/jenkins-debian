@@ -16,9 +16,7 @@ html_package_page = Template((tab*2).join(("""
     <tr>
         <td>
             <span style="font-size:1.2em;">$package</span> $version
-            <a href="/index_$status.html" target="_parent" title="$status">
-                <img src="/static/$icon" alt="$status" />
-            </a>
+$status
             <span style="font-size:0.9em;">$build_time:</span>
 $links
             <a href="https://tracker.debian.org/$package" target="main">PTS</a>
@@ -88,6 +86,18 @@ def check_package_status(package, suite, nocheck=False):
     else:
         build_date = '<span style="color:red;font-weight:bold;">UNTESTED</span>'
     return (status, version, build_date)
+
+
+def gen_status_link_icon(status, icon):
+    html = ''
+    if status != 'untested':
+        html += tab*6 + '<a href="/index_{status}.html" target="_parent" ' + \
+                'title="{status}">\n'
+    html += tab*9 + '<img src="/static/{icon}" alt="{status}" />\n'
+    if status != 'untested':
+        html += tab*8 + '</a>\n'
+    return html.format(status=status, icon=icon)
+
 
 def gen_extra_links(package, version, suite, arch):
     eversion = strip_epoch(version)
@@ -186,12 +196,12 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         links, default_view = gen_extra_links(pkg, version, suite, arch)
         suites_links = gen_suites_links(pkg, suite)
         status, icon = join_status_icon(status, pkg, version)
+        status = gen_status_link_icon(status, icon)
 
         html = html_package_page.substitute(package=pkg,
                                             status=status,
                                             version=version,
                                             build_time=build_date,
-                                            icon=icon,
                                             links=links,
                                             suites_links=suites_links,
                                             default_view=default_view)

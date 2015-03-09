@@ -132,11 +132,11 @@ def print_schedule_result(suite, criteria, packages):
     `packages` is the usual list-of-tuples returned by SQL queries,
     where the first item is the id and the second one the package name
     '''
+    log.info('--------------------------------------------------------------')
     log.info('Criteria: ' + criteria)
     log.info('Suite:    ' + suite)
     log.info('Amount:   ' + str(len(packages)))
     log.info('Packages: ' + ' '.join([x[1] for x in packages]))
-    log.info('==============================================================')
 
 
 def schedule_packages(packages):
@@ -216,13 +216,15 @@ def scheduler():
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
+        log.info('==============================================================')
     # untested packages
     untested = {}
     for suite in SUITES:
-        log.info('Requesting 200 untested packages...')
+        log.info('Requesting 200 untested packages in' + suite + '...')
         untested[suite] = scheduler_untested_packages(suite, 200)
         total += len(untested[suite])
         log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
+    log.info('==============================================================')
 
     # packages with new versions
     new = {}
@@ -232,11 +234,12 @@ def scheduler():
         many_new = 25
     else:
         many_new = 0
-    log.info('Requesting ' + str(many_new) + ' new versions...')
+    log.info('Requesting ' + str(many_new) + ' new versions in' + suite + '...')
     for suite in SUITES:
         new[suite] = scheduler_new_versions(suite, many_new)
         total += len(new[suite])
         log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
+    log.info('==============================================================')
 
     # old packages
     old = {}
@@ -249,10 +252,11 @@ def scheduler():
     for suite in SUITES:
         if suite != 'experimental':
             many_old = many_old*10 # experimental is roughly one tenth of the other suites in size
-        log.info('Requesting ' + str(many_old) + ' old packages...')
+        log.info('Requesting ' + str(many_old) + ' old packages in' + suite + '...')
         old[suite] = scheduler_old_versions(suite, many_old)
         total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
+    log.info('==============================================================')
 
     for suite in SUITES:
         all_scheduled_pkgs = []
@@ -269,7 +273,7 @@ def scheduler():
                   str(len(new[suite])) + ' packages with new versions and ' + \
                   str(len(old[suite])) + ' with the same version ' + \
                   '(total: ' + str(total) + ' of which ' + \
-                  str(now_queued_here) + ' in ' + suite + ')'
+                  str(now_queued_here) + ' are in ' + suite + ')'
         kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
            '--relay-msg']
         kgb.extend(message.split())

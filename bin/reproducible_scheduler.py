@@ -220,7 +220,7 @@ def scheduler():
     # untested packages
     untested = {}
     for suite in SUITES:
-        log.info('Requesting 200 untested packages in' + suite + '...')
+        log.info('Requesting 200 untested packages in ' + suite + '...')
         untested[suite] = scheduler_untested_packages(suite, 200)
         total += len(untested[suite])
         log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
@@ -229,12 +229,12 @@ def scheduler():
     # packages with new versions
     new = {}
     if total <= 100:
-        many_new = 50
+        many_new = 60
     elif total <= 200:
-        many_new = 25
+        many_new = 40
     else:
-        many_new = 5
-    log.info('Requesting ' + str(many_new) + ' new versions in' + suite + '...')
+        many_new = 20
+    log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
         new[suite] = scheduler_new_versions(suite, many_new)
         total += len(new[suite])
@@ -252,7 +252,7 @@ def scheduler():
     for suite in SUITES:
         if suite != 'experimental':
             many_old = many_old*10 # experimental is roughly one tenth of the other suites in size
-        log.info('Requesting ' + str(many_old) + ' old packages in' + suite + '...')
+        log.info('Requesting ' + str(many_old) + ' old packages in ' + suite + '...')
         old[suite] = scheduler_old_versions(suite, many_old)
         total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')

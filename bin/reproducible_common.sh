@@ -246,22 +246,6 @@ gen_packages_html() {
 	cd "$CWD"
 }
 
-gather_schedule_stats() {
-	SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT name FROM sources_scheduled ORDER BY date_scheduled" | xargs echo)
-	COUNT_SCHEDULED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(name) FROM sources_scheduled" | xargs echo)
-	QUERY="	SELECT count(sources.name) FROM sources,source_packages
-			WHERE sources.name NOT IN
-			(SELECT sources.name FROM sources,sources_scheduled
-				WHERE sources.name=sources_scheduled.name)
-			AND sources.name IN
-			(SELECT sources.name FROM sources,source_packages
-				WHERE sources.name=source_packages.name
-				AND sources.version!=source_packages.version
-				AND source_packages.status!='blacklisted')
-			AND sources.name=source_packages.name"
-	COUNT_NEW_VERSIONS=$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
-}
-
 gather_stats() {
 	COUNT_BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"unreproducible\"")
 	COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"FTBFS\"")

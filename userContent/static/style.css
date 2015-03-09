@@ -151,6 +151,12 @@ table.body {
 	margin: 0.75em 0.25em 0em 0em;
 }
 
+table.main {
+	margin: 0.75em 0.25em 0.25em 0.75em;
+	float: left;
+	display: inline-block;
+}
+
 tr:nth-child(odd) {
 	background-color: #fafafa;
 }

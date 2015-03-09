@@ -126,6 +126,7 @@ properties:
 * more graphs
 ** graph average build duration by day
 ** graph oldest build age - in days
+** graph bugs done+open
 
 * pkg sets related:
 ** new package set: kde/plasma

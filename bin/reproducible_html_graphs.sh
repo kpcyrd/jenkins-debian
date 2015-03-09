@@ -114,22 +114,22 @@ update_suite_stats() {
 # update notes stats
 #
 update_notes_stats() {
+	NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
+	if [ ! -d ${NOTES_GIT_PATH} ] ; then
+		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
+		echo "Please investigate and fix!"
+		exit 1
+	elif [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
+		echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
+		echo "Please investigate and fix!"
+		exit 1
+	fi
+	NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
+	ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
 	if [ -z $RESULT ] ; then
 		echo "Updating notes stats for $DATE."
-		NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
-		if [ ! -d ${NOTES_GIT_PATH} ] ; then
-			echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
-			echo "Please investigate and fix!"
-			exit 1
-		elif [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-			echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
-			echo "Please investigate and fix!"
-			exit 1
-		fi
-		NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
-		ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 	fi
 }
@@ -146,12 +146,14 @@ gather_suite_stats() {
 	COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"404\"")
 	COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"not for us\"")
 	COUNT_BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"blacklisted\"")
+	COUNT_OTHER=$(( $COUNT_SOURCELESS+$COUNT_NOTFORUS+$COUNT_BLACKLISTED ))
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
 	PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
 	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
 	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
+	PERCENT_OTHER=$(echo "scale=1 ; ($COUNT_OTHER*100/$COUNT_TOTAL)" | bc)
 }
 
 #
@@ -443,10 +445,12 @@ create_main_stats_page() {
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
 	write_page "<p>"
-	for i in $SUITES ; do
-		write_page " <a href=\"/$i\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"$i stats\"></a>"
+	# write suite graphs
+	for SUITE in $SUITES ; do
+		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
 	done
 	write_page "</p><p>"
+	# write meta tag graphs
 	SUITE="sid"	# shall become a loop once we test stretch
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
@@ -454,18 +458,32 @@ create_main_stats_page() {
 		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 	done
 	write_page "</p><p>"
+	# write suite table
+	write_page "<table class=\"main\"><tr><th>Suite on $DATE</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
+	for SUITE in $SUITES ; do
+		gather_suite_stats
+		write_page "<tr><td>$SUITE</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+	done
+        write_page "</table>"
+	# write inventory table
+	write_page "<table class=\"main\"><tr><th>inventory type</th><th>amount on $DATE</th></tr>"
+	write_page "<tr><td>packages with notes</td><td>$NOTES</td></tr>"
+	write_page "<tr><td>issues categorized</td><td>$ISSUES</td></tr>"
+	write_page "</table>"
+	# other graphs
 	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
 	for i in 3 4 5 1 ; do
-		if [ "$i" = "3" ] ; then
-			write_usertag_table
-		fi
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
+		if [ "$i" = "3" ] ; then
+			write_usertag_table
+		fi
 	done
 	write_page "</p>"
+	# the end
 	write_page_footer
 	publish_page
 }

@@ -302,7 +302,7 @@ write_usertag_table() {
 			let "COUNT+=1"
 			VALUE=$(echo $RESULT | cut -d "|" -f$COUNT)
 			if [ $COUNT -eq 1 ] ; then
-				write_page "<table class=\"body\"><tr><th>Bugs per usertag on $VALUE</th><th>Open</th><th>Done</th><th>Total</th></tr>"
+				write_page "<table class=\"main\"><tr><th>Bugs per usertag on $VALUE</th><th>Open</th><th>Done</th><th>Total</th></tr>"
 			elif [ $((COUNT%2)) -eq 0 ] ; then
 				write_page "<tr><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&archive=both\">${FIELD:5}</a></td><td>$VALUE</td>"
 				TOTAL=$VALUE

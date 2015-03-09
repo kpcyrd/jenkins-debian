@@ -149,10 +149,10 @@ def schedule_packages(packages):
     cursor = conn_db.cursor()
     cursor.executemany(query, pkgs)
     conn_db.commit()
-    log.info('==============================================================')
+    log.info('--------------------------------------------------------------')
     log.info('The following ' + str(len(pkgs)) + ' source packages have ' +
              'been scheduled: ' + ' '.join([str(x[1]) for x in packages]))
-    log.info('==============================================================')
+    log.info('--------------------------------------------------------------')
 
 
 def scheduler_untested_packages(suite, limit):
@@ -282,6 +282,8 @@ def scheduler():
         call(kgb)
         log.info(message)
         build_page('scheduled', suite, 'amd64')  # build suite specific page. FIXME unhardcode amd64
+        log.info('### Suite ' + suite + ' done ###')
+        log.info('==============================================================')
     build_page('scheduled')  # from reproducible_html_indexes, build global page
     log.info('\n\n\n')
     log.info(message)

@@ -22,7 +22,7 @@ init_html
 gather_stats
 
 #
-# create stats
+# init
 #
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
@@ -36,7 +36,7 @@ TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
 
 #
-# gather package + build stats
+# update package + build stats
 #
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
 if [ -z $RESULT ] ; then
@@ -83,7 +83,7 @@ if [ -z $RESULT ] ; then
 fi
 
 #
-# gather notes stats
+# update notes stats
 #
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
 if [ -z $RESULT ] ; then
@@ -103,6 +103,21 @@ if [ -z $RESULT ] ; then
 	ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 fi
+
+#
+# gather packages stats
+#
+gather_stats() {
+	COUNT_BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"unreproducible\"")
+	COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"FTBFS\"")
+	COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"404\"")
+	COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"not for us\"")
+	COUNT_BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"blacklisted\"")
+	PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
+	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
+	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
+	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
+}
 
 #
 # gather meta pkg stats
@@ -141,6 +156,9 @@ gather_meta_stats() {
 	fi
 }
 
+#
+# update meta pkg stats
+#
 if [ "$SUITE" != "experimental" ] ; then
 	# no meta pkg sets in experimental
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do

@@ -450,12 +450,17 @@ create_main_stats_page() {
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
 	done
 	write_page "</p><p>"
-	# write meta tag graphs
-	SUITE="sid"	# shall become a loop once we test stretch
-	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
-		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+	# write meta pkg graphs per suite
+	for SUITE in $SUITES ; do
+		if [ "$SUITE" = "experimental" ] ; then
+			# no pkg sets in experimental
+			continue
+		fi
+		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+			write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+		done
 	done
 	write_page "</p><p>"
 	# write suite table
@@ -491,6 +496,7 @@ create_main_stats_page() {
 #
 # main
 #
+SUITE="sid"
 update_bug_stats
 update_notes_stats
 create_main_stats_page
@@ -498,10 +504,11 @@ for SUITE in $SUITES ; do
 	update_suite_stats
 	gather_suite_stats
 	create_suite_stats_page
-	# no pkg sets in experimental
-	if [ "$SUITE" != "experimental" ] ; then
-		update_meta_pkg_stats
-		create_pkg_sets_page
+	if [ "$SUITE" = "experimental" ] ; then
+		# no pkg sets in experimental
+		continue
 	fi
+	update_meta_pkg_stats
+	create_pkg_sets_page
 done
 

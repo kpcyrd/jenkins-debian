@@ -153,10 +153,6 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_html_graphs_experimental'
-
-- job-template:
-    defaults: reproducible
     name: '{name}_html_indexes'
 
 - job-template:
@@ -244,11 +240,6 @@
             my_description: 'Generate HTML results (stats with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_html_graphs_experimental':
-            my_description: 'Generate HTML results (stats with graphs) for reproducible builds.'
-            my_timed: '15 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh experimental'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_indexes':
             my_description: 'Generate HTML results (indexes) for reproducible builds.'

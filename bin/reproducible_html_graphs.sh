@@ -11,18 +11,11 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-if [ -n "$1" ] ; then
-	SUITE="$1"
-else
-	SUITE="sid"
-fi
-ARCH="amd64"  # we only care about amd64 status here (for now)
-
-init_html
-
 #
 # init some variables
 #
+ARCH="amd64"  # we only care about amd64 status here (for now)
+init_html
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
@@ -202,22 +195,19 @@ gather_meta_stats() {
 # update meta pkg stats
 #
 update_meta_pkg_stats() {
-	if [ "$SUITE" != "experimental" ] ; then
-		# no meta pkg sets in experimental
-		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-			RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
-			if [ -z $RESULT ] ; then
-				META_RESULT=true
-				gather_meta_stats $i
-				if $META_RESULT ; then
-					 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-					echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
-				fi
-				echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
-				touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
+		if [ -z $RESULT ] ; then
+			META_RESULT=true
+			gather_meta_stats $i
+			if $META_RESULT ; then
+				 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
+				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
 			fi
-		done
-	fi
+			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
+			touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
+		fi
+	done
 }
 
 #
@@ -328,155 +318,172 @@ write_usertag_table() {
 	fi
 }
 
+#
+# create suite stats page
+#
+create_suite_stats_page() {
+	VIEW=suite_stats
+	PAGE=index_${VIEW}.html
+	MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
+	echo "$(date) - starting to write $PAGE page."
+	write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
+	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
+		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently.</p>"
+	fi
+	write_page "<p>"
+	set_icon reproducible
+	write_icon
+	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH."
+	set_icon unreproducible
+	write_icon
+	write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."
+	set_icon FTBFS
+	write_icon
+	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
+	write_page "<p>"
+	if [ $COUNT_SOURCELESS -gt 0 ] ; then
+		write_page "For "
+		set_icon 404
+		write_icon
+		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages sources could not be downloaded,"
+	fi
+	set_icon not_for_us
+	write_icon
+	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will not be build here"
+	write_page "and those "
+	set_icon blacklisted
+	write_icon
+	write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
+	write_page "<p>"
+	write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
+	# redo png once a day
+	if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
+		create_png_from_table 0 $SUITE/${TABLE[0]}.png
+	fi
+	write_page "</p>"
+	write_page_footer
+	publish_page $SUITE
+}
+
+#
+# create pkg sets page
+#
+create_pkg_sets_page() {
+	VIEW=pkg_sets
+	PAGE=index_${VIEW}.html
+	echo "$(date) - starting to write $PAGE page."
+	write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
+	write_page "<ul><li>Tracked package sets in $SUITE: </li>"
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		if [ -f /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
+			write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
+		fi
+	done
+	write_page "</ul>"
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		write_page "<hr /><a name=\"${META_PKGSET[$i]}\"></a>"
+		META_RESULT=true
+		gather_meta_stats $i	# FIXME: this ignores unknown packages...
+		if $META_RESULT ; then
+			MAINLABEL[6]="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
+			YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
+			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+			# redo pngs once a day
+			if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
+				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
+			fi
+			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
+			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
+			set_icon reproducible
+			write_icon
+			write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
+			set_linktarget $META_GOOD
+			link_packages $META_GOOD
+			write_page "<br />"
+			set_icon unreproducible
+			write_icon
+			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
+			set_linktarget $META_BAD
+			link_packages $META_BAD
+			write_page "<br />"
+			if [ $COUNT_META_UGLY -gt 0 ] ; then
+				set_icon FTBFS
+				write_icon
+				write_page "$COUNT_META_UGLY ($PERCENT_META_UGLY%) packages failed to build from source:"
+				set_linktarget $META_UGLY
+				link_packages $META_UGLY
+				write_page "<br />"
+			fi
+			if [ $COUNT_META_REST -gt 0 ] ; then
+				set_icon not_for_us
+				write_icon
+				set_icon blacklisted
+				write_icon
+				set_icon 404
+				write_icon
+				write_page "$COUNT_META_REST ($PERCENT_META_REST%) packages are either blacklisted, not for us or cannot be downloaded:"
+				set_linktarget $META_REST
+				link_packages $META_REST
+				write_page "<br />"
+			fi
+			write_page "</p>"
+		fi
+		write_page_meta_sign
+	done
+	write_page_footer
+	publish_page $SUITE/$ARCH
+}
+
+#
+# create main stats page
+#
+create_stats_page() {
+	VIEW=stats
+	PAGE=index_${VIEW}.html
+	echo "$(date) - starting to write $PAGE page."
+	write_page_header $VIEW "Overview of various statistics about reproducible builds"
+	write_page "<p>"
+	for i in $SUITES ; do
+		write_page " <a href=\"/$i\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"$i stats\"></a>"
+	done
+	write_page "</p><p>"
+	SUITE="sid"	# shall become a loop once we test stretch
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+	done
+	write_page "</p><p>"
+	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
+	for i in 3 4 5 1 ; do
+		if [ "$i" = "3" ] ; then
+			write_usertag_table
+		fi
+		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
+		# redo pngs once a day
+		if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+			create_png_from_table $i ${TABLE[$i]}.png
+		fi
+	done
+	write_page "</p>"
+	write_page_footer
+	publish_page
+}
+
+#
+# main
+#
 update_bug_stats
 update_notes_stats
-update_suite_stats
-update_meta_pkg_stats
-
-gather_suite_stats
-VIEW=suite_stats
-PAGE=index_${VIEW}.html
-MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
-echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
-if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
-	write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently.</p>"
-fi
-write_page "<p>"
-set_icon reproducible
-write_icon
-write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH."
-set_icon unreproducible
-write_icon
-write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."
-set_icon FTBFS
-write_icon
-write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
-write_page "<p>"
-if [ $COUNT_SOURCELESS -gt 0 ] ; then
-	write_page "For "
-	set_icon 404
-	write_icon
-	write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages sources could not be downloaded,"
-fi
-set_icon not_for_us
-write_icon
-write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', 'amd64', 'linux-any', 'linux-amd64' nor 'any-amd64' will not be build here"
-write_page "and those "
-set_icon blacklisted
-
-write_icon
-write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
-write_page "<p>"
-write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
-# redo png once a day
-if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
-	create_png_from_table 0 $SUITE/${TABLE[0]}.png
-fi
-write_page "</p>"
-write_page_footer
-publish_page $SUITE
-
-if [ "$SUITE" = "experimental" ] ; then
-	# no package sets page for experimental
-	exit 0
-fi
-VIEW=pkg_sets
-PAGE=index_${VIEW}.html
-echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
-write_page "<ul><li>Tracked package sets in $SUITE: </li>"
-for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	if [ -f /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
-		write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
+create_stats_page
+for SUITE in $SUITES ; do
+	update_suite_stats
+	gather_suite_stats
+	create_suite_stats_page
+	# no pkg sets in experimental
+	if [ "$SUITE" != "experimental" ] ; then
+		update_meta_pkg_stats
+		create_pkg_sets_page
 	fi
 done
-write_page "</ul>"
-for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	write_page "<hr /><a name=\"${META_PKGSET[$i]}\"></a>"
-	META_RESULT=true
-	gather_meta_stats $i	# FIXME: this ignores unknown packages...
-	if $META_RESULT ; then
-		MAINLABEL[6]="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
-		YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
-		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
-		# redo pngs once a day
-		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
-			create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
-		fi
-		write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
-		write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
-		set_icon reproducible
-		write_icon
-		write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
-		set_linktarget $META_GOOD
-		link_packages $META_GOOD
-		write_page "<br />"
-		set_icon unreproducible
-		write_icon
-		write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
-		set_linktarget $META_BAD
-		link_packages $META_BAD
-		write_page "<br />"
-		if [ $COUNT_META_UGLY -gt 0 ] ; then
-			set_icon FTBFS
-			write_icon
-			write_page "$COUNT_META_UGLY ($PERCENT_META_UGLY%) packages failed to build from source:"
-			set_linktarget $META_UGLY
-			link_packages $META_UGLY
-			write_page "<br />"
-		fi
-		if [ $COUNT_META_REST -gt 0 ] ; then
-			set_icon not_for_us
-			write_icon
-			set_icon blacklisted
-			write_icon
-			set_icon 404
-			write_icon
-			write_page "$COUNT_META_REST ($PERCENT_META_REST%) packages are either blacklisted, not for us or cannot be downloaded:"
-			set_linktarget $META_REST
-			link_packages $META_REST
-			write_page "<br />"
-		fi
-		write_page "</p>"
-	fi
-	write_page_meta_sign
-done
-write_page_footer
-publish_page $SUITE/$ARCH
-
-if [ "$SUITE" != "sid" ] ; then
-	# stop here if not called with no arguments...
-	exit 0
-fi
-VIEW=stats
-PAGE=index_${VIEW}.html
-echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Overview of various statistics about reproducible builds"
-write_page "<p>"
-for i in $SUITES ; do
-	write_page " <a href=\"/$i\"><img src=\"/userContent/$i/${TABLE[0]}.png\" class=\"overview\" alt=\"$i stats\"></a>"
-done
-write_page "</p><p>"
-for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-	PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
-	LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-	write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
-done
-write_page "</p><p>"
-# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
-for i in 3 4 5 1 ; do
-	if [ "$i" = "3" ] ; then
-		write_usertag_table
-	fi
-	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
-	# redo pngs once a day
-	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
-		create_png_from_table $i ${TABLE[$i]}.png
-	fi
-done
-write_page "</p>"
-write_page_footer
-publish_page
-
 

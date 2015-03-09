@@ -79,7 +79,7 @@ def update_sources_tables(suite):
     # Now actually update the database:
     cursor = conn_db.cursor()
     # updated packages
-    log.debug('Pusing ' + str(len(updated_pkgs)) + ' updated packages to the database...')
+    log.info('Pushing ' + str(len(updated_pkgs)) + ' updated packages to the database...')
     cursor.executemany('REPLACE INTO sources ' +
                        '(id, name, version, suite, architecture) ' +
                        'VALUES (?, ?, ?, ?, "{arch}")'.format(arch='amd64'),
@@ -207,7 +207,7 @@ def scheduler():
     query = 'SELECT count(*) ' + \
             'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id '
     total = int(query_db(query)[0][0])
-    log.debug('current scheduled packages in all suites: ' + str(total))
+    log.info('Currently scheduled packages in all suites: ' + str(total))
     if total > 250:
         build_page('scheduled')  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
@@ -222,7 +222,7 @@ def scheduler():
         log.info('Requesting 200 untested packages...')
         untested[suite] = scheduler_untested_packages(suite, 200)
         total += len(untested[suite])
-        log.info('About to schedule ' + str(len(untested[suite])) + ' untested packages in ' + suite + '.')
+        log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
 
     # packages with new versions
     new = {}
@@ -236,7 +236,7 @@ def scheduler():
     for suite in SUITES:
         new[suite] = scheduler_new_versions(suite, many_new)
         total += len(new[suite])
-        log.info('About to schedule ' + str(len(new[suite])) + ' new packages in ' + suite + '.')
+        log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
 
     # old packages
     old = {}
@@ -252,7 +252,7 @@ def scheduler():
         log.info('Requesting ' + str(many_old) + ' old packages...')
         old[suite] = scheduler_old_versions(suite, many_old)
         total += len(old[suite])
-        log.info('About to schedule ' + str(len(old[suite])) + ' old packages in ' + suite + '.')
+        log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
 
     for suite in SUITES:
         all_scheduled_pkgs = []

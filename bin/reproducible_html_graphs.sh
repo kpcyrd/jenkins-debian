@@ -71,71 +71,75 @@ YLABEL[5]="Amount of issues"
 #
 # update package + build stats
 #
-RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
-if [ -z $RESULT ] ; then
-	echo "Updating packages and builds stats for $SUITE on $DATE."
-	ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) FROM sources WHERE suite='${SUITE}'")
-	GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE';")
-	GOOAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)='$DATE';")
-	BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE';")
-	BAAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)='$DATE';")
-	UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE';")
-	UGLDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)='$DATE';")
-	REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND date(r.build_date)<='$DATE';")
-	RESDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND date(r.build_date)='$DATE';")
-	OLDESTG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status = 'reproducible' AND s.suite='$SUITE' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
-	OLDESTB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
-	OLDESTU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
-	DIFFG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTG');")
-	if [ -z $DIFFG ] ; then DIFFG=0 ; fi
-	DIFFB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTB');")
-	if [ -z $DIFFB ] ; then DIFFB=0 ; fi
-	DIFFU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTU');")
-	if [ -z $DIFFU ] ; then DIFFU=0 ; fi
-	let "TOTAL=GOOD+BAD+UGLY+REST" || true # let FOO=0+0 returns error in bash...
-	if [ "$ALL" != "$TOTAL" ] ; then
-		let "UNTESTED=ALL-TOTAL"
-	else
-		UNTESTED=0
+update_suite_stats() {
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
+	if [ -z $RESULT ] ; then
+		echo "Updating packages and builds stats for $SUITE on $DATE."
+		ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) FROM sources WHERE suite='${SUITE}'")
+		GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE';")
+		GOOAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)='$DATE';")
+		BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE';")
+		BAAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)='$DATE';")
+		UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE';")
+		UGLDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)='$DATE';")
+		REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND date(r.build_date)<='$DATE';")
+		RESDAY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND date(r.build_date)='$DATE';")
+		OLDESTG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status = 'reproducible' AND s.suite='$SUITE' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
+		OLDESTB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
+		OLDESTU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
+		DIFFG=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTG');")
+		if [ -z $DIFFG ] ; then DIFFG=0 ; fi
+		DIFFB=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTB');")
+		if [ -z $DIFFB ] ; then DIFFB=0 ; fi
+		DIFFU=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT julianday('$DATE') - julianday('$OLDESTU');")
+		if [ -z $DIFFU ] ; then DIFFU=0 ; fi
+		let "TOTAL=GOOD+BAD+UGLY+REST" || true # let FOO=0+0 returns error in bash...
+		if [ "$ALL" != "$TOTAL" ] ; then
+			let "UNTESTED=ALL-TOTAL"
+		else
+			UNTESTED=0
+		fi
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
+		# we do 3 later and 6 is special anyway...
+		for i in 0 1 2 4 5 ; do
+			PREFIX=""
+			if [ $i -eq 0 ] ; then
+				PREFIX=$SUITE
+			fi
+			# force regeneration of the image if it exists
+			if [ -f /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png ] ; then
+				echo "Touching $PREFIX/${TABLE[$i]}.png..."
+				touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png
+			fi
+		done
 	fi
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
-	# we do 3 later and 6 is special anyway...
-	for i in 0 1 2 4 5 ; do
-		PREFIX=""
-		if [ $i -eq 0 ] ; then
-			PREFIX=$SUITE
-		fi
-		# force regeneration of the image if it exists
-		if [ -f /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png ] ; then
-			echo "Touching $PREFIX/${TABLE[$i]}.png..."
-			touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png
-		fi
-	done
-fi
+}
 
 #
 # update notes stats
 #
-RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
-if [ -z $RESULT ] ; then
-	echo "Updating notes stats for $DATE."
-	NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
-	if [ ! -d ${NOTES_GIT_PATH} ] ; then
-		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
-		echo "Please investigate and fix!"
-		exit 1
-	elif [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
-		echo "Please investigate and fix!"
-		exit 1
+update_notes_stats() {
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
+	if [ -z $RESULT ] ; then
+		echo "Updating notes stats for $DATE."
+		NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
+		if [ ! -d ${NOTES_GIT_PATH} ] ; then
+			echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
+			echo "Please investigate and fix!"
+			exit 1
+		elif [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
+			echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
+			echo "Please investigate and fix!"
+			exit 1
+		fi
+		NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
+		ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 	fi
-	NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
-	ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
-fi
+}
 
 #
 # gather suite stats
@@ -197,52 +201,56 @@ gather_meta_stats() {
 #
 # update meta pkg stats
 #
-if [ "$SUITE" != "experimental" ] ; then
-	# no meta pkg sets in experimental
-	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
-		if [ -z $RESULT ] ; then
-			META_RESULT=true
-			gather_meta_stats $i
-			if $META_RESULT ; then
-				 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
+update_meta_pkg_stats() {
+	if [ "$SUITE" != "experimental" ] ; then
+		# no meta pkg sets in experimental
+		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+			RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
+			if [ -z $RESULT ] ; then
+				META_RESULT=true
+				gather_meta_stats $i
+				if $META_RESULT ; then
+					 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
+					echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
+				fi
+				echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
+				touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
 			fi
-			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
-			touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
-		fi
-	done
-fi
+		done
+	fi
+}
 
 #
-# update bugs stats
+# update bug stats
 #
-RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
-if [ -z $RESULT ] ; then
-	echo "Updating bug stats for $DATE."
-	declare -a DONE
-	declare -a OPEN
-	SQL="INSERT INTO ${TABLE[3]} VALUES (\"$DATE\" "
-	for TAG in $USERTAGS ; do
-		OPEN[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:open status:forwarded 2>/dev/null|wc -l)
-		DONE[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:done archive:both 2>/dev/null|wc -l)
-		# test if both values are integers
-		if ! ( [[ ${DONE[$TAG]} =~ ^-?[0-9]+$ ]] && [[ ${OPEN[$TAG]} =~ ^-?[0-9]+$ ]] ) ; then
-			echo "Non-integers value detected, exiting."
-			echo "Usertag: $TAG"
-			echo "Open: ${OPEN[$TAG]}"
-			echo "Done: ${DONE[$TAG]}"
-			exit 1
-		fi
-		SQL="$SQL, ${OPEN[$TAG]}, ${DONE[$TAG]}"
-	done
-	SQL="$SQL)"
-	echo $SQL
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
-	# force regeneration of the image
-	echo "Touching ${TABLE[3]}.png..."
-	touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
-fi
+update_bug_stats() {
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
+	if [ -z $RESULT ] ; then
+		echo "Updating bug stats for $DATE."
+		declare -a DONE
+		declare -a OPEN
+		SQL="INSERT INTO ${TABLE[3]} VALUES (\"$DATE\" "
+		for TAG in $USERTAGS ; do
+			OPEN[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:open status:forwarded 2>/dev/null|wc -l)
+			DONE[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:done archive:both 2>/dev/null|wc -l)
+			# test if both values are integers
+			if ! ( [[ ${DONE[$TAG]} =~ ^-?[0-9]+$ ]] && [[ ${OPEN[$TAG]} =~ ^-?[0-9]+$ ]] ) ; then
+				echo "Non-integers value detected, exiting."
+				echo "Usertag: $TAG"
+				echo "Open: ${OPEN[$TAG]}"
+				echo "Done: ${DONE[$TAG]}"
+				exit 1
+			fi
+			SQL="$SQL, ${OPEN[$TAG]}, ${DONE[$TAG]}"
+		done
+		SQL="$SQL)"
+		echo $SQL
+		sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
+		# force regeneration of the image
+		echo "Touching ${TABLE[3]}.png..."
+		touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
+	fi
+}
 
 #
 # create the png (and query the db to populate a csv file...)
@@ -319,6 +327,11 @@ write_usertag_table() {
 		write_page "</table>"
 	fi
 }
+
+update_bug_stats
+update_notes_stats
+update_suite_stats
+update_meta_pkg_stats
 
 gather_suite_stats
 VIEW=suite_stats

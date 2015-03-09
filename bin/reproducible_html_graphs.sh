@@ -295,6 +295,14 @@ write_usertag_table() {
 	fi
 }
 
+AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
+COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
+COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
+PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
+if [ -z "${PERCENT_TOTAL}" ]; then PERCENT_TOTAL=0; fi
+PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
+if [ -z "${PERCENT_GOOD}" ]; then PERCENT_GOOD=0; fi
+
 VIEW=suite_stats
 PAGE=index_${VIEW}.html
 echo "$(date) - starting to write $PAGE page."

@@ -91,15 +91,6 @@ init_html() {
 	SPOKENTARGET["suite_stats"]="suite: $SUITE"
 	SPOKENTARGET["repo_stats"]="repositories overview"
 	SPOKENTARGET["stats"]="reproducible stats"
-	# FIXME: this can probably all go into html_graph.sh now...: query some data we need everywhere
-	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
-	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
-	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
-
-	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
-	if [ -z "${PERCENT_TOTAL}" ]; then PERCENT_TOTAL=0; fi
-	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
-	if [ -z "${PERCENT_GOOD}" ]; then PERCENT_GOOD=0; fi
 }
 
 write_page() {

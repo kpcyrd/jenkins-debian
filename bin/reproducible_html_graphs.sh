@@ -19,10 +19,9 @@ fi
 ARCH="amd64"  # we only care about amd64 status here (for now)
 
 init_html
-gather_stats
 
 #
-# init
+# init some variables
 #
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
@@ -34,6 +33,40 @@ TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
+USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
+FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
+FIELDS[1]="datum"
+for i in reproducible unreproducible FTBFS other ; do
+	for j in $SUITES ; do
+		FIELDS[1]="${FIELDS[1]}, ${i}_${j}"
+	done
+done
+FIELDS[2]="datum, oldest_reproducible, oldest_unreproducible, oldest_FTBFS"
+FIELDS[3]="datum "
+for TAG in $USERTAGS ; do
+	FIELDS[3]="${FIELDS[3]}, open_$TAG, done_$TAG"
+done
+FIELDS[4]="datum, packages_with_notes"
+FIELDS[5]="datum, known_issues"
+FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
+COLOR[0]=5
+COLOR[1]=8
+COLOR[2]=3
+COLOR[3]=28
+COLOR[4]=1
+COLOR[5]=1
+COLOR[6]=4
+MAINLABEL[1]="Amount of packages built each day"
+MAINLABEL[2]="Age in days of oldest kind of logfile"
+MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
+MAINLABEL[4]="Packages which have notes"
+MAINLABEL[5]="Identified issues"
+YLABEL[0]="Amount (total)"
+YLABEL[1]="Amount (per day)"
+YLABEL[2]="Age in days"
+YLABEL[3]="Amount of bugs"
+YLABEL[4]="Amount of packages"
+YLABEL[5]="Amount of issues"
 
 #
 # update package + build stats
@@ -105,14 +138,19 @@ if [ -z $RESULT ] ; then
 fi
 
 #
-# gather packages stats
+# gather suite stats
 #
-gather_stats() {
+gather_suite_stats() {
+	AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
+	COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
+	COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
 	COUNT_BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"unreproducible\"")
 	COUNT_UGLY=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"FTBFS\"")
 	COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"404\"")
 	COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"not for us\"")
 	COUNT_BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"blacklisted\"")
+	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
+	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
 	PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
 	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
@@ -177,9 +215,8 @@ if [ "$SUITE" != "experimental" ] ; then
 fi
 
 #
-# gather bugs stats
+# update bugs stats
 #
-USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
 RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
 if [ -z $RESULT ] ; then
 	echo "Updating bug stats for $DATE."
@@ -207,43 +244,10 @@ if [ -z $RESULT ] ; then
 	touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
 fi
 
-# used for redo_png (but only needed to define once)
-FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
-FIELDS[1]="datum"
-for i in reproducible unreproducible FTBFS other ; do
-	for j in $SUITES ; do
-		FIELDS[1]="${FIELDS[1]}, ${i}_${j}"
-	done
-done
-FIELDS[2]="datum, oldest_reproducible, oldest_unreproducible, oldest_FTBFS"
-FIELDS[3]="datum "
-for TAG in $USERTAGS ; do
-	FIELDS[3]="${FIELDS[3]}, open_$TAG, done_$TAG"
-done
-FIELDS[4]="datum, packages_with_notes"
-FIELDS[5]="datum, known_issues"
-FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
-COLOR[0]=5
-COLOR[1]=8
-COLOR[2]=3
-COLOR[3]=28
-COLOR[4]=1
-COLOR[5]=1
-COLOR[6]=4
-MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
-MAINLABEL[1]="Amount of packages built each day"
-MAINLABEL[2]="Age in days of oldest kind of logfile"
-MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
-MAINLABEL[4]="Packages which have notes"
-MAINLABEL[5]="Identified issues"
-YLABEL[0]="Amount (total)"
-YLABEL[1]="Amount (per day)"
-YLABEL[2]="Age in days"
-YLABEL[3]="Amount of bugs"
-YLABEL[4]="Amount of packages"
-YLABEL[5]="Amount of issues"
-
-redo_png() {
+#
+# create the png (and query the db to populate a csv file...)
+#
+create_png_from_table() {
 	echo "Checking whether to update $2..."
 	# $1 = id of the stats table
 	# $2 = image file name
@@ -286,6 +290,9 @@ redo_png() {
 	rm ${TABLE[$1]}.csv
 }
 
+#
+# gather bugs stats and generate html table
+#
 write_usertag_table() {
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
 	if [ -z "$RESULTS" ] ; then
@@ -313,16 +320,10 @@ write_usertag_table() {
 	fi
 }
 
-AMOUNT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\"")
-COUNT_TOTAL=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\"")
-COUNT_GOOD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND r.status=\"reproducible\"")
-PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
-if [ -z "${PERCENT_TOTAL}" ]; then PERCENT_TOTAL=0; fi
-PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
-if [ -z "${PERCENT_GOOD}" ]; then PERCENT_GOOD=0; fi
-
+gather_suite_stats
 VIEW=suite_stats
 PAGE=index_${VIEW}.html
+MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
 if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
@@ -357,7 +358,7 @@ write_page "<p>"
 write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 # redo png once a day
 if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
-	redo_png 0 $SUITE/${TABLE[0]}.png
+	create_png_from_table 0 $SUITE/${TABLE[0]}.png
 fi
 write_page "</p>"
 write_page_footer
@@ -388,7 +389,7 @@ for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 		# redo pngs once a day
 		if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
-			redo_png 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
+			create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
 		fi
 		write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
 		write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
@@ -458,7 +459,7 @@ for i in 3 4 5 1 ; do
 	write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
 	if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
-		redo_png $i ${TABLE[$i]}.png
+		create_png_from_table $i ${TABLE[$i]}.png
 	fi
 done
 write_page "</p>"

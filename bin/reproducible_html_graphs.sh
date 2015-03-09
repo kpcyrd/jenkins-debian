@@ -437,7 +437,7 @@ create_pkg_sets_page() {
 #
 # create main stats page
 #
-create_stats_page() {
+create_main_stats_page() {
 	VIEW=stats
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
@@ -475,7 +475,7 @@ create_stats_page() {
 #
 update_bug_stats
 update_notes_stats
-create_stats_page
+create_main_stats_page
 for SUITE in $SUITES ; do
 	update_suite_stats
 	gather_suite_stats

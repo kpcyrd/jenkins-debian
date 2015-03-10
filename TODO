@@ -116,10 +116,18 @@ properties:
 
 === reproducible
 
-* reproducible: dont delete userContent/$pkg on build begin..
-* move all content into /var/lib/userContent/reproducible/
-* more graphs
-** graph average build duration by day
+* misc
+** reproducible: dont delete userContent/$pkg on build begin..
+** move all content into /var/lib/userContent/reproducible/
+** more graphs: graph average build duration by day
+** show package status (briefly) on https://reproducible.debian.net/issues/*html
+** turn job-cfg/g-i.yaml into .yaml.py
+** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
+** "fork" etc/schroot/default into etc/schroot/reproducible
+** include no js header in the css
+** use one css for all, not two minimally different ones
+** restore the "find packages which have been removed from sid" part of reproducible_maintainance.sh
+** re-enable the IRC notification for status changes, once the Pod::Man issue with timezone is fixed
 
 * pkg sets related:
 ** new package set: kde/plasma
@@ -146,16 +154,7 @@ properties:
 	       * | h01ger guesstimates that we would go from 300-600 builds per day to 100-200 with qemubuilder
 	<h01ger> | but those qemubuilders would only get 4 or 8gb ram... maybe 6. and that will have a huge impact
 
-* misc
-** show package status (briefly) on https://reproducible.debian.net/issues/*html
-** turn job-cfg/g-i.yaml into .yaml.py
-** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
-** "fork" etc/schroot/default into etc/schroot/reproducible
-** include no js header in the css
-** use one css for all, not two minimally different ones
-** restore the "find packages which have been removed from sid" part of reproducible_maintainance.sh
-** re-enable the IRC notification for status changes, once the Pod::Man issue with timezone is fixed
-** enable people to upload test packages, to be built in jenkins:
+* enable people to upload test packages, to be built in jenkins:
 	<mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything 
 	<mapreri> jenkins tests.
 	<h01ger> mapreri: please add the feature request to the todo. i'm thinking now that it maybe should just be a jenkins job not integrated into the rp.d.n webui, but... maybe we find a nice way to do it

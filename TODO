@@ -121,7 +121,6 @@ properties:
 * move all content into /var/lib/userContent/reproducible/
 * more graphs
 ** graph average build duration by day
-** graph oldest build age - in days
 
 * pkg sets related:
 ** new package set: kde/plasma

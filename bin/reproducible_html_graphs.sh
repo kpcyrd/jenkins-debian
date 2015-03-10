@@ -35,7 +35,7 @@ for i in reproducible unreproducible FTBFS other ; do
 		FIELDS[1]="${FIELDS[1]}, ${i}_${j}"
 	done
 done
-FIELDS[2]="datum, oldest_reproducible, oldest_unreproducible, oldest_FTBFS"
+FIELDS[2]="datum, oldest"
 FIELDS[3]="datum "
 for TAG in $USERTAGS ; do
 	FIELDS[3]="${FIELDS[3]}, open_$TAG, done_$TAG"
@@ -54,14 +54,13 @@ SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
 COLOR[0]=5
 COLOR[1]=8
-COLOR[2]=3
+COLOR[2]=1
 COLOR[3]=28
 COLOR[4]=1
 COLOR[5]=1
 COLOR[6]=4
 COLOR[7]=2
 MAINLABEL[1]="Amount of packages built each day"
-MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
@@ -289,6 +288,8 @@ create_png_from_table() {
 			 s.other as 'other_sid',
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
 			 FROM stats_builds_per_day AS s WHERE s.suite='sid' GROUP BY s.datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 2 ] ; then
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, ((oldest_reproducible + oldest_unreproducible + oldest_FTBFS)/3) FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else
@@ -344,6 +345,7 @@ create_suite_stats_page() {
 	VIEW=suite_stats
 	PAGE=index_${VIEW}.html
 	MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
+	MAINLABEL[2]="Age in days of oldest build in '$SUITE'"
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
@@ -375,10 +377,12 @@ create_suite_stats_page() {
 	write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 	write_page "<p>"
 	write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
-	# redo png once a day
-	if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[0]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[0]}.png) ] ; then
-		create_png_from_table 0 $SUITE/${TABLE[0]}.png
-	fi
+	for i in 0 2 ; do
+		# recreate png once a day
+		if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+			create_png_from_table $i $SUITE/${TABLE[$i]}.png
+		fi
+	done
 	write_page "</p>"
 	write_page_footer
 	publish_page $SUITE
@@ -461,8 +465,8 @@ create_main_stats_page() {
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
-	write_page "<p>"
 	# write suite graphs
+	write_page "<p>"
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
 	done
@@ -505,6 +509,12 @@ create_main_stats_page() {
 		fi
 	done
 	write_page "</p>"
+	# write suite builds age graphs
+	write_page "<p>"
+	for SUITE in $SUITES ; do
+		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"$SUITE builds age\"></a>"
+	done
+	write_page "</p><p>"
 	# the end
 	write_page_footer
 	publish_page

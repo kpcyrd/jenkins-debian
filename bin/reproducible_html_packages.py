@@ -145,7 +145,7 @@ def gen_extra_links(package, version, suite, arch):
     else:
         log.warning('The package ' + package +
                     ' did not produce any buildlog! Check ' + rbuild)
-    default_view = '/index.html' if not default_view else default_view
+    default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 
 

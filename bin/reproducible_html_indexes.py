@@ -295,7 +295,7 @@ def build_page_section(page, section, suite, arch):
         return (html, footnote)           # do not output anything on the page.
     html += build_leading_text_section(section, rows, suite, arch)
     if page == 'scheduled':
-        html += '<p><table class="body">\n' + tab + '<th>#</th><th>suite</th><th>arch</th><th>package</th></tr>\n'
+        html += '<p><table class="body">\n' + tab + '<th>#</th><th>suite</th><th>architecture</th><th>source package</th></tr>\n'
     else:
         html += '<p>\n' + tab + '<code>\n'
     for row in rows:

@@ -44,7 +44,7 @@ section must have at least a `query` defining what to file in.
 
 queries = {
     'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
-    'scheduled': 'SELECT s.name FROM schedule AS p JOIN sources AS s ON p.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" ORDER BY p.date_scheduled',
+    'scheduled': 'SELECT (select count(*) from schedule as sch_b where sch.id >= sch_b.id), s.suite, s.architecture, s.name FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = "" ORDER BY sch.date_scheduled',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',
     'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
     'reproducible_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
@@ -123,16 +123,6 @@ pages = {
                 'icon_status': 'blacklisted',
                 'query': 'blacklisted_all',
                 'text': Template('$tot ($percent%) packages which have been blacklisted in $suite/$arch:')
-            }
-        ]
-    },
-    'scheduled': {
-        'title': 'Packages in {suite}/{arch} currently scheduled for testing for build reproducibility',
-        'body': [
-            {
-                'query': 'scheduled',
-                'text': Template('$tot packages are currently scheduled for testing in $suite/$arch:'),
-                'bottom': 'A <a href="/index_scheduled.html">full scheduling overview</a> is also available.'
             }
         ]
     },
@@ -249,7 +239,7 @@ global_pages = {
         'body': [
             {
                 'query': 'scheduled',
-                'text': Template('$tot packages are currently scheduled for testing in $suite/$arch:')
+                'text': Template('$tot packages are currently scheduled for testing:')
             }
         ]
     }
@@ -304,19 +294,34 @@ def build_page_section(page, section, suite, arch):
     if not rows and page != 'scheduled':  # there are no package in this set
         return (html, footnote)           # do not output anything on the page.
     html += build_leading_text_section(section, rows, suite, arch)
-    html += '<p>\n' + tab + '<code>\n'
+    if page == 'scheduled':
+        html += '<p><table class="body">\n' + tab + '<th>#</th><th>suite</th><th>arch</th><th>package</th></tr>\n'
+    else:
+        html += '<p>\n' + tab + '<code>\n'
     for row in rows:
-        pkg = row[0]
-        url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
-        html += tab*2 + '<a href="' + url + '" class="'
+        if page == 'scheduled':
+            pkg = row[3]
+            url = RB_PKG_URI + '/' + row[1] + '/' + row[2] + '/' + pkg + '.html'
+            html += tab + '<tr><td>' + str(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
+        else:
+            pkg = row[0]
+            url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
+            html += tab*2
+        html += '<a href="' + url + '" class="'
         if package_has_notes(pkg):
             html += 'noted'
         else:
             html += 'package'
         html += '">' + pkg + '</a>'
-        html += get_trailing_icon(pkg, bugs) + '\n'
-    html += tab + '</code>\n'
-    html += '</p>'
+        html += get_trailing_icon(pkg, bugs)
+        if page == 'scheduled':
+            html += '</code></td></tr>'
+        html += '\n'
+    if page == 'scheduled':
+        html += '</table></p>\n'
+    else:
+        html += tab + '</code>\n'
+        html += '</p>'
     if section.get('bottom'):
         html += section['bottom']
     html = (tab*2).join(html.splitlines(True))
@@ -344,6 +349,8 @@ def build_page(page, suite=None, arch=None):
             for lsuite in SUITES:
                 for larch in ARCHES:
                     html += build_page_section(page, section, lsuite, larch)[0]
+                if page == 'scheduled':
+                    break
             footnote = True
         else:
             html1, footnote1 = build_page_section(page, section, suite, arch)

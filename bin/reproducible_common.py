@@ -151,6 +151,7 @@ html_head_page = Template((tab*2).join("""
     <li><a href="/index_issues.html">issues</a></li>
     <li><a href="/index_notes.html">packages with notes</a></li>
     <li><a href="/index_no_notes.html">package without notes</a></li>
+    <li><a href="/index_scheduled.html">currently scheduled</a></li>
 $links
     <li><a href="/index_repo_stats.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>
@@ -185,7 +186,6 @@ def print_critical_message(msg):
 
 def _gen_links(suite, arch):
     links = [
-        ('scheduled', '<li><a href="/{suite}/{arch}/index_scheduled.html">currently scheduled</a></li>'),
         ('last_24h', '<li><a href="/{suite}/{arch}/index_last_24h.html">packages tested in the last 24h</a></li>'),
         ('last_48h', '<li><a href="/{suite}/{arch}/index_last_48h.html">packages tested in the last 48h</a></li>'),
         ('all_abc', '<li><a href="/{suite}/{arch}/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>'),

@@ -119,10 +119,6 @@ properties:
 * run debbindiff against .changes files in current directory, instead of $LONGPATHES (due to #764459)
 * reproducible: dont delete userContent/$pkg on build begin..
 * move all content into /var/lib/userContent/reproducible/
-* (the general) index_scheduled could contain:
-** information how many packages in other suites are in front of the first package in queue of this suite (so show a table of package, build_scheduled info and not just package names)
-** information when new scheduling was done the last time for this suite
-* once experimental is fully tested, the scheduler should schedule 10% as many packages from experimental as from other suites, as all other suites are ten times as big
 * more graphs
 ** graph average build duration by day
 ** graph oldest build age - in days

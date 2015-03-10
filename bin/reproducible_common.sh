@@ -77,7 +77,7 @@ init_html() {
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repo_stats stats"
-	GLOBALVIEWS="issues notes no_notes repo_stats stats"
+	GLOBALVIEWS="issues notes no_notes scheduled repo_stats stats"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"

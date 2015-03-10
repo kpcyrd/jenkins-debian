@@ -181,6 +181,7 @@ properties:
 === chroot-installation_*
 
 * use schroot for chroot-installation, stop using plain chroot everywhere
+* add alternative tests with aptitude and possible apt
 * split etc/schroot/default
 * inform debian-devel@l.d.o or -qa@?
 * warn about transitional packages installed (on non-upgrades only)

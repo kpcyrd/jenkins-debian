@@ -69,7 +69,7 @@ MESSAGE="$TOTAL $PACKAGES_TXT $ACTION for $SUITE: ${PACKAGES_NAMES:0:256}$BLABLA
 
 # finally
 schedule_packages
-/srv/jenkins/bin/reproducible_html_indexes.py
+/srv/jenkins/bin/reproducible_scheduler.py
 echo
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"

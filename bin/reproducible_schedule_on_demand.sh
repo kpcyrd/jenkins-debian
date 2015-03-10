@@ -69,6 +69,7 @@ MESSAGE="$TOTAL $PACKAGES_TXT $ACTION for $SUITE: ${PACKAGES_NAMES:0:256}$BLABLA
 
 # finally
 schedule_packages
+cd /srv/jenkins/bin
 python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
 echo
 echo "$MESSAGE"

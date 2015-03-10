@@ -26,6 +26,7 @@ TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
+TABLE[7]=stats_bugs_state
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
 FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
 FIELDS[1]="datum"
@@ -42,6 +43,15 @@ done
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
 FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
+FIELDS[7]="datum, done_bugs, open_bugs"
+SUM_DONE="(0"
+SUM_OPEN="(0"
+for TAG in $USERTAGS ; do
+	SUM_DONE="$SUM_DONE+done_$TAG"
+	SUM_OPEN="$SUM_OPEN+open_$TAG"
+done
+SUM_DONE="$SUM_DONE)"
+SUM_OPEN="$SUM_OPEN)"
 COLOR[0]=5
 COLOR[1]=8
 COLOR[2]=3
@@ -49,17 +59,20 @@ COLOR[3]=28
 COLOR[4]=1
 COLOR[5]=1
 COLOR[6]=4
+COLOR[7]=2
 MAINLABEL[1]="Amount of packages built each day"
 MAINLABEL[2]="Age in days of oldest kind of logfile"
 MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
+MAINLABEL[7]="Open and closed bugs"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
 YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
+YLABEL[7]="Amount of bugs open / closed"
 
 #
 # update package + build stats
@@ -241,6 +254,8 @@ update_bug_stats() {
 		# force regeneration of the image
 		echo "Touching ${TABLE[3]}.png..."
 		touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
+		echo "Touching ${TABLE[7]}.png..."
+		touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[7]}.png
 	fi
 }
 
@@ -262,9 +277,7 @@ create_png_from_table() {
 	else
 		WHERE_EXTRA=""
 	fi
-	if [ $1 -ne 1 ] ; then
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
-	else
+	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,
 			 s.reproducible as 'reproducible_sid',
@@ -276,6 +289,10 @@ create_png_from_table() {
 			 s.other as 'other_sid',
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
 			 FROM stats_builds_per_day AS s WHERE s.suite='sid' GROUP BY s.datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 7 ] ; then
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
+	else
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi
 	# only generate graph is the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
@@ -477,7 +494,7 @@ create_main_stats_page() {
 	write_page "</table>"
 	# other graphs
 	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
-	for i in 3 4 5 1 ; do
+	for i in 3 7 4 5 1 ; do
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then

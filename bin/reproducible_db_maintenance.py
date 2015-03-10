@@ -321,7 +321,7 @@ schema_updates = {
             open_signatures INTEGER DEFAULT '0',
             done_signatures INTEGER DEFAULT '0',
             open_environment INTEGER DEFAULT '0',
-            one_environment INTEGER DEFAULT '0',
+            done_environment INTEGER DEFAULT '0',
             open_umask INTEGER DEFAULT '0',
             done_umask INTEGER DEFAULT '0',
             PRIMARY KEY (datum))''',

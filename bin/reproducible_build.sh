@@ -68,7 +68,7 @@ call_debbindiff() {
 		touch $DBDCHROOT_READLOCK
 	fi
 	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --version) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-	( timeout 15m schroot --directory /tmp -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --html $TMPDIR/${LOGFILE} $TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes $TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ) 2>&1 >> ${RBUILDLOG}
+	( timeout 15m schroot --directory $TMPDIR -c source:jenkins-reproducible-sid-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
 	set -e

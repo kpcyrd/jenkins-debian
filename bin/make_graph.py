@@ -48,7 +48,7 @@ def main():
     r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')
     if int(colors) < 10:
         r('legend(x="bottom",legend=colnames(t), ncol=2,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
-    elif int(colors) == 10:
+    elif int(colors) == 12:
         r('legend(x="bottom",legend=colnames(t), ncol=4,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     else:
         r('legend(x="bottom",legend=colnames(t), ncol=7,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')

@@ -129,6 +129,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_pbuilder_testing'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_pbuilder_experimental'
 
 - job-template:
@@ -138,6 +142,10 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_sid'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_testing'
 
 - job-template:
     defaults: reproducible
@@ -206,6 +214,11 @@
             my_timed: '5 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintainance.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_setup_pbuilder_testing':
+            my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '23 0,4,8,12,16,20 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh testing'
+            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_pbuilder_sid':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from sid as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
@@ -225,6 +238,11 @@
             my_description: 'Setup sid schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-sid sid reproducible'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_setup_schroot_testing':
+            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+            my_timed: '23 1 * * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-testing testing reproducible'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_schroot_experimental':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'

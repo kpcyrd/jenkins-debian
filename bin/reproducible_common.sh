@@ -40,7 +40,7 @@ DBDCHROOT_WRITELOCK=/var/lib/jenkins/reproducible-dbdchroot.writelock
 JENKINS_URL=${JENKINS_URL:0:-1}
 
 # tested suites
-SUITES="sid experimental"
+SUITES="sid testing experimental"
 # tested arches
 ARCHES="amd64"
 

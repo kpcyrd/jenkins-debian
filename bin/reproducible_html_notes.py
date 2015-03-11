@@ -421,8 +421,7 @@ def index_no_notes(notes, bugs):
     without_notes = [x for x in all_pkgs if x[0] not in notes]
     html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
            + 'packages without notes, in all suites. These are the packages ' \
-           + 'with failures that still need to be investigated.<br />\n'
-    html += 'In particular:</p>\n'
+           + 'with failures that still need to be investigated.</p>\n'
     for suite in SUITES:
         for arch in ARCHES:
             pkgs = [x for x in without_notes if x[1] == suite and x[2] == arch]

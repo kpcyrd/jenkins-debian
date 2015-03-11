@@ -246,12 +246,14 @@ def scheduler():
     if total <= 150:
         many_old = 25 # multiplied by 10, usually, see below
     elif total <= 250:
+        many_old = 15 # also...
+    elif total <= 350:
         many_old = 10 # ...
     else:
-        many_old = 5
+        many_old = 5  # ...
     for suite in SUITES:
         if suite != 'experimental':
-            many_old = many_old*10 # experimental is roughly one tenth of the other suites in size
+            many_old = many_old*10 # experimental is roughly one tenth of the size of the other suites
         log.info('Requesting ' + str(many_old) + ' old packages in ' + suite + '...')
         old[suite] = scheduler_old_versions(suite, many_old)
         total += len(old[suite])

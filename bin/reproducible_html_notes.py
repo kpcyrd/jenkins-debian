@@ -375,7 +375,7 @@ def index_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            # for now always link to the sid/amd64 url of a package
+            # FIXME for now always link to the sid/amd64 url of a package
             url = RB_PKG_URI + '/sid/amd64/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
@@ -391,20 +391,10 @@ def index_notes(notes, bugs):
     log.info('Notes index now available at ' + desturl)
 
 
-def index_no_notes(notes, bugs):
-    log.debug('Building the index_no_notes page...')
-    all_pkgs = query_db('SELECT s.name, r.status ' +
-                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
-                        'WHERE r.status = "unreproducible" OR r.status = "FTBFS"' +
-                        'AND s.suite="sid" ' +
-                        'ORDER BY r.build_date DESC')
-    without_notes = [x for x in all_pkgs if x[0] not in notes]
-    html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
-           + 'packages without notes. These are the packages with failures ' \
-           + 'that still need to be investigated.<br />\n'
-    html += 'In particular:</p>\n'
+def index_no_notes_section(notes, bugs, packages, suite, arch):
+    html = '<p>In ' + suite + '/' + arch + ':</p>\n'
     for status in ['unreproducible', 'FTBFS']:
-        pkgs = [x[0] for x in without_notes if x[1] == status]
+        pkgs = [x for x in packages if x[3] == status]
         if not pkgs:
             continue
         html += '<p>\n'
@@ -413,12 +403,29 @@ def index_no_notes(notes, bugs):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            # FIXME we currently consider notes only for sid/amd64
-            url = RB_PKG_URI + '/sid/amd64/' + pkg + '.html'
-            html += tab*2 + '<a href="' + url + '" class="package">' + pkg
-            html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
+            url = RB_PKG_URI + '/' + pkg[2] + '/' + pkg[3] + '/' + pkg[0] + '.html'
+            html += tab*2 + '<a href="' + url + '" class="package">' + pkg[0]
+            html += '</a>' + get_trailing_icon(pkg[0], bugs) + '\n'
         html += tab + '</code>\n'
         html += '</p>\n'
+    return html
+
+
+def index_no_notes(notes, bugs):
+    log.debug('Building the index_no_notes page...')
+    all_pkgs = query_db('SELECT s.name, s.suite, s.architecture, r.status ' +
+                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
+                        'WHERE r.status = "unreproducible" OR r.status = "FTBFS"' +
+                        'ORDER BY r.build_date DESC')
+    without_notes = [x for x in all_pkgs if x[0] not in notes]
+    html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
+           + 'packages without notes, in all suites. These are the packages ' \
+           + 'with failures that still need to be investigated.<br />\n'
+    html += 'In particular:</p>\n'
+    for suite in SUITES:
+        for arch in ARCHES:
+            pkgs = [x for x in without_notes if x[1] == suite and x[2] == arch]
+            html += index_no_notes_section(notes, bugs, pkgs, suite, arch)
     html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     html = (tab*2).join(html.splitlines(True))
     title = 'Overview of packages without notes'

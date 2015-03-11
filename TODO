@@ -48,6 +48,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * etc/munin/plugins/munin_stats includes the proposed fix for #767032
 * etc/munin/plugins/cpu includes work in progress for #767100
 * etc/munin/plugins/iostat_ios includes work in progress for #767018
+* bin/reproducible_create_meta_pkg_sets.sh includes a workaround for #774685
 
 === jenkins-job-builder related
 

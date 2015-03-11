@@ -44,7 +44,7 @@ section must have at least a `query` defining what to file in.
 
 queries = {
     'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
-    'scheduled': 'SELECT (select count(*) from schedule as sch_b where sch.id >= sch_b.id), s.suite, s.architecture, s.name FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = "" ORDER BY sch.date_scheduled',
+    'scheduled': 'SELECT (select count(*) from schedule as sch_b where sch.id >= sch_b.id), s.suite, s.architecture, s.name, sch.date_scheduled FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = "" ORDER BY sch.date_scheduled',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',
     'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
     'reproducible_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
@@ -295,7 +295,7 @@ def build_page_section(page, section, suite, arch):
         return (html, footnote)           # do not output anything on the page.
     html += build_leading_text_section(section, rows, suite, arch)
     if page == 'scheduled':
-        html += '<p><table class="body">\n' + tab + '<th>#</th><th>suite</th><th>architecture</th><th>source package</th></tr>\n'
+        html += '<p><table class="body">\n' + tab + '<th>#</th><th>suite</th><th>architecture</th><th>source package</th><th>scheduled at</th></tr>\n'
     else:
         html += '<p>\n' + tab + '<code>\n'
     for row in rows:
@@ -315,7 +315,7 @@ def build_page_section(page, section, suite, arch):
         html += '">' + pkg + '</a>'
         html += get_trailing_icon(pkg, bugs)
         if page == 'scheduled':
-            html += '</code></td></tr>'
+            html += '</code></td><td>' + row[4] + '</td></tr>'
         html += '\n'
     if page == 'scheduled':
         html += '</table></p>\n'

@@ -260,6 +260,7 @@ def scheduler():
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
 
+    now_queued_here = {}
     for suite in SUITES:
         all_scheduled_pkgs = []
         all_scheduled_pkgs.extend(untested[suite])
@@ -268,24 +269,25 @@ def scheduler():
         query = 'SELECT count(*) ' + \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
                 'WHERE s.suite="{suite}"'.format(suite=suite)
-        now_queued_here = int(query_db(query)[0][0]) + len(all_scheduled_pkgs)
-        # build the final message text
-        message = 'Scheduled in ' + suite + ': ' + \
-                  str(len(untested[suite])) + ' untested packages, ' + \
-                  str(len(new[suite])) + ' packages with new versions and ' + \
-                  str(len(old[suite])) + ' with the same version ' + \
-                  '(total: ' + str(total) + ' of which ' + \
-                  str(now_queued_here) + ' are in ' + suite + ')'
-        kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
-           '--relay-msg']
-        kgb.extend(message.split())
+        now_queued_here[suite] = int(query_db(query)[0][0]) + len(all_scheduled_pkgs)
         # finally
         schedule_packages(all_scheduled_pkgs)
-        call(kgb)
-        log.info(message)
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
+    # update the scheduled page
     build_page('scheduled')  # from reproducible_html_indexes, build global page
+    # build the kgb message text
+    message = 'Scheduled in ' + '+'.join(SUITES) + ': ' + \
+              '+'.join([str(untested[x]) for x in SUITES]) + ' new and untested packages, ' + \
+              '+'.join([str(len(new[x])) for x in SUITES]) + ' packages with new versions and ' + \
+              '+'.join([str(len(old[x])) for x in SUITES]) + ' old packages with the same version. ' + \
+              'Total: ' + str(total) + ' split into ' + \
+              '+'.join([str(now_queued_here[x]) for x in SUITES])
+    log.info(message)
+    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
+           '--relay-msg']
+    kgb.extend(message.split())
+    call(kgb)
     log.info('\n\n\n')
     log.info(message)
 

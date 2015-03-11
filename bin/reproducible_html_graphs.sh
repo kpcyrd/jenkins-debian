@@ -267,15 +267,16 @@ create_png_from_table() {
 	# $2 = image file name
 	# $3 = meta package set, only sensible if $1=6
 	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
-	# TABLE[3+4+5] don't have a suite column...
-	# 6 is special anyway
-	if [ $1 -eq 6 ] ; then
-		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
-	elif [ $1 -ne 3 ] && [ $1 -ne 4 ] && [ $1 -ne 5 ] ; then
-		WHERE_EXTRA="WHERE suite = '$SUITE'"
-	else
+	# prepare query
+	WHERE_EXTRA="WHERE suite = '$SUITE'"
+	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] ; then
+		# TABLE[3+4+5] don't have a suite column:
 		WHERE_EXTRA=""
+	elif [ $1 -eq 6 ] ; then
+		# 6 is special too:
+		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
 	fi
+	# run query
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,

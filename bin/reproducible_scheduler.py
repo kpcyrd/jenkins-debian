@@ -139,8 +139,8 @@ def print_schedule_result(suite, criteria, packages):
     log.info('Packages: ' + ' '.join([x[1] for x in packages]))
 
 
-def schedule_packages(packages):
-    date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+def schedule_packages(packages, date):
+    date = date.strftime('%Y-%m-%d %H:%M')
     pkgs = [(x[0], date) for x in packages]
     log.debug('IDs about to be scheduled: ' + str([x[0] for x in packages]))
     query = 'INSERT INTO schedule ' + \
@@ -151,7 +151,7 @@ def schedule_packages(packages):
     conn_db.commit()
     log.info('--------------------------------------------------------------')
     log.info('The following ' + str(len(pkgs)) + ' source packages have ' +
-             'been scheduled: ' + ' '.join([str(x[1]) for x in packages]))
+             'been scheduled at ' + date + ': ' + ' '.join([str(x[1]) for x in packages]))
     log.info('--------------------------------------------------------------')
 
 
@@ -262,16 +262,14 @@ def scheduler():
 
     now_queued_here = {}
     for suite in SUITES:
-        all_scheduled_pkgs = []
-        all_scheduled_pkgs.extend(untested[suite])
-        all_scheduled_pkgs.extend(new[suite])
-        all_scheduled_pkgs.extend(old[suite])
         query = 'SELECT count(*) ' + \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
                 'WHERE s.suite="{suite}"'.format(suite=suite)
-        now_queued_here[suite] = int(query_db(query)[0][0]) + len(all_scheduled_pkgs)
-        # finally
-        schedule_packages(all_scheduled_pkgs)
+        now_queued_here[suite] = int(query_db(query)[0][0]) + len(untested[suite]+new[suite]+old[suite])
+        # schedule packages differently in the queue...
+        schedule_packages(untested[suite], datetime.datetime.now())
+        schedule_packages(new[suite], datetime.datetime.now()+datetime.timedelta(minutes=-60))
+        schedule_packages(old[suite], datetime.datetime.now()+datetime.timedelta(minutes=360))
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
     # update the scheduled page

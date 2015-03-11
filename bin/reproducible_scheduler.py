@@ -276,11 +276,11 @@ def scheduler():
     build_page('scheduled')  # from reproducible_html_indexes, build global page
     # build the kgb message text
     message = 'Scheduled in ' + '+'.join(SUITES) + ': ' + \
-              '+'.join([str(untested[x]) for x in SUITES]) + ' new and untested packages, ' + \
+              '+'.join([str(len(untested[x])) for x in SUITES]) + ' new and untested packages, ' + \
               '+'.join([str(len(new[x])) for x in SUITES]) + ' packages with new versions and ' + \
-              '+'.join([str(len(old[x])) for x in SUITES]) + ' old packages with the same version. ' + \
-              'Total: ' + str(total) + ' split into ' + \
-              '+'.join([str(now_queued_here[x]) for x in SUITES])
+              '+'.join([str(len(old[x])) for x in SUITES]) + ' old packages with the same version, ' + \
+              'for ' + str(total) + ' or ' + \
+              '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
     log.info(message)
     kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
            '--relay-msg']

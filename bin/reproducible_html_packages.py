@@ -88,15 +88,15 @@ def check_package_status(package, suite, nocheck=False):
     return (status, version, build_date)
 
 
-def gen_status_link_icon(status, icon):
+def gen_status_link_icon(status, icon, suite, arch):
     html = ''
     if status != 'untested':
-        html += tab*6 + '<a href="/index_{status}.html" target="_parent" ' + \
-                'title="{status}">\n'
+        html += tab*6 + '<a href="/{suite}/{arch}/index_{status}.html"' + \
+                ' target="_parent" title="{status}">\n'
     html += tab*9 + '<img src="/static/{icon}" alt="{status}" />\n'
     if status != 'untested':
         html += tab*8 + '</a>\n'
-    return html.format(status=status, icon=icon)
+    return html.format(status=status, icon=icon, suite=suite, arch=arch)
 
 
 def gen_extra_links(package, version, suite, arch):
@@ -200,7 +200,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         links, default_view = gen_extra_links(pkg, version, suite, arch)
         suites_links = gen_suites_links(pkg, suite)
         status, icon = join_status_icon(status, pkg, version)
-        status = gen_status_link_icon(status, icon)
+        status = gen_status_link_icon(status, icon, suite, arch)
 
         html = html_package_page.substitute(package=pkg,
                                             status=status,

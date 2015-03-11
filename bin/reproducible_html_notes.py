@@ -403,7 +403,8 @@ def index_no_notes_section(notes, bugs, packages, suite, arch):
         html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
-            url = RB_PKG_URI + '/' + pkg[2] + '/' + pkg[3] + '/' + pkg[0] + '.html'
+            # 0: name, 1: suite, 2: arch, 3: status
+            url = RB_PKG_URI + '/' + pkg[1] + '/' + pkg[2] + '/' + pkg[0] + '.html'
             html += tab*2 + '<a href="' + url + '" class="package">' + pkg[0]
             html += '</a>' + get_trailing_icon(pkg[0], bugs) + '\n'
         html += tab + '</code>\n'

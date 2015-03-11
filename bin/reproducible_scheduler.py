@@ -299,7 +299,6 @@ if __name__ == '__main__':
             call_apt_update(suite)
     overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
     if overall > 250:
-        build_page('scheduled')  # from reproducible_html_indexes
         log.info(str(overall) + ' packages already scheduled, nothing to do.')
         sys.exit()
     log.info(str(overall) + ' packages already scheduled, scheduling some more...')

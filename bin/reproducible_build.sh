@@ -43,6 +43,10 @@ update_db_and_html() {
 	echo
 	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/$SRCPACKAGE.html"
 	echo
+	python3 -c "from reproducible_html_indexes import build_page; \
+			build_page('scheduled'); \
+			build_page('last_24h', suite=\"$SUITE\", arch=\"$ARCH\"); \
+			build_page('last_48h', suite=\"$SUITE\", arch=\"$ARCH\")"
 }
 
 call_debbindiff() {

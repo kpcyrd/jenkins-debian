@@ -300,7 +300,7 @@ create_png_from_table() {
 	else
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi
-	# only generate graph is the query returned data
+	# only generate graph if the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
 		echo "Updating $2..."
 		DIR=$(dirname $2)

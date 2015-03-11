@@ -220,8 +220,8 @@ def scheduler():
     # untested packages
     untested = {}
     for suite in SUITES:
-        log.info('Requesting 200 untested packages in ' + suite + '...')
-        untested[suite] = scheduler_untested_packages(suite, 200)
+        log.info('Requesting 250 untested packages in ' + suite + '...')
+        untested[suite] = scheduler_untested_packages(suite, 250)
         total += len(untested[suite])
         log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
@@ -243,12 +243,12 @@ def scheduler():
 
     # old packages
     old = {}
-    if total <= 75:
+    if total <= 150:
         many_old = 25 # multiplied by 10, usually, see below
-    elif total <= 150:
+    elif total <= 250:
         many_old = 10 # ...
     else:
-        many_old = 1
+        many_old = 5
     for suite in SUITES:
         if suite != 'experimental':
             many_old = many_old*10 # experimental is roughly one tenth of the other suites in size

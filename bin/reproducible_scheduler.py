@@ -292,12 +292,11 @@ def scheduler():
 
 if __name__ == '__main__':
     overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
-    if overall > 400:
+    if overall > 250:
         build_page('scheduled')  # from reproducible_html_indexes
         log.info(str(overall) + ' packages already scheduled, nothing to do.')
         sys.exit()
-    else:
-        log.info(str(overall) + ' packages already scheduled, scheduling some more...')
+    log.info(str(overall) + ' packages already scheduled, scheduling some more...')
     for suite in SUITES:
         call_apt_update(suite)
         update_sources_tables(suite)

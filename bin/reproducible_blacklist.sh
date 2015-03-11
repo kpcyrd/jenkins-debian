@@ -44,7 +44,7 @@ shift
 CANDIDATES="$@"
 check_candidates
 PACKAGES=$(echo $PACKAGES)
-MESSAGE="$TOTAL package(s) blacklisted: ${PACKAGES}"
+MESSAGE="$TOTAL package(s) blacklisted in $SUITE: ${PACKAGES}"
 if [ $TOTAL -lt 1 ] ; then
 	exit 1
 fi

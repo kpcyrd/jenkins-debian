@@ -13,6 +13,7 @@ import sys
 import gzip
 import deb822
 import aptsources.sourceslist
+import random
 from time import sleep
 from random import randint
 from subprocess import call
@@ -291,6 +292,11 @@ def scheduler():
 
 
 if __name__ == '__main__':
+    # scheduler is called 4 times per hour, so we only update the schroots roughly every 4th time
+    if random.randrange(1,5) == 4:
+        log.info('Updating schroots for all suites.')
+        for suite in SUITES:
+            call_apt_update(suite)
     overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
     if overall > 250:
         build_page('scheduled')  # from reproducible_html_indexes
@@ -298,7 +304,6 @@ if __name__ == '__main__':
         sys.exit()
     log.info(str(overall) + ' packages already scheduled, scheduling some more...')
     for suite in SUITES:
-        call_apt_update(suite)
         update_sources_tables(suite)
     scheduler()
     overall = int(query_db('SELECT count(*) FROM schedule')[0][0])

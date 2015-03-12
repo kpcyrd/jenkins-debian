@@ -62,6 +62,8 @@ for PKG in $SOURCES ; do
 	# format output
 	#
 	CSID=""
+	CTEST=""
+	CEXP=""
 	for i in $SID ; do
 		if dpkg --compare-versions "$i" gt "$BET" ; then
 			CSID="$CSID<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
@@ -73,20 +75,16 @@ for PKG in $SOURCES ; do
 			CSID="$CSID$i<br />"
 		fi
 	done
-	SID=$CSID
 	if [ ! -z "$TESTING" ] ; then
-		CTEST=""
 		for i in $TESTING ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
-				CTEST="$CTEST<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+				CTEST="$CTEST<span class=\"green\">$i</span><br />"
 			else
 				CTEST="$CTEST$i<br />"
 			fi
 		done
-		TESTING=$CTEST
 	fi
 	if [ ! -z "$EXPERIMENTAL" ] ; then
-		CEXP=""
 		for i in $EXPERIMENTAL ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
 				CEXP="$CEXP<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
@@ -94,7 +92,6 @@ for PKG in $SOURCES ; do
 				CEXP="$CEXP$i<br />"
 			fi
 		done
-		EXPERIMENTAL=$CEXP
 	fi
 	if [ ! -z "$BET" ] ; then
 		BET="<span class=\"green\">$BET</span>"
@@ -110,9 +107,9 @@ for PKG in $SOURCES ; do
 	write_page "<tr><td>$PKG</td>"
 	write_page "<td>$CRUFT</td>"
 	write_page "<td>$BET</td>"
-	write_page "<td>$TESTING</td>"
-	write_page "<td>$SID</td>"
-	write_page "<td>$EXPERIMENTAL</td>"
+	write_page "<td>$CTEST</td>"
+	write_page "<td>$CSID</td>"
+	write_page "<td>$CEXP</td>"
 	write_page "</tr>"
 done
 write_page "</table></p>"

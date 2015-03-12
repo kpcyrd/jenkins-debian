@@ -327,7 +327,7 @@ write_usertag_table() {
 			if [ $COUNT -eq 1 ] ; then
 				write_page "<table class=\"main\"><tr><th>Bugs per usertag on $VALUE</th><th>Open</th><th>Done</th><th>Total</th></tr>"
 			elif [ $((COUNT%2)) -eq 0 ] ; then
-				write_page "<tr><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&archive=both\">${FIELD:5}</a></td><td>$VALUE</td>"
+				write_page "<tr><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&amp;archive=both\">${FIELD:5}</a></td><td>$VALUE</td>"
 				TOTAL=$VALUE
 				let "TOPEN=TOPEN+VALUE"
 			else
@@ -490,7 +490,7 @@ create_main_stats_page() {
 			write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 		done
 	done
-	write_page "</p><p>"
+	write_page "</p>"
 	# write suite table
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
@@ -504,6 +504,7 @@ create_main_stats_page() {
 	write_page "<tr><td>issues categorized</td><td>$ISSUES</td></tr>"
 	write_page "</table>"
 	# other graphs
+	write_page "<p>"
 	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
 	for i in 3 7 4 5 1 ; do
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
@@ -512,7 +513,9 @@ create_main_stats_page() {
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
 		if [ "$i" = "3" ] ; then
+			write_page "</p>"
 			write_usertag_table
+			write_page "<p>"
 		fi
 	done
 	write_page "</p>"
@@ -521,7 +524,7 @@ create_main_stats_page() {
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"$SUITE builds age\"></a>"
 	done
-	write_page "</p><p>"
+	write_page "</p>"
 	# the end
 	write_page_footer
 	publish_page

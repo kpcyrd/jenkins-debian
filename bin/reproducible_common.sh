@@ -132,7 +132,9 @@ write_page_header() {
 		write_page "<p>These pages are showing the prospects of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>. The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
 	fi
 	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
-		write_page " Join <code>#debian-reproducible</code> on OFTC or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a> to get support for making sure your packages build reproducibly too!"
+		write_page "<p>Join <code>#debian-reproducible</code> on OFTC"
+		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>"
+		write_page "   to get support for making sure your packages build reproducibly too!"
 		write_page "</p>"
 	fi
 	write_page "<ul><li>Have a look at:</li>"

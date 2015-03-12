@@ -102,7 +102,7 @@ call_debbindiff() {
 		update_db_and_html
 	else
 		echo | tee -a ${RBUILDLOG}
-		echo -n "$(date) - ${SRCPACKAGE}/${SUITE} failed to build reproducibly " | tee -a ${RBUILDLOG}
+		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
 		if [ -f ./${LOGFILE} ] ; then
 			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
@@ -154,7 +154,7 @@ else
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	echo "============================================================================="
-	echo "Trying to build ${SRCPACKAGE}/${SUITE} reproducibly now."
+	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now."
 	echo "============================================================================="
 	set -x
 	DATE=$(date +'%Y-%m-%d %H:%M')
@@ -173,7 +173,7 @@ else
 	if [ $RESULT != 0 ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		echo "Download of ${SRCPACKAGE}/${SUITE} sources failed." | tee -a ${RBUILDLOG}
+		echo "Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
@@ -181,11 +181,11 @@ else
 		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] ; then
-		echo "Warning: Download of ${SRCPACKAGE}/${SUITE} sources failed." | tee -a ${RBUILDLOG}
+		echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
 		set +x
-		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
 		update_db_and_html
 		exit 0
 	else
@@ -239,7 +239,7 @@ else
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
 			echo "============================================================================="
-			echo "Re-building ${SRCPACKAGE}/${SUITE} now."
+			echo "Re-building ${SRCPACKAGE} in ${SUITE} on ${ARCH} now."
 			echo "============================================================================="
 			set -x
 			printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG

@@ -301,7 +301,7 @@ def build_page_section(page, section, suite, arch):
     for row in rows:
         if page == 'scheduled':
             pkg = row[4]
-            url = RB_PKG_URI + '/' + row[1] + '/' + row[2] + '/' + pkg + '.html'
+            url = RB_PKG_URI + '/' + row[2] + '/' + row[3] + '/' + pkg + '.html'
             html += tab + '<tr><td>' + str(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td><code>'
         else:
             pkg = row[0]

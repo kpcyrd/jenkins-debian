@@ -13,7 +13,6 @@ common_init "$@"
 
 SUITE="sid"
 ARCH="amd64"
-init_html
 
 VIEW=dd-list
 for SUITE in $SUITES ; do

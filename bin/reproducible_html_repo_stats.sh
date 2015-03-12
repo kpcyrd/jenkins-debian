@@ -12,7 +12,6 @@ common_init "$@"
 
 SUITE="sid"	# for links in page
 ARCH="amd64"	# same
-init_html
 
 VIEW=repo_stats
 PAGE=index_${VIEW}.html

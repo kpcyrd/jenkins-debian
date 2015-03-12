@@ -73,26 +73,6 @@ META_PKGSET[11]="grml"
 META_PKGSET[12]="grml_build-depends"
 META_PKGSET[13]="maint_pkg-perl-maintainers"
 
-init_html() {
-	MAINVIEW="stats"
-	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repo_stats stats"
-	GLOBALVIEWS="issues notes no_notes scheduled repo_stats stats"
-	SUITEVIEWS="dd-list suite_stats"
-	SPOKENTARGET["issues"]="issues"
-	SPOKENTARGET["notes"]="packages with notes"
-	SPOKENTARGET["no_notes"]="packages without notes"
-	SPOKENTARGET["scheduled"]="currently scheduled"
-	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
-	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
-	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
-	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
-	SPOKENTARGET["pkg_sets"]="package sets stats"
-	SPOKENTARGET["suite_stats"]="suite: $SUITE"
-	SPOKENTARGET["repo_stats"]="repositories overview"
-	SPOKENTARGET["stats"]="reproducible stats"
-}
-
 write_page() {
 	echo "$1" >> $PAGE
 }
@@ -126,6 +106,23 @@ write_icon() {
 
 write_page_header() {
 	rm -f $PAGE
+	MAINVIEW="stats"
+	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repo_stats stats"
+	GLOBALVIEWS="issues notes no_notes scheduled repo_stats stats"
+	SUITEVIEWS="dd-list suite_stats"
+	SPOKENTARGET["issues"]="issues"
+	SPOKENTARGET["notes"]="packages with notes"
+	SPOKENTARGET["no_notes"]="packages without notes"
+	SPOKENTARGET["scheduled"]="currently scheduled"
+	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
+	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
+	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
+	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
+	SPOKENTARGET["pkg_sets"]="package sets stats"
+	SPOKENTARGET["suite_stats"]="suite: $SUITE"
+	SPOKENTARGET["repo_stats"]="repositories overview"
+	SPOKENTARGET["stats"]="reproducible stats"
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"

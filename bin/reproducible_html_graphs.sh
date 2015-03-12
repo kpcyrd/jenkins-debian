@@ -15,7 +15,6 @@ common_init "$@"
 # init some variables
 #
 ARCH="amd64"  # we only care about amd64 status here (for now)
-init_html
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')

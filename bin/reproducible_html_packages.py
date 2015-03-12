@@ -168,7 +168,7 @@ def gen_suites_links(package, suite):
         icon = '<img src="/static/{icon}" alt="{status}" title="{status}"/>\n'
         html += icon.format(icon=join_status_icon(status)[1], status=status)
         html += '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + '/' + \
-                str(package) + '.html" target="_parent">' + i[0] + '</a>'
+                str(package) + '.html" target="_parent">' + i[0] + '</a> '
     return tab*5 + (tab*7).join(html.splitlines(True))
 
 

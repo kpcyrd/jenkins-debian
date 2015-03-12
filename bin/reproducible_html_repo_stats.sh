@@ -37,8 +37,8 @@ for PKG in $SOURCES ; do
 	fi
 	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
 	CRUFT=""
-	WARN=false
 	BET=""
+	OBSOLETE=false
 	#
 	# gather versions of a package
 	#
@@ -53,7 +53,6 @@ for PKG in $SOURCES ; do
 	SID=$(rmadison -s sid $PKG | cut -d "|" -f2|xargs echo)
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
-			WARN=true
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
@@ -71,6 +70,7 @@ for PKG in $SOURCES ; do
 			if [ ! -z "$BET" ] ; then
 				CRUFT="$BET $CRUFT"
 				BET=""
+				OBSOLETE=true
 			fi
 		else
 			CSID="$CSID$i<br />"
@@ -112,8 +112,14 @@ for PKG in $SOURCES ; do
 		write_page "$PKG<br /><span class=\"red\">(no git repository)</span>"
 	elif [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
 		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a><br /><span class=\"purple\">(non-standard branch)</span>"
+		if $OBSOLETE ; then
+			write_page " (probably ok)"
+		fi
 	else
 		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
+		if $OBSOLETE ; then
+			write_page "<br /> (unused?)"
+		fi
 	fi
 	write_page " </td>"
 	write_page " <td>$CRUFT</td>"

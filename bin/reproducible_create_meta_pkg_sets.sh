@@ -10,14 +10,13 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-TPATH=/srv/reproducible-results/meta_pkgsets
-CHPATH=/srv/reproducible-results/chdist
-mkdir -p $TPATH $CHPATH
-
 ARCH=amd64
 SUITE=sid
-DISTNAME="$SUITE-$ARCH"
 
+DISTNAME="$SUITE-$ARCH"
+TPATH=/srv/reproducible-results/meta_pkgsets-$SUITE
+CHPATH=/srv/reproducible-results/chdist-$SUITE
+mkdir -p $TPATH $CHPATH
 
 # delete possibly existing dist
 cd $CHPATH

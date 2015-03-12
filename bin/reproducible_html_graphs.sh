@@ -171,8 +171,8 @@ gather_suite_stats() {
 # gather meta pkg stats
 #
 gather_meta_stats() {
-	if [ -f /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$1]}.pkgset ] ; then
-		META_LIST=$(cat /srv/reproducible-results/meta_pkgsets/${META_PKGSET[$1]}.pkgset)
+	if [ -f /srv/reproducible-results/meta_pkgsets-$SUITE/${META_PKGSET[$1]}.pkgset ] ; then
+		META_LIST=$(cat /srv/reproducible-results/meta_pkgsets-$SUITE/${META_PKGSET[$1]}.pkgset)
 		if [ ! -z "$META_LIST" ] ; then
 			META_WHERE=""
 			for PKG in $META_LIST ; do

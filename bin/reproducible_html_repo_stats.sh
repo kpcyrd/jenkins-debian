@@ -104,7 +104,7 @@ for PKG in $SOURCES ; do
 	#
 	# write output
 	#
-	write_page "<tr><td>$PKG</td>"
+	write_page "<tr><td><a href=\"http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds\" target=\"_blank\">$PKG</a></td>"
 	write_page "<td>$CRUFT</td>"
 	write_page "<td>$BET</td>"
 	write_page "<td>$CTEST</td>"

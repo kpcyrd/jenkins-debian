@@ -204,10 +204,10 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/index_all_abc.html$
 	RewriteRule ^/?(.+) /sid/amd64/$1 [R=301,L]
 
-	# redirect (/sid|/experimental) to (/sid|/experimental)/index_suite_stats.html
+	# redirect (/testing|sid|/experimental) to (/testing|/sid|/experimental)/index_suite_stats.html
 	# note: the missing slash in the RewriteRule is wanted to avoid a double slash
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/(sid|experimental)/$
+	RewriteCond %{REQUEST_URI} ^/(testing|sid|experimental)/$
 	RewriteRule ^/(.*) /$1index_suite_stats.html [R,L]
 
 </VirtualHost>

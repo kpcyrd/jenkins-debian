@@ -230,11 +230,11 @@ def scheduler():
     # packages with new versions
     new = {}
     if total <= 100:
-        many_new = 60
+        many_new = 100
     elif total <= 200:
-        many_new = 40
+        many_new = 75
     else:
-        many_new = 20
+        many_new = 50
     log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
         new[suite] = scheduler_new_versions(suite, many_new)
@@ -244,14 +244,12 @@ def scheduler():
 
     # old packages
     old = {}
-    if total <= 150:
+    if total <= 250:
         many_old = 25 # multiplied by 10, usually, see below
-    elif total <= 250:
-        many_old = 15 # also...
     elif total <= 350:
-        many_old = 10 # ...
+        many_old = 17 # also...
     elif total <= 450:
-        many_old = 5 # ...
+        many_old = 10 # ...
     else:
         many_old = 1  # ...
     for suite in SUITES:

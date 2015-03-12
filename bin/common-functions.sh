@@ -53,7 +53,7 @@ else
 		export LC_ALL=C
 	fi
 	if [ -z "$MIRROR" ]; then
-		export MIRROR=http://ftp.de.debian.org/debian
+		export MIRROR=http://ftp2.de.debian.org/debian
 	fi
 	if [ -z "$http_proxy" ]; then
 		export http_proxy="http://localhost:3128"

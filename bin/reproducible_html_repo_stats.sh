@@ -16,6 +16,7 @@ ARCH="amd64"	# same
 VIEW=repo_stats
 PAGE=index_${VIEW}.html
 TMPFILE=$(mktemp)
+TMP2FILE=$(mktemp)
 
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Overview about the reproducible builds apt repository (and comparison to Debian suites)"
@@ -104,16 +105,26 @@ for PKG in $SOURCES ; do
 	#
 	# write output
 	#
-	write_page "<tr><td><a href=\"http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds\" target=\"_blank\">$PKG</a></td>"
-	write_page "<td>$CRUFT</td>"
-	write_page "<td>$BET</td>"
-	write_page "<td>$CTEST</td>"
-	write_page "<td>$CSID</td>"
-	write_page "<td>$CEXP</td>"
+	write_page "<tr><td>"
+	URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds"
+	curl $URL > $TMP2FILE
+	if [ "$(grep "'error'>No repositories found" $TMP2FILE 2>/dev/null)" ] ; then
+		write_page "$PKG<br /><span class=\"red\">(no git repository)</span>"
+	elif [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
+		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a><br /><span class=\"purple\">(non-standard branch)</span>"
+	else
+		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
+	fi
+	write_page " </td>"
+	write_page " <td>$CRUFT</td>"
+	write_page " <td>$BET</td>"
+	write_page " <td>$CTEST</td>"
+	write_page " <td>$CSID</td>"
+	write_page " <td>$CEXP</td>"
 	write_page "</tr>"
 done
 write_page "</table></p>"
-rm $TMPFILE
+rm $TMPFILE $TMP2FILE
 write_page_footer
 publish_page
 

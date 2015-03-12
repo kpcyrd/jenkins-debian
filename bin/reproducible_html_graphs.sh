@@ -352,7 +352,7 @@ create_suite_stats_page() {
 	MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
 	MAINLABEL[2]="Age in days of oldest build in '$SUITE'"
 	echo "$(date) - starting to write $PAGE page."
-	write_page_header $VIEW "Overview of various statistics about reproducible builds for $SUITE"
+	write_page_header $VIEW "Overview of reproducible builds for packages in $SUITE"
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
 		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently.</p>"
 	fi
@@ -490,10 +490,10 @@ create_main_stats_page() {
 	done
 	write_page "</p><p>"
 	# write suite table
-	write_page "<table class=\"main\"><tr><th>Suite on $DATE</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
+	write_page "<table class=\"main\"><tr><th>suite</th><th>sources in total on $DATE</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
 		gather_suite_stats
-		write_page "<tr><td>$SUITE</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+		write_page "<tr><td>$SUITE</td><td>$AMOUNT</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
 	done
         write_page "</table>"
 	# write inventory table

@@ -297,7 +297,10 @@ if __name__ == '__main__':
         log.info('Updating schroots for all suites.')
         for suite in SUITES:
             call_apt_update(suite)
-    overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
+    try:
+        overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
+    except:
+        overall = 9999
     if overall > 250:
         log.info(str(overall) + ' packages already scheduled, nothing to do.')
         sys.exit()
@@ -305,5 +308,3 @@ if __name__ == '__main__':
     for suite in SUITES:
         update_sources_tables(suite)
     scheduler()
-    overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
-    log.info(str(overall) + ' packages scheduled at the end, in all suites.')

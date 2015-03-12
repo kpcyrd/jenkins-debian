@@ -23,7 +23,7 @@ write_page "<p>These source packages are different from sid in our apt repositor
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>version in our repo</th><th>version in sid</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in experimental</th></tr>"
+write_page "<p><table><tr><th>source package</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'sid'</th><th>version in 'testing'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
 SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
@@ -50,6 +50,7 @@ for PKG in $SOURCES ; do
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
+	TESTING=$(rmadison -s testing $PKG | cut -d "|" -f2|xargs echo)
 	EXPERIMENTAL=$(rmadison -s experimental $PKG | cut -d "|" -f2|xargs echo)
 	#
 	# format output
@@ -66,6 +67,7 @@ for PKG in $SOURCES ; do
 			CSID="$CSID$i<br />"
 		fi
 	done
+	SID=$CSID
 	if [ ! -z "$BET" ] ; then
 		BET="<span class=\"purple\">$BET</span>"
 	else
@@ -73,6 +75,18 @@ for PKG in $SOURCES ; do
 	fi
 	if [ ! -z "$CRUFT" ] ; then
 		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
+	fi
+	if [ ! -z "$TESTING" ] ; then
+		CTEST=""
+		if [ "${PKG:0:3}" = "lib" ] ; then
+			PREFIX=${PKG:0:4}
+		else
+			PREFIX=${PKG:0:1}
+		fi
+		for i in $TESTING ; do
+			CTEST="$CTEST<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+		done
+		TESTING=$CTEST
 	fi
 	if [ ! -z "$EXPERIMENTAL" ] ; then
 		CEXP=""
@@ -90,9 +104,10 @@ for PKG in $SOURCES ; do
 	# write output
 	#
 	write_page "<tr><td>$PKG</td>"
-	write_page "<td>$BET</td>"
-	write_page "<td>$CSID</td>"
 	write_page "<td>$CRUFT</td>"
+	write_page "<td>$BET</td>"
+	write_page "<td>$SID</td>"
+	write_page "<td>$TESTING</td>"
 	write_page "<td>$EXPERIMENTAL</td>"
 	write_page "</tr>"
 done

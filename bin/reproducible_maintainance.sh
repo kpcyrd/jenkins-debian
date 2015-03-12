@@ -95,9 +95,11 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo "$FAILED_BUILDS"
 	echo
 	echo "Rescheduling packages: "
-	# FIXME the suite got hardcoded here, a way to recognize the original suite must be found
-	( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | cut -d "_" -f1) ; do echo $PKG ; done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh sid
-	echo
+	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | sort -u) ; do
+		( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f9 | cut -d "_" -f1) ; do
+			echo $PKG
+		done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh $SUITE
+	done
 	DIRTY=true
 fi
 

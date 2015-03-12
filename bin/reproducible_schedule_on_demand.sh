@@ -73,7 +73,9 @@ cd /srv/jenkins/bin
 python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
 echo
 echo "$MESSAGE"
-kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
+if [ -z "${BUILD_URL:-}" ] ; then
+	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
+fi
 echo "============================================================================="
 echo "The following $TOTAL source $PACKAGES_TXT $ACTION for $SUITE: $PACKAGES_NAMES"
 echo "============================================================================="

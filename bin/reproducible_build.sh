@@ -47,7 +47,7 @@ update_db_and_html() {
 	python3 -c "from reproducible_html_indexes import build_page; \
 			build_page('scheduled'); \
 			build_page('last_24h', suite=\"$SUITE\", arch=\"$ARCH\"); \
-			build_page('last_48h', suite=\"$SUITE\", arch=\"$ARCH\")"
+			build_page('last_48h', suite=\"$SUITE\", arch=\"$ARCH\")" || true
 }
 
 call_debbindiff() {

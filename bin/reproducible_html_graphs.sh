@@ -420,7 +420,7 @@ create_pkg_sets_page() {
 			# redo pngs once a day
 			if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
-				convert $SUITE/$ARCH/$PNG -adaptive-resize 160x80 $SUITE/$ARCH/$THUMB
+				convert /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 /var/lib/jenkins/userContent/$SUITE/$ARCH/$THUMB
 			fi
 			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"

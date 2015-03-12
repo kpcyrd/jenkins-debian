@@ -490,7 +490,7 @@ create_main_stats_page() {
 	done
 	write_page "</p><p>"
 	# write suite table
-	write_page "<table class=\"main\"><tr><th>suite</th><th>sources in total</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
+	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
 		gather_suite_stats
 		write_page "<tr><td>$SUITE</td><td>$AMOUNT</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"

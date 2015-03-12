@@ -43,7 +43,7 @@ def call_apt_update(suite):
 
 def update_sources_tables(suite):
     # download the sources file for this suite
-    mirror = 'http://ftp2.de.debian.org/debian'
+    mirror = 'http://ftp.de.debian.org/debian'
     remotefile = mirror + '/dists/' + suite + '/main/source/Sources.gz'
     log.info('Downloading sources file for ' + suite + ': ' + remotefile)
     sources = gzip.decompress(urlopen(remotefile).read()).decode('utf8')

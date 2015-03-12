@@ -23,11 +23,17 @@ write_page "<p>These source packages are different from sid in our apt repositor
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'sid'</th><th>version in 'testing'</th><th>version in 'experimental'</th></tr>"
+write_page "<p><table><tr><th>source package</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'sid'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
 SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
 for PKG in $SOURCES ; do
+	echo "Processing $PKG..."
+	if [ "${PKG:0:3}" = "lib" ] ; then
+		PREFIX=${PKG:0:4}
+	else
+		PREFIX=${PKG:0:1}
+	fi
 	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
 	CRUFT=""
 	WARN=false
@@ -58,7 +64,7 @@ for PKG in $SOURCES ; do
 	CSID=""
 	for i in $SID ; do
 		if dpkg --compare-versions "$i" gt "$BET" ; then
-			CSID="$CSID<span class=\"green\">$i</span><br />"
+			CSID="$CSID<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
 			if [ ! -z "$BET" ] ; then
 				CRUFT="$BET $CRUFT"
 				BET=""
@@ -68,37 +74,35 @@ for PKG in $SOURCES ; do
 		fi
 	done
 	SID=$CSID
-	if [ ! -z "$BET" ] ; then
-		BET="<span class=\"purple\">$BET</span>"
-	else
-		BET="&nbsp;"
-	fi
-	if [ ! -z "$CRUFT" ] ; then
-		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
-	fi
 	if [ ! -z "$TESTING" ] ; then
 		CTEST=""
-		if [ "${PKG:0:3}" = "lib" ] ; then
-			PREFIX=${PKG:0:4}
-		else
-			PREFIX=${PKG:0:1}
-		fi
 		for i in $TESTING ; do
-			CTEST="$CTEST<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+			if dpkg --compare-versions "$i" gt "$BET" ; then
+				CTEST="$CTEST<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+			else
+				CTEST="$CTEST$i<br />"
+			fi
 		done
 		TESTING=$CTEST
 	fi
 	if [ ! -z "$EXPERIMENTAL" ] ; then
 		CEXP=""
-		if [ "${PKG:0:3}" = "lib" ] ; then
-			PREFIX=${PKG:0:4}
-		else
-			PREFIX=${PKG:0:1}
-		fi
 		for i in $EXPERIMENTAL ; do
-			CEXP="$CEXP<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+			if dpkg --compare-versions "$i" gt "$BET" ; then
+				CEXP="$CEXP<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+			else
+				CEXP="$CEXP$i<br />"
+			fi
 		done
 		EXPERIMENTAL=$CEXP
+	fi
+	if [ ! -z "$BET" ] ; then
+		BET="<span class=\"green\">$BET</span>"
+	else
+		BET="&nbsp;"
+	fi
+	if [ ! -z "$CRUFT" ] ; then
+		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
 	fi
 	#
 	# write output
@@ -106,8 +110,8 @@ for PKG in $SOURCES ; do
 	write_page "<tr><td>$PKG</td>"
 	write_page "<td>$CRUFT</td>"
 	write_page "<td>$BET</td>"
-	write_page "<td>$SID</td>"
 	write_page "<td>$TESTING</td>"
+	write_page "<td>$SID</td>"
 	write_page "<td>$EXPERIMENTAL</td>"
 	write_page "</tr>"
 done

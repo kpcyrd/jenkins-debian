@@ -478,8 +478,8 @@ create_main_stats_page() {
 	write_page "</p><p>"
 	# write meta pkg graphs per suite
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" != "sid" ] ; then
-			# FIXME: no pkg sets in experimental
+		if [ "$SUITE" = "experimental" ] ; then
+			# no pkg sets in experimental
 			continue
 		fi
 		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
@@ -536,8 +536,8 @@ for SUITE in $SUITES ; do
 	update_suite_stats
 	gather_suite_stats
 	create_suite_stats_page
-	if [ "$SUITE" != "sid" ] ; then
-		# FIXME: should be: no pkg sets in experimental
+	if [ "$SUITE" = "experimental" ] ; then
+		# no pkg sets in experimental
 		continue
 	fi
 	update_meta_pkg_stats

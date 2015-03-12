@@ -92,7 +92,7 @@ pages = {
             {
                 'icon_status': 'FTBFS',
                 'query': 'FTBFS_all',
-                'text': Template('$tot ($percent%) packages where the sources failed to download in $suite/$arch:')
+                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch:')
             }
         ]
     },

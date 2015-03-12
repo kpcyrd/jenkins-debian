@@ -215,7 +215,7 @@ def write_html_page(title, body, destfile, suite=None, noheader=False, style_not
     html = ''
     html += html_header.substitute(page_title=title)
     if not noheader:
-        links = _gen_links(suite, 'amd64')  # FIXME let's unhardcode amd64...
+        links = _gen_links(suite, 'amd64')  # hardcode amd64 for now...
         html += html_head_page.substitute(
             page_title=title,
             links=links)

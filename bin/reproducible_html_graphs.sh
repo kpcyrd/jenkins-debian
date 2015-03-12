@@ -416,9 +416,11 @@ create_pkg_sets_page() {
 			MAINLABEL[6]="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
 			YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
 			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
 			# redo pngs once a day
 			if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
+				convert $SUITE/$ARCH/$PNG -adaptive-resize 160x80 $SUITE/$ARCH/$THUMB
 			fi
 			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
@@ -478,14 +480,14 @@ create_main_stats_page() {
 	write_page "</p><p>"
 	# write meta pkg graphs per suite
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" = "experimental" ] ; then
-			# no pkg sets in experimental
+		if [ "$SUITE" != "sid" ] ; then
+			# only show pkg sets from sid for now
 			continue
 		fi
 		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
+			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-			write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+			write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 		done
 	done
 	write_page "</p><p>"

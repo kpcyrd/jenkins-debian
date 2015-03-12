@@ -146,8 +146,8 @@ write_page_header() {
 		write_page "</li>"
 	done
 	for TARGET in $ALLVIEWS ; do
-		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then
-			# no pkg_sets are tested in experimental
+		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" != "sid" ] ; then
+			# FIXME: no pkg_sets are tested in experimental
 			continue
 		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}

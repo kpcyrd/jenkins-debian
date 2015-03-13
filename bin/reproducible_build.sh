@@ -148,6 +148,7 @@ else
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
+	create_results_dirs
 	echo "============================================================================="
 	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now."
 	echo "============================================================================="
@@ -157,7 +158,6 @@ else
 	DURATION=0
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
-	create_results_dirs
 
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
@@ -191,7 +191,7 @@ else
 		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,
 		# and then access RBUILDLOG with it's correct name (=eversion)
 		TMPLOG=$(mktemp)
-		mv ${RBUILDLOG} ${TMPLOG}
+		mv ${RBUILDLOG} ${TMPLOG} || { echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting." ; echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting." | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org ; exit 0 }
 		cleanup_userContent
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}

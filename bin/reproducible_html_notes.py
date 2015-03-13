@@ -241,11 +241,22 @@ def gen_html_issue(issue):
     # add affected packages:
     affected = ''
     try:
-        affected += tab*4 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'
-        for pkg in sorted(issues_count[issue]):
-            # FIXME we currently consider notes only for sid/amd64
-            affected += (tab*7 + '<a href="%s/sid/amd64/%s.html" ' +
-                         'class="noted">%s</a>\n') % (RB_PKG_URI, pkg, pkg)
+        suite = 'sid'
+        arch = 'amd64'
+        for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
+            pkgs = [x[0] for x in all_pkgs if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
+            if not pkgs:
+                continue
+            affected += tab*4 + '<p>\n'
+            affected += tab*5 + '<img src="/static/' + join_status_icon(status)[1] + '"'
+            affected += ' alt="' + status + ' icon" />\n'
+            affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
+            affected += tab*5 + '<code>\n'
+            for pkg in pkgs:
+                affected += tab*6 + '<a href="' + RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html' + '" class="noted">' + pkg
+                affected += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
+            affected += tab*5 + '</code>\n'
+            affected += tab*4 + '</p>\n'
     except KeyError:    # The note is not listed in any package, that is
         affected = '<i>None</i>'
     # check for description:
@@ -359,10 +370,9 @@ def index_issues(issues):
 
 def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')
-    all_pkgs = query_db('SELECT s.name, r.status ' +
-                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
-                        'ORDER BY s.name')
-    with_notes = [x for x in all_pkgs if x[0] in notes]
+    suite = 'sid'
+    arch = 'amd64'
+    with_notes = [x for x in all_pkgs if x[2] == suite and x[3] == arch and x[0] in notes]
     html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
     for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
         pkgs = [x[0] for x in with_notes if x[1] == status]
@@ -371,12 +381,10 @@ def index_notes(notes, bugs):
         html += '<p>\n'
         html += tab + '<img src="/static/' + join_status_icon(status)[1] + '"'
         html += ' alt="' + status + ' icon" />\n'
-        pkgs = [x[0] for x in with_notes if x[1] == status]
-        html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
+        html += tab + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch + ':\n'
         html += tab + '<code>\n'
-        for pkg in pkgs:
-            # FIXME for now always link to the sid/amd64 url of a package
-            url = RB_PKG_URI + '/sid/amd64/' + pkg + '.html'
+        for pkg in sorted(pkgs):
+            url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
             html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
             html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
         html += tab + '</code>\n'
@@ -414,11 +422,11 @@ def index_no_notes_section(notes, bugs, packages, suite, arch):
 
 def index_no_notes(notes, bugs):
     log.debug('Building the index_no_notes page...')
-    all_pkgs = query_db('SELECT s.name, s.suite, s.architecture, r.status ' +
+    all_bad_pkgs = query_db('SELECT s.name, s.suite, s.architecture, r.status ' +
                         'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
                         'WHERE r.status = "unreproducible" OR r.status = "FTBFS"' +
                         'ORDER BY r.build_date DESC')
-    without_notes = [x for x in all_pkgs if x[0] not in notes]
+    without_notes = [x for x in all_bad_pkgs if x[0] not in notes]
     html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
            + 'packages without notes, in all suites. These are the packages ' \
            + 'with failures that still need to be investigated.</p>\n'
@@ -437,6 +445,9 @@ def index_no_notes(notes, bugs):
 
 
 if __name__ == '__main__':
+    all_pkgs = query_db('SELECT s.name, r.status, s.suite, s.architecture ' +
+                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
+                        'ORDER BY s.name')
     issues_count = {}
     bugs = get_bugs()
     notes = load_notes()

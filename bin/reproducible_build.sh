@@ -195,7 +195,7 @@ else
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
 			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting."
-			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting. Please check $BUILD_URL" | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
+			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting. Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different BUILD_URL..." | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
 			exit 0
 		fi
 		set -e

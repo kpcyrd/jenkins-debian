@@ -239,7 +239,7 @@ gen_packages_html() {
 			fi
 		done
 		string+=']'
-		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, suite=\"${suite}\", no_clean=True)"
+		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, suite=\"${suite}\", no_clean=True)" || echo "Warning: cannot update html pages for ${string} in ${suite}"
 	done
 	cd "$CWD"
 }

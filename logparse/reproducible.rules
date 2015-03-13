@@ -11,3 +11,4 @@ warning /Warning: packages found where the build was started more than 24h ago:/
 warning /Warning: .+ could not be fully removed./
 warning /Warning: could not download.+/
 warning /Warning: the following failed builds have been found/
+warning /Warning: cannot update html pages for.+/

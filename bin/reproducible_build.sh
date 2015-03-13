@@ -184,14 +184,22 @@ else
 		update_db_and_html
 		exit 0
 	else
-		set -e
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
 		# EPOCH_FREE_VERSION was too long
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,
 		# and then access RBUILDLOG with it's correct name (=eversion)
 		TMPLOG=$(mktemp)
-		mv ${RBUILDLOG} ${TMPLOG} || { echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting." ; exit 0 }
+		# catch race conditions due to several builders trying to build the same package
+		mv ${RBUILDLOG} ${TMPLOG}
+		RESULT=$?
+		if [ $RESULT -ne 0 ] ; then
+			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting."
+			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting. Please check $BUILD_URL" | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
+			exit 0
+		fi
+		set -e
+
 		cleanup_userContent
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}

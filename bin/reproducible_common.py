@@ -235,7 +235,7 @@ def write_html_page(title, body, destfile, suite=None, noheader=False, style_not
         fd.write(html)
 
 def start_db_connection():
-    return sqlite3.connect(REPRODUCIBLE_DB)
+    return sqlite3.connect(REPRODUCIBLE_DB, timeout=60)
 
 def query_db(query):
     cursor = conn_db.cursor()

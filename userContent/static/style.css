@@ -129,6 +129,7 @@ h3 {
 }
 
 table {
+	counter-reset: rowNumber; /* used for automatic row count with CSS */
 	border: 1px solid #ddd;
 	border-radius: 0.5em;
 	border-collapse: collapse;
@@ -160,6 +161,17 @@ table.main {
 tr:nth-child(odd) {
 	background-color: #fafafa;
 }
+
+/* automatic row count with CSS */
+table.scheduled tr:not(:first-child) {
+    counter-increment: rowNumber;
+}
+table.scheduled tr td:first-child::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
+}
+/* end automatic row count with CSS */
 
 a.bug-patch:after {
 	content: "+";

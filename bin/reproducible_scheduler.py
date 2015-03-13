@@ -23,7 +23,7 @@ from urllib.request import urlopen
 from reproducible_common import *
 from reproducible_html_indexes import build_page
 from reproducible_html_packages import gen_packages_html
-
+from reproducible_html_packages import purge_old_pages
 
 def call_apt_update(suite):
     # try three times, before failing the job
@@ -296,6 +296,7 @@ if __name__ == '__main__':
     for suite in SUITES:
         call_apt_update(suite)
         update_sources_tables(suite)
+    purge_old_pages()
     try:
         overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
     except:

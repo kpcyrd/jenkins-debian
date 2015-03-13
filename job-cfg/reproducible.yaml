@@ -261,7 +261,7 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_indexes':
             my_description: 'Generate HTML results (indexes) for reproducible builds.'
-            my_timed: '59 * * * *'
+            my_timed: '*/15 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_indexes.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_dd_list':

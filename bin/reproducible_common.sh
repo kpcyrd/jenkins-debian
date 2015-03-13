@@ -241,7 +241,6 @@ gen_packages_html() {
 		string+=']'
 		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, suite=\"${suite}\", no_clean=True)"
 	done
-	python3 -c "from reproducible_html_packages import purge_old_pages; purge_old_pages()"
 	cd "$CWD"
 }
 

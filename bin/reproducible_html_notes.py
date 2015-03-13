@@ -409,7 +409,7 @@ def index_notes(notes, bugs):
 
 
 def index_no_notes_section(notes, bugs, packages, suite, arch):
-    html = '<p>In ' + suite + '/' + arch + ':</p>\n'
+    html = ''
     for status in ['unreproducible', 'FTBFS']:
         pkgs = [x for x in packages if x[3] == status]
         if not pkgs:
@@ -417,7 +417,7 @@ def index_no_notes_section(notes, bugs, packages, suite, arch):
         html += '<p>\n'
         html += tab + '<img src="/static/' + join_status_icon(status)[1] + '"'
         html += ' alt="' + status + ' icon" />\n'
-        html += tab + str(len(pkgs)) + ' ' + status + ' packages:\n'
+        html += tab + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch + ':\n'
         html += tab + '<code>\n'
         for pkg in pkgs:
             # 0: name, 1: suite, 2: arch, 3: status

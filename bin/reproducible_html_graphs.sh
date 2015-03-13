@@ -354,7 +354,7 @@ create_suite_stats_page() {
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds for packages in $SUITE"
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
-		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE currently.</p>"
+		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE.</p>"
 	fi
 	write_page "<p>"
 	set_icon reproducible
@@ -408,6 +408,11 @@ create_pkg_sets_page() {
 		fi
 	done
 	write_page "</ul>"
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
+		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+	done
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		write_page "<hr /><a name=\"${META_PKGSET[$i]}\"></a>"
 		META_RESULT=true
@@ -495,7 +500,11 @@ create_main_stats_page() {
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
 		gather_suite_stats
-		write_page "<tr><td>$SUITE</td><td>$AMOUNT</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+		write_page "<tr><td>$SUITE</td><td>$AMOUNT"
+		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
+			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
+		fi
+		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
 	done
         write_page "</table>"
 	# write inventory table

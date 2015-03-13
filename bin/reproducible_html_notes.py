@@ -34,6 +34,7 @@ note_html = Template((tab*2).join("""
     </td>
   </tr>
 </table>""".splitlines(True)))
+
 note_issues_html = Template((tab*3).join("""
 <tr>
   <td>
@@ -43,6 +44,7 @@ note_issues_html = Template((tab*3).join("""
     $issues
   </td>
 </tr>""".splitlines(True)))
+
 note_bugs_html = Template((tab*4).join("""
 <tr>
   <td>
@@ -52,6 +54,7 @@ note_bugs_html = Template((tab*4).join("""
      $bugs
   </td>
 </tr>""".splitlines(True)))
+
 note_comments_html = Template((tab*3).join("""
 <tr>
   <td>
@@ -71,6 +74,7 @@ note_issue_html_url = Template((tab*6).join("""
     <a href="$url" target="_blank">$url</a>
   </td>
 </tr>""".splitlines(True)))
+
 note_issue_html_desc = Template((tab*6).join("""
 <tr>
   <td>
@@ -80,6 +84,7 @@ note_issue_html_desc = Template((tab*6).join("""
      $description
   </td>
 </tr>""".splitlines(True)))
+
 note_issue_html = Template((tab*5).join(("""
 <table class="body">
   <tr>
@@ -103,6 +108,7 @@ issue_html_url = Template((tab*4).join("""
     <a href="$url">$url</a>
   </td>
 </tr>""".splitlines(True)))
+
 issue_html = Template((tab*3).join("""
 <table class="body">
   <tr>
@@ -227,6 +233,7 @@ def gen_html_note(package, note):
               str(note['package']) + ' note')
         return note_html.substitute(version='N/A', infos=infos)
 
+
 def gen_html_issue(issue):
     """
     Given a issue as input (as a dict:
@@ -315,6 +322,7 @@ def iterate_over_notes(notes):
         log.info("you can now see your notes at " + desturl)
         i = i + 1
 
+
 def iterate_over_issues(issues):
     num_issues = str(len(issues))
     i = 0
@@ -331,6 +339,7 @@ def iterate_over_issues(issues):
         desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + issue + '_issue.html'
         log.info("you can now see the issue at " + desturl)
         i = i + 1
+
 
 def sort_issues(issue):
     try:

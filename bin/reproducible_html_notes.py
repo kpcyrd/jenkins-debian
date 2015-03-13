@@ -283,15 +283,15 @@ def purge_old_notes(notes):
             os.remove(NOTES_PATH + '/' + page)
             removed_pages.append(pkg)
     for pkg in removed_pages:
-        try:
-            # FIXME: this needs to be s_suite in suites
-            query = 'SELECT s.name ' + \
-                    'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                    'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="sid"'
-            query = query.format(pkg=pkg)
-            to_rebuild.append(query_db(query)[0][0])
-        except IndexError:  # the package is not tested. this can happen if
-            pass            # a package got removed from the archive
+        for suite in SUITES:
+            try:
+                query = 'SELECT s.name ' + \
+                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+                        'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="{suite}"'
+                query = query.format(pkg=pkg, suite=suite)
+                to_rebuild.append(query_db(query)[0][0])
+            except IndexError:  # the package is not tested. this can happen if
+                pass            # a package got removed from the archive
     if to_rebuild:
         gen_packages_html(to_rebuild)
 

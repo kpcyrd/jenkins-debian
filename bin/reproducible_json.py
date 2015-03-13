@@ -12,6 +12,9 @@
 from reproducible_common import *
 
 import json
+import os
+import tempfile
+
 
 output = []
 
@@ -29,8 +32,12 @@ for row in result:
     log.debug(pkg)
     output.append(pkg)
 
-with open(REPRODUCIBLE_JSON, 'w') as fd:
+tmpfile = tempfile.NamedTemporaryFile(dir=os.path.dirname(REPRODUCIBLE_JSON))
+
+with open(tmpfile.name, 'w') as fd:
     json.dump(output, fd, indent=4, sort_keys=True)
+
+os.rename(tmpfile.name, REPRODUCIBLE_JSON)
 
 log.info(REPRODUCIBLE_URL + '/reproducible.json has been updated.')
 

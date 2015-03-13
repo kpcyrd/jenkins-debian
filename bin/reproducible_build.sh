@@ -191,7 +191,7 @@ else
 		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,
 		# and then access RBUILDLOG with it's correct name (=eversion)
 		TMPLOG=$(mktemp)
-		mv ${RBUILDLOG} ${TMPLOG} || { echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting." ; echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting." | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org ; exit 0 }
+		mv ${RBUILDLOG} ${TMPLOG} || { echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting." ; exit 0 }
 		cleanup_userContent
 		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 		mv ${TMPLOG} ${RBUILDLOG}

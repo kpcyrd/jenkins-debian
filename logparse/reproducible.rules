@@ -12,3 +12,4 @@ warning /Warning: .+ could not be fully removed./
 warning /Warning: could not download.+/
 warning /Warning: the following failed builds have been found/
 warning /Warning: cannot update html pages for.+/
+warning /Warning: package .+is probably already building elsewhere, exiting./

@@ -165,6 +165,7 @@ def load_notes():
         except IndexError:
             log.warning("This query produces no results: " + query)
             log.warning("This means there is no tested package with the name " + package + ".")
+            del notes[package]
     return notes
 
 

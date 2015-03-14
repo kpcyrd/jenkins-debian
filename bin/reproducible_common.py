@@ -25,7 +25,7 @@ DEBUG = False
 QUIET = False
 
 # tested suites
-SUITES = ['sid', 'testing', 'experimental']
+SUITES = ['testing', 'sid', 'experimental']
 # tested arches
 ARCHES = ['amd64']
 

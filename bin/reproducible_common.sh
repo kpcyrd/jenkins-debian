@@ -161,13 +161,12 @@ write_page_header() {
 				BASEURL="/$SUITE"
 			fi
 		done
-		write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		if [ "$TARGET" = "suite_stats" ] ; then
 			for i in $SUITES ; do
-				if [ "$i" != "$SUITE" ] ; then
-					write_page "<li><a href=\"/$i\">suite: $i</a></li>"
-				fi
+				write_page "<li><a href=\"/$i\">suite: $i</a></li>"
 			done
+		else
+			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		fi
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"

@@ -319,7 +319,7 @@ def iterate_over_notes(notes):
                         noheader=True)
 
         desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
-        log.info("you can now see your notes at " + desturl)
+        log.info("Note created: " + desturl)
         i = i + 1
 
 
@@ -337,7 +337,7 @@ def iterate_over_issues(issues):
                         style_note=True)
 
         desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + issue + '_issue.html'
-        log.info("you can now see the issue at " + desturl)
+        log.info("Issue created: " + desturl)
         i = i + 1
 
 

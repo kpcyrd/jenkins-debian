@@ -137,6 +137,7 @@ update_notes_stats() {
 	fi
 	NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
 	ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
+	COUNT_ISSUES=$(grep "    -" ${NOTES_GIT_PATH}/packages.yml | egrep -v "    - [0-9]+"|wc -l)
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
 	if [ -z $RESULT ] ; then
 		echo "Updating notes stats for $DATE."
@@ -510,6 +511,7 @@ create_main_stats_page() {
 	# write inventory table
 	write_page "<table class=\"main\"><tr><th>inventory type</th><th>amount</th></tr>"
 	write_page "<tr><td>packages with notes</td><td>$NOTES</td></tr>"
+	write_page "<tr><td>amount of issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>issues categorized</td><td>$ISSUES</td></tr>"
 	write_page "</table>"
 	# other graphs

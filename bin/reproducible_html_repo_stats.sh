@@ -19,7 +19,7 @@ TMPFILE=$(mktemp)
 TMP2FILE=$(mktemp)
 
 echo "$(date) - starting to write $PAGE page."
-write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites)"
+write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
 write_page "<p>These source packages are different from sid in our apt repository on alioth. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"

@@ -248,7 +248,7 @@ def gen_html_issue(issue):
     # add affected packages:
     affected = ''
     try:
-        suite = 'sid'
+        suite = 'unstable'
         arch = 'amd64'
         for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
             pkgs = [x[0] for x in all_pkgs if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
@@ -379,7 +379,7 @@ def index_issues(issues):
 
 def index_notes(notes, bugs):
     log.debug('Building the index_notes page...')
-    suite = 'sid'
+    suite = 'unstable'
     arch = 'amd64'
     with_notes = [x for x in all_pkgs if x[2] == suite and x[3] == arch and x[0] in notes]
     html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'

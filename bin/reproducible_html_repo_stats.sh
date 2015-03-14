@@ -10,8 +10,8 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-SUITE="sid"	# for links in page
-ARCH="amd64"	# same
+SUITE="unstable"	# for links in page
+ARCH="amd64"		# same
 
 VIEW=repo_stats
 PAGE=index_${VIEW}.html
@@ -20,11 +20,11 @@ TMP2FILE=$(mktemp)
 
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
-write_page "<p>These source packages are different from sid in our apt repository on alioth. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
+write_page "<p>These source packages are different from unstable in our apt repository on alioth. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'sid'</th><th>version in 'experimental'</th></tr>"
+write_page "<p><table><tr><th>source package</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
 SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
@@ -50,7 +50,7 @@ for PKG in $SOURCES ; do
 			BET=${VERSION}
 		fi
 	done
-	SID=$(rmadison -s sid $PKG | cut -d "|" -f2|xargs echo)
+	SID=$(rmadison -s unstable $PKG | cut -d "|" -f2|xargs echo)
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
 			CRUFT="$CRUFT ${VERSION}"

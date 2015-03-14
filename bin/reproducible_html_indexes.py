@@ -25,8 +25,8 @@ Reference doc for the folowing lists:
     - `icon_link`: a link to hide below the icon
     - `query`: query to perform against the reproducible db to get the list of
       packages to show
-    - `text` a string.Template instance with $tot (total of packages listed)
-      and $percent (percentual on all sid packages)
+    - `text` a string. Template instance with $tot (total of packages listed)
+      and $percent (percentage of all packages)
     - `timely`: boolean value to enable to add $count and $count_total to the
       text, where:
       * $percent becomes count/count_total

@@ -11,7 +11,7 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-SUITE="sid"
+SUITE="unstable"
 ARCH="amd64"
 
 VIEW=dd-list

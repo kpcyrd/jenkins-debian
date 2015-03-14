@@ -162,33 +162,33 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rb-pkg/sid/amd64/$1.html -f
-	RewriteRule ^/([a-z0-9.+-]+) /rb-pkg/sid/amd64/$1.html [R=302,L]
+	RewriteCond /var/lib/jenkins/userContent/rb-pkg/unstable/amd64/$1.html -f
+	RewriteRule ^/([a-z0-9.+-]+) /rb-pkg/unstable/amd64/$1.html [R=302,L]
 
 	# redirect rb.d.n/rb-pkg/$PKG.html → rb.d.n/rb-pkg/$suite/$arch/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rb-pkg/sid/amd64/$1 -f
-	RewriteRule ^/rb-pkg/([a-z0-9.+-]+) /rb-pkg/sid/amd64/$1 [R=301,L]
+	RewriteCond /var/lib/jenkins/userContent/rb-pkg/unstable/amd64/$1 -f
+	RewriteRule ^/rb-pkg/([a-z0-9.+-]+) /rb-pkg/unstable/amd64/$1 [R=301,L]
 	# the same for /dbd/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/dbd/sid/amd64/$1 -f
-	RewriteRule ^/dbd/([a-z0-9.+-_]+) /dbd/sid/amd64/$1 [R=301,L]
+	RewriteCond /var/lib/jenkins/userContent/dbd/unstable/amd64/$1 -f
+	RewriteRule ^/dbd/([a-z0-9.+-_]+) /dbd/unstable/amd64/$1 [R=301,L]
 	# the same for /rbuild/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rbuild/sid/amd64/$1 -f
-	RewriteRule ^/rbuild/([a-z0-9.+-_]+) /rbuild/sid/amd64/$1 [R=301,L]
+	RewriteCond /var/lib/jenkins/userContent/rbuild/unstable/amd64/$1 -f
+	RewriteRule ^/rbuild/([a-z0-9.+-_]+) /rbuild/unstable/amd64/$1 [R=301,L]
 	# the same for /buildinfo/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/buildinfo/sid/amd64/$1 -f
-	RewriteRule ^/buildinfo/([a-z0-9.+-_]+) /buildinfo/sid/amd64/$1 [R=301,L]
+	RewriteCond /var/lib/jenkins/userContent/buildinfo/unstable/amd64/$1 -f
+	RewriteRule ^/buildinfo/([a-z0-9.+-_]+) /buildinfo/unstable/amd64/$1 [R=301,L]
 	# redirect some rb.d.n/index_*.html to the suite/arch relative one
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
@@ -202,12 +202,12 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/index_last_24h.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_last_48h.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_all_abc.html$
-	RewriteRule ^/?(.+) /sid/amd64/$1 [R=301,L]
+	RewriteRule ^/?(.+) /unstable/amd64/$1 [R=301,L]
 
-	# redirect (/testing|sid|/experimental) to (/testing|/sid|/experimental)/index_suite_stats.html
+	# redirect (/testing|unstable|/experimental) to (/testing|/unstable|/experimental)/index_suite_stats.html
 	# note: the missing slash in the RewriteRule is wanted to avoid a double slash
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
-	RewriteCond %{REQUEST_URI} ^/(testing|sid|experimental)/$
+	RewriteCond %{REQUEST_URI} ^/(testing|unstable|experimental)/$
 	RewriteRule ^/(.*) /$1index_suite_stats.html [R,L]
 
 </VirtualHost>

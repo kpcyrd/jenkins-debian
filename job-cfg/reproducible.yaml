@@ -125,7 +125,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_pbuilder_sid'
+    name: '{name}_setup_pbuilder_unstable'
 
 - job-template:
     defaults: reproducible
@@ -137,11 +137,11 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_sid_debbindiff'
+    name: '{name}_setup_schroot_unstable_debbindiff'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_sid'
+    name: '{name}_setup_schroot_unstable'
 
 - job-template:
     defaults: reproducible
@@ -219,25 +219,25 @@
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh testing'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_setup_pbuilder_sid':
-            my_description: 'Setup and update pbuilder for reproducible builds of packages from sid as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+        - '{name}_setup_pbuilder_unstable':
+            my_description: 'Setup and update pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh sid'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_pbuilder_experimental':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_setup_schroot_sid_debbindiff':
-            my_description: 'Setup schroot for running debbindiff in a sid environment (this is needed to be able to correctly investigate haskell binaries...)'
+        - '{name}_setup_schroot_unstable_debbindiff':
+            my_description: 'Setup schroot for running debbindiff in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-sid-debbindiff sid debbindiff'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_schroot.sh reproducible-unstable-debbindiff unstable debbindiff'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_setup_schroot_sid':
-            my_description: 'Setup sid schroot for fetching source packages for the builder jobs.'
+        - '{name}_setup_schroot_unstable':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-sid sid reproducible'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-unstable unstable reproducible'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_schroot_testing':
             my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'

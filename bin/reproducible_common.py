@@ -25,7 +25,7 @@ DEBUG = False
 QUIET = False
 
 # tested suites
-SUITES = ['testing', 'sid', 'experimental']
+SUITES = ['testing', 'unstable', 'experimental']
 # tested arches
 ARCHES = ['amd64']
 
@@ -195,12 +195,12 @@ def _gen_links(suite, arch):
     html = ''
     for link in links:
         if link[0] == 'pkg_sets' and suite and suite == 'experimental':
-            html += link[1].format(suite='sid', arch=arch) + '\n'
+            html += link[1].format(suite='unstable', arch=arch) + '\n'
             continue
         if suite:
             html += link[1].format(suite=suite, arch=arch) + '\n'
         if not suite:
-            html += link[1].format(suite='sid', arch=arch) + '\n'
+            html += link[1].format(suite='unstable', arch=arch) + '\n'
     if suite:  # suite stats
         html += '<li><a href="/' + suite + \
                 '/index_suite_stats.html">suite: ' + suite + '</a></li>'
@@ -364,7 +364,7 @@ def strip_epoch(version):
     except IndexError:
         return version
 
-def pkg_has_buildinfo(package, version=False, suite='sid', arch='amd64'):
+def pkg_has_buildinfo(package, version=False, suite='unstable', arch='amd64'):
     """
     if there is no version specified it will use the version listed in
     reproducible.db

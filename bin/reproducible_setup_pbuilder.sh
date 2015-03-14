@@ -12,7 +12,7 @@ common_init "$@"
 
 # support different suites
 if [ -z "$1" ] ; then
-	SUITE="sid"
+	SUITE="unstable"
 else
 	SUITE="$1"
 fi
@@ -84,7 +84,7 @@ setup_pbuilder() {
 	TMPFILE=$(mktemp)
 	LOG=$(mktemp)
 	if [ "$SUITE" = "experimental" ] ; then
-		SUITE=sid
+		SUITE=unstable
 		echo "echo 'deb $MIRROR experimental main' > /etc/apt/sources.list.d/experimental.list" > ${TMPFILE}
 		echo "echo 'deb-src $MIRROR experimental main' >> /etc/apt/sources.list.d/experimental.list" >> ${TMPFILE}
 	fi

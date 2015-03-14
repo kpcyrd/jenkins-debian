@@ -219,7 +219,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
     if not no_clean:
         purge_old_pages() # housekeep is always good
 
-def gen_all_rb_pkg_pages(suite='sid', arch='amd64', no_clean=False):
+def gen_all_rb_pkg_pages(suite='unstable', arch='amd64', no_clean=False):
     query = 'SELECT name FROM sources WHERE suite="%s" AND architecture="%s"' % (suite, arch)
     rows = query_db(query)
     pkgs = [str(i[0]) for i in rows]

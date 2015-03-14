@@ -281,19 +281,19 @@ create_png_from_table() {
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "select s.datum,
-			 s.reproducible as 'reproducible_sid',
+			 s.reproducible as 'reproducible_unstable',
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental', 
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing'),0) as 'reproducible_testing',
-			 s.unreproducible as 'unreproducible_sid',
+			 s.unreproducible as 'unreproducible_unstable',
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS unreproducible_testing,
-			 s.FTBFS as 'FTBFS_sid',
+			 s.FTBFS as 'FTBFS_unstable',
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS FTBFS_testing,
-			 s.other as 'other_sid',
+			 s.other as 'other_unstable',
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS other_testing
-			 FROM stats_builds_per_day AS s WHERE s.suite='sid' GROUP BY s.datum" >> ${TABLE[$1]}.csv
+			 FROM stats_builds_per_day AS s WHERE s.suite='unstable' GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, ((oldest_reproducible + oldest_unreproducible + oldest_FTBFS)/3) FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
@@ -486,8 +486,8 @@ create_main_stats_page() {
 	write_page "</p><p>"
 	# write meta pkg graphs per suite
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" != "sid" ] ; then
-			# only show pkg sets from sid for now
+		if [ "$SUITE" != "unstable" ] ; then
+			# only show pkg sets from unstable for now
 			continue
 		fi
 		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
@@ -544,7 +544,7 @@ create_main_stats_page() {
 #
 # main
 #
-SUITE="sid"
+SUITE="unstable"
 update_bug_stats
 update_notes_stats
 create_main_stats_page

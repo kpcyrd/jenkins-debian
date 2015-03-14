@@ -155,7 +155,7 @@ if grep -q '|' $PACKAGES ; then
 fi
 rm $PACKAGES
 
-# find packages which have been removed from sid
+# find packages which have been removed from unstable
 # commented out for now. This can't be done using the database anymore
 QUERY="SELECT source_packages.name FROM source_packages
 		WHERE source_packages.name NOT IN

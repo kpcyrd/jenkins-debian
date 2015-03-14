@@ -330,6 +330,14 @@ schema_updates = {
         'DROP TABLE stats_bugs',
         'ALTER TABLE stats_bugs_tmp RENAME TO stats_bugs',
         'INSERT INTO rb_schema VALUES ("8", "' + now + '")'],
+    9: [ # rename "sid" to "unstable"
+        'UPDATE sources SET suite = "unstable" WHERE suite = "sid"',
+        'UPDATE stats_build SET suite = "unstable" WHERE suite = "sid"',
+        'UPDATE stats_pkg_state SET suite = "unstable" WHERE suite = "sid"',
+        'UPDATE stats_builds_per_day SET suite = "unstable" WHERE suite = "sid"',
+        'UPDATE stats_builds_age SET suite = "unstable" WHERE suite = "sid"',
+        'UPDATE stats_meta_pkg_state SET suite = "unstable" WHERE suite = "sid"',
+        'INSERT INTO rb_schema VALUES ("9", "' + now + '")'],
 }
 
 

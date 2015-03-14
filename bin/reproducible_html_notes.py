@@ -162,10 +162,8 @@ def load_notes():
             query = query.format(pkg=package)
             result = query_db(query)[0]
         except IndexError:
-            print_critical_message('This query produces no results: ' + query +
-                    '\nThis means there is no tested package with the name ' +
-                    package + '.')
-            raise
+            log.warning("This query produces no results: " + query)
+            log.warning("This means there is no tested package with the name " + package + ".")
     return notes
 
 

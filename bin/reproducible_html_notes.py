@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_html_notes.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
@@ -154,7 +155,7 @@ def load_notes():
         notes = yaml.load(fd)
     log.debug("notes loaded. There are " + str(len(notes)) +
                   " package listed")
-    for package in notes:   # check if every pacakge listed on the notes
+    for package in notes:   # check if every package listed on the notes
         try:                # actually have been tested
             query = 'SELECT s.name ' + \
                     'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \

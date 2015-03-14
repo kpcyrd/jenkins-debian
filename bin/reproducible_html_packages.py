@@ -143,8 +143,8 @@ def gen_extra_links(package, version, suite, arch):
         if not default_view:
             default_view = url
     else:
-        log.warning('The package ' + package +
-                    ' did not produce any buildlog! Check ' + rbuild)
+        log.info('The package ' + package +
+                    ' did not produce any buildlog! Maybe it has not been build yet.')
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 
@@ -194,7 +194,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
             status, version, build_date = check_package_status(pkg, suite, nocheck)
         except TypeError:  # the package is not in the checked suite
             continue
-        log.info('Generating the page of ' + pkg + '/' + suite + '@' + version +
+        log.debug('Generating the page of ' + pkg + '/' + suite + '@' + version +
                  ' built at ' + build_date)
 
         links, default_view = gen_extra_links(pkg, version, suite, arch)

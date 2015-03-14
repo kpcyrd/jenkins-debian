@@ -370,7 +370,7 @@ def index_issues(issues):
             '</b> packages categorized in <b>' + str(len(issues)) + \
             '</b> issues.</p>'
     html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
-    title = 'Overview of known issues related to reproducible builds'
+    title = 'Known issues related to reproducible builds'
     destfile = BASE + '/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/index_issues.html'
     write_html_page(title=title, body=html, destfile=destfile)
@@ -400,7 +400,7 @@ def index_notes(notes, bugs):
         html += '</p>\n'
     html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     html = (tab*2).join(html.splitlines(True))
-    title = 'Overview of packages with notes'
+    title = 'Packages with notes'
     destfile = BASE + '/index_notes.html'
     desturl = REPRODUCIBLE_URL + '/index_notes.html'
     write_html_page(title=title, body=html, destfile=destfile,
@@ -445,7 +445,7 @@ def index_no_notes(notes, bugs):
             html += index_no_notes_section(notes, bugs, pkgs, suite, arch)
     html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
     html = (tab*2).join(html.splitlines(True))
-    title = 'Overview of packages without notes'
+    title = 'Packages without notes'
     destfile = BASE + '/index_no_notes.html'
     desturl = REPRODUCIBLE_URL + '/index_no_notes.html'
     write_html_page(title=title, body=html, destfile=destfile,

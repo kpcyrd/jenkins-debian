@@ -18,7 +18,7 @@ VIEW=dd-list
 for SUITE in $SUITES ; do
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
-	write_page_header $VIEW "Overview of maintainers of unreproducible packages in $SUITE"
+	write_page_header $VIEW "Maintainers of unreproducible packages in $SUITE"
 	TMPFILE=$(mktemp)
 	SOURCES=$(mktemp)
 	schroot --directory /tmp -c source:jenkins-reproducible-$SUITE cat /var/lib/apt/lists/*_source_Sources > $SOURCES || \

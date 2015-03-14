@@ -127,7 +127,7 @@ pages = {
         ]
     },
     'all_abc': {
-        'title': 'Overview of reproducible builds in {suite}/{arch} of all tested packages (sorted alphabetically)',
+        'title': 'Alphabetically sorted overview of all tested packages in {suite}/{arch})',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -235,7 +235,7 @@ pages = {
 
 global_pages = {
     'scheduled': {
-        'title': 'Overview of packages currently scheduled for testing for build reproducibility',
+        'title': 'Packages currently scheduled for testing for build reproducibility',
         'body': [
             {
                 'query': 'scheduled',

@@ -436,7 +436,7 @@ def index_no_notes(notes, bugs):
                         'WHERE r.status = "unreproducible" OR r.status = "FTBFS"' +
                         'ORDER BY r.build_date DESC')
     without_notes = [x for x in all_bad_pkgs if x[0] not in notes]
-    html = '\n<p>There are ' + str(len(without_notes)) + ' unreproducible ' \
+    html = '\n<p>There are ' + str(len(without_notes)) + ' faulty ' \
            + 'packages without notes, in all suites. These are the packages ' \
            + 'with failures that still need to be investigated.</p>\n'
     for suite in SUITES:

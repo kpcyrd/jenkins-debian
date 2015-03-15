@@ -10,6 +10,7 @@
 #
 # Build html pages based on the content of the notes.git repository
 
+import copy
 import yaml
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
@@ -152,11 +153,12 @@ def load_notes():
     { 'package_name': {'version': '0.0', 'comments'<etc>}, 'package_name':{} }
     """
     with open(NOTES) as fd:
-        notes = yaml.load(fd)
-    log.debug("notes loaded. There are " + str(len(notes)) +
+        possible_notes = yaml.load(fd)
+    log.debug("notes loaded. There are " + str(len(possible_notes)) +
                   " package listed")
-    for package in notes:   # check if every package listed on the notes
-        try:                # actually have been tested
+    notes = copy.copy(possible_notes)
+    for package in possible_notes:   # check if every package listed on the notes
+        try:                         # actually have been tested
             query = 'SELECT s.name ' + \
                     'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
                     'WHERE s.name="{pkg}" AND r.status != ""'
@@ -166,6 +168,8 @@ def load_notes():
             log.warning("This query produces no results: " + query)
             log.warning("This means there is no tested package with the name " + package + ".")
             del notes[package]
+    log.debug("notes checked. There are " + str(len(notes)) +
+                  " package listed")
     return notes
 
 

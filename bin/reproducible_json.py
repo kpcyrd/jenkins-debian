@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_json.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
@@ -38,6 +39,7 @@ with open(tmpfile.name, 'w') as fd:
     json.dump(output, fd, indent=4, sort_keys=True)
 
 os.rename(tmpfile.name, REPRODUCIBLE_JSON)
+os.chmod(REPRODUCIBLE_JSON, 0o644)
 
 log.info(REPRODUCIBLE_URL + '/reproducible.json has been updated.')
 

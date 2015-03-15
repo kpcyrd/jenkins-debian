@@ -129,7 +129,7 @@ write_page_header() {
 	write_page "<title>$2</title></head>"
 	write_page "<body><header><h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
-		write_page "<p>These pages are showing the prospects of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>. The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs running on jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
+		write_page "<p>These pages are showing the prospects of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>. The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>. Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
 	fi
 	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
 		write_page "<p>Join <code>#debian-reproducible</code> on OFTC"

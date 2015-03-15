@@ -10,6 +10,7 @@ APTCACHE=""
 export http_proxy="http://localhost:3128"
 COMPRESSPROG="pigz"
 # remove /run/shm bindmount once we are running jessie - this is a workaround for #700591
+# /sys and /proc were added as workarounds for #773767
 BINDMOUNTS="$BINDMOUNTS /run/shm /dev/shm /sys /proc"
 
 # Use a different umask, but only do so when the UTS namespace differs from pid 1's UTS namespace.

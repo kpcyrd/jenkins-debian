@@ -117,32 +117,39 @@ Installation tests inside chroot environments.
 
 * See https://wiki.debian.org/HelmutGrohne/rebootstrap for more information about these jobs.
 
-=== reproducible jobs
+=== 'reproducible builds' jobs
 
 * See https://wiki.debian.org/ReproducibleBuilds to learn more about "Reproducible Builds" in Debian and beyond.
 
-* Several jobs are being used to test whether packages be build reproducible or not. The result is the website https://reproducible.debian.net which is actually just a collection of html files being served from this host. Three suites are tested on amd64: 'testing', 'unstable' and 'experimental'.
+* Several jobs are being used to assemble the website https://reproducible.debian.net which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in an SQLite database which can be downloaded from https://reproducible.debian.net/reproducible.db. (That copy is updated every four hours.)
 
-* There are three builder jobs, alpha+beta+gamma which are each started every 2min.. There is a scheduler jobs scheduling builds for them, and job to setup and update the pbuilder base.tgz archives for the different suites.
+* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' through four builder jobs, alpha, beta, gamma and delta, which are each re-started every two minutes.
 
-* Several other jobs exist to build the html pages, to create a JSON file which can be downloaded from https://reproducible.debian.net/reproducible.json.
+* Packages to be build are scheduled via a scheduler job, which runs every hour and which schedules new packages to be tested if the queue is below a certain threshold.
 
-* The SQLite database used can be downloaded from https://reproducible.debian.net/reproducible.db.
+* Several other jobs exist to build the html pages and to create a JSON file which can be downloaded from https://reproducible.debian.net/reproducible.json.
 
-* The reproducible build jobs use their own pbuilder base.tgz, which has the reproducible apt repo added. And there another sid schroot is being used, where debbindiff (which has lots of depends installed) is run from.
+* Information from https://anonscm.debian.org/cgit/reproducible/notes.git is incorporated on pushes to that git repo.
 
-* Manual rescheduling of packages is easy, if you have console access. (Hint: you don't but someone on #debian-reproducible will have.) This is how to:
+* There are suite specific jobs to create the pbuilder base.tgz's per suite, which have the reproducible apt repo added. Similarily there's another job per suite to create the schroots used by the builder jobs to download the packages sources to build.
+
+* Then there is another job to create a sid schroot to run debbindiff on the the two results. (FIXME: explain why here)
+
+* Finally, there is a maintenance job running every 4h, making sure things are considerably under control.
+
+* Plase ask for manual rescheduling of packages in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins need to run this command:
 
 ----
-jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh package1 package2 abcde
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh $suite $package1 $package2
 ----
 
-* blacklisting packages can be done similarily, optionally list reaons in 'notes.git/packages.yml'
+* Blacklisting packages can be done similarily:
 
 ----
-jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh package1
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh $suite $package1
 ----
 
+* Job configuration is at the usual location for 'jenkins.debian.net' - there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.
 
 === dvswitch jobs
 

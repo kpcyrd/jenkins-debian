@@ -271,7 +271,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_notes':
-            my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the notes.git repository.'
+            my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_blank">notes.git</a> repository.'
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.py'

@@ -117,7 +117,7 @@ Installation tests inside chroot environments.
 
 * See https://wiki.debian.org/HelmutGrohne/rebootstrap for more information about these jobs.
 
-=== 'reproducible builds' jobs
+=== reproducible builds jobs
 
 * See https://wiki.debian.org/ReproducibleBuilds to learn more about "Reproducible Builds" in Debian and beyond.
 

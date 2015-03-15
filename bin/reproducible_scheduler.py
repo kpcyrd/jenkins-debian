@@ -255,9 +255,11 @@ def scheduler():
         many_old = 1  # ...
     for suite in SUITES:
         if suite != 'experimental':
-            many_old = many_old*10 # experimental is roughly one tenth of the size of the other suites
-        log.info('Requesting ' + str(many_old) + ' old packages in ' + suite + '...')
-        old[suite] = scheduler_old_versions(suite, many_old)
+            suite_many_old = many_old*10 # experimental is roughly one tenth of the size of the other suites
+        else:
+            suite_many_old = many_old
+        log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
+        old[suite] = scheduler_old_versions(suite, suite_many_old)
         total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')

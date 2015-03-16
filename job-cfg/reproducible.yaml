@@ -177,7 +177,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_html_repo_stats'
+    name: '{name}_html_repository_comparison'
 
 - job-template:
     defaults: reproducible
@@ -281,10 +281,10 @@
             my_timed: '37 13 * * 1'
             my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_html_repo_stats':
-            my_description: 'Generate HTML results (repo_stats) for reproducible builds.'
+        - '{name}_html_repository_comparison':
+            my_description: 'Generate HTML results (repository_comparison) for reproducible builds.'
             my_timed: '0 1 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_repo_stats.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_html_repository_comparison.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_json':
             my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'

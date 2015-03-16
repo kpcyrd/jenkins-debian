@@ -96,9 +96,12 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
 	echo "Rescheduling packages: "
 	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | sort -u) ; do
-		( for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f9 | cut -d "_" -f1) ; do
-			echo $PKG
-		done ) | xargs /srv/jenkins/bin/reproducible_schedule_on_demand.sh $SUITE
+		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f9 | cut -d "_" -f1) ; do echo -n "$PKG " ; done)
+		check_candidates
+		if [ $TOTAL -ne 0 ] ; then
+			echo " - in $SUITE: $CANDIDATES"
+			schedule_packages $PACKAGE_IDS
+		fi
 	done
 	DIRTY=true
 fi

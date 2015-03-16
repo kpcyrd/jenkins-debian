@@ -41,6 +41,11 @@ check_candidates() {
 set +x
 SUITE="$1"
 shift
+if [ "$SUITE" = "sid" ] ; then
+	echo "WARNING: sid has been renamed to unstable."
+	SUITE=unstable
+fi
+
 CANDIDATES="$@"
 check_candidates
 PACKAGES=$(echo $PACKAGES)

@@ -38,10 +38,6 @@ check_candidates() {
 		fi
 	done
 	case $TOTAL in
-	0)
-		echo "No packages to schedule, exiting."
-		exit 0
-		;;
 	1)
 		PACKAGES_TXT="package"
 		;;

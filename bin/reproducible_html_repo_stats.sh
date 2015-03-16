@@ -111,14 +111,21 @@ for PKG in $SOURCES ; do
 	if [ "$(grep "'error'>No repositories found" $TMP2FILE 2>/dev/null)" ] ; then
 		write_page "$PKG<br /><span class=\"red\">(no git repository)</span>"
 	elif [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
-		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a><br /><span class=\"purple\">(non-standard branch)</span>"
-		if $OBSOLETE ; then
-			write_page " (probably ok)"
+		URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=merged/reproducible_builds"
+		curl $URL > $TMP2FILE
+		if [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
+			write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a><br /><span class=\"purple\">non-standard branch</span>"
+			if $OBSOLETE ; then
+				write_page " (probably ok)"
+			fi
+		else
+			write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
+			write_page "<br />(<span class=\"green\">merged</span> and at least available in unstable)"
 		fi
 	else
 		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
 		if $OBSOLETE ; then
-			write_page "<br /> (unused?)"
+			write_page "<br />(unused?)"
 		fi
 	fi
 	write_page " </td>"

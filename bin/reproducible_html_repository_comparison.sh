@@ -38,7 +38,8 @@ for PKG in $SOURCES ; do
 	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
 	CRUFT=""
 	BET=""
-	OBSOLETE=false
+	OBSOLETE_IN_SID=false
+	OBSOLETE_IN_TESTING=false
 	#
 	# gather versions of a package
 	#
@@ -70,7 +71,7 @@ for PKG in $SOURCES ; do
 			if [ ! -z "$BET" ] ; then
 				CRUFT="$BET $CRUFT"
 				BET=""
-				OBSOLETE=true
+				OBSOLETE_IN_SID=true
 			fi
 		else
 			CSID="$CSID$i<br />"
@@ -80,6 +81,7 @@ for PKG in $SOURCES ; do
 		for i in $TESTING ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
 				CTEST="$CTEST<span class=\"green\">$i</span><br />"
+				OBSOLETE_IN_TESTING=true
 			else
 				CTEST="$CTEST$i<br />"
 			fi
@@ -115,16 +117,21 @@ for PKG in $SOURCES ; do
 		curl $URL > $TMP2FILE
 		if [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
 			write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a><br /><span class=\"purple\">non-standard branch</span>"
-			if $OBSOLETE ; then
+			if $OBSOLETE_IN_SID ; then
 				write_page " (probably ok)"
 			fi
 		else
 			write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
-			write_page "<br />(<span class=\"green\">merged</span> and at least available in unstable)"
+			write_page "<br />(<span class=\"green\">merged</span>"
+			if $OBSOLETE_IN_TESTING ; then
+				write_page "and available in testing and unstable)"
+			else
+				write_page "and available in unstable)"
+			fi
 		fi
 	else
 		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
-		if $OBSOLETE ; then
+		if $OBSOLETE_IN_SID ; then
 			write_page "<br />(unused?)"
 		fi
 	fi

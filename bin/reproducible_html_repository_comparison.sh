@@ -65,18 +65,6 @@ for PKG in $SOURCES ; do
 	CSID=""
 	CTEST=""
 	CEXP=""
-	for i in $SID ; do
-		if dpkg --compare-versions "$i" gt "$BET" ; then
-			CSID="$CSID<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
-			if [ ! -z "$BET" ] ; then
-				CRUFT="$BET $CRUFT"
-				BET=""
-				OBSOLETE_IN_SID=true
-			fi
-		else
-			CSID="$CSID$i<br />"
-		fi
-	done
 	if [ ! -z "$TESTING" ] ; then
 		for i in $TESTING ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
@@ -96,6 +84,18 @@ for PKG in $SOURCES ; do
 			fi
 		done
 	fi
+	for i in $SID ; do
+		if dpkg --compare-versions "$i" gt "$BET" ; then
+			CSID="$CSID<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
+			if [ ! -z "$BET" ] ; then
+				CRUFT="$BET $CRUFT"
+				BET=""
+				OBSOLETE_IN_SID=true
+			fi
+		else
+			CSID="$CSID$i<br />"
+		fi
+	done
 	if [ ! -z "$BET" ] ; then
 		BET="<span class=\"green\">$BET</span>"
 	else

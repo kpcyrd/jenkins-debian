@@ -14,8 +14,8 @@ common_init "$@"
 # support for different architectures (we have actual support only for amd64)
 ARCH="amd64"
 
-# sleep 1-3 secs to randomize start times
-SLEEP=$(shuf -i 1-3 -n 1)
+# sleep 1-4 secs to randomize start times
+/bin/sleep $(echo "scale=1 ; $(shuf -i 1-40 -n 1)/10" | bc )
 
 create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}

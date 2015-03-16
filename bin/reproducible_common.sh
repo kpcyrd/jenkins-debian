@@ -88,17 +88,18 @@ schedule_packages() {
 }
 
 check_candidates() {
-	PACKAGES=""
+	PACKAGE_IDS=""
 	PACKAGES_NAMES=""
 	TOTAL=0
 	for PKG in $CANDIDATES ; do
 		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id, name from sources WHERE name='$PKG' AND suite='$SUITE';")
 		if [ ! -z "$RESULT" ] ; then
-			PACKAGES="$PACKAGES $(echo $RESULT|cut -d '|' -f 1)"
+			PACKAGE_IDS="$PACKAGE_IDS $(echo $RESULT|cut -d '|' -f 1)"
 			PACKAGES_NAMES="$PACKAGES_NAMES $(echo $RESULT|cut -d '|' -f 2)"
 			let "TOTAL+=1"
 		fi
 	done
+	PACKAGE_IDS=$(echo $PACKAGE_IDS)
 	case $TOTAL in
 	1)
 		PACKAGES_TXT="package"

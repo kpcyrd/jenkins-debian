@@ -14,6 +14,9 @@ common_init "$@"
 # support for different architectures (we have actual support only for amd64)
 ARCH="amd64"
 
+# sleep 1-3 secs to randomize start times
+SLEEP=$(shuf -i 1-3 -n 1)
+
 create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}
 	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}

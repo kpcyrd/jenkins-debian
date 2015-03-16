@@ -207,6 +207,19 @@
     defaults: reproducible_builder
     name: '{name}_builder_epsilon'
 
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_zeta'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_eta'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_theta'
+
+
 - project:
     name: reproducible
     jobs:
@@ -317,6 +330,21 @@
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_builder_epsilon':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_builder_zeta':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_builder_eta':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_builder_theta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'

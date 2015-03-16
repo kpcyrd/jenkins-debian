@@ -201,12 +201,8 @@ def _gen_links(suite, arch):
             html += link[1].format(suite=suite, arch=arch) + '\n'
         if not suite:
             html += link[1].format(suite='unstable', arch=arch) + '\n'
-    if suite:  # suite stats
-        html += '<li><a href="/' + suite + \
-                '/index_suite_stats.html">suite: ' + suite + '</a></li>'
     for i in SUITES:  # suite links
-           if i != suite:
-                html += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
+            html += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
     return html
 
 

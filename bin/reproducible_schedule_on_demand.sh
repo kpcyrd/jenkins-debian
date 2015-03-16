@@ -16,11 +16,13 @@ schedule_packages() {
 	# so schedule them in the past, so they are picked earlier :)
 	DATE="2014-10-01 00:23"
 	TMPFILE=$(mktemp)
-	for PKG in $PACKAGES ; do
-		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$PKG', '$DATE', '');" >> $TMPFILE
+	for PKG_ID in $@ ; do
+		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$PKG_ID', '$DATE', '');" >> $TMPFILE
 	done
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE
+	cd /srv/jenkins/bin
+	python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
 }
 
 check_candidates() {
@@ -68,9 +70,7 @@ fi
 MESSAGE="$TOTAL $PACKAGES_TXT $ACTION for $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
 
 # finally
-schedule_packages
-cd /srv/jenkins/bin
-python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
+schedule_packages $PACKAGES
 echo
 echo "$MESSAGE"
 if [ -z "${BUILD_URL:-}" ] ; then

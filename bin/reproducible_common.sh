@@ -73,6 +73,42 @@ META_PKGSET[11]="grml"
 META_PKGSET[12]="grml_build-depends"
 META_PKGSET[13]="maint_pkg-perl-maintainers"
 
+schedule_packages() {
+	# these packages are manually scheduled, so should have high priority,
+	# so schedule them in the past, so they are picked earlier :)
+	DATE="2014-10-01 00:23"
+	TMPFILE=$(mktemp)
+	for PKG_ID in $@ ; do
+		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$PKG_ID', '$DATE', '');" >> $TMPFILE
+	done
+	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
+	rm $TMPFILE
+	cd /srv/jenkins/bin
+	python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
+}
+
+check_candidates() {
+	PACKAGES=""
+	PACKAGES_NAMES=""
+	TOTAL=0
+	for PKG in $CANDIDATES ; do
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id, name from sources WHERE name='$PKG' AND suite='$SUITE';")
+		if [ ! -z "$RESULT" ] ; then
+			PACKAGES="$PACKAGES $(echo $RESULT|cut -d '|' -f 1)"
+			PACKAGES_NAMES="$PACKAGES_NAMES $(echo $RESULT|cut -d '|' -f 2)"
+			let "TOTAL+=1"
+		fi
+	done
+	case $TOTAL in
+	1)
+		PACKAGES_TXT="package"
+		;;
+	*)
+		PACKAGES_TXT="packages"
+		;;
+	esac
+}
+
 write_page() {
 	echo "$1" >> $PAGE
 }

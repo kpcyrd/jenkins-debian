@@ -13,7 +13,7 @@ common_init "$@"
 SUITE="unstable"	# for links in page
 ARCH="amd64"		# same
 
-VIEW=repo_stats
+VIEW=repositories
 PAGE=index_${VIEW}.html
 TMPFILE=$(mktemp)
 TMP2FILE=$(mktemp)

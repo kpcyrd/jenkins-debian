@@ -125,7 +125,7 @@ Installation tests inside chroot environments.
 
 * The (current) purpose of https://reproducible.debian.net is to show the prospects of reproducible builds for Debian. IOW: this is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project!
 
-* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' through four builder jobs, alpha, beta, gamma and delta, which are each constantly testing packages and saving the results of these tests.
+* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through four builder jobs, alpha, beta, gamma and delta, which are each constantly testing packages and saving the results of these tests.
 
 * The jenkins job overview at https://jenkins.debian.net/view/reproducible/ probably makes it clearer how the job scheduling works in practice.
 

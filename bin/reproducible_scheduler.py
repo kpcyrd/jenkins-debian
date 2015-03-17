@@ -222,8 +222,8 @@ def scheduler():
     # untested packages
     untested = {}
     for suite in SUITES:
-        log.info('Requesting 333 untested packages in ' + suite + '...')
-        untested[suite] = scheduler_untested_packages(suite, 333)
+        log.info('Requesting 444 untested packages in ' + suite + '...')
+        untested[suite] = scheduler_untested_packages(suite, 444)
         total += len(untested[suite])
         log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')

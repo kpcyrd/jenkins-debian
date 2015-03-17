@@ -189,7 +189,7 @@ def _gen_links(suite, arch):
         ('last_24h', '<li><a href="/{suite}/{arch}/index_last_24h.html">packages tested in the last 24h</a></li>'),
         ('last_48h', '<li><a href="/{suite}/{arch}/index_last_48h.html">packages tested in the last 48h</a></li>'),
         ('all_abc', '<li><a href="/{suite}/{arch}/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>'),
-        ('dd-list', '<li><a href="/{suite}/{arch}/index_dd-list.html">maintainers of unreproducible packages</a></li>'),
+        ('dd-list', '<li><a href="/{suite}/index_dd-list.html">maintainers of unreproducible packages</a></li>'),
         ('pkg_sets', '<li><a href="/{suite}/{arch}/index_pkg_sets.html">package sets stats</a></li>')
     ]
     html = ''

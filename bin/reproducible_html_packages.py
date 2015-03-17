@@ -144,7 +144,7 @@ def gen_extra_links(package, version, suite, arch):
             default_view = url
     else:
         log.info('The package ' + package +
-                    ' did not produce any buildlog! Maybe it has not been build yet.')
+                    ' did not produce any buildlog in ' + suite + '/' + arch + '! Maybe it has not been build yet.')
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 

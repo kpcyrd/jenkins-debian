@@ -121,13 +121,16 @@ properties:
 ** reproducible: dont delete userContent/$pkg on build begin..
 ** move all content into /var/lib/userContent/reproducible/
 ** more graphs: graph average build duration by day
-** show package status (briefly) on https://reproducible.debian.net/issues/*html
 ** turn job-cfg/g-i.yaml into .yaml.py
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** include no js header in the css
 ** use one css for all, not two minimally different ones
 ** restore the "find packages which have been removed from sid" part of reproducible_maintainance.sh
+
+* notes related
+** new page with annoted packages without categorized issues
+** issues pages for testing and experimental
 
 * pkg sets related:
 ** new package set: kde/plasma

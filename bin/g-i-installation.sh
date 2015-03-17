@@ -260,6 +260,7 @@ bootstrap_system() {
 			;;
 		debian-edu_*ltsp-server|debian-edu_*combi-server)
 			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
+			EXTRA_APPEND="$EXTRA_APPEND netcfg/choose_interface=auto"
 			;;
 		*)	;;
 	esac

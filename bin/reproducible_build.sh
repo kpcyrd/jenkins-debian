@@ -44,7 +44,7 @@ update_db_and_html() {
 	set +x
 	gen_packages_html $SUITE $SRCPACKAGE
 	echo
-	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/$SRCPACKAGE.html"
+	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/${ARCH}/$SRCPACKAGE.html"
 	echo
 }
 

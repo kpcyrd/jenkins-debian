@@ -180,7 +180,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
     nocheck is for internal use
     """
     total = len(packages)
-    log.info('Generating the pages of ' + str(total) + ' package(s)')
+    log.debug('Generating the pages of ' + str(total) + ' package(s)')
     if not nocheck and (not suite or not arch):
         nocheck = True
     if nocheck and (not suite or not arch):

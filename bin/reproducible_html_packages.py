@@ -15,7 +15,7 @@ html_package_page = Template((tab*2).join(("""
 <table class="head">
     <tr>
         <td>
-            <span style="font-size:1.2em;">$package</span> $version
+            <span style="font-size:1.2em;">$package</span> $suite: $version
 $status
             <span style="font-size:0.9em;">$build_time:</span>
 $links
@@ -151,7 +151,7 @@ def gen_extra_links(package, version, suite, arch):
 
 def gen_suites_links(package, suite):
     html = ''
-    query = 'SELECT s.suite, s.architecture, r.status ' + \
+    query = 'SELECT s.suite, s.architecture, s.version, r.status ' + \
             'FROM sources AS s LEFT JOIN results AS r ON r.package_id=s.id ' + \
             'WHERE s.name="{pkg}"'.format(pkg=package)
     results = query_db(query)
@@ -161,14 +161,14 @@ def gen_suites_links(package, suite):
     if len(results) == 1:
         return html
     for i in results:
-        # i[0]: suite, i[1]: arch, i[2]: status (NULL if untested)
+        # i[0]: suite, i[1]: arch, i[3]: status (NULL if untested)
         if i[0] == suite:
             continue
-        status = 'untested' if not i[2] else i[2]
+        status = 'untested' if not i[3] else i[3]
         icon = '<img src="/static/{icon}" alt="{status}" title="{status}"/>\n'
         html += icon.format(icon=join_status_icon(status)[1], status=status)
         html += '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + '/' + \
-                str(package) + '.html" target="_parent">' + i[0] + '</a> '
+                str(package) + '.html" target="_parent">' + i[0] + ':' + i[2] + '</a> '
     return tab*5 + (tab*7).join(html.splitlines(True))
 
 
@@ -203,6 +203,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         status = gen_status_link_icon(status, icon, suite, arch)
 
         html = html_package_page.substitute(package=pkg,
+                                            suite=suite,
                                             status=status,
                                             version=version,
                                             build_time=build_date,

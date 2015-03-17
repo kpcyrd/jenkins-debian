@@ -118,6 +118,7 @@ properties:
 === reproducible
 
 * misc
+** once cdbs 0.1.129 (#780592) reaches testing: reschedule these: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
 ** reproducible: dont delete userContent/$pkg on build begin..
 ** move all content into /var/lib/userContent/reproducible/
 ** more graphs: graph average build duration by day

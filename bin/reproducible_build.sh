@@ -119,7 +119,7 @@ call_debbindiff() {
 		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
 		update_db_and_html
 		if [ "${OLD_STATUS}" = "reproducible" ]; then
-			MESSAGE="${SRCPACKAGE} in ${SUITE} on ${ARCH}: status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SRCPACKAGE}"
+			MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi

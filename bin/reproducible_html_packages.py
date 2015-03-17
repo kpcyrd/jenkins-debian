@@ -216,7 +216,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         title = pkg + ' - reproducible build results'
         write_html_page(title=title, body=html, destfile=destfile, suite=suite,
                         noheader=True, noendpage=True)
-        log.info("Package page generated at " + desturl)
+        log.debug("Package page generated at " + desturl)
     if not no_clean:
         purge_old_pages() # housekeep is always good
 

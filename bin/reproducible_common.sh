@@ -220,7 +220,8 @@ write_page_footer() {
 }
 
 write_page_meta_sign() {
-	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a bold font is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue.</p>"
+	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a bold font is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue.</br>"
+	write_page " A <code>&#35;</code> sign after the name of a package indicates that a bug is filed against it. Likewise, a <code>&#43;</code> means that there is bug with a patch attached. In case of more than one bug, the symbol is repeated.</p>"
 }
 
 publish_page() {

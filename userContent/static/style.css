@@ -304,6 +304,7 @@ span.red { color: red; }
 span.purple { color: purple; }
 span.green { color: green; }
 span.dangerous { color: orange; }
+span.avoidwrap { display: inline-block; }
 
 @media all and (max-width: 641px) {
 	body {

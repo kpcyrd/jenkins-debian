@@ -15,16 +15,20 @@ html_package_page = Template((tab*2).join(("""
 <table class="head">
     <tr>
         <td>
-            <span style="font-size:1.2em;">$package</span> $suite: $version
+            <span class="avoidwrap">
+                <span style="font-size:1.2em;">$package</span> $suite: $version
 $status
-            <span style="font-size:0.9em;">$build_time:</span>
+                <span style="font-size:0.9em;">$build_time:</span>
+            </span>
+            <span class="avoidwrap">
 $links
-            <a href="https://tracker.debian.org/$package" target="main">PTS</a>
-            <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
-            <a href="https://sources.debian.net/src/$package/" target="main">sources</a>
-            <a href="https://sources.debian.net/src/$package/$version/debian/" target="main">debian</a>/<!--
-            -->{<a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a>,<!--
-            --><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a>}
+                <a href="https://tracker.debian.org/$package" target="main">PTS</a>
+                <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
+                <a href="https://sources.debian.net/src/$package/" target="main">sources</a>
+                <a href="https://sources.debian.net/src/$package/$version/debian/" target="main">debian</a>/<!--
+                -->{<a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a>,<!--
+                --><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a>}
+            </span>
         </td>
         <td>
 ${suites_links}
@@ -161,14 +165,17 @@ def gen_suites_links(package, suite):
     if len(results) == 1:
         return html
     for i in results:
-        # i[0]: suite, i[1]: arch, i[3]: status (NULL if untested)
+        # i[0]: suite, i[1]: arch, i[2]: version, i[3]: status (NULL if untested)
         if i[0] == suite:
             continue
         status = 'untested' if not i[3] else i[3]
+        html += '<span class="avoidwrap">\n' + tab
         icon = '<img src="/static/{icon}" alt="{status}" title="{status}"/>\n'
         html += icon.format(icon=join_status_icon(status)[1], status=status)
-        html += '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + '/' + \
-                str(package) + '.html" target="_parent">' + i[0] + ':' + i[2] + '</a> '
+        html += tab + '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + \
+                '/' + str(package) + '.html" target="_parent">' + i[0] + \
+                ':' + i[2] + '</a>\n'
+        html += '</span>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))
 
 

@@ -334,11 +334,11 @@ def build_page(page, suite=None, arch=None):
                                'building a suite-specific page.')
         sys.exit(1)
     if not suite:  # global page
-        log.info('Building the ' + page + ' global index page...')
+        log.debug('Building the ' + page + ' global index page...')
         page_sections = global_pages[page]['body']
         title = global_pages[page]['title']
     else:
-        log.info('Building the ' + page + ' index page for ' + suite + '/' +
+        log.debug('Building the ' + page + ' index page for ' + suite + '/' +
                  arch + '...')
         page_sections = pages[page]['body']
         title = pages[page]['title'].format(suite=suite, arch=arch)

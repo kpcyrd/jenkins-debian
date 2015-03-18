@@ -106,7 +106,7 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	DIRTY=true
 fi
 
-# find processes which should not be there
+# find+terminate processes which should not be there
 HAYSTACK=$(mktemp)
 RESULT=$(mktemp)
 PBUIDS="1234 1111 2222"
@@ -119,12 +119,12 @@ for i in $PBUIDS ; do
 done
 if [ -s $RESULT ] ; then
 	echo
-	echo "Warning: processes found which should not be there:"
+	echo "Warning: processes found which should not be there, killing them now:"
 	cat $RESULT
 	echo
 	ZOMBIES=$(cat $RESULT | cut -d " " -f1 | xargs echo)
-	echo "kill -9 $(echo $ZOMBIES)"
-	echo "Please cleanup manually."
+	kill -9 $(echo $ZOMBIES)
+	echo "'kill -9 $(echo $ZOMBIES)' done."
 	echo
 	DIRTY=true
 fi

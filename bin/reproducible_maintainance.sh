@@ -123,7 +123,7 @@ if [ -s $RESULT ] ; then
 	cat $RESULT
 	echo
 	ZOMBIES=$(cat $RESULT | cut -d " " -f1 | xargs echo)
-	sudo kill -9 $(echo $ZOMBIES)
+	sudo kill -9 $(echo $ZOMBIES) 2>&1
 	echo "'kill -9 $(echo $ZOMBIES)' done."
 	echo
 	DIRTY=true

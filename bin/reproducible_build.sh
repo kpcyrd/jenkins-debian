@@ -254,7 +254,7 @@ else
 			  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
 			  LANG="fr_CH.UTF-8" \
 			  LC_ALL="fr_CH.UTF-8" \
-			  unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \
+			  /usr/bin/linux64 --uname-2.6 /usr/bin/unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \
 			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
 			) 2>&1 | tee -a ${RBUILDLOG}
 			set +x

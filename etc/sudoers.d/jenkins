@@ -30,7 +30,7 @@ jenkins ALL=  \
 	/bin/cp -rv /media/*, \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
-	SETENV: NOPASSWD: /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/linux64 --uname-2.6 /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
 	/bin/mv /var/cache/pbuilder/*base*.tgz /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm -v /var/cache/pbuilder/*base*.tgz, \

@@ -9,5 +9,3 @@ echo "I: Changing hostname to test build reproducibility" >&2
 sed -e '/^127.0.0.1/s/$/ i-capture-the-hostname i-capture-the-hostname.i-capture-the-domain/' -i /etc/hosts
 hostname i-capture-the-hostname
 domainname i-capture-the-domain
-# let's pretend we're using a different kernel version
-linux64 --uname-2.6

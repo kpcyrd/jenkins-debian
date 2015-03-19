@@ -91,6 +91,34 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[3]}.pkgset
 	fi
 
+	# build-essential-depends
+	#
+	# This set is created using the following procedure:
+	#
+	#  1. take the binary package build-essential and put it into set S
+	#  2. go over every package in S and
+	#      2.1. if it is a binary package
+	#          2.1.1 add all its Depends and Pre-Depends to S
+	#          2.1.2 add the source package it builds from to S
+	#      2.2. if it is a source package add all its Build-Depends,
+	#           Build-Depends-Indep and Build-Depends-Arch to S
+	#  3. if step 2 added new packages, repeat step 2, otherwise exit
+	#
+	# This set is important because a package can only be trusted if
+	# also all its dependencies, all its build dependencies and
+	# recursively their own dependencies and build dependencies can be
+	# trusted.
+	# So making this set reproducible is required to make anything
+	# in the essential or build-essential set trusted.
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[4]}.pkgset ] ; then
+		curl http://bootstrap.debian.net/importance_metric_all.txt > $TMPFILE2
+		# retrieve the highest number in the third column (packages affect)
+		HIGHEST=`sort -n -k 3 $TMPFILE2 | tail -1 | cut -f 3`
+		# now get all lines where the third column is equal to this value
+		awk '$3 == "'$HIGHEST'" { print $1 }' $TMPFILE2 | cut -d ':' -f 2 > $TMPFILE
+		update_if_similar ${META_PKGSET[4]}.pkgset
+	fi
+
 	# popcon top 1337 installed sources
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[5]}.pkgset ] ; then
 		SQL_QUERY="SELECT popcon_src.source FROM popcon_src ORDER BY popcon_src.insts DESC LIMIT 1337;"
@@ -191,33 +219,6 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[14]}.pkgset
 	fi
 
-	# build-essential-depends
-	#
-	# This set is created using the following procedure:
-	#
-	#  1. take the binary package build-essential and put it into set S
-	#  2. go over every package in S and
-	#      2.1. if it is a binary package
-	#          2.1.1 add all its Depends and Pre-Depends to S
-	#          2.1.2 add the source package it builds from to S
-	#      2.2. if it is a source package add all its Build-Depends,
-	#           Build-Depends-Indep and Build-Depends-Arch to S
-	#  3. if step 2 added new packages, repeat step 2, otherwise exit
-	#
-	# This set is important because a package can only be trusted if
-	# also all its dependencies, all its build dependencies and
-	# recursively their own dependencies and build dependencies can be
-	# trusted.
-	# So making this set reproducible is required to make anything
-	# in the essential or build-essential set trusted.
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[4]}.pkgset ] ; then
-		curl http://bootstrap.debian.net/importance_metric_all.txt > $TMPFILE2
-		# retrieve the highest number in the third column (packages affect)
-		HIGHEST=`sort -n -k 3 $TMPFILE2 | tail -1 | cut -f 3`
-		# now get all lines where the third column is equal to this value
-		awk '$3 == "'$HIGHEST'" { print $1 }' $TMPFILE2 | cut -d ':' -f 2 > $TMPFILE
-		update_if_similar ${META_PKGSET[4]}.pkgset
-	fi
 }
 
 TMPFILE=$(mktemp)

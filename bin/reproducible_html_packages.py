@@ -170,8 +170,8 @@ def gen_suites_links(package, suite):
             continue
         status = 'untested' if not i[3] else i[3]
         html += '<span class="avoidwrap">\n' + tab
-        icon = '<img src="/static/{icon}" alt="{status}" title="{status}"/>\n'
-        html += icon.format(icon=join_status_icon(status)[1], status=status)
+        icon = '<a href="/{suite}/{arch}/index_{status}.html"><img src="/static/{icon}" alt="{status}" title="{status}"/></a>\n'
+        html += icon.format(icon=join_status_icon(status)[1], status=status, suite=i[0], arch=i[1])
         html += tab + '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + \
                 '/' + str(package) + '.html" target="_parent">' + i[0] + \
                 ':' + i[2] + '</a>\n'

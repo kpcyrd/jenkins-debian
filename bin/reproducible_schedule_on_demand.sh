@@ -37,7 +37,7 @@ MESSAGE="$TOTAL $PACKAGES_TXT $ACTION for $SUITE: ${PACKAGES_NAMES:0:256}$BLABLA
 schedule_packages $PACKAGE_IDS
 echo
 echo "$MESSAGE"
-if [ -z "${BUILD_URL:-}" ] ; then
+if [ -z "${BUILD_URL:-}" ] && [ $TOTAL -ne 0 ] ; then
 	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
 fi
 echo "============================================================================="

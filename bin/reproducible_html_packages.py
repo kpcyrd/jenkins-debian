@@ -169,10 +169,18 @@ def gen_suites_links(package, suite):
         if i[0] == suite:
             continue
         status = 'untested' if not i[3] else i[3]
+        if status == 'unreproducible':
+            status = 'FTBR'
         html += '<span class="avoidwrap">\n' + tab
-        icon = '<a href="/{suite}/{arch}/index_{status}.html"><img src="/static/{icon}" alt="{status}" title="{status}"/></a>\n'
-        html += icon.format(icon=join_status_icon(status)[1], status=status, suite=i[0], arch=i[1])
-        html += tab + '<a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + \
+        if status != 'untested':
+            prefix = ' <a href="/' + i[0] + '/' + i[1] + '/index_' + status + '.html">'
+            suffix = '</a>\n'
+        else:
+            prefix = ' '
+            suffix = '\n'
+        icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
+        html += icon.format(icon=join_status_icon(status)[1], status=status)
+        html += tab + ' <a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + \
                 '/' + str(package) + '.html" target="_parent">' + i[0] + \
                 ':' + i[2] + '</a>\n'
         html += '</span>\n'

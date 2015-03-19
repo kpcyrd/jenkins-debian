@@ -28,6 +28,9 @@ QUIET = False
 SUITES = ['testing', 'unstable', 'experimental']
 # tested arches
 ARCHES = ['amd64']
+# defaults
+defaultsuite = 'unstable'
+defaultarch = 'amd64'
 
 BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent'
@@ -119,32 +122,32 @@ html_head_page = Template((tab*2).join("""
   <ul>
     <li>Have a look at:</li>
     <li>
-      <a href="index_reproducible.html" target="_parent">
+      <a href="/$suite/$arch/index_reproducible.html" target="_parent">
         <img src="/static/weather-clear.png" alt="reproducible icon" />
       </a>
     </li>
     <li>
-      <a href="index_FTBR.html" target="_parent">
+      <a href="/$suite/$arch/index_FTBR.html" target="_parent">
         <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
       </a>
     </li>
     <li>
-      <a href="index_FTBFS.html" target="_parent">
+      <a href="/$suite/$arch/index_FTBFS.html" target="_parent">
         <img src="/static/weather-storm.png" alt="FTBFS icon" />
       </a>
     </li>
     <li>
-      <a href="index_404.html" target="_parent">
+      <a href="/$suite/$arch/index_404.html" target="_parent">
         <img src="/static/weather-severe-alert.png" alt="404 icon" />
       </a>
     </li>
     <li>
-      <a href="index_not_for_us.html" target="_parent">
+      <a href="/$suite/$arch/index_not_for_us.html" target="_parent">
         <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
       </a>
     </li>
     <li>
-      <a href="index_blacklisted.html" target="_parent">
+      <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
         <img src="/static/error.png" alt="blacklisted icon" />
       </a>
     </li>
@@ -194,26 +197,25 @@ def _gen_links(suite, arch):
     ]
     html = ''
     for link in links:
-        if link[0] == 'pkg_sets' and suite and suite == 'experimental':
-            html += link[1].format(suite='unstable', arch=arch) + '\n'
+        if link[0] == 'pkg_sets' and suite == 'experimental':
+            html += link[1].format(suite=defaultsuite, arch=arch) + '\n'
             continue
-        if suite:
-            html += link[1].format(suite=suite, arch=arch) + '\n'
-        if not suite:
-            html += link[1].format(suite='unstable', arch=arch) + '\n'
+        html += link[1].format(suite=suite, arch=arch) + '\n'
     for i in SUITES:  # suite links
             html += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
     return html
 
 
-def write_html_page(title, body, destfile, suite=None, noheader=False, style_note=False, noendpage=False):
+def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False):
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     html += html_header.substitute(page_title=title)
     if not noheader:
-        links = _gen_links(suite, 'amd64')  # hardcode amd64 for now...
+        links = _gen_links(suite, arch)
         html += html_head_page.substitute(
             page_title=title,
+            suite=suite,
+            arch=arch,
             links=links)
     html += body
     if style_note:
@@ -360,7 +362,7 @@ def strip_epoch(version):
     except IndexError:
         return version
 
-def pkg_has_buildinfo(package, version=False, suite='unstable', arch='amd64'):
+def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultarch):
     """
     if there is no version specified it will use the version listed in
     reproducible.db

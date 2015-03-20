@@ -169,6 +169,8 @@ properties:
 === qa.debian.org*
 
 * turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
+* mention udd.d.o/schema.html in README
+* remove list_table job
 
 === d-i_manual*
 

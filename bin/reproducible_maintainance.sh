@@ -113,19 +113,25 @@ RESULT=$(mktemp)
 PBUIDS="1234 1111 2222"
 ps axo pid,user,size,pcpu,cmd > $HAYSTACK
 for i in $PBUIDS ; do
-	for ZOMBIE in $(pgrep -u $i -P 1 || true) ; do
+	for PROCESS in $(pgrep -u $i -P 1 || true) ; do
 		# faked-sysv comes and goes...
-		grep ^$ZOMBIE $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null || true
+		grep ^$PROCESS $HAYSTACK | grep -v faked-sysv >> $RESULT 2> /dev/null || true
 	done
 done
 if [ -s $RESULT ] ; then
 	echo
-	echo "Warning: processes found which should not be there, killing them now:"
+	echo "Warning: processes found which should not be there, maybe killing them now:"
 	cat $RESULT
 	echo
-	ZOMBIES=$(cat $RESULT | cut -d " " -f1 | xargs echo)
-	sudo kill -9 $(echo $ZOMBIES) 2>&1
-	echo "'kill -9 $(echo $ZOMBIES)' done."
+	for PROCESS in $(cat $RESULT | cut -d " " -f1 | xargs echo) ; do
+		AGE=$(ps -p $PROCESS -o etimes= || echo 0)
+		if [ $AGE -gt 86400 ] ; then
+			sudo kill -9 $PROCESS 2>&1
+			echo "'kill -9 $PROCESS' done."
+		else
+			echo "Did not kill $PROCESS as it is only $AGE seconds old."
+		fi
+	done
 	echo
 	DIRTY=true
 fi

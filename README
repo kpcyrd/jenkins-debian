@@ -147,6 +147,8 @@ Installation tests inside chroot environments.
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh $suite $package1 $package2
 ----
 
+If $package1 is "artifacts" then the build job will preserv the produced packages and publish them under reproducible.debian.net, to allow easy+deeper investigation of reproducible issues. The url is published in the build log.
+
 * Blacklisting packages can be done similarily:
 
 ----

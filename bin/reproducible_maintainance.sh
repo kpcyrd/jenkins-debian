@@ -101,7 +101,8 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 		check_candidates
 		if [ $TOTAL -ne 0 ] ; then
 			echo " - in $SUITE: $CANDIDATES"
-			schedule_packages $PACKAGE_IDS
+			# '0' here means the artifacts will not be saved
+			schedule_packages 0 $PACKAGE_IDS
 		fi
 	done
 	DIRTY=true
@@ -197,6 +198,15 @@ OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime 
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Removed $OLDSTUFF jenkins html logs."
+	echo
+fi
+
+# remove artifacts older than 3 days
+mkdir -p /var/lib/jenkins/userContent/artifacts
+ARTIFACTS=$(find /var/lib/jenkins/userContent/artifacts -maxdepth 1 -type d -mtime +3 -exec rm -rv {} \;)
+if [ ! -z "$ARTIFACTS" ] ; then
+	echo
+	echo "Removed $ARTIFACTS artifacts."
 	echo
 fi
 

@@ -22,6 +22,15 @@ if [ "$SUITE" = "sid" ] ; then
 	SUITE=unstable
 fi
 
+ARTIFACTS=0
+if [ $1 = "artifacts" ] ; then
+	ARTIFACTS=1
+	shift
+	echo
+	echo "The artifacts of these builds will be saved. Look at the build log for the link"
+	echo
+fi
+
 CANDIDATES="$@"
 check_candidates
 if [ ${#PACKAGE_IDS} -gt 256 ] ; then
@@ -34,7 +43,7 @@ fi
 MESSAGE="$TOTAL $PACKAGES_TXT $ACTION in $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
 
 # finally
-schedule_packages $PACKAGE_IDS
+schedule_packages $ARTIFACTS $PACKAGE_IDS
 echo
 echo "$MESSAGE"
 if [ -z "${BUILD_URL:-}" ] && [ $TOTAL -ne 0 ] ; then

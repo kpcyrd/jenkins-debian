@@ -79,8 +79,10 @@ schedule_packages() {
 	# so schedule them in the past, so they are picked earlier :)
 	DATE="2014-10-01 00:23"
 	TMPFILE=$(mktemp)
+	ARTIFACTS=$1
+	shift
 	for PKG_ID in $@ ; do
-		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$PKG_ID', '$DATE', '');" >> $TMPFILE
+		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started, save_artifacts) VALUES ('$PKG_ID', '$DATE', '', '$ARTIFACTS');" >> $TMPFILE
 	done
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE

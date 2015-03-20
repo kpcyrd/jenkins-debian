@@ -80,7 +80,7 @@ schedule_packages() {
 	# the current date is subtracted twice, so that later manual scheduling comes first
 	DAYS=$(echo "$(date +'%j')*2"|bc)
 	HOURS=$(echo "$(date +'%H')*2"|bc)
-	MINS=$(echo "$(date +'%M')*2"|bc)
+	MINS=$(date +'%M')	# schedule on the full hour so we can recognize them easily
 	DATE=$(date +'%Y-%m-%d %H:%M' -d "$DAYS day ago - $HOURS hours - $MINS minutes")
 	TMPFILE=$(mktemp)
 	ARTIFACTS=$1

@@ -31,7 +31,7 @@ ACTION="manually rescheduled"
 if [ -n "${BUILD_URL:-}" ] ; then
 	ACTION="rescheduled by $BUILD_URL"
 fi
-MESSAGE="$TOTAL $PACKAGES_TXT $ACTION for $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
+MESSAGE="$TOTAL $PACKAGES_TXT $ACTION in $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
 
 # finally
 schedule_packages $PACKAGE_IDS

@@ -168,8 +168,6 @@ properties:
 
 === qa.debian.org*
 
-* turn off notifications on unstable results for udd-versionskew
-* turn off notifications on unstable results for orphaned-without-a-bug
 * turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
 
 === d-i_manual*

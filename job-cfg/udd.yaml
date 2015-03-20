@@ -25,6 +25,7 @@
           parse-rules: '/srv/jenkins/logparse/debian.rules'
           unstable-on-warning: '{my_logparser}'
           fail-on-error: '{my_logparser}'
+          notify-every-unstable-build: false
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org'
     builders:

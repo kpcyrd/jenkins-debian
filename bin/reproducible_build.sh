@@ -27,14 +27,15 @@ cleanup_all() {
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		local hash=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w5 | head -1)
 		local ARTIFACTS="artifacts/r00t-me/tmp-${hash}/${SUITE}/${PACKAGE}"
-		mkdir -p "/var/lib/jenkins/userContent/$ARTIFACTS"
-		cp -r $TMPDIR/* "/var/lib/jenkins/userContent/$ARTIFACTS"
+		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
+		cp -r $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
 		echo "Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them." | tee -a ${RBUILDLOG}
 		echo "WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format." | tee -a ${RBUILDLOG}
 		echo "If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location:" | tee -a ${RBUILDLOG}
 		echo "https://reproducible.debian.net/$ARTIFACTS" | tee -a ${RBUILDLOG}
 		echo | tee -a ${RBUILDLOG}
+		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "new artifacts available at https://reproducible.debian.net/$ARTIFACTS" || true # don't fail the whole job
 	fi
 	rm -r $TMPDIR $TMPCFG
 }

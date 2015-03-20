@@ -41,6 +41,9 @@ if [ -n "${BUILD_URL:-}" ] ; then
 	ACTION="rescheduled by $BUILD_URL"
 fi
 MESSAGE="$TOTAL $PACKAGES_TXT $ACTION in $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
+if [ $ARTIFACTS eq 1 ] ; then
+	MESSAGE="$MESSAGE - artifacts will be preserved."
+fi
 
 # finally
 schedule_packages $ARTIFACTS $PACKAGE_IDS

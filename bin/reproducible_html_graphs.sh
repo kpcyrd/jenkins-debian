@@ -26,7 +26,6 @@ TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
 TABLE[7]=stats_bugs_state
-USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
 FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
 FIELDS[1]="datum"
 for i in reproducible unreproducible FTBFS other ; do

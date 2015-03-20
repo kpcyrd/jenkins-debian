@@ -44,6 +44,9 @@ SUITES="testing unstable experimental"
 # tested arches
 ARCHES="amd64"
 
+# existing usertags
+USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
+
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 declare -A LINKTARGET

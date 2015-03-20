@@ -24,7 +24,7 @@ write_page "<p>These source packages are different from unstable in our apt repo
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>source package</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
+write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
 SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
@@ -107,21 +107,22 @@ for PKG in $SOURCES ; do
 	#
 	# write output
 	#
-	write_page "<tr><td>"
+	write_page "<tr><td><pre>src:$PKG</pre></td>"
+	write_page " <td>"
 	URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds"
 	curl $URL > $TMP2FILE
 	if [ "$(grep "'error'>No repositories found" $TMP2FILE 2>/dev/null)" ] ; then
-		write_page "$PKG<br /><span class=\"red\">(no git repository)</span>"
+		write_page "$URL<br /><span class=\"red\">(no git repository found)</span>"
 	elif [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
 		URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=merged/reproducible_builds"
 		curl $URL > $TMP2FILE
 		if [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
-			write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a><br /><span class=\"purple\">non-standard branch</span>"
+			write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
 			if $OBSOLETE_IN_SID ; then
 				write_page " (probably ok)"
 			fi
 		else
-			write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
+			write_page "<a href=\"$URL\">$PKG.git</a>"
 			write_page "<br />(<span class=\"green\">merged</span>"
 			if $OBSOLETE_IN_TESTING ; then
 				write_page "and available in testing and unstable)"
@@ -130,12 +131,18 @@ for PKG in $SOURCES ; do
 			fi
 		fi
 	else
-		write_page "<a href=\"$URL\" target=\"_blank\">$PKG</a>"
+		write_page "<a href=\"$URL\">$PKG.git</a>"
 		if $OBSOLETE_IN_SID ; then
 			write_page "<br />(unused?)"
 		fi
 	fi
 	write_page " </td>"
+	write_page " <td><a href=\"https://tracker.debian.org/pkg/$PKG\">PTS</a></td>"
+	URL="https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=$PKG&users=reproducible-builds@lists.alioth.debian.org&archive=both"
+	for TAG in $USERTAGS ; do
+		URL="$URL&tag=$TAG"
+	 done
+	write_page " <td><a href=\"$URL\">bugs</a></td>"
 	write_page " <td>$CRUFT</td>"
 	write_page " <td>$BET</td>"
 	write_page " <td>$CTEST</td>"

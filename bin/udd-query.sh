@@ -22,23 +22,6 @@ udd_query() {
 		udd -c"${SQL_QUERY}" > $UDD
 }
 
-list_tables() {
-	SQL_QUERY="SELECT table_schema,table_name
-			FROM information_schema.tables
-			ORDER BY table_schema,table_name;"
-	udd_query
-	echo
-	for TABLE in $(cat $UDD | cut -d "|" -f2) ; do
-		SQL_QUERY="SELECT column_name, data_type, character_maximum_length
-			FROM INFORMATION_SCHEMA.COLUMNS where table_name = '$TABLE';"
-		udd_query
-		cat $UDD
-		echo
-	done
-	rm $UDD
-	echo "Also see https://udd.debian.org/schema/udd.html"
-}
-
 multiarch_versionskew() {
 	if [ -z "$1" ] ; then
 		echo "Warning: no distro supplied, assuming sid."
@@ -120,9 +103,6 @@ orphaned_without_o_bug() {
 #
 UDD=$(mktemp)
 case $1 in
-	list_tables)
-			list_tables
-			;;
 	orphaned_without_o_bug)
 			orphaned_without_o_bug
 			;;

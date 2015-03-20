@@ -131,8 +131,8 @@ def gen_extra_links(package, version, suite, arch, status):
     else:
         log.debug('debbindiff not detetected at ' + dbd)
         if status == 'unreproducible':
-            log.critical('The package ' + package + '/' + suite + '/' + arch +
-                         ' is unreproducible, but without debbindiff output')
+            log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
+                         ' is unreproducible, but without debbindiff output.')
     if pkg_has_buildinfo(package, version, suite):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
               '_' + eversion + '_amd64.buildinfo'
@@ -150,8 +150,8 @@ def gen_extra_links(package, version, suite, arch, status):
         if not default_view:
             default_view = url
     elif status != 'untested':
-        log.critical('The package ' + package + '/' + suite + '/' + arch +
-                     ' didn\'t produce a buildlog, even if it has been built')
+        log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
+                     ' didn\'t produce a buildlog, even if it has been built.')
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 

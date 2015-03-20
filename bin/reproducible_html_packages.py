@@ -242,13 +242,13 @@ def gen_all_rb_pkg_pages(suite='unstable', arch='amd64', no_clean=False):
     query = 'SELECT name FROM sources WHERE suite="%s" AND architecture="%s"' % (suite, arch)
     rows = query_db(query)
     pkgs = [str(i[0]) for i in rows]
-    log.info('Processing all the package pages, ' + str(len(pkgs)))
+    log.info('Processing all ' + str(len(pkgs)) + ' package pages for ' + suite + '/' + arch +'.')
     gen_packages_html(pkgs, suite=suite, arch=arch, no_clean=no_clean)
 
 def purge_old_pages():
     for suite in SUITES:
         for arch in ARCHES:
-            log.info('Removing old pages from ' + suite + '/' + arch + '...')
+            log.info('Removing old pages from ' + suite + '/' + arch + '.')
             try:
                 presents = sorted(os.listdir(RB_PKG_PATH + '/' + suite + '/' +
                                   arch))

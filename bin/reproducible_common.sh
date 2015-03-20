@@ -77,7 +77,11 @@ META_PKGSET[14]="maint_pkg-perl-maintainers"
 schedule_packages() {
 	# these packages are manually scheduled, so should have high priority,
 	# so schedule them in the past, so they are picked earlier :)
-	DATE="2014-10-01 00:23"
+	# the current date is subtracted twice, so that later manual scheduling comes first
+	DAYS=$(echo "$(date +'%j')*2"|bc)
+	HOURS=$(echo "$(date +'%H')*2"|bc)
+	MINS=$(echo "$(date +'%M')*2"|bc)
+	DATE=$(date +'%Y-%m-%d %H:%M' -d "$DAYS day ago - $HOURS hours - $MINS minutes")
 	TMPFILE=$(mktemp)
 	ARTIFACTS=$1
 	shift

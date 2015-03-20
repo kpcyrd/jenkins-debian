@@ -103,7 +103,7 @@ def gen_status_link_icon(status, icon, suite, arch):
     return html.format(status=status, icon=icon, suite=suite, arch=arch)
 
 
-def gen_extra_links(package, version, suite, arch):
+def gen_extra_links(package, version, suite, arch, status):
     eversion = strip_epoch(version)
     notes = NOTES_PATH + '/' + package + '_note.html'
     rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
@@ -130,6 +130,9 @@ def gen_extra_links(package, version, suite, arch):
             default_view = url
     else:
         log.debug('debbindiff not detetected at ' + dbd)
+        if status == 'unreproducible':
+            log.critical('The package ' + package + '/' + suite + '/' + arch +
+                         ' is unreproducible, but without debbindiff output')
     if pkg_has_buildinfo(package, version, suite):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
               '_' + eversion + '_amd64.buildinfo'
@@ -146,9 +149,9 @@ def gen_extra_links(package, version, suite, arch):
                 sizeof_fmt(log_size) + ')</a>\n'
         if not default_view:
             default_view = url
-    else:
-        log.info('The package ' + package +
-                    ' did not produce any buildlog in ' + suite + '/' + arch + '! Maybe it has not been build yet.')
+    elif status != 'untested':
+        log.critical('The package ' + package + '/' + suite + '/' + arch +
+                     ' didn\'t produce a buildlog, even if it has been built')
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 
@@ -212,7 +215,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         log.debug('Generating the page of ' + pkg + '/' + suite + '@' + version +
                  ' built at ' + build_date)
 
-        links, default_view = gen_extra_links(pkg, version, suite, arch)
+        links, default_view = gen_extra_links(pkg, version, suite, arch, status)
         suites_links = gen_suites_links(pkg, suite)
         status, icon = join_status_icon(status, pkg, version)
         status = gen_status_link_icon(status, icon, suite, arch)

@@ -202,11 +202,11 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # remove artifacts older than 3 days
-mkdir -p /var/lib/jenkins/userContent/artifacts
-ARTIFACTS=$(find /var/lib/jenkins/userContent/artifacts -maxdepth 1 -type d -mtime +3 -exec rm -rv {} \;)
+ARTIFACTS=$(find /var/lib/jenkins/userContent/artifacts/* -maxdepth 0 -type d -mtime +3 -exec ls -lad {} \; || true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
-	echo "Removed $ARTIFACTS artifacts."
+	echo "Removed old artifacts:"
+	find /var/lib/jenkins/userContent/artifacts/* -maxdepth 0 -type d -mtime +3 -exec rm -rv {} \;
 	echo
 fi
 

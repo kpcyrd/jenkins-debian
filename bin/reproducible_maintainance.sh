@@ -125,7 +125,8 @@ if [ -s $RESULT ] ; then
 	echo
 	for PROCESS in $(cat $RESULT | cut -d " " -f1 | xargs echo) ; do
 		AGE=$(ps -p $PROCESS -o etimes= || echo 0)
-		if [ $AGE -gt 86400 ] ; then
+		# a single build may only take half a day, so...
+		if [ $AGE -gt 43200 ] ; then
 			sudo kill -9 $PROCESS 2>&1
 			echo "'kill -9 $PROCESS' done."
 		else

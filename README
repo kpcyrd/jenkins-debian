@@ -104,10 +104,15 @@ Installation tests inside chroot environments.
 ** builds one of the six debian-edu packages ('debian-edu', 'debian-edu-config', 'debian-edu-install', 'debian-edu-doc', 'debian-edu-artwork', 'debian-edu-archive-keyring' on every push to it's git master branch
 ** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ get's updated automatically afterwards too.
 
-=== qa.debian.org packages related jobs
+=== qa.debian.org related jobs
 
-* Currently there are two types, one for lintian and one for piuparts.
-* The both simply build the master branch of the lintian GIT repository on every commit against sid. If that succeeds, the same source will be build on jessie and then on wheezy. (piuparts will not be build on wheezy as its current build depends do not exists in wheezy.)
+* There are jobs for lintian and for piuparts:
+** they simply run a build and/or the tests of the master branch of their git repository on every commit against sid. If that succeeds, the same source will be built on jessie and then (only for lintian) on wheezy.
+* There are also jobs related to link:https://udd.debian.org[UDD]:
+** they check for multiarch version screws in various suites or issues with orphaned packages without the correct the relevant bug.
+*** the UDD schema is available at https://udd.debian.org/schema/udd.html
+* Last but not least, dpkg related jobs:
+** they tests for trigger cycles using data from the archive and http://binarycontrol.debian.net
 
 === haskell jobs
 

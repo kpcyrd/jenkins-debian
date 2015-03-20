@@ -118,6 +118,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/userContent/dbd/ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/issues/ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/notes/ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/artifacts/ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/rbuild/
 	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 

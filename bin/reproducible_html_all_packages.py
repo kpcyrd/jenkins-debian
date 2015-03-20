@@ -12,8 +12,9 @@
 
 
 from reproducible_common import *
-from reproducible_html_packages import gen_all_rb_pkg_pages
+from reproducible_html_packages import gen_all_rb_pkg_pages, purge_old_pages
 
 
 for suite in SUITES:
-    gen_all_rb_pkg_pages(suite=suite)
+    gen_all_rb_pkg_pages(suite=suite, no_clean=True)
+purge_old_pages()

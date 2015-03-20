@@ -149,7 +149,7 @@ def gen_extra_links(package, version, suite, arch, status):
                 sizeof_fmt(log_size) + ')</a>\n'
         if not default_view:
             default_view = url
-    elif status != 'untested':
+    elif status not in ('untested', 'not for us', 'blacklisted'):
         log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even if it has been built.')
     default_view = '/untested.html' if not default_view else default_view

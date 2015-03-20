@@ -23,11 +23,11 @@ if [ "$SUITE" = "sid" ] ; then
 fi
 
 ARTIFACTS=0
-if [ $1 = "artifacts" ] ; then
+if [ "$1" = "artifacts" ] ; then
 	ARTIFACTS=1
 	shift
 	echo
-	echo "The artifacts of these builds will be saved. Look at the build log for the link"
+	echo "The artifacts of the build(s) will be saved to the location mentioned at the end of the build log(s)."
 	echo
 fi
 

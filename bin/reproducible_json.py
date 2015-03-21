@@ -21,13 +21,13 @@ output = []
 
 log.info('Creating json dump of current reproducible status')
 
-query = 'SELECT s.name, r.version, s.suite, r.status, r.build_date ' + \
+query = 'SELECT s.name, r.version, s.suite, s.architecture, r.status, r.build_date ' + \
         'FROM results AS r JOIN sources AS s ON r.package_id = s.id '+ \
         'WHERE status != ""'
 result = sorted(query_db(query))
 log.info('\tprocessing ' + str(len(result)))
 
-keys = ['package', 'version', 'suite', 'status', 'build_date']
+keys = ['package', 'version', 'suite', 'architecture', 'status', 'build_date']
 for row in result:
     pkg = dict(zip(keys, row))
     log.debug(pkg)

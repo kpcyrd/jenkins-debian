@@ -24,11 +24,12 @@ create_results_dirs() {
 }
 
 cleanup_all() {
+	set -x
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		local random=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w5 | head -1)
 		local ARTIFACTS="artifacts/r00t-me/tmp-${random}/${SUITE}/${PACKAGE}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
-		cp -r $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
+		cp -rv $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
 		echo "Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them." | tee -a ${RBUILDLOG}
 		echo "WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format." | tee -a ${RBUILDLOG}
@@ -37,6 +38,7 @@ cleanup_all() {
 		echo | tee -a ${RBUILDLOG}
 		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "new artifacts available at https://reproducible.debian.net/$ARTIFACTS" || true # don't fail the whole job
 	fi
+	set +x
 	rm -r $TMPDIR $TMPCFG
 }
 

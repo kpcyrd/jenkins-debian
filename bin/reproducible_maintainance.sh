@@ -70,6 +70,10 @@ if [ ! -z "$OLDSTUFF" ] ; then
 					;;
 			seqan-*.bed)	rm -v $i	# leftovers reported in #766741
 					;;
+			bootlogo)	rm -v $i
+					;;
+			org.daisy.paper.CustomPaperCollection.obj)	rm -v $i
+					;;
 			*)		;;
 		esac
 	done

@@ -25,7 +25,7 @@ create_results_dirs() {
 
 cleanup_all() {
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
-		local random=$(tr -cd '[:alnum:]' < /dev/urandom | head -c5 ; echo)
+		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
 		cp -r $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/

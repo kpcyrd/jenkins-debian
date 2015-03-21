@@ -89,7 +89,7 @@ fi
 # only grep through the last 5h (300 minutes) of builds...
 # (ignore "*None.rbuild.log" because these are build which were just started)
 # this job runs every 4h
-FAILED_BUILDS=$(find /var/lib/jenkins/userContent/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec egrep -l -e "E: Failed to fetch.*Connection failed" -e "E: Failed to fetch.*Size mismatch" {} \; || true)
+FAILED_BUILDS=$(find /var/lib/jenkins/userContent/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec egrep -l -e 'E: Failed to fetch.*(Connection failed|Size mismatch|Cannot initiate the connection to)' {} \; || true)
 if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
 	echo "Warning: the following failed builds have been found"

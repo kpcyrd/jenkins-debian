@@ -27,7 +27,7 @@ cleanup_all() {
 	set -x
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		local random=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w5 | head -1)
-		local ARTIFACTS="artifacts/r00t-me/tmp-${random}/${SUITE}/${PACKAGE}"
+		local ARTIFACTS="artifacts/r00t-me/tmp-${random}/${SUITE}/${SRCPACKAGE}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
 		cp -rv $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
@@ -36,7 +36,7 @@ cleanup_all() {
 		echo "If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location:" | tee -a ${RBUILDLOG}
 		echo "https://reproducible.debian.net/$ARTIFACTS" | tee -a ${RBUILDLOG}
 		echo | tee -a ${RBUILDLOG}
-		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "new artifacts available at https://reproducible.debian.net/$ARTIFACTS" || true # don't fail the whole job
+		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "https://reproducible.debian.net/$ARTIFACTS/ published" || true # don't fail the whole job
 	fi
 	set +x
 	rm -r $TMPDIR $TMPCFG

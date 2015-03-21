@@ -27,7 +27,7 @@ cleanup_all() {
 	set -x
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		local random=$(tr -cd '[:alnum:]' < /dev/urandom | head -c5 ; echo)
-		local ARTIFACTS="artifacts/r00t-me/tmp-${random}/${SUITE}/${SRCPACKAGE}"
+		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
 		cp -rv $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}

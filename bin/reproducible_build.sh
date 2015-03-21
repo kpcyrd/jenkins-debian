@@ -165,9 +165,14 @@ else
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
+	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
+		AANOUNCE=" Artifacts will be preserved."
+	else
+		AANOUNCE=""
+	fi
 	create_results_dirs
 	echo "============================================================================="
-	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now."
+	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now.$AANOUNCE"
 	echo "============================================================================="
 	set -x
 	DATE=$(date +'%Y-%m-%d %H:%M')

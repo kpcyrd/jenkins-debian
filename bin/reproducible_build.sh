@@ -25,8 +25,8 @@ create_results_dirs() {
 
 cleanup_all() {
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
-		local hash=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w5 | head -1)
-		local ARTIFACTS="artifacts/r00t-me/tmp-${hash}/${SUITE}/${PACKAGE}"
+		local random=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w5 | head -1)
+		local ARTIFACTS="artifacts/r00t-me/tmp-${random}/${SUITE}/${PACKAGE}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
 		cp -r $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}

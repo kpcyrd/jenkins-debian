@@ -85,7 +85,7 @@ call_debbindiff() {
 	fi
 	echo | tee -a ${RBUILDLOG}
 	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-	( timeout 15m schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
+	( LC_CTYPE=C.UTF-8 timeout 15m schroot --directory $TMPDIR --preserve-environment -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
 	set -e

@@ -109,7 +109,12 @@ for PKG in $SOURCES ; do
 	#
 	write_page "<tr><td><pre>src:$PKG</pre></td>"
 	write_page " <td>"
-	URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds"
+	case $PKG in
+		strip-nondeterminism)
+			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git" ;;
+		*)
+			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds" ;;
+	esac
 	curl $URL > $TMP2FILE
 	if [ "$(grep "'error'>No repositories found" $TMP2FILE 2>/dev/null)" ] ; then
 		write_page "$URL<br /><span class=\"red\">(no git repository found)</span>"

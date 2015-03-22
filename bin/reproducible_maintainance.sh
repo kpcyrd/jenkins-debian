@@ -61,7 +61,7 @@ fi
 # find and warn about pbuild leftovers
 OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
-	# delete known files
+	# delete known files, see #777537
 	cd /var/cache/pbuilder/result/
 	echo "Attempting file detection..."
 	for i in $(find . -maxdepth 1 -mtime +1 -type f -exec basename {} \;) ; do
@@ -73,6 +73,8 @@ if [ ! -z "$OLDSTUFF" ] ; then
 			bootlogo)	rm -v $i
 					;;
 			org.daisy.paper.CustomPaperCollection.obj)	rm -v $i
+					;;
+			debian-faq.pdf.gz|debian-faq.ps.gz|debian-faq.txt.gz)		rm -v $i
 					;;
 			*)		;;
 		esac

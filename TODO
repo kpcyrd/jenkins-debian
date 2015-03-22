@@ -129,6 +129,7 @@ properties:
 ** include no js header in the css
 ** use one css for all, not two minimally different ones
 ** restore the "find packages which have been removed from sid" part of reproducible_maintainance.sh
+** repo-comparison: check for binaries without source
 
 * notes related
 ** new page with annoted packages without categorized issues

@@ -74,6 +74,8 @@ properties:
 
 * put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
 
+* add another (smaller) test: download+run torbrowser daily
+
 * re-read the docs! 
 ** http://live.debian.net/manual/stable/html/live-manual.en.html#321
 

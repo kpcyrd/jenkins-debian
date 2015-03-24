@@ -122,7 +122,6 @@ properties:
 *** there are still some with this failure (in sid+jessie), appearantly caused by #781076, currently unfixed
 ** find out why fonts-sil-gentium leaves not rbuild.log and no .buildinfo file and whether there are others like this
 *** .buildinfo file and rbuild.log were created and exist on the filesystem
-*** the bug is in strip_epoch() in _common.py which assume epochs are single digit...
 ** find debbindiff problems: rgrep -l "maybe there is still " /var/lib/jenkins/userContent/rbuild/
 ** reproducible: dont delete userContent/$pkg on build begin..
 ** move all content into /var/lib/userContent/reproducible/

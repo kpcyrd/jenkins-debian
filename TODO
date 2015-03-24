@@ -118,8 +118,8 @@ properties:
 === reproducible
 
 * misc
-** once cdbs 0.1.129 (#780592) reaches testing: reschedule these: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
-*** this should be done, confirm
+** once cdbs 0.4.129 (#780592) reaches testing: reschedule these: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
+*** there are still builds with this failure, also in sid... ask ntyni for help
 ** find out why fonts-sil-gentium leaves not rbuild.log and no .buildinfo file and whether there are others like this
 *** .buildinfo file and rbuild.log were created and exist on the filesystem
 *** the bug is in strip_epoch() in _common.py which assume epochs are single digit...

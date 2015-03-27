@@ -24,7 +24,7 @@ create_results_dirs() {
 }
 
 cleanup_all() {
-	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
@@ -36,7 +36,7 @@ cleanup_all() {
 		echo "https://reproducible.debian.net/$ARTIFACTS" | tee -a ${RBUILDLOG}
 		echo | tee -a ${RBUILDLOG}
 		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "https://reproducible.debian.net/$ARTIFACTS/ published" || true # don't fail the whole job
-	elif [ "$SAVE_ARTIFACTS" = "2" ] ; then
+	elif [ $SAVE_ARTIFACTS -eq 2 ] ; then
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved." || true # don't fail the whole job
 	fi
@@ -168,7 +168,7 @@ else
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
-	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		AANOUNCE=" Artifacts will be preserved."
 	else
 		AANOUNCE=""

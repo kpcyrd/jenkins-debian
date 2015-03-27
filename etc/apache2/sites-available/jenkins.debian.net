@@ -98,7 +98,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/reproducible.json$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/index_issues.html$ [or]
-	RewriteCond %{REQUEST_URI} ^/userContent/index_notess.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/userContent/index_notes.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/index_schedule.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/index_last_24h.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/index_last_48h.html$ [or]

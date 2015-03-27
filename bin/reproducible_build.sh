@@ -182,8 +182,12 @@ else
 	START=$(date +'%s')
 	DURATION=0
 	# mark build attempt
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
-
+	RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "BEGIN IMMEDIATE TRANSACTION; SELECT package_id, date_build_started FROM schedule WHERE package_id = '$SRCPKGID' AND date_build_started = ''; REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE'); ROLLBACK TRANSACTION;")
+	if [ -z "$RESULT" ] ; then
+		echo "Package build has just been started by another job, aborting."
+		echo "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting. Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different BUILD_URL..." | mail -s "race condition prevented" qa-jenkins-scm@lists.alioth.debian.org
+		exit 0
+	fi
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}

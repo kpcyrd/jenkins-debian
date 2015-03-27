@@ -30,19 +30,10 @@
 
 - job-template:
     defaults: debsums-tests
-    name: '{name}_wheezy'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org pkg-perl-maintainers@lists.alioth.debian.org'
-
-- job-template:
-    defaults: debsums-tests
     name: '{name}_jessie'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org pkg-perl-maintainers@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
 
 - job-template:
     defaults: debsums-tests
@@ -67,8 +58,3 @@
             my_distro: 'jessie'
             my_shell: 'timeout 5m prove -v'
             my_description: 'Debian/Debsums testsuite running on jessie.'
-            my_trigger: 'debsums-tests_wheezy'
-        - '{name}_wheezy':
-            my_distro: 'wheezy'
-            my_shell: 'timeout 5m prove -v'
-            my_description: 'Debian/Debsums testsuite running on wheezy.'

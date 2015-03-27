@@ -69,6 +69,6 @@
             my_description: 'Debian/Debsums testsuite running on jessie.'
             my_trigger: 'debsums-tests_wheezy'
         - '{name}_wheezy':
-            my_distro: 'wheezy backports'
+            my_distro: 'wheezy'
             my_shell: 'timeout 5m prove -v'
-            my_description: 'Debian/Debsums testsuite running on wheezy (backports).'
+            my_description: 'Debian/Debsums testsuite running on wheezy.'

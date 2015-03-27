@@ -164,7 +164,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond /var/lib/jenkins/userContent/issues/unstable/$1 -f
-	RewriteRule ^/([a-z0-9.+-_]+) /issues/unstable/$1 [R=302,L]
+	RewriteRule ^/issues/([a-z0-9.+-_]+) /issues/unstable/$1 [R=302,L]
 
 	# redirect rb.d.n/$PKG → rb.d.n/rb-pkg/unstable/amd64/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net

@@ -54,11 +54,12 @@ declare -A LINKTARGET
 NOTES_PATH=/var/lib/jenkins/userContent/notes
 ISSUES_PATH=/var/lib/jenkins/userContent/issues
 RB_PATH=/var/lib/jenkins/userContent/rb-pkg/
-mkdir -p $NOTES_PATH $ISSUES_PATH $RB_PATH
+mkdir -p $NOTES_PATH $RB_PATH
 
 # create subdirs for suites
 for i in $SUITES ; do
 	mkdir -p /var/lib/jenkins/userContent/$i
+	mkdir -p $ISSUES_PATH/$i
 done
 
 # known package sets

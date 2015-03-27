@@ -121,6 +121,14 @@ issue_html = Template((tab*3).join("""
       $issue
     </th>
   </tr>
+  <tr>
+    <td>
+      Suites:
+    </td>
+    <td>
+      $suite_links
+    </td>
+  </tr>
     $urls
   <tr>
     <td>
@@ -132,7 +140,7 @@ issue_html = Template((tab*3).join("""
   </tr>
   <tr>
     <td>
-      Packages known to be affected by this issue:
+      Packages in '$suite' known to be affected by this issue:
     </td>
     <td>
 $affected_pkgs
@@ -238,12 +246,21 @@ def gen_html_note(package, note):
         return note_html.substitute(version='N/A', infos=infos)
 
 
-def gen_html_issue(issue):
+def gen_html_issue(issue, suite):
     """
     Given a issue as input (as a dict:
     {"issue_identifier": {"description": "blablabla", "url": "blabla"}}
     ) it returns the html body
     """
+    # links to the issue in other suites
+    suite_links = ''
+    for i in SUITES:
+         if suite_links != '':
+             suite_links += ' / '
+         if i != suite:
+             suite_links += '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/' + i + '/' + issue + '_issue.html">' + i + '</a>'
+         else:
+             suite_links += '<em>' + i + '</em>'
     # check for url:
     if 'url' in issues[issue]:
         url = issue_html_url.substitute(url=issues[issue]['url'])
@@ -252,7 +269,6 @@ def gen_html_issue(issue):
     # add affected packages:
     affected = ''
     try:
-        suite = 'unstable'
         arch = 'amd64'
         for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
             pkgs = [x[0] for x in all_pkgs if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
@@ -280,7 +296,8 @@ def gen_html_issue(issue):
     desc = url2html.sub(r'<a href="\1">\1</a>', desc)
     desc = desc.replace('\n', '<br />')
     return issue_html.substitute(issue=issue, urls=url, description=desc,
-                                   affected_pkgs=affected)
+                                   affected_pkgs=affected,
+                                   suite=suite, suite_links=suite_links)
 
 def purge_old_notes(notes):
     removed_pages = []
@@ -330,19 +347,20 @@ def iterate_over_notes(notes):
 def iterate_over_issues(issues):
     num_issues = str(len(issues))
     i = 0
-    for issue in sorted(issues):
-        log.debug('iterating over issues... ' + str(i) + '/' + num_issues)
-        log.debug('\t' + str(issue))
-        html = gen_html_issue(issue)
+    for suite in SUITES:
+        for issue in sorted(issues):
+            log.debug('iterating over issues in ' + suite +'... ' + str(i) + '/' + num_issues)
+            log.debug('\t' + str(issue))
+            html = gen_html_issue(issue, suite)
 
-        title = 'Notes about issue ' + issue
-        destfile = ISSUES_PATH + '/' + issue + '_issue.html'
-        write_html_page(title=title, body=html, destfile=destfile,
-                        style_note=True)
+            title = 'Notes about issue ' + issue + ' in ' + suite
+            destfile = ISSUES_PATH + '/' + suite + '/' + issue + '_issue.html'
+            write_html_page(title=title, body=html, destfile=destfile,
+                            style_note=True)
 
-        desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + issue + '_issue.html'
-        log.info("Issue created: " + desturl)
-        i = i + 1
+            desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + suite + '/' + issue + '_issue.html'
+            log.info("Issue created: " + desturl)
+            i = i + 1
 
 
 def sort_issues(issue):

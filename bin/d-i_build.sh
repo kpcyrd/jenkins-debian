@@ -71,7 +71,7 @@ pdebuild_package() {
 	else
 		NUM_CPU=1
 	fi
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" --http-proxy $http_proxy
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" -- --http-proxy $http_proxy
 	# cleanup
 	echo
 	cat /var/cache/pbuilder/result/${SOURCE}_*changes

@@ -7,8 +7,10 @@
 MIRRORSITE=http://ftp.de.debian.org/debian/
 EXTRAPACKAGES="fakeroot"
 APTCACHE=""
-export http_proxy="http://localhost:3128"
 COMPRESSPROG="pigz"
+# unset proxy, see #780587
+unset http_proxy
+export -n http_proxy
 # remove /run/shm bindmount once we are running jessie - this is a workaround for #700591
 # /sys and /proc were added as workarounds for #773767
 BINDMOUNTS="$BINDMOUNTS /run/shm /dev/shm /sys"

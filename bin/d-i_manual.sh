@@ -37,9 +37,9 @@ pdebuild_package() {
 	# prepare build
 	#
 	if [ -f /var/cache/pbuilder/base.tgz ] ; then
-		sudo pbuilder --create
+		sudo pbuilder --create --http-proxy $http_proxy
 	else
-		sudo pbuilder --update
+		sudo pbuilder --update --http-proxy $http_proxy
 	fi
 
 	#
@@ -47,7 +47,7 @@ pdebuild_package() {
 	#
 	cd manual
 	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU"
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU" --http-proxy $http_proxy
 	#
 	# publish and cleanup
 	#

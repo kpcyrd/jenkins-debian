@@ -88,9 +88,11 @@ setup_pbuilder() {
 		echo "echo 'deb $MIRROR experimental main' > /etc/apt/sources.list.d/experimental.list" > ${TMPFILE}
 		echo "echo 'deb-src $MIRROR experimental main' >> /etc/apt/sources.list.d/experimental.list" >> ${TMPFILE}
 	fi
+	# use host apt proxy configuration for pbuilder too
+	echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
-	sudo pbuilder --create --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
-	sudo pbuilder --execute --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	sudo pbuilder --create --http-proxy $http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
+	sudo pbuilder --execute --http-proxy $http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
 	echo
 	echo "Now let's see whether the correct packages where installed..."
 	for PKG in ${PACKAGES} ; do
@@ -109,7 +111,7 @@ setup_pbuilder() {
 #
 update_pbuilder() {
 	NAME=$1
-	sudo pbuilder --update --basetgz /var/cache/pbuilder/${NAME}.tgz
+	sudo pbuilder --update --http-proxy $http_proxy --basetgz /var/cache/pbuilder/${NAME}.tgz
 }
 
 #

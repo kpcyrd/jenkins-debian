@@ -48,11 +48,11 @@ pdebuild_package() {
 	# prepare build
 	#
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
-		sudo pbuilder --create
+		sudo pbuilder --create --http-proxy $http_proxy
 	else
 		ls -la /var/cache/pbuilder/base.tgz
 		file /var/cache/pbuilder/base.tgz
-		sudo pbuilder --update || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create )
+		sudo pbuilder --update --http-proxy $http_proxy || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create )
 	fi
 	#
 	# 3.0 quilt is not happy without an upstream tarball
@@ -71,7 +71,7 @@ pdebuild_package() {
 	else
 		NUM_CPU=1
 	fi
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b"
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" --http-proxy $http_proxy
 	# cleanup
 	echo
 	cat /var/cache/pbuilder/result/${SOURCE}_*changes

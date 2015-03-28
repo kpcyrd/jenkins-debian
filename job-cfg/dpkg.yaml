@@ -57,6 +57,6 @@
            my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh unstable'
        - '{name}_setup_schroot':
            my_description: 'Setup schroot for running the dpkg_sid_find_trigger_cycles and reproducible_create_meta_pkg_sets jobs in a jessie environment.'
-           my_time: '23 8 1 * *'
+           my_time: '23 8 * * 1'
            my_shell: '/srv/jenkins/bin/schroot-create.sh dpkg-jessie jessie python apt-file dose-extra'
 

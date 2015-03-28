@@ -70,7 +70,7 @@ call_debbindiff() {
 	BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
-		for i in $(seq 0 100) ; do
+		for i in $(seq 0 200) ; do
 			sleep 15
 			echo "sleeping 15s, debbindiff schroot is locked."
 			if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then
@@ -87,7 +87,7 @@ call_debbindiff() {
 		touch $DBDCHROOT_READLOCK
 	fi
 	echo | tee -a ${RBUILDLOG}
-	TIMEOUT="30m"
+	TIMEOUT="30m"	# don't forget to also change the "seq 0 200" loop 17 lines above
 	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
 	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?

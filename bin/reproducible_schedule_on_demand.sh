@@ -34,7 +34,7 @@ fi
 CANDIDATES="$@"
 check_candidates
 if [ ${#PACKAGE_IDS} -gt 256 ] ; then
-	BLABLABLA="..."
+	BLABLABLA="…✂"
 fi
 ACTION="manually rescheduled"
 if [ -n "${BUILD_URL:-}" ] ; then

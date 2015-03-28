@@ -70,7 +70,7 @@ call_debbindiff() {
 	BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
-		for i in $(seq 0 200) ; do
+		for i in $(seq 0 200) ; do	# this loop also exists in _common.sh and _setup_pbuilder.sh
 			sleep 15
 			echo "sleeping 15s, debbindiff schroot is locked."
 			if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then

@@ -117,7 +117,7 @@ trap remove_writelock INT TERM EXIT
 touch $DBDCHROOT_WRITELOCK
 if [ -f $DBDCHROOT_READLOCK ] ; then
 	# patiently wait for our users to using the schroot
-	for i in $(seq 0 100) ; do
+	for i in $(seq 0 200) ; do
 		sleep 15
 		echo "sleeping 15s, debbindiff schroot is locked and used."
 		if [ ! -f $DBDCHROOT_READLOCK ] ; then

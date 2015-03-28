@@ -11,7 +11,7 @@ PACKAGES_DB=/var/lib/jenkins/reproducible.db
 INIT=/var/lib/jenkins/reproducible.init
 if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
 	if [ -f ${PACKAGES_DB}.lock ] ; then
-		for i in $(seq 0 100) ; do
+		for i in $(seq 0 200) ; do
 			sleep 15
 			echo "sleeping 15s, $PACKAGES_DB is locked."
 			if [ ! -f ${PACKAGES_DB}.lock ] ; then

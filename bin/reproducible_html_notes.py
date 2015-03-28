@@ -114,7 +114,7 @@ issue_html_url = Template((tab*4).join("""
 issue_html = Template((tab*3).join("""
 <table class="body">
   <tr>
-    <td>
+    <td style="min-width: 15%">
       Identifier:
     </td>
     <th>

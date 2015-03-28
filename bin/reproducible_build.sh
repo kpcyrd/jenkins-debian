@@ -24,7 +24,7 @@ create_results_dirs() {
 }
 
 cleanup_all() {
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
+	if [ $SAVE_ARTIFACTS -eq 1 ] || [ $SAVE_ARTIFACTS -eq 3 ] ; then
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
@@ -35,7 +35,11 @@ cleanup_all() {
 		echo "If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location:" | tee -a ${RBUILDLOG}
 		echo "https://reproducible.debian.net/$ARTIFACTS" | tee -a ${RBUILDLOG}
 		echo | tee -a ${RBUILDLOG}
-		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "https://reproducible.debian.net/$ARTIFACTS/ published" || true # don't fail the whole job
+		MESSAGE="https://reproducible.debian.net/$ARTIFACTS/ published"
+		if [ $SAVE_ARTIFACTS -eq 3 ] ; then
+			MESSAGE="$MESSAGE, debbindiff had troubles with these..."
+		fi
+		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 	elif [ $SAVE_ARTIFACTS -eq 2 ] ; then
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved." || true # don't fail the whole job
@@ -100,12 +104,12 @@ call_debbindiff() {
 		if [ ! -s ./${LOGFILE} ] ; then
 			echo "$(date) - debbindiff produced no output and was killed after running into timeout after $TIMEOUT..." >> ${LOGFILE}
 		fi
-		SAVE_ARTIFACTS=1
+		SAVE_ARTIFACTS=3
 	elif [ $RESULT -eq 1 ] ; then
 		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}"
 	elif [ $RESULT -eq 2 ] ; then
 		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
-		SAVE_ARTIFACTS=1
+		SAVE_ARTIFACTS=3
 	fi
 	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1

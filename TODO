@@ -120,25 +120,22 @@ properties:
 === reproducible
 
 * misc
-** cdbs 0.4.129 (#780592) reached testing: rescheduled those: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
-*** there are still some with this failure (in sid+jessie), appearantly caused by #781076, currently unfixed
-** find out why fonts-sil-gentium leaves not rbuild.log and no .buildinfo file and whether there are others like this
-*** .buildinfo file and rbuild.log were created and exist on the filesystem
+** #781076 causes some ftbfs errors in sid + testing, see: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
 ** find debbindiff problems: rgrep -l "maybe there is still " /var/lib/jenkins/userContent/rbuild/
 ** reproducible: dont delete userContent/$pkg on build begin..
 ** move all content into /var/lib/userContent/reproducible/
 ** more graphs: graph average build duration by day
-** turn job-cfg/g-i.yaml into .yaml.py
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible
-** include no js header in the css
 ** use one css for all, not two minimally different ones
 ** restore the "find packages which have been removed from sid" part of reproducible_maintainance.sh
 ** repo-comparison: check for binaries without source
+** turn job-cfg/g-i.yaml into .yaml.py
 
 * notes related
+** put notes-packages relation in db and hint the issues a package while hovering over it
 ** new page with annoted packages without categorized issues
-** issues pages for testing and experimental
+** warn about reproducible packages in all suites which still have notes...
 
 * pkg sets related:
 ** new package set: kde/plasma
@@ -152,17 +149,8 @@ properties:
 ** move "untested" field in stats table too? (as in csv output...)
 
 * missing tests: variation in kernel and date
-** http://www.bstern.org/libuname/ - add "-ldl" to the linker flags...
-** lunar suggests to use qemu with -r and -cpu and -rtc flags
-** https://wiki.debian.org/qemubuilder - part of cowdancer
-	< Lunar^> I would rather say we do not do full uname and CPU variation that use an unreliable LD_PRELOAD
-	< Lunar^> because as soon as the package unset or reset the variable it won't be there anymore
-	       * | h01ger nods. its also ok to leave some variations for when we go "for real" (aka rebuilds in the field)
-	<h01ger> | Lunar^: if that happens. if that doesnt we still get some more variations
-	<h01ger> | so i'd say such an LD_PRELOAD would be useful, even though it wouldnt be complete
-	<h01ger> | but we will find more problems "before going into the fields"
-	       * | h01ger guesstimates that we would go from 300-600 builds per day to 100-200 with qemubuilder
-	<h01ger> | but those qemubuilders would only get 4 or 8gb ram... maybe 6. and that will have a huge impact
+** variations in date are only practical to do in c-i fashion using faketime, thus I suggest to wait for those until we test in the wild...
+** kernel / uname output is changed (using linux64) and shall be changed more in future by doing the 2nd build on a different build host running a different kernel..., no need to do fancy stuff with building in qemu or such...
 
 * enable people to upload test packages, to be built in jenkins:
 	<mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything 

@@ -338,6 +338,8 @@ def join_status_icon(status, package=None, version=None):
              'blacklisted': 'error.png'}
     if status == 'unreproducible':
             status = 'FTBR'
+    elif status == 'not for us':
+            status = 'not_for_us'
     log.debug('Linking status ⇔ icon. package: ' + str(package) + ' @ ' +
               str(version) + ' status: ' + status)
     try:

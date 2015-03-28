@@ -119,9 +119,11 @@ properties:
 
 === reproducible
 
-* misc
+* issues in packages or debbindiff:
 ** #781076 causes some ftbfs errors in sid + testing, see: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
-** find debbindiff problems: rgrep -l "maybe there is still " /var/lib/jenkins/userContent/rbuild/
+** find debbindiff problems: egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
+
+* misc
 ** reproducible: dont delete userContent/$pkg on build begin..
 ** move all content into /var/lib/userContent/reproducible/
 ** more graphs: graph average build duration by day

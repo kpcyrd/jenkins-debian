@@ -519,7 +519,7 @@ create_main_stats_page() {
 	write_page "</table>"
 	# other graphs
 	write_page "<p>"
-	# FIXME: we don't do 2 / stats_builds_age.png yet :/ (and 6 and 0 are done already)
+	# do the global stats
 	for i in 3 7 4 5 1 ; do
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day

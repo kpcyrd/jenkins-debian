@@ -138,10 +138,7 @@ properties:
 ** warn about reproducible packages in all suites which still have notes...
 
 * pkg sets related:
-** here is a weekly updated list of the transitively build-essential source packages in Sid: http://bootstrap.debian.net/source/stats_min.json
-*** curl http://bootstrap.debian.net/source/stats_min.json | sed -s "s#,#\n#g" |grep src:|cut -d ":" -f2|tr -d \" | sort -u
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
-*** actually those links to packages are broken atm...
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA
 
 * db schema 2.0

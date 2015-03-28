@@ -87,22 +87,25 @@ call_debbindiff() {
 		touch $DBDCHROOT_READLOCK
 	fi
 	echo | tee -a ${RBUILDLOG}
+	TIMEOUT="30m"
 	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-	( timeout 30m schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
+	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
 	set -e
 	rm -f $DBDCHROOT_READLOCK
 	echo | tee -a ${RBUILDLOG}
 	if [ $RESULT -eq 124 ] ; then
-		echo "$(date) - debbindiff was killed after running into timeout... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}" | tee -a ${RBUILDLOG}
+		echo "$(date) - debbindiff was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}" | tee -a ${RBUILDLOG}
 		if [ ! -s ./${LOGFILE} ] ; then
-			echo "$(date) - debbindiff produced no output and was killed after running into timeout..." >> ${LOGFILE}
+			echo "$(date) - debbindiff produced no output and was killed after running into timeout after $TIMEOUT..." >> ${LOGFILE}
 		fi
+		SAVE_ARTIFACTS=1
 	elif [ $RESULT -eq 1 ] ; then
 		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}"
 	elif [ $RESULT -eq 2 ] ; then
 		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
+		SAVE_ARTIFACTS=1
 	fi
 	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1

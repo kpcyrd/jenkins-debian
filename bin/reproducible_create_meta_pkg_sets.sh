@@ -174,17 +174,16 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[9]}.pkgset
 	fi
 
-	# tails
+	# kde and everything it depends on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[10]}.pkgset ] ; then
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
-		convert_into_source_packages_only
+		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full \) > ${TMPFILE2}
+		schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[10]}.pkgset
 	fi
-
-	# all build depends of tails
+	# all build depends of kde
 	rm -f $TMPFILE
-	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[10]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
@@ -192,20 +191,17 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[11]}.pkgset
 	fi
 
-	# grml
+	# tails
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[12]}.pkgset ] ; then
-		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
-		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
-			convert_into_source_packages_only
-			update_if_similar ${META_PKGSET[12]}.pkgset
-		else
-			echo "Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
-		fi
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
+		convert_into_source_packages_only
+		update_if_similar ${META_PKGSET[12]}.pkgset
 	fi
 
-	# all build depends of grml
+	# all build depends of tails
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
+	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[12]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
@@ -213,10 +209,31 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[13]}.pkgset
 	fi
 
-	# pkg-perl-maintainers
+	# grml
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[14]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[14]}.pkgset ] ; then
+		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
+		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+			convert_into_source_packages_only
+			update_if_similar ${META_PKGSET[14]}.pkgset
+		else
+			echo "Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
+		fi
+	fi
+
+	# all build depends of grml
+	rm -f $TMPFILE
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[15]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[15]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[14]}.pkgset) ; do
+			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
+		done
+		convert_into_source_packages_only
+		update_if_similar ${META_PKGSET[15]}.pkgset
+	fi
+
+	# pkg-perl-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-		update_if_similar ${META_PKGSET[14]}.pkgset
+		update_if_similar ${META_PKGSET[16]}.pkgset
 	fi
 
 }

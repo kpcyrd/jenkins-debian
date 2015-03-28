@@ -72,11 +72,13 @@ META_PKGSET[6]="installed_on_debian.org"
 META_PKGSET[7]="had_a_DSA"
 META_PKGSET[8]="gnome"
 META_PKGSET[9]="gnome_build-depends"
-META_PKGSET[10]="tails"
-META_PKGSET[11]="tails_build-depends"
-META_PKGSET[12]="grml"
-META_PKGSET[13]="grml_build-depends"
-META_PKGSET[14]="maint_pkg-perl-maintainers"
+META_PKGSET[10]="kde"
+META_PKGSET[11]="kde_build-depends"
+META_PKGSET[12]="tails"
+META_PKGSET[13]="tails_build-depends"
+META_PKGSET[14]="grml"
+META_PKGSET[15]="grml_build-depends"
+META_PKGSET[16]="maint_pkg-perl-maintainers"
 
 schedule_packages() {
 	# these packages are manually scheduled, so should have high priority,

@@ -146,6 +146,12 @@ printf "" > $DIRECTORY/interested-explicit
 printf "" > $DIRECTORY/activated-file
 printf "" > $DIRECTORY/activated-explicit
 
+scratch=$(mktemp -d -t tmp.dpkg_trigger_cycles.XXXXXXXXXX)
+function finish {
+	rm -rf "$scratch"
+}
+trap finish EXIT
+
 # find all binary packages with /triggers$
 curl --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
 	| xargs apt-get $APT_OPTS --print-uris download \
@@ -153,7 +159,7 @@ curl --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ft
 	| sort \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
-	tmpdir=`mktemp -d`
+	tmpdir=`mktemp -d --tmpdir="$scratch"`
 	( curl --retry 2 --retry-delay 10 --location --silent "$url" || ( echo "curl failed with exit $?">&2; exit 1 ) ) \
 		| dpkg-deb --ctrl-tarfile /dev/stdin \
 		| tar -C "$tmpdir" --exclude=./md5sums -x

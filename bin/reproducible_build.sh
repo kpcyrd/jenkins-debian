@@ -235,11 +235,14 @@ else
 		ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 		set +x
 		for arch in ${ARCHITECTURES} ; do
-			if [ "$arch" = "any" ] || [ "$arch" = "all" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
+			if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
 				SUITABLE=true
 				break
 			fi
 		done
+		if [ "${ARCHITECTURES}" = "all" ] ; then
+			SUITABLE=true
+		fi
 		if ! $SUITABLE ; then
 			set -x
 			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"

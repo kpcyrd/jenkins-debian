@@ -72,9 +72,11 @@ if [ ! -z "$OLDSTUFF" ] ; then
 					;;
 			bootlogo)	rm -v $i
 					;;
-			org.daisy.paper.CustomPaperCollection.obj)	rm -v $i
+			org.daisy.paper.CustomPaperCollection.obj)		rm -v $i
 					;;
-			debian-faq.pdf.gz|debian-faq.ps.gz|debian-faq.txt.gz)		rm -v $i
+			debian-faq.pdf.gz|debian-faq.ps.gz|debian-faq.txt.gz)	rm -v $i
+					;;
+			sumo_doxygen_lastrun.log)				rm -v $i
 					;;
 			*)		;;
 		esac

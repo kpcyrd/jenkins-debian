@@ -130,9 +130,30 @@ def store_notes():
     log.info('Saved ' + str(len(to_add)) + ' notes in the database')
 
 
+def really_ftbfs_packages():
+    query = 'SELECT s.id, s.name, s.suite, s.architecture ' + \
+            'FROM notes AS n JOIN sources AS s ON n.package_id=s.id ' + \
+            'JOIN results AS r ON r.package_id=s.id ' + \
+            'WHERE n.issues NOT LIKE "%timestamps_from_cpp_macros%" ' + \
+            'AND r.status="FTBFS"'
+    result = sorted(query_db(query), key=lambda x: x[1])
+    log.info('')
+    log.info('')
+    log.info('Following there are a list of package which FTBFS in our ' +
+             'current setup, but does not have the tag ' +
+             'timestamps_from cpp_macros, i.e. they are real FTBFS.')
+    log.info('')
+    for pkg in result:
+        log.info(pkg[1] + '\t' + REPRODUCIBLE_URL + '/' + pkg[2] + '/' +
+                 pkg[3] + '/' + pkg[1])
+    log.info('')
+    log.info('For a total of ' + str(len(result)) + ' packages')
+
+
 if __name__ == '__main__':
     notes = load_notes()
     issues = load_issues()
     store_issues()
     drop_old_issues()
     store_notes()
+    really_ftbfs_packages()

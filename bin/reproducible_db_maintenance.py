@@ -339,6 +339,21 @@ schema_updates = {
         'UPDATE stats_builds_age SET suite = "unstable" WHERE suite = "sid"',
         'UPDATE stats_meta_pkg_state SET suite = "unstable" WHERE suite = "sid"',
         'INSERT INTO rb_schema VALUES ("9", "' + now + '")'],
+    10: [ # add the notes and issues tables
+        '''CREATE TABLE notes (
+            package_id INTEGER,
+            version TEXT NOT NULL,
+            issues TEXT,
+            bugs TEXT,
+            comments TEXT,
+            PRIMARY KEY (package_id),
+            FOREIGN KEY(package_id) REFERENCES sources(id))''',
+        '''CREATE TABLE issues (
+            name TEXT NOT NULL,
+            description TEXT NOT NULL,
+            url TEXT,
+            PRIMARY KEY (name))''',
+        'INSERT INTO rb_schema VALUES ("10", "' + now + '")'],
 }
 
 

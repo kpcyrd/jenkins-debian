@@ -59,6 +59,7 @@
       artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
+      - shell: '/srv/jenkins/bin/reproducible_notes.py'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'

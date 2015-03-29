@@ -340,8 +340,9 @@ def iterate_over_notes(notes):
                         noheader=True)
 
         desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
-        log.info("Note created: " + desturl)
+        log.debug("Note created: " + desturl)
         i = i + 1
+    log.info('Created ' + str(i) + ' note pages.')
 
 
 def iterate_over_issues(issues):
@@ -359,8 +360,9 @@ def iterate_over_issues(issues):
                             style_note=True)
 
             desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + suite + '/' + issue + '_issue.html'
-            log.info("Issue created: " + desturl)
+            log.debug("Issue created: " + desturl)
             i = i + 1
+        log.info('Created ' + str(i) + ' issue pages for ' + suite)
 
 
 def sort_issues(issue):

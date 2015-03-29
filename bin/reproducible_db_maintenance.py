@@ -360,10 +360,9 @@ def db_create_tables():
 def db_update():
     """
     Update the database schema.
-    Get a list of queries to perform from schema_updates, and (if needed)
-    some python code from the above run_update_code().
+    Get a list of queries to perform from schema_updates.
     The need for an update is detected by checking the biggest value in the
-    rb_schema table against the biggest value in the schema_updates dictionary
+    rb_schema table against the biggest value in the schema_updates dictionary.
     """
     current = query_db('SELECT MAX(version) FROM rb_schema')[0][0]
     if not current:

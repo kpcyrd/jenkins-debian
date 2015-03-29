@@ -15,6 +15,7 @@ from reproducible_common import *
 
 now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
+
 # the original schema is here
 db_schema = [
     {
@@ -347,6 +348,7 @@ def db_create_tables():
     The check is done against sqlite_master, a reserved sqlite table
     containing all database metadata.
     """
+    changed = False
     for table in db_schema:
         query = 'SELECT name FROM sqlite_master WHERE name="{}"'
         query = query.format(table['name'])
@@ -355,6 +357,8 @@ def db_create_tables():
             for query in table['query']:
                 log.info('\t' + re.sub(' +', ' ', query.replace('\n', ' ')))
                 query_db(query)
+                changed = True
+    return changed
 
 
 def db_update():
@@ -371,7 +375,7 @@ def db_update():
         current = 0
     last = max(schema_updates.keys())
     if current == last:
-        return
+        return False
     if current > last:
         print_critiacal_message('The active database schema is higher than' +
                                 '  the last update available.\nPlease check!')
@@ -379,17 +383,27 @@ def db_update():
     log.info('Found schema updates.')
     for update in range(current+1, last+1):
         log.info('Applying database update #' + str(update) + '. Queries:')
+        startTime = datetime.datetime.now()
         for query in schema_updates[update]:
             log.info('\t' + query)
             query_db(query)
+        log.info(str(len(schema_updates[update])) + ' queries executed in ' +
+                 str(datetime.datetime.now() - startTime))
+    return True
 
 
 if __name__ == '__main__':
+    changed_created = False
     try:
         if not query_db('SELECT * FROM rb_schema'):
-            db_create_tables()
+            changed_create = db_create_tables()
     except:
         log.error('There is no rb_schema table in the database.')
         log.error('Will run a full db_create_tables().')
-        db_create_tables()
-    db_update()
+        changed_created = db_create_tables()
+    changed = db_update()
+    if changed or changed_created:
+        log.info('Total execution time: ' + str(datetime.datetime.now() -
+                 datetime.datetime.strptime(now, "%Y-%m-%d-%H-%M-%S")))
+    else:
+        log.info('No pending updates.')

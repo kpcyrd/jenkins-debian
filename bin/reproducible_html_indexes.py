@@ -56,8 +56,8 @@ queries = {
     'FTBFS_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY build_date DESC',
     'FTBFS_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
     'FTBFS_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBFS_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id COALESCE JOIN notes as n ON n.package_id=r.package_id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND NOT (n.issues LIKE "%timestamps_from_cpp_macros%" OR n.issues LIKE "%ftbfs_werror_equals%" OR n.issues LIKE "%ocaml_configure_not_as_root%") ORDER BY s.name',
-    'FTBFS_caused_by_us': 'SELECT s.name FROM notes AS n JOIN sources AS s ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE r.status="FTBFS" and s.suite="{suite}" and s.architecture="{arch}" AND (n.issues NOT LIKE "%timestamps_from_cpp_macros%" OR n.issues NOT LIKE "%ftbfs_werror_equals%" OR n.issues NOT LIKE "%ocaml_configure_not_as_root%")',
+    'FTBFS_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY name',
+    'FTBFS_not_by_us': 'SELECT s.name FROM notes AS n JOIN sources AS s ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE r.status="FTBFS" and s.suite="{suite}" and s.architecture="{arch}" AND (n.issues NOT LIKE "%timestamps_from_cpp_macros%" OR n.issues NOT LIKE "%ftbfs_werror_equals%" OR n.issues NOT LIKE "%ocaml_configure_not_as_root%")',
     '404_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY build_date DESC',
     '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
     'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY build_date DESC',
@@ -97,8 +97,8 @@ pages = {
             },
             {
                 'icon_status': 'FTBFS',
-                'query': 'FTBFS_caused_by_us',
-                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch due to our changes in the toolchain or due to our setup.\n This list includes packages tagged <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/timestamps_from_cpp_macros_issue.html">timestamps_from_cpp_macros</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ftbfs_werror_equals_issue.html">ftbfs_werror_equals</a> and <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ocaml_configure_not_as_root_issue.html">ocaml_configure_not_as_root</a>.'),
+                'query': 'FTBFS_not_by_us',
+                'text': Template('$tot ($percent%) packages which really (i.e. the failure is not caused by changes we made to the toolchain) failed to build from source in $suite/$arch.\n This list exclude packages tagged <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/timestamps_from_cpp_macros_issue.html">timestamps_from_cpp_macros</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ftbfs_werror_equals_issue.html">ftbfs_werror_equals</a>, or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ocaml_configure_not_as_root_issue.html">ocaml_configure_not_as_root</a>.'),
             }
         ]
     },

@@ -122,7 +122,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_maintainance'
+    name: '{name}_maintenance'
 
 - job-template:
     defaults: reproducible
@@ -224,10 +224,10 @@
 - project:
     name: reproducible
     jobs:
-        - '{name}_maintainance':
-            my_description: 'Do some maintainance: check for old directories laying around, do backups, etc.'
+        - '{name}_maintenance':
+            my_description: 'Do some maintenance: check for old directories laying around, do backups, etc.'
             my_timed: '5 0,4,8,12,16,20 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_maintainance.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_pbuilder_testing':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'

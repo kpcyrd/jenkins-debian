@@ -18,7 +18,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == General ToDo
 
-* rename maintainance jobs into maintenance jobs
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
 * move this setup to jenkins.d.o
@@ -130,7 +129,7 @@ properties:
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** use one css for all, not two minimally different ones
-** restore the "find packages which have been removed from sid" part of reproducible_maintainance.sh
+** restore the "find packages which have been removed from sid" part of reproducible_maintenance.sh
 ** repo-comparison: check for binaries without source
 ** turn job-cfg/g-i.yaml into .yaml.py
 

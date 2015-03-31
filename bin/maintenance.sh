@@ -136,7 +136,7 @@ wait4idle() {
 	echo "Done waiting: $(date)"
 }
 
-general_maintainance() {
+general_maintenance() {
 	uptime
 
 	echo
@@ -159,10 +159,10 @@ general_maintainance() {
 }
 
 #
-# if $1 is empty, we do general maintainance, else for some subgroup of all jobs
+# if $1 is empty, we do general maintenance, else for some subgroup of all jobs
 #
 if [ -z $1 ] ; then
-	general_maintainance
+	general_maintenance
 	compress_old_jenkins_logs
 	report_squid_usage brief
 else

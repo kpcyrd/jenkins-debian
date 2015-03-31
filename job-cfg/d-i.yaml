@@ -323,7 +323,7 @@
 
 - job-template:
     defaults: d-i
-    name: '{name}_maintainance'
+    name: '{name}_maintenance'
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     properties:
       - sidebar:
@@ -343,7 +343,7 @@
     triggers:
       - timed: '30 5 * * *'
     builders:
-      - shell: '/srv/jenkins/bin/maintainance.sh {name}'
+      - shell: '/srv/jenkins/bin/maintenance.sh {name}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
@@ -804,7 +804,7 @@
     name: d-i
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml">d-i.yaml</a>.'
     jobs:
-      - '{name}_maintainance'
+      - '{name}_maintenance'
       - '{name}_check_jenkins_jobs'
       - '{name}_manual':
          include: '/trunk/manual/debian/.*

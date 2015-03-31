@@ -59,7 +59,7 @@
           categories:
             - g-i-installation
 - defaults:
-    name: g-i-installation-maintainance
+    name: g-i-installation-maintenance
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -69,7 +69,7 @@
     triggers:
       - timed: "0 6 * * *"
     builders:
-      - shell: '/srv/jenkins/bin/maintainance.sh {name}'
+      - shell: '/srv/jenkins/bin/maintenance.sh {name}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
@@ -94,8 +94,8 @@
           job-prio: '175'
 
 - job-template:
-    defaults: g-i-installation-maintainance
-    name: '{name}_maintainance'
+    defaults: g-i-installation-maintenance
+    name: '{name}_maintenance'
 
 - job-template:
     defaults: g-i-installation
@@ -325,7 +325,7 @@
     name: g-i-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
-      - '{name}_maintainance'
+      - '{name}_maintenance'
       - '{name}_debian-edu_wheezy_minimal':
          my_title: 'Debian Edu (wheezy) minimal'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'

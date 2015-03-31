@@ -7,7 +7,7 @@
                         icon: /userContent/images/debian-swirl-24x24.png
                 - sidebar:
                         url: https://jenkins.debian.net/view/schroot-maint/
-                        text: schroot maintainance jobs
+                        text: schroot maintenance jobs
                         icon: /userContent/images/debian-jenkins-24x24.png
                 - sidebar:
                         url: http://www.profitbricks.com
@@ -37,7 +37,7 @@
                         icon: /userContent/images/debian-swirl-24x24.png
                 - sidebar:
                         url: https://jenkins.debian.net/view/schroot-maint/
-                        text: schroot maintainance jobs
+                        text: schroot maintenance jobs
                         icon: /userContent/images/debian-jenkins-24x24.png
                 - sidebar:
                         url: http://www.profitbricks.com

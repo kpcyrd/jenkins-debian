@@ -1,5 +1,5 @@
 - defaults:
-    name: self-maintainance
+    name: self-maintenance
     description: 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}'
     logrotate:
       daysToKeep: 90
@@ -30,8 +30,8 @@
           job-prio: '125'
 
 - job-template:
-    defaults: self-maintainance
-    name: '{name}_maintainance'
+    defaults: self-maintenance
+    name: '{name}_maintenance'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian.rules'
@@ -39,21 +39,21 @@
           fail-on-error: 'true'
 
 - job-template:
-    defaults: self-maintainance
-    name: '{name}_sub-maintainance'
-    defaults: self-maintainance
-    name: '{name}_sub-maintainance-squid'
-    defaults: self-maintainance
-    name: 'rebootstrap_maintainance'
+    defaults: self-maintenance
+    name: '{name}_sub-maintenance'
+    defaults: self-maintenance
+    name: '{name}_sub-maintenance-squid'
+    defaults: self-maintenance
+    name: 'rebootstrap_maintenance'
 
 - project:
     name: self
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/self.yaml">self.yaml</a>.'
     jobs:
-      - '{name}_maintainance':
-         my_shell: '/srv/jenkins/bin/maintainance.sh'
-      - '{name}_sub-maintainance-squid':
-         my_shell: '/srv/jenkins/bin/maintainance.sh squid'
-      - 'rebootstrap_maintainance':
-         my_shell: '/srv/jenkins/bin/maintainance.sh rebootstrap'
+      - '{name}_maintenance':
+         my_shell: '/srv/jenkins/bin/maintenance.sh'
+      - '{name}_sub-maintenance-squid':
+         my_shell: '/srv/jenkins/bin/maintenance.sh squid'
+      - 'rebootstrap_maintenance':
+         my_shell: '/srv/jenkins/bin/maintenance.sh rebootstrap'
 

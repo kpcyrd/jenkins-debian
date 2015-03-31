@@ -20,7 +20,7 @@ trigger_times = { 'squeeze': '30 16 25 * *',
                   'sid':     '30 4 * * *' }
 
 targets = """
-   maintainance
+   maintenance
    bootstrap
    gnome
    kde
@@ -84,7 +84,7 @@ def get_targets_in_distro(distro, targets):
 # who gets mail for which target
 #
 def get_recipients(target):
-    if target == 'maintainance':
+    if target == 'maintenance':
         return 'qa-jenkins-scm@lists.alioth.debian.org'
     elif target == 'haskell':
         return 'jenkins+debian-haskell qa-jenkins-scm@lists.alioth.debian.org pkg-haskell-maintainers@lists.alioth.debian.org'
@@ -103,7 +103,7 @@ def get_recipients(target):
 # views for different targets
 #
 def get_view(target, distro):
-    if target == 'maintainance':
+    if target == 'maintenance':
         return 'jenkins.d.n'
     elif target == 'haskell':
         return 'haskell'
@@ -198,19 +198,19 @@ print("""
 """)
 for base_distro in sorted(base_distros):
     for target in sorted(get_targets_in_distro(base_distro, targets)):
-        if target in ('bootstrap', 'maintainance'):
+        if target in ('bootstrap', 'maintenance'):
              action = target
         else:
              action = 'install_'+target
         # default job
-        if target == 'maintainance' or base_distro != oldstable:
+        if target == 'maintenance' or base_distro != oldstable:
             print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s'""" %
              dict(base_distro=base_distro,
                   action=action))
         # upgrade job
-        if base_distro in distro_upgrades and action != 'maintainance':
+        if base_distro in distro_upgrades and action != 'maintenance':
              print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s'""" %
@@ -218,7 +218,7 @@ for base_distro in sorted(base_distros):
                   action=action,
                   second_base=distro_upgrades[base_distro]))
         # upgrade job with upgrading apt+dpkg first
-        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintainance':
+        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintenance':
              print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first'""" %
@@ -233,9 +233,9 @@ print("""
     jobs:""")
 for base_distro in sorted(base_distros):
     for target in sorted(get_targets_in_distro(base_distro, targets)):
-        if target == 'maintainance':
+        if target == 'maintenance':
             description = 'Maintainance job for chroot-installation_'+base_distro+'_* jobs, do some cleanups and monitoring so that there is a predictable environment.'
-            shell = '/srv/jenkins/bin/maintainance.sh chroot-installation_'+base_distro
+            shell = '/srv/jenkins/bin/maintenance.sh chroot-installation_'+base_distro
             prio = 135
             time = trigger_times[base_distro]
             if base_distro in distro_upgrades.values():
@@ -252,7 +252,7 @@ for base_distro in sorted(base_distros):
             time = ''
             trigger = ''
             for trigger_target in get_targets_in_distro(base_distro, targets):
-                if trigger_target not in ('maintainance', 'bootstrap'):
+                if trigger_target not in ('maintenance', 'bootstrap'):
                     if trigger != '':
                         trigger = trigger+', '
                     trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target
@@ -262,12 +262,12 @@ for base_distro in sorted(base_distros):
             prio = 130
             time = ''
             trigger = ''
-        if target in ('bootstrap', 'maintainance'):
+        if target in ('bootstrap', 'maintenance'):
             action = target
         else:
             action = 'install_'+target
         # default job
-        if target == 'maintainance' or base_distro != oldstable:
+        if target == 'maintenance' or base_distro != oldstable:
             print("""      - '{name}_%(base_distro)s_%(action)s':
             my_shell: '%(shell)s'
             my_prio: '%(prio)s'
@@ -286,13 +286,13 @@ for base_distro in sorted(base_distros):
                   view=get_view(target, base_distro),
                   description=description))
         # upgrade job
-        if base_distro in distro_upgrades and action != 'maintainance':
+        if base_distro in distro_upgrades and action != 'maintenance':
             if target == 'bootstrap':
                 shell = '/srv/jenkins/bin/chroot-installation.sh '+base_distro+' none '+distro_upgrades[base_distro]
                 description = 'Debootstrap '+base_distro+', then upgrade to '+distro_upgrades[base_distro]+'.'
                 trigger = ''
                 for trigger_target in get_targets_in_distro(base_distro, targets):
-                    if trigger_target not in ('maintainance', 'bootstrap'):
+                    if trigger_target not in ('maintenance', 'bootstrap'):
                         if trigger != '':
                             trigger = trigger+', '
                         trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]
@@ -318,12 +318,12 @@ for base_distro in sorted(base_distros):
                   second_base=distro_upgrades[base_distro],
                   description=description))
         # upgrade job with upgrading apt+dpkg first
-        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintainance':
+        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintenance':
             description = 'Debootstrap '+base_distro+', then upgrade apt and dpkg to '+distro_upgrades[base_distro]+' and then everything else.'
             if target == 'bootstrap':
                 trigger = ''
                 for trigger_target in get_targets_in_distro(base_distro, targets):
-                    if trigger_target not in ('maintainance', 'bootstrap'):
+                    if trigger_target not in ('maintenance', 'bootstrap'):
                         if trigger != '':
                             trigger = trigger+', '
                         trigger = trigger+'chroot-installation_'+base_distro+'_install_'+trigger_target+'_upgrade_to_'+distro_upgrades[base_distro]+'_aptdpkg_first'

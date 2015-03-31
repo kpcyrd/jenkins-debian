@@ -1080,7 +1080,7 @@ monitor_system() {
 				echo "ERROR: An installation step failed." >> $GOCR
 				exit 1
 			elif [ ! -z "$ROOT_PROBLEM" ] ; then
-				echo "ERROR: System is hanging at boot and waiting for root maintainance." >> $GOCR
+				echo "ERROR: System is hanging at boot and waiting for root maintenance." >> $GOCR
 				exit 1
 			elif [ ! -z "$BUILD_LTSP_PROBLEM" ] ; then
 				echo "ERROR: The failing step is: Build LTSP chroot." >> $GOCR

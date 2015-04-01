@@ -144,7 +144,7 @@ call_debbindiff() {
 		if [ "${OLD_STATUS}" = "reproducible" ]; then
 			MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
-			kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+			# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
 	fi
 }

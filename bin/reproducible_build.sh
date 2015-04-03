@@ -154,6 +154,10 @@ call_debbindiff() {
 			# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
 	fi
+	HOUR=$(echo "$DURATION/3600"|bc)
+	MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
+	SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
+	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s." | tee -a ${RBUILDLOG}
 }
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)

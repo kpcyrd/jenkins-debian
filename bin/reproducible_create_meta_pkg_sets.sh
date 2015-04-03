@@ -56,13 +56,13 @@ update_if_similar() {
 				echo diff $TARGET $TARGET.new
 				diff $TARGET $TARGET.new || true
 				echo
-				echo "Too much difference for $TARGET, aborting. Please investigate and update manually."
+				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually."
 				rm $TARGET.new
-				exit 1
+			else
+				mv $TMPFILE $TARGET
+				echo "$(date) - $TARGET updated."
 			fi
 		fi
-		mv $TMPFILE $TARGET
-		echo "$(date) - $TARGET updated."
 	else
 		echo "$(date) - $TARGET not updated, $TMPFILE is empty."
 	fi
@@ -286,7 +286,7 @@ for SUITE in $SUITES ; do
 
 	# finally
 	update_pkg_sets
-	echo "$(date) - All meta package sets for $SUITE created successfully."
+	echo "$(date) - Done updating all meta package sets for $SUITE."
 done
 
 rm -f $TMPFILE ${TMPFILE2}

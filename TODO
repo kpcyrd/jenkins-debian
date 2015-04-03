@@ -119,7 +119,6 @@ properties:
 === reproducible
 
 * issues in packages or debbindiff:
-** #781076 causes some ftbfs errors in sid + testing, see: rgrep -l "/usr/bin/make: invalid option" /var/lib/jenkins/userContent/rbuild/testing/
 ** find debbindiff problems: egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
 
 * misc

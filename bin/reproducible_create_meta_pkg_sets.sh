@@ -54,7 +54,7 @@ update_if_similar() {
 				mv $TMPFILE $TARGET.new
 				echo
 				echo diff $TARGET $TARGET.new
-				diff $TARGET $TARGET.new
+				diff $TARGET $TARGET.new || true
 				echo
 				echo "Too much difference, aborting. Please investigate and update manually."
 				exit 1

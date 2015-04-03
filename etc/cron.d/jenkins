@@ -8,4 +8,4 @@ MAILTO=root
 
 0 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-running-kernel            
 2 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-packages
-30 * * * * root /usr/sbin/service ntp stop ; /usr/sbin/ntpdate de.pool.ntp.org ; /usr/sbin/service ntp start
+30 * * * * root ( /usr/sbin/service ntp stop ; /usr/sbin/ntpdate de.pool.ntp.org ; /usr/sbin/service ntp start ) > /dev/null

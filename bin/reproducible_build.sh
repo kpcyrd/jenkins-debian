@@ -37,7 +37,7 @@ cleanup_all() {
 		echo | tee -a ${RBUILDLOG}
 		MESSAGE="https://reproducible.debian.net/$ARTIFACTS/ published"
 		if [ $SAVE_ARTIFACTS -eq 3 ] ; then
-			MESSAGE="$MESSAGE, debbindiff had troubles with these..."
+			MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
 		fi
 		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 	elif [ $SAVE_ARTIFACTS -eq 2 ] ; then
@@ -92,7 +92,8 @@ call_debbindiff() {
 	fi
 	echo | tee -a ${RBUILDLOG}
 	TIMEOUT="30m"	# don't forget to also change the "seq 0 200" loop 17 lines above
-	echo "$(date) - $(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1) will be used to compare the two builds now." | tee -a ${RBUILDLOG}
+	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
+	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
 	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
@@ -100,22 +101,22 @@ call_debbindiff() {
 	rm -f $DBDCHROOT_READLOCK
 	echo | tee -a ${RBUILDLOG}
 	if [ $RESULT -eq 124 ] ; then
-		echo "$(date) - debbindiff was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}" | tee -a ${RBUILDLOG}
+		echo "$(date) - $DBDVERSION was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}" | tee -a ${RBUILDLOG}
 		if [ ! -s ./${LOGFILE} ] ; then
-			echo "$(date) - debbindiff produced no output and was killed after running into timeout after $TIMEOUT..." >> ${LOGFILE}
+			echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${LOGFILE}
 		fi
 		SAVE_ARTIFACTS=3
 	elif [ $RESULT -eq 1 ] ; then
-		DEBBINDIFFOUT="debbindiff found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}"
+		DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}"
 	elif [ $RESULT -eq 2 ] ; then
-		DEBBINDIFFOUT="debbindiff had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
+		DEBBINDIFFOUT="$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 		SAVE_ARTIFACTS=3
 	fi
 	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
 		echo
-		echo "debbindiff found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
+		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 		calculate_build_duration
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
@@ -129,7 +130,7 @@ call_debbindiff() {
 			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
 		else
-			echo -n ", debbindiff produced no output (which is strange)"
+			echo -n ", $DBDVERSION produced no output (which is strange)"
 		fi
 		if [ ! -f b1/${BUILDINFO} ] ; then
 			echo " and a .buildinfo file is missing." | tee -a ${RBUILDLOG}

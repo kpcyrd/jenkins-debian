@@ -56,7 +56,7 @@ update_if_similar() {
 				echo diff $TARGET $TARGET.new
 				diff $TARGET $TARGET.new || true
 				echo
-				echo "Too much difference, aborting. Please investigate and update manually."
+				echo "Too much difference for $TARGET, aborting. Please investigate and update manually."
 				exit 1
 			fi
 		fi

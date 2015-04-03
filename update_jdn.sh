@@ -156,7 +156,9 @@ sudo apt-get install -t wheezy-backports \
 			qemu-user-static \
 			ruby-packetfu \
 			ruby-rjb \
-			seabios
+			seabios \
+			openbios-ppc \
+			openbios-sparc
 
 explain "Packages installed."
 

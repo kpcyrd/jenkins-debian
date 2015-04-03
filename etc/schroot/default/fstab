@@ -21,4 +21,4 @@
 #/run		/run		none	rw,bind		0	0
 #/run/lock	/run/lock	none	rw,bind		0	0
 /dev/shm	/dev/shm	none	rw,bind		0	0
-#/run/shm	/run/shm	none	rw,bind		0	0
+/run/shm	/run/shm	none	rw,bind		0	0

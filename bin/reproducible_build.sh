@@ -33,7 +33,7 @@ cleanup_all() {
 		echo "Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them." | tee -a ${RBUILDLOG}
 		echo "WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format." | tee -a ${RBUILDLOG}
 		echo "If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location:" | tee -a ${RBUILDLOG}
-		URL="https://reproducible.debian.net/$ARTIFACTS"
+		URL="https://reproducible.debian.net/$ARTIFACTS/"
 		TMPFILE=$(mktemp)
 		curl $URL > $TMPFILE 2>/dev/null
 		sed -i "s#</h1>#</h1><a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a>#g" $TMPFILE

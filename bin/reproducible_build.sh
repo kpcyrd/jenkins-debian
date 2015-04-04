@@ -165,17 +165,7 @@ TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
-SQL_SUITES=""
-for i in $SUITES ; do
-	if [ -n "$SQL_SUITES" ] ; then
-		SQL_SUITES="$SQL_SUITES, '$i'"
-	else
-		SQL_SUITES="('$i'"
-	fi
-done
-SQL_SUITES="$SQL_SUITES)"
-
-RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' AND s.suite IN $SQL_SUITES ORDER BY date_scheduled LIMIT 1")
+RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 if [ -z "$RESULT" ] ; then
 	echo "No packages scheduled, sleeping 30m."
 	sleep 30m

@@ -89,10 +89,16 @@ setup_pbuilder() {
 		echo "echo 'deb-src $MIRROR experimental main' >> /etc/apt/sources.list.d/experimental.list" >> ${TMPFILE}
 	fi
 	# use host apt proxy configuration for pbuilder too
-	echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
+	if [ ! -z "$http_proxy" ] ; then
+		echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
+		pbuilder_http_proxy="--http-proxy $http_proxy"
+	fi
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
-	sudo pbuilder --create --http-proxy $http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
-	sudo pbuilder --execute --http-proxy $http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
+	if [ "$DEBUG" = "true" ] ; then
+		cat "$TMPFILE"
+	fi
+	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
 	echo
 	echo "Now let's see whether the correct packages where installed..."
 	for PKG in ${PACKAGES} ; do

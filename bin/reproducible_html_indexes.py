@@ -42,6 +42,17 @@ Technically speaking, a package can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
 """
 
+# filter used on the index_FTBFS pages
+filtered_issues = ('timestamps_from_cpp_macros' , 'ftbfs_werror_equals', 'ocaml_configure_not_as_root', 'bad_handling_of_extra_warnings')
+filter_query = ''
+for issue in filtered_issues:
+    if filter_query == '':
+        filter_query = 'n.issues LIKE "%' + issue + '%"'
+        filter_html = '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+    else:
+        filter_query += ' OR n.issues LIKE "%' + issue + '%"'
+        filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+
 queries = {
     'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
     'scheduled': 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = "" ORDER BY sch.date_scheduled',
@@ -57,8 +68,8 @@ queries = {
     'FTBFS_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
     'FTBFS_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
     'FTBFS_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY s.name',
-    'FTBFS_filtered': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id NOT IN (SELECT n.package_id FROM NOTES AS n WHERE n.issues LIKE "%timestamps_from_cpp_macros%" OR n.issues LIKE "%ftbfs_werror_equals%" OR n.issues LIKE "%ocaml_configure_not_as_root%" OR n.issues LIKE "%bad_handling_of_extra_warnings%" ) ORDER BY s.name',
-    'FTBFS_caused_by_us': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id IN (SELECT n.package_id FROM NOTES AS n WHERE n.issues LIKE "%timestamps_from_cpp_macros%" OR n.issues LIKE "%ftbfs_werror_equals%" OR n.issues LIKE "%ocaml_configure_not_as_root%" OR n.issues LIKE "%bad_handling_of_extra_warnings%" ) ORDER BY s.name',
+    'FTBFS_filtered': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id NOT IN (SELECT n.package_id FROM NOTES AS n WHERE ' + filter_query + ' ) ORDER BY s.name',
+    'FTBFS_caused_by_us': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id IN (SELECT n.package_id FROM NOTES AS n WHERE ' + filter_query + ' ) ORDER BY s.name',
     '404_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY build_date DESC',
     '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
     'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY build_date DESC',
@@ -99,7 +110,7 @@ pages = {
             {
                 'icon_status': 'FTBFS',
                 'query': 'FTBFS_caused_by_us',
-                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch due to our changes in the toolchain or due to our setup.\n This list includes packages tagged <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/timestamps_from_cpp_macros_issue.html">timestamps_from_cpp_macros</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ftbfs_werror_equals_issue.html">ftbfs_werror_equals</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ocaml_configure_not_as_root_issue.html">ocaml_configure_not_as_root</a> and <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/bad_handling_of_extra_warnings_issue.html">bad_handling_of_extra_warnings</a>.'),
+                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch due to our changes in the toolchain or due to our setup.\n This list includes packages tagged ' + filter_html + '.'),
             }
         ]
     },

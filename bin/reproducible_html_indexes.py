@@ -43,7 +43,7 @@ section must have at least a `query` defining what to file in.
 """
 
 # filter used on the index_FTBFS pages
-filtered_issues = ('timestamps_from_cpp_macros' , 'ftbfs_werror_equals', 'ocaml_configure_not_as_root', 'bad_handling_of_extra_warnings', 'ftbfs_pbuilder_malformed_dsc')
+filtered_issues = ('timestamps_from_cpp_macros' , 'ftbfs_werror_equals', 'ocaml_configure_not_as_root', 'bad_handling_of_extra_warnings', 'ftbfs_pbuilder_malformed_dsc', 'ftbfs_in_jenkins_setup' )
 filter_query = ''
 for issue in filtered_issues:
     if filter_query == '':

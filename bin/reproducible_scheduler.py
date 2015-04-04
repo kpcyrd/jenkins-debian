@@ -29,9 +29,11 @@ from reproducible_html_packages import purge_old_pages
 def call_apt_update(suite):
     # try three times, before failing the job
     for i in [1, 2, 3]:
-        if not call(['schroot', '--directory', '/root', '-u', 'root', \
-                     '-c', 'source:jenkins-reproducible-'+suite, '--', \
-                     'apt-get', 'update']):
+        to_call =['schroot', '--directory', '/root', '-u', 'root', \
+                  '-c', 'source:jenkins-reproducible-'+suite, '--', \
+                  'apt-get', 'update']
+        log.debug('calling ' + ' '.join(to_call))
+        if not call(to_call):
             return
         else:
             log.warning('`apt-get update` failed. Retrying another ' + str(3-i)

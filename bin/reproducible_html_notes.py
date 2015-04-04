@@ -256,12 +256,12 @@ def gen_html_issue(issue, suite):
     # links to the issue in other suites
     suite_links = ''
     for i in SUITES:
-         if suite_links != '':
-             suite_links += ' / '
-         if i != suite:
-             suite_links += '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/' + i + '/' + issue + '_issue.html">' + i + '</a>'
-         else:
-             suite_links += '<em>' + i + '</em>'
+        if suite_links != '':
+            suite_links += ' / '
+        if i != suite:
+            suite_links += '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/' + i + '/' + issue + '_issue.html">' + i + '</a>'
+        else:
+            suite_links += '<em>' + i + '</em>'
     # check for url:
     if 'url' in issues[issue]:
         url = issue_html_url.substitute(url=issues[issue]['url'])

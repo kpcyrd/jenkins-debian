@@ -14,6 +14,7 @@ import copy
 import yaml
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
+from reproducible_html_indexes import build_page
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -492,3 +493,6 @@ if __name__ == '__main__':
     index_no_notes(notes, bugs)
     purge_old_notes(notes)
     gen_packages_html(notes) # regenerate all rb-pkg/ pages
+    for suite in SUITES:
+        for arch in ARCHES:
+            build_page('FTBFS', suite, arch)

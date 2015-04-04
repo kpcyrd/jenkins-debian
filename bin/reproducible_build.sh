@@ -36,7 +36,7 @@ cleanup_all() {
 		URL="https://reproducible.debian.net/$ARTIFACTS/"
 		TMPFILE=$(mktemp)
 		curl $URL > $TMPFILE 2>/dev/null
-		sed -i "s#</h1>#</h1><a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a>#g" $TMPFILE
+		sed -i "s#</table>#<tr><td colspan=\"5\"><a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a></td></tr></table>#g" $TMPFILE
 		chmod 644 $TMPFILE
 		mv $TMPFILE /var/lib/jenkins/userContent/$ARTIFACTS/index.html
 		echo "$URL" | tee -a ${RBUILDLOG}

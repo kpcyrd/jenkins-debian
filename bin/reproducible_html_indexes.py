@@ -56,7 +56,8 @@ queries = {
     'FTBFS_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY build_date DESC',
     'FTBFS_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
     'FTBFS_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBFS_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id COALESCE JOIN notes as n ON n.package_id=r.package_id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND NOT (n.issues LIKE "%timestamps_from_cpp_macros%" OR n.issues LIKE "%ftbfs_werror_equals%" OR n.issues LIKE "%ocaml_configure_not_as_root%") ORDER BY s.name',
+    'FTBFS_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY s.name',
+    'FTBFS_filtered': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id JOIN notes as n ON n.package_id=r.package_id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND NOT (n.issues LIKE "%timestamps_from_cpp_macros%" OR n.issues LIKE "%ftbfs_werror_equals%" OR n.issues LIKE "%ocaml_configure_not_as_root%") ORDER BY build_date DESC',
     'FTBFS_caused_by_us': 'SELECT s.name FROM notes AS n JOIN sources AS s ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE r.status="FTBFS" and s.suite="{suite}" and s.architecture="{arch}" AND (n.issues NOT LIKE "%timestamps_from_cpp_macros%" OR n.issues NOT LIKE "%ftbfs_werror_equals%" OR n.issues NOT LIKE "%ocaml_configure_not_as_root%")',
     '404_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY build_date DESC',
     '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
@@ -92,8 +93,8 @@ pages = {
         'body': [
             {
                 'icon_status': 'FTBFS',
-                'query': 'FTBFS_all',
-                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch:')
+                'query': 'FTBFS_filtered',
+                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch: (this list is filtered and only shows unexpected ftbfs issues - see the list below for expected failures.)')
             },
             {
                 'icon_status': 'FTBFS',

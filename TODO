@@ -158,7 +158,7 @@ properties:
 
 === qa.debian.org*
 
-* turn udd-versionskew packages names into tracker.d.o links and provide version numbers in output too
+* udd-versionskew: also provide arch-relative version numbers in output too
 
 === d-i_manual*
 

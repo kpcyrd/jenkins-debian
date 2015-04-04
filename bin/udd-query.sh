@@ -49,9 +49,13 @@ multiarch_versionskew() {
 	if [ -s $UDD ] ; then
 		echo "Warning: multi-arch version skew in $DISTRO detected."
 		echo
-		# TODO: turn source package names into links
+		printf  "         Package          |           Tracker\n"
+		# bash sucks: it's printf(1) implementation doesn't like leading dashes as-is...
+		printf -- "--------------------------------------------------------------------------\n"
+		for pkg in $(cat $UDD) ; do
+			printf "%25s | %s\n" "$pkg" "https://tracker.debian.org/$pkg"
 		# TODO: show versions (per arch) too
-		cat $UDD
+		done
 	fi
 	rm $UDD
 }

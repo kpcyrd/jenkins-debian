@@ -103,7 +103,7 @@ setup_pbuilder() {
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
 	# create stamp file to record initial creation date
 	touch /var/log/jenkins/${NAME}.tgz.stamp
-	rm ${TMPFILE}
+	rm ${TMPFILE} ${LOG}
 }
 
 #

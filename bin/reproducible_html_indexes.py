@@ -99,7 +99,7 @@ pages = {
             {
                 'icon_status': 'FTBFS',
                 'query': 'FTBFS_caused_by_us',
-                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch due to our changes in the toolchain or due to our setup.\n This list includes packages tagged <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/timestamps_from_cpp_macros_issue.html">timestamps_from_cpp_macros</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ftbfs_werror_equals_issue.html">ftbfs_werror_equals</a> and <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ocaml_configure_not_as_root_issue.html">ocaml_configure_not_as_root</a>.'),
+                'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch due to our changes in the toolchain or due to our setup.\n This list includes packages tagged <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/timestamps_from_cpp_macros_issue.html">timestamps_from_cpp_macros</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ftbfs_werror_equals_issue.html">ftbfs_werror_equals</a>, <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/ocaml_configure_not_as_root_issue.html">ocaml_configure_not_as_root</a> and <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/bad_handling_of_extra_warnings_issue.html">bad_handling_of_extra_warnings</a>.'),
             }
         ]
     },

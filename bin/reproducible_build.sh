@@ -74,6 +74,13 @@ update_db_and_html() {
 	echo
 }
 
+print_out_duration() {
+	HOUR=$(echo "$DURATION/3600"|bc)
+	MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
+	SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
+	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s." | tee -a ${RBUILDLOG}
+}
+
 call_debbindiff() {
 	DBDREPORT=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
 	DBDREPORT=$(echo ${DBDREPORT%.dsc}.debbindiff.html)
@@ -150,10 +157,7 @@ call_debbindiff() {
 			# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
 	fi
-	HOUR=$(echo "$DURATION/3600"|bc)
-	MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
-	SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
-	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s." | tee -a ${RBUILDLOG}
+	print_out_duration
 }
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)

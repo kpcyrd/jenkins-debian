@@ -171,10 +171,9 @@ choose_package () {
 	fi
 }
 
+init() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		AANOUNCE=" Artifacts will be preserved."
-	else
-		AANOUNCE=""
 	fi
 	create_results_dirs
 	echo "============================================================================="
@@ -182,6 +181,7 @@ choose_package () {
 	echo "============================================================================="
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
+}
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 TMPCFG=$(mktemp -t pbuilderrc_XXXX)
@@ -197,6 +197,9 @@ START=$(date +'%s')
 
 
 choose_package
+init
+
+
 
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}

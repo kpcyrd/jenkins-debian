@@ -161,8 +161,16 @@ handle_404() {
 	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
-	set +x
 	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	update_db_and_html
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	exit 0
+}
+
+handle_not_for_us() {
+	# a list of valid architecture for this package should be passed to this function
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"
+	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
 	update_db_and_html
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 	exit 0
@@ -212,6 +220,26 @@ get_source_package() {
 	if [ $RESULT != 0 ] ; then handle_404 ; fi
 }
 
+check_suitability() {
+	# check whether the package is not for us...
+	local SUITABLE=false
+	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
+	set +x
+	for arch in ${ARCHITECTURES} ; do
+		if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
+			local SUITABLE=true
+			break
+		fi
+	done
+	if [ "${ARCHITECTURES}" = "all" ] ; then
+		local SUITABLE=true
+	fi
+	if ! $SUITABLE ; then
+		set -x
+		handle_not_for_us $ARCHITECTURES
+	fi
+}
+
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 TMPCFG=$(mktemp -t pbuilderrc_XXXX)
@@ -233,33 +261,11 @@ get_source_package
 VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
 EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 
+cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
+
+check_suitability
 
 
-		cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
-		# check whether the package is not for us...
-		SUITABLE=false
-		ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
-		set +x
-		for arch in ${ARCHITECTURES} ; do
-			if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
-				SUITABLE=true
-				break
-			fi
-		done
-		if [ "${ARCHITECTURES}" = "all" ] ; then
-			SUITABLE=true
-		fi
-		if ! $SUITABLE ; then
-			set -x
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"
-			set +x
-			echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "${ARCHITECTURES}" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
-			update_db_and_html
-			if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
-			exit 0
-		fi
-		set +e
-		set -x
 		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 		FTBFS=1
 		TMPLOG=$(mktemp)

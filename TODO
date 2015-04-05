@@ -20,11 +20,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
-* move this setup to jenkins.d.o
-** needs replacement of all chroot jobs with schroot
-* build packages using jenkins-debian-glue and not my hacks
 * move /srv/jenkins.debian.net-scm-sync.git somewhere public?
+** alioth... just manually push it
 * *backup*:
+** gpg encrypted to some keys
+** run on alioth or paradis
 ** '/var/lib/jenkins/jobs' (the results - the configs are in .git)
 ** '/var/lib/munin'
 ** '/var/log'
@@ -32,6 +32,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** '/var/lib/jenkins/reproducible.db' (is backed up manually)
 ** '/srv/jenkins.debian.net-scm-sync.git' (is backed up manually)
 ** '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
+
+=== move this setup to jenkins.d.o
+* start a list what needs to be done:
+** needs replacement of all chroot jobs with schroot
+** exame + trim sudoers.d
 
 === To be done once jenkins.d.n runs jessie
 
@@ -133,9 +138,9 @@ properties:
 ** turn job-cfg/g-i.yaml into .yaml.py
 
 * notes related
-** put notes-packages relation in db and hint the issues a package while hovering over it
+** hint issues of a package while hovering over it
 ** new page with annoted packages without categorized issues
-** warn about reproducible packages in all suites which still have notes...
+** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 
 * pkg sets related:
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
@@ -143,8 +148,9 @@ properties:
 
 * db schema 2.0
 ** move "untested" field in stats table too? (as in csv output...)
+** support for irc-notification of test done (without leaving artifacts)
 
-* missing tests: variation in kernel and date
+* missing tests: variation in kernel and date and cpu type
 ** variations in date are only practical to do in c-i fashion using faketime, thus I suggest to wait for those until we test in the wild...
 ** kernel / uname output is changed (using linux64) and shall be changed more in future by doing the 2nd build on a different build host running a different kernel..., no need to do fancy stuff with building in qemu or such...
 
@@ -167,6 +173,7 @@ properties:
 
 === d-i_build*
 
+* build packages using jenkins-debian-glue and not my hacks?
 * run scripts/digress/ ?
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
 

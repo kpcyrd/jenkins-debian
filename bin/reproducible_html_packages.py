@@ -151,7 +151,7 @@ def gen_extra_links(package, version, suite, arch, status):
             default_view = url
     elif status not in ('untested', 'not for us', 'blacklisted'):
         log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
-                     ' didn\'t produce a buildlog, even if it has been built.')
+                     ' didn\'t produce a buildlog, even though it has been built.')
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 

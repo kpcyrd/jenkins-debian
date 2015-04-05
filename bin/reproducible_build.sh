@@ -192,6 +192,8 @@ init() {
 	echo "============================================================================="
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
+	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
+	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 }
 
 get_source_package() {
@@ -216,26 +218,23 @@ TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
-# global variables (this is what we expect, at least. if something goes wrong, then something failed)
-RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
-DBDREPORT=$(echo ${SRCPACKAGE}_${EVERSION}.debbindiff.html)
-BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 DATE=$(date +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 
-
 choose_package
+
+RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
+DBDREPORT=$(echo ${SRCPACKAGE}_${EVERSION}.debbindiff.html)
+BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
+
 init
+get_source_package
+
+VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
+EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 
 
 
-	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
-	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
-	set +e
-	get_source_package
-		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
-		# EPOCH_FREE_VERSION was too long
-		EVERSION=$(echo $VERSION | cut -d ":" -f2)
 		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,
 		# and then access RBUILDLOG with it's correct name (=eversion)
 		TMPLOG=$(mktemp)

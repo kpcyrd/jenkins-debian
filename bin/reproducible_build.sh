@@ -75,8 +75,8 @@ update_db_and_html() {
 }
 
 call_debbindiff() {
-	LOGFILE=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
-	LOGFILE=$(echo ${LOGFILE%.dsc}.debbindiff.html)
+	DBDREPORT=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
+	DBDREPORT=$(echo ${DBDREPORT%.dsc}.debbindiff.html)
 	BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
@@ -100,25 +100,25 @@ call_debbindiff() {
 	TIMEOUT="30m"	# don't forget to also change the "seq 0 200" loop 17 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
-	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${LOGFILE} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
+	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${DBDREPORT} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
 	set -e
 	rm -f $DBDCHROOT_READLOCK
 	echo | tee -a ${RBUILDLOG}
 	if [ $RESULT -eq 124 ] ; then
-		echo "$(date) - $DBDVERSION was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}" | tee -a ${RBUILDLOG}
-		if [ ! -s ./${LOGFILE} ] ; then
-			echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${LOGFILE}
+		echo "$(date) - $DBDVERSION was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}" | tee -a ${RBUILDLOG}
+		if [ ! -s ./${DBDREPORT} ] ; then
+			echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${DBDREPORT}
 		fi
 		SAVE_ARTIFACTS=3
 	elif [ $RESULT -eq 1 ] ; then
-		DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${LOGFILE}"
+		DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 	elif [ $RESULT -eq 2 ] ; then
 		DEBBINDIFFOUT="$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 		SAVE_ARTIFACTS=3
 	fi
-	if [ $RESULT -eq 0 ] && [ ! -f ./${LOGFILE} ] && [ -f b1/${BUILDINFO} ] ; then
+	if [ $RESULT -eq 0 ] && [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
 		echo
@@ -132,9 +132,9 @@ call_debbindiff() {
 		echo | tee -a ${RBUILDLOG}
 		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
-		if [ -f ./${LOGFILE} ] ; then
+		if [ -f ./${DBDREPORT} ] ; then
 			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
-			mv ./${LOGFILE} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
+			mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
 		else
 			echo -n ", $DBDVERSION produced no output (which is strange)"
 		fi

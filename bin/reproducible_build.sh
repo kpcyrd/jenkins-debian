@@ -82,9 +82,6 @@ print_out_duration() {
 }
 
 call_debbindiff() {
-	DBDREPORT=$(ls ${SRCPACKAGE}_${EVERSION}.dsc)
-	DBDREPORT=$(echo ${DBDREPORT%.dsc}.debbindiff.html)
-	BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
 		for i in $(seq 0 200) ; do	# this loop also exists in _common.sh and _setup_pbuilder.sh
@@ -183,10 +180,6 @@ choose_package () {
 	echo "============================================================================="
 	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now.$AANOUNCE"
 	echo "============================================================================="
-	set -x
-	DATE=$(date +'%Y-%m-%d %H:%M')
-	START=$(date +'%s')
-	DURATION=0
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 
@@ -195,7 +188,14 @@ TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
-	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
+# global variables (this is what we expect, at least. if something goes wrong, then something failed)
+RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
+DBDREPORT=$(echo ${SRCPACKAGE}_${EVERSION}.debbindiff.html)
+BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
+DATE=$(date +'%Y-%m-%d %H:%M')
+START=$(date +'%s')
+
+
 choose_package
 
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}

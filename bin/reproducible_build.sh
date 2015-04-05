@@ -50,7 +50,7 @@ cleanup_all() {
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved." || true # don't fail the whole job
 	fi
-	rm -r $TMPDIR $TMPCFG
+	rm -r $TMPDIR
 }
 
 cleanup_userContent() {
@@ -176,6 +176,15 @@ handle_not_for_us() {
 	exit 0
 }
 
+handle_ftbfs() {
+	echo "${SRCPACKAGE} failed to build from source."
+	calculate_build_duration
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
+	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
+	update_db_and_html
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+}
+
 choose_package () {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
@@ -234,15 +243,72 @@ check_suitability() {
 	if [ "${ARCHITECTURES}" = "all" ] ; then
 		local SUITABLE=true
 	fi
-	if ! $SUITABLE ; then
+	if ! $SUITABLE ; then handle_not_for_us $ARCHITECTURES ; fi
+}
+
+build_rebuild() {
+	local FTBFS=1
+	local TMPLOG=$(mktemp --tmpdir=$PWD)
+	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$PWD)
+	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	mkdir b1 b2
+	set -x
+	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
+	( timeout 12h nice ionice -c 3 sudo \
+	  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
+	  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
+	  pbuilder --build \
+		--configfile $TMPCFG \
+		--debbuildopts "-b" \
+		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
+		--buildresult b1 \
+		--distribution ${SUITE} \
+		${SRCPACKAGE}_*.dsc \
+	) 2>&1 | tee ${TMPLOG}
+	set +x
+	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
+		# the first build did not FTBFS, try rebuild it.
+		echo "============================================================================="
+		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
+		echo "============================================================================="
 		set -x
-		handle_not_for_us $ARCHITECTURES
+		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
+		( timeout 12h nice ionice -c 3 sudo \
+		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
+		  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
+		  LANG="fr_CH.UTF-8" \
+		  LC_ALL="fr_CH.UTF-8" \
+		  /usr/bin/linux64 --uname-2.6 \
+			/usr/bin/unshare --uts -- \
+				/usr/sbin/pbuilder --build \
+					--configfile $TMPCFG \
+					--hookdir /etc/pbuilder/rebuild-hooks \
+					--debbuildopts "-b" \
+					--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
+					--buildresult b2 \
+					--distribution ${SUITE} \
+					${SRCPACKAGE}_${EVERSION}.dsc
+		) 2>&1 | tee -a ${RBUILDLOG}
+		set +x
+		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
+			# both builds were fine, i.e., they did not FTBFS.
+			local FTBFS=0
+			cleanup_userContent # FIXME check wheter my changes were fine
+			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+			RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+			call_debbindiff
+		else
+			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
+		fi
+	else
+		cat ${TMPLOG} >> ${RBUILDLOG}
 	fi
+	rm ${TMPLOG} $TMPCFG
+	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }
 
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
-TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
@@ -264,59 +330,8 @@ EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 
 check_suitability
+build_rebuild
 
-
-		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-		FTBFS=1
-		TMPLOG=$(mktemp)
-		mkdir b1 b2
-		printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
-		( timeout 12h nice ionice -c 3 sudo \
-		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
-		  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
-		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --buildresult b1 --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
-		) 2>&1 | tee ${TMPLOG}
-		set +x
-		if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-			echo "============================================================================="
-			echo "Re-building ${SRCPACKAGE} in ${SUITE} on ${ARCH} now."
-			echo "============================================================================="
-			set -x
-			printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
-			( timeout 12h nice ionice -c 3 sudo \
-			  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
-			  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
-			  LANG="fr_CH.UTF-8" \
-			  LC_ALL="fr_CH.UTF-8" \
-			  /usr/bin/linux64 --uname-2.6 /usr/bin/unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \
-			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --buildresult b2 --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
-			) 2>&1 | tee -a ${RBUILDLOG}
-			set +x
-			if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-				FTBFS=0
-				cleanup_userContent
-				mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-				RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-				call_debbindiff
-			else
-				echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
-			fi
-		else
-			cat ${TMPLOG} >> ${RBUILDLOG}
-		fi
-		rm ${TMPLOG}
-		if [ $FTBFS -eq 1 ] ; then
-			set +x
-			echo "${SRCPACKAGE} failed to build from source."
-			calculate_build_duration
-			sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
-			sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
-			update_db_and_html
-			if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
-		fi
-	fi
-
-fi
 cd ..
 cleanup_all
 trap - INT TERM EXIT

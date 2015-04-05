@@ -269,20 +269,15 @@ check_suitability
 		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 		FTBFS=1
 		TMPLOG=$(mktemp)
+		mkdir b1 b2
 		printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
 		( timeout 12h nice ionice -c 3 sudo \
 		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
 		  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
-		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
+		  pbuilder --build --configfile $TMPCFG --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --buildresult b1 --distribution ${SUITE} ${SRCPACKAGE}_*.dsc
 		) 2>&1 | tee ${TMPLOG}
 		set +x
-		if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-			mkdir b1 b2
-			dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes b1
-			# the .changes file might not contain the original sources archive
-			# so first delete files from .dsc, then from .changes file
-			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
-			sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
+		if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			echo "============================================================================="
 			echo "Re-building ${SRCPACKAGE} in ${SUITE} on ${ARCH} now."
 			echo "============================================================================="
@@ -294,16 +289,11 @@ check_suitability
 			  LANG="fr_CH.UTF-8" \
 			  LC_ALL="fr_CH.UTF-8" \
 			  /usr/bin/linux64 --uname-2.6 /usr/bin/unshare --uts -- /usr/sbin/pbuilder --build --configfile $TMPCFG --hookdir /etc/pbuilder/rebuild-hooks \
-			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
+			    --debbuildopts "-b" --basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz --buildresult b2 --distribution ${SUITE} ${SRCPACKAGE}_${EVERSION}.dsc
 			) 2>&1 | tee -a ${RBUILDLOG}
 			set +x
-			if [ -f /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
+			if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 				FTBFS=0
-				dcmd cp /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes b2
-				# and again (see comment 5 lines above)
-				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
-				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
-				cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
 				cleanup_userContent
 				mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 				RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log

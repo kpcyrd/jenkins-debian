@@ -223,7 +223,7 @@ START=$(date +'%s')
 
 choose_package
 
-RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
+RBUILDLOG=$(mktemp --tmpdir=$PWD) # FIXME
 DBDREPORT=$(echo ${SRCPACKAGE}_${EVERSION}.debbindiff.html)
 BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
 
@@ -235,22 +235,6 @@ EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 
 
 
-		# preserve RBUILDLOG as TMPLOG, then cleanup userContent from previous builds,
-		# and then access RBUILDLOG with it's correct name (=eversion)
-		TMPLOG=$(mktemp)
-		# catch race conditions due to several builders trying to build the same package
-		mv ${RBUILDLOG} ${TMPLOG}
-		RESULT=$?
-		if [ $RESULT -ne 0 ] ; then
-			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting."
-			echo  "Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting. Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different BUILD_URL..." | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
-			exit 0
-		fi
-		set -e
-
-		cleanup_userContent
-		RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-		mv ${TMPLOG} ${RBUILDLOG}
 		cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 		# check whether the package is not for us...
 		SUITABLE=false
@@ -314,6 +298,9 @@ EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}.dsc
 				sudo dcmd rm /var/cache/pbuilder/result/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
 				cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
+				cleanup_userContent
+				mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+				RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 				call_debbindiff
 			else
 				echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}

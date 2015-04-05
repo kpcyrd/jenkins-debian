@@ -157,6 +157,17 @@ call_debbindiff() {
 	print_out_duration
 }
 
+handle_404() {
+	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
+	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
+	set +x
+	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	update_db_and_html
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	exit 0
+}
+
 choose_package () {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
@@ -183,6 +194,23 @@ init() {
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 }
 
+get_source_package() {
+	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+	local RESULT=$?
+	if [ $RESULT != 0 ] ; then
+		# sometimes apt-get cannot download a package for whatever reason.
+		# if so, wait some time and try again. only if that fails, give up.
+		echo "Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
+		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
+		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
+		sleep 5m
+		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+		local RESULT=$?
+	fi
+	if [ $RESULT != 0 ] ; then handle_404 ; fi
+}
+
+
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
 TMPCFG=$(mktemp -t pbuilderrc_XXXX)
 trap cleanup_all INT TERM EXIT
@@ -204,28 +232,7 @@ init
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 	set +e
-	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
-	RESULT=$?
-	if [ $RESULT != 0 ] ; then
-		# sometimes apt-get cannot download a package for whatever reason.
-		# if so, wait some time and try again. only if that fails, give up.
-		echo "Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
-		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
-		sleep 5m
-		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
-		RESULT=$?
-	fi
-	if [ $RESULT != 0 ] ; then
-		echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
-		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
-		set +x
-		echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
-		update_db_and_html
-		if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
-		exit 0
-	else
+	get_source_package
 		VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
 		# EPOCH_FREE_VERSION was too long
 		EVERSION=$(echo $VERSION | cut -d ":" -f2)

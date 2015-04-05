@@ -160,22 +160,20 @@ call_debbindiff() {
 	print_out_duration
 }
 
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
-TMPCFG=$(mktemp -t pbuilderrc_XXXX)
-trap cleanup_all INT TERM EXIT
-cd $TMPDIR
-
-RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
-if [ -z "$RESULT" ] ; then
-	echo "No packages scheduled, sleeping 30m."
-	sleep 30m
-else
-	set +x
+choose_package () {
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
+	if [ -z "$RESULT" ] ; then
+		echo "No packages scheduled, sleeping 30m."
+		sleep 30m
+		exit 0
+	fi
+}
+
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		AANOUNCE=" Artifacts will be preserved."
 	else
@@ -192,7 +190,14 @@ else
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)
+TMPCFG=$(mktemp -t pbuilderrc_XXXX)
+trap cleanup_all INT TERM EXIT
+cd $TMPDIR
+
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_None.rbuild.log
+choose_package
+
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 	set +e

@@ -138,11 +138,7 @@ call_debbindiff() {
 		else
 			echo -n ", $DBDVERSION produced no output (which is strange)"
 		fi
-		if [ ! -f b1/${BUILDINFO} ] ; then
-			echo " and a .buildinfo file is missing." | tee -a ${RBUILDLOG}
-		else
-			echo "." | tee -a ${RBUILDLOG}
-		fi
+		echo "." | tee -a ${RBUILDLOG}
 		OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 		calculate_build_duration
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"

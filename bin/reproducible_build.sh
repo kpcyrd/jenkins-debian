@@ -220,6 +220,10 @@ call_debbindiff() {
 		124)
 			dbd_timeout
 			;;
+		*)
+			DEBBINDIFFOUT="Something weird with $DBDVERSION happened and I don't know how to handle it. Check out $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
+			handle_ftbr
+			;;
 	esac
 	print_out_duration
 }

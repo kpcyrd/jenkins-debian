@@ -147,6 +147,10 @@ Use common-debian-service-https-redirect reproducible.debian.net
 
 	DocumentRoot /var/lib/jenkins/userContent
 
+	<Directory /var/lib/jenkins/userContent/artifacts>
+		HeaderName .HEADER.html
+	</Directory>
+
 	# use reproducible.html as "home page"
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/$

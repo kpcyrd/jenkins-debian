@@ -192,7 +192,7 @@ dbd_timeout() {
 
 call_debbindiff() {
 	init_debbindiff  # check and set up locks for chroot
-	local TMPLOG=(mktemp --tmpdir=$PWD)
+	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 17 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
@@ -295,9 +295,9 @@ check_suitability() {
 
 build_rebuild() {
 	FTBFS=1
-	local TMPLOG=$(mktemp --tmpdir=$PWD)
-	local RBUILDLOG=$(mktemp --tmpdir=$PWD) # FIXME check wheter my changes here are fine
-	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$PWD)
+	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
+	local RBUILDLOG=$(mktemp --tmpdir=$TMPDIR) # FIXME check wheter my changes here are fine
+	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 	mkdir b1 b2
 	set -x

@@ -102,24 +102,28 @@ init_debbindiff() {
 	fi
 }
 
+dbd_timeout() {
+	echo "$(date) - $DBDVERSION was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}" | tee -a ${RBUILDLOG}
+	if [ ! -s ./${DBDREPORT} ] ; then
+		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${DBDREPORT}
+	fi
+	SAVE_ARTIFACTS=3
+}
+
 call_debbindiff() {
 	init_debbindiff
 	echo | tee -a ${RBUILDLOG}
-	TIMEOUT="30m"	# don't forget to also change the "seq 0 200" loop 17 lines above
+	TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 17 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
+	set -x
 	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${DBDREPORT} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
 	RESULT=$?
 	set +x
-	set -e
 	rm -f $DBDCHROOT_READLOCK
 	echo | tee -a ${RBUILDLOG}
 	if [ $RESULT -eq 124 ] ; then
-		echo "$(date) - $DBDVERSION was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}" | tee -a ${RBUILDLOG}
-		if [ ! -s ./${DBDREPORT} ] ; then
-			echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${DBDREPORT}
-		fi
-		SAVE_ARTIFACTS=3
+		dbd_timeout
 	elif [ $RESULT -eq 1 ] ; then
 		DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 	elif [ $RESULT -eq 2 ] ; then

@@ -74,6 +74,9 @@ update_db_and_html() {
 	# everything passed at this function is saved as a status of this package in the db
 	local STATUS="$@"
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (payyckage_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '$STATUS', '$DATE', '$DURATION')"
+	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', '${STATUS}', '${DATE}', '${DURATION}')"
+	fi
 	# unmark build since it's properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	set +x
@@ -112,7 +115,6 @@ handle_not_for_us() {
 handle_ftbfs() {
 	echo "${SRCPACKAGE} failed to build from source."
 	calculate_build_duration
-	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
 	update_db_and_html "FTBFS"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 }
@@ -132,7 +134,6 @@ handle_ftbr() {
 		echo "$DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	calculate_build_duration
-	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
 	update_db_and_html "unreproducible"
 	# notification for changing status
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
@@ -151,7 +152,6 @@ handle_reproducible() {
 		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 		calculate_build_duration
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
 		update_db_and_html "reproducible"
 	else
 		echo "Debbindiff says the build is reproducible, but either there is a debbindiff file or there is no .buildinfo. Please investigate" | tee -a $RBUILDLOG

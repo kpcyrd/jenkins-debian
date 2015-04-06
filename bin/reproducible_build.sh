@@ -300,7 +300,6 @@ check_suitability() {
 build_rebuild() {
 	FTBFS=1
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
-	local RBUILDLOG=$(mktemp --tmpdir=$TMPDIR) # FIXME check wheter my changes here are fine
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 	mkdir b1 b2
@@ -370,6 +369,7 @@ cd $TMPDIR
 
 DATE=$(date +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
+RBUILDLOG=$(mktemp --tmpdir=$TMPDIR) # FIXME check wheter my changes here are fine
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
 
@@ -385,7 +385,7 @@ EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 
 check_suitability
-build_rebuild  # defines FTBFS, RBUILDLOG
+build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
 	call_debbindiff  # defines DBDVERSION
 fi

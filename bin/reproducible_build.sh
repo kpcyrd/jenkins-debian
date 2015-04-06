@@ -320,6 +320,7 @@ build_rebuild() {
 			cleanup_userContent # FIXME check wheter my changes here are fine
 			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
 			call_debbindiff
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}

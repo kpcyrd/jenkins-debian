@@ -20,7 +20,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
-* move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 ** alioth... just manually push it
 * *backup*:
 ** gpg encrypted to some keys
@@ -32,6 +31,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** '/var/lib/jenkins/reproducible.db' (is backed up manually)
 ** '/srv/jenkins.debian.net-scm-sync.git' (is backed up manually)
 ** '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
+** '/srv/jenkins.debian.net-scm-sync.git'
+** '/etc/.git' and '/etc'
+
 
 === move this setup to jenkins.d.o
 * start a list what needs to be done:

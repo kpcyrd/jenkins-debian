@@ -149,7 +149,7 @@ handle_reproducible() {
 		figlet ${SRCPACKAGE}
 		echo | tee -a ${RBUILDLOG}
 		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
-		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
+		echo "${SRCPACKAGE} from $SUITE built successfully and reproducibly on ${ARCH}." | tee -a ${RBUILDLOG}
 		calculate_build_duration
 		update_db_and_html "reproducible"
 	else

@@ -11,6 +11,8 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+set -e
+
 # support for different architectures (we have actual support only for amd64)
 ARCH="amd64"
 

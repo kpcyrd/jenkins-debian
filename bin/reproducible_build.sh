@@ -29,29 +29,33 @@ create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}
 }
 
-cleanup_all() {
-	if [ $SAVE_ARTIFACTS -eq 1 ] || [ $SAVE_ARTIFACTS -eq 3 ] ; then
+save_artifacts() {
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
+		local URL="$REPRODUCIBLE_URL/$ARTIFACTS/"
+		local HEADER="$ARTIFACTS/.HEADER.html"
 		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
 		cp -r $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
-		echo "Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them." | tee -a ${RBUILDLOG}
-		echo "WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format." | tee -a ${RBUILDLOG}
-		echo "If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location:" | tee -a ${RBUILDLOG}
-		URL="https://reproducible.debian.net/$ARTIFACTS/"
-		TMPFILE=$(mktemp)
-		curl $URL > $TMPFILE 2>/dev/null
-		sed -i "s#</table>#<tr><td colspan=\"5\"><a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a></td></tr></table>#g" $TMPFILE
-		chmod 644 $TMPFILE
-		mv $TMPFILE /var/lib/jenkins/userContent/$ARTIFACTS/index.html
-		echo "$URL" | tee -a ${RBUILDLOG}
+		local msg="Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them.\n"
+		local msg="WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
+		local msg="If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
+		echo $msg | tee -a $BUILDLOG
+		echo $msg | sed 's#\n#\n<br />#g' > $HEADER
+		echo "Package page: <a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
+		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}
-		MESSAGE="$URL published"
+		# irc message
+		local MESSAGE="$URL published"
 		if [ $SAVE_ARTIFACTS -eq 3 ] ; then
-			MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
+			local MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
 		fi
 		irc_message "$MESSAGE"
+}
+
+cleanup_all() {
+	if [ $SAVE_ARTIFACTS -eq 1 ] || [ $SAVE_ARTIFACTS -eq 3 ] ; then
+		save_artifacts
 	elif [ $SAVE_ARTIFACTS -eq 2 ] ; then
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved."

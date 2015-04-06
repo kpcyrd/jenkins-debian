@@ -122,14 +122,18 @@ call_debbindiff() {
 	set +x
 	rm -f $DBDCHROOT_READLOCK
 	echo | tee -a ${RBUILDLOG}
-	if [ $RESULT -eq 124 ] ; then
-		dbd_timeout
-	elif [ $RESULT -eq 1 ] ; then
-		DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
-	elif [ $RESULT -eq 2 ] ; then
-		DEBBINDIFFOUT="$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
-		SAVE_ARTIFACTS=3
-	fi
+	case $RESULT in
+		124)
+			dbd_timeout
+			;;
+		1)
+			DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
+			;;
+		2)
+			DEBBINDIFFOUT="$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
+			SAVE_ARTIFACTS=3
+			;;
+	esac
 	if [ $RESULT -eq 0 ] && [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}

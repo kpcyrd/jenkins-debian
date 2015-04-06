@@ -109,6 +109,20 @@ handle_ftbfs() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 }
 
+handle_reproducible() {
+	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
+		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
+		figlet ${SRCPACKAGE}
+		echo | tee -a ${RBUILDLOG}
+		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
+		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
+		calculate_build_duration
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
+		update_db_and_html
+	fi
+}
+
 init_debbindiff() {
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
@@ -154,6 +168,8 @@ call_debbindiff() {
 		124)
 			dbd_timeout
 			;;
+		0)
+			handle_reproducible
 		1)
 			DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
@@ -162,17 +178,6 @@ call_debbindiff() {
 			SAVE_ARTIFACTS=3
 			;;
 	esac
-	if [ $RESULT -eq 0 ] && [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
-		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
-		figlet ${SRCPACKAGE}
-		echo
-		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
-		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
-		calculate_build_duration
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
-		update_db_and_html
-	else
 		echo | tee -a ${RBUILDLOG}
 		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
 		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
@@ -193,7 +198,6 @@ call_debbindiff() {
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 		fi
-	fi
 	print_out_duration
 }
 

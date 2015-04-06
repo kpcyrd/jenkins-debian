@@ -117,8 +117,8 @@ handle_ftbfs() {
 
 handle_ftbr() {
 	echo | tee -a ${RBUILDLOG}
-	echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
-	cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
+	echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}" | tee -a ${RBUILDLOG}
+	cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ -f ./${DBDREPORT} ] ; then
 		echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 		mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
@@ -126,13 +126,14 @@ handle_ftbr() {
 		echo -n ", $DBDVERSION produced no output (which is strange)"
 	fi
 	echo "." | tee -a ${RBUILDLOG}
-	OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	calculate_build_duration
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
 	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
 	update_db_and_html
+	# notification for changing status
+	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	if [ "${OLD_STATUS}" = "reproducible" ]; then
-		MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
+		MESSAGE="status changed from reproducible → unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 		# irc_message "$MESSAGE"
 	fi
@@ -158,7 +159,7 @@ handle_reproducible() {
 init_debbindiff() {
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
-		for i in $(seq 0 200) ; do	# this loop also exists in _common.sh and _setup_schroot.sh
+		for i in $(seq 0 200) ; do  # this loop also exists in _common.sh and _setup_schroot.sh
 			sleep 15
 			echo "sleeping 15s, debbindiff schroot is locked."
 			if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then
@@ -202,7 +203,7 @@ call_debbindiff() {
 	) 2>&1 >> $TMPLOG
 	RESULT=$?
 	set +x
-	cat $TMPLOG | tee -a $RBUILDLOG
+	cat $TMPLOG | tee -a $RBUILDLOG  # print out dbd output
 	rm -f $DBDCHROOT_READLOCK $TMPLOG
 	echo | tee -a ${RBUILDLOG}
 	case $RESULT in

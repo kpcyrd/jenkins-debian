@@ -123,6 +123,29 @@ handle_reproducible() {
 	fi
 }
 
+handle_ftbr() {
+	echo | tee -a ${RBUILDLOG}
+	echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
+	cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
+	if [ -f ./${DBDREPORT} ] ; then
+		echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
+		mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
+	else
+		echo -n ", $DBDVERSION produced no output (which is strange)"
+	fi
+	echo "." | tee -a ${RBUILDLOG}
+	OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
+	calculate_build_duration
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
+	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
+	update_db_and_html
+	if [ "${OLD_STATUS}" = "reproducible" ]; then
+		MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
+		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
+		# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+	fi
+}
+
 init_debbindiff() {
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
@@ -178,26 +201,7 @@ call_debbindiff() {
 			SAVE_ARTIFACTS=3
 			;;
 	esac
-		echo | tee -a ${RBUILDLOG}
-		echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
-		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true
-		if [ -f ./${DBDREPORT} ] ; then
-			echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
-			mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
-		else
-			echo -n ", $DBDVERSION produced no output (which is strange)"
-		fi
-		echo "." | tee -a ${RBUILDLOG}
-		OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
-		calculate_build_duration
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
-		update_db_and_html
-		if [ "${OLD_STATUS}" = "reproducible" ]; then
-			MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
-			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
-			# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
-		fi
+	handle_ftbr
 	print_out_duration
 }
 

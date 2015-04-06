@@ -71,7 +71,10 @@ calculate_build_duration() {
 }
 
 update_db_and_html() {
-	# unmark build as properly finished
+	# everything passed at this function is saved as a status of this package in the db
+	local STATUS="$@"
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (payyckage_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '$STATUS', '$DATE', '$DURATION')"
+	# unmark build since it's properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	set +x
 	gen_packages_html $SUITE $SRCPACKAGE
@@ -90,18 +93,18 @@ print_out_duration() {
 handle_404() {
 	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
-	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
-	update_db_and_html
+	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, ora it was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	DURATION=''
+	update_db_and_html "404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 	exit 0
 }
 
 handle_not_for_us() {
 	# a list of valid architecture for this package should be passed to this function
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"
+	DURATION=''
 	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
-	update_db_and_html
+	update_db_and_html "not for us"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 	exit 0
 }
@@ -109,9 +112,8 @@ handle_not_for_us() {
 handle_ftbfs() {
 	echo "${SRCPACKAGE} failed to build from source."
 	calculate_build_duration
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
 	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
-	update_db_and_html
+	update_db_and_html "FTBFS"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 }
 
@@ -130,9 +132,8 @@ handle_ftbr() {
 		echo "$DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	calculate_build_duration
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
 	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
-	update_db_and_html
+	update_db_and_html "unreproducible"
 	# notification for changing status
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	if [ "${OLD_STATUS}" = "reproducible" ]; then
@@ -150,9 +151,8 @@ handle_reproducible() {
 		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
 		calculate_build_duration
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
 		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
-		update_db_and_html
+		update_db_and_html "reproducible"
 	else
 		echo "Debbindiff says the build is reproducible, but either there is a debbindiff file or there is no .buildinfo. Please investigate" | tee -a $RBUILDLOG
 		handle_ftbr

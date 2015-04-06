@@ -81,6 +81,34 @@ print_out_duration() {
 	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s." | tee -a ${RBUILDLOG}
 }
 
+handle_404() {
+	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
+	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
+	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	update_db_and_html
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	exit 0
+}
+
+handle_not_for_us() {
+	# a list of valid architecture for this package should be passed to this function
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"
+	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
+	update_db_and_html
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	exit 0
+}
+
+handle_ftbfs() {
+	echo "${SRCPACKAGE} failed to build from source."
+	calculate_build_duration
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
+	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
+	update_db_and_html
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+}
+
 init_debbindiff() {
 	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
 	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
@@ -167,34 +195,6 @@ call_debbindiff() {
 		fi
 	fi
 	print_out_duration
-}
-
-handle_404() {
-	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
-	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '404', '$DATE', '')"
-	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
-	update_db_and_html
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
-	exit 0
-}
-
-handle_not_for_us() {
-	# a list of valid architecture for this package should be passed to this function
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'not for us', '$DATE', '')"
-	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
-	update_db_and_html
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
-	exit 0
-}
-
-handle_ftbfs() {
-	echo "${SRCPACKAGE} failed to build from source."
-	calculate_build_duration
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'FTBFS', '$DATE', '$DURATION')"
-	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'FTBFS', '${DATE}', '${DURATION}')"
-	update_db_and_html
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 }
 
 choose_package () {

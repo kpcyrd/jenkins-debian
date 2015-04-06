@@ -109,20 +109,6 @@ handle_ftbfs() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 }
 
-handle_reproducible() {
-	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
-		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
-		figlet ${SRCPACKAGE}
-		echo | tee -a ${RBUILDLOG}
-		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
-		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
-		calculate_build_duration
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
-		update_db_and_html
-	fi
-}
-
 handle_ftbr() {
 	echo | tee -a ${RBUILDLOG}
 	echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH} " | tee -a ${RBUILDLOG}
@@ -143,6 +129,23 @@ handle_ftbr() {
 		MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 		# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+	fi
+}
+
+handle_reproducible() {
+	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
+		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
+		figlet ${SRCPACKAGE}
+		echo | tee -a ${RBUILDLOG}
+		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
+		echo "${SRCPACKAGE} built successfully and reproducibly." | tee -a ${RBUILDLOG}
+		calculate_build_duration
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'reproducible',  '$DATE', '$DURATION')"
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'reproducible', '${DATE}', '${DURATION}')"
+		update_db_and_html
+	else
+		echo "Debbindiff says the build is reproducible, but either there is a debbindiff file or there is no .buildinfo. Please investigate" | tee -a $RBUILDLOG
+		handle_ftbr
 	fi
 }
 

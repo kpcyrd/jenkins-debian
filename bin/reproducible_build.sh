@@ -294,7 +294,7 @@ check_suitability() {
 }
 
 build_rebuild() {
-	local FTBFS=1
+	FTBFS=1
 	local TMPLOG=$(mktemp --tmpdir=$PWD)
 	local RBUILDLOG=$(mktemp --tmpdir=$PWD) # FIXME check wheter my changes here are fine
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$PWD)
@@ -340,12 +340,11 @@ build_rebuild() {
 		set +x
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
-			local FTBFS=0
+			FTBFS=0
 			cleanup_userContent # FIXME check wheter my changes here are fine
 			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
-			call_debbindiff
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
 		fi
@@ -382,7 +381,10 @@ EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 
 check_suitability
-build_rebuild  # defines RBUILDLOG
+build_rebuild  # defines FTBFS, RBUILDLOG
+if [ $FTBFS -eq 0 ] ; then
+	call_debbindiff
+fi
 
 cd ..
 cleanup_all

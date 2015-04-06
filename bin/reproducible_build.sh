@@ -157,8 +157,11 @@ handle_reproducible() {
 		echo "${SRCPACKAGE} from $SUITE built successfully and reproducibly on ${ARCH}." | tee -a ${RBUILDLOG}
 		calculate_build_duration
 		update_db_and_html "reproducible"
-	else
-		echo "Debbindiff says the build is reproducible, but either there is a debbindiff file or there is no .buildinfo. Please investigate" | tee -a $RBUILDLOG
+	elif [ -f ./$DBDREPORT ] ; then
+		echo "Debbindiff says the build is reproducible, but there is a debbindiff file. Please investigate" | tee -a $RBUILDLOG
+		handle_ftbr
+	elif [ ! -f b1/$BUILDINFO ] ; then
+		echo "Debbindiff says the build is reproducible, but there is no .buildinfo file. Please investigate" | tee -a $RBUILDLOG
 		handle_ftbr
 	fi
 }

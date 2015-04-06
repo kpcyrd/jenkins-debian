@@ -20,7 +20,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * replace amd64 in scripts with $HOSTARCH
 * put kgb-client.conf in git and sed passwords from filesystem into it...
-* document ssh://git.debian.org/git/qa/jenkins.debian.net-scm-sync.git properly
+* move /srv/jenkins.debian.net-scm-sync.git somewhere public?
 ** alioth... just manually push it
 * *backup*:
 ** gpg encrypted to some keys

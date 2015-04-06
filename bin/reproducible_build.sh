@@ -17,6 +17,12 @@ ARCH="amd64"
 # sleep 1-12 secs to randomize start times
 /bin/sleep $(echo "scale=1 ; $(shuf -i 1-120 -n 1)/10" | bc )
 
+irc_message() {
+	local MESSAGE="$@"
+	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+}
+
+
 create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}
 	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}
@@ -45,10 +51,10 @@ cleanup_all() {
 		if [ $SAVE_ARTIFACTS -eq 3 ] ; then
 			MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
 		fi
-		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+		irc_message "$MESSAGE"
 	elif [ $SAVE_ARTIFACTS -eq 2 ] ; then
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
-		kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved." || true # don't fail the whole job
+		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved."
 	fi
 	rm -r $TMPDIR
 }
@@ -128,7 +134,7 @@ handle_ftbr() {
 	if [ "${OLD_STATUS}" = "reproducible" ]; then
 		MESSAGE="status changed from reproducible -> unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
-		# kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+		# irc_message "$MESSAGE"
 	fi
 }
 

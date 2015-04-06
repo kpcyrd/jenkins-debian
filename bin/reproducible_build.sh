@@ -179,16 +179,25 @@ dbd_timeout() {
 }
 
 call_debbindiff() {
-	init_debbindiff
+	init_debbindiff  # check and set up locks for chroot
+	local TMPLOG=(mktemp --tmpdir=$PWD)
 	echo | tee -a ${RBUILDLOG}
 	TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 17 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
 	set -x
-	( timeout $TIMEOUT schroot --directory $TMPDIR -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --html ./${DBDREPORT} ./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 ) 2>&1 >> ${RBUILDLOG}
+	( timeout $TIMEOUT schroot \
+		--directory $TMPDIR \
+		-c source:jenkins-reproducible-unstable-debbindiff \
+		debbindiff -- \
+			--html ./${DBDREPORT} \
+			./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
+			./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 \
+	) 2>&1 >> $TMPLOG
 	RESULT=$?
 	set +x
-	rm -f $DBDCHROOT_READLOCK
+	cat $TMPLOG | tee -a $RBUILDLOG
+	rm -f $DBDCHROOT_READLOCK $TMPLOG
 	echo | tee -a ${RBUILDLOG}
 	case $RESULT in
 		124)

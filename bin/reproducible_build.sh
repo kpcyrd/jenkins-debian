@@ -180,9 +180,9 @@ init_debbindiff() {
 }
 
 dbd_timeout() {
-	local msg="DBDVERSION was killed after running into timeout after ${TIMEOUT}"
+	local msg="DBDVERSION was killed after running into timeout after $1"
 	if [ ! -s ./${DBDREPORT} ] ; then
-		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${DBDREPORT}
+		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
 	else
 		local msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
@@ -194,7 +194,7 @@ call_debbindiff() {
 	init_debbindiff  # check and set up locks for chroot
 	local TMPLOG=(mktemp --tmpdir=$PWD)
 	echo | tee -a ${RBUILDLOG}
-	TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 17 lines above
+	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 17 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
 	set -x
@@ -222,7 +222,7 @@ call_debbindiff() {
 			handle_ftbr "$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
-			dbd_timeout
+			dbd_timeout $TIMEOUT
 			;;
 		*)
 			handle_ftbr "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it"
@@ -383,7 +383,7 @@ cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 check_suitability
 build_rebuild  # defines FTBFS, RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
-	call_debbindiff
+	call_debbindiff  # defines DBDVERSION
 fi
 
 cd ..

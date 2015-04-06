@@ -116,16 +116,19 @@ handle_ftbfs() {
 }
 
 handle_ftbr() {
+	# a ftbr explaination message could be passed
+	local FTBRmessage="$@"
 	echo | tee -a ${RBUILDLOG}
-	echo -n "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}" | tee -a ${RBUILDLOG}
+	echo "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
 	cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
+	if [ ! -z "$FTRmessage" ] ; then
+		echo "${FTBRmessage}." | tee -a ${RBUILDLOG}
+	fi
 	if [ -f ./${DBDREPORT} ] ; then
-		echo -n ", $DEBBINDIFFOUT" | tee -a ${RBUILDLOG}
 		mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
 	else
-		echo -n ", $DBDVERSION produced no output (which is strange)"
+		echo "$DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
-	echo "." | tee -a ${RBUILDLOG}
 	calculate_build_duration
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '${VERSION}', 'unreproducible', '$DATE', '$DURATION')"
 	sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', 'unreproducible', '${DATE}', '${DURATION}')"
@@ -210,20 +213,18 @@ call_debbindiff() {
 		0)
 			handle_reproducible
 		1)
-			DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
-			handle_ftbr
+			handle_ftbr "$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
 		2)
-			DEBBINDIFFOUT="$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			SAVE_ARTIFACTS=3
-			handle_ftbr
+			handle_ftbr "$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
 			dbd_timeout
 			;;
 		*)
-			DEBBINDIFFOUT="Something weird with $DBDVERSION happened and I don't know how to handle it. Check out $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
-			handle_ftbr
+			handle_ftbr "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it"
+			irc_message "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it. Check out $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
 			;;
 	esac
 	print_out_duration

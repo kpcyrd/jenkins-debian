@@ -22,7 +22,6 @@ irc_message() {
 	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 }
 
-
 create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}
 	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}
@@ -77,7 +76,7 @@ calculate_build_duration() {
 update_db_and_html() {
 	# everything passed at this function is saved as a status of this package in the db
 	local STATUS="$@"
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (payyckage_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '$STATUS', '$DATE', '$DURATION')"
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '$STATUS', '$DATE', '$DURATION')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
 		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', '${STATUS}', '${DATE}', '${DURATION}')"
 	fi
@@ -218,6 +217,7 @@ call_debbindiff() {
 	case $RESULT in
 		0)
 			handle_reproducible
+			;;
 		1)
 			handle_ftbr "$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
@@ -284,7 +284,6 @@ check_suitability() {
 	# check whether the package is not for us...
 	local SUITABLE=false
 	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
-	set +x
 	for arch in ${ARCHITECTURES} ; do
 		if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
 			local SUITABLE=true
@@ -346,7 +345,7 @@ build_rebuild() {
 			FTBFS=0
 			cleanup_userContent # FIXME check wheter my changes here are fine
 			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-			RBUIlDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+			RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}

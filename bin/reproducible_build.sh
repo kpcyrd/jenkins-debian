@@ -79,7 +79,6 @@ update_db_and_html() {
 	fi
 	# unmark build since it's properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
-	set +x
 	gen_packages_html $SUITE $SRCPACKAGE
 	echo
 	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/${ARCH}/$SRCPACKAGE.html"
@@ -126,12 +125,12 @@ handle_ftbr() {
 	echo "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
 	cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ ! -z "$FTRmessage" ] ; then
-		echo "${FTBRmessage}." | tee -a ${RBUILDLOG}
+		echo "$(date) - ${FTBRmessage}." | tee -a ${RBUILDLOG}
 	fi
 	if [ -f ./${DBDREPORT} ] ; then
 		mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
 	else
-		echo "$DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
+		echo "$(date) - $DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	calculate_build_duration
 	update_db_and_html "unreproducible"
@@ -181,11 +180,14 @@ init_debbindiff() {
 }
 
 dbd_timeout() {
-	echo "$(date) - $DBDVERSION was killed after running into timeout after $TIMEOUT... maybe there is still $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}" | tee -a ${RBUILDLOG}
+	local msg="DBDVERSION was killed after running into timeout after ${TIMEOUT}"
 	if [ ! -s ./${DBDREPORT} ] ; then
 		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after $TIMEOUT..." >> ${DBDREPORT}
+	else
+		local msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
 	SAVE_ARTIFACTS=3
+	handle_ftbr "$msg"
 }
 
 call_debbindiff() {

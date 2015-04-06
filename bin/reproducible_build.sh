@@ -200,20 +200,21 @@ call_debbindiff() {
 	rm -f $DBDCHROOT_READLOCK $TMPLOG
 	echo | tee -a ${RBUILDLOG}
 	case $RESULT in
-		124)
-			dbd_timeout
-			;;
 		0)
 			handle_reproducible
 		1)
 			DEBBINDIFFOUT="$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
+			handle_ftbr
 			;;
 		2)
 			DEBBINDIFFOUT="$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			SAVE_ARTIFACTS=3
+			handle_ftbr
+			;;
+		124)
+			dbd_timeout
 			;;
 	esac
-	handle_ftbr
 	print_out_duration
 }
 

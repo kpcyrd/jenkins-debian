@@ -32,17 +32,18 @@ create_results_dirs() {
 
 save_artifacts() {
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
+		local BASE="/var/lib/jenkins/userContent"
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		local URL="$REPRODUCIBLE_URL/$ARTIFACTS/"
-		local HEADER="$ARTIFACTS/.HEADER.html"
-		mkdir -p /var/lib/jenkins/userContent/$ARTIFACTS
-		cp -r $TMPDIR/* /var/lib/jenkins/userContent/$ARTIFACTS/
+		local HEADER="$BASE/$ARTIFACTS/.HEADER.html"
+		mkdir -p $BASE/$ARTIFACTS
+		cp -r $TMPDIR/* $BASE/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
 		local msg="Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them.\n"
-		local msg="WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
-		local msg="If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
-		echo $msg | tee -a $BUILDLOG
-		echo $msg | sed 's#\n#\n<br />#g' > $HEADER
+		local msg="${msg}WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
+		local msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
+		printf "$msg" | tee -a $BUILDLOG
+		echo "$msg" | sed 's#\n#\n<br />#g' > $HEADER
 		echo "Package page: <a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
 		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}

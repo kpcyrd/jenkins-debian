@@ -78,7 +78,10 @@ calculate_build_duration() {
 update_db_and_html() {
 	# everything passed at this function is saved as a status of this package in the db
 	local STATUS="$@"
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', 'None', '$STATUS', '$DATE', '$DURATION')"
+	if [ -z "$VERSION" ] ; then
+		VERSION="None"
+	fi
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '$VERSION', '$STATUS', '$DATE', '$DURATION')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
 		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', '${STATUS}', '${DATE}', '${DURATION}')"
 	fi

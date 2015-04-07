@@ -380,14 +380,13 @@ RBUILDLOG=$(mktemp --tmpdir=$TMPDIR) # FIXME check wheter my changes here are fi
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
 
-DBDREPORT=$(echo ${SRCPACKAGE}_${EVERSION}.debbindiff.html)
-BUILDINFO=${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo
-
 init
 get_source_package
 
 VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
 EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
+DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
+BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 

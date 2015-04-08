@@ -13,6 +13,23 @@ explain() {
 	echo
 }
 
+#
+# set up users and groups
+#
+if ! getent group jenkins-adm ; then
+	sudo addgroup --system jenkins-adm
+fi
+if ! getent passwd jenkins-adm ; then
+	sudo adduser --system --no-create-home --ingroup jenkins-adm --disable-login --no-create-home jenkins-adm
+	sudo usermod -G jenkins
+fi
+for user in helmut holger mattia ; do
+	if ! getent passwd $user ; then
+		sudo adduser --gecos "" $user
+		sudo usermod -G jenkins,jenkins-adm
+	fi
+done
+
 mkdir -p /srv/workspace
 
 if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
@@ -183,7 +200,9 @@ if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 	sudo a2enmod macro
 fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
+sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm
 sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
+sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/000-default
 # for reproducible.d.n url rewriting:
 sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 sudo service apache2 reload
@@ -196,7 +215,10 @@ sudo service munin-node force-reload
 # install the heart of jenkins.debian.net
 #
 cd $BASEDIR
-cp --preserve=mode,timestamps -r bin logparse job-cfg features live /srv/jenkins/
+for dir in bin logparse job-cfg features live ; do
+	cp --preserve=mode,timestamps -r $dir /srv/jenkins/
+	chmod -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
+done
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."
 cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/

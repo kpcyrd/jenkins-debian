@@ -156,14 +156,12 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** the grepping should probably only done on files younger then $check_frequency
 
 * misc
-** reproducible: dont delete userContent/$pkg on build begin..
 ** move all content into /var/lib/userContent/reproducible/
 ** more graphs: graph average build duration by day
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** use one css for all, not two minimally different ones
 ** repo-comparison: check for binaries without source
-** turn job-cfg/g-i.yaml into .yaml.py
 
 * notes related
 ** hint issues of a package while hovering over it
@@ -224,6 +222,7 @@ These small changes are probably still worth doing anyway:
 * g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
 * download .isos once in central place
 * g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
+* turn job-cfg/g-i.yaml into .yaml.py
 
 The following ideas should really only be implemented for the new 'lvc*' tests.... (but are kept here for now)
 

@@ -352,7 +352,7 @@ build_rebuild() {
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
-			cleanup_userContent # FIXME check wheter my changes here are fine
+			cleanup_userContent
 			chmod 644 $RBUILDLOG
 			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
@@ -378,7 +378,7 @@ cd $TMPDIR
 
 DATE=$(date +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
-RBUILDLOG=$(mktemp --tmpdir=$TMPDIR) # FIXME check wheter my changes here are fine
+RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
 

@@ -218,6 +218,17 @@ if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 fi
 
+# find + chmod files with bad permissions
+BADPERMS=$(find /var/lib/jenkins/userContent/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f)
+if [ ! -x "$BADPERMS" ] ; then
+    DIRTY=true
+    echo
+    echo "Warning: Found files with bad permissions (!=644):"
+    echo "Please fix permission manually"
+    echo "$BADPERMS" | xargs echo chmod -v 644
+    echo
+fi
+
 if ! $DIRTY ; then
 	echo "Everything seems to be fine."
 	echo

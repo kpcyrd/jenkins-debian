@@ -8,6 +8,7 @@ warning /Warning: old temp directories found in .+/
 warning /Warning: lock .+ still exists, exiting./
 warning /Warning: processes found which should not be there/
 warning /Warning: packages found where the build was started more than 24h ago:/
+warning /Warning: Found files with bad permissions.+/
 warning /Warning: .+ could not be fully removed./
 warning /Warning: could not download.+/
 warning /Warning: the following failed builds have been found/

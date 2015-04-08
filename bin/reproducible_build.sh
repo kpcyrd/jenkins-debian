@@ -353,6 +353,7 @@ build_rebuild() {
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
 			cleanup_userContent # FIXME check wheter my changes here are fine
+			chmod 644 $RBUILDLOG
 			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}

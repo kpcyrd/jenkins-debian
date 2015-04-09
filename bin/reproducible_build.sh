@@ -261,11 +261,11 @@ choose_package () {
 
 init() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
-		AANOUNCE=" Artifacts will be preserved."
+		local AANOUNCE="Artifacts will be preserved."
 	fi
 	create_results_dirs
 	echo "============================================================================="
-	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now.$AANOUNCE"
+	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now. $AANOUNCE"
 	echo "============================================================================="
 	# mark build attempt
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"

@@ -16,15 +16,15 @@ explain() {
 #
 # set up users and groups
 #
-if ! getent group jenkins-adm ; then
+if ! getent group jenkins-adm > /dev/nnull ; then
 	sudo addgroup --system jenkins-adm
 fi
-if ! getent passwd jenkins-adm ; then
-	sudo adduser --system --no-create-home --ingroup jenkins-adm --disable-login --no-create-home jenkins-adm
+if ! getent passwd jenkins-adm > /dev/null  ; then
+	sudo adduser --system --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
 	sudo usermod -G jenkins
 fi
 for user in helmut holger mattia ; do
-	if ! getent passwd $user ; then
+	if ! getent passwd $user > /dev/null ; then
 		sudo adduser --gecos "" $user
 		sudo usermod -G jenkins,jenkins-adm
 	fi

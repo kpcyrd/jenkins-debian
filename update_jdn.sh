@@ -217,7 +217,7 @@ sudo service munin-node force-reload
 cd $BASEDIR
 for dir in bin logparse job-cfg features live ; do
 	cp --preserve=mode,timestamps -r $dir /srv/jenkins/
-	chmod -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
+	chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
 cp procmailrc /var/lib/jenkins/.procmailrc
 explain "Jenkins updated."

@@ -30,6 +30,33 @@ create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}
 }
 
+handle_race() {
+	echo | tee -a $BUILDLOG
+	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting.\n"
+	local msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different build.\n"
+	case $1 in
+		"db")
+			local msg="${msg}The race condition was cought while marking the build attempt in the database.\n"
+			;;
+		"init")
+			local msg="${msg}The race condition was cought while writing the lockfile.\n"
+			;;
+		"lockfile")
+			local msg="${msg}The race condition was cought while checking the lockfile for pid correctness.\n"
+			;;
+	esac
+	printf "$msg" | tee -a $BUILDLOG
+	printf "$msg" | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
+	echo "$(date) - Terminating nicely this build..." | tee -a $RBUILDLOG
+	exit 0
+}
+
+check_for_races() {
+	if [ $$ -ne $(cat "$LOCKFILE") ] ; then
+		handle_race lockfile
+	fi
+}
+
 save_artifacts() {
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local BASE="/var/lib/jenkins/userContent"
@@ -62,7 +89,7 @@ cleanup_all() {
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved."
 	fi
-	rm -r $TMPDIR
+	rm -r $TMPDIR $LOCKFILE
 }
 
 cleanup_userContent() {
@@ -268,7 +295,16 @@ init() {
 	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now. $AANOUNCE"
 	echo "============================================================================="
 	# mark build attempt
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
+	if [ -z $(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'") ] ; then
+		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
+	else
+		handle_race db
+	fi
+	if [ ! -f "$LOCKFILE" ] ; then
+		echo $$ > "$LOCKFILE"
+	else
+		handle_race init
+	fi
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
 }
@@ -327,6 +363,7 @@ build_rebuild() {
 	set +x
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
+		check_for_races
 		echo "============================================================================="
 		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
 		echo "============================================================================="
@@ -382,6 +419,9 @@ RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
 
+# used to catch race conditions where the same package is being built by two parallel jobs
+LOCKFILE="/tmp/${SUITE}-${ARCH}-${SRCPACKAGE}"
+
 init
 get_source_package
 
@@ -392,12 +432,15 @@ BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 
+check_for_races
 check_suitability
+check_for_races
 build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
 	call_debbindiff  # defines DBDVERSION
 fi
 
+check_for_races
 cd ..
 cleanup_all
 trap - INT TERM EXIT

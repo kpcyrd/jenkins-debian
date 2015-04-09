@@ -1340,7 +1340,10 @@ case $NAME in
 			# kill qemu and image
 			#
 			set -x
-			sudo kill -9 $(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}') || true
+			TOKILL=$(ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " 2>/dev/null | awk '{print $1}')
+			if [ ! -z "$TOKILL" ] ; then
+				sudo kill -9 "$TOKILL" || true
+			fi
 			set +x
 			if [ ! -z "$IMAGE" ] ; then
 				sudo umount -l $IMAGE_MNT || true

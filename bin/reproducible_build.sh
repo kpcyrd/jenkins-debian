@@ -95,9 +95,9 @@ cleanup_all() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then save_artifacts ; fi
 	if [ "$NOTIFY" = "failure" ] ; then
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
-		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log and $BUILD_URL to find out why no artifacts were saved."
+		irc_message "Check $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and $BUILD_URL to find out why no artifacts were saved (final status $STATUS)"
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
-		irc_message "This package just finished building: $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
+		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE just finished building ($STATUS)"
 	fi
 	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
@@ -116,7 +116,7 @@ calculate_build_duration() {
 
 update_db_and_html() {
 	# everything passed at this function is saved as a status of this package in the db
-	local STATUS="$@"
+	STATUS="$@"
 	if [ -z "$VERSION" ] ; then
 		VERSION="None"
 	fi
@@ -456,7 +456,7 @@ check_suitability
 check_for_race_conditions
 build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
-	call_debbindiff  # defines DBDVERSION
+	call_debbindiff  # defines DBDVERSION, update_db_and_html defines STATUS
 fi
 
 check_for_race_conditions

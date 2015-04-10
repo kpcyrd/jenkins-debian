@@ -52,7 +52,7 @@ OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -name "reproducible-*-*" -mtime +
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old schroots found in /schroots, which have been deleted:"
-	find /schroots/ -maxdepth 1 -type d -name "reproducible-*-*" -mtime +2 -exec sudo rm -rf {} \;
+	find /schroots/ -maxdepth 1 -type d -name "reproducible-*-*" -mtime +2 -exec sudo rm -rf --one-file-system {} \;
 	echo "$OLDSTUFF"
 	echo
 	DIRTY=true

@@ -119,6 +119,7 @@ fi
 # find+terminate processes which should not be there
 HAYSTACK=$(mktemp)
 RESULT=$(mktemp)
+TOKILL=$(mktemp)
 PBUIDS="1234 1111 2222"
 ps axo pid,user,size,pcpu,cmd > $HAYSTACK
 for i in $PBUIDS ; do
@@ -128,24 +129,27 @@ for i in $PBUIDS ; do
 	done
 done
 if [ -s $RESULT ] ; then
-	echo
-	echo "Warning: processes found which should not be there, maybe killing them now:"
-	cat $RESULT
-	echo
 	for PROCESS in $(cat $RESULT | cut -d " " -f1 | xargs echo) ; do
 		AGE=$(ps -p $PROCESS -o etimes= || echo 0)
 		# a single build may only take half a day, so...
 		if [ $AGE -gt 43200 ] ; then
-			sudo kill -9 $PROCESS 2>&1
-			echo "'kill -9 $PROCESS' done."
-		else
-			echo "Did not kill $PROCESS as it is only $AGE seconds old."
+			echo "$PROCESS" >> $TOKILL
 		fi
 	done
-	echo
-	DIRTY=true
+	if [ -s $TOKILL ] ; then
+		DIRTY=true
+		echo
+		echo "Warning: processes found which should not be there, killing them now:"
+		cat $TOKILL | xargs echo
+		echo
+		for PROCESS in $(cat $TOKILL | xargs echo) ; do
+			echo sudo kill -9 $PROCESS 2>&1
+			#echo "'kill -9 $PROCESS' done."  # FIXME re-enable once we're sure this new code is fine
+		done
+		echo
+	fi
 fi
-rm $HAYSTACK $RESULT
+rm $HAYSTACK $RESULT $TOKILL
 
 # find packages which build didnt end correctly
 QUERY="

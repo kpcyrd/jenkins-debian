@@ -176,7 +176,7 @@ def scheduler_untested_packages(suite, limit):
 
 def scheduler_new_versions(suite, limit):
     criteria = 'tested before, new version available, sorted by last build date'
-    query = """SELECT DISTINCT s.id, s.name
+    query = """SELECT DISTINCT s.id, s.name, s.version, r.version
                FROM sources AS s JOIN results AS r ON s.id = r.package_id
                WHERE s.suite='{suite}'
                AND s.version != r.version
@@ -185,7 +185,9 @@ def scheduler_new_versions(suite, limit):
                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                ORDER BY r.build_date
                LIMIT {limit}""".format(suite=suite, limit=limit)
-    packages = query_db(query)
+    pkgs = query_db(query)
+    # this is to avoid perpetual rescheduling of packages in our exp repository
+    packages = [(x[0], x[1]) for x in pkgs if version_compare(x[2], x[3]) > 0]
     print_schedule_result(suite, criteria, packages)
     return packages
 

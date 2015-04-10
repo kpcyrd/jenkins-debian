@@ -354,6 +354,13 @@ schema_updates = {
             url TEXT,
             PRIMARY KEY (name))''',
         'INSERT INTO rb_schema VALUES ("10", "' + now + '")'],
+    11: [ # table with removed packages, to enable the maintenance job to do clean up
+        '''CREATE TABLE removed_packages (
+            name TEXT NOT NULL,
+            suite TEXT NOT NULL,
+            architecture TEXT NOT NULL,
+            PRIMARY KEY (name, suite, architecture))''',
+        'INSERT INTO rb_schema VALUES ("11", "' + now + '")'],
 }
 
 

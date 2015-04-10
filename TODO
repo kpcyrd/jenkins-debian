@@ -138,7 +138,6 @@ properties:
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** use one css for all, not two minimally different ones
-** restore the "find packages which have been removed from sid" part of reproducible_maintenance.sh
 ** repo-comparison: check for binaries without source
 ** turn job-cfg/g-i.yaml into .yaml.py
 

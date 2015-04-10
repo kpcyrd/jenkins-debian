@@ -185,26 +185,25 @@ fi
 rm $PACKAGES
 
 # find packages which have been removed from unstable
-# commented out for now. This can't be done using the database anymore
-QUERY="SELECT source_packages.name FROM source_packages
-		WHERE source_packages.name NOT IN
-		(SELECT sources.name FROM sources)
-	LIMIT 25"
-#PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
-PACKAGES=''
+QUERY="SELECT name, suite, architecture FROM removed_packages
+		LIMIT 25"
+PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
 if [ ! -z "$PACKAGES" ] ; then
+	DIRTY=true
 	echo
+	echo "Warning: found files relative to old packages, no more in the archive:"
 	echo "Removing these removed packages from database:"
 	echo $PACKAGES
 	echo
-	QUERY="DELETE FROM source_packages
-			WHERE source_packages.name NOT IN
-			(SELECT sources.name FROM sources)
-		LIMIT 25"
-	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
-	cd /var/lib/jenkins/userContent
-	for i in PACKAGES ; do
-		find rb-pkg/ rbuild/ notes/ dbd/ -name "${i}_*" -exec rm -v {} \;
+	for pkg in "$PACKAGES" ; do
+		PKGNAME=$(echo "$pkg" | cut -f '|' -d 1)
+		SUITE=$(echo "$pkg" | cut -f '|' -d 2)
+		ARCH=$(echo "$pkg" | cut -f '|' -d 3)
+		QUERY="DELETE FROM removed_packages
+			WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
+		sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
+		cd /var/lib/jenkins/userContent
+		find rb-pkg/$SUITE/$ARCH  rbuild/$SUITE/$ARCH notes/ dbd/$SUITE/$ARCH buildinfo/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs echo rm -v
 	done
 	cd -
 fi

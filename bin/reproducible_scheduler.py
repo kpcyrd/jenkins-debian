@@ -102,11 +102,13 @@ def update_sources_tables(suite):
     rmed_pkgs = [x for x in cur_pkgs_name if x not in new_pkgs_name]
     log.info('Now deleting ' + str(len(rmed_pkgs)) + ' removed packages: ' + str(rmed_pkgs))
     rmed_pkgs_id = []
+    pkgs_to_rm = []
     for pkg in rmed_pkgs:
         result = query_db(('SELECT id FROM sources ' +
                           'WHERE name="{name}" ' +
                           'AND suite="{suite}"').format(name=pkg, suite=suite))
         rmed_pkgs_id.extend(result)
+        pkgs_to_rm.extend([(x[0], x[1], 'amd64') for x in result])
     log.debug('removed packages ID: ' + str([str(x[0]) for x in rmed_pkgs_id]))
     cursor.executemany('DELETE FROM sources ' +
                        'WHERE id=?', rmed_pkgs_id)
@@ -114,6 +116,9 @@ def update_sources_tables(suite):
                        'WHERE package_id=?', rmed_pkgs_id)
     cursor.executemany('DELETE FROM schedule ' +
                        'WHERE package_id=?', rmed_pkgs_id)
+    cursor.executemany('INSERT INTO removed_packages '  +
+                       '(name, suite, architecture) ' +
+                       'VALUES (?, ?, ?)', pkgs_to_rm)
     conn_db.commit()
     # finally check whether the db has the correct number of packages
     pkgs_end = query_db('SELECT count(*) FROM sources WHERE suite="%s"' % suite)

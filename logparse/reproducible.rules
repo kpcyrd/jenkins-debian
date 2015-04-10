@@ -9,6 +9,7 @@ warning /Warning: lock .+ still exists, exiting./
 warning /Warning: old schroots found in /schroots, which have been deleted:/
 warning /Warning: processes found which should not be there/
 warning /Warning: packages found where the build was started more than 24h ago:/
+warning /Warning: found files relative to old packages, no more in the archive:/
 warning /Warning: Found files with bad permissions.+/
 warning /Warning: .+ could not be fully removed./
 warning /Warning: could not download.+/

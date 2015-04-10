@@ -224,7 +224,7 @@ fi
 
 # find + chmod files with bad permissions
 BADPERMS=$(find /var/lib/jenkins/userContent/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f)
-if [ ! -x "$BADPERMS" ] ; then
+if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo
     echo "Warning: Found files with bad permissions (!=644):"

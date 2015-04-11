@@ -854,7 +854,7 @@ post_install_boot() {
 						*)	;;
 					esac
 					;;
-		debian-edu*-combi-server) case $TOKEN in
+		debian-edu*ltsp-server|debian-edu*-combi-server) case $TOKEN in
 						# debian-edu installations report error found during installation, go forward
 						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;

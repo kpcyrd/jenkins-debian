@@ -158,7 +158,7 @@ def gen_extra_links(package, version, suite, arch, status):
 
 def gen_suites_links(package, suite):
     html = ''
-    query = 'SELECT s.suite, s.architecture, s.version, r.status ' + \
+    query = 'SELECT s.suite, s.architecture, s.version, r.version, r.status ' + \
             'FROM sources AS s LEFT JOIN results AS r ON r.package_id=s.id ' + \
             'WHERE s.name="{pkg}"'.format(pkg=package)
     results = query_db(query)
@@ -168,10 +168,12 @@ def gen_suites_links(package, suite):
     if len(results) == 1:
         return html
     for i in results:
-        # i[0]: suite, i[1]: arch, i[2]: version, i[3]: status (NULL if untested)
-        if i[0] == suite:
+        # i[0]: suite, i[1]: arch, i[2]: avail version, i[3]: tested version,
+        # i[4]: status (i[2] and i[3] will be NULL if untested)
+        if i[0] == suite:  # don't link the current suite
             continue
-        status = 'untested' if not i[3] else i[3]
+        status = 'untested' if not i[4] else i[4]
+        version = i[3] if i[3] else i[2]
         if status == 'unreproducible':
             status = 'FTBR'
         html += '<span class="avoidwrap">\n' + tab
@@ -185,7 +187,7 @@ def gen_suites_links(package, suite):
         html += icon.format(icon=join_status_icon(status)[1], status=status)
         html += tab + ' <a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + \
                 '/' + str(package) + '.html" target="_parent">' + i[0] + \
-                ':' + i[2] + '</a>\n'
+                ':' + version + '</a>\n'
         html += '</span>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))
 

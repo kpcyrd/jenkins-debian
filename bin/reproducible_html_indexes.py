@@ -19,6 +19,7 @@ Reference doc for the folowing lists:
 * pages is just a list of pages. It is actually a dictionary, where every
   element is a page. Every page has:
   + `title`: The page title
+  + `header`: (optional) sane html to be printed on top of the page
   + `body`: a list of dicts containing every section that made up the page.
     Every section has:
     - `icon_status`: the name of a icon (see join_status_icon())
@@ -334,6 +335,8 @@ def build_page(page, suite=None, arch=None):
         title = pages[page]['title'].format(suite=suite, arch=arch)
     html = ''
     footnote = False
+    if pages[page].get('header'):
+        html += pages[page].get('header')
     for section in page_sections:
         if not suite:  # global page
             for lsuite in SUITES:

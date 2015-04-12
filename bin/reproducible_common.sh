@@ -99,7 +99,7 @@ schedule_packages() {
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE
 	cd /srv/jenkins/bin
-	python3 -c "from reproducible_html_indexes import build_page; build_page('scheduled')"
+	python3 -c "from reproducible_html_indexes import generate_schedule; generate_schedule()"
 }
 
 check_candidates() {

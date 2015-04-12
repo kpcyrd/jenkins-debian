@@ -22,7 +22,7 @@ from apt_pkg import version_compare
 from urllib.request import urlopen
 
 from reproducible_common import *
-from reproducible_html_indexes import build_page
+from reproducible_html_indexes import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
 
@@ -215,7 +215,7 @@ def scheduler():
     total = int(query_db(query)[0][0])
     log.info('Currently scheduled packages in all suites: ' + str(total))
     if total > 250:
-        build_page('scheduled')  # from reproducible_html_indexes
+        generate_schedule()  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
                  ', nothing to do here.')
         return
@@ -281,7 +281,7 @@ def scheduler():
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
     # update the scheduled page
-    build_page('scheduled')  # from reproducible_html_indexes, build global page
+    generate_schedule()  # from reproducible_html_indexes
     # build the kgb message text
     message = 'Scheduled in ' + '+'.join(SUITES) + ': ' + \
               '+'.join([str(len(untested[x])) for x in SUITES]) + ' new and untested packages, ' + \

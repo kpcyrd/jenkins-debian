@@ -12,14 +12,16 @@
 import os
 import re
 import sys
+import json
 import errno
 import sqlite3
 import logging
 import argparse
 import datetime
 import psycopg2
-from traceback import print_exception
+import html as HTML
 from string import Template
+from traceback import print_exception
 
 DEBUG = False
 QUIET = False
@@ -325,6 +327,32 @@ def package_has_notes(package):
         return True
     else:
         return False
+
+
+def link_package(package, suite, arch, bugs={}):
+    url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + package + '.html'
+    query = 'SELECT n.issues, n.bugs, n.comments ' + \
+            'FROM notes AS n JOIN sources AS s ON s.id=n.package_id ' + \
+            'WHERE s.name="{pkg}" AND s.suite="{suite}" ' + \
+            'AND s.architecture="{arch}"'
+    try:
+        notes = query_db(query.format(pkg=package, suite=suite, arch=arch))[0]
+    except IndexError:  # no notes for this package
+        html = '<a href="' + url + '" class="package">' + package  + '</a>'
+    else:
+        title = ''
+        for issue in json.loads(notes[0]):
+            title += issue + '\n'
+        for bug in json.loads(notes[1]):
+            title += '#' + str(bug) + '\n'
+        if notes[2]:
+            title += notes[2]
+        title = HTML.escape(title.strip())
+        html = '<a href="' + url + '" class="noted" title="' + title + \
+               '">' + package + '</a>'
+    finally:
+        html += get_trailing_icon(package, bugs)
+    return html
 
 
 def join_status_icon(status, package=None, version=None):

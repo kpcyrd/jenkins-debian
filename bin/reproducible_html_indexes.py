@@ -34,12 +34,12 @@ Reference doc for the folowing lists:
       * $count_total being the number of all tested packages
       * $count being the len() of the query indicated by `query2`
     - `query2`: useful only if `timely` is True.
-* global_pages is another list of pages. They follows the same structure of
-  "normal" pages, but with a difference: every section is building for every
-  (suite, arch) and the page itself is placed outside of any suite/arch
-  directory.
+  + global: if true, then the page will saved on the root of rb.d.n, and:
+    - the query also takes the value "status"
+    - if "nosuite" is True, then suite and arch are meant to be the default
+      values specified in _common.py, and they will not iterate over the suites
 
-Technically speaking, a package can be empty (we all love nonsense) but every
+Technically speaking, a page can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
 """
 
@@ -251,9 +251,6 @@ pages = {
     }
 }
 
-global_pages = {
-}
-
 
 def build_leading_text_section(section, rows, suite, arch):
     html = '<p>\n' + tab
@@ -294,21 +291,27 @@ def build_leading_text_section(section, rows, suite, arch):
 
 def build_page_section(page, section, suite, arch):
     try:
-        rows = query_db(queries[section['query']].format(suite=suite, arch=arch))
+        if pages[page].get('global') and pages[page]['global']:
+            suite = defaultsuite if not suite else suite
+            arch = defaultarch if not arch else arch
+            query = queries[section['query']].format(
+                status=section['db_status'], suite=suite, arch=arch)
+        else:
+            query = queries[section['query']].format(suite=suite, arch=arch)
+        rows = query_db(query)
     except:
-        print_critical_message('A query failed: ' + queries[section['query']])
+        print_critical_message('A query failed: ' + query)
         raise
     html = ''
     footnote = True if rows else False
-    if not rows:                          # there are no package in this set
-        return (html, footnote)           # do not output anything on the page.
+    if not rows:                            # there are no package in this set
+        log.debug('empty query: ' + query)  # do not output anything.
+        return (html, footnote)
     html += build_leading_text_section(section, rows, suite, arch)
     html += '<p>\n' + tab + '<code>\n'
     for row in rows:
         pkg = row[0]
-        url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
-        html += tab*2
-        html += link_package(pkg, suite, arch, bugs)
+        html += tab*2 + link_package(pkg, suite, arch, bugs)
         html += '\n'
     else:
         html += tab + '</code>\n'
@@ -320,34 +323,41 @@ def build_page_section(page, section, suite, arch):
 
 
 def build_page(page, suite=None, arch=None):
-    if suite and not arch:
+    gpage = False
+    if pages[page].get('global') and pages[page]['global']:
+        gpage = True
+    if not gpage and suite and not arch:
         print_critical_message('The architecture was not specified while ' +
                                'building a suite-specific page.')
         sys.exit(1)
-    if not suite:  # global page
+    if gpage:
         log.debug('Building the ' + page + ' global index page...')
-        page_sections = global_pages[page]['body']
-        title = global_pages[page]['title']
+        title = pages[page]['title']
     else:
         log.debug('Building the ' + page + ' index page for ' + suite + '/' +
                  arch + '...')
-        page_sections = pages[page]['body']
         title = pages[page]['title'].format(suite=suite, arch=arch)
+    page_sections = pages[page]['body']
     html = ''
     footnote = False
     if pages[page].get('header'):
         html += pages[page].get('header')
     for section in page_sections:
-        if not suite:  # global page
-            for lsuite in SUITES:
-                for larch in ARCHES:
-                    html += build_page_section(page, section, lsuite, larch)[0]
+        if gpage:
+            if section.get('nosuite') and section['nosuite']:  # only defaults
+                html += build_page_section(page, section, None, None)[0]
+            else:
+                for suite in SUITES:
+                    for arch in ARCHES:
+                        log.debug('global page §' + section['db_status'] +
+                                  ' in ' + page + ' for ' + suite + '/' + arch)
+                        html += build_page_section(page, section, suite, arch)[0]
             footnote = True
         else:
             html1, footnote1 = build_page_section(page, section, suite, arch)
             html += html1
             footnote = True if footnote1 else footnote
-    if not suite:  # global page
+    if gpage:
         destfile = BASE + '/index_' + page + '.html'
         desturl = REPRODUCIBLE_URL + '/index_' + page + '.html'
         suite = defaultsuite  # used for the links generated by write_html_page
@@ -395,5 +405,3 @@ if __name__ == '__main__':
         for arch in ARCHES:
             for page in pages.keys():
                 build_page(page, suite, arch)
-    for page in global_pages.keys():
-        build_page(page)

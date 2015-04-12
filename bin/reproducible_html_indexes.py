@@ -325,13 +325,7 @@ def build_page_section(page, section, suite, arch):
             pkg = row[0]
             url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
             html += tab*2
-        html += '<a href="' + url + '" class="'
-        if package_has_notes(pkg):
-            html += 'noted'
-        else:
-            html += 'package'
-        html += '">' + pkg + '</a>'
-        html += get_trailing_icon(pkg, bugs)
+        html += link_package(pkg, suite, arch, bugs)
         if page == 'scheduled':
             html += '</code></td></tr>'
         html += '\n'

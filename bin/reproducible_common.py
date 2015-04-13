@@ -231,7 +231,7 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
     except OSError as e:
         if e.errno != errno.EEXIST:  # that's 'File exists' error (errno 17)
             raise
-    with open(destfile, 'w') as fd:
+    with open(destfile, 'w', encoding='UTF-8') as fd:
         fd.write(html)
 
 def start_db_connection():

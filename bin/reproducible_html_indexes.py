@@ -20,6 +20,8 @@ Reference doc for the folowing lists:
   element is a page. Every page has:
   + `title`: The page title
   + `header`: (optional) sane html to be printed on top of the page
+  + `header_query`: (optional): the output of this query is put inside "tot" of
+    the string above
   + `body`: a list of dicts containing every section that made up the page.
     Every section has:
     - `icon_status`: the name of a icon (see join_status_icon())
@@ -341,7 +343,11 @@ def build_page(page, suite=None, arch=None):
     html = ''
     footnote = False
     if pages[page].get('header'):
-        html += pages[page].get('header')
+        if pages[page].get('header_query'):
+            html += pages[page]['header'].format(
+                tot=query_db(pages[page]['header_query'])[0][0])
+        else:
+            html += pages[page].get('header')
     for section in page_sections:
         if gpage:
             if section.get('nosuite') and section['nosuite']:  # only defaults

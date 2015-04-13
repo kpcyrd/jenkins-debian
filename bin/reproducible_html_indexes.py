@@ -76,7 +76,9 @@ queries = {
     '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
     'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY build_date DESC',
     'not_for_us_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY name',
-    'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name'
+    'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name',
+    'notes': 'SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" ORDER BY s.name',
+    'no_notes': 'SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY s.name'
 }
 
 pages = {
@@ -249,6 +251,83 @@ pages = {
                                  'successfully built reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
                 'timely': True
             },
+        ]
+    },
+    'notes': {
+        'global': True,
+        'title': 'Packages with notes',
+        'header': '<p>There are {tot} packages with notes.</p>',
+        'header_query': 'SELECT count(*) FROM (SELECT * FROM sources AS s JOIN notes AS n ON n.package_id=s.id GROUP BY s.name) AS tmp',
+        'body': [
+            {
+                'icon_status': 'FTBR',
+                'db_status': 'unreproducible',
+                'icon_link': '/index_FTBR.html',
+                'query': 'notes',
+                'nosuite': True,
+                'text': Template('$tot unreproducible packages in $suite/$arch :')
+            },
+            {
+                'icon_status': 'FTBFS',
+                'db_status': 'FTBFS',
+                'icon_link': '/index_FTBFS.html',
+                'query': 'notes',
+                'nosuite': True,
+                'text': Template('$tot FTBFS packages in $suite/$arch:')
+            },
+            {
+                'icon_status': 'not_for_us',
+                'db_status': 'not for us',
+                'icon_link': '/index_not_for_us.html',
+                'query': 'notes',
+                'nosuite': True,
+                'text': Template('$tot not for us packages in $suite/$arch:')
+            },
+            {
+                'icon_status': 'blacklisted',
+                'db_status': 'blacklisted',
+                'icon_link': '/index_blacklisted.html',
+                'query': 'notes',
+                'nosuite': True,
+                'text': Template('$tot blacklisted packages in $suite/$arch:')
+            },
+            {
+                'icon_status': 'reproducible',
+                'db_status': 'reproducible',
+                'icon_link': '/index_reproducible.html',
+                'query': 'notes',
+                'nosuite': True,
+                'text': Template('$tot reproducible packages in $suite/$arch:')
+            }
+        ]
+    },
+    'no_notes': {
+        'global': True,
+        'title': 'Packages without notes',
+        'header': '<p>There are {tot} faulty packages without notes, in all suites. These are the packages with failures that still need to be investigated.</p>',
+        'header_query': 'SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ("unreproducible", "FTBFS", "blacklisted") AND s.id NOT IN (SELECT package_id FROM notes))',
+        'body': [
+            {
+                'icon_status': 'FTBR',
+                'db_status': 'unreproducible',
+                'icon_link': '/index_FTBR.html',
+                'query': 'no_notes',
+                'text': Template('$tot unreproducible packages in $suite/$arch:')
+            },
+            {
+                'icon_status': 'FTBFS',
+                'db_status': 'FTBFS',
+                'icon_link': '/index_FTBFS.html',
+                'query': 'no_notes',
+                'text': Template('$tot FTBFS packages in $suite/$arch:')
+            },
+            {
+                'icon_status': 'blacklisted',
+                'db_status': 'blacklisted',
+                'icon_link': '/index_blacklisted.html',
+                'query': 'no_notes',
+                'text': Template('$tot blacklisted packages in $suite/$arch:')
+            }
         ]
     }
 }

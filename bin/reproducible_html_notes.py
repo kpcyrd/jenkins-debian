@@ -402,82 +402,6 @@ def index_issues(issues):
     log.info('Issues index now available at ' + desturl)
 
 
-def index_notes(notes, bugs):
-    log.debug('Building the index_notes page...')
-    suite = 'unstable'
-    arch = 'amd64'
-    with_notes = [x for x in all_pkgs if x[2] == suite and x[3] == arch and x[0] in notes]
-    html = '\n<p>There are ' + str(len(notes)) + ' packages with notes.</p>\n'
-    for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
-        pkgs = [x[0] for x in with_notes if x[1] == status]
-        if not pkgs:
-            continue
-        html += '<p>\n'
-        html += tab + '<img src="/static/' + join_status_icon(status)[1] + '"'
-        html += ' alt="' + status + ' icon" />\n'
-        html += tab + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch + ':\n'
-        html += tab + '<code>\n'
-        for pkg in sorted(pkgs):
-            url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
-            html += tab*2 + '<a href="' + url + '" class="noted">' + pkg
-            html += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
-        html += tab + '</code>\n'
-        html += '</p>\n'
-    html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
-    html = (tab*2).join(html.splitlines(True))
-    title = 'Packages with notes'
-    destfile = BASE + '/index_notes.html'
-    desturl = REPRODUCIBLE_URL + '/index_notes.html'
-    write_html_page(title=title, body=html, destfile=destfile,
-                    style_note=True)
-    log.info('Notes index now available at ' + desturl)
-
-
-def index_no_notes_section(notes, bugs, packages, suite, arch):
-    html = ''
-    for status in ['unreproducible', 'FTBFS']:
-        pkgs = [x for x in packages if x[3] == status]
-        if not pkgs:
-            continue
-        html += '<p>\n'
-        html += tab + '<img src="/static/' + join_status_icon(status)[1] + '"'
-        html += ' alt="' + status + ' icon" />\n'
-        html += tab + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch + ':\n'
-        html += tab + '<code>\n'
-        for pkg in pkgs:
-            # 0: name, 1: suite, 2: arch, 3: status
-            url = RB_PKG_URI + '/' + pkg[1] + '/' + pkg[2] + '/' + pkg[0] + '.html'
-            html += tab*2 + '<a href="' + url + '" class="package">' + pkg[0]
-            html += '</a>' + get_trailing_icon(pkg[0], bugs) + '\n'
-        html += tab + '</code>\n'
-        html += '</p>\n'
-    return html
-
-
-def index_no_notes(notes, bugs):
-    log.debug('Building the index_no_notes page...')
-    all_bad_pkgs = query_db('SELECT s.name, s.suite, s.architecture, r.status ' +
-                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
-                        'WHERE r.status = "unreproducible" OR r.status = "FTBFS"' +
-                        'ORDER BY r.build_date DESC')
-    without_notes = [x for x in all_bad_pkgs if x[0] not in notes]
-    html = '\n<p>There are ' + str(len(without_notes)) + ' faulty ' \
-           + 'packages without notes, in all suites. These are the packages ' \
-           + 'with failures that still need to be investigated.</p>\n'
-    for suite in SUITES:
-        for arch in ARCHES:
-            pkgs = [x for x in without_notes if x[1] == suite and x[2] == arch]
-            html += index_no_notes_section(notes, bugs, pkgs, suite, arch)
-    html += '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
-    html = (tab*2).join(html.splitlines(True))
-    title = 'Packages without notes'
-    destfile = BASE + '/index_no_notes.html'
-    desturl = REPRODUCIBLE_URL + '/index_no_notes.html'
-    write_html_page(title=title, body=html, destfile=destfile,
-                    style_note=True)
-    log.info('Packages without notes index now available at ' + desturl)
-
-
 if __name__ == '__main__':
     all_pkgs = query_db('SELECT s.name, r.status, s.suite, s.architecture ' +
                         'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
@@ -489,10 +413,10 @@ if __name__ == '__main__':
     iterate_over_notes(notes)
     iterate_over_issues(issues)
     index_issues(issues)
-    index_notes(notes, bugs)
-    index_no_notes(notes, bugs)
     purge_old_notes(notes)
     gen_packages_html(notes) # regenerate all rb-pkg/ pages
+    build_page('notes')
+    build_page('no_notes')
     for suite in SUITES:
         for arch in ARCHES:
             build_page('FTBFS', suite, arch)

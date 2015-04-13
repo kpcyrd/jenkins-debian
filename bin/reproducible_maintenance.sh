@@ -140,12 +140,16 @@ if [ -s $RESULT ] ; then
 		DIRTY=true
 		echo
 		echo "Warning: processes found which should not be there, killing them now:"
-		cat $TOKILL | xargs echo
+		for PROCESS in $(cat $TOKILL) ; do
+			PSCALL=${PSCALL:+"$PSCALL,"}"$PROCESS"
+		done
+		ps -F -p $PSCALL
 		echo
-		for PROCESS in $(cat $TOKILL | xargs echo) ; do
+		for PROCESS in $(cat $TOKILL) ; do
 			echo sudo kill -9 $PROCESS 2>&1
 			#echo "'kill -9 $PROCESS' done."  # FIXME re-enable once we're sure this new code is fine
 		done
+		echo "Please kill processes manually for now."
 		echo
 	fi
 fi

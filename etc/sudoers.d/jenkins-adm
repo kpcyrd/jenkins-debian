@@ -1,4 +1,4 @@
 # allow member of the jenkins-adm group to sudo-to the jenkins-adm user (owner
 # of jenkins script) and the jenkins user itself
 %jenkins-adm ALL=(jenkins:jenkins) NOPASSWD: ALL
-%jenkins-adm ALL=(jenkins-amd:jenkins-adm) NOPASSWD: ALL
+%jenkins-adm ALL=(jenkins-adm:jenkins-adm) NOPASSWD: ALL

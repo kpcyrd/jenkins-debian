@@ -138,6 +138,7 @@ if [ -s $RESULT ] ; then
 	done
 	if [ -s $TOKILL ] ; then
 		DIRTY=true
+		PSCALL=""
 		echo
 		echo "Warning: processes found which should not be there, killing them now:"
 		for PROCESS in $(cat $TOKILL) ; do

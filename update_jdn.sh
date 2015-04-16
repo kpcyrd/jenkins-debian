@@ -306,7 +306,7 @@ cd $BASEDIR
 KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
     # to assure the files are owned by the right user/team
-    sudo -u jenkins-adm "$BASEDIR/deploy-kgb"
+    sudo -u jenkins-adm "$BASEDIR/deploy-kgb.py"
 else
     echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
     echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."

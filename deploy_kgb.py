@@ -13,7 +13,7 @@ import os
 import yaml
 
 secrets = '/srv/jenkins/kgb/secrets.yml'
-outputs = '/srv/jenkins/kgb'
+outputs = '/srv/jenkins/kgb/'
 
 with open(secrets) as fd:
     passwords = yaml.load(fd)

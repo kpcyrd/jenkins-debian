@@ -45,12 +45,14 @@ if ! mountpoint -q /srv/workspace; then
 fi
 
 # make sure needed directories exists
-for directory in  /srv/jenkins /schroots /srv/reproducible-results /srv/d-i /srv/live-build ; do
+for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory
 	fi
 done
+sudo mkdir /srv/jenkins
+sudo chown jenkins-adm.jenkins-adm /srv/jenkins
 
 if ! test -h /chroots; then
 	rmdir /chroots || rm -f /chroots # do not recurse
@@ -295,6 +297,19 @@ else
     if ! sudo vgs $VGNAME >/dev/null 2>&1; then
         sudo vgcreate $VGNAME $PVNAME
     fi
+fi
+
+#
+# generate the kgb-client configurations
+#
+cd $BASEDIR
+KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
+if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
+    # to assure the files are owned by the right user/team
+    sudo -u jenkins-adm "$BASEDIR/deploy-kgb"
+else
+    echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
+    echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."
 fi
 
 #

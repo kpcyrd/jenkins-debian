@@ -19,7 +19,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 == General ToDo
 
 * replace amd64 in scripts with $HOSTARCH
-* put kgb-client.conf in git and sed passwords from filesystem into it...
 ** alioth... just manually push it
 * *backup*:
 ** gpg encrypted to some keys

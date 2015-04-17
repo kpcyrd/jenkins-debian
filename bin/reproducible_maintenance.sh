@@ -81,7 +81,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 			*)		;;
 		esac
 	done
-	cd -
+	cd - > /dev/null
 	# report the rest
 	OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
 	if [ ! -z "$OLDSTUFF" ] ; then
@@ -206,7 +206,7 @@ if grep -q '|' $PACKAGES ; then
 		cd /var/lib/jenkins/userContent
 		find rb-pkg/$SUITE/$ARCH  rbuild/$SUITE/$ARCH notes/ dbd/$SUITE/$ARCH buildinfo/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs echo rm -v
 	done
-	cd -
+	cd - > /dev/null
 fi
 rm $PACKAGES
 

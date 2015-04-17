@@ -108,8 +108,9 @@ def update_sources_tables(suite):
                           'WHERE name="{name}" ' +
                           'AND suite="{suite}"').format(name=pkg, suite=suite))
         rmed_pkgs_id.extend(result)
-        pkgs_to_rm.extend([(x[0], x[1], 'amd64') for x in result])
+        pkgs_to_rm.append((pkg, suite, 'amd64'))
     log.debug('removed packages ID: ' + str([str(x[0]) for x in rmed_pkgs_id]))
+    log.debug('removed packages: ' + str(pkgs_to_rm))
     cursor.executemany('DELETE FROM sources ' +
                        'WHERE id=?', rmed_pkgs_id)
     cursor.executemany('DELETE FROM results ' +

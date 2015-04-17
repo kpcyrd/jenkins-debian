@@ -184,18 +184,19 @@ if grep -q '|' $PACKAGES ; then
 fi
 rm $PACKAGES
 
-# find packages which have been removed from unstable
+# find packages which have been removed from the archive
+PACKAGES=$(mktemp)
 QUERY="SELECT name, suite, architecture FROM removed_packages
 		LIMIT 25"
-PACKAGES=$(sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY")
-if [ ! -z "$PACKAGES" ] ; then
+sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+if grep -q '|' $PACKAGES ; then
 	DIRTY=true
 	echo
 	echo "Warning: found files relative to old packages, no more in the archive:"
 	echo "Removing these removed packages from database:"
-	echo $PACKAGES
+	cat $PACKAGES
 	echo
-	for pkg in "$PACKAGES" ; do
+	for pkg in $(cat $PACKAGES) ; do
 		PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)
 		SUITE=$(echo "$pkg" | cut -d '|' -f 2)
 		ARCH=$(echo "$pkg" | cut -d '|' -f 3)
@@ -207,6 +208,7 @@ if [ ! -z "$PACKAGES" ] ; then
 	done
 	cd -
 fi
+rm $PACKAGES
 
 # delete jenkins html logs from reproducible_builder_* jobs as they are mostly redundant
 # (they only provide the extended value of parsed console output, which we dont need here.)

@@ -196,9 +196,9 @@ if [ ! -z "$PACKAGES" ] ; then
 	echo $PACKAGES
 	echo
 	for pkg in "$PACKAGES" ; do
-		PKGNAME=$(echo "$pkg" | cut -f '|' -d 1)
-		SUITE=$(echo "$pkg" | cut -f '|' -d 2)
-		ARCH=$(echo "$pkg" | cut -f '|' -d 3)
+		PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)
+		SUITE=$(echo "$pkg" | cut -d '|' -f 2)
+		ARCH=$(echo "$pkg" | cut -d '|' -f 3)
 		QUERY="DELETE FROM removed_packages
 			WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
 		sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"

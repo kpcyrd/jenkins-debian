@@ -140,8 +140,8 @@ handle_404() {
 
 handle_not_for_us() {
 	# a list of valid architecture for this package should be passed to this function
-	DURATION=''
 	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
+	DURATION=''
 	update_db_and_html "not for us"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
 	exit 0

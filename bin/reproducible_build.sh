@@ -30,7 +30,7 @@ create_results_dirs() {
 	mkdir -p /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}
 }
 
-handle_race() {
+handle_race_condition() {
 	echo | tee -a $BUILDLOG
 	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting.\n"
 	local msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different build.\n"
@@ -51,9 +51,9 @@ handle_race() {
 	exit 0
 }
 
-check_for_races() {
+check_for_race_conditions() {
 	if [ $$ -ne $(cat "$LOCKFILE") ] ; then
-		handle_race lockfile
+		handle_race_condition lockfile
 	fi
 }
 
@@ -298,12 +298,12 @@ init() {
 	if [ -z $(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'") ] ; then
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 	else
-		handle_race db
+		handle_race_condition db
 	fi
 	if [ ! -f "$LOCKFILE" ] ; then
 		echo $$ > "$LOCKFILE"
 	else
-		handle_race init
+		handle_race_condition init
 	fi
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
@@ -363,7 +363,7 @@ build_rebuild() {
 	set +x
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
-		check_for_races
+		check_for_race_conditions
 		echo "============================================================================="
 		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
 		echo "============================================================================="
@@ -432,15 +432,15 @@ BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 
-check_for_races
+check_for_race_conditions
 check_suitability
-check_for_races
+check_for_race_conditions
 build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
 	call_debbindiff  # defines DBDVERSION
 fi
 
-check_for_races
+check_for_race_conditions
 cd ..
 cleanup_all
 trap - INT TERM EXIT

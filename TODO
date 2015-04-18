@@ -44,7 +44,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** not suitable for jenkins.d.o, thus we will run all tests on slaves, where DSA doesnt care what we do
 * upgrade to jessie, software used which is not in jessie / available as jenkins plugin:
 ** jenkins.deb
-*** DSA prefers if we could use jenkins from jessie-backports
+*** DSA prefers if we could use jenkins from jessie-backports or jessie-sloppy-backports
 *** 2nd option: own repo, only contains jenkins.deb
 *** 3rd option: use upstreams repo
 ** jenkins-job-builder probably needs to be more properly packaged

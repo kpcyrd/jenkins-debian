@@ -131,7 +131,7 @@ print_out_duration() {
 handle_404() {
 	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, ora it was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
 	DURATION=''
 	update_db_and_html "404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
@@ -233,7 +233,7 @@ call_debbindiff() {
 	init_debbindiff  # check and set up locks for chroot
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
-	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 17 lines above
+	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 33 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
 	set -x
@@ -406,7 +406,7 @@ build_rebuild() {
 
 
 #
-# below there is what controls the world
+# below is what controls the world
 #
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actually happens
@@ -419,7 +419,7 @@ RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
 
-# used to catch race conditions where the same package is being built by two parallel jobs
+# used to catch race conditions when the same package is being built by two parallel jobs
 LOCKFILE="/tmp/${SUITE}-${ARCH}-${SRCPACKAGE}"
 
 init

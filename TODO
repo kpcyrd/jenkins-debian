@@ -134,7 +134,17 @@ properties:
 === reproducible
 
 * issues in packages or debbindiff:
-** find debbindiff problems: egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
+** find debbindiff problems: 
+----
+egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
+----
+
+* packages build with different dependencies, should be rescheduled:
+----
+grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*1 '
+----
+** if the value is larger than 0, there are differing dependencies...
+** the grepping should probably only done on files younger then $check_frequency
 
 * misc
 ** reproducible: dont delete userContent/$pkg on build begin..

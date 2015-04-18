@@ -36,7 +36,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === move this setup to jenkins.d.o
 
-* needs replacement of all chroot jobs with real schroot, and not as poor chroot(8) replacement. some links:
+The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins slaves, probably/maybe also maintained by DSA (so we get them into their munin), but on which we can use sudo as we need it. (or maybe not dsa-maintained slaves, so that we can use sudo as we need, for the price of not being in DSAs munin.)
+
+* chroot jobs should use real schroot sessions, and not just use schroot as poor chroot(8) replacement. some links:
 ** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
 ** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
 ** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
@@ -44,7 +46,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** not suitable for jenkins.d.o, thus we will run all tests on slaves, where DSA doesnt care what we do
 * upgrade to jessie, software used which is not in jessie / available as jenkins plugin:
 ** jenkins.deb
-*** DSA prefers if we could use jenkins from jessie-backports or jessie-sloppy-backports
+*** DSA prefers if we could use jenkins from jessie-backports
 *** 2nd option: own repo, only contains jenkins.deb
 *** 3rd option: use upstreams repo
 ** jenkins-job-builder probably needs to be more properly packaged

@@ -11,9 +11,11 @@ architectures = """
    """.split()
 
 mono_architectures = """
-    armel armhf arm64
+    armel armhf musl-linux-armhf arm64 musl-linux-arm64
     alpha
+    musl-linux-i386
     m68k
+    musl-linux-mips musl-linux-mipsel
     powerpcel powerpcspe ppc64el
     or1k
     sh4
@@ -87,7 +89,7 @@ for arch in sorted(architectures):
             if nobiarch and arch in mono_architectures:
                 continue
             for supported in ["", "_supported"]:
-                if nobiarch and supported:
+                if (nobiarch or arch.startswith("musl-linux-")) and supported:
                     continue
                 for debbindiff in ["", "_debbindiff"]:
                     if debbindiff and (arch not in release_architectures or gccver != "4.9"):
@@ -109,7 +111,7 @@ for arch in sorted(architectures):
             if nobiarch and arch in mono_architectures:
                 continue
             for supported in (False, True):
-                if nobiarch and supported:
+                if (nobiarch or arch.startswith("musl-linux-")) and supported:
                     continue
                 for debbindiff in (False, True):
                     if debbindiff and (arch not in release_architectures or gccver != "4.9"):

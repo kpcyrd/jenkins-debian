@@ -35,12 +35,18 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 
 === move this setup to jenkins.d.o
+
 * start a list what needs to be done:
 ** needs replacement of all chroot jobs with real schroot, and not as poor chroot(8) replacemant. some links:
 *** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
 *** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
 *** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
 ** exame + trim sudoers.d
+** upgrade to jessie
+** software used which is not in jessie / available as jenkins plugin:
+*** jenkins-job-builder probably needs to be more properly packaged
+*** livescreenshot plugin (we use a patched version)
+** the existing jenkins.d.o host needs to be renamed to something else
 
 === To be done once jenkins.d.n runs jessie
 

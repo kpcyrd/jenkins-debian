@@ -179,6 +179,8 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 * missing tests: variation in kernel and date and cpu type
 ** variations in date are only practical to do in c-i fashion using faketime, thus I suggest to wait for those until we test in the wild...
 ** kernel / uname output is changed (using linux64) and shall be changed more in future by doing the 2nd build on a different build host running a different kernel..., no need to do fancy stuff with building in qemu or such...
+** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4
+*** that 2nd slave can also run with a different date (or year, so probably 1984)
 
 * enable people to upload test packages, to be built in jenkins:
 	<mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything 

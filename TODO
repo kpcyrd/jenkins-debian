@@ -38,6 +38,20 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins slaves, probably/maybe also maintained by DSA (so we get them into their munin), but on which we can use sudo as we need it. (or maybe not dsa-maintained slaves, so that we can use sudo as we need, for the price of not being in DSAs munin.)
 
+==== next steps for jenkins.d.o migration
+
+* weasel/h01ger: install jenkins.deb
+** also create jenkins users in jenkins (KISS)
+* h01ger: get slaves: wishlist for starting: 3 slaves, 8 cores, 32gb ram, 50gb hd space if we dont need squid3 on them, 80gb if we do.
+** install slaves - how (to automate)?
+* install jenkins-job-builder
+** needs proper package
+* ... (to be planned, see below)
+* update DNS to point jenkins.d.o to jerea.d.o
+* ... (to be planned, see below)
+
+==== unsorted notes for jenkins.d.o migration
+
 * chroot jobs should use real schroot sessions, and not just use schroot as poor chroot(8) replacement. some links:
 ** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
 ** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd

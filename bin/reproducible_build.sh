@@ -303,11 +303,13 @@ init() {
 	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")" ] ; then
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
 	else
+		BAD_LOCKFILE=true
 		handle_race_condition db
 	fi
 	if [ ! -f "$LOCKFILE" ] ; then
 		echo $$ > "$LOCKFILE"
 	else
+		BAD_LOCKFILE=true
 		handle_race_condition init
 	fi
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}

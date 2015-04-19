@@ -48,6 +48,7 @@ handle_race_condition() {
 	printf "$msg" | tee -a $BUILDLOG
 	printf "$msg" | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
 	echo "$(date) - Terminating nicely this build..." | tee -a $RBUILDLOG
+	if [ $SAVE_ARTIFACTS -eq 1 ] || [ $SAVE_ARTIFACTS -eq 3 ] ; then SAVE_ARTIFACTS=2 ; fi
 	exit 0
 }
 
@@ -89,7 +90,8 @@ cleanup_all() {
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved."
 	fi
-	rm -r $TMPDIR $LOCKFILE
+	rm -r $TMPDIR
+	rm $LOCKFILE || true
 }
 
 cleanup_userContent() {
@@ -236,6 +238,7 @@ call_debbindiff() {
 	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 33 lines above
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
+	set +e
 	set -x
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
@@ -247,6 +250,7 @@ call_debbindiff() {
 	) 2>&1 >> $TMPLOG
 	RESULT=$?
 	set +x
+	set -e
 	cat $TMPLOG | tee -a $RBUILDLOG  # print out dbd output
 	rm -f $DBDCHROOT_READLOCK $TMPLOG
 	echo | tee -a ${RBUILDLOG}
@@ -389,10 +393,6 @@ build_rebuild() {
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
-			cleanup_userContent
-			chmod 644 $RBUILDLOG
-			mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-			RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
@@ -400,6 +400,10 @@ build_rebuild() {
 	else
 		cat ${TMPLOG} >> ${RBUILDLOG}
 	fi
+	cleanup_userContent
+	chmod 644 $RBUILDLOG
+	mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	rm ${TMPLOG} $TMPCFG
 	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }

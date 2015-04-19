@@ -54,6 +54,7 @@ handle_race_condition() {
 
 check_for_race_conditions() {
 	if [ $$ -ne $(cat "$LOCKFILE") ] ; then
+		BAD_LOCKFILE=true
 		handle_race_condition lockfile
 	fi
 }
@@ -91,7 +92,7 @@ cleanup_all() {
 		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved."
 	fi
 	rm -r $TMPDIR
-	rm $LOCKFILE || true
+	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 }
 
 cleanup_userContent() {
@@ -420,6 +421,7 @@ cd $TMPDIR
 DATE=$(date +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
+BAD_LOCKFILE=false
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
 

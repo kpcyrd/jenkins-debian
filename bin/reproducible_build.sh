@@ -72,8 +72,10 @@ save_artifacts() {
 		local msg="${msg}WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		local msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
 		printf "$msg" | tee -a $BUILDLOG
-		echo "$msg" | sed 's#\n#\n<br />#g' > $HEADER
+		echo "<p>" > $HEADER
+		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
 		echo "Package page: <a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
+		echo "</p>" >> $HEADER4
 		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}
 		# irc message

@@ -189,7 +189,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** repo-comparison: check for binaries without source
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 * notes related
-** hint issues of a package while hovering over it
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 

@@ -75,7 +75,7 @@ save_artifacts() {
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
 		echo "Package page: <a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
-		echo "</p>" >> $HEADER4
+		echo "</p>" >> $HEADER
 		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}
 		# irc message

@@ -50,7 +50,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 else
 	# default settings used for the jenkins.debian.net environment
 	if [ -z "$LC_ALL" ]; then
-		export LC_ALL=C
+		export LC_ALL=C.UTF-8
 	fi
 	if [ -z "$MIRROR" ]; then
 		export MIRROR=http://ftp.de.debian.org/debian

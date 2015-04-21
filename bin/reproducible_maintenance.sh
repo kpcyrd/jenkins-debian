@@ -170,9 +170,7 @@ sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Wa
 if grep -q '|' $PACKAGES ; then
 	echo
 	echo "Warning: packages found where the build was started more than 36h ago:"
-	echo "pkg_id|name|date_scheduled|date_build_started"
-	echo
-	cat $PACKAGES
+	sqlite3 -init $INIT -header -column ${PACKAGES_DB} "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
 		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""

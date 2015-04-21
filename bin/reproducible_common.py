@@ -355,6 +355,14 @@ def link_package(package, suite, arch, bugs={}):
     return html
 
 
+def link_packages(packages, suite, arch):
+    bugs = get_bugs()
+    html = ''
+    for pkg in packages:
+        html += link_package(pkg, suite, arch, bugs)
+    return html
+
+
 def join_status_icon(status, package=None, version=None):
     table = {'reproducible' : 'weather-clear.png',
              'FTBFS': 'weather-storm.png',

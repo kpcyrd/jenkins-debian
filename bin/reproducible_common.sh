@@ -262,14 +262,16 @@ set_package_class() {
 }
 
 set_linktarget() {
+	cd "$BASE"
 	for PKG in $@ ; do
 		if [ -f $RB_PATH/$SUITE/$ARCH/$PKG.html ] ; then
-			set_package_class
-			LINKTARGET[$PKG]="<a href=\"/userContent/rb-pkg/$SUITE/$ARCH/$PKG.html\" $CLASS>$PKG</a>"
+			LINKTARGET[$PKG]=$(python3 -c "from reproducible_common import link_package ; \
+							print(link_package('$PKG', '$SUITE', '$ARCH'))")
 		else
 			LINKTARGET[$PKG]="$PKG"
 		fi
 	done
+	cd - > /dev/null
 }
 
 link_packages() {

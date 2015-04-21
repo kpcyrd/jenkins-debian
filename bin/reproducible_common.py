@@ -429,6 +429,9 @@ def get_bugs():
             )
     """
     # returns a list of tuples [(id, source, done)]
+    global conn_udd
+    if not conn_udd:
+        conn_udd = start_udd_connection()
     rows = query_udd(query)
     log.info("finding out which usertagged bugs have been closed or at least have patches")
     packages = {}
@@ -489,6 +492,8 @@ def get_trailing_bug_icon(bug, bugs, package=None):
     return html
 
 # init the databases connections
-conn_db = start_db_connection() # the local sqlite3 reproducible db
-conn_udd = start_udd_connection()
+conn_db = start_db_connection()  # the local sqlite3 reproducible db
+# get_bugs() is the only user of this, let it initialize the connection itself,
+# during it's first call to speed up things when unneeded
+conn_udd = None
 

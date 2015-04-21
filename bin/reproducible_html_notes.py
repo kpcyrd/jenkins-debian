@@ -281,8 +281,7 @@ def gen_html_issue(issue, suite):
             affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
             affected += tab*5 + '<code>\n'
             for pkg in pkgs:
-                affected += tab*6 + '<a href="' + RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html' + '" class="noted">' + pkg
-                affected += '</a>' + get_trailing_icon(pkg, bugs) + '\n'
+                affected += tab*6 + link_package(pkg, suite, arch, bugs)
             affected += tab*5 + '</code>\n'
             affected += tab*4 + '</p>\n'
     except KeyError:    # The note is not listed in any package, that is

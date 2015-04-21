@@ -378,8 +378,8 @@ def index_issues(issues):
     html = (tab*2).join(templ.splitlines(True))
     for issue in sorted(issues, key=sort_issues):
         html += tab*3 + '<tr>\n'
-        html += tab*4 + '<td><a href="' + ISSUES_URI + '/' + issue + \
-                '_issue.html">' + issue + '</a></td>\n'
+        html += tab*4 + '<td><a href="' + ISSUES_URI + '/' + defaultsuite + \
+                '/'+ issue + '_issue.html">' + issue + '</a></td>\n'
         html += tab*4 + '<td>\n'
         try:
             html += tab*5 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'

@@ -351,7 +351,7 @@ def link_package(package, suite, arch, bugs={}):
         html = '<a href="' + url + '" class="noted" title="' + title + \
                '">' + package + '</a>'
     finally:
-        html += get_trailing_icon(package, bugs)
+        html += get_trailing_icon(package, bugs) + '\n'
     return html
 
 

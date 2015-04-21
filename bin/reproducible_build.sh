@@ -319,7 +319,7 @@ init() {
 }
 
 get_source_package() {
-	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 	local RESULT=$?
 	if [ $RESULT != 0 ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
@@ -328,7 +328,7 @@ get_source_package() {
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} >> ${RBUILDLOG} 2>&1
+		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 		local RESULT=$?
 	fi
 	if [ $RESULT != 0 ] ; then handle_404 ; fi

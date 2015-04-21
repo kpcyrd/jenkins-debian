@@ -49,7 +49,6 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
-declare -A LINKTARGET
 
 NOTES_PATH=/var/lib/jenkins/userContent/notes
 ISSUES_PATH=/var/lib/jenkins/userContent/issues
@@ -261,23 +260,23 @@ set_package_class() {
 	fi
 }
 
-set_linktarget() {
-	cd "$BASE"
-	for PKG in $@ ; do
-		if [ -f $RB_PATH/$SUITE/$ARCH/$PKG.html ] ; then
-			LINKTARGET[$PKG]=$(python3 -c "from reproducible_common import link_package ; \
-							print(link_package('$PKG', '$SUITE', '$ARCH'))")
-		else
-			LINKTARGET[$PKG]="$PKG"
-		fi
+link_packages() {
+	cd /srv/jenkins/bin
+	for (( i=1; i<$#+1; i=i+400 )) ; do
+		local string='['
+		local delimiter=''
+		for (( j=0; j<400; j++)) ; do
+			local item=$(( $j+$i ))
+			if (( $item < $#+1 )) ; then
+				local string+="${delimiter}\"${!item}\""
+				local delimiter=','
+			fi
+		done
+		local string+=']'
+		write_page " $(python3 -c "from reproducible_common import link_packages; \
+				print(link_packages(${string}, '$SUITE', '$ARCH'))" 2> /dev/null)"
 	done
 	cd - > /dev/null
-}
-
-link_packages() {
-	for PKG in $@ ; do
-		write_page " ${LINKTARGET[$PKG]}"
-	done
 }
 
 gen_packages_html() {

@@ -261,7 +261,6 @@ set_package_class() {
 }
 
 link_packages() {
-	cd /srv/jenkins/bin
 	for (( i=1; i<$#+1; i=i+400 )) ; do
 		local string='['
 		local delimiter=''
@@ -273,10 +272,12 @@ link_packages() {
 			fi
 		done
 		local string+=']'
-		write_page " $(python3 -c "from reproducible_common import link_packages; \
+		cd /srv/jenkins/bin
+		DATA=" $(python3 -c "from reproducible_common import link_packages; \
 				print(link_packages(${string}, '$SUITE', '$ARCH'))" 2> /dev/null)"
+		cd - > /dev/null
+		write_page "$DATA"
 	done
-	cd - > /dev/null
 }
 
 gen_packages_html() {

@@ -100,6 +100,10 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# fail early
+set -o pipefail
+set -e
+
 ARCH="amd64"
 DIST="$1"
 DIRECTORY="`pwd`/debian-$DIST-$ARCH"

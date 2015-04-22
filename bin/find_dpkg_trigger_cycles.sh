@@ -157,14 +157,14 @@ function finish {
 trap finish EXIT
 
 # find all binary packages with /triggers$
-curl --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
+curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
 	| xargs apt-get $APT_OPTS --print-uris download \
 	| sed -ne "s/^'\([^']\+\)'\s\+\([^_]\+\)_.*/\2 \1/p" \
 	| sort \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
 	tmpdir=`mktemp -d --tmpdir="$scratch"`
-	( curl --retry 2 --retry-delay 10 --location --silent "$url" || ( echo "curl failed with exit $?">&2; exit 1 ) ) \
+	( curl --retry 3 --retry-delay 10 --location --silent "$url" || ( echo "curl failed with exit $?">&2; exit 1 ) ) \
 		| dpkg-deb --ctrl-tarfile /dev/stdin \
 		| tar -C "$tmpdir" --exclude=./md5sums -x
 	if [ ! -f "$tmpdir/triggers" ]; then

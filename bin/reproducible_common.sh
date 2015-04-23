@@ -90,10 +90,8 @@ schedule_packages() {
 	MINS=$(date +'%M')	# schedule on the full hour so we can recognize them easily
 	DATE=$(date +'%Y-%m-%d %H:%M' -d "$DAYS day ago - $HOURS hours - $MINS minutes")
 	TMPFILE=$(mktemp)
-	ARTIFACTS=$1
-	shift
 	for PKG_ID in $@ ; do
-		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started, save_artifacts) VALUES ('$PKG_ID', '$DATE', '', '$ARTIFACTS');" >> $TMPFILE
+		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started, save_artifacts, notify) VALUES ('$PKG_ID', '$DATE', '', '$ARTIFACTS', '$NOTIFY');" >> $TMPFILE
 	done
 	cat $TMPFILE | sqlite3 -init $INIT ${PACKAGES_DB}
 	rm $TMPFILE

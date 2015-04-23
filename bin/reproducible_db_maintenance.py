@@ -361,6 +361,10 @@ schema_updates = {
             architecture TEXT NOT NULL,
             PRIMARY KEY (name, suite, architecture))''',
         'INSERT INTO rb_schema VALUES ("11", "' + now + '")'],
+    12: [ # refactor the artifacts handling, splitting artifacts savind from
+          # IRC notification
+        'ALTER TABLE schedule ADD COLUMN notify TEXT',
+        'INSERT INTO rb_schema VALUES ("12", "' + now + '")'],
 }
 
 

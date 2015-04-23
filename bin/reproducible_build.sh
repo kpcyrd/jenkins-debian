@@ -48,7 +48,10 @@ handle_race_condition() {
 	printf "$msg" | tee -a $BUILDLOG
 	printf "$msg" | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
 	echo "$(date) - Terminating nicely this build..." | tee -a $RBUILDLOG
-	if [ $SAVE_ARTIFACTS -eq 1 ] || [ $SAVE_ARTIFACTS -eq 3 ] ; then SAVE_ARTIFACTS=2 ; fi
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
+		SAVE_ARTIFACTS=0
+		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
+	fi
 	exit 0
 }
 
@@ -79,19 +82,22 @@ save_artifacts() {
 		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}
 		# irc message
-		local MESSAGE="$URL published"
-		if [ $SAVE_ARTIFACTS -eq 3 ] ; then
-			local MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
+		if [ ! -z "$NOTIFY" ] ; then
+			local MESSAGE="$URL published"
+			if [ "$NOTIFY" = "debbindiff failure" ] ; then
+				local MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
+			fi
+			irc_message "$MESSAGE"
 		fi
-		irc_message "$MESSAGE"
 }
 
 cleanup_all() {
-	if [ $SAVE_ARTIFACTS -eq 1 ] || [ $SAVE_ARTIFACTS -eq 3 ] ; then
-		save_artifacts
-	elif [ $SAVE_ARTIFACTS -eq 2 ] ; then
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then save_artifacts ; fi
+	if [ "$NOTIFY" = "failure" ] ; then
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
-		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log to find out why no artifacts were saved."
+		irc_message "Check $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log and $BUILD_URL to find out why no artifacts were saved."
+	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
+		irc_message "This package just finished building: $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
 	fi
 	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
@@ -139,7 +145,8 @@ handle_404() {
 	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
 	DURATION=''
 	update_db_and_html "404"
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
+	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	exit 0
 }
 
@@ -148,7 +155,8 @@ handle_not_for_us() {
 	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
 	DURATION=''
 	update_db_and_html "not for us"
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
+	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	exit 0
 }
 
@@ -156,7 +164,8 @@ handle_ftbfs() {
 	echo "${SRCPACKAGE} failed to build from source."
 	calculate_build_duration
 	update_db_and_html "FTBFS"
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=2 ; fi
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
+	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 }
 
 handle_ftbr() {
@@ -230,7 +239,8 @@ dbd_timeout() {
 	else
 		local msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
-	SAVE_ARTIFACTS=3
+	SAVE_ARTIFACTS=1
+	NOTIFY="debbindiff"
 	handle_ftbr "$msg"
 }
 
@@ -265,7 +275,8 @@ call_debbindiff() {
 			handle_ftbr "$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
 		2)
-			SAVE_ARTIFACTS=3
+			SAVE_ARTIFACTS=1
+			NOTIFY="debbindiff"
 			handle_ftbr "$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
@@ -280,12 +291,13 @@ call_debbindiff() {
 }
 
 choose_package () {
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
+	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
 	if [ -z "$RESULT" ] ; then
 		echo "No packages scheduled, sleeping 30m."
 		sleep 30m
@@ -427,7 +439,7 @@ START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 BAD_LOCKFILE=false
 
-choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS
+choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
 
 # used to catch race conditions when the same package is being built by two parallel jobs
 LOCKFILE="/tmp/${SUITE}-${ARCH}-${SRCPACKAGE}"

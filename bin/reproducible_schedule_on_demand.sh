@@ -22,14 +22,24 @@ if [ "$SUITE" = "sid" ] ; then
 	SUITE=unstable
 fi
 
-ARTIFACTS=0
-if [ "$1" = "artifacts" ] ; then
-	ARTIFACTS=1
-	shift
-	echo
-	echo "The artifacts of the build(s) will be saved to the location mentioned at the end of the build log(s)."
-	echo
-fi
+case "$1" in
+	"artifacts")
+		ARTIFACTS=1
+		NOTIFY=true
+		shift
+		printf "\nThe artifacts of the build(s) will be saved to the location mentioned at the end of the build log(s).\n\n"
+		;;
+	"notify")
+		ARTIFACTS=0
+		NOTIFY=true
+		shift
+		printf "\nThe IRC channel will be notify once the build(s) finished.\n\n"
+		;;
+	*)
+		ARTIFACTS=0
+		NOTIFY=''
+		;;
+esac
 
 CANDIDATES="$@"
 check_candidates
@@ -43,10 +53,12 @@ fi
 MESSAGE="$TOTAL $PACKAGES_TXT $ACTION in $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
 if [ $ARTIFACTS -eq 1 ] ; then
 	MESSAGE="$MESSAGE - artifacts will be preserved."
+elif $NOTIFY ; then
+	MESSAGE="$MESSAGE - notification once finished."
 fi
 
 # finally
-schedule_packages $ARTIFACTS $PACKAGE_IDS
+schedule_packages $PACKAGE_IDS
 echo
 echo "$MESSAGE"
 if [ -z "${BUILD_URL:-}" ] && [ $TOTAL -ne 0 ] ; then

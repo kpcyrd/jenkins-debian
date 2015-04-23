@@ -109,8 +109,8 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 		check_candidates
 		if [ $TOTAL -ne 0 ] ; then
 			echo " - in $SUITE: $CANDIDATES"
-			# '0' here means the artifacts will not be saved
-			schedule_packages 0 $PACKAGE_IDS
+			ARTIFACTS=0
+			schedule_packages $PACKAGE_IDS
 		fi
 	done
 	DIRTY=true

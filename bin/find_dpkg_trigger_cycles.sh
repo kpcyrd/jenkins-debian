@@ -171,7 +171,9 @@ curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&p
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
 	tmpdir=`mktemp -d --tmpdir="$scratch"`
-	( curl --retry 3 --retry-delay 10 --location --silent "$url" || ( echo "curl failed with exit $?">&2; exit 1 ) ) \
+	# curl is allowed to fail with exit status 23 because we want to stop
+	# downloading immediately after control.tar.gz has been extracted
+	( curl --retry 3 --retry-delay 10 --location --silent "$url" || [ "$?" -eq 23 ] || ( echo "curl failed">&2 && exit 1 ) ) \
 		| dpkg-deb --ctrl-tarfile /dev/stdin \
 		| tar -C "$tmpdir" --exclude=./md5sums -x
 	if [ ! -f "$tmpdir/triggers" ]; then
@@ -180,16 +182,16 @@ curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&p
 	fi
 	# find all triggers that are either interest or interest-await
 	# and which are file triggers (start with a slash)
-	egrep "^\s*interest(-await)?\s+/" "$tmpdir/triggers" | while read line; do
+	egrep "^\s*interest(-await)?\s+/" "$tmpdir/triggers" || [ "$?" -ne 2 ] | while read line; do
 		echo "$pkg $line"
 	done >> $DIRECTORY/interested-file
-	egrep "^\s*interest(-await)?\s+[^/]" "$tmpdir/triggers" | while read line; do
+	egrep "^\s*interest(-await)?\s+[^/]" "$tmpdir/triggers" || [ "$?" -ne 2 ] | while read line; do
 		echo "$pkg $line"
 	done >> $DIRECTORY/interested-explicit
-	egrep "^\s*activate(-await)?\s+/" "$tmpdir/triggers" | while read line; do
+	egrep "^\s*activate(-await)?\s+/" "$tmpdir/triggers" || [ "$?" -ne 2 ] | while read line; do
 		echo "$pkg $line"
 	done >> $DIRECTORY/activated-file
-	egrep "^\s*activate(-await)?\s+[^/]" "$tmpdir/triggers" | while read line; do
+	egrep "^\s*activate(-await)?\s+[^/]" "$tmpdir/triggers" || [ "$?" -ne 2 ] | while read line; do
 		echo "$pkg $line"
 	done >> $DIRECTORY/activated-explicit
 	rm -r "$tmpdir"

@@ -51,8 +51,12 @@ for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build ; 
 		sudo chown jenkins.jenkins $directory
 	fi
 done
-sudo mkdir /srv/jenkins
-sudo chown jenkins-adm.jenkins-adm /srv/jenkins
+for directory /srv/jenkins ; do
+	if [ ! -d $directory ] ; then
+		sudo mkdir $directory
+		sudo chown jenkins-adm.jenkins-adm $directory
+	fi
+done
 
 if ! test -h /chroots; then
 	rmdir /chroots || rm -f /chroots # do not recurse

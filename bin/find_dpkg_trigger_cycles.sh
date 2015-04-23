@@ -109,20 +109,12 @@ DIST="$1"
 DIRECTORY="`pwd`/debian-$DIST-$ARCH"
 
 APT_OPTS="-y"
-APT_OPTS=$APT_OPTS" -o Apt::Architecture=$ARCH"
-APT_OPTS=$APT_OPTS" -o Dir::Etc::TrustedParts=$DIRECTORY/etc/apt/trusted.gpg.d"
-APT_OPTS=$APT_OPTS" -o Dir::Etc::Trusted=$DIRECTORY/etc/apt/trusted.gpg"
-APT_OPTS=$APT_OPTS" -o Dir=$DIRECTORY/"
-APT_OPTS=$APT_OPTS" -o Dir::Etc=$DIRECTORY/etc/apt/"
-APT_OPTS=$APT_OPTS" -o Dir::Etc::SourceList=$DIRECTORY/etc/apt/sources.list"
-APT_OPTS=$APT_OPTS" -o Dir::State=$DIRECTORY/var/lib/apt/"
-APT_OPTS=$APT_OPTS" -o Dir::State::Status=$DIRECTORY/var/lib/dpkg/status"
-APT_OPTS=$APT_OPTS" -o Dir::Cache=$DIRECTORY/var/cache/apt/"
 #APT_OPTS=$APT_OPTS" -o Acquire::Check-Valid-Until=false" # because we use snapshot
 
 mkdir -p $DIRECTORY
 mkdir -p $DIRECTORY/etc/apt/
 mkdir -p $DIRECTORY/etc/apt/trusted.gpg.d/
+mkdir -p $DIRECTORY/etc/apt/apt.conf.d/
 mkdir -p $DIRECTORY/etc/apt/sources.list.d/
 mkdir -p $DIRECTORY/etc/apt/preferences.d/
 mkdir -p $DIRECTORY/var/lib/apt/
@@ -136,6 +128,21 @@ cp /etc/apt/trusted.gpg.d/* $DIRECTORY/etc/apt/trusted.gpg.d/
 touch $DIRECTORY/var/lib/dpkg/status
 
 echo deb $MIRROR $DIST main > $DIRECTORY/etc/apt/sources.list
+
+cat << END > "$DIRECTORY/etc/apt/apt.conf"
+Apt::Architecture "$ARCH";
+Dir::Etc::TrustedParts "$DIRECTORY/etc/apt/trusted.gpg.d";
+Dir::Etc::Trusted "$DIRECTORY/etc/apt/trusted.gpg";
+Dir "$DIRECTORY/";
+Dir::Etc "$DIRECTORY/etc/apt/";
+Dir::Etc::SourceList "$DIRECTORY/etc/apt/sources.list";
+Dir::State "$DIRECTORY/var/lib/apt/";
+Dir::State::Status "$DIRECTORY/var/lib/dpkg/status";
+Dir::Cache "$DIRECTORY/var/cache/apt/";
+END
+
+APT_CONFIG="$DIRECTORY/etc/apt/apt.conf"
+export APT_CONFIG
 
 apt-get $APT_OPTS update
 

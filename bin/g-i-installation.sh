@@ -259,7 +259,7 @@ bootstrap_system() {
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		debian-edu_*ltsp-server|debian-edu_*combi-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
+			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1 -soundhw all"
 			EXTRA_APPEND="$EXTRA_APPEND netcfg/choose_interface=auto"
 			;;
 		*)	;;

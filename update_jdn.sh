@@ -51,7 +51,7 @@ for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build ; 
 		sudo chown jenkins.jenkins $directory
 	fi
 done
-for directory /srv/jenkins ; do
+for directory in /srv/jenkins ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins-adm.jenkins-adm $directory

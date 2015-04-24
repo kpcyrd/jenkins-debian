@@ -59,7 +59,7 @@ COLOR[5]=1
 COLOR[6]=4
 COLOR[7]=2
 MAINLABEL[1]="Amount of packages built each day"
-MAINLABEL[3]="Bugs with usertags for user reproducible-builds@lists.alioth.debian.org"
+MAINLABEL[3]="Usertags on bugs for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
 MAINLABEL[7]="Open and closed bugs"
@@ -342,7 +342,7 @@ write_usertag_table() {
 				let "TTOTAL=TTOTAL+TOTAL"
 			fi
 		done
-		write_page "<tr><td>All usertagged bugs for reproducible-builds@lists.alioth.debian.org</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
+		write_page "<tr><td>Total number of usertags set by reproducible-builds@lists.alioth.debian.org<br />(this is not the number of bugs as bugs can have several tags))</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
 		write_page "</table>"
 	fi
 }

@@ -71,7 +71,7 @@ print("""
           branches:
             - '{my_branchname}'
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
+      - shell: 'export LC_ALL=C ; /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'

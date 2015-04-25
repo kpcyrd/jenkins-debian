@@ -4,14 +4,16 @@ base_distros = """
    squeeze
    wheezy
    jessie
+   stretch
    sid
    """.split()
 
 distro_upgrades = { 'squeeze':  'wheezy',
                     'wheezy':  'jessie',
-                    'jessie':  'sid' }
+                    'jessie':  'stretch',
+                    'stretch':  'sid' }
 
-oldstable = 'squeeze'
+oldoldstable = 'squeeze'
 
 # ftp.de.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = { 'squeeze': '30 16 25 * *',
@@ -206,7 +208,7 @@ for base_distro in sorted(base_distros):
         else:
              action = 'install_'+target
         # default job
-        if target == 'maintenance' or base_distro != oldstable:
+        if target == 'maintenance' or base_distro != oldoldstable:
             print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s'""" %
@@ -221,7 +223,7 @@ for base_distro in sorted(base_distros):
                   action=action,
                   second_base=distro_upgrades[base_distro]))
         # upgrade job with upgrading apt+dpkg first
-        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintenance':
+        if base_distro in distro_upgrades and base_distro != oldoldstable and target[:10] != 'education-' and action != 'maintenance':
              print("""- job-template:
     defaults: chroot-installation
     name: '{name}_%(base_distro)s_%(action)s_upgrade_to_%(second_base)s_aptdpkg_first'""" %
@@ -270,7 +272,7 @@ for base_distro in sorted(base_distros):
         else:
             action = 'install_'+target
         # default job
-        if target == 'maintenance' or base_distro != oldstable:
+        if target == 'maintenance' or base_distro != oldoldstable:
             print("""      - '{name}_%(base_distro)s_%(action)s':
             my_shell: '%(shell)s'
             my_prio: '%(prio)s'
@@ -321,7 +323,7 @@ for base_distro in sorted(base_distros):
                   second_base=distro_upgrades[base_distro],
                   description=description))
         # upgrade job with upgrading apt+dpkg first
-        if base_distro in distro_upgrades and base_distro != oldstable and target[:10] != 'education-' and action != 'maintenance':
+        if base_distro in distro_upgrades and base_distro != oldoldstable and target[:10] != 'education-' and action != 'maintenance':
             description = 'Debootstrap '+base_distro+', then upgrade apt and dpkg to '+distro_upgrades[base_distro]+' and then everything else.'
             if target == 'bootstrap':
                 trigger = ''

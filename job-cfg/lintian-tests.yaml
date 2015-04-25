@@ -37,6 +37,15 @@
 
 - job-template:
     defaults: lintian-tests
+    name: '{name}_stretch'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org lintian-maint@debian.org'
+      - trigger:
+          project: '{my_trigger}'
+
+- job-template:
+    defaults: lintian-tests
     name: '{name}_jessie'
     publishers:
       - email:
@@ -62,7 +71,12 @@
             my_distro: 'sid'
             my_shell: 'timeout 6h debian/rules runtests'
             my_description: 'Debian/Lintian testsuite running on sid.'
-            my_trigger: 'lintian-tests_jessie'
+            my_trigger: 'lintian-tests_stretch'
+        - '{name}_stretch':
+            my_distro: 'stretch'
+            my_shell: 'timeout 6h debian/rules runtests'
+            my_description: 'Debian/Lintian testsuite running on stretch.'
+            my_trigger: 'lintian-tests_wheezy'
         - '{name}_jessie':
             my_distro: 'jessie'
             my_shell: 'timeout 6h debian/rules runtests'

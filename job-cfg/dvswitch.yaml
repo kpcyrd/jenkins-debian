@@ -39,6 +39,15 @@
 
 - job-template:
     defaults: dvswitch
+    name: '{name}_stretch'
+    publishers:
+      - email:
+          recipients: 'jenkins+dvswitch qa-jenkins-scm@lists.alioth.debian.org dvswitch-maint@debian.org'
+      - trigger:
+          project: '{my_trigger}'
+
+- job-template:
+    defaults: dvswitch
     name: '{name}_sid'
     triggers:
       - pollscm: '*/6 * * * *'
@@ -69,6 +78,11 @@
             my_distro: 'sid'
             my_shell: 'debian/rules build'
             my_description: 'Build the dvswitch git master branch on sid.'
+            my_trigger: 'dvswitch_stretch'
+        - '{name}_stretch':
+            my_distro: 'stretch'
+            my_shell: 'debian/rules build'
+            my_description: 'Build the dvswitch git master branch on stretch.'
             my_trigger: 'dvswitch_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'

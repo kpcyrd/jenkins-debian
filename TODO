@@ -33,6 +33,15 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** '/srv/jenkins.debian.net-scm-sync.git'
 ** '/etc/.git' and '/etc'
 
+=== TODO for testing stretch
+
+Most jobs have been converted, a few are left to do:
+
+* add g-i tests for stretch
+** also d-edu jessie beta1 cd+usb images
+** rename current g-i d-edu jessie tests to g-i edu jessie dailies
+* add stretch live-builds
+* do lvc for stretch too
 
 === move this setup to jenkins.d.o
 
@@ -176,7 +185,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** use one css for all, not two minimally different ones
 ** repo-comparison: check for binaries without source
-
+** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 * notes related
 ** hint issues of a package while hovering over it
 ** new page with annoted packages without categorized issues

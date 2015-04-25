@@ -212,6 +212,9 @@ case $1 in
 	jessie)		DISTRO="jessie"
 			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			;;
+	stretch)	DISTRO="stretch"
+			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
+			;;
 	sid)		DISTRO="sid"
 			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			;;
@@ -257,11 +260,12 @@ fi
 
 if [ "$3" != "" ] ; then
 	case $3 in
-		squeeze)upgrade2 squeeze;;
-		wheezy)	upgrade2 wheezy;;
-		jessie)	upgrade2 jessie;;
-		sid)	upgrade2 sid;;
-		*)	echo "unsupported distro." ; exit 1 ;;
+		squeeze)	upgrade2 squeeze;;
+		wheezy)		upgrade2 wheezy;;
+		jessie)		upgrade2 stretch;;
+		stretch)	upgrade2 stretch;;
+		sid)		upgrade2 sid;;
+		*)		echo "unsupported distro." ; exit 1 ;;
 	esac
 fi
 

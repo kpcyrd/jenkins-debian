@@ -202,7 +202,7 @@ if grep -q '|' $PACKAGES ; then
 			WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
 		sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
 		cd /var/lib/jenkins/userContent
-		find rb-pkg/$SUITE/$ARCH  rbuild/$SUITE/$ARCH notes/ dbd/$SUITE/$ARCH buildinfo/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs echo rm -v
+		find rb-pkg/$SUITE/$ARCH  rbuild/$SUITE/$ARCH notes/ dbd/$SUITE/$ARCH buildinfo/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs rm -v
 	done
 	cd - > /dev/null
 fi

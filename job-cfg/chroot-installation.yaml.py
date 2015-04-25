@@ -17,8 +17,9 @@ oldoldstable = 'squeeze'
 
 # ftp.de.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = { 'squeeze': '30 16 25 * *',
-                  'wheezy':  '30 16 * * 1,4',
-                  'jessie':  '30 10 */2 * *',
+                  'wheezy':  '30 16 1,15 * *',
+                  'jessie':  '30 10 * * 1,4',
+                  'stretch':  '30 10 */2 * *',
                   'sid':     '30 4 * * *' }
 
 targets = """

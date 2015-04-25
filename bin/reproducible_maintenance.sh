@@ -192,7 +192,7 @@ if grep -q '|' $PACKAGES ; then
 	echo
 	echo "Warning: found files relative to old packages, no more in the archive:"
 	echo "Removing these removed packages from database:"
-	cat $PACKAGES
+	sqlite3 -init $INIT -header -column ${PACKAGES_DB} "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	echo
 	for pkg in $(cat $PACKAGES) ; do
 		PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)

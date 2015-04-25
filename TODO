@@ -42,6 +42,7 @@ Most jobs have been converted, a few are left to do:
 ** rename current g-i d-edu jessie tests to g-i edu jessie dailies
 * add stretch live-builds
 * do lvc for stretch too
+* mention stretch in README where appropriate
 
 === move this setup to jenkins.d.o
 

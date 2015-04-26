@@ -260,11 +260,7 @@ fi
 
 if [ "$3" != "" ] ; then
 	case $3 in
-		squeeze)	upgrade2 squeeze;;
-		wheezy)		upgrade2 wheezy;;
-		jessie)		upgrade2 jessie;;
-		stretch)	upgrade2 stretch;;
-		sid)		upgrade2 sid;;
+		squeeze|wheezy|jessie|stretch|sid)	upgrade2 $3;;
 		*)		echo "unsupported distro." ; exit 1 ;;
 	esac
 fi

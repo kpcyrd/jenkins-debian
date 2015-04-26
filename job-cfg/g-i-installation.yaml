@@ -317,6 +317,50 @@
     defaults: g-i-installation
     name: '{name}_debian-edu_jessie-daily-netinst_main-ltsp-server'
 
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-daily-usb_standalone'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-daily-usb_standalone_mate'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-daily-usb_main-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-daily-usb_main-ltsp-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-netinst_standalone_mate'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-netinst_main-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-netinst_main-ltsp-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-usb_standalone'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-usb_standalone_mate'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-usb_main-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-usb_main-ltsp-server'
+
 - project:
     name: g-i-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
@@ -706,6 +750,90 @@
          my_title: 'Debian Edu (jessie daily netinst) main+ltsp-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily netinst image.'
+         my_time: '42 0 * * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-daily-usb_standalone':
+         my_title: 'Debian Edu (jessie daily usb) standalone (Default)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_standalone_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
+         my_time: '42 1 */2 * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-daily-usb_standalone_mate':
+         my_title: 'Debian Edu (jessie daily usb) standalone (Mate Desktop)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
+         my_time: '42 1 */2 * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-daily-usb_main-server':
+         my_title: 'Debian Edu (jessie daily usb) main-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_main-server_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
+         my_time: '42 3 * * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-daily-usb_main-ltsp-server':
+         my_title: 'Debian Edu (jessie daily usb) main+ltsp-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
+         my_time: '42 0 * * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-netinst_standalone':
+         my_title: 'Debian Edu (jessie beta1 netinst) standalone (Default)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_time: '42 1 */2 * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-netinst_standalone_mate':
+         my_title: 'Debian Edu (jessie beta1 netinst) standalone (Mate Desktop)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_time: '42 1 */2 * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-netinst_main-server':
+         my_title: 'Debian Edu (jessie beta1 netinst) main-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_time: '42 3 * * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-netinst_main-ltsp-server':
+         my_title: 'Debian Edu (jessie beta1 netinst) main+ltsp-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_time: '42 0 * * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-usb_standalone':
+         my_title: 'Debian Edu (jessie beta1 usb) standalone (Default)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_time: '42 1 */2 * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-usb_standalone_mate':
+         my_title: 'Debian Edu (jessie beta1 usb) standalone (Mate Desktop)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_time: '42 1 */2 * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-usb_main-server':
+         my_title: 'Debian Edu (jessie beta1 usb) main-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_time: '42 3 * * *'
+         my_trigger: ''
+         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - '{name}_debian-edu_jessie-beta1-usb_main-ltsp-server':
+         my_title: 'Debian Edu (jessie beta1 usb) main+ltsp-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
          my_time: '42 0 * * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'

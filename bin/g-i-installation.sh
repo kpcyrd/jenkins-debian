@@ -136,7 +136,7 @@ cleanup_all() {
 	# remove lvm volume
 	#
 	case $NAME in
-	#	*jessie_main-server)	echo "Warning: not deleting lvm volume $LV"
+	#	*debian-edu_jessie*_main-server)	echo "Warning: not deleting lvm volume $LV"
 	#				;;
 		*) 	sudo lvremove -f $LV
 		;;

@@ -262,7 +262,7 @@ if [ "$3" != "" ] ; then
 	case $3 in
 		squeeze)	upgrade2 squeeze;;
 		wheezy)		upgrade2 wheezy;;
-		jessie)		upgrade2 stretch;;
+		jessie)		upgrade2 jessie;;
 		stretch)	upgrade2 stretch;;
 		sid)		upgrade2 sid;;
 		*)		echo "unsupported distro." ; exit 1 ;;

@@ -39,8 +39,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 Most jobs have been converted, a few are left to do:
 
 * add g-i tests for stretch
-** also d-edu jessie beta1 cd+usb images
-** rename current g-i d-edu jessie tests to g-i edu jessie dailies
 * add stretch live-builds
 * do lvc for stretch too
 * mention stretch in README where appropriate
@@ -252,6 +250,7 @@ These small changes are probably still worth doing anyway:
 
 * g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
 * download .isos once in central place
+** /var/lib/jenkins/jobs/g-i-installation_*/workspace/*iso needs 53GB currently, it could be 30 less
 * g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
 * turn job-cfg/g-i.yaml into .yaml.py
 

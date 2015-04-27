@@ -80,8 +80,8 @@ def get_targets_in_distro(distro, targets):
          # qt5, education-desktop-mate and cinnamon weren't in wheezy
          if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' or target == 'qt5' ):
              continue
-         # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid
-         if (distro == 'sid' or distro == 'jessie') and ( target == 'education-desktop-sugar' ):
+         # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid - it's also not yet available in stretch again...
+         if (distro == 'sid' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-desktop-sugar' ):
              continue
          targets_in_distro.append(target)
      return targets_in_distro

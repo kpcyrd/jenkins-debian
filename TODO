@@ -32,7 +32,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
 ** '/srv/jenkins.debian.net-scm-sync.git'
 ** '/etc/.git' and '/etc'
-* (gz|x)-compress jenkins and reproducible logs and teach apache to uncompress them on-fly (maybe uncompress them only if the client does not support compressed content?)
+* (gz|x)-compress jenkins and reproducible logs and teach apache to uncompress them on-fly (maybe uncompress them only if the client does not support compressed content?) - This is also recorded in the "To be done once jenkins.d.n runs jessie" section...
 
 === TODO for testing stretch
 
@@ -194,6 +194,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 * notes related
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
+** notes job shouldn't fail when it hits unknown packages (=removed ones + typos) but rather point this out, probably via irc notify
 
 * pkg sets related:
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...

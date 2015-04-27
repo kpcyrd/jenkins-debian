@@ -53,7 +53,7 @@ fi
 MESSAGE="$TOTAL $PACKAGES_TXT $ACTION in $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
 if [ $ARTIFACTS -eq 1 ] ; then
 	MESSAGE="$MESSAGE - artifacts will be preserved."
-elif $NOTIFY ; then
+elif [ "$NOTIFY" = "true" ] ; then
 	MESSAGE="$MESSAGE - notification once finished."
 fi
 

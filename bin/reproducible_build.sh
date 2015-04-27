@@ -189,7 +189,7 @@ handle_ftbr() {
 	if [ "${OLD_STATUS}" = "reproducible" ]; then
 		MESSAGE="status changed from reproducible → unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
-		# irc_message "$MESSAGE"
+		irc_message "$MESSAGE"
 	fi
 }
 

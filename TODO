@@ -32,6 +32,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
 ** '/srv/jenkins.debian.net-scm-sync.git'
 ** '/etc/.git' and '/etc'
+* (gz|x)-compress jenkins and reproducible logs and teach apache to uncompress them on-fly (maybe uncompress them only if the client does not support compressed content?)
 
 === TODO for testing stretch
 
@@ -188,6 +189,10 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** use one css for all, not two minimally different ones
 ** repo-comparison: check for binaries without source
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
+
+* build related
+** Store the two buildlogs in separated (g|x)zipped files and propose a diff of the two
+
 * notes related
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.

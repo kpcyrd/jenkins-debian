@@ -364,7 +364,6 @@ check_suitability() {
 
 build_rebuild() {
 	FTBFS=1
-	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 	mkdir b1 b2
@@ -380,7 +379,7 @@ build_rebuild() {
 		--buildresult b1 \
 		--distribution ${SUITE} \
 		${SRCPACKAGE}_*.dsc \
-	) 2>&1 | tee ${TMPLOG}
+	) 2>&1 | tee -a $RBUILDLOG
 	set +x
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
@@ -414,14 +413,12 @@ build_rebuild() {
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
 		fi
-	else
-		cat ${TMPLOG} >> ${RBUILDLOG}
 	fi
 	cleanup_userContent
 	chmod 644 $RBUILDLOG
 	mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-	rm ${TMPLOG} $TMPCFG
+	rm $TMPCFG
 	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }
 

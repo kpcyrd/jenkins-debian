@@ -241,11 +241,11 @@ def scheduler():
     # packages with new versions
     new = {}
     if total <= 100:
-        many_new = 100
+        many_new = 150
     elif total <= 200:
-        many_new = 75
+        many_new = 100
     else:
-        many_new = 50
+        many_new = 75
     log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
         new[suite] = scheduler_new_versions(suite, many_new)

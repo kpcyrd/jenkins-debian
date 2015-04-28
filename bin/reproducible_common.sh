@@ -250,14 +250,6 @@ publish_page() {
 	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
 }
 
-set_package_class() {
-	if [ -f ${NOTES_PATH}/${PKG}_note.html ] ; then
-		CLASS="class=\"noted\""
-	else
-		CLASS="class=\"package\""
-	fi
-}
-
 link_packages() {
 	for (( i=1; i<$#+1; i=i+400 )) ; do
 		local string='['

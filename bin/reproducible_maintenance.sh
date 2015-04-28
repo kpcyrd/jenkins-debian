@@ -170,7 +170,7 @@ sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Wa
 if grep -q '|' $PACKAGES ; then
 	echo
 	echo "Warning: packages found where the build was started more than 36h ago:"
-	sqlite3 -init $INIT -header -column ${PACKAGES_DB} "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+	printf ".width 0 25 \n $QUERY ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
 		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
@@ -192,7 +192,7 @@ if grep -q '|' $PACKAGES ; then
 	echo
 	echo "Warning: found files relative to old packages, no more in the archive:"
 	echo "Removing these removed packages from database:"
-	sqlite3 -init $INIT -header -column ${PACKAGES_DB} "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+	printf ".width 25 12 \n $QUERY ;" | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	echo
 	for pkg in $(cat $PACKAGES) ; do
 		PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)

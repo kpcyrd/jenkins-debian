@@ -25,9 +25,9 @@ irc_message() {
 }
 
 create_results_dirs() {
-	mkdir -p /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}
-	mkdir -p /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}
-	mkdir -p /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}
+	mkdir -p $BASE/dbd/${SUITE}/${ARCH}
+	mkdir -p $BASE/rbuild/${SUITE}/${ARCH}
+	mkdir -p $BASE/buildinfo/${SUITE}/${ARCH}
 }
 
 handle_race_condition() {
@@ -64,7 +64,6 @@ check_for_race_conditions() {
 
 save_artifacts() {
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
-		local BASE="/var/lib/jenkins/userContent"
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		local URL="$REPRODUCIBLE_URL/$ARTIFACTS/"
 		local HEADER="$BASE/$ARTIFACTS/.HEADER.html"
@@ -104,9 +103,9 @@ cleanup_all() {
 }
 
 cleanup_userContent() {
-	rm -f /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
-	rm -f /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
-	rm -f /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
+	rm -f $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
+	rm -f $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
+	rm -f $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
 calculate_build_duration() {
@@ -173,12 +172,12 @@ handle_ftbr() {
 	local FTBRmessage="$@"
 	echo | tee -a ${RBUILDLOG}
 	echo "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
-	cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
+	cp b1/${BUILDINFO} $BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ ! -z "$FTRmessage" ] ; then
 		echo "$(date) - ${FTBRmessage}." | tee -a ${RBUILDLOG}
 	fi
 	if [ -f ./${DBDREPORT} ] ; then
-		mv ./${DBDREPORT} /var/lib/jenkins/userContent/dbd/${SUITE}/${ARCH}/
+		mv ./${DBDREPORT} $BASE/dbd/${SUITE}/${ARCH}/
 	else
 		echo "$(date) - $DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
@@ -195,7 +194,7 @@ handle_ftbr() {
 
 handle_reproducible() {
 	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
-		cp b1/${BUILDINFO} /var/lib/jenkins/userContent/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
+		cp b1/${BUILDINFO} $BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
 		echo | tee -a ${RBUILDLOG}
 		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
@@ -416,8 +415,8 @@ build_rebuild() {
 	fi
 	cleanup_userContent
 	chmod 644 $RBUILDLOG
-	mv $RBUILDLOG /var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-	RBUILDLOG=/var/lib/jenkins/userContent/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	rm $TMPCFG
 	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }

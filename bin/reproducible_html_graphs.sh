@@ -112,9 +112,9 @@ update_suite_stats() {
 				PREFIX=$SUITE
 			fi
 			# force regeneration of the image if it exists
-			if [ -f /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png ] ; then
+			if [ -f $BASE/$PREFIX/${TABLE[$i]}.png ] ; then
 				echo "Touching $PREFIX/${TABLE[$i]}.png..."
-				touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$PREFIX/${TABLE[$i]}.png
+				touch -d "$FORCE_DATE 00:00" $BASE/$PREFIX/${TABLE[$i]}.png
 			fi
 		done
 	fi
@@ -223,7 +223,7 @@ update_meta_pkg_stats() {
 				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
 			fi
 			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
-			touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
+			touch -d "$FORCE_DATE 00:00" $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
 		fi
 	done
 }
@@ -256,9 +256,9 @@ update_bug_stats() {
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
 		# force regeneration of the image
 		echo "Touching ${TABLE[3]}.png..."
-		touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[3]}.png
+		touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[3]}.png
 		echo "Touching ${TABLE[7]}.png..."
-		touch -d "$FORCE_DATE 00:00" /var/lib/jenkins/userContent/${TABLE[7]}.png
+		touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[7]}.png
 	fi
 }
 
@@ -311,7 +311,7 @@ create_png_from_table() {
 		mkdir -p $DIR
 		echo "Generating $2."
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
-		mv $2 /var/lib/jenkins/userContent/$DIR
+		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi
 	rm ${TABLE[$1]}.csv
@@ -388,7 +388,7 @@ create_suite_stats_page() {
 	write_page " <a href=\"/userContent/$SUITE/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do
 		# recreate png once a day
-		if [ ! -f /var/lib/jenkins/userContent/$SUITE/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+		if [ ! -f $BASE/$SUITE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE/$SUITE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i $SUITE/${TABLE[$i]}.png
 		fi
 	done
@@ -407,7 +407,7 @@ create_pkg_sets_page() {
 	write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
 	write_page "<ul><li>Tracked package sets in $SUITE: </li>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		if [ -f /var/lib/jenkins/userContent/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
+		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
 			write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
 		fi
 	done
@@ -427,9 +427,9 @@ create_pkg_sets_page() {
 			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
 			# redo pngs once a day
-			if [ ! -f /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG ] || [ ! -z $(find /var/lib/jenkins/userContent/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
+			if [ ! -f $BASE/$SUITE/$ARCH/$PNG ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
-				convert /var/lib/jenkins/userContent/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 /var/lib/jenkins/userContent/$SUITE/$ARCH/$THUMB
+				convert $BASE/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 $BASE/$SUITE/$ARCH/$THUMB
 			fi
 			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
@@ -519,7 +519,7 @@ create_main_stats_page() {
 	for i in 3 7 4 5 1 ; do
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
-		if [ ! -f /var/lib/jenkins/userContent/${TABLE[$i]}.png ] || [ ! -z $(find /var/lib/jenkins/userContent -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
 		if [ "$i" = "3" ] ; then

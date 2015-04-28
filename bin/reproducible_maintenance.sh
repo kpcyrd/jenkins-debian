@@ -34,7 +34,7 @@ if [ ! -f reproducible_$DATE.db.xz ] ; then
 fi
 
 # provide copy for external backups
-cp -v $PACKAGES_DB /var/lib/jenkins/userContent/
+cp -v $PACKAGES_DB $BASE/
 
 # delete old temp directories
 OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
@@ -97,7 +97,7 @@ fi
 # only grep through the last 5h (300 minutes) of builds...
 # (ignore "*None.rbuild.log" because these are build which were just started)
 # this job runs every 4h
-FAILED_BUILDS=$(find /var/lib/jenkins/userContent/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec egrep -l -e 'E: Failed to fetch.*(Connection failed|Size mismatch|Cannot initiate the connection to)' {} \; || true)
+FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec egrep -l -e 'E: Failed to fetch.*(Connection failed|Size mismatch|Cannot initiate the connection to)' {} \; || true)
 if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
 	echo "Warning: the following failed builds have been found"
@@ -201,7 +201,7 @@ if grep -q '|' $PACKAGES ; then
 		QUERY="DELETE FROM removed_packages
 			WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
 		sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
-		cd /var/lib/jenkins/userContent
+		cd $BASE
 		find rb-pkg/$SUITE/$ARCH  rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH buildinfo/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs rm -v
 	done
 	cd - > /dev/null
@@ -218,16 +218,16 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # remove artifacts older than 3 days
-ARTIFACTS=$(find /var/lib/jenkins/userContent/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; || true)
+ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; || true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"
-	find /var/lib/jenkins/userContent/artifacts/* -maxdepth 1 -type d -mtime +3 -exec rm -rv {} \;
+	find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec rm -rv {} \;
 	echo
 fi
 
 # find + chmod files with bad permissions
-BADPERMS=$(find /var/lib/jenkins/userContent/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f)
+BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo

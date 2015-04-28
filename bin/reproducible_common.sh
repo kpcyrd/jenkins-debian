@@ -236,13 +236,13 @@ write_page_meta_sign() {
 publish_page() {
 	if [ "$1" = "" ] ; then
 		if [ "$VIEW" = "$MAINVIEW" ] ; then
-			cp $PAGE /var/lib/jenkins/userContent/reproducible.html
+			cp $PAGE $BASE/reproducible.html
 		fi
 		TARGET=$PAGE
 	else
 		TARGET=$1/$PAGE
 	fi
-	cp $PAGE /var/lib/jenkins/userContent/$TARGET
+	cp $PAGE $BASE/$TARGET
 	rm $PAGE
 	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
 }

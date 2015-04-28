@@ -184,12 +184,13 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** more graphs: graph average build duration by day
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible
-** use one css for all, not two minimally different ones
 ** repo-comparison: check for binaries without source
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
+** write a script to schedule set of packages automatically:
+*** all/unreproducible packages affected by a particular issue
 
 * build related
-** Store the two buildlogs in separated (g|x)zipped files and propose a diff of the two
+** Store the two buildlogs in separated gzipped files and propose a diff of the two
 
 * notes related
 ** new page with annoted packages without categorized issues
@@ -201,7 +202,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 
 * db schema 2.0
 ** move "untested" field in stats table too? (as in csv output...)
-** support for irc-notification of test done (without leaving artifacts)
 
 * missing tests: variation in kernel and date and cpu type
 ** variations in date are only practical to do in c-i fashion using faketime, thus I suggest to wait for those until we test in the wild...

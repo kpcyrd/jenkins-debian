@@ -145,9 +145,9 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	Use common-directives reproducible.debian.net
 	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
 
-	DocumentRoot /var/lib/jenkins/userContent
+	DocumentRoot /var/lib/jenkins/userContent/reproducible
 
-	<Directory /var/lib/jenkins/userContent/artifacts>
+	<Directory /var/lib/jenkins/userContent/reproducible/artifacts>
 		HeaderName .HEADER.html
 	</Directory>
 
@@ -167,14 +167,14 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/issues/unstable/$1 -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/issues/unstable/$1 -f
 	RewriteRule ^/issues/([a-z0-9.+-_]+) /issues/unstable/$1 [R=302,L]
 
 	# redirect rb.d.n/$PKG → rb.d.n/rb-pkg/unstable/amd64/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rb-pkg/unstable/amd64/$1.html -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/unstable/amd64/$1.html -f
 	RewriteRule ^/([a-z0-9.+-]+) /rb-pkg/unstable/amd64/$1.html [R=302,L]
 
 	# redirect rb.d.n/$PKG → rb.d.n/rb-pkg/experimental/amd64/$PKG.html
@@ -182,39 +182,39 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rb-pkg/experimental/amd64/$1.html -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/experimental/amd64/$1.html -f
 	RewriteRule ^/([a-z0-9.+-]+) /rb-pkg/experimental/amd64/$1.html [R=302,L]
 
 	# redirect rb.d.n/$suite/amd64/$PKG → rb.d.n/rb-pkg/$suite/amd64/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rb-pkg/$1/amd64/$2.html -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/$1/amd64/$2.html -f
 	RewriteRule ^/(unstable|testing|experimental)/amd64/([a-z0-9.+-]+) /rb-pkg/$1/amd64/$2.html [R=302,L]
 
 	# redirect rb.d.n/rb-pkg/$PKG.html → rb.d.n/rb-pkg/$suite/$arch/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rb-pkg/unstable/amd64/$1 -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/unstable/amd64/$1 -f
 	RewriteRule ^/rb-pkg/([a-z0-9.+-]+) /rb-pkg/unstable/amd64/$1 [R=301,L]
 	# the same for /dbd/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/dbd/unstable/amd64/$1 -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/dbd/unstable/amd64/$1 -f
 	RewriteRule ^/dbd/([a-z0-9.+-_]+) /dbd/unstable/amd64/$1 [R=301,L]
 	# the same for /rbuild/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/rbuild/unstable/amd64/$1 -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/rbuild/unstable/amd64/$1 -f
 	RewriteRule ^/rbuild/([a-z0-9.+-_]+) /rbuild/unstable/amd64/$1 [R=301,L]
 	# the same for /buildinfo/
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond /var/lib/jenkins/userContent/buildinfo/unstable/amd64/$1 -f
+	RewriteCond /var/lib/jenkins/userContent/reproducible/buildinfo/unstable/amd64/$1 -f
 	RewriteRule ^/buildinfo/([a-z0-9.+-_]+) /buildinfo/unstable/amd64/$1 [R=301,L]
 	# redirect some rb.d.n/index_*.html to the suite/arch relative one
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net

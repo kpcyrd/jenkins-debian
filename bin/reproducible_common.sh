@@ -50,7 +50,7 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 
-BASE="/var/lib/jenkins/userContent"
+BASE="/var/lib/jenkins/userContent/reproducible"
 mkdir -p "$BASE"
 
 # create subdirs for suites

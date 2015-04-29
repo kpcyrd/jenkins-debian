@@ -181,7 +181,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** the grepping should probably only done on files younger then $check_frequency
 
 * misc
-** move all content into /var/lib/userContent/reproducible/
 ** more graphs: graph average build duration by day
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** "fork" etc/schroot/default into etc/schroot/reproducible

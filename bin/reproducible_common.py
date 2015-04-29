@@ -35,7 +35,7 @@ defaultsuite = 'unstable'
 defaultarch = 'amd64'
 
 BIN_PATH = '/srv/jenkins/bin'
-BASE = '/var/lib/jenkins/userContent'
+BASE = '/var/lib/jenkins/userContent/reproducible'
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'

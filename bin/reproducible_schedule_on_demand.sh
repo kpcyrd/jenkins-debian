@@ -33,7 +33,7 @@ case "$1" in
 		ARTIFACTS=0
 		NOTIFY=true
 		shift
-		printf "\nThe IRC channel will be notify once the build(s) finished.\n\n"
+		printf "\nThe IRC channel will be notified once the build(s) finished.\n\n"
 		;;
 	*)
 		ARTIFACTS=0

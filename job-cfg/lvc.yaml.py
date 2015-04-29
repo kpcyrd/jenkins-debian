@@ -47,7 +47,7 @@ print("""
           text: Jobs for libvirt and cucumber based tests
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
-          url: http://www.profitbricks.com
+          url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - throttle:

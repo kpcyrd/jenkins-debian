@@ -14,7 +14,7 @@ https://jenkins.debian.net is a tool for automated quality monitoring of Debian.
 
 Get the source by running `git clone git://git.debian.org/git/qa/jenkins.debian.net.git`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository. (The irrelevant bits are some very simple configuration files containing passwords.)
 
-The (virtualized) hardware is sponsored since October 2012 by http://www.profitbricks.com - currently it's using 23 cores and 75 GB memory, thanks a lot!
+The (virtualized) hardware is sponsored since October 2012 by http://www.profitbricks.co.uk - currently it's using 23 cores and 75 GB memory, thanks a lot!
 
 Some stats are available using link:https://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
 

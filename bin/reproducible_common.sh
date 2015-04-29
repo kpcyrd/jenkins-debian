@@ -178,7 +178,7 @@ write_page_header() {
 		write_page "<p>These pages are showing the prospects of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>."
 		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
-		write_page " Thanks to <a href=\"https://www.profitbricks.com\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
+		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machine this is running on!</p>"
 	fi
 	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
 		write_page "<p>Join <code>#debian-reproducible</code> on OFTC"

@@ -25,7 +25,7 @@ print("""
           text: Debian Edu development
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar:
-          url: http://www.profitbricks.com
+          url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
     description: 'Build the master branch of git://anonscm.debian.org/debian-edu/{my_package}.git in sid on every commit.<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/edu-packages.yaml">edu-packages.yaml</a>.'

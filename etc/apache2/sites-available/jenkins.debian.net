@@ -59,6 +59,14 @@ NameVirtualHost *:443
 		AddType text/plain .log
 	</Directory>
 
+	<FilesMatch "\.gz$">
+		AddEncoding gzip .gz
+		ForceType text/plain
+		FilterDeclare gzipInflate CONTENT_SET
+		FilterProvider gzipInflate inflate "%{req:Accept-Encoding} !~ /gzip/"
+		FilterChain +gzipInflate
+	</FilesMatch>
+
 	RewriteEngine on
 	ProxyRequests Off
 

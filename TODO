@@ -33,6 +33,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** '/srv/jenkins.debian.net-scm-sync.git'
 ** '/etc/.git' and '/etc'
 * (gz|x)-compress jenkins and reproducible logs and teach apache to uncompress them on-fly (maybe uncompress them only if the client does not support compressed content?) - This is also recorded in the "To be done once jenkins.d.n runs jessie" section...
+* put /etc/rc.local in git and extend it to do cleanup of lockfiles etc
 
 === TODO for testing stretch
 

@@ -261,7 +261,7 @@ call_debbindiff() {
 			./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 \
 	) 2>&1 >> $TMPLOG
 	RESULT=$?
-	set +x
+	if ! "$DEBUG" ; then set +x ; fi
 	set -e
 	cat $TMPLOG | tee -a $RBUILDLOG  # print out dbd output
 	rm -f $DBDCHROOT_READLOCK $TMPLOG
@@ -379,7 +379,7 @@ build_rebuild() {
 		--distribution ${SUITE} \
 		${SRCPACKAGE}_*.dsc \
 	) 2>&1 | tee -a $RBUILDLOG
-	set +x
+	if ! "$DEBUG" ; then set +x ; fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
@@ -404,7 +404,7 @@ build_rebuild() {
 					--distribution ${SUITE} \
 					${SRCPACKAGE}_${EVERSION}.dsc
 		) 2>&1 | tee -a ${RBUILDLOG}
-		set +x
+	if ! "$DEBUG" ; then set +x ; fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0

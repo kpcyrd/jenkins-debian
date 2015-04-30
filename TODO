@@ -264,6 +264,12 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 
 == Further ideas...
 
+=== rebuild sid completly on demand
+
+* nthykier wants to be able to rebuild all of sid to test how changes to eg lintian, debhelper, cdbs, gcc affect the archive:
+* h01ger> | nthykier: so a.) rebuild everything from sid plus custom repo. b.) option to only rebuild a subset, like all rdepends or all packages build-depending on something
+* h01ger> | and c.) only build once, not continously and d.) enable more cores+ram on demand to build faster
+
 === Test them all
 
 * build packages from all team repos on alioth with jenkins-debian-glue on team request (eg, via a .txt file in a git.repo) for specific branches (which shall also be automated, eg. to be able to only have squeeze+sid branches build, but not all other branches.)

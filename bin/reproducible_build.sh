@@ -36,13 +36,13 @@ handle_race_condition() {
 	local msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different build.\n"
 	case $1 in
 		"db")
-			local msg="${msg}The race condition was cought while marking the build attempt in the database.\n"
+			local msg="${msg}The race condition was caught while marking the build attempt in the database.\n"
 			;;
 		"init")
-			local msg="${msg}The race condition was cought while writing the lockfile.\n"
+			local msg="${msg}The race condition was caught while writing the lockfile.\n"
 			;;
 		"lockfile")
-			local msg="${msg}The race condition was cought while checking the lockfile for pid correctness.\n"
+			local msg="${msg}The race condition was caught while checking the lockfile for pid correctness.\n"
 			;;
 	esac
 	printf "$msg" | tee -a $BUILDLOG

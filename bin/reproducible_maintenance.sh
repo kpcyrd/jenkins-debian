@@ -58,41 +58,6 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	DIRTY=true
 fi
 
-# find and warn about pbuild leftovers
-OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
-if [ ! -z "$OLDSTUFF" ] ; then
-	# delete known files, see #777537
-	cd /var/cache/pbuilder/result/
-	echo "Attempting file detection..."
-	for i in $(find . -maxdepth 1 -mtime +1 -type f -exec basename {} \;) ; do
-		case $i in
-			stderr|stdout)	rm -v $i
-					;;
-			seqan-*.bed)	rm -v $i	# leftovers reported in #766741
-					;;
-			bootlogo)	rm -v $i
-					;;
-			org.daisy.paper.CustomPaperCollection.obj)		rm -v $i
-					;;
-			debian-faq.pdf.gz|debian-faq.ps.gz|debian-faq.txt.gz)	rm -v $i
-					;;
-			sumo_doxygen_lastrun.log)				rm -v $i
-					;;
-			*)		;;
-		esac
-	done
-	cd - > /dev/null
-	# report the rest
-	OLDSTUFF=$(find /var/cache/pbuilder/result/ -mtime +1 -exec ls -lad {} \;)
-	if [ ! -z "$OLDSTUFF" ] ; then
-		echo "Warning: old files or directories found in /var/cache/pbuilder/result/"
-		echo "$OLDSTUFF"
-		echo "Please cleanup manually."
-	fi
-	echo
-	DIRTY=true
-fi
-
 # find failed builds due to network problems and reschedule them
 # only grep through the last 5h (300 minutes) of builds...
 # (ignore "*None.rbuild.log" because these are build which were just started)

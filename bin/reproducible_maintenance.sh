@@ -48,11 +48,11 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # find old schroots
-OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -name "reproducible-*-*" -mtime +2 -exec ls -lad {} \;)
+OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Warning: old schroots found in /schroots, which have been deleted:"
-	find /schroots/ -maxdepth 1 -type d -name "reproducible-*-*" -mtime +2 -exec sudo rm -rf --one-file-system {} \;
+	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec sudo rm -rf --one-file-system {} \;
 	echo "$OLDSTUFF"
 	echo
 	DIRTY=true

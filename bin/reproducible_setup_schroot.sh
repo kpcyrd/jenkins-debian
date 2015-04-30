@@ -54,10 +54,12 @@ bootstrap() {
 
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then
+		set -x
 		sudo chroot $CHROOT_TARGET apt-get update
 		# install debbindiff with all recommends...
 		#sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@"
 		sudo chroot $CHROOT_TARGET apt-get install -y "$@"
+		if ! $DEBUG ; then set +x ; fi
 	else
 		# schroot is used to download sources, so add our repo too
 		echo 'deb-src http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list

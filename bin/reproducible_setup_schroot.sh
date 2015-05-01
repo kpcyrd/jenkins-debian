@@ -108,6 +108,7 @@ EOF
 
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
+		sudo umount -l $CHROOT_TARGET/proc || true
 		sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 	fi
 }

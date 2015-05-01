@@ -17,3 +17,4 @@ warning /Warning: the following failed builds have been found/
 warning /Warning: cannot update html pages for.+/
 warning /Warning: package .+is probably already building elsewhere, exiting./
 warning /Warning: too much difference for .+, aborting. Please investigate and update manually./
+warning /Warning: This query produces no results:.+/

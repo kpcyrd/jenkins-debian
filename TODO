@@ -194,7 +194,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 * notes related
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
-** notes job shouldn't fail when it hits unknown packages (=removed ones + typos) but rather point this out, probably via irc notify
 
 * pkg sets related:
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...

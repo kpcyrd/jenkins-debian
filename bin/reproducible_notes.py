@@ -13,6 +13,7 @@ import json
 import yaml
 from apt_pkg import version_compare
 from reproducible_common import *
+from subprocess import call
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -46,10 +47,12 @@ def load_notes():
         query = query.format(pkg=pkg)
         result = query_db(query)
         if not result:
-            print_critical_message('This query produces no results: ' + query
+            print_critical_message('Warning: This query produces no results: ' + query
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
-            sys.exit(1)
+            kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
+                   '--relay-msg', 'There is problem with the note for '+pkg+' - please investigate']]
+            call(kgb)
         else:
             notes[pkg] = []
             for suite in result:

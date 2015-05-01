@@ -51,7 +51,7 @@ def load_notes():
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
             kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
-                   '--relay-msg', 'There is problem with the note for '+pkg+' - please investigate']]
+                   '--relay-msg', 'There is problem with the note for '+pkg+' - please investigate' ]
             call(kgb)
         else:
             notes[pkg] = []

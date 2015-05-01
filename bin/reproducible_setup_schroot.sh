@@ -52,6 +52,9 @@ bootstrap() {
 	fi
 	echo "deb-src $MIRROR $SUITE main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 
+	# things break without /proc
+	sudo mount --bind /proc $CHROOT_TARGET/proc
+
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then
 		set -x
@@ -99,6 +102,8 @@ EOF
 		rm $TMPFILE
 		sudo chroot $CHROOT_TARGET apt-get update
 	fi
+
+	sudo umount -l $CHROOT_TARGET/proc
 }
 
 cleanup() {

@@ -168,12 +168,13 @@ properties:
 === reproducible
 
 * issues in packages or debbindiff:
-** find debbindiff problems: 
+** find debbindiff problems - these might be caught by bin/reproducible_breakages.py but already?
 ----
 egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
 ----
 
 * packages build with different dependencies, should be rescheduled:
+** not sure if these should be caught by reproducible_maintenance.sh or reproducible_breakages.py...
 ----
 grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*1 '
 ----
@@ -189,12 +190,16 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** write a script to schedule set of packages automatically:
 *** all/unreproducible packages affected by a particular issue
 
+* debbindiff related
+** install debbindiff from unstable in the debbindiff-testing-schroot
+
 * build related
 ** Store the two buildlogs in separated gzipped files and propose a diff of the two
 
 * notes related
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
+*** aint that covered by reproducible_breakages.py already?
 
 * pkg sets related:
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...

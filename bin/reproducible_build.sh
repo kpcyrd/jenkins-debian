@@ -232,7 +232,7 @@ init_debbindiff() {
 }
 
 dbd_timeout() {
-	local msg="DBDVERSION was killed after running into timeout after $1"
+	local msg="$DBDVERSION was killed after running into timeout after $1"
 	if [ ! -s ./${DBDREPORT} ] ; then
 		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
 	else

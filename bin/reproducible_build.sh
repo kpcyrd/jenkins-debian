@@ -96,7 +96,7 @@ cleanup_all() {
 		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
 		irc_message "Check $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and $BUILD_URL to find out why no artifacts were saved (final status $STATUS)"
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
-		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE just finished building ($STATUS)"
+		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE finished building ($STATUS)"
 	fi
 	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi

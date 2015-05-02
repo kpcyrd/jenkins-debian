@@ -168,7 +168,7 @@ properties:
 === reproducible
 
 * issues in packages or debbindiff:
-** find debbindiff problems - these might be caught by bin/reproducible_breakages.py but already?
+** find debbindiff problems - these might be caught by bin/reproducible_breakages.py already?
 ----
 egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
 ----

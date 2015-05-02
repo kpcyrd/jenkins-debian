@@ -1354,6 +1354,8 @@ case $NAME in
 			case $NAME in
 				debian-edu_*test*server)	let START_TRIGGER=NR+600
 								;;
+				*_kfreebsd*)			let START_TRIGGER=NR+200
+								;;
 				*)				let START_TRIGGER=NR+80
 								;;
 			esac

@@ -200,6 +200,8 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already?
+** update README in notes.git to explain how the version there is used and what to do
+** add note to all the notes+issues pages explaining that too
 
 * pkg sets related:
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...

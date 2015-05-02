@@ -1027,7 +1027,7 @@ monitor_system() {
 		#
 		# break if qemu-system has finished
 		#
-		if ! ps fax | grep [q]emu-system | grep vnc=$DISPLAY >/dev/null; then
+		if ! ps fax | grep [q]emu-system | grep "vnc=$DISPLAY " >/dev/null; then
 			touch $RESULTS/qemu_quit
 			break
 		fi

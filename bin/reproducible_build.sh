@@ -248,13 +248,18 @@ call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 33 lines above
-	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-unstable-debbindiff debbindiff -- --version 2>&1)"
+	DBDSUITE=$SUITE
+	if [ "$SUITE" = "experimental" ] ; then
+		# there is no extra debbindiff-schroot for experimental because we specical case ghc enough already ;)
+		DBDSUITE="unstable"
+	fi
+	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
 	set +e
 	set -x
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
-		-c source:jenkins-reproducible-unstable-debbindiff \
+		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
 		debbindiff -- \
 			--html ./${DBDREPORT} \
 			./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \

@@ -330,7 +330,7 @@ bootstrap_system() {
 		echo -n "$QEMU_KERNEL " >> $QEMU_LAUNCHER
 	else
 	        case $NAME in
-			*_kfreebsd)	;;
+			*_kfreebsd*)	;;
 			*_hurd*)	# Hurd needs multiboot options jenkins can't escape correctly
 					echo -n '--kernel '$WORKSPACE'/gnumach --initrd "'$IMAGE_MNT'/boot/initrd.gz \$(ramdisk-create),'$IMAGE_MNT'/boot/kernel/ext2fs.static --multiboot-command-line=\${kernel-command-line} --host-priv-port=\${host-port} --device-master-port=\${device-port} --exec-server-task=\${exec-task} -T typed gunzip:device:rd0 \$(task-create) \$(task-resume),'$IMAGE_MNT'/boot/kernel/ld.so.1 /hurd/exec \$(exec-task=task-create)" ' >> $QEMU_LAUNCHER
 					APPEND="console=com0 $APPEND"
@@ -339,7 +339,7 @@ bootstrap_system() {
 		esac
 	fi
 	case $NAME in
-		*_kfreebsd)	# not supported for the --append option
+		*_kfreebsd*)	# not supported for the --append option
 				;;
 		*)		echo "--append \"$APPEND\"" >> $QEMU_LAUNCHER
 				;;

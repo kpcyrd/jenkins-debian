@@ -136,9 +136,11 @@ Installation tests inside chroot environments.
 
 * Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through eight concurrent builder jobs which are each constantly testing packages and saving the results of these tests.
 
-* The jenkins job overview at https://jenkins.debian.net/view/reproducible/ probably makes it clearer how the job scheduling works in practice.
+* Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and which schedules "new packages" to be tested if the queue is below a certain threshold. New packages" in this context means:
+** truely new packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
+** new versions of existing packages.
 
-* Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and which schedules new packages to be tested if the queue is below a certain threshold.
+* If the scheduling queue is low, already tested package will be scheduled for re-testing.
 
 * Several other jobs exist to build the html pages and to create a JSON file which can be downloaded from https://reproducible.debian.net/reproducible.json.
 
@@ -149,6 +151,8 @@ Installation tests inside chroot environments.
 * Then there is another job to create a sid schroot to run debbindiff on the the two results. (FIXME: explain why here)
 
 * Finally, there is a maintenance job running every 4h, making sure things are considerably under control.
+
+* The jenkins job overview at https://jenkins.debian.net/view/reproducible/ probably makes it clearer how the job scheduling works in practice.
 
 * Plase ask for manual rescheduling of packages in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins need to run this command:
 

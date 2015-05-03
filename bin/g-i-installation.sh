@@ -1275,9 +1275,13 @@ if [ ! -z "$NETBOOT" ] ; then
         # if there is a netboot installer tarball...
         #
         fetch_if_newer "$NETBOOT" "$URL"
-        # try to extract, otherwise abort
         sha256sum "$NETBOOT"
-        tar -zxvf "$NETBOOT" || exit
+        # try to extract, otherwise clean up and abort
+        if ! tar -zxvf "$NETBOOT" ; then
+		echo "tarball seems corrupt;  deleting it"
+		rm -f "$NETBOOT"
+		exit 1
+	fi
 elif [ ! -z "$IMAGE" ] ; then
 	#
 	# if there is a CD image...

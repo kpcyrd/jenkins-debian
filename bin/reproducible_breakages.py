@@ -40,7 +40,7 @@ def unrep_with_dbd_issues():
             data = open(dbd, 'br').read(3)
             if b'<' not in data:
                 bad_dbd.append((pkg, version, suite, arch))
-                log.warning(pkg + '/' + suite + ' (' + version + ') has a '
+                log.warning(pkg + '/' + suite + ' (' + version + ') has '
                             'debbindiff output, but it does not seem to '
                             'be an html page.')
     return without_dbd, bad_dbd
@@ -144,7 +144,7 @@ def alien_dbd():
                 pkg, version = file.rsplit('.', 2)[0].rsplit('_', 1)
             except ValueError:
                 log.critical(bcolors.FAIL + '/'.join([root, file]) +
-                             ' does not seems like a file that should be there'
+                             ' does not seem to be a file that should be there'
                              + bcolors.ENDC)
             result = query_db(query.format(pkg=pkg, suite=suite, arch=arch))
             try:
@@ -214,8 +214,8 @@ def gen_html():
     html += _gen_section('are marked as unreproducible, but without ' +
                          'debbindiff output:', without_dbd)
     html += _gen_section('are marked as unreproducible, but their ' +
-                         'debbindiff output does not seem an html ' +
-                         'page:', bad_dbd)
+                         'debbindiff output does not seem to be an html ' +
+                         'file:', bad_dbd)
     # debbindiff report where it shouldn't be
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a debbindiff file:', not_unrep_with_dbd_file())

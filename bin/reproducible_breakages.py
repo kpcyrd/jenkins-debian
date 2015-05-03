@@ -41,8 +41,8 @@ def unrep_with_dbd_issues():
             if b'<' not in data:
                 bad_dbd.append((pkg, version, suite, arch))
                 log.warning(pkg + '/' + suite + ' (' + version + ') has a '
-                            'debbindiff output, but it does not seem an '
-                            'html page.')
+                            'debbindiff output, but it does not seem to '
+                            'be an html page.')
     return without_dbd, bad_dbd
 
 
@@ -120,7 +120,7 @@ def alien_rbuild():
                 pkg, version = file.rsplit('.', 2)[0].rsplit('_', 1)
             except ValueError:
                 log.critical(bcolors.FAIL + '/'.join([root, file]) +
-                             ' does not seems like a file that should be there'
+                             ' does not seem to be a file that should be there'
                              + bcolors.ENDC)
             if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
                 bad_files.append('/'.join([root, file]))
@@ -203,11 +203,11 @@ def _gen_section(header, pkgs, entries=None):
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed package without cleanup)
-    html += _gen_section('rbuild that should not be there', None,
+    html += _gen_section('rbuild file that should not be there', None,
                          entries=alien_rbuild())
-    html += _gen_section('debbindiffs that should not be there', None,
+    html += _gen_section('debbindiff files that should not be there:', None,
                          entries=alien_dbd())
-    html += _gen_section('rb-pkg pages that should not be there', None,
+    html += _gen_section('rb-pkg pages that should not be there:', None,
                          entries=alien_rbpkg())
     # debbindiff troubles
     without_dbd, bad_dbd = unrep_with_dbd_issues()
@@ -220,10 +220,10 @@ def gen_html():
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a debbindiff file:', not_unrep_with_dbd_file())
     # missing buildlog
-    html += _gen_section('are built but does not have a buildlog',
+    html += _gen_section('are built but don\'t have a buildlog:',
                          lack_rbuild())
     # pbuilder-satisfydepends failed
-    html += _gen_section('failed to met their build-dependecies',
+    html += _gen_section('failed to match their build-dependencies:',
                          pbuilder_dep_fail())
     return html
 

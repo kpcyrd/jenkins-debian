@@ -25,7 +25,8 @@ def unrep_with_dbd_issues():
     bad_dbd = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status="unreproducible"'''
+               WHERE r.status="unreproducible"
+               ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -51,7 +52,8 @@ def not_unrep_with_dbd_file():
     bad_pkgs = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status != "unreproducible"'''
+               WHERE r.status != "unreproducible"
+               ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -69,7 +71,8 @@ def lack_rbuild():
     bad_pkgs = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status != "" AND r.status != "blacklisted"'''
+               WHERE r.status != "" AND r.status != "blacklisted"
+               ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -87,7 +90,8 @@ def pbuilder_dep_fail():
     bad_pkgs = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status = "FTBFS"'''
+               WHERE r.status = "FTBFS"
+               ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -109,7 +113,8 @@ def alien_rbuild():
     query = '''SELECT s.name
                FROM sources AS s JOIN results AS r on r.package_id=s.id
                WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
-               AND s.architecture="{arch}"'''
+               AND s.architecture="{arch}"
+               ORDER BY s.name ASC, s.suite DESC'''
     bad_files = []
     for root, dirs, files in os.walk(RBUILD_PATH):
         if not files:
@@ -133,7 +138,8 @@ def alien_dbd():
     query = '''SELECT r.status
                FROM sources AS s JOIN results AS r on r.package_id=s.id
                WHERE s.name="{pkg}" AND s.suite="{suite}"
-               AND s.architecture="{arch}"'''
+               AND s.architecture="{arch}"
+               ORDER BY s.name ASC, s.suite DESC'''
     bad_files = []
     for root, dirs, files in os.walk(DBD_PATH):
         if not files:
@@ -166,7 +172,8 @@ def alien_rbpkg():
     query = '''SELECT s.name
                FROM sources AS s
                WHERE s.name="{pkg}" AND s.suite="{suite}"
-               AND s.architecture="{arch}"'''
+               AND s.architecture="{arch}"
+               ORDER BY s.name ASC, s.suite DESC'''
     bad_files = []
     for root, dirs, files in os.walk(RB_PKG_PATH):
         if not files:

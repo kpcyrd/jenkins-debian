@@ -324,7 +324,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_create_meta_pkg_sets.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_breakages':
-            my_description: 'Generate an HTML page full with CI issues (packages with incoherent status or files that should not be there)'
+            my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
             my_timed: '1 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_breakages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'

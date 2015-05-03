@@ -1271,13 +1271,13 @@ trap cleanup_all INT TERM EXIT
 # install image preparation
 #
 if [ ! -z "$NETBOOT" ] ; then
-        #
-        # if there is a netboot installer tarball...
-        #
-        fetch_if_newer "$NETBOOT" "$URL"
-        sha256sum "$NETBOOT"
-        # try to extract, otherwise clean up and abort
-        if ! tar -zxvf "$NETBOOT" ; then
+	#
+	# if there is a netboot installer tarball...
+	#
+	fetch_if_newer "$NETBOOT" "$URL"
+	sha256sum "$NETBOOT"
+	# try to extract, otherwise clean up and abort
+	if ! tar -zxvf "$NETBOOT" ; then
 		echo "tarball seems corrupt;  deleting it"
 		rm -f "$NETBOOT"
 		exit 1

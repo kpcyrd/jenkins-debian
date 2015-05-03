@@ -60,7 +60,7 @@ parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-d", "--debug", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
-args = parser.parse_args()
+args, unknown_args = parser.parse_known_args()
 log_level = logging.INFO
 if args.debug or DEBUG:
     log_level = logging.DEBUG

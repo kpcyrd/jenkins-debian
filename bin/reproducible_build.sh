@@ -182,9 +182,9 @@ handle_ftbr() {
 		echo "$(date) - $DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	calculate_build_duration
+	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	update_db_and_html "unreproducible"
 	# notification for changing status
-	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	if [ "${OLD_STATUS}" = "reproducible" ]; then
 		MESSAGE="status changed from reproducible → unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}

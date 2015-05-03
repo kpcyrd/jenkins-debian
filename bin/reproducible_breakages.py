@@ -149,12 +149,12 @@ def alien_dbd():
             result = query_db(query.format(pkg=pkg, suite=suite, arch=arch))
             try:
                 if result[0][0] != 'unreproducible':
-                    bad_files.append('/'.join([root, file]) + '(' +
+                    bad_files.append('/'.join([root, file]) + ' (' +
                                      str(result[0][0]) + ' pacakge)')
                     log.warning('/'.join([root, file]) + ' should not be '
                                 'there (' + str(result[0][0]) + ' package)')
             except IndexError:
-                bad_files.append('/'.join([root, file]) + '(' +
+                bad_files.append('/'.join([root, file]) + ' (' +
                                  'missing pacakge)')
                 log.warning(bcolors.WARN + '/'.join([root, file]) + ' should '
                             'not be there (missing package)' + bcolors.ENDC)

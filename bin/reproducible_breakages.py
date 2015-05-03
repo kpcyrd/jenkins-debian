@@ -220,7 +220,8 @@ def gen_html():
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a debbindiff file:', not_unrep_with_dbd_file())
     # missing buildlog
-    html += _gen_section('are built does not have a buildlog', lack_rbuild())
+    html += _gen_section('are built but does not have a buildlog',
+                         lack_rbuild())
     # pbuilder-satisfydepends failed
     html += _gen_section('failed to met their build-dependecies',
                          pbuilder_dep_fail())

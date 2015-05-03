@@ -78,7 +78,7 @@ def lack_rbuild():
         if not os.access(rbuild, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(pkg + '/' + suite + ' (' + version + ') has been '
-                        'built, but it\'s without a buildlog.')
+                        'built, but a buildlog is missing.')
     return bad_pkgs
 
 
@@ -100,7 +100,7 @@ def pbuilder_dep_fail():
                     if re.search(b'E: pbuilder-satisfydepends failed.', line):
                         bad_pkgs.append((pkg, version, suite, arch))
                         log.warning(pkg + '/' + suite + ' (' + version +
-                                    ') failed to met its dependecies')
+                                    ') failed to met its dependencies.')
     return bad_pkgs
 
 

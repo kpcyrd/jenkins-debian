@@ -195,6 +195,10 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian_jessie_hurd_lxde'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue'
 
 - job-template:
@@ -528,7 +532,14 @@
       - '{name}_debian_sid_daily_hurd_lxde':
          my_title: 'Debian (sid daily build CD) LXDE desktop install on Hurd'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of Debian LXDE desktop on Hurd - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_hurd_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_description: 'Do a fully automated installation of Debian LXDE desktop on Hurd - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_hurd_lxde_preseed.cfg">this preseed.cfg</a>).<br />This job is only triggered manually.'
+         my_time: ''
+         my_trigger: ''
+         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
+      - '{name}_debian_jessie_hurd_lxde':
+         my_title: 'Debian (jessie CD) LXDE desktop install on Hurd'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a LXDE desktop on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a> - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_hurd_lxde_preseed.cfg">this preseed.cfg</a>).'
          my_time: '42 10 */2 * *'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
@@ -773,56 +784,56 @@
       - '{name}_debian-edu_jessie-beta1-netinst_standalone':
          my_title: 'Debian Edu (jessie beta1 netinst) standalone (Default)'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-netinst_standalone_mate':
          my_title: 'Debian Edu (jessie beta1 netinst) standalone (Mate Desktop)'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-netinst_main-server':
          my_title: 'Debian Edu (jessie beta1 netinst) main-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-netinst_main-ltsp-server':
          my_title: 'Debian Edu (jessie beta1 netinst) main+ltsp-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-usb_standalone':
          my_title: 'Debian Edu (jessie beta1 usb) standalone (Default)'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-usb_standalone_mate':
          my_title: 'Debian Edu (jessie beta1 usb) standalone (Mate Desktop)'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-usb_main-server':
          my_title: 'Debian Edu (jessie beta1 usb) main-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
       - '{name}_debian-edu_jessie-beta1-usb_main-ltsp-server':
          my_title: 'Debian Edu (jessie beta1 usb) main+ltsp-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
          my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'

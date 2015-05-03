@@ -103,19 +103,15 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian-edu_wheezy_standalone'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_workstation'
+    name: '{name}_debian-edu_wheezy_workstation'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_combi-server'
+    name: '{name}_debian-edu_wheezy_combi-server'
 
 - job-template:
     defaults: g-i-installation
@@ -291,15 +287,15 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone_gnome'
+    name: '{name}_debian-edu_wheezy-standalone_gnome'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone_lxde'
+    name: '{name}_debian-edu_wheezy-standalone_lxde'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-test_standalone_xfce'
+    name: '{name}_debian-edu_wheezy-standalone_xfce'
 
 - job-template:
     defaults: g-i-installation
@@ -380,24 +376,17 @@
          my_time: '42 20 15 * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_standalone':
-         my_title: 'Debian Edu (wheezy-test) standalone'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 20 16 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_workstation':
-         my_title: 'Debian Edu (wheezy-test) workstation'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy workstation profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_workstation_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+      - '{name}_debian-edu_wheezy_workstation':
+         my_title: 'Debian Edu (wheezy) workstation'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy workstation profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_workstation_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_time: '42 22 16 * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_combi-server':
-         my_title: 'Debian Edu (wheezy-test) combi-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 30 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy combi-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+      - '{name}_debian-edu_wheezy_combi-server':
+         my_title: 'Debian Edu (wheezy) combi-server'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 30 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy combi-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_time: '42 0 16 * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
@@ -704,24 +693,24 @@
          my_time: '42 6 * * 7'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_standalone_gnome':
-         my_title: 'Debian Edu (wheezy-test) standalone (gnome)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+      - '{name}_debian-edu_wheezy_standalone_gnome':
+         my_title: 'Debian Edu (wheezy) standalone (gnome)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_time: '42 18 17 * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_standalone_lxde':
-         my_title: 'Debian Edu (wheezy-test) standalone (lxde)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+      - '{name}_debian-edu_wheezy_standalone_lxde':
+         my_title: 'Debian Edu (wheezy) standalone (lxde)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_time: '42 22 17 * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy-test_standalone_xfce':
-         my_title: 'Debian Edu (wheezy-test) standalone (xfce)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-test-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy-test_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+      - '{name}_debian-edu_wheezy_standalone_xfce':
+         my_title: 'Debian Edu (wheezy) standalone (xfce)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
          my_time: '42 2 * * 1'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'

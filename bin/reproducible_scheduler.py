@@ -296,10 +296,7 @@ def scheduler():
               'for ' + str(total) + ' or ' + \
               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
     log.info(message)
-    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
-           '--relay-msg']
-    kgb.extend(message.split())
-    call(kgb)
+    irc_msg(message)
     log.info('\n\n\n')
     log.info(message)
 

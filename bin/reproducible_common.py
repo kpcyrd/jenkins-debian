@@ -21,6 +21,7 @@ import datetime
 import psycopg2
 import html as HTML
 from string import Template
+from subprocess import call
 from traceback import print_exception
 
 DEBUG = False
@@ -498,6 +499,12 @@ def get_trailing_bug_icon(bug, bugs, package=None):
         except KeyError:
             pass
     return html
+
+def irc_msg(msg):
+    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
+           '--relay-msg']
+    kgb.extend(str(msg).strip().split())
+    call(kgb)
 
 # init the databases connections
 conn_db = start_db_connection()  # the local sqlite3 reproducible db

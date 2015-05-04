@@ -8,8 +8,8 @@
 #
 # A secure script to be called from remote hosts
 
+import time
 import argparse
-from subprocess import check_output
 
 
 parser = argparse.ArgumentParser(
@@ -97,6 +97,8 @@ message += ': ' + ' '.join(packages)[0:256] + blablabla + artifacts_txt
 # so schedule them in the past, so they are picked earlier :)
 # the current date is subtracted twice, so it sorts before early scheduling
 # schedule on the full hour so we can recognize them easily
+epoch = int(time.time())
+yesterday = epoch - 60*60*24
 now = datetime.datetime.now()
 days = int(now.strftime('%j'))*2
 hours = int(now.strftime('%H'))*2
@@ -105,18 +107,42 @@ time_delta = datetime.timedelta(days=days, hours=hours, minutes=minutes)
 date = (now - time_delta).strftime('%Y-%m-%d %H:%M')
 log.debug('date_scheduled = ' + date + ' time_delta = ' + str(time_delta))
 
+
+# a single person can't schedule more than 50 packages in the same day; this
+# is actually easy to bypass, but let's give some trust to the Debian people
+query = '''SELECT count(*) FROM manual_scheduler
+           WHERE requester = "{}" AND date_request > "{}"'''
+try:
+    amount = int(query_db(query.format(requester, date))[0][0])
+except IndexError:
+    amount = 0
+log.debug(requester + ' already scheduled ' + str(amount) + ' packages today')
+if amount + len(ids) > 50:
+    log.error(bcolors.FAIL + 'You exceeded the maximun amount of manual ' +
+              'rescheduling for today. Please ask in #debian-reproducible ' +
+              'if need to schedule more packages.' + bcolors.ENDC)
+    sys.exit(1)
+
+
+# do the actual scheduling
 to_schedule = []
+save_schedule = []
 for id in ids:
     artifacts_value = 1 if artifacts else 0
-    to_schedule.append((id, date, artifacts_value))
+    to_schedule.append((id, date, artifacts_value, requester))
+    save_schedule.append((id, requester, epoch))
 log.debug('Packages about to be scheduled: ' + str(to_schedule))
 
-query = '''REPLACE INTO schedule
-    (package_id, date_scheduled, date_build_started, save_artifacts, notify)
-    VALUES (?, ?, "", ?, "true")'''
+query1 = '''REPLACE INTO schedule
+    (package_id, date_scheduled, date_build_started, save_artifacts, notify, scheduler)
+    VALUES (?, ?, "", ?, "true", ?)'''
+query2 = '''INSTERT INTO manual_scheduler
+    (package_id, requester, date_request) VALUS (?, ?, ?)'''
 
 cursor = conn_db.cursor()
-cursor.executemany(query, to_schedule)
+cursor.executemany(query1, to_schedule)
+cursor.executemanu(query2, save_schedule)
+conn_db.commit()
 
 log.info(bcolors.GOOD + message + bcolors.ENDC)
 irc_msg(message)

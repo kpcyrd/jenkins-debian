@@ -226,6 +226,11 @@ for dir in bin logparse job-cfg features live ; do
 	chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
 cp procmailrc /var/lib/jenkins/.procmailrc
+mkdir /var/lib/jenkins/.ssh
+cp jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
+chown -R jenkins:jenkins /var/lib/jenkins/.ssh
+chmod 700 /var/lib/jenkins/.ssh
+chmod 600 /var/lib/jenkins/.ssh/authorized_keys
 explain "Jenkins updated."
 cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
 TMPFILE=$(mktemp)

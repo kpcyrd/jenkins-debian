@@ -83,7 +83,7 @@ save_artifacts() {
 		# irc message
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="$URL published"
-			if [ "$NOTIFY" = "debbindiff failure" ] ; then
+			if [ "$NOTIFY" = "debbindiff" ] ; then
 				local MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
 			fi
 			irc_message "$MESSAGE"

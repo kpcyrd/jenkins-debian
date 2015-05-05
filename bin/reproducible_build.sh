@@ -381,7 +381,6 @@ build_rebuild() {
 		--debbuildopts "-b" \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 		--buildresult b1 \
-		--distribution ${SUITE} \
 		${SRCPACKAGE}_*.dsc \
 	) 2>&1 | tee -a $RBUILDLOG
 	if ! "$DEBUG" ; then set +x ; fi
@@ -406,7 +405,6 @@ build_rebuild() {
 					--debbuildopts "-b" \
 					--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 					--buildresult b2 \
-					--distribution ${SUITE} \
 					${SRCPACKAGE}_${EVERSION}.dsc
 		) 2>&1 | tee -a ${RBUILDLOG}
 	if ! "$DEBUG" ; then set +x ; fi

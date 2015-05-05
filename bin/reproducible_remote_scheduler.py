@@ -20,6 +20,9 @@ parser.add_argument('-a', '--artifacts', default=False, action='store_true',
                     help='Save artifacts (for further offline study)')
 parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule for')
+parser.add_argument('-m', '--message', default='',
+                    help='A text to be sent to the channel while notifing ' +
+                    'the scheduling')
 parser.add_argument('packages', metavar='package', nargs='+',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
@@ -47,10 +50,12 @@ except KeyError:
                  'trouble with that.' + bcolors.ENDC)
     sys.exit(1)
 suite = scheduling_args.suite
+reason = scheduling_args.message
 packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
 
 log.debug('Requester: ' + requester)
+log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
 log.debug('Architecture: ' + defaultarch)
 log.debug('Suite: ' + suite)
@@ -82,7 +87,10 @@ packages_txt = ' packages ' if len(packages) > 1 else ' package '
 artifacts_txt = ' - artifacts will be preserved' if artifacts else ''
 
 message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + ' by ' + \
-    requester + ': ' + ' '.join(packages)[0:256] + blablabla + artifacts_txt
+    requester
+if reason:
+    message += ' (reason: ' + reason + ')'
+message += ': ' + ' '.join(packages)[0:256] + blablabla + artifacts_txt
 
 
 # these packages are manually scheduled, so should have high priority,

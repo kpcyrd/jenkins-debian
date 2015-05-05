@@ -225,7 +225,7 @@ for dir in bin logparse job-cfg features live ; do
 	cp --preserve=mode,timestamps -r $dir /srv/jenkins/
 	chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
-mkdir /var/lib/jenkins/.ssh
+mkdir -p /var/lib/jenkins/.ssh
 cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
 cp jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
 chown -R jenkins:jenkins /var/lib/jenkins/.ssh

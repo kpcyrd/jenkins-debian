@@ -204,6 +204,7 @@ if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 	sudo a2enmod ssl
 	sudo a2enmod headers
 	sudo a2enmod macro
+	sudo a2enmod filter
 fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm

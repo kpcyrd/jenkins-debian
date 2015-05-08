@@ -66,8 +66,8 @@ NameVirtualHost *:443
 		<IfVersion >= 2.4>
 			FilterProvider gzipInflate inflate "%{req:Accept-Encoding} !~ /gzip/"
 		</IfVersion>
-		<IfVersion <= 2.2>
-			FilterProvider gzipInflate inflate resp=Accept-Encoding ! $gzip
+		<IfVersion < 2.4>
+			FilterProvider gzipInflate inflate req=Accept-Encoding !$gzip
 		</IfVersion>
 		FilterChain +gzipInflate
 	</FilesMatch>

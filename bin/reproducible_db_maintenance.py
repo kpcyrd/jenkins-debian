@@ -370,9 +370,9 @@ schema_updates = {
             id INTEGER PRIMARY KEY,
             package_id INTEGER NOT NULL,
             requester TEXT NOT NULL,
-            date_request INTEGER) NOT NULL'''
-        'ALTER TABLE schedule ADD COLUMN scheduler TEXT'
-        'INSERT INTO rb_schema VALUES ("12", "' + now + '")'],
+            date_request INTEGER NOT NULL)''',
+        'ALTER TABLE schedule ADD COLUMN scheduler TEXT',
+        'INSERT INTO rb_schema VALUES ("13", "' + now + '")'],
 }
 
 

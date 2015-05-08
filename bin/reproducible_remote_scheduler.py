@@ -142,7 +142,7 @@ query2 = '''INSTERT INTO manual_scheduler
 
 cursor = conn_db.cursor()
 cursor.executemany(query1, to_schedule)
-cursor.executemanu(query2, save_schedule)
+cursor.executemany(query2, save_schedule)
 conn_db.commit()
 
 log.info(bcolors.GOOD + message + bcolors.ENDC)

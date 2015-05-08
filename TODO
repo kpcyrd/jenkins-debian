@@ -189,6 +189,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** write a script to schedule set of packages automatically:
 *** all/unreproducible packages affected by a particular issue
+** keep+display both html+txt output from debbindiff (once its supports that)
 
 * debbindiff related
 ** install debbindiff from unstable in the debbindiff-testing-schroot

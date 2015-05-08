@@ -137,8 +137,8 @@ log.debug('Packages about to be scheduled: ' + str(to_schedule))
 query1 = '''REPLACE INTO schedule
     (package_id, date_scheduled, date_build_started, save_artifacts, notify, scheduler)
     VALUES (?, ?, "", ?, "true", ?)'''
-query2 = '''INSTERT INTO manual_scheduler
-    (package_id, requester, date_request) VALUS (?, ?, ?)'''
+query2 = '''INSERT INTO manual_scheduler
+    (package_id, requester, date_request) VALUES (?, ?, ?)'''
 
 cursor = conn_db.cursor()
 cursor.executemany(query1, to_schedule)

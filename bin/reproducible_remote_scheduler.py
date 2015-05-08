@@ -13,16 +13,16 @@ import argparse
 
 
 parser = argparse.ArgumentParser(
-    description='Reschedule packages to re-test their reproducibly',
-    epilog='You can wait for the results on #debian-reproducible, where the ' +
-           'build will be announced')
+    description='Reschedule packages to re-test their reproducibility',
+    epilog='The build results will be announced on the #debian-reproducible' +
+           ' IRC channel.')
 parser.add_argument('-a', '--artifacts', default=False, action='store_true',
                     help='Save artifacts (for further offline study)')
 parser.add_argument('-s', '--suite', required=True,
-                    help='Specify the suite to schedule for')
+                    help='Specify the suite to schedule in')
 parser.add_argument('-m', '--message', default='',
-                    help='A text to be sent to the channel while notifing ' +
-                    'the scheduling')
+                    help='A text to be sent to the IRC channel when notifying' +
+                    ' about the scheduling')
 parser.add_argument('packages', metavar='package', nargs='+',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
@@ -61,7 +61,7 @@ log.debug('Architecture: ' + defaultarch)
 log.debug('Suite: ' + suite)
 
 if suite not in SUITES:
-    log.critical('The specified suite is not in the available ones.')
+    log.critical('The specified suite is not being tested.')
     log.critical('Please chose between ' + ', '.join(SUITES))
     sys.exit(1)
 
@@ -118,9 +118,10 @@ except IndexError:
     amount = 0
 log.debug(requester + ' already scheduled ' + str(amount) + ' packages today')
 if amount + len(ids) > 50:
-    log.error(bcolors.FAIL + 'You exceeded the maximun amount of manual ' +
-              'rescheduling for today. Please ask in #debian-reproducible ' +
-              'if need to schedule more packages.' + bcolors.ENDC)
+    log.error(bcolors.FAIL + 'You have exceeded the maximun number of manual ' +
+              'rescheduling allowed for a day. Please ask in ' +
+              '#debian-reproducible if you need to schedule more packages.' +
+              bcolors.ENDC)
     sys.exit(1)
 
 

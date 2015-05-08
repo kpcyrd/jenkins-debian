@@ -365,7 +365,7 @@ schema_updates = {
           # IRC notification
         'ALTER TABLE schedule ADD COLUMN notify TEXT',
         'INSERT INTO rb_schema VALUES ("12", "' + now + '")'],
-    13: [ # take note of the manual scheduling done, to limit people
+    13: [ # record manual scheduling done, to be able to limit people
         '''CREATE TABLE manual_scheduler (
             id INTEGER PRIMARY KEY,
             package_id INTEGER NOT NULL,

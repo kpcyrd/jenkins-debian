@@ -77,6 +77,7 @@ META_PKGSET[15]="tails_build-depends"
 META_PKGSET[16]="grml"
 META_PKGSET[17]="grml_build-depends"
 META_PKGSET[18]="maint_pkg-perl-maintainers"
+META_PKGSET[19]="maint_pkg-java-maintainers"
 
 schedule_packages() {
 	# these packages are manually scheduled, so should have high priority,

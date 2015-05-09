@@ -254,6 +254,12 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[18]}.pkgset
 	fi
 
+	# pkg-java-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[19]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[19]}.pkgset
+	fi
+
 }
 
 TMPFILE=$(mktemp)

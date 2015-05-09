@@ -217,6 +217,14 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4
 *** that 2nd slave can also run with a different date (or year, so probably 1984)
 
+* build-slave design:
+** 9 cores, 36gb ram, 80gb disk, 50gb /, 30gb /srv/kvm
+** runs squid3 + kvm
+** kvm guest with different cpu, 32gb ram, 8 cores, 30gb /
+** date changed in /etc/rc.local to 1984
+** runs pbuilder inside the kmv guest
+** ssh is forwarded to the host
+
 * enable people to upload test packages, to be built in jenkins:
 	<mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything 
 	<mapreri> jenkins tests.
@@ -224,14 +232,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 	<mapreri> h01ger: I'm instead thinking about a repo defining a reproducible-specific suite or something on that line, that integrates well with the current setup. but this is really something wild.
 	<h01ger> well, and everybody in debian-keyring from sid can uplood? :)
 	<mapreri> that would be wonderful.
-
-* enable people to schedule packages:
-** script on alioth, using ssh keys only accessable to the reproducible group and another one for DDs+DMs
-** a daily limit of 50 packages (can be stored in /tmp or such), else it should tell to contact us
-*** for non-reproducible members i would like to see a lower limit of packages allowed to schedule. 
-** the script called should not be reproducible_schedule_on_demand.sh but rather reproducible_remoter_scheduler.sh - or we should teach reproducible_schedule_on_demand.sh proper options: --artifacts --notify --remote-user foo 
-*** implied in this: remote schedulings should notify via IRC, who did the scheduling -> the script on alioth should pass $USER
-
 
 === qa.debian.org*
 

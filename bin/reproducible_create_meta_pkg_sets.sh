@@ -68,6 +68,17 @@ update_if_similar() {
 	fi
 }
 
+get_installable_set() {
+	set +e
+	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	RESULT=$?
+	if [ $RESULT -ne 0 ] ; then
+		rm $TMPFILE
+		echo "Warning: dose-deb-coinstall cannot calculate the installable set for $1"
+	fi
+	set -e
+}
+
 update_pkg_sets() {
 	# the essential package set
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
@@ -87,9 +98,11 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
 		# here we want the installable set:
-		schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[3]}.pkgset
+		get_installable_set ${META_PKGSET[3]}.pkgset
+		if [ -f $TMPFILE ] ; then
+			convert_from_deb822_into_source_packages_only
+			update_if_similar ${META_PKGSET[3]}.pkgset
+		fi
 	fi
 
 	# build-essential-depends
@@ -151,9 +164,11 @@ update_pkg_sets() {
 	# gnome and everything it depends on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[8]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[8]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
-		schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[8]}.pkgset
+		get_installable_set ${META_PKGSET[8]}.pkgset
+		if [ -f $TMPFILE ] ; then
+			convert_from_deb822_into_source_packages_only
+			update_if_similar ${META_PKGSET[8]}.pkgset
+		fi
 	fi
 
 	# The build-depends of X tasks can be solved once dose-ceve is able to read
@@ -178,9 +193,11 @@ update_pkg_sets() {
 	# kde and everything it depends on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[10]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full \) > ${TMPFILE2}
-		schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[10]}.pkgset
+		get_installable_set ${META_PKGSET[10]}.pkgset
+		if [ -f $TMPFILE ] ; then
+			convert_from_deb822_into_source_packages_only
+			update_if_similar ${META_PKGSET[10]}.pkgset
+		fi
 	fi
 	# all build depends of kde
 	rm -f $TMPFILE
@@ -195,9 +212,11 @@ update_pkg_sets() {
 	# xfce and everything it depends on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[12]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage xfce4 \) > ${TMPFILE2}
-		schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[12]}.pkgset
+		get_installable_set ${META_PKGSET[12]}.pkgset
+		if [ -f $TMPFILE ] ; then
+			convert_from_deb822_into_source_packages_only
+			update_if_similar ${META_PKGSET[12]}.pkgset
+		fi
 	fi
 	# all build depends of xfce
 	rm -f $TMPFILE

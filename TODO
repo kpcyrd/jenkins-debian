@@ -20,20 +20,23 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * replace amd64 in scripts with $HOSTARCH
 ** alioth... just manually push it
-* *backup*:
-** gpg encrypted to some keys
-** run on alioth or paradis
-** '/var/lib/jenkins/jobs' (the results - the configs are in .git)
-** '/var/lib/munin'
-** '/var/log'
-** '/root/' (contains etckeeper.git)
-** '/var/lib/jenkins/reproducible.db' (is backed up manually)
-** '/srv/jenkins.debian.net-scm-sync.git' (is backed up manually)
-** '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
-** '/srv/jenkins.debian.net-scm-sync.git'
-** '/etc/.git' and '/etc'
 * (gz|x)-compress jenkins and reproducible logs and teach apache to uncompress them on-fly (maybe uncompress them only if the client does not support compressed content?) - This is also recorded in the "To be done once jenkins.d.n runs jessie" section...
 * put /etc/rc.local in git and extend it to do cleanup of lockfiles etc
+
+=== proper backup
+
+* postpone til we run on .debian.org?
+* gpg encrypted to some keys
+* run on alioth or paradis
+* '/var/lib/jenkins/jobs' (the results - the configs are in .git)
+* '/var/lib/munin'
+* '/var/log'
+* '/root/' (contains etckeeper.git)
+* '/var/lib/jenkins/reproducible.db' (is backed up manually)
+* '/srv/jenkins.debian.net-scm-sync.git' (is backed up manually)
+* '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
+* '/srv/jenkins.debian.net-scm-sync.git'
+* '/etc/.git' and '/etc'
 
 === TODO for testing stretch
 
@@ -100,7 +103,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === jenkins-job-builder related
 
-* use jessie version plus my patches from kali
+* use jessie version plus h01ger's patches from kali
 * change of syntax:
 ----
 properties:
@@ -108,7 +111,7 @@ properties:
       priority: 150
 ----
 * this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
-* cleanup my patches (eg add documentation) and send pull requests on github:
+* cleanup h01ger's patches (eg add documentation) and send pull requests on github:
 ** publisher:logparse
 ** publisher:htmlpublisher
 ** svn:scm
@@ -116,7 +119,7 @@ properties:
 
 === livescreenshot plugin
 
-* publish forked livescreenshot plugin and send pull request for my bugfix
+* publish forked livescreenshot plugin and send pull request for h01ger's bugfix
 
 == lvc, work in progress, just started
 
@@ -244,7 +247,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 
 === d-i_build*
 
-* build packages using jenkins-debian-glue and not my hacks?
+* build packages using jenkins-debian-glue and not with the custom scripts used today?
 * run scripts/digress/ ?
 * bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
 

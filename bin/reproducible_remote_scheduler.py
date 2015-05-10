@@ -59,6 +59,7 @@ log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
 log.debug('Architecture: ' + defaultarch)
 log.debug('Suite: ' + suite)
+log.debug('Packages: ' + ' '.join(packages))
 
 if suite not in SUITES:
     log.critical('The specified suite is not being tested.')

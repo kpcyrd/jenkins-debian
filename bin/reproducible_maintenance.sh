@@ -112,10 +112,9 @@ if [ -s $RESULT ] ; then
 		ps -F -p $PSCALL
 		echo
 		for PROCESS in $(cat $TOKILL) ; do
-			echo sudo kill -9 $PROCESS 2>&1
-			#echo "'kill -9 $PROCESS' done."  # FIXME re-enable once we're sure this new code is fine
+			sudo kill -9 $PROCESS 2>&1
+			echo "'kill -9 $PROCESS' done."
 		done
-		echo "Please kill processes manually for now."
 		echo
 	fi
 fi

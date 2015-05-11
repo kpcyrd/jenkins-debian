@@ -27,6 +27,7 @@ $links
                 <a href="https://sources.debian.net/src/$package/$version/" target="main">sources</a>
                 <a href="https://sources.debian.net/src/$package/$version/debian/" target="main">debian</a>/<!--
                 -->{<a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a>,<!--
+                --><a href="https://sources.debian.net/src/$package/$version/debian/control" target="main">control</a>,<!--
                 --><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a>}
             </span>
         </td>

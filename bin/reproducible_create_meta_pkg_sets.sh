@@ -288,6 +288,13 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[19]}.pkgset
 	fi
 
+	# pkg-haskell-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -FDepends -n ghc -sPackage $PACKAGES >> $TMPFILE
+		update_if_similar ${META_PKGSET[20]}.pkgset
+	fi
+
 }
 
 TMPFILE=$(mktemp)

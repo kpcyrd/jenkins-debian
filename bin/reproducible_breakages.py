@@ -60,7 +60,7 @@ def not_unrep_with_dbd_file():
         dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + pkg + '_' + \
             eversion + '.debbindiff.html'
         if os.access(dbd, os.R_OK):
-            bad_pks.append((pkg, version, suite, arch))
+            bad_pkgs.append((pkg, version, suite, arch))
             log.warning(pkg + '/' + suite + ' (' + version + ') has a '
                         'debbindiff file but it\'s not unreproducible.')
     return bad_pkgs

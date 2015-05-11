@@ -304,8 +304,9 @@ pages = {
     },
     'no_notes': {
         'notes': True,
+        'notes_hint': True,
         'title': 'Packages without notes',
-        'header': '<p>There are {tot} faulty packages without notes in {suite}/{arch}. These are the packages with failures that still need to be investigated.</p>',
+        'header': '<p>There are {tot} faulty packages without notes in {suite}/{arch}.{hint}</p>',
         'header_query': 'SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ("unreproducible", "FTBFS", "blacklisted") AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite="{suite}" AND s.architecture="{arch}")',
         'body': [
             {
@@ -423,9 +424,13 @@ def build_page(page, suite=None, arch=None):
     html = ''
     footnote = False
     if pages[page].get('header'):
+        if pages[page].get('notes_hint') and pages[page]['notes_hint'] and suite == defaultsuite:
+            hint = 'These are the packages with failures that still need to be investigated.'
+        else:
+            hint = ''
         if pages[page].get('header_query'):
             html += pages[page]['header'].format(
-                tot=query_db(pages[page]['header_query'].format(suite=suite, arch=arch))[0][0], suite=suite, arch=arch)
+                tot=query_db(pages[page]['header_query'].format(suite=suite, arch=arch))[0][0], suite=suite, arch=arch, hint=hint)
         else:
             html += pages[page].get('header')
     for section in page_sections:

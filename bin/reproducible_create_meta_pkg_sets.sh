@@ -302,7 +302,7 @@ update_pkg_sets() {
 	# pkg-haskell-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -FDepends -n ghc -sPackage $PACKAGES >> $TMPFILE
+		grep-dctrl -sBuild-Depends -n -X -FPackage ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		update_if_similar ${META_PKGSET[21]}.pkgset
 	fi
 

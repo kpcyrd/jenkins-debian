@@ -314,6 +314,14 @@ create_png_from_table() {
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
+	# create empty dummy png if there havent been any results ever
+	elif [ ! -f $BASE/$DIR/$(basename $2) ] ; then
+		DIR=$(dirname $2)
+		mkdir -p $DIR
+		echo "Creating $2 dummy."
+		convert -size 1600x800 xc:#aaaaaa -depth 8 $2
+		mv $2 $BASE/$DIR
+		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi
 	rm ${TABLE[$1]}.csv
 }
@@ -463,8 +471,8 @@ create_pkg_sets_page() {
 				write_page "<br />"
 			fi
 			write_page "</p>"
-		fi
 		write_page_meta_sign
+		fi
 	done
 	write_page_footer
 	publish_page $SUITE/$ARCH

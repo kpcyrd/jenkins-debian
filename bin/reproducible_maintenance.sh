@@ -154,7 +154,7 @@ sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Wa
 if grep -q '|' $PACKAGES ; then
 	DIRTY=true
 	echo
-	echo "Warning: found files relative to old packages, no more in the archive:"
+	echo "Found files relative to old packages, no more in the archive:"
 	echo "Removing these removed packages from database:"
 	printf ".width 25 12 \n $QUERY ;" | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	echo

@@ -40,6 +40,7 @@ Reference doc for the folowing lists:
     - the query also takes the value "status"
     - if "nosuite" is True, then suite and arch are meant to be the default
       values specified in _common.py, and they will not iterate over the suites
+  + notes: if true the query also takes the value "status"
 
 Technically speaking, a page can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
@@ -254,10 +255,10 @@ pages = {
         ]
     },
     'notes': {
-        'global': True,
+        'notes': True,
         'title': 'Packages with notes',
-        'header': '<p>There are {tot} packages with notes.</p>',
-        'header_query': 'SELECT count(*) FROM (SELECT * FROM sources AS s JOIN notes AS n ON n.package_id=s.id GROUP BY s.name) AS tmp',
+        'header': '<p>There are {tot} packages with notes in {suite}/{arch}.</p>',
+        'header_query': 'SELECT count(*) FROM (SELECT * FROM sources AS s JOIN notes AS n ON n.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" GROUP BY s.name) AS tmp',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -302,10 +303,10 @@ pages = {
         ]
     },
     'no_notes': {
-        'global': True,
+        'notes': True,
         'title': 'Packages without notes',
-        'header': '<p>There are {tot} faulty packages without notes, in all suites. These are the packages with failures that still need to be investigated.</p>',
-        'header_query': 'SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ("unreproducible", "FTBFS", "blacklisted") AND s.id NOT IN (SELECT package_id FROM notes))',
+        'header': '<p>There are {tot} faulty packages without notes in {suite}/{arch}. These are the packages with failures that still need to be investigated.</p>',
+        'header_query': 'SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ("unreproducible", "FTBFS", "blacklisted") AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite="{suite}" AND s.architecture="{arch}")',
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -375,6 +376,7 @@ def build_page_section(page, section, suite, arch):
         if pages[page].get('global') and pages[page]['global']:
             suite = defaultsuite if not suite else suite
             arch = defaultarch if not arch else arch
+        if pages[page].get('notes') and pages[page]['notes']:
             query = queries[section['query']].format(
                 status=section['db_status'], suite=suite, arch=arch)
         else:
@@ -423,7 +425,7 @@ def build_page(page, suite=None, arch=None):
     if pages[page].get('header'):
         if pages[page].get('header_query'):
             html += pages[page]['header'].format(
-                tot=query_db(pages[page]['header_query'])[0][0])
+                tot=query_db(pages[page]['header_query'].format(suite=suite, arch=arch))[0][0], suite=suite, arch=arch)
         else:
             html += pages[page].get('header')
     for section in page_sections:

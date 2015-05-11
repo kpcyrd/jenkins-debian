@@ -160,7 +160,7 @@ write_page_header() {
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repositories stats"
-	GLOBALVIEWS="issues notes no_notes scheduled repositories stats"
+	GLOBALVIEWS="issues scheduled repositories stats"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"

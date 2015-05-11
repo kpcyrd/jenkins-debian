@@ -320,6 +320,11 @@ create_png_from_table() {
 		mkdir -p $DIR
 		echo "Creating $2 dummy."
 		convert -size 1600x800 xc:#aaaaaa -depth 8 $2
+		if [ "$3" != "" ] ; then
+			local THUMB="${TABLE[1]}_${3}-thumbnail.png"
+			convert $2 -adaptive-resize 160x80 ${THUMB}
+			mv ${THUMB} $BASE/$DIR
+		fi
 		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi
@@ -422,7 +427,7 @@ create_pkg_sets_page() {
 	done
 	write_page "</ul>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
+		THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
 		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 	done
@@ -434,7 +439,7 @@ create_pkg_sets_page() {
 			MAINLABEL[6]="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
 			YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
 			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
-			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
+			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 			# redo pngs once a day
 			if [ ! -f $BASE/$SUITE/$ARCH/$PNG ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}

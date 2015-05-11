@@ -414,8 +414,8 @@ if __name__ == '__main__':
     index_issues(issues)
     purge_old_notes(notes)
     gen_packages_html(notes) # regenerate all rb-pkg/ pages
-    build_page('notes')
-    build_page('no_notes')
     for suite in SUITES:
         for arch in ARCHES:
+            build_page('notes')
+            build_page('no_notes')
             build_page('FTBFS', suite, arch)

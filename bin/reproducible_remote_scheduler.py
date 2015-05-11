@@ -20,7 +20,7 @@ parser.add_argument('-a', '--artifacts', default=False, action='store_true',
                     help='Save artifacts (for further offline study)')
 parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule in')
-parser.add_argument('-m', '--message', default='', nargs='+'
+parser.add_argument('-m', '--message', default='', nargs='+',
                     help='A text to be sent to the IRC channel when notifying' +
                     ' about the scheduling')
 parser.add_argument('packages', metavar='package', nargs='+',

@@ -425,7 +425,7 @@ def build_page(page, suite=None, arch=None):
     footnote = False
     if pages[page].get('header'):
         if pages[page].get('notes_hint') and pages[page]['notes_hint'] and suite == defaultsuite:
-            hint = 'These are the packages with failures that still need to be investigated.'
+            hint = ' <em>These</em> are the packages with failures that <em>still need to be investigated</em>.'
         else:
             hint = ''
         if pages[page].get('header_query'):

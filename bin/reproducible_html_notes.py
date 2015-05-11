@@ -416,6 +416,6 @@ if __name__ == '__main__':
     gen_packages_html(notes) # regenerate all rb-pkg/ pages
     for suite in SUITES:
         for arch in ARCHES:
-            build_page('notes')
-            build_page('no_notes')
+            build_page('notes', suite, arch)
+            build_page('no_notes', suite, arch)
             build_page('FTBFS', suite, arch)

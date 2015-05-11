@@ -41,6 +41,12 @@ convert_from_deb822_into_source_packages_only() {
 		> ${TMPFILE2} < $TMPFILE
 	sort -u ${TMPFILE2} > $TMPFILE
 }
+
+update_target() {
+	mv $TMPFILE $TARGET
+	echo "$(date) - $TARGET updated."
+}
+
 update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
 	# with garbage, eg. when external services are down
@@ -59,9 +65,11 @@ update_if_similar() {
 				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually."
 				rm $TARGET.new
 			else
-				mv $TMPFILE $TARGET
-				echo "$(date) - $TARGET updated."
+				update_target
 			fi
+		else
+			# target does not exist, create it
+			update_target
 		fi
 	else
 		echo "$(date) - $TARGET not updated, $TMPFILE is empty."

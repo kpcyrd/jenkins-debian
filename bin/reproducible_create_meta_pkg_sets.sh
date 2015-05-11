@@ -295,6 +295,12 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[20]}.pkgset
 	fi
 
+	# pkg-ruby-extras-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[21]}.pkgset
+	fi
+
 }
 
 TMPFILE=$(mktemp)

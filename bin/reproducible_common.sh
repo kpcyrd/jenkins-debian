@@ -82,6 +82,7 @@ META_PKGSET[20]="maint_pkg-java-maintainers"
 META_PKGSET[21]="maint_pkg-haskell-maintainers"
 META_PKGSET[22]="maint_pkg-ruby-extras-maintainers"
 META_PKGSET[23]="maint_debian-boot"
+META_PKGSET[24]="maint_debian-ocaml"
 
 schedule_packages() {
 	# these packages are manually scheduled, so should have high priority,

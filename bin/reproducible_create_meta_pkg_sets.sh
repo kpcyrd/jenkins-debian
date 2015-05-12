@@ -63,7 +63,9 @@ update_if_similar() {
 				diff $TARGET $TARGET.new || true
 				echo
 				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually."
-				rm $TARGET.new
+				KEEP=$(mktemp)
+				mv $TARGET.new $KEEP
+				echo "The new pkg-set has been saved as $KEEP for further investigation."
 			else
 				update_target
 			fi

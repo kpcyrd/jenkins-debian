@@ -114,13 +114,13 @@ log.debug('date_scheduled = ' + date + ' time_delta = ' + str(time_delta))
 query = '''SELECT count(*) FROM manual_scheduler
            WHERE requester = "{}" AND date_request > "{}"'''
 try:
-    amount = int(query_db(query.format(requester, date))[0][0])
+    amount = int(query_db(query.format(requester, int(time.time()-86400)))[0][0])
 except IndexError:
     amount = 0
 log.debug(requester + ' already scheduled ' + str(amount) + ' packages today')
 if amount + len(ids) > 50:
-    log.error(bcolors.FAIL + 'You have exceeded the maximun number of manual ' +
-              'rescheduling allowed for a day. Please ask in ' +
+    log.error(bcolors.FAIL + 'You have exceeded the maximum number of manual ' +
+              'reschedulings allowed for a day. Please ask in ' +
               '#debian-reproducible if you need to schedule more packages.' +
               bcolors.ENDC)
     sys.exit(1)

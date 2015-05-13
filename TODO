@@ -192,6 +192,9 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** write a script to schedule set of packages automatically:
 *** all/unreproducible packages affected by a particular issue
+** link index_breakages.html
+**  add --debug for the manual scheduler, so that we get notified on irc when a build _starts_ and on which builder, so we can find the rbuild log
+** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
 
 * debbindiff related
 ** install debbindiff from unstable in the debbindiff-testing-schroot (and use apt-pining so that upgrades dont upgrade to sid)
@@ -203,11 +206,12 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 * notes related
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
-*** aint that covered by reproducible_breakages.py already?
+*** aint that covered by reproducible_breakages.py already? yes. are all of those covered?
 ** update README in notes.git to explain how the version there is used and what to do
 ** add note to all the notes+issues pages explaining that too
 
 * pkg sets related:
+** split the page into 26 different one, keep the existing and its anchors so that existing links continue to work (but then just provides another pointer to the new sub page for that set)
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 
@@ -215,10 +219,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** move "untested" field in stats table too? (as in csv output...)
 
 * missing tests: variation in kernel and date and cpu type
-** variations in date are only practical to do in c-i fashion using faketime, thus I suggest to wait for those until we test in the wild...
-** kernel / uname output is changed (using linux64) and shall be changed more in future by doing the 2nd build on a different build host running a different kernel..., no need to do fancy stuff with building in qemu or such...
 ** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4
-*** that 2nd slave can also run with a different date (or year, so probably 1984)
 
 * a test VM using this build-slave design has been setup:
 ** 9 cores, 36gb ram, 80gb disk, 50gb /, 30gb /srv/kvm

@@ -322,7 +322,7 @@ def purge_old_notes(notes):
             except IndexError:  # the package is not tested. this can happen if
                 pass            # a package got removed from the archive
     if to_rebuild:
-        gen_packages_html(to_rebuild, no_clean=True)
+        gen_packages_html([Package(x) for x in to_rebuild])
 
 
 def purge_old_issues(issues):
@@ -431,7 +431,7 @@ if __name__ == '__main__':
     index_issues(issues)
     purge_old_notes(notes)
     purge_old_issues(issues)
-    gen_packages_html(notes) # regenerate all rb-pkg/ pages
+    gen_packages_html([Package(x) for x in notes])
     for suite in SUITES:
         for arch in ARCHS:
             build_page('notes', suite, arch)

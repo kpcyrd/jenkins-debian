@@ -232,12 +232,14 @@ def gen_packages_html(packages, no_clean=False):
         purge_old_pages()  # housekeep is always good
 
 
-def gen_all_rb_pkg_pages(suite='unstable', arch='amd64', no_clean=False):
-    query = 'SELECT name FROM sources WHERE suite="%s" AND architecture="%s"' % (suite, arch)
+def gen_all_rb_pkg_pages(no_clean=False):
+    query = 'SELECT DISTINCT name FROM sources'
     rows = query_db(query)
-    pkgs = [str(i[0]) for i in rows]
-    log.info('Processing all ' + str(len(pkgs)) + ' package pages for ' + suite + '/' + arch +'.')
-    gen_packages_html(pkgs, suite=suite, arch=arch, no_clean=no_clean)
+    pkgs = [Package(str(i[0]), no_notes=True) for i in rows]
+    log.info('Processing all ' + str(len(pkgs)) + ' package from all suites/architectures')
+    gen_packages_html(pkgs, no_clean=True)  # we clean at the end
+    purge_old_pages()
+
 
 def purge_old_pages():
     for suite in SUITES:

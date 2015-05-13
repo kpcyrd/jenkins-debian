@@ -346,27 +346,12 @@ link_packages() {
 	if "$DEBUG" ; then set -x ; fi
 }
 
-gen_packages_html() {
-	local suite="$1"
-	shift
-	CWD=$(pwd)
+gen_package_html() {
 	cd /srv/jenkins/bin
-	local i
-	for (( i=1; i<$#+1; i=i+100 )) ; do
-		local string='['
-		local delimiter=''
-		local j
-		for (( j=0; j<100; j++)) ; do
-			local item=$(( $j+$i ))
-			if (( $item < $#+1 )) ; then
-				string+="${delimiter}\"${!item}\""
-				delimiter=','
-			fi
-		done
-		string+=']'
-		python3 -c "from reproducible_html_packages import gen_packages_html; gen_packages_html(${string}, suite=\"${suite}\", no_clean=True)" || echo "Warning: cannot update html pages for ${string} in ${suite}"
-	done
-	cd "$CWD"
+	python3 -c "import reproducible_html_packages as rep
+pkg = rep.Package('$1', no_notes=True)
+rep.gen_packages_html([pkg], no_clean=True)" || echo "Warning: cannot update html pages for $1"
+	cd - > /dev/null
 }
 
 calculate_build_duration() {

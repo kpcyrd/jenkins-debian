@@ -81,9 +81,11 @@ else
 	revert_blacklisted_packages
 fi
 
-# notify
-gen_packages_html $SUITE $PACKAGES
+for PACKAGE in "$PACKAGES" ; do
+    gen_package_html $PACKAGE
+done
 echo
+# notify
 echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
 echo

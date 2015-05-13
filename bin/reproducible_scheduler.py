@@ -149,7 +149,7 @@ def update_sources_db(suite, arch, sources):
         sys.exit(1)
     if pkgs_to_add:
         log.info('Building pages for the new packages')
-        gen_packages_html(pkgs_to_add, no_clean=True)
+        gen_packages_html([Package(x) for x in pkgs_to_add], no_clean=True)
 
 
 def print_schedule_result(suite, criteria, packages):

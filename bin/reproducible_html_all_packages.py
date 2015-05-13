@@ -11,11 +11,7 @@
 # code already written in reproducible_html_packages
 
 
-from reproducible_common import *
-from reproducible_html_packages import gen_all_rb_pkg_pages, purge_old_pages
+from reproducible_html_packages import gen_all_rb_pkg_pages
 
 
-for suite in SUITES:
-    for arch in ARCHS:
-        gen_all_rb_pkg_pages(suite=suite, arch=arch, no_clean=True)
-purge_old_pages()
+gen_all_rb_pkg_pages(no_clean=True)

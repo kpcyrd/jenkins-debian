@@ -318,7 +318,7 @@ update_pkg_sets() {
 	# pkg-golang-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[23]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[23]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sBuild-Depends -n -X -FPackage golang $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		update_if_similar ${META_PKGSET[23]}.pkgset
 	fi
 

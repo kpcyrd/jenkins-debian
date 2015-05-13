@@ -422,14 +422,14 @@ create_pkg_sets_page() {
 	write_page "<ul><li>Tracked package sets in $SUITE: </li>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
-			write_page "<li><a href=\"#${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a></li>"
+			write_page "<li><a href='#${META_PKGSET[$i]}'>${META_PKGSET[$i]}</a></li>"
 		fi
 	done
 	write_page "</ul>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+		write_page "<a href=\"/$SUITE/$ARCH/index_pkg_sets.html#${META_PKGSET[$i]}\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\"></a>"
 	done
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		write_page "<hr /><a name=\"${META_PKGSET[$i]}\"></a>"

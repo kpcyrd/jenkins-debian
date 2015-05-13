@@ -314,16 +314,23 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[22]}.pkgset
 	fi
 
-	# debian-boot@l.d.o maintainers
+	# pkg-golang-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[23]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[23]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sBuild-Depends -n -X -FPackage golang $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		update_if_similar ${META_PKGSET[23]}.pkgset
 	fi
 
-	# debian-ocaml-maint@l.d.o maintainers
+	# debian-boot@l.d.o maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[24]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[24]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[24]}.pkgset
+	fi
+
+	# debian-ocaml-maint@l.d.o maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[25]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[25]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[25]}.pkgset
 	fi
 
 }

@@ -447,11 +447,6 @@ create_pkg_sets_page() {
 			fi
 			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" alt=\"${MAINLABEL[6]}\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
-			set_icon reproducible
-			write_icon
-			write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
-			link_packages $META_GOOD
-			write_page "<br />"
 			set_icon unreproducible
 			write_icon
 			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
@@ -475,6 +470,11 @@ create_pkg_sets_page() {
 				link_packages $META_REST
 				write_page "<br />"
 			fi
+			set_icon reproducible
+			write_icon
+			write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
+			link_packages $META_GOOD
+			write_page "<br />"
 			write_page "</p>"
 		write_page_meta_sign
 		fi

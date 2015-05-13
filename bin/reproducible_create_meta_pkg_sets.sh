@@ -59,8 +59,8 @@ update_if_similar() {
 			if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
 				mv $TMPFILE $TARGET.new
 				echo
-				echo diff $TARGET $TARGET.new
-				diff $TARGET $TARGET.new || true
+				echo diff -u $TARGET $TARGET.new
+				diff -u $TARGET $TARGET.new || true
 				echo
 				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually."
 				KEEP=$(mktemp)

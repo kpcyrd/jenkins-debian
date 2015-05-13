@@ -62,41 +62,6 @@ def sizeof_fmt(num):
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
-def check_package_status(package, suite, nocheck=False):
-    """
-    This returns a tuple containing status, version and build_date of the last
-    version of the package built by jenkins CI
-    """
-    try:
-        query = ('SELECT r.status, r.version, r.build_date, s.notify_maintainer ' +
-                 'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
-                 'WHERE s.name="{pkg}" ' +
-                 'AND s.suite="{suite}"').format(pkg=package, suite=suite)
-        result = query_db(query)[0]
-    except IndexError:
-        query = 'SELECT version, notify_maintainer ' + \
-                'FROM sources WHERE name="{pkg}" AND suite="{suite}"'
-        query = query.format(pkg=package, suite=suite)
-        try:
-            result = query_db(query)[0]
-            if result:
-                result = ('untested', str(result[0]), False, result[1])
-        except IndexError:
-            if nocheck:
-                return False
-            print_critical_message('This query produces no results: ' + query +
-                    '\nThis means there is no available package with the name '
-                    + package + '.')
-            raise
-    status = str(result[0])
-    version = str(result[1])
-    notify_maint = '⚑' if int(result[3]) == 1 else ''
-    if result[2]:
-        build_date = 'at ' + str(result[2]) + ' UTC'
-    else:
-        build_date = '<span style="color:red;font-weight:bold;">UNTESTED</span>'
-    return (status, version, build_date, notify_maint)
-
 
 def gen_status_link_icon(status, icon, suite, arch):
     html = ''
@@ -221,57 +186,51 @@ def gen_suites_links(package, suite):
     return tab*5 + (tab*7).join(html.splitlines(True))
 
 
-def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=False):
+def gen_packages_html(packages, no_clean=False):
     """
-    generate the /rb-pkg/package.html page
-    packages should be a list
-    If suite and/or arch is not passed, then build that packages for all suites
-    nocheck is for internal use
+    generate the /rb-pkg/package.html pages.
+    packages should be a list of Package objects.
     """
     total = len(packages)
     log.debug('Generating the pages of ' + str(total) + ' package(s)')
-    if not nocheck and (not suite or not arch):
-        nocheck = True
-    if nocheck and (not suite or not arch):
-        for lsuite in SUITES:
-            for larch in ARCHS:
-                gen_packages_html(packages, lsuite, larch, True, True)
-        if not no_clean:
-            purge_old_pages()
-        return
-    for pkg in sorted(packages):
-        pkg = str(pkg)
-        try:
-            pkgstatus = check_package_status(pkg, suite, nocheck)
-            status, version, build_date, notify_maint = pkgstatus
-        except TypeError:  # the package is not in the checked suite
-            continue
-        log.debug('Generating the page of ' + pkg + '/' + suite + '@' + version +
-                 ' built at ' + build_date)
+    for package in sorted(packages, key=lambda x: x.name):
+        assert isinstance(package, Package)
+        pkg = package.name
+        for suite in SUITES:
+            for arch in ARCHS:
+                status = package.get_status(suite, arch)
+                version = package.get_tested_version(suite, arch)
+                build_date = package.get_build_date(suite, arch)
+                if status == False:  # the package is not in the checked suite
+                    continue
+                log.debug('Generating the page of ' + pkg + '/' + suite + '@' +
+                          version + ' built at ' + build_date)
 
-        links, default_view = gen_extra_links(pkg, version, suite, arch, status)
-        suites_links = gen_suites_links(pkg, suite)
-        status, icon = join_status_icon(status, pkg, version)
-        status = gen_status_link_icon(status, icon, suite, arch)
+                links, default_view = gen_extra_links(pkg, version, suite, arch, status)
+                suites_links = gen_suites_links(pkg, suite)
+                status, icon = join_status_icon(status, pkg, version)
+                status = gen_status_link_icon(status, icon, suite, arch)
 
-        html = html_package_page.substitute(package=pkg,
-                                            suite=suite,
-                                            status=status,
-                                            version=version,
-                                            build_time=build_date,
-                                            links=links,
-                                            notify_maintainer=notify_maint,
-                                            suites_links=suites_links,
-                                            default_view=default_view)
-        destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
-        desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + '/' + \
-                  arch + '/' + pkg + '.html'
-        title = pkg + ' - reproducible build results'
-        write_html_page(title=title, body=html, destfile=destfile, suite=suite,
-                        noheader=True, noendpage=True)
-        log.debug("Package page generated at " + desturl)
+                html = html_package_page.substitute(
+                    package=pkg,
+                    suite=suite,
+                    status=status,
+                    version=version,
+                    build_time=build_date,
+                    links=links,
+                    notify_maintainer=package.notify_maint,
+                    suites_links=suites_links,
+                    default_view=default_view)
+                destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
+                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + '/' + \
+                          arch + '/' + pkg + '.html'
+                title = pkg + ' - reproducible build results'
+                write_html_page(title=title, body=html, destfile=destfile,
+                                noheader=True, noendpage=True)
+                log.debug("Package page generated at " + desturl)
     if not no_clean:
-        purge_old_pages() # housekeep is always good
+        purge_old_pages()  # housekeep is always good
+
 
 def gen_all_rb_pkg_pages(suite='unstable', arch='amd64', no_clean=False):
     query = 'SELECT name FROM sources WHERE suite="%s" AND architecture="%s"' % (suite, arch)

@@ -80,6 +80,7 @@ setup_pbuilder() {
 	NAME=$1
 	shift
 	PACKAGES="$@"
+	EXTRA_PACKAGES="locales-all"
 	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp)
 	LOG=$(mktemp)
@@ -94,7 +95,7 @@ setup_pbuilder() {
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
-	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE
+	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
 	if [ "$DEBUG" = "true" ] ; then
 		cat "$TMPFILE"
 	fi

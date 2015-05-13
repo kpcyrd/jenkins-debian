@@ -297,6 +297,7 @@ update_pkg_sets() {
 	# pkg-java-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
 		grep-dctrl -FDepends -n default-jdk -sPackage $PACKAGES >> $TMPFILE
 		update_if_similar ${META_PKGSET[20]}.pkgset
 	fi

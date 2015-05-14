@@ -46,8 +46,7 @@ handle_race_condition() {
 			;;
 	esac
 	printf "$msg" | tee -a $BUILDLOG
-	printf "$msg" | mail -s "race condition found" qa-jenkins-scm@lists.alioth.debian.org
-	echo "$(date) - Terminating nicely this build..." | tee -a $RBUILDLOG
+	echo "$(date) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		SAVE_ARTIFACTS=0
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi

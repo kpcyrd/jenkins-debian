@@ -41,7 +41,7 @@ if ! mountpoint -q /srv/workspace; then
 	if test -z "$(ls -A /srv/workspace)"; then
 		mount /srv/workspace
 	else
-		echo "mountpoint /srv/workspace is non-empty"
+		explain "mountpoint /srv/workspace is non-empty"
 	fi
 fi
 
@@ -62,7 +62,7 @@ done
 if ! test -h /chroots; then
 	rmdir /chroots || rm -f /chroots # do not recurse
 	if test -e /chroots; then
-		echo could not clear /chroots
+		explain "could not clear /chroots"
 	else
 		ln -s /srv/workspace/chroots /chroots
 	fi
@@ -71,7 +71,7 @@ fi
 if ! test -h /var/cache/pbuilder/build; then
 	rmdir /var/cache/pbuilder/build || rm -f /var/cache/pbuilder/build
 	if test -e /var/cache/pbuilder/build; then
-		echo could not clear /var/cache/pbuilder/build
+		explain "could not clear /var/cache/pbuilder/build"
 	else
 		ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build
 	fi
@@ -191,7 +191,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 	echo "Also needs python-arpy from jessie..."
 	echo "Also needs ovmf from jessie..."
 else
-	echo "No new packages to be installed."
+	explain "No new packages to be installed."
 fi
 
 #
@@ -273,7 +273,7 @@ for config in *.yaml ; do
 	if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
 		sudo jenkins-jobs update $config
 	else
-		echo "$config has not changed, nothing to do."
+		explain "$config has not changed, nothing to do."
 	fi
 done
 explain "Jenkins jobs updated."
@@ -333,7 +333,7 @@ if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkin
     if [ "$KGB_SECRETS" -nt $STAMP ] || [ ! -f $STAMP ] ; then
         sudo -u jenkins-adm "./deploy_kgb.py"
     else
-        echo "kgb-client configuration unchanged, nothing to do."
+        explain "kgb-client configuration unchanged, nothing to do."
     fi
 else
     echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
@@ -351,4 +351,4 @@ rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 # finally
 #
 touch $STAMP	# so on the next run, only configs newer than this file will be updated
-
+explain "Jenkins successfully updated."

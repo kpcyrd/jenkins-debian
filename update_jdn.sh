@@ -273,7 +273,7 @@ for config in *.yaml ; do
 	if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
 		sudo jenkins-jobs update $config
 	else
-		explain "$config has not changed, nothing to do."
+		echo "$config has not changed, nothing to do."
 	fi
 done
 explain "Jenkins jobs updated."

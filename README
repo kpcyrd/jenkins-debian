@@ -148,7 +148,7 @@ Installation tests inside chroot environments.
 
 * There are suite specific jobs to create the pbuilder base.tgz's per suite, which have the reproducible apt repo added. Similarily there's another job per suite to create the schroots used by the builder jobs to download the packages sources to build.
 
-* Then there is another job to create a sid schroot to run debbindiff on the the two results. (FIXME: explain why here)
+* Then there are two more jobs to create sid and testing schroots to run debbindiff on the the two results. This is neccessary since two investiage haskell binaries, debbindiff needs access to the same haskell compiler version as the investigated packages have been built with.
 
 * Finally, there is a maintenance job running every 4h, making sure things are considerably under control.
 

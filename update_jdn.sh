@@ -80,7 +80,7 @@ fi
 #
 # install packages we need
 #
-if [ ./$0 -nt $STAMP ] || [ -f $STAMP ] ; then
+if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 	sudo apt-get install \
 			apache2 \
 			apt-file \
@@ -330,7 +330,7 @@ cd $BASEDIR
 KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
     # the last condition is to assure the files are owned by the right user/team
-    if [ "$KGB_SECRETS" -nt $STAMP ] ; then
+    if [ "$KGB_SECRETS" -nt $STAMP ] || [ ! -f $STAMP ] ; then
         sudo -u jenkins-adm "./deploy_kgb.py"
     else
         echo "kgb-client configuration unchanged, nothing to do."

@@ -212,7 +212,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** add note to all the notes+issues pages explaining that too
 
 * pkg sets related:
-** split the page into 26 different one, keep the existing and its anchors so that existing links continue to work (but then just provides another pointer to the new sub page for that set)
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 

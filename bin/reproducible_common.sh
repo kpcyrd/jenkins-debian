@@ -207,6 +207,7 @@ write_page_header() {
 		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		BASEURL="/$SUITE/$ARCH"
+		local i
 		for i in $GLOBALVIEWS ; do
 			if [ "$TARGET" = "$i" ] ; then
 				BASEURL=""

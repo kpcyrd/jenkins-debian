@@ -6,6 +6,7 @@
 BASEDIR=/root/jenkins.debian.net
 PVNAME=/dev/vdb      # LVM physical volume for jobs
 VGNAME=jenkins01     # LVM volume group
+STAMP=/var/log/jenkins/update-jenkins.stamp
 
 explain() {
 	echo
@@ -256,7 +257,6 @@ explain "Updated user content for Jenkins."
 # run jenkins-job-builder to update jobs if needed
 #     (using sudo because /etc/jenkins_jobs is root:root 700)
 #
-STAMP=/var/log/jenkins/jobs-updated.stamp
 cd /srv/jenkins/job-cfg
 for metaconfig in *.yaml.py ; do
 	python $metaconfig > $TMPFILE
@@ -272,7 +272,6 @@ for config in *.yaml ; do
 	fi
 done
 explain "Jenkins jobs updated."
-touch $STAMP	# so on the next run, only configs newer than this file will be updated
 rm -f $TMPFILE
 
 #
@@ -325,8 +324,12 @@ fi
 cd $BASEDIR
 KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
-    # to assure the files are owned by the right user/team
-    sudo -u jenkins-adm "./deploy_kgb.py"
+    # the last condition is to assure the files are owned by the right user/team
+    if [ "$KGB_SECRETS" -nt $STAMP ] ; then
+        sudo -u jenkins-adm "./deploy_kgb.py"
+    else
+        echo "kgb-client configuration unchanged, nothing to do."
+    fi
 else
     echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
     echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."
@@ -338,4 +341,9 @@ fi
 #
 echo
 rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
+
+#
+# finally
+#
+touch $STAMP	# so on the next run, only configs newer than this file will be updated
 

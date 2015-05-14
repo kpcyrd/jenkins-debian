@@ -46,6 +46,7 @@ handle_race_condition() {
 			;;
 	esac
 	printf "$msg" | tee -a $BUILDLOG
+	printf "$(date) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	echo "$(date) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		SAVE_ARTIFACTS=0

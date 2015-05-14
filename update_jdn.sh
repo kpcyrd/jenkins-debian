@@ -351,4 +351,4 @@ rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 # finally
 #
 touch $STAMP	# so on the next run, only configs newer than this file will be updated
-explain "Jenkins successfully updated."
+explain "$(hostname -f) successfully updated."

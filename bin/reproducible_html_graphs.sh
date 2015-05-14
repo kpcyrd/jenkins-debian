@@ -413,6 +413,25 @@ create_suite_stats_page() {
 }
 
 #
+# create pkg set navigation
+#
+create_pkg_sets_navigation() {
+	local i
+	write_page "<ul><li>Tracked package sets in $SUITE: </li>"
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
+			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
+			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
+			write_page "<li>"
+			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\">${META_PKGSET[$i]}</a>"
+			write_page "</li>"
+		fi
+	done
+	write_page "</ul>"
+}
+
+#
 # create pkg sets pages
 #
 create_pkg_sets_pages() {
@@ -423,17 +442,7 @@ create_pkg_sets_pages() {
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
-	write_page "<ul><li>Tracked package sets in $SUITE: </li>"
-	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
-			write_page "<li>"
-			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
-			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaova:erview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\">${META_PKGSET[$i]}</a>"
-			write_page "</li>"
-		fi
-	done
-	write_page "</ul>"
+	create_pkg_sets_navigation
 	write_page_footer
 	publish_page $SUITE/$ARCH
 	#
@@ -443,11 +452,8 @@ create_pkg_sets_pages() {
 		PAGE="pkg_set_${META_PKGSET[$i]}.html"
 		echo "$(date) - starting to write $PAGE page."
 		write_page_header $VIEW "Overview about reproducible builds for the ${META_PKGSET[$i]} package set in $SUITE/$ARCH"
-		for j in $(seq 1 ${#META_PKGSET[@]}) ; do
-			THUMB=${TABLE[6]}_${META_PKGSET[$j]}-thumbnail.png
-			LABEL="package set '${META_PKGSET[$j]}' in $SUITE/$ARCH"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$j]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
-		done
+		create_pkg_sets_navigation
+		write_page "<hr />"
 		META_RESULT=true
 		gather_meta_stats $i	# FIXME: this ignores unknown packages...
 		if $META_RESULT ; then
@@ -462,7 +468,7 @@ create_pkg_sets_pages() {
 			fi
 			LABEL="package set '${META_PKGSET[$j]}' in $SUITE/$ARCH"
 			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
-			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />"
+			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />&nbsp;<br />"
 			set_icon unreproducible
 			write_icon
 			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
@@ -486,6 +492,7 @@ create_pkg_sets_pages() {
 				link_packages $META_REST
 				write_page "<br />"
 			fi
+			write_page "&nbsp;<br />"
 			set_icon reproducible
 			write_icon
 			write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"

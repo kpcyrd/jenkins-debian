@@ -180,6 +180,9 @@ gather_meta_stats() {
 		META_LIST=$(cat $PKGSET_PATH)
 		if [ ! -z "$META_LIST" ] ; then
 			META_WHERE=""
+			# gather data about all packages we know about
+			# as a result, unknown packages in the package set
+			# are silently ignored
 			for PKG in $META_LIST ; do
 				if [ -z "$META_WHERE" ] ; then
 					META_WHERE="s.name in ('$PKG'"
@@ -455,7 +458,7 @@ create_pkg_sets_pages() {
 		create_pkg_sets_navigation
 		write_page "<hr />"
 		META_RESULT=true
-		gather_meta_stats $i	# FIXME: this ignores unknown packages...
+		gather_meta_stats $i
 		if $META_RESULT ; then
 			MAINLABEL[6]="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
 			YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"

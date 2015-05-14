@@ -122,9 +122,9 @@ for DIRECTORY in * ; do
 		done
 	fi
 done
-# FIXME: check for removed manuals (but with existing jobs) missing - for all types of manuals and build jobs
 #
-# ...and now the translations kept in po files....
+# ...and now for translations kept in po files....
+#
 cd po
 IGNORE="pot README"
 for DIRECTORY in * ; do

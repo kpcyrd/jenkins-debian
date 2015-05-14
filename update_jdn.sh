@@ -256,14 +256,24 @@ explain "Updated user content for Jenkins."
 # run jenkins-job-builder to update jobs if needed
 #     (using sudo because /etc/jenkins_jobs is root:root 700)
 #
+STAMP=/var/log/jenkins/jobs-updated.stamp
 cd /srv/jenkins/job-cfg
 for metaconfig in *.yaml.py ; do
-	python $metaconfig > ${metaconfig%.py}
+	python $metaconfig > $TMPFILE
+	if ! $(diff $metaconfig $TMPFILE > /dev/null) ; then
+		cp $TMPFILE ${metaconfig%.py}
+	fi
 done
 for config in *.yaml ; do
-	sudo jenkins-jobs update $config
+	if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
+		sudo jenkins-jobs update $config
+	else
+		echo "$config has not changed, nothing to do."
+	fi
 done
 explain "Jenkins jobs updated."
+touch $STAMP	# so on the next run, only configs newer than this file will be updated
+rm -f $TMPFILE
 
 #
 # crappy tests for checking that jenkins-job-builder works correctly

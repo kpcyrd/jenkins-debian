@@ -572,6 +572,8 @@ create_main_stats_page() {
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"$SUITE builds age\"></a>"
 	done
 	write_page "</p>"
+	# link to index_breakages
+	write_page "<p>There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too.</p>"
 	# the end
 	write_page_footer
 	publish_page

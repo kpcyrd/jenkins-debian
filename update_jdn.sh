@@ -260,7 +260,7 @@ STAMP=/var/log/jenkins/jobs-updated.stamp
 cd /srv/jenkins/job-cfg
 for metaconfig in *.yaml.py ; do
 	python $metaconfig > $TMPFILE
-	if ! $(diff $metaconfig $TMPFILE > /dev/null) ; then
+	if ! $(diff ${metaconfig%.py} $TMPFILE > /dev/null) ; then
 		cp $TMPFILE ${metaconfig%.py}
 	fi
 done

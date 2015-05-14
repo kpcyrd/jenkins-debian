@@ -80,7 +80,9 @@ fi
 #
 # install packages we need
 #
-sudo apt-get install	apache2 \
+if [ ./$0 -nt $STAMP ] || [ -f $STAMP ] ; then
+	sudo apt-get install \
+			apache2 \
 			apt-file \
 			apt-listchanges \
 			bash-completion \
@@ -163,7 +165,7 @@ sudo apt-get install	apache2 \
 			xvfb \
 			zutils
 
-sudo apt-get install -t wheezy-backports \
+	sudo apt-get install -t wheezy-backports \
 			binfmt-support \
 			cucumber \
 			debootstrap \
@@ -184,10 +186,13 @@ sudo apt-get install -t wheezy-backports \
 			openbios-ppc \
 			openbios-sparc
 
-explain "Packages installed."
+	explain "Packages installed."
 
-echo "Also needs python-arpy from jessie..."
-echo "Also needs ovmf from jessie..."
+	echo "Also needs python-arpy from jessie..."
+	echo "Also needs ovmf from jessie..."
+else
+	echo "No new packages to be installed."
+fi
 
 #
 # deploy package configuration in /etc

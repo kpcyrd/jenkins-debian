@@ -149,23 +149,16 @@ def gen_extra_links(package, version, suite, arch, status):
 
 
 def gen_suites_links(package, suite):
+    # FIXME this function needs multiarchifing
+    arch = defaultarch
     html = ''
-    query = 'SELECT s.suite, s.architecture, s.version, r.version, r.status ' + \
-            'FROM sources AS s LEFT JOIN results AS r ON r.package_id=s.id ' + \
-            'WHERE s.name="{pkg}"'.format(pkg=package)
-    results = query_db(query)
-    if len(results) < 1:
-        print_critical_message('This query produces 0 results:\n' + query)
-        raise ValueError
-    if len(results) == 1:
-        return html
-    for i in results:
-        # i[0]: suite, i[1]: arch, i[2]: avail version, i[3]: tested version,
-        # i[4]: status (i[2] and i[3] will be NULL if untested)
-        if i[0] == suite:  # don't link the current suite
+    for i in package._status:
+        if i == suite:  # don't link the current suite
             continue
-        status = 'untested' if not i[4] else i[4]
-        version = i[3] if i[3] else i[2]
+        if package._status[i][arch].status == False:
+            continue  # The package is not available in that suite
+        status = package._status[i][arch].status
+        version = package._status[i][arch].version
         if status == 'unreproducible':
             status = 'FTBR'
         elif status == 'not for us':
@@ -179,8 +172,8 @@ def gen_suites_links(package, suite):
             suffix = '\n'
         icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
         html += icon.format(icon=join_status_icon(status)[1], status=status)
-        html += tab + ' <a href="' + RB_PKG_URI + '/' + i[0] + '/' + i[1] + \
-                '/' + str(package) + '.html" target="_parent">' + i[0] + \
+        html += tab + ' <a href="' + RB_PKG_URI + '/' + suite + '/' + arch + \
+                '/' + package.name + '.html" target="_parent">' + suite + \
                 ':' + version + '</a>\n'
         html += '</span>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))
@@ -207,7 +200,7 @@ def gen_packages_html(packages, no_clean=False):
                           version + ' built at ' + build_date)
 
                 links, default_view = gen_extra_links(pkg, version, suite, arch, status)
-                suites_links = gen_suites_links(pkg, suite)
+                suites_links = gen_suites_links(package, suite)
                 status, icon = join_status_icon(status, pkg, version)
                 status = gen_status_link_icon(status, icon, suite, arch)
 

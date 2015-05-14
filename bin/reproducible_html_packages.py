@@ -131,7 +131,6 @@ def gen_extra_links(package, version, suite, arch, status):
 
     links = ''
     default_view = ''
-    # check whether there are notes available for this package
     if os.access(notes, os.R_OK):
         url = NOTES_URI + '/' + package + '_note.html'
         links += '<a href="' + url + '" target="main">notes</a>\n'
@@ -156,7 +155,7 @@ def gen_extra_links(package, version, suite, arch, status):
         if not default_view:
             default_view = url
     else:
-        log.debug('buildinfo not detected at ' + buildinfo)
+        log.critical('buildinfo not detected at ' + buildinfo)
     rbuild = pkg_has_rbuild(package, version, suite, arch)
     if rbuild:  # being a tuple (rbuild path, size), empty if non existant
         url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \

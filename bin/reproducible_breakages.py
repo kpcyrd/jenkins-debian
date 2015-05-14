@@ -156,12 +156,12 @@ def alien_dbd():
             try:
                 if result[0][0] != 'unreproducible':
                     bad_files.append('/'.join([root, file]) + ' (' +
-                                     str(result[0][0]) + ' pacakge)')
+                                     str(result[0][0]) + ' package)')
                     log.warning('/'.join([root, file]) + ' should not be '
                                 'there (' + str(result[0][0]) + ' package)')
             except IndexError:
                 bad_files.append('/'.join([root, file]) + ' (' +
-                                 'missing pacakge)')
+                                 'missing package)')
                 log.warning(bcolors.WARN + '/'.join([root, file]) + ' should '
                             'not be there (missing package)' + bcolors.ENDC)
     return bad_files

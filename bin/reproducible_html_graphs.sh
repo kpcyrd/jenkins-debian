@@ -337,7 +337,7 @@ create_png_from_table() {
 #
 write_usertag_table() {
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
-	if [ -z "$RESULTS" ] ; then
+	if [ ! -z "$RESULT" ] ; then
 		COUNT=0
 		TOPEN=0 ; TDONE=0 ; TTOTAL=0
 		for FIELD in $(echo ${FIELDS[3]} | tr -d ,) ; do

@@ -19,8 +19,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 == General ToDo
 
 * replace amd64 in scripts with $HOSTARCH
-** alioth... just manually push it
-* (gz|x)-compress jenkins and reproducible logs and teach apache to uncompress them on-fly (maybe uncompress them only if the client does not support compressed content?) - This is also recorded in the "To be done once jenkins.d.n runs jessie" section...
 * put /etc/rc.local in git and extend it to do cleanup of lockfiles etc
 
 === proper backup
@@ -171,12 +169,11 @@ properties:
 
 === reproducible
 
-* issues in packages or debbindiff:
-** find debbindiff problems - these might be caught by bin/reproducible_breakages.py already?
+* issues with debbindiff:
+** find debbindiff problems - is this caught by bin/reproducible_breakages.py already?
 ----
 egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
 ----
-
 * packages build with different dependencies, should be rescheduled:
 ** not sure if these should be caught by reproducible_maintenance.sh or reproducible_breakages.py...
 ----
@@ -193,13 +190,12 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** write a script to schedule set of packages automatically:
 *** all/unreproducible packages affected by a particular issue
-** link index_breakages.html
 **  add --debug for the manual scheduler, so that we get notified on irc when a build _starts_ and on which builder, so we can find the rbuild log
 ** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
 
 * debbindiff related
 ** install debbindiff from unstable in the debbindiff-testing-schroot (and use apt-pining so that upgrades dont upgrade to sid)
-** keep+display both html+txt output from debbindiff (once its supports that)
+** keep+display both html+txt output from debbindiff
 
 * build related
 ** Store the two buildlogs in separated gzipped files and propose a diff of the two

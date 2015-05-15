@@ -42,6 +42,13 @@ case "$1" in
 esac
 
 CANDIDATES="$@"
+if [ ${#} -gt 50 ] && $NOTIFY ; then
+	echo
+	figlet "No."
+	echo "Do not schedule more than 50 packages with notification. If you really really need to spam the IRC channel this much, use a loop to achieve that. Exiting."
+	echo
+	exit 1
+fi
 check_candidates
 if [ ${#PACKAGE_IDS} -gt 256 ] ; then
 	BLABLABLA="✂…"

@@ -76,8 +76,8 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo "$FAILED_BUILDS"
 	echo
 	echo "Rescheduling packages: "
-	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f7 | sort -u) ; do
-		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f9 | cut -d "_" -f1) ; do echo -n "$PKG " ; done)
+	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
+		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo -n "$PKG " ; done)
 		check_candidates
 		if [ $TOTAL -ne 0 ] ; then
 			echo " - in $SUITE: $CANDIDATES"

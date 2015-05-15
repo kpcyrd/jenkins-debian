@@ -220,7 +220,7 @@ def scheduler():
             'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id '
     total = int(query_db(query)[0][0])
     log.info('Currently scheduled packages in all suites: ' + str(total))
-    if total > 250:
+    if total > 750:
         generate_schedule()  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
                  ', nothing to do here.')
@@ -261,8 +261,10 @@ def scheduler():
         many_old = 17 # also...
     elif total <= 450:
         many_old = 10 # ...
-    else:
+    elif total <= 550:
         many_old = 1  # ...
+    else:
+        many_old = 0  # ...
     for suite in SUITES:
         if suite != 'experimental':
             suite_many_old = many_old*10 # experimental is roughly one tenth of the size of the other suites
@@ -311,7 +313,7 @@ if __name__ == '__main__':
         overall = int(query_db('SELECT count(*) FROM schedule')[0][0])
     except:
         overall = 9999
-    if overall > 250:
+    if overall > 750:
         log.info(str(overall) + ' packages already scheduled, nothing to do.')
         sys.exit()
     log.info(str(overall) + ' packages already scheduled, scheduling some more...')

@@ -33,16 +33,16 @@ create_results_dirs() {
 handle_race_condition() {
 	echo | tee -a $BUILDLOG
 	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting.\n"
-	local msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different build.\n"
+	msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different build.\n"
 	case $1 in
 		"db")
-			local msg="${msg}The race condition was caught while marking the build attempt in the database.\n"
+			msg="${msg}The race condition was caught while marking the build attempt in the database.\n"
 			;;
 		"init")
-			local msg="${msg}The race condition was caught while writing the lockfile.\n"
+			msg="${msg}The race condition was caught while writing the lockfile.\n"
 			;;
 		"lockfile")
-			local msg="${msg}The race condition was caught while checking the lockfile for pid correctness.\n"
+			msg="${msg}The race condition was caught while checking the lockfile for pid correctness.\n"
 			;;
 	esac
 	printf "$msg" | tee -a $BUILDLOG
@@ -71,8 +71,8 @@ save_artifacts() {
 		cp -r $TMPDIR/* $BASE/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
 		local msg="Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them.\n"
-		local msg="${msg}WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
-		local msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
+		msg="${msg}WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
+		msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
 		printf "$msg" | tee -a $BUILDLOG
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
@@ -84,7 +84,7 @@ save_artifacts() {
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="$URL published"
 			if [ "$NOTIFY" = "debbindiff" ] ; then
-				local MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
+				MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
 			fi
 			irc_message "$MESSAGE"
 		fi
@@ -236,7 +236,7 @@ dbd_timeout() {
 	if [ ! -s ./${DBDREPORT} ] ; then
 		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
 	else
-		local msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
+		msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
 	SAVE_ARTIFACTS=1
 	NOTIFY="debbindiff"
@@ -345,7 +345,7 @@ get_source_package() {
 		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
 		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
-		local RESULT=$?
+		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] ; then handle_404 ; fi
 }
@@ -356,12 +356,12 @@ check_suitability() {
 	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 	for arch in ${ARCHITECTURES} ; do
 		if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] ; then
-			local SUITABLE=true
+			SUITABLE=true
 			break
 		fi
 	done
 	if [ "${ARCHITECTURES}" = "all" ] ; then
-		local SUITABLE=true
+		SUITABLE=true
 	fi
 	if ! $SUITABLE ; then handle_not_for_us $ARCHITECTURES ; fi
 }

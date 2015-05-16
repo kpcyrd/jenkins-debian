@@ -72,7 +72,7 @@ fi
 FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec egrep -l -e 'E: Failed to fetch.*(Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
 if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
-	echo "Warning: the following failed builds have been found"
+	echo "The following builds have failed due to network problems and will be rescheduled now:"
 	echo "$FAILED_BUILDS"
 	echo
 	echo "Rescheduling packages: "

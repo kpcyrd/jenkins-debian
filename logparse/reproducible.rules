@@ -12,7 +12,6 @@ warning /Warning: packages found where the build was started more than.+/
 warning /Warning: Found files with bad permissions.+/
 warning /Warning: .+ could not be fully removed./
 warning /Warning: could not download.+/
-warning /Warning: the following failed builds have been found/
 warning /Warning: cannot update html pages for.+/
 warning /Warning: package .+is probably already building elsewhere, exiting./
 warning /Warning: too much difference for .+, aborting. Please investigate and update manually./

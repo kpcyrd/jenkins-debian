@@ -297,10 +297,13 @@ def scheduler():
               '+'.join([str(len(old[x])) for x in SUITES]) + ' old packages with the same version, ' + \
               'for ' + str(total) + ' or ' + \
               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
-    log.info(message)
-    irc_msg(message)
     log.info('\n\n\n')
     log.info(message)
+    # only notifiy irc if there were packages scheduled in any suite
+    for x in SUITES:
+        if len(untested[x])+len(new[x])+len(old[x]) > 0:
+            irc_msg(message)
+            break
 
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ note_html = Template((tab*2).join("""
   <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
       <p>
-        Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.
+        Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in 'unstable'.
       </p>
     </td>
   </tr>
@@ -150,7 +150,7 @@ $affected_pkgs
   <tr><td colspan="2">&nbsp;</td></tr>
   <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
-      <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>
+      <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in 'unstable'.</p>
     </td>
   </tr>
 </table>""".splitlines(True)))
@@ -393,7 +393,7 @@ def index_issues(issues):
             str(len([x for x in notes if notes[x].get('issues')])) + \
             '</b> packages categorized in <b>' + str(len(issues)) + \
             '</b> issues.</p>'
-    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a>.</p>'
+    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in \'unstable\'.</p>'
     title = 'Known issues related to reproducible builds'
     destfile = BASE + '/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/index_issues.html'

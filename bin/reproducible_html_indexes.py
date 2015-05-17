@@ -46,6 +46,7 @@ Technically speaking, a page can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
 """
 
+# filter_query is defined in reproducible_common.py and excludes some FTBFS issues
 queries = {
     'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',

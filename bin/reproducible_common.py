@@ -180,7 +180,7 @@ html_foot_page_style_note = Template((tab*2).join("""
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 # filter used on the index_FTBFS pages and for the reproducible.json
-filtered_issues = ('timestamps_from_cpp_macros' , 'ftbfs_werror_equals', 'bad_handling_of_extra_warnings', 'ftbfs_pbuilder_malformed_dsc', 'ftbfs_in_jenkins_setup', 'ftbfs_build_depends_not_available_on_amd64' )
+filtered_issues = ('ftbfs_werror_equals', 'bad_handling_of_extra_warnings', 'ftbfs_pbuilder_malformed_dsc', 'ftbfs_in_jenkins_setup', 'ftbfs_build_depends_not_available_on_amd64' )
 filter_query = ''
 for issue in filtered_issues:
     if filter_query == '':

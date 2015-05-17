@@ -60,10 +60,12 @@ bootstrap() {
 		set -x
 		sudo chroot $CHROOT_TARGET apt-get update
 		# install debbindiff with all recommends...
-		#sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@"
 		sudo chroot $CHROOT_TARGET apt-get install -y "$@"
 		if ! $DEBUG ; then set +x ; fi
 	else
+		#
+		# FIXME: this else block is unused - remove or merge everything else with schroot-create?
+		#
 		# schroot is used to download sources, so add our repo too
 		echo 'deb-src http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
 		TMPFILE=$(mktemp)
@@ -102,6 +104,16 @@ EOF
 		rm $TMPFILE
 		sudo chroot $CHROOT_TARGET apt-get update
 	fi
+	# use debbindiff from unstable
+	if [ "$SUITE" = "testing" ] ; then
+		echo "deb-src $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
+		sudo chroot $CHROOT_TARGET apt-get update
+		# install debbindiff from unstable without re-adding all recommends...
+		sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff
+	fi
+	echo
+	sudo chroot $CHROOT_TARGET dpkg -l debbindiff
+	echo
 
 	sudo umount -l $CHROOT_TARGET/proc
 }

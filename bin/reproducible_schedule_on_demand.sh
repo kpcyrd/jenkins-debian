@@ -42,7 +42,7 @@ case "$1" in
 esac
 
 CANDIDATES="$@"
-if [ ${#} -gt 50 ] && $NOTIFY ; then
+if [ ${#} -gt 50 ] && [ "$NOTIFY" = "true" ] ; then
 	echo
 	figlet "No."
 	echo "Do not schedule more than 50 packages with notification. If you really really need to spam the IRC channel this much, use a loop to achieve that. Exiting."

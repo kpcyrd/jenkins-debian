@@ -46,17 +46,6 @@ Technically speaking, a page can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
 """
 
-# filter used on the index_FTBFS pages
-filtered_issues = ('timestamps_from_cpp_macros' , 'ftbfs_werror_equals', 'bad_handling_of_extra_warnings', 'ftbfs_pbuilder_malformed_dsc', 'ftbfs_in_jenkins_setup', 'ftbfs_build_depends_not_available_on_amd64' )
-filter_query = ''
-for issue in filtered_issues:
-    if filter_query == '':
-        filter_query = 'n.issues LIKE "%' + issue + '%"'
-        filter_html = '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
-    else:
-        filter_query += ' OR n.issues LIKE "%' + issue + '%"'
-        filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
-
 queries = {
     'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',

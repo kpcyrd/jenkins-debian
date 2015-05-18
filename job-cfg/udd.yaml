@@ -58,7 +58,7 @@
            my_description: 'Detect multi-arch versions skews in jessie.'
            my_logparser: 'true'
         - '{name}_stretch_multiarch_versionskew':
-           my_time: '1 8 * * *'
+           my_time: '1 8 * * 1'
            my_params: 'multiarch_versionskew stretch'
            my_description: 'Detect multi-arch versions skews in stretch.'
            my_logparser: 'true'

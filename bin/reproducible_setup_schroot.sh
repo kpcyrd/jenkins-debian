@@ -106,7 +106,7 @@ EOF
 	fi
 	# use debbindiff from unstable
 	if [ "$SUITE" = "testing" ] ; then
-		echo "deb-src $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
+		echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 		sudo chroot $CHROOT_TARGET apt-get update
 		# install debbindiff from unstable without re-adding all recommends...
 		sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff

@@ -286,6 +286,7 @@ gen_packages_html() {
 	for (( i=1; i<$#+1; i=i+100 )) ; do
 		local string='['
 		local delimiter=''
+		local j
 		for (( j=0; j<100; j++)) ; do
 			local item=$(( $j+$i ))
 			if (( $item < $#+1 )) ; then

@@ -256,17 +256,19 @@ publish_page() {
 }
 
 link_packages() {
+        local i
 	for (( i=1; i<$#+1; i=i+400 )) ; do
 		local string='['
 		local delimiter=''
+		local j
 		for (( j=0; j<400; j++)) ; do
 			local item=$(( $j+$i ))
 			if (( $item < $#+1 )) ; then
-				local string+="${delimiter}\"${!item}\""
-				local delimiter=','
+				string+="${delimiter}\"${!item}\""
+				delimiter=','
 			fi
 		done
-		local string+=']'
+		string+=']'
 		cd /srv/jenkins/bin
 		DATA=" $(python3 -c "from reproducible_common import link_packages; \
 				print(link_packages(${string}, '$SUITE', '$ARCH'))" 2> /dev/null)"
@@ -280,11 +282,12 @@ gen_packages_html() {
 	shift
 	CWD=$(pwd)
 	cd /srv/jenkins/bin
+	local i
 	for (( i=1; i<$#+1; i=i+100 )) ; do
-		string='['
-		delimiter=''
+		local string='['
+		local delimiter=''
 		for (( j=0; j<100; j++)) ; do
-			item=$(( $j+$i ))
+			local item=$(( $j+$i ))
 			if (( $item < $#+1 )) ; then
 				string+="${delimiter}\"${!item}\""
 				delimiter=','

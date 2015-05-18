@@ -451,6 +451,7 @@ create_pkg_sets_pages() {
 	#
 	# create individual pages for all the sets
 	#
+	local i
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		PAGE="pkg_set_${META_PKGSET[$i]}.html"
 		echo "$(date) - starting to write $PAGE page."

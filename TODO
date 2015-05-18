@@ -221,7 +221,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** runs squid3 + kvm
 *** though squid is not configured yet
 ** kvm guest with different cpu, 32gb ram, 8 cores, 30gb /
-** date changed in /etc/rc.local to 1984
+** date changed in /etc/rc.local to today plus two days, one month and one year and hoping that the apt-signing key is still valid
 ** runs pbuilder inside the kmv guest
 
 * enable people to upload test packages, to be built in jenkins:

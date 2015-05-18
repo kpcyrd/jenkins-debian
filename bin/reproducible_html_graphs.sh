@@ -18,6 +18,9 @@ ARCH="amd64"  # we only care about amd64 status here (for now)
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
+NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
+
+# variables related to the stats we do
 TABLE[0]=stats_pkg_state
 TABLE[1]=stats_builds_per_day
 TABLE[2]=stats_builds_age
@@ -124,7 +127,6 @@ update_suite_stats() {
 # update notes stats
 #
 update_notes_stats() {
-	NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 	if [ ! -d ${NOTES_GIT_PATH} ] ; then
 		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
 		echo "Please investigate and fix!"
@@ -557,6 +559,10 @@ create_main_stats_page() {
 	gather_suite_stats
 	write_page "<tr><td>packages in $SUITE with issues but without any identified one</td><td>$(echo $COUNT_BAD + $COUNT_UGLY - $NOTES|bc)</td></tr>"
 	write_page "<tr><td>packages in $SUITE which need to be fixed</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
+	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
+		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in total</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
+		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in the last three months</td><td>$(cd ${NOTES_GIT_PATH} git log --since="3 month ago"|grep Author|sort -u |wc -l)</td></tr>"
+	fi
 	write_page "</table>"
 	# other graphs
 	write_page "<p>"

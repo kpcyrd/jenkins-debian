@@ -360,7 +360,7 @@ check_suitability() {
 	local SUITABLE=false
 	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 	for arch in ${ARCHITECTURES} ; do
-		if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] || [ "${ARCHITECTURES}" = "all" ] ; then
+		if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] || [ "$arch" = "all" ] ; then
 			SUITABLE=true
 			break
 		fi

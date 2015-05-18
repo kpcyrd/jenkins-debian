@@ -178,6 +178,7 @@ a.bug-patch:after {
 a.bug-done {
 	text-decoration: line-through;
 	color: #73d216;
+	font-weight: bold;
 }
 
 span.bug {
@@ -193,6 +194,7 @@ span.bug-patch {
 span.bug-done {
 	text-decoration: line-through;
 	color: #73d216;
+	font-weight: bold;
 }
 
 td, th {

@@ -68,7 +68,7 @@
            my_description: 'Detect multi-arch versions skews in sid.'
            my_logparser: 'true'
         - '{name}_orphaned_without_o_bug':
-           my_time: '3 8 * * *'
+           my_time: '3 8 * * 1'
            my_params: 'orphaned_without_o_bug'
            my_description: 'Detect orphaned packages with maintainer set to packages@qa.debian.org but without an "Orphaned" bug against the wnpp pseudo-package.'
            my_logparser: 'true'

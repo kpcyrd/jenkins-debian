@@ -555,7 +555,8 @@ create_main_stats_page() {
 	write_page "<tr><td>issues categorized</td><td>$ISSUES</td></tr>"
 	SUITE="unstable"
 	gather_suite_stats
-	write_page "<tr><td>packages in $SUITE without notes</td><td>$(echo $COUNT_BAD + $COUNT_UGLY - $NOTES|bc)</td></tr>"
+	write_page "<tr><td>packages in $SUITE without any identified issue</td><td>$(echo $COUNT_BAD + $COUNT_UGLY - $NOTES|bc)</td></tr>"
+	write_page "<tr><td>packages in $SUITE which need to be fixed</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
 	write_page "</table>"
 	# other graphs
 	write_page "<p>"

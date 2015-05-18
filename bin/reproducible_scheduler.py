@@ -282,7 +282,7 @@ def scheduler():
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
         if suite == 'testing':
             old[suite] = scheduler_old_versions(suite, suite_many_old)
-        else
+        else:
             old[suite] = scheduler_old_versions(suite, 0)
         total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')

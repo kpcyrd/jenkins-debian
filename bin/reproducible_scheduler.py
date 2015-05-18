@@ -262,9 +262,9 @@ def scheduler():
     else:
         many_old_base = 0  # ...
     for suite in SUITES:
-        if suite = 'unstable':
+        if suite == 'unstable':
             suite_many_old = many_old_base*10 # experimental is roughly one tenth of the size of the other suites
-        elif suite = 'testing':
+        elif suite == 'testing':
             suite_many_old = many_old_base*5 # re-schedule testing less than unstable as we care more about unstable and because unstable changes more frequently
         else:
             suite_many_old = many_old_base

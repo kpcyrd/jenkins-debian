@@ -35,10 +35,6 @@
 
 - job-template:
     defaults: udd
-    name: '{name}_wheezy_multiarch_versionskew'
-
-- job-template:
-    defaults: udd
     name: '{name}_jessie_multiarch_versionskew'
 
 - job-template:
@@ -60,11 +56,6 @@
 - project:
     name: udd
     jobs:
-        - '{name}_wheezy_multiarch_versionskew':
-           my_time: '2 8 1 * *'
-           my_params: 'multiarch_versionskew wheezy'
-           my_description: 'Detect multi-arch versions skews in wheezy.'
-           my_logparser: 'true'
         - '{name}_stretch_multiarch_versionskew':
            my_time: '1 8 * * *'
            my_params: 'multiarch_versionskew stretch'

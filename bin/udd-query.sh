@@ -47,7 +47,12 @@ multiarch_versionskew() {
 
 	udd_query
 	if [ -s $UDD ] ; then
-		echo "Warning: multi-arch version skew in $DISTRO detected."
+		if [ "$DISTRO" != "sid" ] ; then
+			echo "Warning: multi-arch version skew in $DISTRO detected."
+		else
+			# multiarch version skew in sid is inevitable
+			echo "Multi-arch version skew in $DISTRO detected."
+		fi
 		echo
 		printf  "         Package          |           Tracker\n"
 		# bash sucks: it's printf(1) implementation doesn't like leading dashes as-is...

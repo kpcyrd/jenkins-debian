@@ -214,6 +214,11 @@ def scheduler_old_versions(suite, limit):
     print_schedule_result(suite, criteria, packages)
     return packages
 
+def add_up_numbers(package_type):
+    package_type_sum = '+'.join([str(len(package_type[x])) for x in SUITES])
+    if package_type_sum == '0+0+0':
+        package_type_sum = '0'
+    return package_type_sum
 
 def scheduler():
     query = 'SELECT count(*) ' + \
@@ -290,9 +295,9 @@ def scheduler():
     generate_schedule()  # from reproducible_html_indexes
     # build the kgb message text
     message = 'Scheduled in ' + '+'.join(SUITES) + ': ' + \
-              '+'.join([str(len(untested[x])) for x in SUITES]) + ' new and untested packages, ' + \
-              '+'.join([str(len(new[x])) for x in SUITES]) + ' packages with new versions and ' + \
-              '+'.join([str(len(old[x])) for x in SUITES]) + ' old packages with the same version, ' + \
+              add_up_numbers(untested) + ' new and untested packages, ' + \
+              add_up_numbers(new) + ' packages with new versions and ' + \
+              add_up_numbers(old) + ' old packages with the same version, ' + \
               'for ' + str(total) + ' or ' + \
               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
     log.info('\n\n\n')

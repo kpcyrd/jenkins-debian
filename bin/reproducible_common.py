@@ -171,9 +171,11 @@ html_foot_page_style_note = Template((tab*2).join("""
   A package name displayed with a bold font is an indication that this
   package has a note. Visited packages are linked in green, those which
   have not been visited are linked in blue.<br />
-  A <code>&#35;</code> sign after the name of a package indicates that a bug is
-  filed against it. Likewise, a <code>&#43;</code> means that there is bug with a
-  patch attached. In case of more than one bug, the symbol is repeated.
+  A <code><span class="bug">&#35;</span></code> sign after the name of a
+  package indicates that a bug is filed against it. Likewise, a
+  <code><span class="bug-patch">&#43;</span></code> sign indicates there is
+  a patch available. <code><span class="bug-done">&#35;</span></code>
+  indicates a closed bug. In cases of several bugs, the symbol is repeated.
 </p>""".splitlines(True)))
 
 
@@ -488,7 +490,7 @@ def get_trailing_icon(package, bugs):
             elif bugs[package][bug]['patch']:
                 html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
             else:
-                html += '" title="#' + str(bug) + '">#</span>'
+                html += 'bug" title="#' + str(bug) + '">#</span>'
     return html
 
 

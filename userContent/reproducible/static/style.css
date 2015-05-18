@@ -177,17 +177,22 @@ a.bug-patch:after {
 
 a.bug-done {
 	text-decoration: line-through;
+	color: green;
+}
+
+span.bug {
+	color: red;
+	font-weight: bold;
 }
 
 span.bug-patch {
-	color: red;
+	color: yellow;
 	font-weight: bold;
 }
 
 span.bug-done {
 	text-decoration: line-through;
-	font-weight: bold;
-	color: black;
+	color: green;
 }
 
 td, th {

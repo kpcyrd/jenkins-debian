@@ -53,7 +53,7 @@
     name: udd
     jobs:
         - '{name}_jessie_multiarch_versionskew':
-           my_time: '1 8 * * *'
+           my_time: '1 8 1 * *'
            my_params: 'multiarch_versionskew jessie'
            my_description: 'Detect multi-arch versions skews in jessie.'
            my_logparser: 'true'

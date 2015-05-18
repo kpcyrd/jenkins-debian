@@ -238,7 +238,10 @@ def scheduler():
     untested = {}
     for suite in SUITES:
         log.info('Requesting 444 untested packages in ' + suite + '...')
-        untested[suite] = scheduler_untested_packages(suite, 444)
+        if suite == 'testing':
+            untested[suite] = scheduler_untested_packages(suite, 444)
+        else:
+            untested[suite] = scheduler_untested_packages(suite, 0)
         total += len(untested[suite])
         log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
@@ -253,7 +256,10 @@ def scheduler():
         many_new = 150
     log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
-        new[suite] = scheduler_new_versions(suite, many_new)
+        if suite == 'testing':
+            new[suite] = scheduler_new_versions(suite, many_new)
+        else:
+            new[suite] = scheduler_new_versions(suite, 0)
         total += len(new[suite])
         log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
@@ -274,7 +280,10 @@ def scheduler():
         else:
             suite_many_old = many_old_base    # experimental is roughly one tenth of the size of the other suites
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
-        old[suite] = scheduler_old_versions(suite, suite_many_old)
+        if suite == 'testing':
+            old[suite] = scheduler_old_versions(suite, suite_many_old)
+        else
+            old[suite] = scheduler_old_versions(suite, 0)
         total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')

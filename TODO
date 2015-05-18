@@ -185,16 +185,15 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 * misc
 ** more graphs: graph average build duration by day
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
+** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** repo-comparison: check for binaries without source
-** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** write a script to schedule set of packages automatically:
 *** all/unreproducible packages affected by a particular issue
 **  add --debug for the manual scheduler, so that we get notified on irc when a build _starts_ and on which builder, so we can find the rbuild log
 ** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
 
 * debbindiff related
-** install debbindiff from unstable in the debbindiff-testing-schroot (and use apt-pining so that upgrades dont upgrade to sid)
 ** keep+display both html+txt output from debbindiff
 
 * build related
@@ -205,7 +204,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already? yes. are all of those covered?
 ** update README in notes.git to explain how the version there is used and what to do
-** add note to all the notes+issues pages explaining that too
+** add note to all the notes+issues pages explaining that too (mostly done)
 
 * pkg sets related:
 ** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
@@ -235,6 +234,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 
 === qa.debian.org*
 
+* udd-versionskew: explain jobs in README
 * udd-versionskew: also provide arch-relative version numbers in output too
 
 === d-i_manual*

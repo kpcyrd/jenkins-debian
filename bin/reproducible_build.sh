@@ -300,7 +300,7 @@ choose_package () {
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	# force debug mode for certain packages
-	if [ $SRCPACKAGE = "php-sabredav" ] ; then
+	if [ $SRCPACKAGE = "xxxxxxx" ] ; then
 		export DEBUG=true
 		irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE"
 	fi

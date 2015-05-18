@@ -551,7 +551,7 @@ create_main_stats_page() {
 	done
         write_page "</table>"
 	# write inventory table
-	write_page "<table class=\"main\"><tr><th>inventory type</th><th>amount</th></tr>"
+	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
 	write_page "<tr><td>packages with notes</td><td>$NOTES</td></tr>"
 	write_page "<tr><td>total amount of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>identified issues</td><td>$ISSUES</td></tr>"

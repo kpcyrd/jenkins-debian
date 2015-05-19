@@ -221,7 +221,7 @@ init_debbindiff() {
 			fi
 		done
 		if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ]  ; then
-			echo "Warning: lock $DBDCHROOT_WRITELOCK or [ -f $DBDCHROOT_READLOCK ] still exists, exiting."
+			echo "Warning: lock $DBDCHROOT_WRITELOCK or $DBDCHROOT_READLOCK still exists, exiting."
 			exit 1
 		fi
 	else
@@ -254,7 +254,7 @@ call_debbindiff() {
 		DBDSUITE="unstable"
 	fi
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
-	echo "$(date) - $DBDVERSION will be used to compare the two builds now." | tee -a ${RBUILDLOG}
+	echo "$(date) - $DBDVERSION will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
 	set -x
 	( timeout $TIMEOUT schroot \
@@ -268,7 +268,7 @@ call_debbindiff() {
 	RESULT=$?
 	if ! "$DEBUG" ; then set +x ; fi
 	set -e
-	cat $TMPLOG | tee -a $RBUILDLOG  # print out dbd output
+	cat $TMPLOG | tee -a $RBUILDLOG  # print dbd output
 	rm -f $DBDCHROOT_READLOCK $TMPLOG
 	echo | tee -a ${RBUILDLOG}
 	case $RESULT in
@@ -288,7 +288,7 @@ call_debbindiff() {
 			;;
 		*)
 			handle_ftbr "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it"
-			irc_message "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it. Check out $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
+			irc_message "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it. Check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
 			;;
 	esac
 	print_out_duration
@@ -316,11 +316,11 @@ choose_package () {
 
 init() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
-		local AANOUNCE="Artifacts will be preserved."
+		local ANNOUNCE="Artifacts will be preserved."
 	fi
 	create_results_dirs
 	echo "============================================================================="
-	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now. $AANOUNCE"
+	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now. $ANNOUNCE"
 	echo "============================================================================="
 	# mark build attempt
 	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")" ] ; then

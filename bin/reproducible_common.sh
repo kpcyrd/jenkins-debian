@@ -39,9 +39,9 @@ DBDCHROOT_WRITELOCK=/var/lib/jenkins/reproducible-dbdchroot.writelock
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
 
-# tested suites
+# suites being tested
 SUITES="testing unstable experimental"
-# tested arches
+# arches being tested
 ARCHES="amd64"
 
 # existing usertags
@@ -88,7 +88,7 @@ META_PKGSET[25]="maint_debian-ocaml"
 schedule_packages() {
 	# these packages are manually scheduled, so should have high priority,
 	# so schedule them in the past, so they are picked earlier :)
-	# the current date is subtracted twice, so that later manual scheduling comes first
+	# the current date is subtracted twice, so that packages scheduled later get higher will be picked sooner
 	DAYS=$(echo "$(date +'%j')*2"|bc)
 	HOURS=$(echo "$(date +'%H')*2"|bc)
 	MINS=$(date +'%M')	# schedule on the full hour so we can recognize them easily
@@ -172,7 +172,7 @@ write_page_header() {
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
-	SPOKENTARGET["pkg_sets"]="package sets stats"
+	SPOKENTARGET["pkg_sets"]="package sets"
 	SPOKENTARGET["suite_stats"]="suite: $SUITE"
 	SPOKENTARGET["repositories"]="repositories overview"
 	SPOKENTARGET["stats"]="reproducible stats"
@@ -182,7 +182,7 @@ write_page_header() {
 	write_page "<title>$2</title></head>"
 	write_page "<body><header><h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
-		write_page "<p>These pages are showing the prospects of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>."
+		write_page "<p>These pages are showing the <em>prospects</em> of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>."
 		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
 		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machine this is running on!</p>"

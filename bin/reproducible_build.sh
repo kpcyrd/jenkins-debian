@@ -154,6 +154,7 @@ handle_not_for_us() {
 	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
 	DURATION=''
 	update_db_and_html "not for us"
+	irc_message "$BUILD_URL/console has just build a not-for-us package"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	exit 0

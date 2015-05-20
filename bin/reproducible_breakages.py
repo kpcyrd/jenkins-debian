@@ -85,6 +85,25 @@ def lack_rbuild():
     return bad_pkgs
 
 
+def lack_buildinfo():
+    log.info('running lack_buildinfo check...')
+    bad_pkgs = []
+    query = '''SELECT s.name, r.version, s.suite, s.architecture
+               FROM sources AS s JOIN results AS r ON r.package_id=s.id
+               WHERE r.status NOT IN ("blacklisted", "not for us", "FTBFS", "")
+               ORDER BY s.name ASC, s.suite DESC'''
+    results = query_db(query)
+    for pkg, version, suite, arch in results:
+        eversion = strip_epoch(version)
+        buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + pkg + \
+            '_' + eversion + '_' + arch + '.buildinfo'
+        if not os.access(buildinfo, os.R_OK):
+            bad_pkgs.append((pkg, version, suite, arch))
+            log.warning(pkg + '/' + suite + ' (' + version + ') has been '
+                        'successfully built, but a .buildinfo is missing')
+    return bad_pkgs
+
+
 def pbuilder_dep_fail():
     log.info('running pbuilder_dep_fail check...')
     bad_pkgs = []
@@ -226,9 +245,11 @@ def gen_html():
     # debbindiff report where it shouldn't be
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a debbindiff file:', not_unrep_with_dbd_file())
-    # missing buildlog
+    # missing files
     html += _gen_section('are built but don\'t have a buildlog:',
                          lack_rbuild())
+    html += _gen_section('are built but don\'t have a .buildinfo file:',
+                         lack_buildinfo())
     # pbuilder-satisfydepends failed
     html += _gen_section('failed to match their build-dependencies:',
                          pbuilder_dep_fail())

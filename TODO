@@ -169,6 +169,10 @@ properties:
 
 === reproducible
 
+* r_build.sh
+** keep+display both html+txt output from debbindiff
+** Store the two buildlogs in separated gzipped files and propose a diff of the two
+
 * issues with debbindiff:
 ** find debbindiff problems - is this caught by bin/reproducible_breakages.py already?
 ----
@@ -183,35 +187,25 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** the grepping should probably only done on files younger then $check_frequency
 
 * misc
+** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
 ** more graphs: graph average build duration by day
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** repo-comparison: check for binaries without source
-** write a script to schedule set of packages automatically:
-*** all/unreproducible packages affected by a particular issue
-**  add --debug for the manual scheduler, so that we get notified on irc when a build _starts_ and on which builder, so we can find the rbuild log
-** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
-
-* debbindiff related
-** keep+display both html+txt output from debbindiff
-
-* build related
-** Store the two buildlogs in separated gzipped files and propose a diff of the two
+** move "untested" field in stats table too? (as in csv output...)
 
 * notes related
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already? yes. are all of those covered?
-** update README in notes.git to explain how the version there is used and what to do
-** add note to all the notes+issues pages explaining that too (mostly done)
 
 * pkg sets related:
-** for all pkg sets: only display FTBR+FTBFS and reproducible packages with notes by default, provide a way to show them all...
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 
-* db schema 2.0
-** move "untested" field in stats table too? (as in csv output...)
+* new script to schedule set of packages:
+*** all/unreproducible packages affected by a particular issue
+**  add --debug for the manual scheduler, so that we get notified on irc when a build _starts_ and on which builder, so we can find the rbuild log
 
 * missing tests: variation in kernel and date and cpu type
 ** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4

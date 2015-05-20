@@ -235,13 +235,6 @@ def gen_html():
                          entries=alien_dbd())
     html += _gen_section('rb-pkg pages that should not be there:', None,
                          entries=alien_rbpkg())
-    # debbindiff troubles
-    without_dbd, bad_dbd = unrep_with_dbd_issues()
-    html += _gen_section('are marked as unreproducible, but without ' +
-                         'debbindiff output:', without_dbd)
-    html += _gen_section('are marked as unreproducible, but their ' +
-                         'debbindiff output does not seem to be an html ' +
-                         'file:', bad_dbd)
     # debbindiff report where it shouldn't be
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a debbindiff file:', not_unrep_with_dbd_file())
@@ -250,6 +243,13 @@ def gen_html():
                          lack_rbuild())
     html += _gen_section('are built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
+    # debbindiff troubles
+    without_dbd, bad_dbd = unrep_with_dbd_issues()
+    html += _gen_section('are marked as unreproducible, but without ' +
+                         'debbindiff output:', without_dbd)
+    html += _gen_section('are marked as unreproducible, but their ' +
+                         'debbindiff output does not seem to be an html ' +
+                         'file:', bad_dbd)
     # pbuilder-satisfydepends failed
     html += _gen_section('failed to match their build-dependencies:',
                          pbuilder_dep_fail())

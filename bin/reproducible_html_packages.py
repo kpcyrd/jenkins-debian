@@ -177,6 +177,8 @@ def gen_suites_links(package, suite):
         version = i[3] if i[3] else i[2]
         if status == 'unreproducible':
             status = 'FTBR'
+        elif status == 'not for us':
+            status = 'not_for_us'
         html += '<span class="avoidwrap">\n' + tab
         if status != 'untested':
             prefix = ' <a href="/' + i[0] + '/' + i[1] + '/index_' + status + '.html">'

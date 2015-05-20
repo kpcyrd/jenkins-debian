@@ -4,7 +4,7 @@
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -303,13 +303,13 @@ choose_package () {
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	# force debug mode for certain packages
-	case $SRCPACKAGE in
-		mig|libdatetime-format-http-perl|libio-html-perl|libio-pty-easy-perl|libnet-scp-expect-perl|libsocket-perl)
-			export DEBUG=true
-			irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE"
-			;;
-		*)	;;
-	esac
+	#case $SRCPACKAGE in
+	#	mig|libdatetime-format-http-perl|libio-html-perl|libio-pty-easy-perl|libnet-scp-expect-perl|libsocket-perl)
+	#		export DEBUG=true
+	#		irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE"
+	#		;;
+	#	*)	;;
+	#esac
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)

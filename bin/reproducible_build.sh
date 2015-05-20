@@ -414,7 +414,7 @@ build_rebuild() {
 					--buildresult b2 \
 					${SRCPACKAGE}_${EVERSION}.dsc
 		) 2>&1 | tee -a ${RBUILDLOG}
-	if ! "$DEBUG" ; then set +x ; fi
+		if ! "$DEBUG" ; then set +x ; fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0

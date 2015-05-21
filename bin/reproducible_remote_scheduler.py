@@ -16,8 +16,11 @@ parser = argparse.ArgumentParser(
     description='Reschedule packages to re-test their reproducibility',
     epilog='The build results will be announced on the #debian-reproducible' +
            ' IRC channel.')
-parser.add_argument('-a', '--artifacts', default=False, action='store_true',
-                    help='Save artifacts (for further offline study)')
+group = parser.add_mutually_exclusive_group()
+group.add_argument('-a', '--artifacts', default=False, action='store_true',
+                   help='Save artifacts (for further offline study)')
+group.add_argument('-n', '--no-notify', default=False, action='store_true',
+                   help='Do not notify the channel when the build finish')
 parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule in')
 parser.add_argument('-m', '--message', default='', nargs='+',
@@ -53,10 +56,12 @@ suite = scheduling_args.suite
 reason = ' '.join(scheduling_args.message)
 packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
+notify = not scheduling_args.no_notify  # note the notify vs no-notify
 
 log.debug('Requester: ' + requester)
 log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
+log.debug('Notify: ' + str(notify))
 log.debug('Architecture: ' + defaultarch)
 log.debug('Suite: ' + suite)
 log.debug('Packages: ' + ' '.join(packages))
@@ -131,13 +136,13 @@ to_schedule = []
 save_schedule = []
 for id in ids:
     artifacts_value = 1 if artifacts else 0
-    to_schedule.append((id, date, artifacts_value, requester))
+    to_schedule.append((id, date, artifacts_value, str(notify).lower(), requester))
     save_schedule.append((id, requester, epoch))
 log.debug('Packages about to be scheduled: ' + str(to_schedule))
 
 query1 = '''REPLACE INTO schedule
     (package_id, date_scheduled, date_build_started, save_artifacts, notify, scheduler)
-    VALUES (?, ?, "", ?, "true", ?)'''
+    VALUES (?, ?, "", ?, ?, ?)'''
 query2 = '''INSERT INTO manual_scheduler
     (package_id, requester, date_request) VALUES (?, ?, ?)'''
 

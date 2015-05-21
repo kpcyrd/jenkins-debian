@@ -142,11 +142,16 @@ handle_404() {
 	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	irc_message "$BUILD_URL encountered a 404 problem."
 	DURATION=''
+	EVERSION="None"
+	chmod 644 $RBUILDLOG
+	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	update_db_and_html "404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
-	exit 0
+	exit 0 # RBUILDLOG and SAVE_ARTIFACTS and NOTIFY are used in cleanup_all called at exit
 }
 
 handle_not_for_us() {
@@ -454,8 +459,8 @@ LOCKFILE="/tmp/${SUITE}-${ARCH}-${SRCPACKAGE}"
 init
 get_source_package
 
-VERSION=$(grep "^Version: " ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d " " -f2-)
-EVERSION=$(echo $VERSION | cut -d ":" -f2)  # EPOCH_FREE_VERSION was too long
+VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
+EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION was too long
 DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
 BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 

@@ -196,6 +196,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** move "untested" field in stats table too? (as in csv output...)
 
 * notes related
+** #786396: classify issue by "toolchain" or "package" fix needed
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already? yes. are all of those covered?

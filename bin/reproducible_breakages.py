@@ -249,7 +249,7 @@ def gen_html():
     # debbindiff troubles
     without_dbd, bad_dbd = unrep_with_dbd_issues()
     html += _gen_section('are marked as unreproducible, but without ' +
-                         'debbindiff output - so probably debbindiff' +
+                         'debbindiff output - so probably debbindiff ' +
                          'crashed:', without_dbd)
     html += _gen_section('are marked as unreproducible, but their ' +
                          'debbindiff output does not seem to be an html ' +

@@ -455,7 +455,7 @@ BAD_LOCKFILE=false
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
 
 # used to catch race conditions when the same package is being built by two parallel jobs
-LOCKFILE="/tmp/${SUITE}-${ARCH}-${SRCPACKAGE}"
+LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 
 init
 get_source_package

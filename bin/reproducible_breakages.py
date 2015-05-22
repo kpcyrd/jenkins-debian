@@ -263,15 +263,15 @@ if __name__ == '__main__':
     bugs = get_bugs()
     html = '<p>This page lists unexpected things a human should look at and '
     html += 'fix, like packages with an incoherent status or files that '
-    html += 'should not be there.<br />Please help with empting this page!</p>'
+    html += 'should not be there.<em>Please help making this page empty!</em></p>'
     breakages = gen_html()
     if breakages:
         html += breakages
     else:
         html += '<p><b>COOL!!!</b> Everything is GOOD and not a issue was '
         html += 'detected. <i>Enjoy!</i></p>'
-    title = 'CI breakages'
+    title = 'Breakages on reproducible.debian.net'
     destfile = BASE + '/index_breakages.html'
     desturl = REPRODUCIBLE_URL + '/index_breakages.html'
     write_html_page(title, html, destfile, style_note=True)
-    log.info('CI breackages page created at ' + desturl)
+    log.info('Breackages page created at ' + desturl)

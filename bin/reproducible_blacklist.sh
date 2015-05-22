@@ -87,7 +87,7 @@ echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
 echo
 echo "============================================================================="
-echo "The following $TOTAL source packages from $SUITE have been blacklisted: $PACKAGES"
+echo "The following $TOTAL source packages from $SUITE have been $ACTION: $PACKAGES"
 echo "============================================================================="
 echo
 echo "Probably edit notes.git/packages.yml now and enter/remove reasons for blacklisting there."

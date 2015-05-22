@@ -153,6 +153,15 @@ if grep -q '|' $PACKAGES ; then
 fi
 rm $PACKAGES
 
+# remove lockfiles older than 2 days
+LOCKFILES=$(find /tmp/reproducible-lockfile-* -maxdepth 1 -type f -mtime +2 -exec ls -lad {} \; || true)
+if [ ! -z "$LOCKFILES" ] ; then
+	echo
+	echo "Removed old lockfiles:"
+	find /tmp/reproducible-lockfile-* -maxdepth 1 -type f -mtime +2 -exec rm -rv {} \;
+	echo
+fi
+
 # find packages which have been removed from the archive
 PACKAGES=$(mktemp)
 QUERY="SELECT name, suite, architecture FROM removed_packages

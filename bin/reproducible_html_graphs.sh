@@ -374,7 +374,7 @@ create_suite_stats_page() {
 	VIEW=suite_stats
 	PAGE=index_${VIEW}.html
 	MAINLABEL[0]="Reproducibility status for packages in '$SUITE'"
-	MAINLABEL[2]="Age in days of oldest build in '$SUITE'"
+	MAINLABEL[2]="Age in days of oldest reproducible build result in '$SUITE'"
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds for packages in $SUITE"
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
@@ -563,6 +563,8 @@ create_main_stats_page() {
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in total</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in the last three months</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td></tr>"
 	fi
+	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='${SUITE}' AND datum='$DATE'")
+	write_page "<tr><td>oldest build result in $SUITE</td><td>$RESULT days</td></tr>"
 	write_page "</table>"
 	# other graphs
 	write_page "<p>"
@@ -581,11 +583,11 @@ create_main_stats_page() {
 	done
 	write_page "</p>"
 	# write suite builds age graphs
-	write_page "<p><table><tr>"
+	write_page "<p>"
 	for SUITE in $SUITES ; do
-		write_page " <td><a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"$SUITE reproducible builds age\"></a><td>"
+		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE\"></a>"
 	done
-	write_page "</tr></table></p>"
+	write_page "</p>"
 	# link to index_breakages
 	write_page "<p>There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too.</p>"
 	# the end

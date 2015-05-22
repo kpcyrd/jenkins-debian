@@ -309,7 +309,7 @@ choose_package () {
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	# force debug mode for certain packages
 	case $SRCPACKAGE in
-			gauche|xxxxxxx)
+			xxxxxxx)
 			export DEBUG=true
 			set -x
 			irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE"

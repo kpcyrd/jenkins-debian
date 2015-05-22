@@ -576,7 +576,12 @@ create_main_stats_page() {
 	write_page "<p>"
 	# do the global stats
 	for i in 3 7 4 5 1 ; do
-		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
+		if [ $i = "3" ] || [ $i = "1" ] ; then
+			OVERVIEW=""
+		else
+			OVERVIEW='class="overview"'
+		fi
+		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" $OVERVIEW alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
@@ -584,7 +589,7 @@ create_main_stats_page() {
 		if [ "$i" = "3" ] ; then
 			write_page "</p>"
 			write_usertag_table
-			write_page "<p>"
+			write_page "<p style=\"clear:both;\">"
 		fi
 	done
 	write_page "</p>"

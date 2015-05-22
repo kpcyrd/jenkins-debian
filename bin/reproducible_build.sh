@@ -311,6 +311,7 @@ choose_package () {
 	case $SRCPACKAGE in
 			gauche|xxxxxxx)
 			export DEBUG=true
+			set -x
 			irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE"
 			;;
 		*)	;;

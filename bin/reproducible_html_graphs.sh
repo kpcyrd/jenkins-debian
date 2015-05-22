@@ -563,8 +563,10 @@ create_main_stats_page() {
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in total</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in the last three months</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td></tr>"
 	fi
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE datum='$DATE'")
-	write_page "<tr><td>oldest build result in all suites</td><td>$RESULT days</td></tr>"
+	AGE_TESTING=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND datum='$DATE'")
+	AGE_UNSTABLE=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND datum='$DATE'")
+	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND datum='$DATE'")
+	write_page "<tr><td>oldest build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
 	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0'")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)

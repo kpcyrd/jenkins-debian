@@ -304,8 +304,8 @@ create_png_from_table() {
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
 			 FROM stats_builds_per_day AS s GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
-		# just make a graph of the oldest build, no matter what status
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+		# just make a graph of the oldest successful build (ignore FTBFS)
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, max(oldest_reproducible, oldest_unreproducible) FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else

@@ -21,6 +21,16 @@ blacklist_packages() {
 	done
 }
 
+revert_blacklisted_packages() {
+	DATE=$(date +'%Y-%m-%d %H:%M')
+	TMPFILE=$(mktemp)
+	for PKG in $PACKAGES ; do
+		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE';")
+		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE';")
+		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM results WHERE package_id='$PKGID' AND status='blacklisted';"
+	done
+}
+
 check_candidates() {
 	PACKAGES=""
 	TOTAL=0
@@ -46,16 +56,31 @@ if [ "$SUITE" = "sid" ] ; then
 	SUITE=unstable
 fi
 
+if [ "$1" != "--revert" ] ; then
+	REVERT=false
+	ACTION="blacklisted"
+else
+	shift
+	REVERT=true
+	ACTION="removed from blacklist"
+fi
+
 CANDIDATES="$@"
 check_candidates
 PACKAGES=$(echo $PACKAGES)
-MESSAGE="$TOTAL package(s) blacklisted in $SUITE: ${PACKAGES}"
+MESSAGE="$TOTAL package(s) $ACTION in $SUITE: ${PACKAGES}"
 if [ $TOTAL -lt 1 ] ; then
 	exit 1
 fi
 
-# finally
-blacklist_packages
+# main
+if [ "$1" != "--revert" ] ; then
+	blacklist_packages
+else
+	revert_blacklisted_packages
+fi
+
+# notify
 gen_packages_html $SUITE $PACKAGES
 echo
 echo "$MESSAGE"
@@ -65,4 +90,9 @@ echo "==========================================================================
 echo "The following $TOTAL source packages from $SUITE have been blacklisted: $PACKAGES"
 echo "============================================================================="
 echo
-echo "Probably edit notes.git/packages.yml now and enter reasons for blacklisting there"
+echo "Probably edit notes.git/packages.yml now and enter/remove reasons for blacklisting there."
+
+# finally, let's re-schedule them if the blacklisted was reverted
+if [ "$1" = "--revert" ] ; then
+	/srv/jenkins/bin/reproducible_schedule_on_demand.sh $SUITE $PACKAGES
+fi

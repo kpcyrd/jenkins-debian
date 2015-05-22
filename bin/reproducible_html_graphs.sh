@@ -565,6 +565,10 @@ create_main_stats_page() {
 	fi
 	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='${SUITE}' AND datum='$DATE'")
 	write_page "<tr><td>oldest build result in $SUITE</td><td>$RESULT days</td></tr>"
+	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='${SUITE}' AND r.build_duration!='' AND r.build_duration!='0'")
+	MIN=$(echo $RESULT/60|bc)
+	SEC=$(echo "$RESULT-($MIN*60)"|bc)
+	write_page "<tr><td>average test duration in $SUITE</td><td>$MIN minutes, $SEC seconds</td></tr>"
 	write_page "</table>"
 	# other graphs
 	write_page "<p>"

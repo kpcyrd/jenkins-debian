@@ -107,9 +107,12 @@ def lack_buildinfo():
 def pbuilder_dep_fail():
     log.info('running pbuilder_dep_fail check...')
     bad_pkgs = []
+    # we only care about these failures in the testing suite as they happen
+    # all the time in other suites, as packages are buggy
+    # and specific versions also come and go
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status = "FTBFS"
+               WHERE r.status = "FTBFS" AND s.suite = "testing"
                ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:

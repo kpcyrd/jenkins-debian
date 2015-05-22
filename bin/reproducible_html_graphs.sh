@@ -304,8 +304,8 @@ create_png_from_table() {
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
 			 FROM stats_builds_per_day AS s GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
-		# just make a graph of the oldest successful build (ignore FTBFS)
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, max(oldest_reproducible, oldest_unreproducible) FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else
@@ -581,11 +581,11 @@ create_main_stats_page() {
 	done
 	write_page "</p>"
 	# write suite builds age graphs
-	write_page "<p>"
+	write_page "<p><table><tr>"
 	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"$SUITE builds age\"></a>"
+		write_page " <td><a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"$SUITE reproducible builds age\"></a><td>"
 	done
-	write_page "</p>"
+	write_page "</tr></table></p>"
 	# link to index_breakages
 	write_page "<p>There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too.</p>"
 	# the end

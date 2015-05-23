@@ -564,23 +564,6 @@ create_main_stats_page() {
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in total</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> in the last three months</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td></tr>"
 	fi
-	AGE_TESTING=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND datum='$DATE'")
-	AGE_UNSTABLE=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND datum='$DATE'")
-	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND datum='$DATE'")
-	write_page "<tr><td>oldest build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%'")
-	MIN=$(echo $RESULT/60|bc)
-	SEC=$(echo "$RESULT-($MIN*60)"|bc)
-	write_page "<tr><td>average test duration (on $DATE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-28 days')")
-	MIN=$(echo $RESULT/60|bc)
-	SEC=$(echo "$RESULT-($MIN*60)"|bc)
-	write_page "<tr><td>average test duration (in the last 4 weeks)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date LIKE '%$DATE%'")
-	write_page "<tr><td>packages tested on $DATE</td><td>$RESULT</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date > datetime('$DATE', '-28 days')")
-	RESULT="$(echo $RESULT/28|bc)"
-	write_page "<tr><td>packages tested on average per day in the last 4 weeks</td><td>$RESULT</td></tr>"
 	write_page "</table>"
 	# write bugs with usertags table
 	write_usertag_table
@@ -604,9 +587,29 @@ create_main_stats_page() {
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE\"></a>"
 	done
-	write_page "</p>"
+	# write build performace stats
+	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
+	AGE_TESTING=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND datum='$DATE'")
+	AGE_UNSTABLE=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND datum='$DATE'")
+	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND datum='$DATE'")
+	write_page "<tr><td>oldest build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
+	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%'")
+	MIN=$(echo $RESULT/60|bc)
+	SEC=$(echo "$RESULT-($MIN*60)"|bc)
+	write_page "<tr><td>average test duration (on $DATE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
+	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-28 days')")
+	MIN=$(echo $RESULT/60|bc)
+	SEC=$(echo "$RESULT-($MIN*60)"|bc)
+	write_page "<tr><td>average test duration (in the last 4 weeks)</td><td>$MIN minutes, $SEC seconds</td></tr>"
+	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date LIKE '%$DATE%'")
+	write_page "<tr><td>packages tested on $DATE</td><td>$RESULT</td></tr>"
+	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date > datetime('$DATE', '-28 days')")
+	RESULT="$(echo $RESULT/28|bc)"
+	write_page "<tr><td>packages tested on average per day in the last 4 weeks</td><td>$RESULT</td></tr>"
+	write_page "</table>"
 	# link to index_breakages
-	write_page "<p>There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too.</p>"
+	write_page "</p><p style=\"clear:both;\">"
+	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too.</p>"
 	# the end
 	write_page_footer
 	publish_page

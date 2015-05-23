@@ -261,18 +261,18 @@ def scheduler():
     # old packages
     old = {}
     if total <= 250:
-        many_old_base = 35 # multiplied by 10 or 5 or 1, see below
+        many_old_base = 17.5 # multiplied by 20 or 10 or 1, see below
     elif total <= 350:
-        many_old_base = 25 # also...
+        many_old_base = 12.5 # also...
     else:
         many_old_base = 0  # ...
     for suite in SUITES:
         if suite == 'unstable':
-            suite_many_old = many_old_base*10 # unstable changes the most and is most relevant
+            suite_many_old = int(many_old_base*20) # unstable changes the most and is most relevant
         elif suite == 'testing':
-            suite_many_old = many_old_base*5  # re-schedule testing less than unstable as we care more more about unstable (atm)
+            suite_many_old = int(many_old_base*10)  # re-schedule testing less than unstable as we care more more about unstable (atm)
         else:
-            suite_many_old = many_old_base    # experimental is roughly one tenth of the size of the other suites
+            suite_many_old = int(many_old_base)    # experimental is roughly one twentieth of the size of the other suites
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
         old[suite] = scheduler_old_versions(suite, suite_many_old)
         total += len(old[suite])

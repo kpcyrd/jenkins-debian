@@ -597,6 +597,7 @@ create_main_stats_page() {
 	write_page "<tr><td>number of cores used</td><td>$NUM_CPU</td><td>$(echo $NUM_CPU-1|bc)</td></tr>"
 	write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	write_page "<tr><td>hour, minute</td><td>hour is usually the same...</td><td>the minute differs (currently, work in progress)</td></tr>"
+	write_page "<tr><td><em>everything else...</em></td><td>&nbsp;</td><td>is the same. So far, this is about the <em>prospects</em> of <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds of Debian</a>...</td></tr>"
 	write_page "</table>"
 	# write build per day graph
 	write_page "</p><p style=\"clear:both;\">"

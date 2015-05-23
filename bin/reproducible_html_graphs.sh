@@ -593,7 +593,8 @@ create_main_stats_page() {
 	write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 	write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds (currently, work in progress)</td></tr>"
-	write_page "<tr><td>number of cores used</td><td>$(cat /proc/cpuinfo |grep ^processor|wc -l)</td><td>(currently, work in progress)</td></tr>"
+	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	write_page "<tr><td>number of cores used</td><td>$NUM_CPU</td><td>$(echo $NUM_CPU-1|bc)</td></tr>"
 	write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	write_page "<tr><td>hour, minute</td><td>hour is usually the same...</td><td>the minute differs (currently, work in progress)</td></tr>"
 	write_page "</table>"

@@ -412,7 +412,7 @@ build_rebuild() {
 		set -x
 		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
 		( timeout 12h nice ionice -c 3 sudo \
-		  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
+		  DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)" \
 		  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
 		  LANG="fr_CH.UTF-8" \
 		  LC_ALL="fr_CH.UTF-8" \

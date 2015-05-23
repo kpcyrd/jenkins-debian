@@ -552,9 +552,9 @@ create_main_stats_page() {
         write_page "</table>"
 	# write inventory table
 	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
-	write_page "<tr><td>packages with notes</td><td>$NOTES</td></tr>"
+	write_page "<tr><td>different identified issues</td><td>$ISSUES</td></tr>"
+	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
 	write_page "<tr><td>total amount of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
-	write_page "<tr><td>identified issues</td><td>$ISSUES</td></tr>"
 	SUITE="unstable"
 	gather_suite_stats
 	write_page "<tr><td>packages in $SUITE with issues but without any identified one</td><td>$(echo $COUNT_BAD + $COUNT_UGLY - $NOTES|bc)</td></tr>"
@@ -570,7 +570,7 @@ create_main_stats_page() {
 	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0'")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
-	write_page "<tr><td>average test duration in all suites</td><td>$MIN minutes, $SEC seconds</td></tr>"
+	write_page "<tr><td>average test duration</td><td>$MIN minutes, $SEC seconds</td></tr>"
 	write_page "</table>"
 	# write bugs with usertags table
 	write_usertag_table

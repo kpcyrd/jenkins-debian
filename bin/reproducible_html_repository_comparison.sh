@@ -18,6 +18,8 @@ PAGE=index_${VIEW}.html
 TMPFILE=$(mktemp)
 TMP2FILE=$(mktemp)
 
+MODIFIED_IN_SID=0
+
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
 write_page "<p>These source packages are different from unstable in our apt repository on alioth. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
@@ -139,6 +141,8 @@ for PKG in $SOURCES ; do
 		write_page "<a href=\"$URL\">$PKG.git</a>"
 		if $OBSOLETE_IN_SID ; then
 			write_page "<br />(unused?)"
+		else
+			let "MODIFIED_IN_SID+=1"
 		fi
 	fi
 	write_page " </td>"
@@ -159,4 +163,4 @@ write_page "</table></p>"
 rm $TMPFILE $TMP2FILE
 write_page_footer
 publish_page
-
+echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt

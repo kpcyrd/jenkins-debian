@@ -520,26 +520,8 @@ create_main_stats_page() {
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
-	# write suite graphs
-	write_page "<p>"
-	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
-	done
-	write_page "</p><p>"
-	# write meta pkg graphs per suite
-	for SUITE in $SUITES ; do
-		if [ "$SUITE" != "unstable" ] ; then
-			# only show pkg sets from unstable for now
-			continue
-		fi
-		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
-			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
-		done
-	done
-	write_page "</p><p>"
 	# write suite table
+	write_page "<p>"
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
 		gather_suite_stats
@@ -550,6 +532,25 @@ create_main_stats_page() {
 		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
 	done
         write_page "</table>"
+	# write suite graphs
+	write_page "</p><p style=\"clear:both;\">"
+	for SUITE in $SUITES ; do
+		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
+	done
+	write_page "</p><p>"
+	# write meta pkg graphs per suite
+	for SUITE in $SUITES ; do
+		if [ "$SUITE" != "unstable" ] ; then
+			# only show pkg sets from unstable
+			continue
+		fi
+		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
+			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+		done
+	done
+	write_page "</p><p>"
 	# write inventory table
 	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
 	write_page "<tr><td>identified distinct issues</td><td>$ISSUES</td></tr>"

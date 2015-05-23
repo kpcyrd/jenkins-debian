@@ -532,6 +532,23 @@ create_main_stats_page() {
 		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
 	done
         write_page "</table>"
+	# explain setup
+	write_page "<table class=\"main\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
+	write_page "<tr><td>hostname</td><td>$(hostname)</td><td>i-capture-the-hostname</td></tr>"
+	write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
+	write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=1111</td><td>BUILDUSERID=2222</td></tr>"
+	write_page "<tr><td>env BUILDUSERNAME</td><td>BUILDUSERNAME=pbuilder1</td><td>BUILDUSERNAME=pbuilder2</td></tr>"
+	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
+	write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+	write_page "<tr><td>env LC_ALL</td><td><em>unset</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
+	write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td>/usr/bin/unshare --uts</td></tr>"
+	write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
+	write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
+	write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds (currently, work in progress)</td></tr>"
+	write_page "<tr><td>number of cores used</td><td>$(cat /proc/cpuinfo |grep ^processor|wc -l)</td><td>(currently, work in progress)</td></tr>"
+	write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
+	write_page "<tr><td>hour, minute</td><td>hour is usually the same...</td><td>the minute differs (currently, work in progress)</td></tr>"
+	write_page "</table>"
 	# write suite graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do

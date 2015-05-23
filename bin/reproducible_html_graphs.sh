@@ -538,7 +538,7 @@ create_main_stats_page() {
 			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 		done
 	done
-	write_page "</p>"
+	write_page "</p><p>"
 	# write suite table
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
@@ -572,24 +572,20 @@ create_main_stats_page() {
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
 	write_page "<tr><td>average test duration in all suites</td><td>$MIN minutes, $SEC seconds</td></tr>"
 	write_page "</table>"
-	# other graphs
-	write_page "<p>"
-	# do the global stats
+	# write bugs with usertags table
+	write_usertag_table
+	write_page "</p><p style=\"clear:both;\">"
+	# do other global graphs
 	for i in 3 7 4 5 1 ; do
-		if [ $i = "3" ] || [ $i = "1" ] ; then
+		if [ $i = "1" ] ; then
 			OVERVIEW=""
 		else
-			OVERVIEW='class="overview"'
+			OVERVIEW='class="halfview"'
 		fi
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" $OVERVIEW alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
-		fi
-		if [ "$i" = "3" ] ; then
-			write_page "</p>"
-			write_usertag_table
-			write_page "<p style=\"clear:both;\">"
 		fi
 	done
 	write_page "</p>"

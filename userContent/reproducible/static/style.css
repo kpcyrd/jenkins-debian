@@ -26,6 +26,10 @@ img {
 	height: auto;
 }
 
+img.halfview {
+	max-width: 49%;
+}
+
 img.overview {
 	max-width: 33%;
 }

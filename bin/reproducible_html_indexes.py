@@ -470,7 +470,7 @@ def generate_schedule():
         url = RB_PKG_URI + '/' + row[1] + '/' + row[2] + '/' + pkg + '.html'
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
-        html += link_package(pkg, defaultsuite, defaultarch, bugs)
+        html += link_package(pkg, row[1], row[2], bugs)
         html += '</code></td></tr>\n'
     html += '</table></p>\n'
     destfile = BASE + '/index_scheduled.html'

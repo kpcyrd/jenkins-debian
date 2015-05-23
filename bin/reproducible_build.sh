@@ -131,6 +131,12 @@ update_db_and_html() {
 	echo
 }
 
+update_rbuildlog() {
+	chmod 644 $RBUILDLOG
+	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+}
+
 print_out_duration() {
 	local HOUR=$(echo "$DURATION/3600"|bc)
 	local MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
@@ -145,9 +151,7 @@ handle_404() {
 	irc_message "$BUILD_URL encountered a 404 problem."
 	DURATION=''
 	EVERSION="None"
-	chmod 644 $RBUILDLOG
-	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	update_rbuildlog
 	update_db_and_html "404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
@@ -157,10 +161,8 @@ handle_404() {
 handle_not_for_us() {
 	# a list of valid architecture for this package should be passed to this function
 	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
-	chmod 644 $RBUILDLOG
-	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	DURATION=''
+	update_rbuildlog
 	update_db_and_html "not for us"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
@@ -434,9 +436,7 @@ build_rebuild() {
 		fi
 	fi
 	cleanup_userContent
-	chmod 644 $RBUILDLOG
-	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	update_rbuildlog
 	rm $TMPCFG
 	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }

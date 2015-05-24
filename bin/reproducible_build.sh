@@ -392,7 +392,7 @@ build_rebuild() {
 	mkdir b1 b2
 	set -x
 	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
-	( timeout 12h nice ionice -c 3 sudo \
+	( timeout -k 12h 12h nice ionice -c 3 sudo \
 	  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
 	  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
 	  pbuilder --build \
@@ -411,7 +411,7 @@ build_rebuild() {
 		echo "============================================================================="
 		set -x
 		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
-		( timeout 12h nice ionice -c 3 sudo \
+		( timeout -k 12h 12h nice ionice -c 3 sudo \
 		  DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)" \
 		  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
 		  LANG="fr_CH.UTF-8" \

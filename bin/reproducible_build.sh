@@ -357,7 +357,7 @@ get_source_package() {
 	local RESULT
 	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 	RESULT=$?
-	if [ $RESULT != 0 ] || [ ! test $(ls ${SRCPACKAGE}_*.dsc 2>&1 /dev/null) ] ; then
+	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
 		echo "Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
@@ -367,7 +367,7 @@ get_source_package() {
 		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 		RESULT=$?
 	fi
-	if [ $RESULT != 0 ] || [ ! test $(ls ${SRCPACKAGE}_*.dsc 2>&1 /dev/null) ] ; then
+	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
 		handle_404
 	fi
 }

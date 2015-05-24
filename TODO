@@ -185,6 +185,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ----
 ** if the value is larger than 0, there are differing dependencies...
 ** the grepping should probably only done on files younger then $check_frequency
+*** wouldnt it be easier to just compare .buildinfo files? (directly after build even)
 
 * misc
 ** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
@@ -194,12 +195,13 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** repo-comparison: check for binaries without source
 ** move "untested" field in stats table too? (as in csv output...)
+** new page: packages which are orphaned but have a reproducible usertagged patch
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
-*** aint that covered by reproducible_breakages.py already? yes. are all of those covered?
+*** aint that covered by reproducible_breakages.py already? no.
 
 * pkg sets related:
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control

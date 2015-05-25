@@ -4,7 +4,7 @@
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -359,7 +359,7 @@ write_usertag_table() {
 			elif [ $((COUNT%2)) -eq 0 ] ; then
 				write_page "<tr><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&amp;archive=both\">${FIELD:5}</a></td><td>$VALUE</td>"
 				TOTAL=$VALUE
-				let "TOPEN=TOPEN+VALUE"
+				let "TOPEN=TOPEN+VALUE" || TOPEN=0
 			else
 				write_page "<td>$VALUE</td>"
 				let "TOTAL=TOTAL+VALUE" || true # let FOO=0+0 returns error in bash...

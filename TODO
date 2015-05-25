@@ -210,7 +210,8 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 *** all/unreproducible packages affected by a particular issue
 **  add --debug for the manual scheduler, so that we get notified on irc when a build _starts_ and on which builder, so we can find the rbuild log
 
-* missing tests: variation in kernel and date and cpu type
+* missing tests: variation in kernel and date and cpu type and user group
+** prebuilder does group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4
 
 * a test VM using this build-slave design has been setup:

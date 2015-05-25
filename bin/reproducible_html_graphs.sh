@@ -185,6 +185,7 @@ gather_meta_stats() {
 			# gather data about all packages we know about
 			# as a result, unknown packages in the package set
 			# are silently ignored
+			set +x
 			for PKG in $META_LIST ; do
 				if [ -z "$META_WHERE" ] ; then
 					META_WHERE="s.name in ('$PKG'"
@@ -192,6 +193,7 @@ gather_meta_stats() {
 					META_WHERE="$META_WHERE, '$PKG'"
 				fi
 			done
+			if "$DEBUG" ; then set -x ; fi
 			META_WHERE="$META_WHERE)"
 		else
 			META_WHERE="name = 'meta-name-does-not-exist'"

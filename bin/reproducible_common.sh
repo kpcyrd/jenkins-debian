@@ -256,6 +256,7 @@ publish_page() {
 }
 
 link_packages() {
+	set +x
         local i
 	for (( i=1; i<$#+1; i=i+400 )) ; do
 		local string='['
@@ -275,6 +276,7 @@ link_packages() {
 		cd - > /dev/null
 		write_page "$DATA"
 	done
+	if "$DEBUG" ; then set -x ; fi
 }
 
 gen_packages_html() {

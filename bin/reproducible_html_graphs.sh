@@ -255,7 +255,7 @@ update_bug_stats() {
 				echo "Open: ${OPEN[$TAG]}"
 				echo "Done: ${DONE[$TAG]}"
 				exit 1
-			elif [ ${DONE[$TAG]} !=0 ] || [ ${OPEN[$TAG]} !=0 ] ; then
+			elif [ "${DONE[$TAG]}" !=0 ] || [ "${OPEN[$TAG]}" !=0 ] ; then
 				GOT_BTS_RESULTS=true
 			fi
 			SQL="$SQL, ${OPEN[$TAG]}, ${DONE[$TAG]}"

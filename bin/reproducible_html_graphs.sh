@@ -4,7 +4,7 @@
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -243,6 +243,7 @@ update_bug_stats() {
 		echo "Updating bug stats for $DATE."
 		declare -a DONE
 		declare -a OPEN
+		GOT_BTS_RESULTS=false
 		SQL="INSERT INTO ${TABLE[3]} VALUES (\"$DATE\" "
 		for TAG in $USERTAGS ; do
 			OPEN[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:open status:forwarded 2>/dev/null|wc -l)
@@ -254,17 +255,22 @@ update_bug_stats() {
 				echo "Open: ${OPEN[$TAG]}"
 				echo "Done: ${DONE[$TAG]}"
 				exit 1
+			elif [ $DONE[$TAG] !=0 ] || [ $OPEN[$TAG] !=0 ] ; then
+				GOT_BTS_RESULTS=true
 			fi
 			SQL="$SQL, ${OPEN[$TAG]}, ${DONE[$TAG]}"
 		done
 		SQL="$SQL)"
 		echo $SQL
-		sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
-		# force regeneration of the image
-		echo "Touching ${TABLE[3]}.png..."
-		touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[3]}.png
-		echo "Touching ${TABLE[7]}.png..."
-		touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[7]}.png
+		if $GOT_BTS_RESULTS ; then
+			echo "Updating ${PACKAGES_DB} with bug stats for $DATE."
+			sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
+			# force regeneration of the image
+			echo "Touching ${TABLE[3]}.png..."
+			touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[3]}.png
+			echo "Touching ${TABLE[7]}.png..."
+			touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[7]}.png
+		fi
 	fi
 }
 

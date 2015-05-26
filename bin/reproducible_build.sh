@@ -119,6 +119,13 @@ update_db_and_html() {
 	if [ -z "$VERSION" ] ; then
 		VERSION="None"
 	fi
+	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
+	# notification for changing status
+	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ]; then
+		echo "More information on <URL:$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCHPACKAGE>, feel free to reply to this email to get more help." | \
+			mail -s "Reproducibly of package $SRCPACKAGE changed: $OLD_STATUS → $STATUS" \
+				-a "From: reproducible-builds@lists.alioth.debian.org" "$SRCPACKAGE@packages.debian.org"
+	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '$VERSION', '$STATUS', '$DATE', '$DURATION')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
 		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', '${STATUS}', '${DATE}', '${DURATION}')"
@@ -305,7 +312,7 @@ call_debbindiff() {
 }
 
 choose_package () {
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
@@ -321,6 +328,7 @@ choose_package () {
 	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
+	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
 	if [ -z "$RESULT" ] ; then
 		echo "No packages scheduled, sleeping 30m."
 		sleep 30m

@@ -373,6 +373,9 @@ schema_updates = {
             date_request INTEGER NOT NULL)''',
         'ALTER TABLE schedule ADD COLUMN scheduler TEXT',
         'INSERT INTO rb_schema VALUES ("13", "' + now + '")'],
+    14: [ # column to enable mail notification to maintainers
+        'ALTER TABLE sources ADD COLUMN notify_maintainer INTEGER NOT NULL DEFAULT 0',
+        'INSERT INTO rb_schema VALUES ("14", "' + now + '")'],
 }
 
 

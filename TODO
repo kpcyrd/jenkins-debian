@@ -204,6 +204,7 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 *** aint that covered by reproducible_breakages.py already? no.
 
 * pkg sets related:
+** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 
 * new script to schedule set of packages:

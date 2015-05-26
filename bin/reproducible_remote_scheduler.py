@@ -76,27 +76,41 @@ if scheduling_args.artifacts:
              'mentioned at the end of the build log(s).')
 
 ids = []
+pkgs = []
 
-query = 'SELECT id FROM sources WHERE name="{pkg}" AND suite="{suite}"'
+query1 = 'SELECT id FROM sources WHERE name="{pkg}" AND suite="{suite}"'
+query2 = '''SELECT p.date_build_started
+            FROM sources AS s JOIN schedule as p ON p.package_id=s.id
+            WHERE s.name="{pkg}" AND suite="{suite}"'''
 for pkg in packages:
-    queryed = query.format(pkg=pkg, suite=suite)
-    result = query_db(query.format(pkg=pkg, suite=suite))
-    result = query_db(queryed)
+    # test whether the package actually exists
+    result = query_db(query1.format(pkg=pkg, suite=suite))
     try:
-        ids.append(result[0][0])
+        # tests whether the package is already building
+        result2 = query_db(query2.format(pkg=pkg, suite=suite))
+        try:
+            if result2[0][0] != '':
+                ids.append(result[0][0])
+                pkgs.append(pkg)
+            else:
+                log.warning(bcolors.WARN + 'The package ' + pkg + ' is ' +
+                    'already building, not scheduling it.' + bcolors.ENDC)
+        except IndexError:
+            ids.append(result[0][0])
+            pkgs.append(pkg)
     except IndexError:
         log.critical('The package ' + pkg + ' is not available in ' + suite)
         sys.exit(1)
 
-blablabla = '✂…' if len(' '.join(packages)) > 257 else ''
-packages_txt = ' packages ' if len(packages) > 1 else ' package '
+blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
+packages_txt = ' packages ' if len(pkgs) > 1 else ' package '
 artifacts_txt = ' - artifacts will be preserved' if artifacts else ''
 
 message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + ' by ' + \
     requester
 if reason:
     message += ' (reason: ' + reason + ')'
-message += ': ' + ' '.join(packages)[0:256] + blablabla + artifacts_txt
+message += ': ' + ' '.join(pkgs)[0:256] + blablabla + artifacts_txt
 
 
 # these packages are manually scheduled, so should have high priority,

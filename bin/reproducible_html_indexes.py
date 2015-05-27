@@ -68,8 +68,8 @@ queries = {
     'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY build_date DESC',
     'not_for_us_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY name',
     'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name',
-    'notes': 'SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" ORDER BY s.name',
-    'no_notes': 'SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY s.name'
+    'notes': 'SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" ORDER BY r.build_date DESC',
+    'no_notes': 'SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY r.build_date DESC'
 }
 
 pages = {

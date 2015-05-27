@@ -1,5 +1,4 @@
-Contributing code to this project
----------------------------------
+=== Contributing code to this project
 
 It's helpful to track fixes or new features via wishlist bugs against the
 'qa.debian.org' package, eg with the 'reportbug' tool ('devscripts' package).
@@ -7,9 +6,11 @@ The BTS will ensure the developers' mailing list
    debian-qa@lists.debian.org
 is notified.
 
+The code is available in the link:http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/[jenkins.debian.net.git repository].
+
 Patches can be submitted by mail (git format-patch, see below)
 or as requests to pull from a publicly-visible git repository.
-In either case, please make a topic branch based on the 'develop' branch.
+In either case, please make a topic branch based on the 'master' branch.
 
 You can send patches or requests to the development list,
 or to the tracking bug: <bugnumber>@bugs.debian.org.
@@ -26,8 +27,10 @@ One possible workflow:
   # <describe the issue, attach the patch>
 ----
 
-Contributing bugs to other projects
------------------------------------
+=== Contributing bugs to other projects
+
 Another very useful type of contributions are filing bug reports based
 on jenkins job runs. Another useful kind of contribution would be to
 describe how.
+
+// vim: set filetype=asciidoc:

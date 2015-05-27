@@ -161,11 +161,11 @@ Installation tests inside chroot environments.
 * If you are not in the reproducible team or if you want to reschedule big sets of packages please ask for a manual rescheduling in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins need to run this command:
 
 ----
-jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh $suite $package1 $package2
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh --$option $suite $package1 $package2
 ----
 
-If $package1 is "artifacts" then the build job will preserve the produced packages and publish them under reproducible.debian.net, to allow easy+deeper investigation of reproducible issues. The URL is published in the build log and on IRC.
-The same way, if $package1 is "notify" the build job will notify the team IRC channel when a package finishes building.
+The script can be called with either one of the two options: with "--artifacts" the build job will preserve the produced packages and publish them under reproducible.debian.net, to allow easy+deeper investigation of reproducible issues. The URL is published in the build log and on IRC.
+Alternativly it's possible to use "--notify" to make the build job notify the team IRC channel when a package finishes building.
 
 * Blacklisting packages can be done similarily:
 

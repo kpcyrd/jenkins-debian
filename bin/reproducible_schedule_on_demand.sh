@@ -15,31 +15,21 @@ common_init "$@"
 # main
 #
 set +x
+ARTIFACTS=0
+NOTIFY=''
+if [ "$1" = "--notify" ] ; then
+	NOTIFY=true
+	shift
+elif [ "$1" = "--artifacts" ] ; then
+	ARTIFACTS=1
+	NOTIFY=true
+fi
 SUITE="$1"
 shift
 if [ "$SUITE" = "sid" ] ; then
 	echo "WARNING: sid has been renamed to unstable."
 	SUITE=unstable
 fi
-
-case "$1" in
-	"artifacts")
-		ARTIFACTS=1
-		NOTIFY=true
-		shift
-		printf "\nThe artifacts of the build(s) will be saved to the location mentioned at the end of the build log(s).\n\n"
-		;;
-	"notify")
-		ARTIFACTS=0
-		NOTIFY=true
-		shift
-		printf "\nThe IRC channel will be notified once the build(s) finished.\n\n"
-		;;
-	*)
-		ARTIFACTS=0
-		NOTIFY=''
-		;;
-esac
 
 CANDIDATES="$@"
 if [ ${#} -gt 50 ] && [ "$NOTIFY" = "true" ] ; then

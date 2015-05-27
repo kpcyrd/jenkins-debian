@@ -15,14 +15,16 @@ You can send patches or requests to the development list,
 or to the tracking bug: <bugnumber>@bugs.debian.org.
 
 One possible workflow:
+----
   git clone git://anonscm.debian.org/debian-qa/jenkins.debian.net.git
   git checkout origin/master -b <topicname>
-  <edits>
+  # <edits>
   git commit -a
   git format-patch -M origin/master
 
   reportbug qa.debian.org
-  <describe the issue, attach the patch>
+  # <describe the issue, attach the patch>
+----
 
 Contributing bugs to other projects
 -----------------------------------

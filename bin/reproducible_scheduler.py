@@ -204,7 +204,6 @@ def scheduler_old_versions(suite, limit):
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}'
-                AND r.version = s.version
                 AND r.status != 'blacklisted'
                 AND r.build_date < datetime('now', '-14 day')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)

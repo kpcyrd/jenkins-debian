@@ -44,11 +44,11 @@ def main():
                      "#ce5c00", "#73d216", "#edd400", "#f57900", \
                      "#c17d11", "#3465a4", "#666666", "#AAAAAA" ))')
     elif int(colors) == 40:
-        r('palette(c("#4e9a06"))')
+        r('palette(c("#4e9a06", "#000000"))')
     elif int(colors) == 41:
-        r('palette(c("#73d216"))')
+        r('palette(c("#73d216", "#000000"))')
     elif int(colors) == 42:
-        r('palette(c("#8ae234"))')
+        r('palette(c("#8ae234", "#000000"))')
     r('v <- t[0:nrow(t),0:'+colors+']')
     # make graph since day 1
     r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')

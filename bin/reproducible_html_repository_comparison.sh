@@ -148,7 +148,7 @@ for PKG in $SOURCES ; do
 		write_page "<a href=\"$URL\">$PKG.git</a>"
 		if ! $OBSOLETE_IN_TESTING && ! $OBSOLETE_IN_SID && ! $OBSOLETE_IN_EXP && [ "$PKG" != "strip-nondeterminism" ] ; then
 			write_page "<br />(unused?)"
-		elif $OBSOLETE_IN_SID ; then
+		elif ! $OBSOLETE_IN_SID ; then
 			let "MODIFIED_IN_SID+=1"
 		fi
 	fi

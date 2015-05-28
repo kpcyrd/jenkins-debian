@@ -49,10 +49,13 @@ def main():
         r('palette(c("#73d216", "#000000"))')
     elif int(colors) == 42:
         r('palette(c("#8ae234", "#000000"))')
+    # "revert the hack" (it's still a hack :)
+    if int(colors) >= 40:
+        colors='1'
     r('v <- t[0:nrow(t),0:'+colors+']')
     # make graph since day 1
     r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')
-    if int(colors) < 10 or int(colors) >= 40:
+    if int(colors) < 10:
         r('legend(x="bottom",legend=colnames(t), ncol=2,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     elif int(colors) == 12:
         r('legend(x="bottom",legend=colnames(t), ncol=4,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')

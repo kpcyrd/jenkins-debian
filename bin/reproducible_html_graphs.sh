@@ -319,13 +319,23 @@ create_png_from_table() {
 	else
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi
+	# this is a gross hack: normally we take the number of colors a table should have...
+	#  for the builds_age table we only want one color, but different ones, so this hack:
+	COLORS=${COLOR[$1]}
+	if [ $1 -eq 2 ] ; then
+		case "$SUITE" in
+			testing)	COLORS=40 ;;
+			unstable)	COLORS=41 ;;
+			experimental)	COLORS=42 ;;
+		esac
+	fi
 	# only generate graph if the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
 		echo "Updating $2..."
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		echo "Generating $2."
-		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLOR[$1]} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
+		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	# create empty dummy png if there havent been any results ever

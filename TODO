@@ -188,7 +188,6 @@ grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*
 *** wouldnt it be easier to just compare .buildinfo files? (directly after build even)
 
 * misc
-** db should get another flag, "notify_maintainer" to indicate that any status change on this package should be mailed to the maintainers+uploaders. add a script to set this flag for a.) packages b.) packages maintained by address
 ** more graphs: graph average build duration by day
 ** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)

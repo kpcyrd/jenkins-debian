@@ -73,6 +73,8 @@ for PKG in $SOURCES ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
 				CTEST="$CTEST<span class=\"green\">$i</span><br />"
 				OBSOLETE_IN_TESTING=true
+				OBSOLETE_IN_SID=true
+				OBSOLETE_IN_EXP=true
 			else
 				CTEST="$CTEST$i<br />"
 			fi
@@ -95,6 +97,7 @@ for PKG in $SOURCES ; do
 				CRUFT="$BET $CRUFT"
 				BET=""
 				OBSOLETE_IN_SID=true
+				OBSOLETE_IN_EXP=true
 			fi
 		else
 			CSID="$CSID$i<br />"

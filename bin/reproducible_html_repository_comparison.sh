@@ -129,9 +129,10 @@ for PKG in $SOURCES ; do
 		URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=merged/reproducible_builds"
 		curl $URL > $TMP2FILE
 		if [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
-			write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
-			if $OBSOLETE_IN_SID ; then
-				write_page " (probably ok)"
+			if ! $OBSOLETE_IN_SID ; then
+				write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
+			else
+				write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package aint't used in unstable)"
 			fi
 		else
 			write_page "<a href=\"$URL\">$PKG.git</a>"
@@ -146,11 +147,22 @@ for PKG in $SOURCES ; do
 		fi
 	else
 		write_page "<a href=\"$URL\">$PKG.git</a>"
-		if ! $OBSOLETE_IN_TESTING && ! $OBSOLETE_IN_SID && ! $OBSOLETE_IN_EXP && [ "$PKG" != "strip-nondeterminism" ] ; then
-			write_page "<br />(unused?)"
-		elif ! $OBSOLETE_IN_SID ; then
-			let "MODIFIED_IN_SID+=1"
+		if [ "$PKG" != "strip-nondeterminism" ] ; then
+			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
+				write_page "<br />(unused?"
+				write_page "<br /><span class=\"purple\">Then the branch should probably renamed.</span>"
+			elif $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
+				write_page "<br />(only used in testing, fixed in sid,"
+				write_page "<br /><span class=\"purple\">branch should probably renamed</span>)"
+			elif $OBSOLETE_IN_EXP ; then
+				write_page "<br />(only used in testing and unstable, fixed in experimental)"
+			fi
+		elif [ "$PKG" = "strip-nondeterminism" ] && $OBSOLETE_IN_SID ; then
+			write_page "<br />(this repo is always used)"
 		fi
+	fi
+	if ! $OBSOLETE_IN_SID ; then
+		let "MODIFIED_IN_SID+=1"
 	fi
 	write_page " </td>"
 	write_page " <td><a href=\"https://tracker.debian.org/pkg/$PKG\">PTS</a></td>"

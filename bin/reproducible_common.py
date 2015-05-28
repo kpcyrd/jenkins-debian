@@ -64,6 +64,7 @@ group.add_argument("-q", "--quiet", action="store_true")
 args, unknown_args = parser.parse_known_args()
 log_level = logging.INFO
 if args.debug or DEBUG:
+    DEBUG = True
     log_level = logging.DEBUG
 if args.quiet or QUIET:
     log_level = logging.ERROR

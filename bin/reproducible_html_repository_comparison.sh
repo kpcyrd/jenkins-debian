@@ -42,6 +42,7 @@ for PKG in $SOURCES ; do
 	BET=""
 	OBSOLETE_IN_SID=false
 	OBSOLETE_IN_TESTING=false
+	OBSOLETE_IN_EXP=false
 	#
 	# gather versions of a package
 	#
@@ -81,7 +82,8 @@ for PKG in $SOURCES ; do
 		for i in $EXPERIMENTAL ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
 				CEXP="$CEXP<a href=\"https://tracker.debian.org/media/packages/$PREFIX/$PKG/changelog-$i\">$i</a><br />"
-			else
+				OBSOLETE_IN_EXP=true
+		else
 				CEXP="$CEXP$i<br />"
 			fi
 		done
@@ -133,15 +135,17 @@ for PKG in $SOURCES ; do
 			write_page "<br />(<span class=\"green\">merged</span>"
 			if $OBSOLETE_IN_TESTING ; then
 				write_page "and available in testing and unstable)"
-			else
+			elif $OBSOLETE_IN_SID ; then
 				write_page "and available in unstable)"
+			elif $OBSOLETE_IN_EXP ; then
+				write_page "and available in experimental)"
 			fi
 		fi
 	else
 		write_page "<a href=\"$URL\">$PKG.git</a>"
-		if $OBSOLETE_IN_SID ; then
+		if ! $OBSOLETE_IN_TESTING && ! $OBSOLETE_IN_SID && ! $OBSOLETE_IN_EXP && [ "$PKG" != "strip-nondeterminism" ] ; then
 			write_page "<br />(unused?)"
-		else
+		elif $OBSOLETE_IN_SID ; then
 			let "MODIFIED_IN_SID+=1"
 		fi
 	fi

@@ -279,7 +279,13 @@ def scheduler():
     log.info('==============================================================')
 
     now_queued_here = {}
+    # make sure to schedule packages in unstable first
+    # (but keep the view ordering everywhere else)
+    priotized_suite_order = ['unstable']
     for suite in SUITES:
+        if suite not in priotized_suite_order:
+            priotized_suite_order += suite
+    for suite in priotized_suite_order:
         query = 'SELECT count(*) ' + \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
                 'WHERE s.suite="{suite}"'.format(suite=suite)

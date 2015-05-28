@@ -16,11 +16,12 @@ parser = argparse.ArgumentParser(
                 'maintainer when the reproducibly status change',
     epilog='The build results will be announced on the #debian-reproducible' +
            ' IRC channel.')
-group = parser.add_mutually_exclusive_group()
 parser.add_argument('-o', '--deactivate', action='store_true',
                     help='Deactivate the notifications')
-group.add_argument('-p', '--packages', default='', nargs='+',
-                   help='list of packages for which activate notifications')
+parser.add_argument('-p', '--packages', default='', nargs='+',
+                    help='list of packages for which activate notifications')
+parser.add_argument('-m', '--maintainer', default='',
+                    help='email of a maintainer interested in his packages')
 local_args = parser.parse_known_args()[0]
 
 # these are here as an hack to be able to parse the command line
@@ -35,19 +36,19 @@ class bcolors:
     FAIL = '\033[91m' + BOLD + UNDERLINE
     ENDC = '\033[0m'
 
-packages = local_args.packages
+packages = local_args.packages if local_args.packages else []
+maintainer = local_args.maintainer
 
-if not packages:
-    log.critical(bcolors.FAIL + 'You have to specify at least a package' +
-                 bcolors.ENDC)
+if not packages and not maintainer:
+    log.critical(bcolors.FAIL + 'You have to specify at least a package ' +
+                 'or a maintainer.' + bcolors.ENDC)
 
 def _good(text):
     log.info(bcolors.GOOD + str(text) + bcolors.ENDC)
 
-c = conn_db.cursor()
 
-for package in packages:
-    if local_args.deactivate:
+def process_pkg(package, deactivate):
+    if deactivate:
         _good('Deactovating notification for package ' + str(package))
         flag = 0
     else:
@@ -65,3 +66,26 @@ for package in packages:
         log.debug(query_db(query))
 
 
+if maintainer:
+    global conn_udd
+    if not conn_udd:
+        conn_udd = start_udd_connection()
+    c = conn_udd.cursor()
+    query = "SELECT source FROM sources WHERE maintainer_email = '{}' " + \
+            "AND release = 'sid'"
+    try:
+        c.execute(query.format(maintainer))
+        pkgs = [x[0] for x in c.fetchall()]
+    except IndexError:
+        log.info('No packages maintained by ' + maintainer)
+        sys.exit(0)
+    finally:
+        conn_udd.close()
+    log.info('Packages maintained by ' + maintainer + ':')
+    log.info('\t' + ', '.join(pkgs))
+    packages.extend(pkgs)
+
+
+c = conn_db.cursor()
+for package in packages:
+    process_pkg(package, local_args.deactivate)

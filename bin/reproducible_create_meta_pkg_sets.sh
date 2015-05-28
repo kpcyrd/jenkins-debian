@@ -122,11 +122,14 @@ update_pkg_sets() {
 	#  1. take the binary package build-essential and put it into set S
 	#  2. go over every package in S and
 	#      2.1. if it is a binary package
-	#          2.1.1 add all its Depends and Pre-Depends to S
+	#          2.1.1 add all its strong dependencies to S
 	#          2.1.2 add the source package it builds from to S
-	#      2.2. if it is a source package add all its Build-Depends,
-	#           Build-Depends-Indep and Build-Depends-Arch to S
+	#      2.2. if it is a source package add all its strong dependencies
+	#           to S
 	#  3. if step 2 added new packages, repeat step 2, otherwise exit
+	#
+	# Strong dependencies are those direct or indirect dependencies of
+	# a package without which the package cannot be installed.
 	#
 	# This set is important because a package can only be trusted if
 	# also all its dependencies, all its build dependencies and
@@ -134,12 +137,17 @@ update_pkg_sets() {
 	# trusted.
 	# So making this set reproducible is required to make anything
 	# in the essential or build-essential set trusted.
+	# Since this is only the strong set, it is a minimal set. In reality
+	# more packages are needed to build build-essential
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[4]}.pkgset ] ; then
-		curl http://bootstrap.debian.net/importance_metric_all.txt > $TMPFILE2
-		# retrieve the highest number in the third column (packages affect)
-		HIGHEST=`sort -n -k 3 $TMPFILE2 | tail -1 | cut -f 3`
-		# now get all lines where the third column is equal to this value
-		awk '$3 == "'$HIGHEST'" { print $1 }' $TMPFILE2 | cut -d ':' -f 2 > $TMPFILE
+		grep-dctrl --exact-match --field Package build-essential "$PACKAGES" \
+			| botch-latest-version - - \
+			| botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+			| botch-create-graph --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
+			| botch-buildgraph2packages - "$PACKAGES" \
+			| botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+			| grep-dctrl --no-field-names --show-field=Package '' \
+			| sort -u > $TMPFILE
 		update_if_similar ${META_PKGSET[4]}.pkgset
 	fi
 

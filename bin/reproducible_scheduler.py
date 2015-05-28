@@ -66,7 +66,7 @@ def update_sources_tables(suite):
     log.debug('Packages different in the archive and in the db: ' +
               str(different_pkgs))
     for pkg in different_pkgs:
-        query = 'SELECT id, version FROM sources ' + \
+        query = 'SELECT id, version, notify_maintainer FROM sources ' + \
                 'WHERE name="{name}" AND suite="{suite}"'
         query = query.format(name=pkg[0], suite=pkg[2])
         try:
@@ -76,21 +76,25 @@ def update_sources_tables(suite):
             continue
         pkg_id = result[0]
         old_version = result[1]
+        notify_maint = int(result[2])
         if version_compare(pkg[1], old_version) > 0:
             log.debug('New version: ' + str(pkg) + ' (we had  ' +
                       old_version + ')')
-            updated_pkgs.append((pkg_id, pkg[0], pkg[1], pkg[2]))
+            updated_pkgs.append((pkg_id, pkg[0], pkg[1], pkg[2], notify_maint))
     # Now actually update the database:
     cursor = conn_db.cursor()
     # updated packages
-    log.info('Pushing ' + str(len(updated_pkgs)) + ' updated packages to the database...')
-    cursor.executemany('REPLACE INTO sources ' +
-                       '(id, name, version, suite, architecture) ' +
-                       'VALUES (?, ?, ?, ?, "{arch}")'.format(arch='amd64'),
-                       updated_pkgs)
+    log.info('Pushing ' + str(len(updated_pkgs)) +
+             ' updated packages to the database...')
+    cursor.executemany(
+        'REPLACE INTO sources ' +
+        '(id, name, version, suite, architecture, notify_maintainer) ' +
+        'VALUES (?, ?, ?, ?, "{arch}", ?)'.format(arch='amd64'),
+        updated_pkgs)
     conn_db.commit()
     # new packages
-    log.info('Now inserting ' + str(len(pkgs_to_add)) + ' new sources in the database: ' +
+    log.info('Now inserting ' + str(len(pkgs_to_add)) +
+             ' new sources in the database: ' +
              str(pkgs_to_add))
     cursor.executemany('INSERT INTO sources ' +
                        '(name, version, suite, architecture) ' +
@@ -100,7 +104,8 @@ def update_sources_tables(suite):
     cur_pkgs_name = [x[0] for x in cur_pkgs]
     new_pkgs_name = [x[0] for x in new_pkgs]
     rmed_pkgs = [x for x in cur_pkgs_name if x not in new_pkgs_name]
-    log.info('Now deleting ' + str(len(rmed_pkgs)) + ' removed packages: ' + str(rmed_pkgs))
+    log.info('Now deleting ' + str(len(rmed_pkgs)) +
+             ' removed packages: ' + str(rmed_pkgs))
     rmed_pkgs_id = []
     pkgs_to_rm = []
     for pkg in rmed_pkgs:

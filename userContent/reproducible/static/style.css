@@ -307,7 +307,7 @@ label[rel="extra"]:last-child {
 	padding-right: 0.5em;
 }
 
-span.red { color: red; }
+span.red { color: #d70a53; }
 span.purple { color: purple; }
 span.green { color: green; }
 span.dangerous { color: orange; }

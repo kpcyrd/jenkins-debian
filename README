@@ -20,7 +20,7 @@ Some stats are available using link:https://jenkins.debian.net/munin/jenkins-mon
 
 == Getting involved
 
-jenkins.debian.net is ment as QA ressource for the whole Debian project. Please contact us (via #debian-qa on IRC or via the debian-qa mailinglist) If you / your project is interested to run tests in this setup!
+jenkins.debian.net is intended to be a QA resource for the whole Debian project. Please contact us (via #debian-qa on IRC or via the debian-qa mailinglist) If you / your project is interested to run tests in this setup!
 
 If you notice some jobs has problems and you want to find out why, read <<debug,debug certain jobs>> to learn how to do debug jobs locally.
 
@@ -28,7 +28,7 @@ include::CONTRIBUTING[]
 
 == Notifications
 
-There are two types of notifications being used: email and IRC. At the end of each builds console log it says to where notifcations has been send. An adress of the form 'jenkins-foo' means an IRC notification has been send to the #foo IRC channel.
+There are two types of notifications being used: email and IRC. At the end of each builds console log it says to where notifications have been sent. An address of the form 'jenkins-foo' means an IRC notification has been sent to the #foo IRC channel.
 
 All job result notifications should be sent to https://lists.alioth.debian.org/mailman/listinfo/qa-jenkins-scm and optionally to other recipients as well.
 
@@ -105,7 +105,7 @@ Installation tests inside chroot environments.
 *** screenshots and logs are preserved and a movie created,
 *** testing clients against the main-server is planned too, for some time...
 ** 'chroot-installation_$(distro)_install_$(education-metapackage)':
-*** tests apt installation of a metapackage in a specic distro.
+*** tests apt installation of a metapackage in a specific distro.
 * 'edu-packages_$(distro)_$(src-package)':
 ** builds one of the six debian-edu packages ('debian-edu', 'debian-edu-config', 'debian-edu-install', 'debian-edu-doc', 'debian-edu-artwork', 'debian-edu-archive-keyring' on every push to it's git master branch
 ** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ get's updated automatically afterwards too.
@@ -139,7 +139,7 @@ Installation tests inside chroot environments.
 * Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through eight concurrent builder jobs which are each constantly testing packages and saving the results of these tests.
 
 * Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and which schedules "new packages" to be tested if the queue is below a certain threshold. New packages" in this context means:
-** truely new packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
+** truly new packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
 ** new versions of existing packages.
 
 * If the scheduling queue is low, already tested package will be scheduled for re-testing.
@@ -148,9 +148,9 @@ Installation tests inside chroot environments.
 
 * Information from https://anonscm.debian.org/cgit/reproducible/notes.git is incorporated on pushes to that git repo.
 
-* There are suite specific jobs to create the pbuilder base.tgz's per suite, which have the reproducible apt repo added. Similarily there's another job per suite to create the schroots used by the builder jobs to download the packages sources to build.
+* There are suite specific jobs to create the pbuilder base.tgz's per suite, which have the reproducible apt repo added. Similarly there's another job per suite to create the schroots used by the builder jobs to download the packages sources to build.
 
-* Then there are two more jobs to create sid and testing schroots to run debbindiff on the the two results. This is neccessary since to investigate haskell binaries, debbindiff needs access to the same haskell compiler version as the investigated packages have been built with.
+* Then there are two more jobs to create sid and testing schroots to run debbindiff on the the two results. This is necessary since to investigate haskell binaries, debbindiff needs access to the same haskell compiler version as the investigated packages have been built with.
 
 * Finally, there is a maintenance job running every 4h, making sure things are considerably under control.
 
@@ -167,9 +167,9 @@ jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh --$option
 ----
 
 The script can be called with either one of the two options: with "--artifacts" the build job will preserve the produced packages and publish them under reproducible.debian.net, to allow easy+deeper investigation of reproducible issues. The URL is published in the build log and on IRC.
-Alternativly it's possible to use "--notify" to make the build job notify the team IRC channel when a package finishes building.
+Alternatively it's possible to use "--notify" to make the build job notify the team IRC channel when a package finishes building.
 
-* Blacklisting packages can be done similarily:
+* Blacklisting packages can be done similarly:
 
 ----
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh $suite $package1
@@ -193,7 +193,7 @@ These are jobs for making sure jenkins.debian.net is running smoothly.
 
 *FIXME*: To debug certain jobs, a jenkins setup is actually not needed. Make this easy and describe here.
 
-*This is work in progress too, but mostly just needs documentation!* In principle the shell commands from the various jobs should run on any Debian system just fine. Please use a test system though, as all your data might be eaten.
+* This is work in progress too, but mostly just needs documentation!* In principle the shell commands from the various jobs should run on any Debian system just fine. Please use a test system though, as all your data might be eaten.
 
 * Build this source as a debian package and install the jenkins.d.n-debug package and all it's recommends.
 

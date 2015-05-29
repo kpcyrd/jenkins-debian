@@ -90,7 +90,7 @@ def check_package_status(package, suite, nocheck=False):
             raise
     status = str(result[0])
     version = str(result[1])
-    notify_maint = u'\u2691' if int(result[3]) == 1 else ''  # that's  ⚑
+    notify_maint = '⚑' if int(result[3]) == 1 else ''
     if result[2]:
         build_date = 'at ' + str(result[2]) + ' UTC'
     else:

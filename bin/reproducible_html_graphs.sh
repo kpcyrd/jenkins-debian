@@ -572,8 +572,8 @@ create_main_stats_page() {
 	# write inventory table
 	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct issues</a></td><td>$ISSUES</td></tr>"
+	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
-	write_page "<tr><td>total amount of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	SUITE="unstable"
 	gather_suite_stats
 	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")

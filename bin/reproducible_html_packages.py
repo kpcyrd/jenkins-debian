@@ -35,6 +35,9 @@ $links
 ${suites_links}
         </td>
         <td style="text-align:right; font-size:0.9em;">
+            <span class="red" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">
+                $notify_maintainer
+            </span>
             <a href="%s" target="_parent">
                 reproducible builds
             </a>
@@ -65,18 +68,19 @@ def check_package_status(package, suite, nocheck=False):
     version of the package built by jenkins CI
     """
     try:
-        query = ('SELECT r.status, r.version, r.build_date ' +
+        query = ('SELECT r.status, r.version, r.build_date, s.notify_maintainer ' +
                  'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
                  'WHERE s.name="{pkg}" ' +
                  'AND s.suite="{suite}"').format(pkg=package, suite=suite)
         result = query_db(query)[0]
     except IndexError:
-        query = 'SELECT version FROM sources WHERE name="{pkg}" AND suite="{suite}"'
+        query = 'SELECT version, notify_maintainer ' + \
+                'FROM sources WHERE name="{pkg}" AND suite="{suite}"'
         query = query.format(pkg=package, suite=suite)
         try:
-            result = query_db(query)[0][0]
+            result = query_db(query)[0]
             if result:
-                result = ('untested', str(result), False)
+                result = ('untested', str(result[0]), False, result[1])
         except IndexError:
             if nocheck:
                 return False
@@ -86,11 +90,12 @@ def check_package_status(package, suite, nocheck=False):
             raise
     status = str(result[0])
     version = str(result[1])
+    notify_maint = u'\u2691' if int(result[3]) == 1 else ''  # that's  ⚑
     if result[2]:
         build_date = 'at ' + str(result[2]) + ' UTC'
     else:
         build_date = '<span style="color:red;font-weight:bold;">UNTESTED</span>'
-    return (status, version, build_date)
+    return (status, version, build_date, notify_maint)
 
 
 def gen_status_link_icon(status, icon, suite, arch):
@@ -214,7 +219,8 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
     for pkg in sorted(packages):
         pkg = str(pkg)
         try:
-            status, version, build_date = check_package_status(pkg, suite, nocheck)
+            pkgstatus = check_package_status(pkg, suite, nocheck)
+            status, version, build_date, notify_maint = pkgstatus
         except TypeError:  # the package is not in the checked suite
             continue
         log.debug('Generating the page of ' + pkg + '/' + suite + '@' + version +
@@ -231,6 +237,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
                                             version=version,
                                             build_time=build_date,
                                             links=links,
+                                            notify_maintainer=notify_maint,
                                             suites_links=suites_links,
                                             default_view=default_view)
         destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'

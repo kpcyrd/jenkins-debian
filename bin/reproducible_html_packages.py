@@ -35,7 +35,7 @@ $links
 ${suites_links}
         </td>
         <td style="text-align:right; font-size:0.9em;">
-            <span class="red" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">
+            <span class="red" style="font-size:1.5em;" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">
                 $notify_maintainer
             </span>
             <a href="%s" target="_parent">

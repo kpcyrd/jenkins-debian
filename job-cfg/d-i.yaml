@@ -251,6 +251,7 @@
           url: '{gitrepo}'
           branches:
             - master
+            - 'pu/*'
     builders:
       - shell: '/srv/jenkins/bin/d-i_build.sh'
     triggers:

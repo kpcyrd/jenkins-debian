@@ -40,7 +40,7 @@ pdebuild_package() {
 		return
 	fi
 	if [ $(dh_listpackages | sed '/^$/d' | wc -l) -eq 0 ]; then
-		echo "This package is not to be supposed to be build on $(dpkg --print-architecture)"
+		echo "This package is not supposed to be built on $(dpkg --print-architecture)"
 		grep "Architecture:" debian/control
 		return
 	fi

@@ -417,7 +417,7 @@ def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultar
     """
     if not version:
         query = 'SELECT r.version ' + \
-                'FROM results AS r JOIN sources AS s on r.package_id=s.id ' + \
+                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
                 'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
         query = query.format(package, suite, arch)
         version = str(query_db(query)[0][0])
@@ -427,6 +427,24 @@ def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultar
         return True
     else:
         return False
+
+
+def pkg_has_rbuild(package, version=False, suite=defaultsuite, arch=defaultarch):
+    if not version:
+        query = 'SELECT r.version ' + \
+                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+                'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
+        query = query.format(package, suite, arch)
+        version = str(query_db(query)[0][0])
+    rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
+             strip_epoch(version) + '.rbuild.log'
+    if os.access(rbuild, os.R_OK):
+        return (rbuild, os.stat(rbuild).st_size)
+    elif os.access(rbuild+'.gz', os.R_OK):
+        return (rbuild+'.gz', os.stat(rbuild+'.gz').st_size)
+    else:
+        return ()
+
 
 def get_bugs():
     """

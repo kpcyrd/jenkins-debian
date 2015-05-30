@@ -75,10 +75,7 @@ def lack_rbuild():
                ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
-        eversion = strip_epoch(version)
-        rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + pkg + '_' + \
-            eversion + '.rbuild.log'
-        if not os.access(rbuild, os.R_OK):
+        if not pkg_has_rbuild(pkg, version, suite, arch):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(pkg + '/' + suite + ' (' + version + ') has been '
                         'built, but a buildlog is missing.')
@@ -265,7 +262,8 @@ if __name__ == '__main__':
     bugs = get_bugs()
     html = '<p>This page lists unexpected things a human should look at and '
     html += 'fix, like packages with an incoherent status or files that '
-    html += 'should not be there.<em>Please help making this page empty!</em></p>'
+    html += 'should not be there. '
+    html += '<em>Please help making this page empty!</em></p>\n'
     breakages = gen_html()
     if breakages:
         html += breakages

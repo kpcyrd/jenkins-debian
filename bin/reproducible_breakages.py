@@ -127,10 +127,15 @@ def pbuilder_dep_fail():
     return bad_pkgs
 
 
-def alien_rbuild():
-    log.info('running alien_rbuild check...')
+def alien_log(directory=None):
+    if directory == None:
+        bad_files = []
+        for path in RBUILD_PATH, LOGS_PATH:
+            bad_files.extend(alien_log(path))
+        return bad_files
+    log.info('running alien_log check over ' + directory + '...')
     query = '''SELECT s.name
-               FROM sources AS s JOIN results AS r on r.package_id=s.id
+               FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
                ORDER BY s.name ASC, s.suite DESC'''
@@ -229,8 +234,8 @@ def _gen_section(header, pkgs, entries=None):
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed package without cleanup)
-    html += _gen_section('rbuild file that should not be there', None,
-                         entries=alien_rbuild())
+    html += _gen_section('log files that should not be there', None,
+                         entries=alien_log())
     html += _gen_section('debbindiff files that should not be there:', None,
                          entries=alien_dbd())
     html += _gen_section('rb-pkg pages that should not be there:', None,

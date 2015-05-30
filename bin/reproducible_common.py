@@ -42,12 +42,14 @@ REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
 
 DBD_URI = '/dbd'
+LOGS_URI = '/logs'
 NOTES_URI = '/notes'
 ISSUES_URI = '/issues'
 RB_PKG_URI = '/rb-pkg'
 RBUILD_URI = '/rbuild'
 BUILDINFO_URI = '/buildinfo'
 DBD_PATH = BASE + DBD_URI
+LOGS_PATH = BASE + LOGS_URI
 NOTES_PATH = BASE + NOTES_URI
 ISSUES_PATH = BASE + ISSUES_URI
 RB_PKG_PATH = BASE + RB_PKG_URI
@@ -79,6 +81,8 @@ log.debug("BIN_PATH:\t" + BIN_PATH)
 log.debug("BASE:\t\t" + BASE)
 log.debug("DBD_URI:\t\t" + DBD_URI)
 log.debug("DBD_PATH:\t" + DBD_PATH)
+log.debug("LOGS_URI:\t" + LOGS_URI)
+log.debug("LOGS_PATH:\t" + LOGS_PATH)
 log.debug("NOTES_URI:\t" + NOTES_URI)
 log.debug("ISSUES_URI:\t" + ISSUES_URI)
 log.debug("NOTES_PATH:\t" + NOTES_PATH)

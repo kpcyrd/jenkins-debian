@@ -104,7 +104,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			ghc \
 			gocr \
 			graphviz \
-			guestmount \
+			libguestfs-tools \
 			haveged \
 			imagemagick \
 			ip2host \

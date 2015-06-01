@@ -163,9 +163,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			x11vnc \
 			xtightvncviewer \
 			xvfb \
-			zutils
-
-	sudo apt-get install -t wheezy-backports \
+			zutils \
 			binfmt-support \
 			cucumber \
 			debootstrap \
@@ -184,12 +182,16 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			ruby-rjb \
 			seabios \
 			openbios-ppc \
-			openbios-sparc
+			openbios-sparc \
+			python-arpy \
+			ovmf
+
+	#sudo apt-get install -t jessie-backports \
+	#		pbuilder \
+	#		botch
 
 	explain "Packages installed."
 
-	echo "Also needs python-arpy from jessie..."
-	echo "Also needs ovmf from jessie..."
 else
 	explain "No new packages to be installed."
 fi

@@ -8,8 +8,7 @@ NameVirtualHost *:443
 		CustomLog /var/log/apache2/access.log combined
 		ErrorLog /var/log/apache2/error.log
 		<Proxy *>
-			Order deny,allow
-			Allow from all
+			Require all granted
 		</Proxy>
 		ProxyPreserveHost on
 		AllowEncodedSlashes NoDecode
@@ -47,15 +46,13 @@ NameVirtualHost *:443
 	<Directory /var/www/>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
-		Order allow,deny
-		allow from all
+		Require all granted
 		AddType text/plain .log
 	</Directory>
 	<Directory /var/lib/jenkins/userContent>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
-		Order allow,deny
-		allow from all
+		Require all granted
 		AddType text/plain .log
 	</Directory>
 
@@ -136,8 +133,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
 	<Proxy *>
-		Order deny,allow
-		Allow from all
+		Require all granted
 	</Proxy>
 	ProxyPreserveHost on
 	AllowEncodedSlashes NoDecode
@@ -249,5 +245,9 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/(testing|unstable|experimental)/$
 	RewriteRule ^/(.*) /$1index_suite_stats.html [R,L]
+
+	<Proxy *>
+		Require all granted
+	</Proxy>
 
 </VirtualHost>

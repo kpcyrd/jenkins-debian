@@ -80,7 +80,7 @@ update_if_similar() {
 
 get_installable_set() {
 	set +e
-	schroot --directory /tmp -c source:jenkins-dpkg-jessie -- dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
+	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		rm $TMPFILE

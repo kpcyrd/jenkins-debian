@@ -54,17 +54,13 @@
        - '{name}_jessie_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in Debian jessie.'
            my_time: '0 10 * * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh jessie'
+           my_shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh jessie'
        - '{name}_stretch_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in Debian stretch.'
            my_time: '0 10 * * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh stretch'
+           my_shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh stretch'
        - '{name}_sid_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in Debian sid.'
            my_time: '0 12 * * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-dpkg-jessie /srv/jenkins/bin/find_dpkg_trigger_cycles.sh sid'
-       - '{name}_setup_schroot_jessie':
-           my_description: 'Setup schroot for running the dpkg_(jessie|stretch|sid)_find_trigger_cycles and reproducible_create_meta_pkg_sets jobs in a jessie environment.'
-           my_time: '23 8 * * 1'
-           my_shell: '/srv/jenkins/bin/schroot-create.sh dpkg-jessie jessie python apt-file dose-extra'
+           my_shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh sid'
 

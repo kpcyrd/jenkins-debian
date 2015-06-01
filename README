@@ -64,7 +64,7 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 ** while this job is triggered on commits, the SCM is only polled every 15min to see if there are new commits.
 
 * 'd_i_manual_$language_html'
-** builds a language (on wheezy) on every commit of svn/trunk/manual/$LANG with `make languages=$LANG architectures=amd64 formats=html`.
+** builds a language (on jessie) on every commit of svn/trunk/manual/$LANG with `make languages=$LANG architectures=amd64 formats=html`.
 ** while these jobs are triggered on commits, the SCM is only polled every 15min to see if there are new commits.
 ** on successful build, 'd_i_manual_$lang_pdf' is triggered.
 

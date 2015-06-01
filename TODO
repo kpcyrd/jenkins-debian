@@ -91,7 +91,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * bin/g-i-installation: use lvcreate without --virtualsize
 * check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
 * reproducible: let the scheduler use the xz-compressed file instead of the gzip one. This is because of missing lzma module in wheezy's python.
-* job-cfg/dpkg.yaml: drop source:jenkins-dpkg-jessie, these jobs dont need a schroot
 
 === To be done once bugs are fixed
 

@@ -216,8 +216,8 @@ if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm
-sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/000-default
-sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/000-default
+sudo ln -sf /etc/apache2/sites-available/jenkins.debian.net /etc/apache2/sites-enabled/jenkins.conf
+sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.conf
 # for reproducible.d.n url rewriting:
 [ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 sudo service apache2 reload

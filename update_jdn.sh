@@ -184,7 +184,8 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			openbios-ppc \
 			openbios-sparc \
 			python-arpy \
-			ovmf
+			ovmf \
+			sysvinit-core
 
 	#sudo apt-get install -t jessie-backports \
 	#		pbuilder \

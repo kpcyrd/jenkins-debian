@@ -163,8 +163,8 @@ write_page_header() {
 	rm -f $PAGE
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc dd-list pkg_sets suite_stats repositories stats"
-	GLOBALVIEWS="issues scheduled repositories stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats repositories stats"
+	GLOBALVIEWS="issues scheduled notify repositories stats"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
@@ -173,6 +173,7 @@ write_page_header() {
 	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
+	SPOKENTARGET["notify"]="⚑"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 	SPOKENTARGET["pkg_sets"]="package sets"
 	SPOKENTARGET["suite_stats"]="suite: $SUITE"
@@ -226,9 +227,6 @@ write_page_header() {
 			done
 		else
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
-		fi
-		if [ "$TARGET" = "dd-list" ] ; then
-			write_page "<li><a href=\"$BASEURL/index_notify.html\">⚑</a></li>"
 		fi
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"

@@ -11,7 +11,7 @@
 # Schedule packages to be build.
 
 import sys
-import gzip
+import lzma
 import deb822
 import aptsources.sourceslist
 import random
@@ -47,9 +47,9 @@ def call_apt_update(suite):
 def update_sources_tables(suite):
     # download the sources file for this suite
     mirror = 'http://ftp.de.debian.org/debian'
-    remotefile = mirror + '/dists/' + suite + '/main/source/Sources.gz'
+    remotefile = mirror + '/dists/' + suite + '/main/source/Sources.xz'
     log.info('Downloading sources file for ' + suite + ': ' + remotefile)
-    sources = gzip.decompress(urlopen(remotefile).read()).decode('utf8')
+    sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
     # extract relevant info (package name and version) from the sources file
     new_pkgs = []

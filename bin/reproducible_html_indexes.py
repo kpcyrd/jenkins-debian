@@ -36,10 +36,11 @@ Reference doc for the folowing lists:
       * $count_total being the number of all tested packages
       * $count being the len() of the query indicated by `query2`
     - `query2`: useful only if `timely` is True.
+    - `nosuite`: if true do not iterate over the suite/arches, use only the
+      defaults
   + global: if true, then the page will saved on the root of rb.d.n, and:
     - the query also takes the value "status"
-    - if "nosuite" is True, then suite and arch are meant to be the default
-      values specified in _common.py, and they will not iterate over the suites
+    - force the suite/arch to the defaults
   + notes: if true the query also takes the value "status"
 
 Technically speaking, a page can be empty (we all love nonsense) but every

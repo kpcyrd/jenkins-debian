@@ -399,6 +399,8 @@ def build_page(page, suite=None, arch=None):
     gpage = False
     if pages[page].get('global') and pages[page]['global']:
         gpage = True
+        suite = defaultsuite
+        arch = defaultarch
     if not gpage and suite and not arch:
         print_critical_message('The architecture was not specified while ' +
                                'building a suite-specific page.')

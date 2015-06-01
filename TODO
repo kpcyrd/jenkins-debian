@@ -178,14 +178,6 @@ properties:
 ----
 egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
 ----
-* packages build with different dependencies, should be rescheduled:
-** not sure if these should be caught by reproducible_maintenance.sh or reproducible_breakages.py...
-----
-grep '(=.*).,.$' rygel_0.24.2-1.debbindiff.html | uniq -c | sort | grep -c '^\s*1 '
-----
-** if the value is larger than 0, there are differing dependencies...
-** the grepping should probably only done on files younger then $check_frequency
-*** wouldnt it be easier to just compare .buildinfo files? (directly after build even)
 
 * misc
 ** more graphs: graph average build duration by day

@@ -260,6 +260,20 @@ dbd_timeout() {
 	handle_ftbr "$msg"
 }
 
+check_buildinfo() {
+	local TMPFILE1=$(mktemp)
+	local TMPFILE2=$(mktemp)
+	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
+	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
+	set +e
+	RESULT=$(diff $TMPFILE1 $TMPFILE2)
+	rm $TMPFILE1 $TMPFILE2
+	set -e
+	if [ $RESULT -eq 1 ] ; then
+		irc_message "$BUILDINFO varies, probably due to mirror update. Please investigate ${BUILD_URL} and make reproducible_build.sh deal properly with this."
+	fi
+}
+
 call_debbindiff() {
 	init_debbindiff  # check and set up locks for chroot
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
@@ -483,6 +497,7 @@ check_suitability
 check_for_race_conditions
 build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
+	check_buildinfo
 	call_debbindiff  # defines DBDVERSION, update_db_and_html defines STATUS
 fi
 

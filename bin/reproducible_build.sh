@@ -266,9 +266,10 @@ check_buildinfo() {
 	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
 	set +e
-	RESULT=$(diff $TMPFILE1 $TMPFILE2)
-	rm $TMPFILE1 $TMPFILE2
+	diff $TMPFILE1 $TMPFILE2
+	RESULT=$?
 	set -e
+	rm $TMPFILE1 $TMPFILE2
 	if [ $RESULT -eq 1 ] ; then
 		irc_message "$BUILDINFO varies, probably due to mirror update. Please investigate ${BUILD_URL} and make reproducible_build.sh deal properly with this."
 	fi

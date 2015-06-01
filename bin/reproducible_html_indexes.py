@@ -70,7 +70,8 @@ queries = {
     'not_for_us_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY name',
     'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name',
     'notes': 'SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" ORDER BY r.build_date DESC',
-    'no_notes': 'SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY r.build_date DESC'
+    'no_notes': 'SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY r.build_date DESC',
+    'notification': 'SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.notify_maintainer = 1',
 }
 
 pages = {
@@ -320,6 +321,40 @@ pages = {
                 'icon_link': '/index_blacklisted.html',
                 'query': 'no_notes',
                 'text': Template('$tot blacklisted packages in $suite/$arch:')
+            }
+        ]
+    },
+    'notify': {
+        'global': True,
+        'notes': True,
+        'nosuite': True,
+        'title': 'Packages with notification enabled',
+        'header': '<p>The following {tot} packages with notifications enabled in {suite}/{arch}.<br />When a status change happen (e.g. reproducible → unreproducible) the system sends an email to $srcpackage@packages.debian.org, notifing the maintainer and relevant parties (please subscribe through the PTS o Tracker if you are interested in such emails)<br />Ask us to enable the notification for your package in our IRC channel!</p>',
+        'header_query': 'SELECT COUNT(*) FROM sources WHERE suite="{suite}" AND architecture="{arch}" AND notify_maintainer = 1',
+        'body': [
+            {
+                'icon_status': 'FTBR',
+                'db_status': 'unreproducible',
+                'icon_link': '/index_FTBR.html',
+                'query': 'notification',
+                'text': Template('$tot unreproducible packages in $suite/$arch'),
+                'nosuite': True
+            },
+            {
+                'icon_status': 'FTBFS',
+                'db_status': 'FTBFS',
+                'icon_link': '/index_FTBFS.html',
+                'query': 'notification',
+                'text': Template('$tot FTBFS packages in $suite/$arch'),
+                'nosuite': True
+            },
+            {
+                'icon_status': 'reproducible',
+                'db_status': 'reproducible',
+                'icon_link': '/index_reproducible.html',
+                'query': 'notification',
+                'text': Template('$tot reproducible packages in $suite/$arch'),
+                'nosuite': True
             }
         ]
     }

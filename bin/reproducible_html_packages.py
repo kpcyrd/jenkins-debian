@@ -109,6 +109,18 @@ def gen_status_link_icon(status, icon, suite, arch):
     return html.format(status=status, icon=icon, suite=suite, arch=arch)
 
 
+def link_buildlogs(package, eversion, suite, arch):
+    html = ''
+    path = suite + '/' + arch + '/' + package + '_' + eversion + '.build{}.log.gz'
+    log = LOGS_PATH + '/' + path
+    uri = LOGS_URI + '/' + path
+    if os.access(log.format('1'), os.R_OK):
+        html += '<a href="' + uri.format('1') + '" target="main">log1</a>\n'
+    if os.access(logs.format('2'), os.R_OK):
+        html += '<a href="' + uri.format('2') + '" target="main">2</a>\n'
+    return html
+
+
 def gen_extra_links(package, version, suite, arch, status):
     eversion = strip_epoch(version)
     notes = NOTES_PATH + '/' + package + '_note.html'
@@ -146,7 +158,7 @@ def gen_extra_links(package, version, suite, arch, status):
     else:
         log.debug('buildinfo not detected at ' + buildinfo)
     rbuild = pkg_has_rbuild(package, version, suite, arch)
-    if rbuild:  # being a tuple (rbuild path, size), empty if non_existant
+    if rbuild:  # being a tuple (rbuild path, size), empty if non existant
         url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
               eversion + '.rbuild.log'  # apache ignores the trailing .gz
         links +='<a href="' + url + '" target="main">rbuild (' + \
@@ -156,6 +168,7 @@ def gen_extra_links(package, version, suite, arch, status):
     elif status not in ('untested', 'blacklisted'):
         log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even though it has been built.')
+    links += link_buildlogs(package, eversion, suite, arch)
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 

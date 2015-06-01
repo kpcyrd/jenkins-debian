@@ -116,7 +116,7 @@ def link_buildlogs(package, eversion, suite, arch):
     uri = LOGS_URI + '/' + path
     if os.access(log.format('1'), os.R_OK):
         html += '<a href="' + uri.format('1') + '" target="main">log1</a>\n'
-    if os.access(logs.format('2'), os.R_OK):
+    if os.access(log.format('2'), os.R_OK):
         html += '<a href="' + uri.format('2') + '" target="main">2</a>\n'
     return html
 

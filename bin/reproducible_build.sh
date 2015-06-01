@@ -21,6 +21,8 @@ ARCH="amd64"
 
 create_results_dirs() {
 	mkdir -p $BASE/dbd/${SUITE}/${ARCH}
+	mkdir -p $BASE/logs/${SUITE}/${ARCH}
+	mkdir -p $BASE/logdiffs/${SUITE}/${ARCH}
 	mkdir -p $BASE/rbuild/${SUITE}/${ARCH}
 	mkdir -p $BASE/buildinfo/${SUITE}/${ARCH}
 }
@@ -93,6 +95,10 @@ cleanup_all() {
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
 		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE finished building ($STATUS)"
 	fi
+	gzip -9fvn $RBUILDLOG
+	# XXX quite ugly: this is just needed to get the correct value of the
+	# compressed files in the html. It's cheap and quite safe so, *shrugs*...
+	gen_packages_html $SUITE $SRCPACKAGE
 	cd
 	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
@@ -100,8 +106,10 @@ cleanup_all() {
 
 cleanup_userContent() {
 	rm -f $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
+	rm -f $BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log > /dev/null 2>&1
 	rm -f $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
 	rm -f $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
+	rm -f $BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff > /dev/null 2>&1
 }
 
 update_db_and_html() {
@@ -145,6 +153,30 @@ update_rbuildlog() {
 	chmod 644 $RBUILDLOG
 	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+}
+
+diff_copy_buildlogs() {
+	local DIFF="$BASE/logdiffs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.diff"
+	if [ -f b1/build.log ] ; then
+		if [ -f b2/build.log ] ; then
+			printf "Diff of the two buildlogs:\n\n--\n" | tee -a $DIFF
+			diff -u b1/build.log b2/build.log | tee -a $DIFF
+			if [ ${PIPESTATUS[0]} -eq 0 ] ; then
+				echo "The two build logs are identical! \o/" | tee -a $DIFF
+			fi
+			echo -e "\nCompressing the logs..."
+			gzip -9vn $DIFF
+			gzip -9cvn b2/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
+			chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
+		else
+			echo "Warning: No second build log" | tee -a $RBUILDLOG
+			echo "Compressing the log..."
+		fi
+		gzip -9cvn b1/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
+		chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
+	else
+		echo "Error: No first build log, not even looking for the second" | tee -a $RBUILDLOG
+	fi
 }
 
 handle_404() {
@@ -383,7 +415,8 @@ EOF
 		--debbuildopts "-b" \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 		--buildresult b1 \
-		${SRCPACKAGE}_*.dsc \
+		--logfile b1/build.log \
+		${SRCPACKAGE}_${EVERSION}.dsc
 	) 2>&1 | tee -a $RBUILDLOG
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
@@ -442,7 +475,7 @@ export LC_ALL="fr_CH.UTF-8"
 umask 0002
 EOF
 		# remember to change the sudoers setting if you change the following command
-		( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
+		sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
 		  /usr/bin/linux64 --uname-2.6 \
 			/usr/bin/unshare --uts -- \
 				/usr/sbin/pbuilder --build \
@@ -451,8 +484,8 @@ EOF
 					--debbuildopts "-b" \
 					--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 					--buildresult b2 \
-					${SRCPACKAGE}_${EVERSION}.dsc
-		) 2>&1 | tee -a ${RBUILDLOG}
+					--logfile b2/build.log \
+					${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
 		if ! "$DEBUG" ; then set +x ; fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
@@ -501,6 +534,7 @@ if [ $FTBFS -eq 0 ] ; then
 	check_buildinfo
 fi
 cleanup_userContent
+diff_copy_buildlogs
 update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs

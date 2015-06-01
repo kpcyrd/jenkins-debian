@@ -141,11 +141,11 @@ update_pkg_sets() {
 	# more packages are needed to build build-essential
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[4]}.pkgset ] ; then
 		grep-dctrl --exact-match --field Package build-essential "$PACKAGES" \
-			| botch-latest-version - - \
-			| botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
-			| botch-create-graph --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
-			| botch-buildgraph2packages - "$PACKAGES" \
-			| botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-latest-version - - \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-create-graph --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-buildgraph2packages - "$PACKAGES" \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
 			| grep-dctrl --no-field-names --show-field=Package '' \
 			| sort -u > $TMPFILE
 		update_if_similar ${META_PKGSET[4]}.pkgset

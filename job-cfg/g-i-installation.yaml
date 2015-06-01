@@ -2,7 +2,7 @@
 - defaults:
     name: g-i-installation
     description: '{my_description}{do_not_edit}'
-    disabled: true
+    # disabled: true
     logrotate:
       daysToKeep: 90
       numToKeep: 20

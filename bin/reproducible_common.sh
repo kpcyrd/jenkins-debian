@@ -227,6 +227,9 @@ write_page_header() {
 		else
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		fi
+		if [ "$TARGET" = "dd-list" ] ; then
+			write_page "<li><a href=\"$BASEURL/index_notify.html\">⚑</a></li>"
+		fi
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
 	write_page "</ul>"

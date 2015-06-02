@@ -351,7 +351,7 @@ init() {
 	echo "============================================================================="
 	# mark build attempt
 	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")" ] ; then
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO schedule (package_id, date_scheduled, date_build_started) VALUES ('$SRCPKGID', '$SCHEDULED_DATE', '$DATE');"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE' WHERE package_id = '$SRCPKGID'"
 	else
 		BAD_LOCKFILE=true
 		handle_race_condition db

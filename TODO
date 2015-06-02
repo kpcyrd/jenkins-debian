@@ -187,6 +187,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** repo-comparison: check for binaries without source
 ** move "untested" field in stats table too? (as in csv output...)
 ** new page: packages which are orphaned but have a reproducible usertagged patch
+** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed

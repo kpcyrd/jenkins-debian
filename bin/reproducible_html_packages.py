@@ -35,9 +35,9 @@ $links
 ${suites_links}
         </td>
         <td style="text-align:right; font-size:0.9em;">
-            <span class="red" style="font-size:1.5em;" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">
-                <a href="/index_notify.html" target="_parent">$notify_maintainer</a>
-            </span>
+            <a href="/index_notify.html" target="_parent">
+                <span class="red" style="font-size:1.5em;" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">$notify_maintainer</span>
+            </a>
             <a href="%s" target="_parent">
                 reproducible builds
             </a>

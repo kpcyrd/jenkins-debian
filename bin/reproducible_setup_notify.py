@@ -27,6 +27,7 @@ local_args = parser.parse_known_args()[0]
 # these are here as an hack to be able to parse the command line
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
+from reproducible_html_indexes import build_page
 
 
 class bcolors:
@@ -92,3 +93,4 @@ for package in packages:
     process_pkg(package, local_args.deactivate)
 
 gen_packages_html(packages, no_clean=True)
+build_page('notify')

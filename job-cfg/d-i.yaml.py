@@ -74,7 +74,6 @@ iso-scan
 kbd-chooser
 kernel-wedge
 kickseed
-lenny-support
 libdebian-installer
 lilo-installer
 live-installer

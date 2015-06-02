@@ -282,21 +282,6 @@ explain "Jenkins jobs updated."
 rm -f $TMPFILE
 
 #
-# crappy tests for checking that jenkins-job-builder works correctly
-#
-#wc -m counts one byte too many, so we substract one
-let DEFINED_MY_TRIGGERS=$(grep -v \# *.yaml | grep my_trigger: | grep -v "my_trigger: ''"|wc -l)+$(grep my_trigger: *.yaml|grep , |xargs -r echo | sed 's/[^,]//g'| wc -m)-1
-let DEFINED_DI_TRIGGERS=$(grep "defaults: d-i-manual-html" d-i.yaml|wc -l)
-#DEFINED_REPRODUCIBLE_TRIGGERS=$(grep "^    defaults: reproducible$" reproducible.yaml|wc -l)
-let DEFINED_TRIGGERS=DEFINED_MY_TRIGGERS+DEFINED_DI_TRIGGERS
-#let DEFINED_TRIGGERS=DEFINED_TRIGGERS+DEFINED_REPRODUCIBLE_TRIGGERS
-let CONFIGURED_TRIGGERS=$(grep \</childProjects /var/lib/jenkins/jobs/*/config.xml|wc -l)+$(grep  \<childProjects /var/lib/jenkins/jobs/*/config.xml |grep , |xargs -r echo | sed 's/[^,]//g'| wc -m)-1
-if [ "$DEFINED_TRIGGERS" != "$CONFIGURED_TRIGGERS" ] ; then
-	figlet -f banner Warning
-	explain "Number of defined triggers ($DEFINED_TRIGGERS) differs from currently configured triggers ($CONFIGURED_TRIGGERS), please investigate."
-fi
-
-#
 # configure git for jenkins
 #
 if [ "$(sudo su - jenkins -c 'git config --get user.email')" != "jenkins@jenkins.debian.net" ] ; then

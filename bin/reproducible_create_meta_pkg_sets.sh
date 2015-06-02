@@ -133,7 +133,7 @@ update_pkg_sets() {
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-create-graph --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-buildgraph2packages - "$PACKAGES" \
-			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --all --deb-native-arch="$ARCH" - "$SOURCES" \
 			| grep-dctrl --no-field-names --show-field=Package '' \
 			| sort -u > $TMPFILE
 		update_if_similar ${META_PKGSET[4]}.pkgset

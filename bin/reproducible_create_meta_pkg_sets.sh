@@ -13,22 +13,10 @@ common_init "$@"
 ARCH=amd64
 
 # helper functions
-convert_into_source_packages_only() {
+packages_list_to_deb822() {
 	rm -f ${TMPFILE2}
-	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u )
-	for PKG in $ALL_PKGS ; do
-		SRC=""
-		if [ ! -z "$PKG" ] ; then
-			SRC=$(grep-dctrl -X -n -FPackage -sSource $PKG $PACKAGES || true )
-			[ ! -z "$SRC" ] || SRC=$(grep-dctrl -X -n -FPackage -sPackage $PKG $PACKAGES || true)
-		fi
-		[ ! -z "$SRC" ] || SRC=$(echo $PKG )
-		echo $SRC >> ${TMPFILE2}
-	done
-	# grep-dctrl output might include versions (space seperated) and archs (colon seperated)
-	# and duplicates
-	cut -d " " -f1 ${TMPFILE2} | cut -d ":" -f1 | sort -u > $TMPFILE
-	rm ${TMPFILE2}
+	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u | tr '\n' '|')
+	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $PACKAGES > $TMPFILE
 }
 convert_from_deb822_into_source_packages_only() {
 	# given a Packages file in deb822 format on standard input, the
@@ -186,7 +174,8 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[8]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[8]}.pkgset ] ; then
 		svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
 		grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5|sort -u > $TMPFILE
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[8]}.pkgset
 	fi
 
@@ -215,7 +204,8 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[8]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[10]}.pkgset
 	fi
 
@@ -234,7 +224,8 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[11]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[12]}.pkgset
 	fi
 
@@ -253,7 +244,8 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[13]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[14]}.pkgset
 	fi
 
@@ -261,7 +253,8 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[15]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[15]}.pkgset ] ; then
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[15]}.pkgset
 	fi
 
@@ -271,7 +264,8 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[15]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[16]}.pkgset
 	fi
 
@@ -279,7 +273,8 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
 		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
-			convert_into_source_packages_only
+			packages_list_to_deb822
+			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[17]}.pkgset
 		else
 			echo "Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
@@ -292,7 +287,8 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[17]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
-		convert_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[18]}.pkgset
 	fi
 

@@ -225,6 +225,8 @@ write_page_header() {
 			for i in $SUITES ; do
 				write_page "<li><a href=\"/$i\">suite: $i</a></li>"
 			done
+		elif [ "$TARGET" = "notify" ] ; then
+			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
 		else
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		fi

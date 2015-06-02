@@ -14,7 +14,6 @@ ARCH=amd64
 
 # helper functions
 packages_list_to_deb822() {
-	rm -f ${TMPFILE2}
 	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u | tr '\n' '|')
 	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $PACKAGES > $TMPFILE
 }
@@ -28,6 +27,7 @@ convert_from_deb822_into_source_packages_only() {
 		-e 'else{$s=~s/\s*([\S]+)\s+.*/\1/;print "$s\n"}}' \
 		> ${TMPFILE2} < $TMPFILE
 	sort -u ${TMPFILE2} > $TMPFILE
+	rm ${TMPFILE2}
 }
 
 update_target() {

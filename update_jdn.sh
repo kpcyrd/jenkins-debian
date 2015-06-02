@@ -98,7 +98,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			dose-extra \
 			dstat \
 			etckeeper \
-			ffmpeg \
+			libav-tools \
 			figlet \
 			gawk \
 			ghc \
@@ -111,13 +111,12 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			less \
 			libapache2-mod-macro \
 			libav-tools \
-			libavcodec-extra-53 \
 			libcap2-bin \
 			libfile-touch-perl \
 			libjson-rpc-perl \
 			libsikuli-script-java \
 			libsoap-lite-perl \
-			libvirt-ruby \
+			ruby-libvirt \
 			libvpx1 \
 			libxslt1-dev \
 			molly-guard \
@@ -127,7 +126,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			ntp \
 			openjdk-7-jre \
 			pigz \
-			postgresql-client-9.1 \
+			postgresql-client-9.4 \
 			poxml \
 			procmail \
 			python-hachoir-metadata \

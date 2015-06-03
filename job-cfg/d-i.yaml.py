@@ -302,7 +302,19 @@ data.append( {'defaults': { 'name': 'd-i-build',
                    'description': 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
                    'triggers': [{'pollscm': '*/6 * * * *'}],
                    'scm': [{'git': {'url': '{gitrepo}',
-                                    'branches': ['master', 'pu/*']}}],
+                                    'branches': ['master']}}],
+                   'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+                   'project-type': 'freestyle',
+                   'properties': prop(middle=sb_pkgs, priority=99),
+                   'logrotate': lr(90),
+                   'publishers': publ()}}
+)
+
+data.append( {'defaults': { 'name': 'd-i-pu-build',
+                   'description': 'Builds debian packages in sid from git pu/ branches, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
+                   'triggers': [{'pollscm': '*/30 * * * *'}],
+                   'scm': [{'git': {'url': '{gitrepo}',
+                                    'branches': ['pu/**']}}],
                    'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
                    'project-type': 'freestyle',
                    'properties': prop(middle=sb_pkgs, priority=99),
@@ -351,6 +363,8 @@ data.extend(map(lambda (l, f): jtmpl(act='manual',lang=l,fmt=f,po=(l not in non_
 
 data.extend(map(lambda l: jtmpl(act='build',lang=l), pkgs))
 
+data.extend(map(lambda l: jtmpl(act='pu-build',lang=l), pkgs))
+
 
 jobs = [ '{name}_maintenance',
          '{name}_check_jenkins_jobs',
@@ -365,7 +379,10 @@ jobs.extend(map(lambda (l, fmt): {'_'.join(['{name}','manual',l,fmt]): {'lang': 
                         for f in ['html', 'pdf']
                         for l in langs.keys()])))
 
-jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
+jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]):    {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
+                pkgs))
+
+jobs.extend(map(lambda (p): {'_'.join(['{name}','pu-build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
                 pkgs))
 
 data.append(

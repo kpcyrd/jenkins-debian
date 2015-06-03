@@ -301,33 +301,34 @@ data.append( {'defaults': jobspec_svn( name='d-i-manual-pdf-po2xml',
                                        logkeep=90 )})
 
 data.append( {'defaults': { 'name': 'd-i-build',
-                   'description': 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                   'triggers': [{'pollscm': '*/6 * * * *'}],
-                   'scm': [{'git': {'url': '{gitrepo}',
-                                    'branches': ['master']}}],
-                   'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
-                   'project-type': 'freestyle',
-                   'properties': prop(middle=sb_pkgs, priority=99),
-                   'logrotate': lr(90),
-                   'publishers': publ(irc='debian-boot')}}
+                            'description': 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
+                            'triggers': [{'pollscm': '*/6 * * * *'}],
+                            'scm': [{'git': {'url': '{gitrepo}',
+                                             'branches': ['master']}}],
+                            'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+                            'project-type': 'freestyle',
+                            'properties': prop(middle=sb_pkgs, priority=99),
+                            'logrotate': lr(90),
+                            'publishers': publ(irc='debian-boot')}}
 )
 
 data.append( {'defaults': { 'name': 'd-i-pu-build',
-                   'description': 'Builds debian packages in sid from git pu/ branches, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                   'triggers': [{'pollscm': '*/10 * * * *'}],
-                   'scm': [{'git': {'url': '{gitrepo}',
-                                    'branches': ['pu/**']}}],
-                   'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
-                   'project-type': 'freestyle',
-                   'properties': prop(middle=sb_pkgs, priority=99),
-                   'logrotate': lr(90),
-                   'publishers': publ()}}
+                            'description': 'Builds debian packages in sid from git pu/ branches, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
+                            'triggers': [{'pollscm': '*/10 * * * *'}],
+                            'scm': [{'git': {'url': '{gitrepo}',
+                                             'branches': ['pu/**']}}],
+                            'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+                            'project-type': 'freestyle',
+                            'properties': prop(middle=sb_pkgs, priority=99),
+                            'logrotate': lr(90),
+                            'publishers': publ()}}
 )
 
 data.append({'job-template': jobspec_svn( defaults='d-i',
                                           name='{name}_manual',
                                           desc=instguide_desc,
-                                          trigger=15, priority=125,
+                                          trigger=15,
+                                          priority=125,
                                           publisher=publ_email,
                                           inc_regs='{include}')})
 

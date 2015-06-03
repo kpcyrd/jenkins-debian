@@ -17,6 +17,7 @@ packages_list_to_deb822() {
 	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u | tr '\n' '|')
 	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $PACKAGES > $TMPFILE
 }
+
 convert_from_deb822_into_source_packages_only() {
 	# given a Packages file in deb822 format on standard input, the
 	# following perl "oneliner" outputs the associated (unversioned)
@@ -68,13 +69,14 @@ update_if_similar() {
 
 get_installable_set() {
 	set +e
+	echo "$(date) - Calculating the installable set for $1"
 	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		rm $TMPFILE
 		echo "Warning: dose-deb-coinstall cannot calculate the installable set for $1"
 	fi
-	rm ${TMPFILE2}
+	rm -v ${TMPFILE2}
 	set -e
 }
 

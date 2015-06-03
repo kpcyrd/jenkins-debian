@@ -128,7 +128,7 @@ def pbuilder_dep_fail():
 
 
 def alien_log(directory=None):
-    if directory == None:
+    if directory is None:
         bad_files = []
         for path in RBUILD_PATH, LOGS_PATH:
             bad_files.extend(alien_log(path))
@@ -151,6 +151,7 @@ def alien_log(directory=None):
                 log.critical(bcolors.FAIL + '/'.join([root, file]) +
                              ' does not seem to be a file that should be there'
                              + bcolors.ENDC)
+                continue
             if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
                 bad_files.append('/'.join([root, file]))
                 log.warning('/'.join([root, file]) + ' should not be there')

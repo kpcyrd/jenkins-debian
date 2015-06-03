@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import os
 from yaml import load, dump
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -141,12 +142,8 @@ zipl-installer
 
 
 def scm_svn(po, inc_regs=None):
-    po_str = ''
-    if po == True:
-        po_str = 'po/'
-
     if inc_regs == None:
-        inc_regs = '/trunk/manual/' + po_str + '{lang}/.*'
+        inc_regs = os.path.join('/trunk/manual/', 'po' if po else '', '{lang}', '.*')
 
     return  [{'svn': {'excludedCommitMessages': '',
                       'url': 'svn://anonscm.debian.org/svn/d-i/trunk',
@@ -231,10 +228,14 @@ def prop(middle=sb_manual, priority=None):
 
 
 def jtmpl(act, lang, fmt=None, po=False):
-    return {'job-template': {'name': '{name}_' + act + '_' + lang
-                             + ('_' + fmt if fmt else ''),
-                             'defaults': 'd-i-' + act
-                             + ('-' + fmt if fmt else '') + ('-po2xml' if po else '')}}
+    n = ['{name}', act, lang]
+    d = [ 'd-i', act ]
+    if fmt:
+        n.append(fmt)
+        d.append(fmt)
+    if po:
+        d.append('po2xml')
+    return {'job-template': {'name': '_'.join(n), 'defaults': '-'.join(d)}}
 
 
 def jobspec_svn(name, desc=None, defaults=None,
@@ -342,10 +343,11 @@ data.append(
 )
 
 
-data.extend(map(lambda l: jtmpl(act='manual',lang=l,fmt='html',po=(l not in non_po_langs)), langs.keys()))
-
-data.extend(map(lambda l: jtmpl(act='manual',lang=l,fmt='pdf',po=(l not in non_po_langs)),
-               filter(lambda l: l not in non_pdf_langs,  langs.keys())))
+data.extend(map(lambda (l, f): jtmpl(act='manual',lang=l,fmt=f,po=(l not in non_po_langs)),
+                filter(lambda (l, f): not (f=='pdf' and l in non_pdf_langs),
+                       [(l, f)
+                        for f in ['html', 'pdf']
+                        for l in langs.keys()])))
 
 data.extend(map(lambda l: jtmpl(act='build',lang=l), pkgs))
 
@@ -357,14 +359,13 @@ jobs = [ '{name}_maintenance',
                                          '/trunk/manual/doc/.*\n'
                                          '/trunk/manual/scripts/.*' )}}]
 
-jobs.extend(map(lambda (l, lang): {'{name}_manual_' + l + '_html': {'lang': l, 'languagename': lang}},
-                langs.iteritems()))
+jobs.extend(map(lambda (l, fmt): {'_'.join(['{name}','manual',l,fmt]): {'lang': l, 'languagename': langs[l]}},
+                filter(lambda (l, f): not (f=='pdf' and l in non_pdf_langs),
+                       [(l, f)
+                        for f in ['html', 'pdf']
+                        for l in langs.keys()])))
 
-jobs.extend(map(lambda (l, lang): {'{name}_manual_' + l + '_pdf': {'lang': l, 'languagename': lang}},
-                filter(lambda (l, x): l not in non_pdf_langs,
-                       langs.iteritems())))
-
-jobs.extend(map(lambda (p): {'{name}_build_' + p: {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
+jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
                 pkgs))
 
 data.append(

@@ -74,6 +74,7 @@ get_installable_set() {
 		rm $TMPFILE
 		echo "Warning: dose-deb-coinstall cannot calculate the installable set for $1"
 	fi
+	rm ${TMPFILE2}
 	set -e
 }
 

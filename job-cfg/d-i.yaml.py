@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# Copyright © 2015 Philip Hands <phil@hands.com>
+# Copyright 2015 Philip Hands <phil@hands.com>
 # written to generate something very similar to d-i.yaml so much of the
 # quoted text is Copyright Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2

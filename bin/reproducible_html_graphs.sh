@@ -581,7 +581,7 @@ create_main_stats_page() {
 	set +x
 	gather_suite_stats
 	set -x
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 	write_page "<tr><td>packages in $SUITE with issues but <a href=\"/$SUITE/$ARCH/index_no_notes.html\">without identified ones</a></td><td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td></tr>"
 
 	write_page "<tr><td>packages in $SUITE which need to be fixed</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
@@ -641,21 +641,21 @@ create_main_stats_page() {
 	done
 	# write build performace stats
 	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
-	AGE_TESTING=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND datum='$DATE'")
-	AGE_UNSTABLE=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND datum='$DATE'")
-	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND datum='$DATE'")
+	AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND datum='$DATE'")
+	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND datum='$DATE'")
+	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND datum='$DATE'")
 	write_page "<tr><td>oldest build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%'")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%'")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
 	write_page "<tr><td>average test duration (on $DATE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-28 days')")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-28 days')")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
 	write_page "<tr><td>average test duration (in the last 4 weeks)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date LIKE '%$DATE%'")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date LIKE '%$DATE%'")
 	write_page "<tr><td>packages tested on $DATE</td><td>$RESULT</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date > datetime('$DATE', '-28 days')")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r WHERE r.build_date > datetime('$DATE', '-28 days')")
 	RESULT="$(echo $RESULT/28|bc)"
 	write_page "<tr><td>packages tested on average per day in the last 4 weeks</td><td>$RESULT</td></tr>"
 	write_page "</table>"

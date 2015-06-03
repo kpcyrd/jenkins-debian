@@ -20,6 +20,7 @@ PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
 # using 'unshare --uts'...
 if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then
 	umask 0002
+	PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/path"
 fi
 
 USEDEVSHM=yes

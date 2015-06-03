@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# Copyright 2015 Philip Hands <phil@hands.com>
+# and released under the GPL v2+
+
 import sys
 import os
 from yaml import load, dump

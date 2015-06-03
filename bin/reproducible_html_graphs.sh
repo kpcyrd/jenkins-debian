@@ -4,7 +4,7 @@
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -534,6 +534,7 @@ create_pkg_sets_pages() {
 # create main stats page
 #
 create_main_stats_page() {
+	set -x
 	VIEW=stats
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
@@ -542,7 +543,9 @@ create_main_stats_page() {
 	write_page "<p>"
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
+		set +x
 		gather_suite_stats
+		set -x
 		write_page "<tr><td>$SUITE</td><td>$AMOUNT"
 		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
 			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
@@ -575,7 +578,9 @@ create_main_stats_page() {
 	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
 	SUITE="unstable"
+	set +x
 	gather_suite_stats
+	set -x
 	RESULT=$(sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 	write_page "<tr><td>packages in $SUITE with issues but <a href=\"/$SUITE/$ARCH/index_no_notes.html\">without identified ones</a></td><td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td></tr>"
 
@@ -594,9 +599,11 @@ create_main_stats_page() {
 	for i in 3 7 4 5 ; do
 		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
+		set +x
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
+		set -x
 	done
 	# explain setup
 	write_page "</p><p style=\"clear:both;\">"
@@ -622,9 +629,11 @@ create_main_stats_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	write_page " <a href=\"/userContent/${TABLE[1]}.png\"><img src=\"/userContent/${TABLE[1]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo png once a day
+	set +x
 	if [ ! -f $BASE/${TABLE[1]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}.png) ] ; then
 			create_png_from_table 1 ${TABLE[1]}.png
 	fi
+	set -x
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do
@@ -654,6 +663,7 @@ create_main_stats_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. More feedback is always welcome!</p>"
 	# the end
+	set +x
 	write_page_footer
 	publish_page
 }

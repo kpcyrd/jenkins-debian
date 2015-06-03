@@ -266,7 +266,8 @@ explain "Updated user content for Jenkins."
 #
 cd /srv/jenkins/job-cfg
 for metaconfig in *.yaml.py ; do
-	python $metaconfig > $TMPFILE
+# there are both python2 and python3 scripts here
+	./$metaconfig > $TMPFILE
 	if ! $(diff ${metaconfig%.py} $TMPFILE > /dev/null) ; then
 		cp $TMPFILE ${metaconfig%.py}
 	fi

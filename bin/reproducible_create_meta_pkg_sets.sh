@@ -28,7 +28,7 @@ convert_from_deb822_into_source_packages_only() {
 		-e 'else{$s=~s/\s*([\S]+)\s+.*/\1/;print "$s\n"}}' \
 		> ${TMPFILE2} < $TMPFILE
 	sort -u ${TMPFILE2} > $TMPFILE
-	rm ${TMPFILE2}
+	rm -f ${TMPFILE2}
 }
 
 update_target() {
@@ -73,10 +73,10 @@ get_installable_set() {
 	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
-		rm $TMPFILE
+		rm -f $TMPFILE
 		echo "Warning: dose-deb-coinstall cannot calculate the installable set for $1"
 	fi
-	rm -v ${TMPFILE2}
+	rm -f ${TMPFILE2}
 	set -e
 }
 
@@ -175,13 +175,13 @@ update_pkg_sets() {
 
 	# packages which had a DSA
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[8]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[8]}.pkgset ] ; then
-		rm ${TMPFILE2}
+		rm -f ${TMPFILE2}
 		svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
 		grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5|sort -u > $TMPFILE
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[8]}.pkgset
-		rm ${TMPFILE2}
+		rm -f ${TMPFILE2}
 	fi
 
 	# gnome and everything it depends on

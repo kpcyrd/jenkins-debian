@@ -205,6 +205,12 @@ def lr(keep):
     return {'artifactDaysToKeep': -1, 'daysToKeep': keep, 'numToKeep': 30, 'artifactNumToKeep': -1}
 
 
+def publ_email(irc=None):
+    r = ['jenkins+' + irc] if irc != None else []
+    r.append('qa-jenkins-scm@lists.alioth.debian.org')
+    return [{'email': {'recipients': ' '.join(r)}}]
+
+
 def publ(fmt=None,trigger=False,irc=None):
     p = []
     if trigger:
@@ -219,10 +225,6 @@ def publ(fmt=None,trigger=False,irc=None):
     return p
 
 
-def publ_email(irc=None):
-    r = ['jenkins+' + irc] if irc != None else []
-    r.append('qa-jenkins-scm@lists.alioth.debian.org')
-    return [{'email': {'recipients': ' '.join(r)}}]
 
 
 def prop(middle=sb_manual, priority=None):

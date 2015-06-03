@@ -280,7 +280,7 @@ data.append({'defaults': jobspec(name='d-i-manual-pdf-po2xml',
 
 data.append(
     {'defaults': {'scm': [{'git': {'url': '{gitrepo}',
-                                   'branches': ['master', 'pu/*']}}],
+                                   'branches': ['master']}}],
                   'publishers': publ(),
                   'description': 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
                   'triggers': [{'pollscm': '*/6 * * * *'}],

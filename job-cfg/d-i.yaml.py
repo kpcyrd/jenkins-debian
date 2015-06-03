@@ -210,7 +210,7 @@ def publ(fmt=None,trigger=False):
         {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian-installer.rules',
                        'unstable-on-warning': 'true',
                        'fail-on-error': 'true'}},
-        {'email': {'recipients': 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'}}])
+        {'email': {'recipients': 'jenkins+debian-bot qa-jenkins-scm@lists.alioth.debian.org'}}])
     if fmt != None:
         p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest_only': True}})
     return p

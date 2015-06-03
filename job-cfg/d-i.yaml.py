@@ -202,22 +202,24 @@ def lr(keep):
     return {'artifactDaysToKeep': -1, 'daysToKeep': keep, 'numToKeep': 30, 'artifactNumToKeep': -1}
 
 
-def publ(fmt=None,trigger=False):
+def publ(fmt=None,trigger=False,irc=None):
     p = []
     if trigger:
         p = [{'trigger': {'project': 'd-i_manual_{lang}_pdf', 'threshold': 'UNSTABLE'}}]
     p.extend([
         {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian-installer.rules',
                        'unstable-on-warning': 'true',
-                       'fail-on-error': 'true'}},
-        {'email': {'recipients': 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'}}])
+                       'fail-on-error': 'true'}}])
+    p.extend(publ_email(irc=irc))
     if fmt != None:
         p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest_only': True}})
     return p
 
 
-def publ_email():
-        return [{'email': {'recipients': 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'}}]
+def publ_email(irc=None):
+    r = ['jenkins+' + irc] if irc != None else []
+    r.append('qa-jenkins-scm@lists.alioth.debian.org')
+    return [{'email': {'recipients': ' '.join(r)}}]
 
 
 def prop(middle=sb_manual, priority=None):
@@ -249,7 +251,7 @@ def jobspec_svn(name, desc=None, defaults=None,
                        + (' po2xml' if po else '')}],
          'properties': prop(priority=priority),
          'name': name}
-    j['publishers'] = publisher() if publisher != None else publ(fmt=fmt,trigger=trigger)
+    j['publishers'] = publisher() if publisher != None else publ(fmt=fmt,trigger=trigger,irc='debian-boot')
 
     if desc != None:
         j['description'] = desc()
@@ -307,14 +309,14 @@ data.append( {'defaults': { 'name': 'd-i-build',
                    'project-type': 'freestyle',
                    'properties': prop(middle=sb_pkgs, priority=99),
                    'logrotate': lr(90),
-                   'publishers': publ()}}
+                   'publishers': publ(irc='debian-boot')}}
 )
 
 data.append( {'defaults': { 'name': 'd-i-pu-build',
                    'description': 'Builds debian packages in sid from git pu/ branches, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                   'triggers': [{'pollscm': '*/30 * * * *'}],
+                   'triggers': [{'pollscm': '*/10 * * * *'}],
                    'scm': [{'git': {'url': '{gitrepo}',
-                                    'branches': ['origin/pu/**']}}],
+                                    'branches': ['pu/**']}}],
                    'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
                    'project-type': 'freestyle',
                    'properties': prop(middle=sb_pkgs, priority=99),
@@ -363,6 +365,8 @@ data.extend(map(lambda (l, f): jtmpl(act='manual',lang=l,fmt=f,po=(l not in non_
 
 data.extend(map(lambda l: jtmpl(act='build',lang=l), pkgs))
 
+data.extend(map(lambda l: jtmpl(act='pu-build',lang=l), pkgs))
+
 
 jobs = [ '{name}_maintenance',
          '{name}_check_jenkins_jobs',
@@ -377,7 +381,10 @@ jobs.extend(map(lambda (l, fmt): {'_'.join(['{name}','manual',l,fmt]): {'lang': 
                         for f in ['html', 'pdf']
                         for l in langs.keys()])))
 
-jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
+jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]):    {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
+                pkgs))
+
+jobs.extend(map(lambda (p): {'_'.join(['{name}','pu-build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
                 pkgs))
 
 data.append(

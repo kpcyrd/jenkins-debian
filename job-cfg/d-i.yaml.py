@@ -210,7 +210,7 @@ def publ(fmt=None,trigger=False):
         {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian-installer.rules',
                        'unstable-on-warning': 'true',
                        'fail-on-error': 'true'}},
-        {'email': {'recipients': 'jenkins+debian-bot qa-jenkins-scm@lists.alioth.debian.org'}}])
+        {'email': {'recipients': 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'}}])
     if fmt != None:
         p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest_only': True}})
     return p
@@ -363,8 +363,6 @@ data.extend(map(lambda (l, f): jtmpl(act='manual',lang=l,fmt=f,po=(l not in non_
 
 data.extend(map(lambda l: jtmpl(act='build',lang=l), pkgs))
 
-data.extend(map(lambda l: jtmpl(act='pu-build',lang=l), pkgs))
-
 
 jobs = [ '{name}_maintenance',
          '{name}_check_jenkins_jobs',
@@ -379,10 +377,7 @@ jobs.extend(map(lambda (l, fmt): {'_'.join(['{name}','manual',l,fmt]): {'lang': 
                         for f in ['html', 'pdf']
                         for l in langs.keys()])))
 
-jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]):    {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
-                pkgs))
-
-jobs.extend(map(lambda (p): {'_'.join(['{name}','pu-build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
+jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
                 pkgs))
 
 data.append(

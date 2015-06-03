@@ -1,7 +1,9 @@
-#!/usr/bin/python
-
-# Copyright 2015 Philip Hands <phil@hands.com>
-# and released under the GPL v2+
+#!/usr/bin/python3
+#
+# Copyright © 2015 Philip Hands <phil@hands.com>
+# written to generate something very similar to d-i.yaml so much of the
+# quoted text is Copyright Holger Levsen <holger@layer-acht.org>
+# Licensed under GPL-2
 
 import sys
 import os
@@ -215,8 +217,8 @@ def prop(type='manual', priority=None):
     return p
 
 
-def jtmpl(act, lang, fmt=None, po=False):
-    n = ['{name}', act, lang]
+def jtmpl(act, target, fmt=None, po=False):
+    n = ['{name}', act, target]
     d = [ 'd-i', act ]
     if fmt:
         n.append(fmt)
@@ -260,50 +262,32 @@ data.append({'defaults': { 'name': 'd-i',
                            'project-type': 'freestyle',
                            'properties': prop(type='misc')}})
 
-data.append(jobspec_svn(key='defaults',
-                        name='d-i-manual-html',
-                        fmt='html',
-                        lang='{lang}',
-                        trigger=15,
-                        logkeep=90))
+data.extend(
+    [jobspec_svn(key='defaults',
+                 name='d-i-manual-' + fmt + ('-po2xml' if po else ''),
+                 fmt=fmt,
+                 lang='{lang}',
+                 trigger=None if fmt == 'pdf' else 15 if not po else 30,
+                 desc=pdf_desc if fmt == 'pdf' else None,
+                 po=po,
+                 logkeep=90)
+     for fmt in ['html', 'pdf']
+     for po  in [False, True]])
 
-data.append(jobspec_svn(key='defaults',
-                        name='d-i-manual-html-po2xml',
-                        fmt='html',
-                        lang='{lang}',
-                        po=True,
-                        trigger=30,
-                        logkeep=90 ))
-
-data.append(jobspec_svn(key='defaults',
-                        name='d-i-manual-pdf',
-                        fmt='pdf',
-                        lang='{lang}',
-                        desc=pdf_desc,
-                        logkeep=90 ))
-
-data.append(jobspec_svn(key='defaults',
-                        name='d-i-manual-pdf-po2xml',
-                        fmt='pdf',
-                        lang='{lang}',
-                        desc=pdf_desc,
-                        po=True,
-                        logkeep=90 ))
-
-data.extend(map(
-    lambda (n,bdsc,br,trg,irc): {
-        'defaults': { 'name': n,
-                      'description': 'Builds debian packages in sid from git '+ bdsc +', triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                      'triggers': [{'pollscm': trg}],
-                      'scm': [{'git': {'url': '{gitrepo}',
-                                       'branches': [br]}}],
-                      'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
-                      'project-type': 'freestyle',
-                      'properties': prop(type='packages', priority=99),
-                      'logrotate': lr(90),
-                      'publishers': publ(irc=irc)}},
-        [('d-i-build', 'master branch', 'master', '*/6 * * * *',  'debian-boot'),
-         ('d-i-pu-build', 'pu/ branches',  'pu/**' , '*/10 * * * *', None)]))
+data.extend(
+    [{'defaults': { 'name': n,
+                   'description': 'Builds debian packages in sid from git '+ bdsc +', triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
+                   'triggers': [{'pollscm': trg}],
+                   'scm': [{'git': {'url': '{gitrepo}',
+                                    'branches': [br]}}],
+                   'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+                   'project-type': 'freestyle',
+                   'properties': prop(type='packages', priority=99),
+                   'logrotate': lr(90),
+                   'publishers': publ(irc=irc)}}
+     for (n,bdsc,br,trg,irc)
+     in [('d-i-build',    'master branch', 'master', '*/6 * * * *',  'debian-boot'),
+         ('d-i-pu-build', 'pu/ branches',  'pu/**' , '*/10 * * * *', None)]])
 
 data.append(jobspec_svn(key='job-template',
                         defaults='d-i',
@@ -339,17 +323,16 @@ data.append(
                                       {'email': {'recipients': 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'}}]}}
 )
 
+data.extend(
+    [jtmpl(act='manual',target=l,fmt=f,po=(l not in non_po_langs))
+     for f in ['html', 'pdf']
+     for l in sorted(langs.keys())
+     if not (f=='pdf' and l in non_pdf_langs)])
 
-data.extend(map(lambda (l, f): jtmpl(act='manual',lang=l,fmt=f,po=(l not in non_po_langs)),
-                filter(lambda (l, f): not (f=='pdf' and l in non_pdf_langs),
-                       [(l, f)
-                        for f in ['html', 'pdf']
-                        for l in langs.keys()])))
-
-data.extend(map(lambda l: jtmpl(act='build',lang=l), pkgs))
-
-data.extend(map(lambda l: jtmpl(act='pu-build',lang=l), pkgs))
-
+data.extend(
+    [jtmpl(act=act,target=pkg)
+     for act in ['build', 'pu-build']
+     for pkg in pkgs])
 
 jobs = [ '{name}_maintenance',
          '{name}_check_jenkins_jobs',
@@ -358,22 +341,20 @@ jobs = [ '{name}_maintenance',
                                          '/trunk/manual/doc/.*\n'
                                          '/trunk/manual/scripts/.*' )}}]
 
-jobs.extend(map(lambda (l, fmt): {'_'.join(['{name}','manual',l,fmt]): {'lang': l, 'languagename': langs[l]}},
-                filter(lambda (l, f): not (f=='pdf' and l in non_pdf_langs),
-                       [(l, f)
-                        for f in ['html', 'pdf']
-                        for l in langs.keys()])))
+jobs.extend(
+    [{'_'.join(['{name}','manual',l,f]): {'lang': l, 'languagename': langs[l]}}
+     for f in ['html', 'pdf']
+     for l in sorted(langs.keys())
+     if not (f=='pdf' and l in non_pdf_langs)])
 
-jobs.extend(map(lambda (p): {'_'.join(['{name}','build',p]):    {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
-                pkgs))
-
-jobs.extend(map(lambda (p): {'_'.join(['{name}','pu-build',p]): {'gitrepo': 'git://git.debian.org/git/d-i/' + p}},
-                pkgs))
+jobs.extend(
+    [{'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
+     for act in ['build', 'pu-build']
+     for pkg in pkgs])
 
 data.append(
     {'project': { 'name': 'd-i',
                   'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">d-i.yaml.py</a>.',
-                  'jobs': jobs}}
-)
+                  'jobs': jobs}})
 
 sys.stdout.write( dump(data, Dumper=Dumper) )

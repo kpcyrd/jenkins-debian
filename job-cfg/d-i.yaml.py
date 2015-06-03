@@ -176,31 +176,6 @@ def instguide_desc():
     return 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
 
 
-def sb_about():
-    return {'sidebar': {'url': 'https://jenkins.debian.net/userContent/about.html',
-                        'text': 'About jenkins.debian.net',
-                        'icon': '/userContent/images/debian-swirl-24x24.png'}}
-
-def sb_misc():
-    return {'sidebar': {'url': 'https://jenkins.debian.net/view/d-i_misc/',
-                        'text': 'Misc debian-installer jobs',
-                        'icon': '/userContent/images/debian-jenkins-24x24.png'}}
-
-def sb_manual():
-    return {'sidebar': {'url': 'https://jenkins.debian.net/view/d-i_manual/',
-                        'text': 'debian-installer manual jobs',
-                        'icon': '/userContent/images/debian-jenkins-24x24.png'}}
-
-def sb_pkgs():
-    return {'sidebar': {'url': 'https://jenkins.debian.net/view/d-i_packages/',
-                        'text': 'debian-installer packages jobs',
-                        'icon': '/userContent/images/debian-jenkins-24x24.png'}}
-
-def sb_pbricks():
-    return {'sidebar': {'url': 'http://www.profitbricks.co.uk',
-                        'text': 'Sponsored by Profitbricks',
-                        'icon': '/userContent/images/profitbricks-24x24.png'}}
-
 def lr(keep):
     return {'artifactDaysToKeep': -1, 'daysToKeep': keep, 'numToKeep': 30, 'artifactNumToKeep': -1}
 
@@ -225,13 +200,19 @@ def publ(fmt=None,trigger=False,irc=None):
     return p
 
 
-
-
-def prop(middle=sb_manual, priority=None):
-    arr = [sb_about(), middle(), sb_pbricks()]
+def prop(type='manual', priority=None):
+    p = [{'sidebar': {'url': 'https://jenkins.debian.net/userContent/about.html',
+                      'text': 'About jenkins.debian.net',
+                      'icon': '/userContent/images/debian-swirl-24x24.png'}},
+         {'sidebar': {'url': 'https://jenkins.debian.net/view/d-i_' + type + '/',
+                      'text': 'debian-installer ' + type + ' jobs',
+                      'icon': '/userContent/images/debian-jenkins-24x24.png'}},
+         {'sidebar': {'url': 'http://www.profitbricks.co.uk',
+                      'text': 'Sponsored by Profitbricks',
+                      'icon': '/userContent/images/profitbricks-24x24.png'}}]
     if priority != None:
-        arr.append( {'priority': {'job-prio': str(priority)}} )
-    return arr
+        p.append( {'priority': {'job-prio': str(priority)}} )
+    return p
 
 
 def jtmpl(act, lang, fmt=None, po=False):
@@ -245,7 +226,7 @@ def jtmpl(act, lang, fmt=None, po=False):
     return {'job-template': {'name': '_'.join(n), 'defaults': '-'.join(d)}}
 
 
-def jobspec_svn(name, desc=None, defaults=None,
+def jobspec_svn(key, name, desc=None, defaults=None,
                 priority=120, logkeep=None, trigger=None, publisher=None,
                 lang=None, fmt=None, po=False, inc_regs=None ):
     j = {'scm': scm_svn(po=po,inc_regs=inc_regs),
@@ -269,73 +250,69 @@ def jobspec_svn(name, desc=None, defaults=None,
         j['triggers'] = [{'pollscm': '*/' + str(trigger) + ' * * * *'}]
     if logkeep != None:
         j['logrotate'] = lr(logkeep)
-    return j
+    return { key : j }
 
 
 data = []
 
-data.append( {'defaults': { 'name': 'd-i',
-                            'logrotate': lr(90),
-                            'project-type': 'freestyle',
-                            'properties': prop(middle=sb_misc)}})
+data.append({'defaults': { 'name': 'd-i',
+                           'logrotate': lr(90),
+                           'project-type': 'freestyle',
+                           'properties': prop(type='misc')}})
 
-data.append( {'defaults': jobspec_svn( name='d-i-manual-html',
-                                       fmt='html',
-                                       lang='{lang}',
-                                       trigger=15,
-                                       logkeep=90 )})
+data.append(jobspec_svn(key='defaults',
+                        name='d-i-manual-html',
+                        fmt='html',
+                        lang='{lang}',
+                        trigger=15,
+                        logkeep=90))
 
-data.append( {'defaults': jobspec_svn( name='d-i-manual-html-po2xml',
-                                       fmt='html',
-                                       lang='{lang}',
-                                       po=True,
-                                       trigger=30,
-                                       logkeep=90 )})
+data.append(jobspec_svn(key='defaults',
+                        name='d-i-manual-html-po2xml',
+                        fmt='html',
+                        lang='{lang}',
+                        po=True,
+                        trigger=30,
+                        logkeep=90 ))
 
-data.append( {'defaults': jobspec_svn( name='d-i-manual-pdf',
-                                       fmt='pdf',
-                                       lang='{lang}',
-                                       desc=pdf_desc,
-                                       logkeep=90 )})
+data.append(jobspec_svn(key='defaults',
+                        name='d-i-manual-pdf',
+                        fmt='pdf',
+                        lang='{lang}',
+                        desc=pdf_desc,
+                        logkeep=90 ))
 
-data.append( {'defaults': jobspec_svn( name='d-i-manual-pdf-po2xml',
-                                       fmt='pdf',
-                                       lang='{lang}',
-                                       desc=pdf_desc,
-                                       po=True,
-                                       logkeep=90 )})
+data.append(jobspec_svn(key='defaults',
+                        name='d-i-manual-pdf-po2xml',
+                        fmt='pdf',
+                        lang='{lang}',
+                        desc=pdf_desc,
+                        po=True,
+                        logkeep=90 ))
 
-data.append( {'defaults': { 'name': 'd-i-build',
-                            'description': 'Builds debian packages in sid from git master branch, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                            'triggers': [{'pollscm': '*/6 * * * *'}],
-                            'scm': [{'git': {'url': '{gitrepo}',
-                                             'branches': ['master']}}],
-                            'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
-                            'project-type': 'freestyle',
-                            'properties': prop(middle=sb_pkgs, priority=99),
-                            'logrotate': lr(90),
-                            'publishers': publ(irc='debian-boot')}}
-)
+data.extend(map(
+    lambda (n,bdsc,br,trg,irc): {
+        'defaults': { 'name': n,
+                      'description': 'Builds debian packages in sid from git '+ bdsc +', triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
+                      'triggers': [{'pollscm': trg}],
+                      'scm': [{'git': {'url': '{gitrepo}',
+                                       'branches': [br]}}],
+                      'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+                      'project-type': 'freestyle',
+                      'properties': prop(type='packages', priority=99),
+                      'logrotate': lr(90),
+                      'publishers': publ(irc=irc)}},
+        [('d-i-build', 'master branch', 'master', '*/6 * * * *',  'debian-boot'),
+         ('d-i-pu-build', 'pu/ branches',  'pu/**' , '*/10 * * * *', None)]))
 
-data.append( {'defaults': { 'name': 'd-i-pu-build',
-                            'description': 'Builds debian packages in sid from git pu/ branches, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                            'triggers': [{'pollscm': '*/10 * * * *'}],
-                            'scm': [{'git': {'url': '{gitrepo}',
-                                             'branches': ['pu/**']}}],
-                            'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
-                            'project-type': 'freestyle',
-                            'properties': prop(middle=sb_pkgs, priority=99),
-                            'logrotate': lr(90),
-                            'publishers': publ()}}
-)
-
-data.append({'job-template': jobspec_svn( defaults='d-i',
-                                          name='{name}_manual',
-                                          desc=instguide_desc,
-                                          trigger=15,
-                                          priority=125,
-                                          publisher=publ_email,
-                                          inc_regs='{include}')})
+data.append(jobspec_svn(key='job-template',
+                        defaults='d-i',
+                        name='{name}_manual',
+                        desc=instguide_desc,
+                        trigger=15,
+                        priority=125,
+                        publisher=publ_email,
+                        inc_regs='{include}'))
 
 data.append(
     {'job-template': { 'defaults': 'd-i',

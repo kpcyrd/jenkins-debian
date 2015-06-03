@@ -54,14 +54,14 @@ for PKG in $SOURCES ; do
 			BET=${VERSION}
 		fi
 	done
-	SID=$(rmadison -s unstable $PKG | cut -d "|" -f2|xargs echo)
+	SID=$(rmadison -s unstable $PKG | egrep -v '^(debian|new):' | cut -d "|" -f2|xargs echo)
 	for VERSION in ${VERSIONS} ; do
 		if [ "${VERSION}" != "$BET" ] ; then
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
-	TESTING=$(rmadison -s testing $PKG | cut -d "|" -f2|xargs echo)
-	EXPERIMENTAL=$(rmadison -s experimental $PKG | cut -d "|" -f2|xargs echo)
+	TESTING=$(rmadison -s testing $PKG | egrep -v '^(debian|new):' | cut -d "|" -f2|xargs echo)
+	EXPERIMENTAL=$(rmadison -s experimental $PKG | egrep -v '^(debian|new):' | cut -d "|" -f2|xargs echo)
 	#
 	# format output
 	#

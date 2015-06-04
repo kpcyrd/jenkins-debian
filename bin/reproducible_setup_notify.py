@@ -74,7 +74,7 @@ if maintainer:
         conn_udd = start_udd_connection()
     c = conn_udd.cursor()
     query = "SELECT source FROM sources WHERE maintainer_email = '{}' " + \
-            "AND release = 'sid'"
+            "AND release = 'sid' AND component = 'main'"
     try:
         c.execute(query.format(maintainer))
         pkgs = [x[0] for x in c.fetchall()]

@@ -243,8 +243,9 @@ cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userCo
 TMPFILE=$(mktemp)
 git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
 echo "----" >> $TMPFILE
+cat THANKS.head > /var/lib/jenkins/userContent/THANKS
 # samuel and lunar committed with several commiters, only display one
-grep -v "samuel.thibault@ens-lyon.org" THANKS.head | grep -v Lunar > $TMPFILE > /var/lib/jenkins/userContent/THANKS
+grep -v "samuel.thibault@ens-lyon.org" $TMPFILE | grep -v Lunar >> /var/lib/jenkins/userContent/THANKS
 rm $TMPFILE
 cp -pr userContent /var/lib/jenkins/
 cd /var/lib/jenkins/userContent/

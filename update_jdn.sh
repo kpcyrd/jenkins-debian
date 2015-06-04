@@ -87,24 +87,23 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			apt-listchanges \
 			bash-completion \
 			bc \
+			binfmt-support \
 			build-essential \
 			calamaris \
 			cron-apt \
+			cucumber \
 			curl \
 			debootstrap \
-			devscripts \
 			devscripts \
 			dnsmasq-base \
 			dose-extra \
 			dstat \
 			etckeeper \
-			libav-tools \
 			figlet \
 			gawk \
 			ghc \
 			gocr \
 			graphviz \
-			libguestfs-tools \
 			haveged \
 			imagemagick \
 			ip2host \
@@ -113,22 +112,35 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			libav-tools \
 			libcap2-bin \
 			libfile-touch-perl \
+			libguestfs-tools \
 			libjson-rpc-perl \
 			libsikuli-script-java \
 			libsoap-lite-perl \
-			ruby-libvirt \
+			libvirt0 \
+			libvirt-bin \
+			libvirt-dev \
 			libvpx1 \
 			libxslt1-dev \
+			linux-image-amd64 \
 			molly-guard \
 			moreutils \
 			mr \
 			mtr-tiny \
+			munin \
+			munin-plugins-extra \
 			ntp \
+			openbios-ppc \
+			openbios-sparc \
 			openjdk-7-jre \
+			ovmf \
 			pigz \
 			postgresql-client-9.4 \
 			poxml \
 			procmail \
+			python3-debian \
+			python3-psycopg2 \
+			python3-yaml \
+			python-arpy \
 			python-hachoir-metadata \
 			python-imaging \
 			python-lzma \
@@ -137,13 +149,19 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			python-setuptools \
 			python-twisted \
 			python-yaml \
-			python3-psycopg2 \
-			python3-yaml \
+			qemu \
+			qemu-kvm \
+			qemu-system-x86 \
+			qemu-user-static \
 			radvd \
 			ruby-json \
+			ruby-libvirt \
+			ruby-packetfu \
+			ruby-rjb \
 			ruby-rspec \
 			schroot \
 			screen \
+			seabios \
 			shorewall \
 			shorewall6 \
 			sqlite3 \
@@ -163,27 +181,6 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			xtightvncviewer \
 			xvfb \
 			zutils \
-			binfmt-support \
-			cucumber \
-			debootstrap \
-			libvirt-bin \
-			libvirt-dev \
-			libvirt0 \
-			linux-image-amd64 \
-			munin \
-			munin-plugins-extra \
-			python3-debian \
-			qemu \
-			qemu-kvm \
-			qemu-system-x86 \
-			qemu-user-static \
-			ruby-packetfu \
-			ruby-rjb \
-			seabios \
-			openbios-ppc \
-			openbios-sparc \
-			python-arpy \
-			ovmf \
 			sysvinit-core
 
 	#sudo apt-get install -t jessie-backports \

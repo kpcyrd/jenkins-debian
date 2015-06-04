@@ -165,17 +165,17 @@ def svn_desc(po, fmt):
     s =  'Builds the {languagename} ' + fmt + ' version of the installation-guide for all architectures. '
     s += 'Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual'
     s += '/po' if po else ''
-    s += '/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered. {do_not_edit}'
+    s += '/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered.'
     return s
 
 
 def pdf_desc():
-    s = 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>. {do_not_edit}'
+    s = 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>.'
     return s
 
 
 def instguide_desc():
-    return 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre> {do_not_edit}'
+    return 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre>'
 
 
 def lr(keep):
@@ -246,6 +246,8 @@ def jobspec_svn(key, name, desc=None, defaults=None,
     else:
         if fmt != None:
             j['description'] = svn_desc(po=po,fmt=fmt)
+    j['description'] += ' {do_not_edit}'
+
     if defaults != None:
         j['defaults'] = defaults
     if trigger != None:

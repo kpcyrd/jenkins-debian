@@ -88,6 +88,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			bash-completion \
 			bc \
 			binfmt-support \
+			bison \
 			build-essential \
 			calamaris \
 			cron-apt \
@@ -100,6 +101,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			dstat \
 			etckeeper \
 			figlet \
+			flex \
 			gawk \
 			ghc \
 			gocr \

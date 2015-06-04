@@ -257,6 +257,24 @@ def jobspec_svn(key, name, desc=None, defaults=None,
     return { key : j }
 
 
+def jobs():
+    j = [ '{name}_maintenance',
+          '{name}_check_jenkins_jobs',
+          {'{name}_manual': {'include': ( '/trunk/manual/debian/.*\n'
+                                          '/trunk/manual/po/.*\n'
+                                          '/trunk/manual/doc/.*\n'
+                                          '/trunk/manual/scripts/.*' )}}]
+    j.extend(
+        [{'_'.join(['{name}','manual',l,f]): {'lang': l, 'languagename': langs[l]}}
+         for f in ['html', 'pdf']
+         for l in sorted(langs.keys())
+         if not (f=='pdf' and l in non_pdf_langs)])
+    j.extend(
+        [{'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
+         for act in ['build', 'pu-build']
+         for pkg in pkgs])
+    return j
+
 data = []
 
 data.append(
@@ -336,27 +354,9 @@ data.extend(
      for act in ['build', 'pu-build']
      for pkg in pkgs])
 
-jobs = [ '{name}_maintenance',
-         '{name}_check_jenkins_jobs',
-         {'{name}_manual': {'include': ( '/trunk/manual/debian/.*\n'
-                                         '/trunk/manual/po/.*\n'
-                                         '/trunk/manual/doc/.*\n'
-                                         '/trunk/manual/scripts/.*' )}}]
-
-jobs.extend(
-    [{'_'.join(['{name}','manual',l,f]): {'lang': l, 'languagename': langs[l]}}
-     for f in ['html', 'pdf']
-     for l in sorted(langs.keys())
-     if not (f=='pdf' and l in non_pdf_langs)])
-
-jobs.extend(
-    [{'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
-     for act in ['build', 'pu-build']
-     for pkg in pkgs])
-
 data.append(
     {'project': { 'name': 'd-i',
                   'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">d-i.yaml.py</a>.',
-                  'jobs': jobs}})
+                  'jobs': jobs()}})
 
 sys.stdout.write( dump(data, Dumper=Dumper) )

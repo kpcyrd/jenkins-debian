@@ -257,24 +257,41 @@ def jobspec_svn(key, name, desc=None, defaults=None,
     return { key : j }
 
 
-def jobs():
-    j = [ '{name}_maintenance',
-          '{name}_check_jenkins_jobs',
-          {'{name}_manual': {'include': ( '/trunk/manual/debian/.*\n'
-                                          '/trunk/manual/po/.*\n'
-                                          '/trunk/manual/doc/.*\n'
-                                          '/trunk/manual/scripts/.*' )}}]
-    j.extend(
-        [{'_'.join(['{name}','manual',l,f]): {'lang': l, 'languagename': langs[l]}}
-         for f in ['html', 'pdf']
-         for l in sorted(langs.keys())
-         if not (f=='pdf' and l in non_pdf_langs)])
-    j.extend(
-        [{'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
-         for act in ['build', 'pu-build']
-         for pkg in pkgs])
-    return j
+def templs_jobs():
+    templates = []
+    jobs = [ '{name}_maintenance',
+             '{name}_check_jenkins_jobs',
+             {'{name}_manual': {'include': ( '/trunk/manual/debian/.*\n'
+                                             '/trunk/manual/po/.*\n'
+                                             '/trunk/manual/doc/.*\n'
+                                             '/trunk/manual/scripts/.*' )}}]
+    def tj_append(t, j):
+        templates.append(t)
+        jobs.append(j)
 
+    # this is a bit contrived: in order to only need to go through each loop once
+    # we're producing the template and it's job at the same time in a tuple, then
+    # using a local function to append those results onto their apropriate lists
+    # This is done mostly as a stepping ston to discarding the teplates (assuming
+    # that is possible, which we'll find out...)
+    [tj_append(t,j) for (t,j) in [
+        (
+            jtmpl(act='manual',target=l,fmt=f,po=(l not in non_po_langs)),
+            {'_'.join(['{name}','manual',l,f]): {'lang': l, 'languagename': langs[l]}}
+        )
+        for f in ['html', 'pdf']
+        for l in sorted(langs.keys())
+        if not (f=='pdf' and l in non_pdf_langs)]]
+    [tj_append(t,j) for (t,j) in [
+        (
+            jtmpl(act=act,target=pkg),
+            {'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
+        )
+        for act in ['build', 'pu-build']
+        for pkg in pkgs]]
+    return (templates, jobs)
+
+# -- here we build the data to be dumped as yaml
 data = []
 
 data.append(
@@ -342,21 +359,13 @@ data.append(
                                                      'unstable-on-warning': 'true',
                                                      'fail-on-error': 'true'}},
                                       publ_email('debian-boot')]}})
+(templs, jobs) = templs_jobs()
 
-data.extend(
-    [jtmpl(act='manual',target=l,fmt=f,po=(l not in non_po_langs))
-     for f in ['html', 'pdf']
-     for l in sorted(langs.keys())
-     if not (f=='pdf' and l in non_pdf_langs)])
-
-data.extend(
-    [jtmpl(act=act,target=pkg)
-     for act in ['build', 'pu-build']
-     for pkg in pkgs])
+data.extend(templs)
 
 data.append(
     {'project': { 'name': 'd-i',
                   'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">d-i.yaml.py</a>.',
-                  'jobs': jobs()}})
+                  'jobs': jobs}})
 
 sys.stdout.write( dump(data, Dumper=Dumper) )

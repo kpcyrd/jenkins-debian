@@ -94,7 +94,7 @@ for package in packages:
 gen_packages_html(packages, no_clean=True)
 build_page('notify')
 
-if deactivate:
+if local_args.deactivate:
     _good('Notifications disabled for ' + str(len(packages)) + ' package(s)')
 else:
     _good('Notifications enabled for ' + str(len(packages)) + ' package(s)')

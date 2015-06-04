@@ -259,10 +259,11 @@ def jobspec_svn(key, name, desc=None, defaults=None,
 
 data = []
 
-data.append({'defaults': { 'name': 'd-i',
-                           'logrotate': lr(90),
-                           'project-type': 'freestyle',
-                           'properties': prop(type='misc')}})
+data.append(
+    {'defaults': { 'name': 'd-i',
+                   'logrotate': lr(90),
+                   'project-type': 'freestyle',
+                   'properties': prop(type='misc')}})
 
 data.extend(
     [jobspec_svn(key='defaults',
@@ -291,14 +292,15 @@ data.extend(
      in [('d-i-build',    'master branch', 'master', '*/6 * * * *',  'debian-boot'),
          ('d-i-pu-build', 'pu/ branches',  'pu/**' , '*/10 * * * *', None)]])
 
-data.append(jobspec_svn(key='job-template',
-                        defaults='d-i',
-                        name='{name}_manual',
-                        desc=instguide_desc,
-                        trigger=15,
-                        priority=125,
-                        publishers=[publ_email()],
-                        inc_regs='{include}'))
+data.append(
+    jobspec_svn(key='job-template',
+                defaults='d-i',
+                name='{name}_manual',
+                desc=instguide_desc,
+                trigger=15,
+                priority=125,
+                publishers=[publ_email()],
+                inc_regs='{include}'))
 
 data.append(
     {'job-template': { 'defaults': 'd-i',

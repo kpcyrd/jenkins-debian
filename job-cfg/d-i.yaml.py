@@ -325,7 +325,7 @@ data.extend(
                    'publishers': publ(irc=irc)}}
      for (n,bdsc,br,trg,irc)
      in [('d-i-build',    'master branch', 'origin/master', 'H/6 * * * *',  'debian-boot'),
-         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', None)]])
+         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', 'debian-boot')]])
 
 data.append(
     jobspec_svn(key='job-template',

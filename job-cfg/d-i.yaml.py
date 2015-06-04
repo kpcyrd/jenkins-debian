@@ -251,7 +251,7 @@ def jobspec_svn(key, name, desc=None, defaults=None,
     if defaults != None:
         j['defaults'] = defaults
     if trigger != None:
-        j['triggers'] = [{'pollscm': '*/' + str(trigger) + ' * * * *'}]
+        j['triggers'] = [{'pollscm': 'H/' + str(trigger) + ' * * * *'}]
     if logkeep != None:
         j['logrotate'] = lr(logkeep)
     return { key : j }
@@ -324,8 +324,8 @@ data.extend(
                    'logrotate': lr(90),
                    'publishers': publ(irc=irc)}}
      for (n,bdsc,br,trg,irc)
-     in [('d-i-build',    'master branch', 'origin/master', '*/6 * * * *',  'debian-boot'),
-         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , '*/10 * * * *', None)]])
+     in [('d-i-build',    'master branch', 'origin/master', 'H/6 * * * *',  'debian-boot'),
+         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', None)]])
 
 data.append(
     jobspec_svn(key='job-template',

@@ -367,7 +367,7 @@ write_usertag_table() {
 			let "COUNT+=1"
 			VALUE=$(echo $RESULT | cut -d "|" -f$COUNT)
 			if [ $COUNT -eq 1 ] ; then
-				write_page "<table class=\"main\"><tr><th>Usertagged bugs</th><th>Open</th><th>Done</th><th>Total</th></tr>"
+				write_page "<table class=\"main\" id=\"usertagged-bugs\"><tr><th>Usertagged bugs</th><th>Open</th><th>Done</th><th>Total</th></tr>"
 			elif [ $((COUNT%2)) -eq 0 ] ; then
 				write_page "<tr><td><a href=\"https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=${FIELD:5};users=reproducible-builds@lists.alioth.debian.org&amp;archive=both\">${FIELD:5}</a></td><td>$VALUE</td>"
 				TOTAL=$VALUE
@@ -600,7 +600,7 @@ create_main_stats_page() {
 	done
 	# explain setup
 	write_page "</p><p style=\"clear:both;\">"
-	write_page "<table class=\"main\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
+	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
 	write_page "<tr><td>hostname</td><td>$(hostname)</td><td>i-capture-the-hostname</td></tr>"
 	write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=\"1111\"</td><td>BUILDUSERID=\"2222\"</td></tr>"

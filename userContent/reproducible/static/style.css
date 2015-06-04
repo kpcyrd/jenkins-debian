@@ -218,6 +218,12 @@ th {
 	padding: 0.5em;
 }
 
+table:target th {
+    background: #ffb;
+}
+
+
+
 iframe#main {
 	margin: 0;
 	width: 100%;

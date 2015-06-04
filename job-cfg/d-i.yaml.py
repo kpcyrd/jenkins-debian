@@ -324,8 +324,8 @@ data.extend(
                    'logrotate': lr(90),
                    'publishers': publ(irc=irc)}}
      for (n,bdsc,br,trg,irc)
-     in [('d-i-build',    'master branch', 'master', '*/6 * * * *',  'debian-boot'),
-         ('d-i-pu-build', 'pu/ branches',  'pu/**' , '*/10 * * * *', None)]])
+     in [('d-i-build',    'master branch', 'origin/master', '*/6 * * * *',  'debian-boot'),
+         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , '*/10 * * * *', None)]])
 
 data.append(
     jobspec_svn(key='job-template',

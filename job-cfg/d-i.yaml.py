@@ -185,7 +185,7 @@ def lr(keep):
 def publ_email(irc=None):
     r = ['jenkins+' + irc] if irc != None else []
     r.append('qa-jenkins-scm@lists.alioth.debian.org')
-    return [{'email': {'recipients': ' '.join(r)}}]
+    return {'email': {'recipients': ' '.join(r)}}
 
 
 def publ(fmt=None,trigger=False,irc=None):
@@ -196,7 +196,7 @@ def publ(fmt=None,trigger=False,irc=None):
         {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian-installer.rules',
                        'unstable-on-warning': 'true',
                        'fail-on-error': 'true'}}])
-    p.extend(publ_email(irc=irc))
+    p.append(publ_email(irc=irc))
     if fmt != None:
         p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest_only': True}})
     return p
@@ -229,7 +229,7 @@ def jtmpl(act, target, fmt=None, po=False):
 
 
 def jobspec_svn(key, name, desc=None, defaults=None,
-                priority=120, logkeep=None, trigger=None, publisher=None,
+                priority=120, logkeep=None, trigger=None, publishers=None,
                 lang=None, fmt=None, po=False, inc_regs=None ):
     j = {'scm': scm_svn(po=po,inc_regs=inc_regs),
          'project-type': 'freestyle',
@@ -239,7 +239,7 @@ def jobspec_svn(key, name, desc=None, defaults=None,
                        + (' po2xml' if po else '')}],
          'properties': prop(priority=priority),
          'name': name}
-    j['publishers'] = publisher() if publisher != None else publ(fmt=fmt,trigger=trigger,irc='debian-boot')
+    j['publishers'] = publishers if publishers != None else publ(fmt=fmt,trigger=trigger,irc='debian-boot')
 
     if desc != None:
         j['description'] = desc()
@@ -295,7 +295,7 @@ data.append(jobspec_svn(key='job-template',
                         desc=instguide_desc,
                         trigger=15,
                         priority=125,
-                        publisher=publ_email,
+                        publishers=[publ_email()],
                         inc_regs='{include}'))
 
 data.append(
@@ -307,8 +307,7 @@ data.append(
                        'publishers': [{'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
                                                      'unstable-on-warning': 'true',
                                                      'fail-on-error': 'true'}},
-                                      {'email': {'recipients': 'qa-jenkins-scm@lists.alioth.debian.org'}}]}}
-)
+                                      publ_email()]}})
 
 data.append(
     {'job-template': { 'defaults': 'd-i',
@@ -320,8 +319,7 @@ data.append(
                        'publishers': [{'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
                                                      'unstable-on-warning': 'true',
                                                      'fail-on-error': 'true'}},
-                                      {'email': {'recipients': 'jenkins+debian-boot qa-jenkins-scm@lists.alioth.debian.org'}}]}}
-)
+                                      publ_email('debian-boot')]}})
 
 data.extend(
     [jtmpl(act='manual',target=l,fmt=f,po=(l not in non_po_langs))

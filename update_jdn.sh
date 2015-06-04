@@ -217,7 +217,7 @@ fi
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm
 sudo a2ensite -q jenkins.debian.net
-auso a2enconf -q munin
+sudo a2enconf -q munin
 sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.conf
 # for reproducible.d.n url rewriting:
 [ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent

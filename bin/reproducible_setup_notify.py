@@ -67,7 +67,6 @@ def process_pkg(package, deactivate):
         query = 'SELECT * FROM sources WHERE name="{}"'.format(package)
         log.debug(query_db(query))
 
-
 if maintainer:
     global conn_udd
     if not conn_udd:
@@ -94,3 +93,8 @@ for package in packages:
 
 gen_packages_html(packages, no_clean=True)
 build_page('notify')
+
+if deactivate:
+    _good('Notifications disabled for ' + str(len(packages)) + ' package(s)')
+else:
+    _good('Notifications enabled for ' + str(len(packages)) + ' package(s)')

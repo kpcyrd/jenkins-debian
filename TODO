@@ -225,6 +225,9 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 	<h01ger> well, and everybody in debian-keyring from sid can uplood? :)
 	<mapreri> that would be wonderful.
 
+* coreboot build job
+** add more variations
+** clone with https
 * coreboot html
 ** r.d.n/coreboot.html - link from r.d.n frontpage
 ** include coreboot logo

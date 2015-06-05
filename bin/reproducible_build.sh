@@ -319,8 +319,8 @@ call_debbindiff() {
 			dbd_timeout $TIMEOUT
 			;;
 		*)
-			handle_ftbr "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it"
-			irc_message "Something weird with $DBDVERSION (exit with $RESULT) happened and I don't know how to handle it. Check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
+			handle_ftbr "Something weird happened when running $DBDVERSION (which exited with $RESULT) and I don't know how to handle it"
+			irc_message "Something weird happened when running $DBDVERSION (which exited with $RESULT) and I don't know how to handle it. Check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
 			;;
 	esac
 	print_out_duration

@@ -665,7 +665,6 @@ create_main_stats_page() {
 SUITE="unstable"
 update_bug_stats
 update_notes_stats
-create_main_stats_page
 for SUITE in $SUITES ; do
 	update_suite_stats
 	gather_suite_stats
@@ -677,4 +676,5 @@ for SUITE in $SUITES ; do
 	update_meta_pkg_stats
 	create_pkg_sets_pages
 done
+create_main_stats_page
 

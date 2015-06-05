@@ -228,6 +228,9 @@
     defaults: reproducible_builder
     name: '{name}_builder_theta'
 
+- job-template:
+    defaults: reproducible
+    name: '{name}_coreboot'
 
 - project:
     name: reproducible
@@ -368,3 +371,9 @@
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_coreboot':
+            my_description: 'Test coreboot for reproducibility.'
+            my_timed: '23 42 23 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+

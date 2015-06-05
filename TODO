@@ -225,13 +225,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 	<h01ger> well, and everybody in debian-keyring from sid can uplood? :)
 	<mapreri> that would be wonderful.
 
-* coreboot
-** git clone --recursive http://review.coreboot.org/p/coreboot.git
-** cd coreboot
-** make crossgcc-i386
-** bash utils/abuild/abuild
-** results in coreboot-builds/*/coreboot.rom
-* coreboot output
+* coreboot html
 ** r.d.n/coreboot.html - link from r.d.n frontpage
 ** include coreboot logo
 ** table with variations
@@ -240,7 +234,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** link to r.p.n, the 129 issues and wiki
 ** ask for help
 * coreboot job
-** run once a month
+** better description
 
 * openwrt
 <pre>

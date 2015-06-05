@@ -160,7 +160,7 @@ done
 echo "============================================================================="
 echo "$(date) - Building coreboot images now - first build run."
 echo "============================================================================="
-export TZ="/usr/share/zoneinfo/Etc/GMT+12" \
+export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 bash utils/abuild/abuild
 
 cd coreboot-builds

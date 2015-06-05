@@ -161,7 +161,7 @@ echo "==========================================================================
 echo "$(date) - Building coreboot images now - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
-bash utils/abuild/abuild
+bash util/abuild/abuild
 
 cd coreboot-builds
 for i in * ; do
@@ -179,7 +179,7 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
-bash utils/abuild/abuild
+bash util/abuild/abuild
 
 export LANG="en_GB.UTF-8"
 unset LC_ALL

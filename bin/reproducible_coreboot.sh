@@ -148,6 +148,8 @@ echo "$(date -u) - Cloning the coreboot git repository with submodules now."
 echo "============================================================================="
 git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot
+# still required because the coreboot moved submodule and take care of old git versions
+git submodule update --init --checkout 3rdparty/blobs
 COREBOOT="$(git log -1 | head -3)"
 
 echo "============================================================================="

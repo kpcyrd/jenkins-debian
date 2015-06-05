@@ -163,6 +163,7 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 bash util/abuild/abuild
 
+set -x
 cd coreboot-builds
 for i in * ; do
 	if [ -f $i/coreboot.rom ] ; then
@@ -172,6 +173,7 @@ for i in * ; do
 done
 cd ..
 rm coreboot-builds -rf
+set +x
 
 echo "============================================================================="
 echo "$(date) - Building coreboot images now - second build run."

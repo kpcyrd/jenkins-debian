@@ -287,7 +287,7 @@ def templs_jobs():
             jtmpl(act=act,target=pkg),
             {'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
         )
-        for act in ['build', 'pu-build']
+        for act in ['build']
         for pkg in pkgs]]
     return (templates, jobs)
 
@@ -361,11 +361,16 @@ data.append(
                                       publ_email('debian-boot')]}})
 (templs, jobs) = templs_jobs()
 
+# let's see if we can be rather more efficient with the yaml -- test just the pu stuff
+templs.append(jtmpl(act='pu-build',target='{pkg}'))
+jobs.append({'_'.join(['{name}','pu-build','{pkg}']): {'gitrepo': 'git://git.debian.org/git/d-i/{pkg}'}})
+
 data.extend(templs)
 
 data.append(
     {'project': { 'name': 'd-i',
                   'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">d-i.yaml.py</a>.',
+                  'pkg': pkgs,
                   'jobs': jobs}})
 
 sys.stdout.write( dump(data, Dumper=Dumper) )

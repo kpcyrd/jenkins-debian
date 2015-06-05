@@ -148,7 +148,7 @@ echo "$(date) - Cloning the coreboot git repository with submodules now."
 echo "============================================================================="
 git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot
-COREBOOT="$(git log -1 | head 3)"
+COREBOOT="$(git log -1 | head -3)"
 
 echo "============================================================================="
 echo "$(date) - Building cross compilers for ${ARCHS} now."

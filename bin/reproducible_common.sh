@@ -183,8 +183,10 @@ write_page_header() {
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>$2</title></head>"
-	write_page "<body><header><h2>$2</h2>"
-	if [ "$1" = "$MAINVIEW" ] ; then
+	if [ "$1" != "$MAINVIEW" ] ; then
+		write_page "<body><header><h2>$2</h2>"
+	else
+		write_page "<body onload=\"selectSearch()\"><header><h2>$2</h2>"
 		write_page "<p>These pages are showing the <em>prospects</em> of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>."
 		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
@@ -233,6 +235,11 @@ write_page_header() {
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
 	write_page "</ul>"
+	if [ "$1" = "$MAINVIEW" ] ; then
+		write_page "<form onsubmit=\"location.href='https://reproducible.debian.net/' + document.getElementById('SrcPkg').value; return false;\">"
+		write_page "https://reproducible.debian.net/<input type=\"text\" id=\"SrcPkg\" />"
+		write_page "<input type=\"submit\" value=\"submit source package name\" />"
+	fi
 	write_page "</header>"
 }
 

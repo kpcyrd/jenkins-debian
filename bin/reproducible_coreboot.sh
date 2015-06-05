@@ -223,6 +223,7 @@ for i in * ; do
 done
 echo "</ul></body></html>" >> $PAGE
 cd ..
+echo "Enjoy $REPRODUCIBLE_URL/coreboot.html"
 
 #build_rebuild  # defines FTBFS
 #if [ $FTBFS -eq 0 ] ; then

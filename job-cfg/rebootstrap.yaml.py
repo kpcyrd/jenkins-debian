@@ -2,7 +2,6 @@
 
 architectures = """
    i386
-   hppa
    mips mips64el mipsel
    powerpc ppc64
    s390x
@@ -13,6 +12,7 @@ architectures = """
 mono_architectures = """
     armel armhf musl-linux-armhf arm64 musl-linux-arm64
     alpha
+    hppa
     musl-linux-i386
     m68k
     musl-linux-mips musl-linux-mipsel

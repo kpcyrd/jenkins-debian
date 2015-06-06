@@ -33,7 +33,7 @@ print_out_duration() {
 	local HOUR=$(echo "$DURATION/3600"|bc)
 	local MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
 	local SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
-	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
+	echo "$(date -u) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
 }
 
 call_debbindiff() {
@@ -65,7 +65,7 @@ call_debbindiff() {
 			;;
 		124)
 			if [ ! -s $TMPDIR/$1.html ] ; then
-				echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after ${TIMEOUT}..."
+				echo "$(date -u) - $DBDVERSION produced no output and was killed after running into timeout after ${TIMEOUT}..."
 			else
 				local msg="$DBDVERSION was killed after running into timeout after $TIMEOUT"
 				msg="$msg, but there is still $TMPDIR/$1.html"
@@ -139,26 +139,26 @@ TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actua
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
-DATE=$(date +'%Y-%m-%d %H:%M')
+DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 mkdir b1 b2
 
 echo "============================================================================="
-echo "$(date) - Cloning the coreboot git repository with submodules now."
+echo "$(date -u) - Cloning the coreboot git repository with submodules now."
 echo "============================================================================="
 git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot
 COREBOOT="$(git log -1 | head -3)"
 
 echo "============================================================================="
-echo "$(date) - Building cross compilers for ${ARCHS} now."
+echo "$(date -u) - Building cross compilers for ${ARCHS} now."
 echo "============================================================================="
 for ARCH in ${ARCHS} ; do 
 	make crossgcc-$ARCH
 done
 
 echo "============================================================================="
-echo "$(date) - Building coreboot images now - first build run."
+echo "$(date -u) - Building coreboot images now - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 bash util/abuild/abuild || true
@@ -174,7 +174,7 @@ cd ..
 rm coreboot-builds -rf
 
 echo "============================================================================="
-echo "$(date) - Building coreboot images now - second build run."
+echo "$(date -u) - Building coreboot images now - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
@@ -203,7 +203,7 @@ TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date) - Running $DBDVERSION on coreboot images now"
+echo "$(date -u) - Running $DBDVERSION on coreboot images now"
 echo "============================================================================="
 
 create_results_dirs

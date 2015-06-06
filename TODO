@@ -226,12 +226,10 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 	<mapreri> that would be wonderful.
 
 * coreboot build job
-** add more variations
+** add more variations: domain+hostname, PATH, uid+gid, USER, UTS namespace, kernel version, umask
 ** clone with https
 * coreboot html
 ** include rom name via path in dbd output
-* coreboot job
-** better description
 
 * openwrt
 <pre>

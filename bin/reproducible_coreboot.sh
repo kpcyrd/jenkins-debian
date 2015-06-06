@@ -101,7 +101,7 @@ echo "==========================================================================
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."
 echo "============================================================================="
 for ARCH in ${ARCHS} ; do 
-	make crossgcc-$ARCH
+	nice ionice -c 3 make crossgcc-$ARCH
 done
 
 echo "============================================================================="
@@ -115,7 +115,7 @@ NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything
-bash util/abuild/abuild || true # don't fail the full job just because some targets fail
+nice ionice -c 3 bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
 cd coreboot-builds
 for i in * ; do
@@ -136,7 +136,7 @@ export LC_ALL="fr_CH.UTF-8"
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
-bash util/abuild/abuild || true # don't fail the full job just because some targets fail
+nice ionice -c 3 bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
 export LANG="en_GB.UTF-8"
 unset LC_ALL

@@ -372,7 +372,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_coreboot':
-            my_description: 'Test coreboot for reproducibility.'
+            my_description: 'Try to rebuild all coreboot ROMs twice (with variations) and investigate them regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'

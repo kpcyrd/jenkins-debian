@@ -4,7 +4,7 @@
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -161,9 +161,8 @@ echo "==========================================================================
 echo "$(date) - Building coreboot images now - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
-bash util/abuild/abuild
+bash util/abuild/abuild || true
 
-set -x
 cd coreboot-builds
 for i in * ; do
 	if [ -f $i/coreboot.rom ] ; then
@@ -173,7 +172,6 @@ for i in * ; do
 done
 cd ..
 rm coreboot-builds -rf
-set +x
 
 echo "============================================================================="
 echo "$(date) - Building coreboot images now - second build run."
@@ -181,7 +179,7 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
-bash util/abuild/abuild
+bash util/abuild/abuild || true
 
 export LANG="en_GB.UTF-8"
 unset LC_ALL

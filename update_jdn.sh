@@ -107,6 +107,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			gocr \
 			graphviz \
 			haveged \
+			iasl \
 			imagemagick \
 			ip2host \
 			less \

@@ -585,7 +585,7 @@ create_main_stats_page() {
 		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a></td><td>$(echo $RESULT)</td></tr>"
+	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td></tr>"
 	write_page "</table>"
 	# write bugs with usertags table
 	write_usertag_table

@@ -250,7 +250,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	# note: the missing slash in the RewriteRule is wanted to avoid a double slash
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_URI} ^/coreboot/$
-	RewriteRule ^/(.*) /coreboot/coreboot.html_ [R,L]
+	RewriteRule ^/(.*) /coreboot/coreboot.html [R,L]
 
 	<Proxy *>
 		Require all granted

@@ -25,18 +25,6 @@ create_results_dirs() {
 	mkdir -p $BASE/coreboot/dbd
 }
 
-calculate_build_duration() {
-	END=$(date +'%s')
-	DURATION=$(( $END - $START ))
-}
-
-print_out_duration() {
-	local HOUR=$(echo "$DURATION/3600"|bc)
-	local MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
-	local SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
-	echo "$(date -u) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
-}
-
 call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo
@@ -190,9 +178,11 @@ cat > $PAGE <<- EOF
           <br />
         </blockquote>
 EOF
-write_page "       <h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LANG, LC_CTYPE variable and number of cores variations yet and no fancy html.</p><pre>"
-write_page $COREBOOT
-write_page "       </pre><ul>"
+write_page "       <h1>Reproducible Coreboot</h1>"
+write_page "       <p>This is work in progress started on 2015-06-04.</p>"
+write_page "       <pre>$COREBOOT<pre>"
+write_explaination_table coreboot
+write_page "       <ul>"
 ROMS=0
 RROMS=0
 create_results_dirs

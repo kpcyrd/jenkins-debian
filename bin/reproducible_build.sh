@@ -109,11 +109,6 @@ cleanup_userContent() {
 	rm -f $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
 }
 
-calculate_build_duration() {
-	END=$(date +'%s')
-	DURATION=$(( $END - $START ))
-}
-
 update_db_and_html() {
 	# everything passed at this function is saved as a status of this package in the db
 	STATUS="$@"
@@ -143,13 +138,6 @@ update_rbuildlog() {
 	chmod 644 $RBUILDLOG
 	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-}
-
-print_out_duration() {
-	local HOUR=$(echo "$DURATION/3600"|bc)
-	local MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
-	local SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
-	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s." | tee -a ${RBUILDLOG}
 }
 
 handle_404() {

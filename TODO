@@ -230,9 +230,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** clone with https
 * coreboot html
 ** r.d.n/coreboot.html - link from r.d.n frontpage
-** include coreboot logo
-** table with variations
-** page with dbd results per rom
+** include rom name via path in dbd output
 ** link to script in git, explain job is run monthly
 ** link to r.p.n, the 129 issues and wiki
 ** ask for help

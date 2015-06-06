@@ -609,7 +609,7 @@ create_main_stats_page() {
 	write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	write_page "<tr><td>env LC_ALL</td><td><em>unset</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
 	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-	write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/path\"</td></tr>"
+	write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
 	write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=$NUM_CPU\"</td><td>DEB_BUILD_OPTIONS=\"parallel=$(echo $NUM_CPU-1|bc)\"<br />(using a different number of cores is on the agenda)</td></tr>"
 	write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
 	write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"

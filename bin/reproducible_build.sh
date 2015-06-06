@@ -401,7 +401,7 @@ check_suitability() {
 build_rebuild() {
 	FTBFS=1
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	local NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 	mkdir b1 b2
 	set -x
 	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG

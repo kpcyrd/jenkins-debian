@@ -46,7 +46,7 @@ pdebuild_package() {
 	# build
 	#
 	cd manual
-	NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+	NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU" -- --http-proxy $http_proxy
 	#
 	# publish and cleanup

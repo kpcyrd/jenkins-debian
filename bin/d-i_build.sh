@@ -67,7 +67,7 @@ pdebuild_package() {
 	SOURCE=$(dpkg-parsechangelog |grep ^Source: | cut -d " " -f2)
 	# workaround #767260 (console-setup doesn't support parallel build)
 	if [ "$SOURCE" != "console-setup" ] ; then
-		NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
+		NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 	else
 		NUM_CPU=1
 	fi

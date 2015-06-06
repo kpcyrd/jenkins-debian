@@ -227,7 +227,6 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * coreboot build job
 ** add more variations
-** add more archs: mips, arm, arm64, riscv
 ** clone with https
 * coreboot html
 ** include rom name via path in dbd output

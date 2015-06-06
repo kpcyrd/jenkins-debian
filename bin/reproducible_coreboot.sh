@@ -13,10 +13,10 @@ common_init "$@"
 
 set -e
 
-# support for different architectures (we start with i386 only)
-ARCHS="i386"
+# build for different architectures
+ARCHS="i386 mips arm arm64 riscv"
 
-cleanup_all() {
+cleanup_tmpdir() {
 	cd
 	rm -r $TMPDIR
 }
@@ -80,7 +80,7 @@ call_debbindiff() {
 #
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actually happens
-trap cleanup_all INT TERM EXIT
+trap cleanup_tmpdir INT TERM EXIT
 cd $TMPDIR
 
 DATE=$(date -u +'%Y-%m-%d %H:%M')
@@ -113,6 +113,7 @@ sed -i 's#MAKE=$i#MAKE=make#' util/abuild/abuild
 # use all cores for first build
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
+sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything
 bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
@@ -220,5 +221,5 @@ irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated."
 
 # remove coreboot tree, we don't need it anymore...
 rm coreboot -r
-cleanup_all
+cleanup_tmpdir
 trap - INT TERM EXIT

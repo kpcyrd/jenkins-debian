@@ -195,7 +195,7 @@ write_page_header() {
 	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
 		write_page "<p>Join <code>#debian-reproducible</code> on OFTC"
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>"
-		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general, so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
+		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general, so if you are an upstream developer or working on another distribution, we'd love to hear from you! And these are not empty words: we've just started to regularily test <a href=\"/coreboot/\">coreboot</a> and other projects shall follow."
 		write_page "</p>"
 	fi
 	write_page "<ul><li>Have a look at:</li>"

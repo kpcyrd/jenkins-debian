@@ -210,7 +210,7 @@ echo "==========================================================================
 
 create_results_dirs
 PAGE=$BASE/coreboot/coreboot.html
-echo "<html><head></head><body><h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LAND and LC_CTYPE variations yet and no fancy html.</p><pre>" > $PAGE
+echo "<html><head></head><body><h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LANG and LC_CTYPE variations yet and no fancy html.</p><pre>" > $PAGE
 echo -n $COREBOOT >> $PAGE
 echo "</pre><ul>" >> $PAGE
 
@@ -226,7 +226,7 @@ for i in * ; do
 done
 echo "</ul></body></html>" >> $PAGE
 cd ..
-echo "Enjoy $REPRODUCIBLE_URL/coreboot.html"
+echo "Enjoy $REPRODUCIBLE_URL/coreboot/coreboot.html"
 
 #build_rebuild  # defines FTBFS
 #if [ $FTBFS -eq 0 ] ; then

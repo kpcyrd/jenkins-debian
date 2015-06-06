@@ -243,17 +243,22 @@ echo "       <h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ
 echo -n $COREBOOT >> $PAGE
 echo "       </pre><ul>" >> $PAGE
 
+ROMS=0
+RROMS=0
 cd b1
 for i in * ; do
+	let ROMS+=1
 	call_debbindiff $i
 	if [ -f $TMPDIR/$i.html ] ; then
 		mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html
 		echo "         <li><a href=\"dbd/$i.html\">$i debbindiff output</li>" >> $PAGE
 	else
 		echo "         <li>$i had no debbindiff output - it's probably reproducible :)</li>" >> $PAGE
+		let RROMS+=1
 	fi
 done
-echo "       </ul>" >> $PAGE
+PERCENT=$(echo "scale=1 ; ($RROMS*100/$ROMS)" | bc)
+echo "       </ul><p>$RROMS ($PERCENT%) out of $ROMS built coreboot images were reproducible.</p>" >> $PAGE
 cat >> PAGE <<- EOF
       </div>
     </div>

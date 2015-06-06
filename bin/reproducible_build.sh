@@ -98,6 +98,7 @@ cleanup_all() {
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
 		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE finished building ($STATUS)"
 	fi
+	cd
 	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 }

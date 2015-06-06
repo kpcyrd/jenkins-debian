@@ -17,7 +17,8 @@ set -e
 ARCHS="i386"
 
 cleanup_all() {
-       rm -r $TMPDIR
+	cd
+	rm -r $TMPDIR
 }
 
 create_results_dirs() {
@@ -78,61 +79,16 @@ call_debbindiff() {
 	esac
 }
 
-build_rebuild() {
-	FTBFS=1
-	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-	local NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
-	set -x
-	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
-	( timeout -k 12h 12h nice ionice -c 3 sudo \
-	  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
-	  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
-	  pbuilder --build \
-		--configfile $TMPCFG \
-		--debbuildopts "-b" \
-		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
-		--buildresult b1 \
-		${SRCPACKAGE}_*.dsc \
-	) 2>&1 
-	if ! "$DEBUG" ; then set +x ; fi
-	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-		# the first build did not FTBFS, try rebuild it.
-		echo "============================================================================="
-		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
-		echo "============================================================================="
-		set -x
-		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
-		( timeout -k 12h 12h nice ionice -c 3 sudo \
-		  DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)" \
-		  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
-		  LANG="fr_CH.UTF-8" \
-		  LC_ALL="fr_CH.UTF-8" \
-		  /usr/bin/linux64 --uname-2.6 \
-			/usr/bin/unshare --uts -- \
-				/usr/sbin/pbuilder --build \
-					--configfile $TMPCFG \
-					--hookdir /etc/pbuilder/rebuild-hooks \
-					--debbuildopts "-b" \
-					--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
-					--buildresult b2 \
-					${SRCPACKAGE}_${EVERSION}.dsc
-		) 2>&1
-		if ! "$DEBUG" ; then set +x ; fi
-		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-			# both builds were fine, i.e., they did not FTBFS.
-			FTBFS=0
-			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
-		else
-			echo "The second build failed, even though the first build was successful."
-		fi
-	fi
-	rm $TMPCFG
-	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
-}
-
+# FIXME: include these variations
+#build_rebuild() {
+#( timeout -k 12h 12h nice ionice -c 3 sudo \
+#		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
+#		  /usr/bin/linux64 --uname-2.6 \
+#			/usr/bin/unshare --uts -- \
+#					--hookdir /etc/pbuilder/rebuild-hooks \
 
 #
-# below is what controls the world
+# main
 #
 
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actually happens
@@ -148,7 +104,7 @@ echo "$(date -u) - Cloning the coreboot git repository with submodules now."
 echo "============================================================================="
 git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot
-# still required because the coreboot moved submodule and take care of old git versions
+# still required because coreboot moved submodules and to take care of old git versions
 git submodule update --init --checkout 3rdparty/blobs
 COREBOOT="$(git log -1 | head -3)"
 
@@ -169,7 +125,7 @@ sed -i 's#MAKE=$i#MAKE=make#' util/abuild/abuild
 NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 # actually build everything
-bash util/abuild/abuild || true
+bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
 cd coreboot-builds
 for i in * ; do
@@ -190,7 +146,7 @@ export LC_ALL="fr_CH.UTF-8"
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
-bash util/abuild/abuild || true
+bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
 export LANG="en_GB.UTF-8"
 unset LC_ALL
@@ -204,11 +160,8 @@ for i in * ; do
 	fi
 done
 cd ..
-rm coreboot-builds -rf
-
-# remove coreboot tree, we don't need it anymore...
+rm coreboot-builds -r
 cd ..
-rm coreboot -rf
 
 TIMEOUT="30m"
 DBDSUITE="unstable"
@@ -216,11 +169,9 @@ DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE
 echo "============================================================================="
 echo "$(date -u) - Running $DBDVERSION on coreboot images now"
 echo "============================================================================="
-
-create_results_dirs
-# FIXME: should not update inplace but in $(mktemp)
-PAGE=$BASE/coreboot/coreboot.html
-cat > PAGE <<- EOF
+# and creating the webpage while we're at it
+PAGE=coreboot/coreboot.html
+cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -239,44 +190,40 @@ cat > PAGE <<- EOF
           <br />
         </blockquote>
 EOF
-echo "       <h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LANG, LC_CTYPE variable and number of cores variations yet and no fancy html.</p><pre>" > $PAGE
-echo -n $COREBOOT >> $PAGE
-echo "       </pre><ul>" >> $PAGE
-
+write_page "       <h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LANG, LC_CTYPE variable and number of cores variations yet and no fancy html.</p><pre>"
+write_page $COREBOOT
+write_page "       </pre><ul>"
 ROMS=0
 RROMS=0
+create_results_dirs
 cd b1
 for i in * ; do
 	let ROMS+=1
 	call_debbindiff $i
 	if [ -f $TMPDIR/$i.html ] ; then
 		mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html
-		echo "         <li><a href=\"dbd/$i.html\">$i debbindiff output</li>" >> $PAGE
+		write_page "         <li><a href=\"dbd/$i.html\">$i debbindiff output</li>"
 	else
-		echo "         <li>$i had no debbindiff output - it's probably reproducible :)</li>" >> $PAGE
+		write_page "         <li>$i had no debbindiff output - it's probably reproducible :)</li>"
 		let RROMS+=1
 	fi
 done
 PERCENT=$(echo "scale=1 ; ($RROMS*100/$ROMS)" | bc)
-echo "       </ul><p>$RROMS ($PERCENT%) out of $ROMS built coreboot images were reproducible.</p>" >> $PAGE
-cat >> PAGE <<- EOF
+write_page "       </ul><p>$RROMS ($PERCENT%) out of $ROMS built coreboot images were reproducible.</p>"
+cat >> $PAGE <<- EOF
       </div>
     </div>
   </body>
 </html>
 EOF
 cd ..
-echo "Enjoy $REPRODUCIBLE_URL/coreboot/coreboot.html"
+publish_page
 
-#build_rebuild  # defines FTBFS
-#if [ $FTBFS -eq 0 ] ; then
-#	call_debbindiff  # defines DBDVERSION, update_db_and_html defines STATUS
-#fi
-
+# the end
 calculate_build_duration
 print_out_duration
 
-cd ..
+# remove coreboot tree, we don't need it anymore...
+rm coreboot -r
 cleanup_all
 trap - INT TERM EXIT
-

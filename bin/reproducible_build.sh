@@ -271,7 +271,8 @@ check_buildinfo() {
 	set -e
 	rm $TMPFILE1 $TMPFILE2
 	if [ $RESULT -eq 1 ] ; then
-		irc_message "$BUILDINFO varies, probably due to mirror update. Please investigate ${BUILD_URL} and make reproducible_build.sh deal properly with this."
+		irc_message "$BUILDINFO varies, probably due to mirror update."
+		# FIXME: rebuild again, probably just the first though
 	fi
 }
 

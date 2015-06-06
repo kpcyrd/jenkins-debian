@@ -227,12 +227,12 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * coreboot build job
 ** add more variations: domain+hostname, PATH, uid+gid, USER, UTS namespace, kernel version, umask
-** clone with https
+** clone with https?
 * coreboot html
 ** include rom name via path in dbd output
 
 * openwrt
-<pre>
+----
  <nbd> auschecken / updaten macht man ja einfach global auf dem tree mit git
  <nbd> wenn man einmal make defconfig ausgeführt hat, gibt's paket und target metadaten in tmp/.packageinfo und tmp/.targetinfo
  <nbd> man kann ne .config mit der target auswahl und CONFIG_ALL=y erstellen und mit make defconfig auffüllen
@@ -242,7 +242,24 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
  <nbd> das wird für ein target deutlich weniger als 12h brauchen
  <nbd> default config ohne CONFIG_ALL dauert bei meinem laptop in der regel <30 min
  <nbd> mit CONFIG_ALL vielleicht 2-3 stunden oder so
-</pre>
+----
+
+* remote scheduling:
+----
+<weasel> | h01ger: I have a slave configured, named buildbot.pixelminers.
+<weasel> remote root is /home/jenkins/pseudo-hosts/buildbot.pixelminers.net
+<weasel> and launch command is ssh localhost ~/pseudo-hosts/jenkins-tools/slaves/linux/start-slave.sh
+<weasel> https://www.palfrader.org/volatile/2015-06-06-sP55pjoGcN8/screenshot.png
+<weasel> https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux
+<weasel> - job:
+<weasel>     name: tor-ci-freebsd-amd64-master
+<weasel>     project-type: freestyle
+<weasel>     node: freebsd-amd64
+<weasel>     builders:
+<weasel>         - shell: '~/jenkins-tools/slaves/other/build-wrapper'
+<weasel> https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/other/build-wrapper
+<weasel> https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/other/tor-ci-freebsd-amd64-master/build
+----
 
 === qa.debian.org*
 

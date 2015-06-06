@@ -682,5 +682,6 @@ for SUITE in $SUITES ; do
 	update_meta_pkg_stats
 	create_pkg_sets_pages
 done
+SUITE="unstable"
 create_main_stats_page
 

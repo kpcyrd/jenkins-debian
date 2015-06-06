@@ -4,7 +4,7 @@
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -152,17 +152,23 @@ cd coreboot
 git submodule update --init --checkout 3rdparty/blobs
 COREBOOT="$(git log -1 | head -3)"
 
+NUM_CPU=$(cat /proc/cpuinfo |grep ^processor|wc -l)
 echo "============================================================================="
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."
 echo "============================================================================="
 for ARCH in ${ARCHS} ; do 
-	make crossgcc-$ARCH
+	make -j $NUM_CPU crossgcc-$ARCH
 done
 
 echo "============================================================================="
 echo "$(date -u) - Building coreboot images now - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
+# prevent failing using more than one CPU
+sed -i 's#MAKE=$i#MAKE=make#' util/abuild/abuild
+# use all cores for first build
+sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
+# actually build everything
 bash util/abuild/abuild || true
 
 cd coreboot-builds
@@ -181,6 +187,9 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
+# use allmost all cores for second build
+NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
 bash util/abuild/abuild || true
 
 export LANG="en_GB.UTF-8"
@@ -209,22 +218,48 @@ echo "$(date -u) - Running $DBDVERSION on coreboot images now"
 echo "============================================================================="
 
 create_results_dirs
+# FIXME: should not update inplace but in $(mktemp)
 PAGE=$BASE/coreboot/coreboot.html
-echo "<html><head></head><body><h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LANG and LC_CTYPE variations yet and no fancy html.</p><pre>" > $PAGE
+cat > PAGE <<- EOF
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>coreboot</title>
+    <link rel='stylesheet' id='twentyfourteen-style-css'  href='landing_style.css?ver=4.0' type='text/css' media='all' />
+  </head>
+  <body>
+    <div class="content">
+      <div class="page-content">
+        <p>&nbsp;</p>
+        <p><center><img src="coreboot.png" width="300" class="alignnone size-medium wp-image-6" alt="coreboot" height="231" /></center></p>
+        <blockquote>
+          <p><strong>coreboot&trade;</strong>: fast and flexible <em>and reproducible</em> Open Source firmware?</p>
+          <br />
+        </blockquote>
+EOF
+echo "       <h1>Reproducible Coreboot</h2><p>This is work in progress - only TZ, LANG, LC_CTYPE variable and number of cores variations yet and no fancy html.</p><pre>" > $PAGE
 echo -n $COREBOOT >> $PAGE
-echo "</pre><ul>" >> $PAGE
+echo "       </pre><ul>" >> $PAGE
 
 cd b1
 for i in * ; do
 	call_debbindiff $i
 	if [ -f $TMPDIR/$i.html ] ; then
 		mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html
-		echo "<li><a href=\"dbd/$i.html\">$i debbindiff output</li>" >> $PAGE
+		echo "         <li><a href=\"dbd/$i.html\">$i debbindiff output</li>" >> $PAGE
 	else
-		echo "<li>$i had no debbindiff output - it's probably reproducible :)</li>" >> $PAGE
+		echo "         <li>$i had no debbindiff output - it's probably reproducible :)</li>" >> $PAGE
 	fi
 done
-echo "</ul></body></html>" >> $PAGE
+echo "       </ul>" >> $PAGE
+cat >> PAGE <<- EOF
+      </div>
+    </div>
+  </body>
+</html>
+EOF
 cd ..
 echo "Enjoy $REPRODUCIBLE_URL/coreboot/coreboot.html"
 

@@ -29,7 +29,6 @@ call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo
 	set +e
-	set -x
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
 		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \

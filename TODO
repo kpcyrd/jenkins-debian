@@ -225,11 +225,9 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 	<h01ger> well, and everybody in debian-keyring from sid can uplood? :)
 	<mapreri> that would be wonderful.
 
-* coreboot build job
+* coreboot
 ** add more variations: domain+hostname, PATH, uid+gid, USER, UTS namespace, kernel version, umask
 ** clone with https?
-* coreboot html
-** include rom name via path in dbd output
 
 * openwrt
 ----

@@ -360,3 +360,8 @@ print_out_duration() {
 	echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s." | tee -a ${RBUILDLOG}
 }
 
+irc_message() {
+	local MESSAGE="$@"
+	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+}
+

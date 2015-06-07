@@ -19,11 +19,6 @@ ARCH="amd64"
 # sleep 1-12 secs to randomize start times
 /bin/sleep $(echo "scale=1 ; $(shuf -i 1-120 -n 1)/10" | bc )
 
-irc_message() {
-	local MESSAGE="$@"
-	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
-}
-
 create_results_dirs() {
 	mkdir -p $BASE/dbd/${SUITE}/${ARCH}
 	mkdir -p $BASE/rbuild/${SUITE}/${ARCH}

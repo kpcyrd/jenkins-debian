@@ -458,7 +458,7 @@ img.aligncenter,
 .site-content .entry-meta,
 .page-content {
 	margin: 0 auto;
-	max-width: 550px;
+	max-width: 90%;
 }
 
 .page-content {

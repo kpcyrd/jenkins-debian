@@ -227,6 +227,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * coreboot
 ** add more variations: domain+hostname, uid+gid, USER, UTS namespace
+** add more archs: mips arm riscv (arm64)
 
 * openwrt
 ----

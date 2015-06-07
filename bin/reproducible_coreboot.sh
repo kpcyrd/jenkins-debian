@@ -160,7 +160,7 @@ echo "==========================================================================
 echo "$(date -u) - Running $DBDVERSION on coreboot images now"
 echo "============================================================================="
 # and creating the webpage while we're at it
-PAGE=coreboot/coreboot.html
+PAGE=$PWD/coreboot/coreboot.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">
@@ -212,6 +212,7 @@ cat >> $PAGE <<- EOF
 EOF
 write_page_footer
 cd ..
+PAGE=coreboot/coreboot.html
 publish_page
 
 # the end

@@ -21,5 +21,5 @@ warning /Warning: dose-deb-coinstall cannot.+/
 
 # coreboot
 
-warning /.+recipe for target.+ failed/
-warning /skipping.+because we're missing compilers for.+/
+#warning /.+recipe for target.+ failed/
+#warning /skipping.+because we're missing compilers for.+/

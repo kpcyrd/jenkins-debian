@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for different architectures
-ARCHS="i386 mips arm arm64 riscv"
+ARCHS="i386 mips arm riscv" # arm64
 
 cleanup_tmpdir() {
 	cd
@@ -104,7 +104,7 @@ echo "==========================================================================
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."
 echo "============================================================================="
 for ARCH in ${ARCHS} ; do 
-	nice ionice -c 3 make crossgcc-$ARCH
+	nice ionice -c 3 make crossgcc-$ARCH || true # don't fail the full job just because some targets fail
 done
 
 echo "============================================================================="

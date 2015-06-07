@@ -226,8 +226,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 	<mapreri> that would be wonderful.
 
 * coreboot
-** add more variations: domain+hostname, PATH, uid+gid, USER, UTS namespace, kernel version, umask
-** clone with https?
+** add more variations: domain+hostname, uid+gid, USER, UTS namespace
 
 * openwrt
 ----

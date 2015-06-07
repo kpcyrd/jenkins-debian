@@ -263,9 +263,9 @@ write_explaination_table() {
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
 	write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	write_page "<tr><td>env LC_ALL</td><td><em>unset</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
+	write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
 	local NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
 		write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=\"1111\"</td><td>BUILDUSERID=\"2222\"</td></tr>"
 		write_page "<tr><td>env BUILDUSERNAME</td><td>BUILDUSERNAME=\"pbuilder1\"</td><td>BUILDUSERNAME=\"pbuilder2\"</td></tr>"
 		write_page "<tr><td>env USER</td><td>USER=\"pbuilder1\"</td><td>USER=\"pbuilder2\"</td></tr>"
@@ -273,9 +273,9 @@ write_explaination_table() {
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"
 		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=$NUM_CPU\"</td><td>DEB_BUILD_OPTIONS=\"parallel=$(echo $NUM_CPU-1|bc)\"<br />(using a different number of cores is on the agenda)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
-		write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
-		write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	fi
+	write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
+	write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	write_page "<tr><td>hour, minute</td><td>hour is usually the same...</td><td>usually, the minute differs... (currently, work in progress)</td></tr>"

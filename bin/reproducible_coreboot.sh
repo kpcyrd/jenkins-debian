@@ -118,7 +118,8 @@ NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything
-nice ionice -c 3 bash util/abuild/abuild || true # don't fail the full job just because some targets fail
+nice ionice -c 3 \
+	bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
 cd coreboot-builds
 for i in * ; do
@@ -136,14 +137,21 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
+export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
+umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
-nice ionice -c 3 bash util/abuild/abuild || true # don't fail the full job just because some targets fail
+nice ionice -c 3 \
+	linux64 --uname-2.6 \
+	bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 
+# reset environment to default values again
 export LANG="en_GB.UTF-8"
 unset LC_ALL
 export TZ="/usr/share/zoneinfo/UTC"
+export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
+umask 0022
 
 cd coreboot-builds
 for i in * ; do

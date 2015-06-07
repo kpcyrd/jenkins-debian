@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for different architectures
-ARCHS="i386 mips arm riscv" # arm64
+ARCHS="i386" # mips arm riscv" # arm64
 
 cleanup_tmpdir() {
 	cd

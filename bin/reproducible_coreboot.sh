@@ -90,10 +90,13 @@ mkdir b1 b2
 echo "============================================================================="
 echo "$(date -u) - Cloning the coreboot git repository with submodules now."
 echo "============================================================================="
-git clone --recursive http://review.coreboot.org/p/coreboot.git
+CAFILE=/etc/ssl/ca-global/ca-certificates.crt
+CACONFIG=
+[ -f "$CAFILE" ] && CACONFIG="GIT_SSL_CAINFO=$CAFILE"
+env $CACONFIG git clone --recursive https://review.coreboot.org/p/coreboot.git
 cd coreboot
 # still required because coreboot moved submodules and to take care of old git versions
-git submodule update --init --checkout 3rdparty/blobs
+env $CACONFIG git submodule update --init --checkout 3rdparty/blobs
 COREBOOT="$(git log -1)"
 COREBOOT_VERSION=$(git describe)
 

@@ -86,6 +86,7 @@ cd coreboot
 git submodule update --init --checkout 3rdparty/blobs
 COREBOOT="$(git log -1)"
 COREBOOT_VERSION=$(git describe)
+NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 
 echo "============================================================================="
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."
@@ -95,7 +96,7 @@ GOT_XTOOLCHAIN=false
 set +e
 for ARCH in ${ARCHS} ; do
 	echo "$(date -u) - Building cross compiler for ${ARCH}."
-	nice ionice -c 3 make crossgcc-$ARCH
+	nice ionice -c 3 make -j $NUM_CPU crossgcc-$ARCH
 	RESULT=$?
 	if [ $RESULT -eq 0 ] ; then
 		GOT_XTOOLCHAIN=true
@@ -113,7 +114,6 @@ export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # prevent failing using more than one CPU
 sed -i 's#MAKE=$i#MAKE=make#' util/abuild/abuild
 # use all cores for first build
-NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything

@@ -174,6 +174,7 @@ cat > $PAGE <<- EOF
         <p>&nbsp;</p>
         <p><center><img src="coreboot.png" width="300" class="alignnone size-medium wp-image-6" alt="coreboot" height="231" /><br />
         <blockquote>
+	  <br />
           <strong>coreboot&trade;</strong>: fast, flexible <em>and reproducible</em> Open Source firmware?
         </blockquote>
        </center></p>

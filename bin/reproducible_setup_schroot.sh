@@ -129,29 +129,6 @@ bootstrap $@
 
 trap - INT TERM EXIT
 
-remove_writelock() {
-	# remove the lock
-	rm $DBDCHROOT_WRITELOCK
-}
-
-trap remove_writelock INT TERM EXIT
-# aquire a write lock in any case
-touch $DBDCHROOT_WRITELOCK
-if [ -f $DBDCHROOT_READLOCK ] ; then
-	# patiently wait for our users to using the schroot
-	for i in $(seq 0 200) ; do
-		sleep 15
-		echo "sleeping 15s, debbindiff schroot is locked and used."
-		if [ ! -f $DBDCHROOT_READLOCK ] ; then
-			break
-		fi
-	done
-	if [ -f $DBDCHROOT_READLOCK ] ; then
-		echo "Warning: lock $DBDCHROOT_READLOCK still exists, exiting."
-		exit 1
-	fi
-fi
-
 # pivot the new schroot in place
 rand=$RANDOM
 if [ -d $SCHROOT_BASE/"$TARGET" ]
@@ -179,4 +156,3 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	__END__
 
 trap - INT TERM EXIT
-remove_writelock

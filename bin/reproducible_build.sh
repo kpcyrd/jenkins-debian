@@ -211,27 +211,6 @@ handle_reproducible() {
 	fi
 }
 
-init_debbindiff() {
-	# the schroot for debbindiff gets updated once a day. wait patiently if that's the case
-	if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ] ; then
-		for i in $(seq 0 200) ; do  # this loop also exists in _common.sh and _setup_schroot.sh
-			sleep 15
-			echo "sleeping 15s, debbindiff schroot is locked."
-			if [ ! -f $DBDCHROOT_WRITELOCK ] && [ ! -f $DBDCHROOT_READLOCK ] ; then
-				break
-			fi
-		done
-		if [ -f $DBDCHROOT_WRITELOCK ] || [ -f $DBDCHROOT_READLOCK ]  ; then
-			echo "Warning: lock $DBDCHROOT_WRITELOCK or $DBDCHROOT_READLOCK still exists, exiting."
-			exit 1
-		fi
-	else
-		# we create (more) read-lock(s) but stop on write locks...
-		# write locks are only done by the schroot setup job
-		touch $DBDCHROOT_READLOCK
-	fi
-}
-
 dbd_timeout() {
 	local msg="$DBDVERSION was killed after running into timeout after $1"
 	if [ ! -s ./${DBDREPORT} ] ; then
@@ -261,7 +240,6 @@ check_buildinfo() {
 }
 
 call_debbindiff() {
-	init_debbindiff  # check and set up locks for chroot
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 33 lines above
@@ -286,7 +264,7 @@ call_debbindiff() {
 	if ! "$DEBUG" ; then set +x ; fi
 	set -e
 	cat $TMPLOG | tee -a $RBUILDLOG  # print dbd output
-	rm -f $DBDCHROOT_READLOCK $TMPLOG
+	rm $TMPLOG
 	echo | tee -a ${RBUILDLOG}
 	case $RESULT in
 		0)

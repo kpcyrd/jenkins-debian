@@ -34,8 +34,6 @@ fi
 
 # common variables
 REPRODUCIBLE_URL=https://reproducible.debian.net
-DBDCHROOT_READLOCK=/var/lib/jenkins/reproducible-dbdchroot.readlock
-DBDCHROOT_WRITELOCK=/var/lib/jenkins/reproducible-dbdchroot.writelock
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
 

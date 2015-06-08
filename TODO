@@ -232,6 +232,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * coreboot
 ** add more variations: domain+hostname, uid+gid, USER, UTS namespace
+** split into two jobs, one to build the toolchain, the other to test, keep the git repo and update it. run both jobs weekly.
 
 * openwrt
 ----

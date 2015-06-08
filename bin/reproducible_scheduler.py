@@ -265,9 +265,9 @@ def scheduler():
     # old packages
     old = {}
     if total <= 250:
-        many_old_base = 17.5 # multiplied by 20 or 10 or 1, see below
+        many_old_base = 35 # multiplied by 20 or 10 or 1, see below
     elif total <= 350:
-        many_old_base = 12.5 # also...
+        many_old_base = 25 # also...
     else:
         many_old_base = 0  # ...
     for suite in SUITES:

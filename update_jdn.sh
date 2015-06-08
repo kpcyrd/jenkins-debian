@@ -91,6 +91,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			bison \
 			build-essential \
 			calamaris \
+			cmake \
 			cron-apt \
 			cucumber \
 			curl \

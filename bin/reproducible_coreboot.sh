@@ -204,7 +204,7 @@ for i in * ; do
 			let GOOD_ROMS+=1
 		fi
 	else
-		write_page "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i failed to build from source.</li>"
+		write_page "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source.</li>"
 		let BAD_ROMS+=1
 	fi
 done

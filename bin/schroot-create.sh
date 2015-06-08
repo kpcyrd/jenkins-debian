@@ -3,6 +3,7 @@
 # Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # Copyright      2014 Joachim Breitner <nomeata@debian.org>
+# Copyright      2015 MAttia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -12,13 +13,14 @@ common_init "$@"
 # bootstraps a new chroot for schroot, and then moves it into the right location
 
 # $1 = schroot name
-# $2 = base suite
+# $2 = base distro/suite
 # $3 $4 ... = extra packages to install
 
 if [ $# -lt 2 ]; then
-	echo "usage: $0 TARGET SUITE [backports] CMD [ARG1 ARG2 ...]"
+	echo "usage: $0 TARGET SUITE [backports] [reproducible] [ARG1 ARG2 ...]"
 	exit 1
 fi
+
 TARGET="$1"
 shift
 SUITE="$1"
@@ -36,9 +38,13 @@ if [ "$1" = "backports" ] ; then
 	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main"
 	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main"
 	shift
-elif [ "$1" = "reproducible" ] ; then
+fi
+
+if [ "$1" = "reproducible" ] ; then
 	EXTRA_SOURCES[4]="deb http://reproducible.alioth.debian.org/debian/ ./"
 	EXTRA_SOURCES[5]="deb-src http://reproducible.alioth.debian.org/debian/ ./"
+	REPRODUCIBLE=true
+	shift
 fi
 
 if [ ! -d "$CHROOT_BASE" ]; then
@@ -106,20 +112,40 @@ bootstrap() {
 		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
 	done
 
-	if [ "$1" = "reproducible" ] ; then
+	if $REPRODUCIBLE ; then
 		TMPFILE=$(mktemp -u)
 		add_repokey $CHROOT_TARGET/$TMPFILE
 		sudo chroot $CHROOT_TARGET bash $TMPFILE
 		rm $CHROOT_TARGET/$TMPFILE
-		shift
 	fi
+
 
 	sudo chroot $CHROOT_TARGET apt-get update
 	if [ -n "$1" ] ; then
 		for d in proc dev dev/pts ; do
 			sudo mount --bind /$d $CHROOT_TARGET/$d
 		done
+		set -x
+		sudo chroot $CHROOT_TARGET apt-get update
+		# install debbindiff with all recommends...
+		if [ "$1" = "debbindiff" ] ; then
+			sudo chroot $CHROOT_TARGET apt-get install -y --install-recommends debbindiff
+		fi
 		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@" sudo
+		# always use debbindiff from unstable
+		if [ "$SUITE" = "testing" ] && [ "$1" = "debbindiff" ] ; then
+			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
+			sudo chroot $CHROOT_TARGET apt-get update
+			# install debbindiff from unstable without re-adding all recommends...
+			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff
+		fi
+		if ! $DEBUG ; then set +x ; fi
+		# double check debbindiff version
+		if [ "$1" = "debbindiff" ] ; then
+			echo
+			sudo chroot $CHROOT_TARGET dpkg -l debbindiff
+			echo
+		fi
 		# umount in reverse order
 		for d in dev/pts dev proc ; do
 			sudo umount -l $CHROOT_TARGET/$d
@@ -133,7 +159,7 @@ bootstrap() {
 
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
+		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed." ; fuser -mv $CHROOT_TARGET ; ls $CHROOT_TARGET -la )
 	fi
 }
 trap cleanup INT TERM EXIT
@@ -150,9 +176,8 @@ fi
 
 sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
 
-if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ]
-then
-	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand"
+if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ] ; then
+	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand" || ( echo "Warning: $SCHROOT_BASE/${TARGET}-$rand could not be fully removed." ; fuser -mv $SCHROOT_BASE/${TARGET}-$rand ; ls $SCHROOT_BASE/${TARGET}-$rand -la )
 fi
 
 # write the schroot config

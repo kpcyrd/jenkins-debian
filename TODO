@@ -181,7 +181,6 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * misc
 ** more graphs: graph average build duration by day
-** meld bin/reproducible_setup_schroot.sh into bin/schroot-create.sh and alias the former to the latter
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** repo-comparison: check for binaries without source

@@ -260,6 +260,9 @@ write_explaination_table() {
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>hostname</td><td>$(hostname)</td><td>i-capture-the-hostname</td></tr>"
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
+	else
+		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds.</td></tr>"
+		write_page "<tr><td>domainname</td><td colspan=\"2\"> is not yet varied between rebuilds.</td></tr>"
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
 	write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
@@ -274,6 +277,11 @@ write_explaination_table() {
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"
 		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=$NUM_CPU\"</td><td>DEB_BUILD_OPTIONS=\"parallel=$(echo $NUM_CPU-1|bc)\"<br />(using a different number of cores is on the agenda)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
+	else
+		write_page "<tr><td>env USER</td><td colspan=\"2\"> is not yet varied between rebuilds.</td></tr>"
+		write_page "<tr><td>uid</td><td colspan=\"2\"> is not yet varied between rebuilds.</td></tr>"
+		write_page "<tr><td>gid</td><td colspan=\"2\"> is not yet varied between rebuilds.</td></tr>"
+		write_page "<tr><td>UTS namespace</td><td colspan=\"2\"> is not yet varied between rebuilds.</td></tr>"
 	fi
 	write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 	write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"

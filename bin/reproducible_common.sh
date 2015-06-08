@@ -298,9 +298,6 @@ write_explaination_table() {
 
 publish_page() {
 	if [ "$1" = "" ] ; then
-		if [ "$VIEW" = "$MAINVIEW" ] ; then
-			cp $PAGE $BASE/reproducible.html
-		fi
 		TARGET=$PAGE
 	else
 		TARGET=$1/$PAGE

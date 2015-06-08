@@ -641,6 +641,7 @@ create_main_stats_page() {
 	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. More feedback is always welcome!</p>"
 	# the end
 	write_page_footer
+	cp $PAGE $BASE/reproducible.html
 	publish_page
 }
 

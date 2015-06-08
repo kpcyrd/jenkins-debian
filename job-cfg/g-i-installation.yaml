@@ -283,15 +283,15 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-standalone_gnome'
+    name: '{name}_debian-edu_wheezy_standalone_gnome'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-standalone_lxde'
+    name: '{name}_debian-edu_wheezy_standalone_lxde'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy-standalone_xfce'
+    name: '{name}_debian-edu_wheezy_standalone_xfce'
 
 - job-template:
     defaults: g-i-installation
@@ -324,6 +324,10 @@
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian-edu_jessie-daily-usb_main-ltsp-server'
+
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian-edu_jessie-beta1-netinst_standalone'
 
 - job-template:
     defaults: g-i-installation

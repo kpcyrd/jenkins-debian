@@ -197,11 +197,13 @@ for i in * ; do
 	let ALL_ROMS+=1
 	if [ -f $i/coreboot.rom ] ; then
 		call_debbindiff $i
+		SIZE="$(du -h $i/coreboot.rom | cut -f1)"
 		if [ -f $TMPDIR/$i.html ] ; then
 			mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html
-			write_page "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> is unreproducible.</li>"
+			write_page "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> ($SIZE) is unreproducible.</li>"
 		else
-			write_page "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i had no debbindiff output so it's probably reproducible :)</li>"
+			SHASUM=$(sha256sum $i/coreboot.rom|cut -d " " -f1)
+			write_page "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, $SIZE) had no debbindiff output so it's probably reproducible :)</li>"
 			let GOOD_ROMS+=1
 		fi
 	else

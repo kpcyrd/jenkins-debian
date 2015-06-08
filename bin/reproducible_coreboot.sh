@@ -27,7 +27,6 @@ create_results_dirs() {
 
 call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
-	echo
 	set +e
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
@@ -43,17 +42,17 @@ call_debbindiff() {
 	cat $TMPLOG # print dbd output
 	rm -f $TMPLOG
 	case $RESULT in
-		0)	echo "$1/coreboot.rom is reproducible, yay!"
+		0)	echo "$(date -u) - $1/coreboot.rom is reproducible, yay!"
 			;;
 		1)
-			echo "$DBDVERSION found issues, please investigate $1/coreboot.rom"
+			echo "$(date -u) - $DBDVERSION found issues, please investigate $1/coreboot.rom"
 			;;
 		2)
-			echo "$DBDVERSION had trouble comparing the two builds. Please investigate $1/coreboot.rom"
+			echo "$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/coreboot.rom"
 			;;
 		124)
 			if [ ! -s $TMPDIR/$1.html ] ; then
-				echo "$(date -u) - $DBDVERSION produced no output and was killed after running into timeout after ${TIMEOUT}..."
+				echo "$(date -u) - $DBDVERSION produced no output for $1/coreboot.rom and was killed after running into timeout after ${TIMEOUT}..."
 			else
 				local msg="$DBDVERSION was killed after running into timeout after $TIMEOUT"
 				msg="$msg, but there is still $TMPDIR/$1.html"
@@ -61,7 +60,7 @@ call_debbindiff() {
 			echo $msg
 			;;
 		*)
-			echo "Something weird happened when running $DBDVERSION (which exited with $RESULT) and I don't know how to handle it"
+			echo "$(date -u) - Something weird happened when running $DBDVERSION on $1/coreboot.rom (which exited with $RESULT) and I don't know how to handle it"
 			;;
 	esac
 }

@@ -91,27 +91,25 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_minimal'
+    name: '{name}_debian_{my_desktop}'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_standalone'
+    name: '{name}_debian_{my_dist}_{my_desktop}'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_workstation'
+    name: '{name}_debian-edu_jessie-{my_image}_{my_de_profile}'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_combi-server'
+    name: '{name}_debian-edu_{my_dist}_{my_de_profile}'
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_main-server'
+    name: '{name}_debian_sid_daily_rescue_{my_langname}'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_jessie_xfce'
+# =-=-=-=
 
 - job-template:
     defaults: g-i-installation
@@ -119,43 +117,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian_jessie_lxde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_jessie_kde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_jessie_gnome'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_jessie_gnome_brltty'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_jessie_gnome_speakup'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_wheezy_xfce'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian_wheezy_kfreebsd_xfce'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_wheezy_lxde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_wheezy_kde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_wheezy_gnome'
 
 - job-template:
     defaults: g-i-installation
@@ -192,78 +154,6 @@
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_spanish'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_japanese'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_chinese'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_korean'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_russian'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_greek'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_vietnamese'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_hebrew'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_hindi'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_tamil'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_tibetan'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_gujarati'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_kannada'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_malayalam'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_marathi'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_punjabi'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_telugu'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_arabic'
 
 - job-template:
     defaults: g-i-installation
@@ -325,125 +215,194 @@
     defaults: g-i-installation
     name: '{name}_debian-edu_jessie-daily-usb_main-ltsp-server'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-netinst_standalone'
+# =-=-=-=
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-netinst_standalone_mate'
+- job-group:
+    name: '{name}_debian-edu'
+    my_disksize: 30
+    my_dist:
+      - wheezy
+    my_de_profile:
+      - minimal:
+          my_time: '23 20 15 * *'
+          my_disksize: 25
+      - standalone:
+          my_time: '42 20 15 * *'
+      - workstation:
+          my_time: '42 22 16 * *'
+      - combi-server:
+          my_time: '42 0 16 * *'
+      - main-server:
+          my_time: '42 2 16 * *'
+    jobs:
+      - '{name}_debian-edu_{my_dist}_{my_de_profile}':
+          my_title: 'Debian Edu ({my_dist}) {my_de_profile}'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/cd-{my_dist}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+          my_description: 'Do a fully automated installation of a Debian Edu {my_dist} {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_{my_dist}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+          my_trigger: ''
+          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-netinst_main-server'
+- job-group:
+    name: '{name}_debian_wheezy_desktops'
+    my_optdesc: ''
+    my_dist:
+      - wheezy
+    my_desktop:
+      - kde:
+          my_time: '42 15 2,9,16,23 * *'
+      - xfce:
+          my_time: '42 16 4 * *'
+      - lxde:
+          my_time: '42 19 4 * *'
+      - gnome:
+          my_time: '42 19 4 * *'
+    jobs:
+      - '{name}_debian_{my_dist}_{my_desktop}':
+          my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_desktop}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_trigger: ''
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-netinst_main-ltsp-server'
+- job-group:
+    name: '{name}_debian_jessie_desktops'
+    my_trigger: ''
+    my_optdesc: ''
+    my_dist:
+      - jessie
+    my_desktop:
+      - kde:
+          my_time: '42 15 */2 * *'
+      - xfce:
+          my_time: '42 16 */2 * *'
+      - lxde:
+          my_time: '42 19 */2 * *'
+      - gnome:
+          my_time: '42 19 */2 * *'
+          my_trigger: 'g-i-installation_debian_{my_dist}_gnome_brltty, g-i-installation_debian_{my_dist}_gnome_speakup'
+      - gnome_brltty:
+          my_optdesc: ' with braille display support'
+          my_time: ''
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
+      - gnome_speakup:
+          my_optdesc: ' with Speakup support'
+          my_time: ''
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
+    jobs:
+      - '{name}_debian_{my_dist}_{my_desktop}':
+          my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_desktop}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-usb_standalone'
+- job-group:
+    name: '{name}_debian_sid_daily_rescue_translations'
+    my_langname: ''
+    my_time: ''
+    my_trigger: ''
+    my_langname:
+      - spanish:
+          my_locale: es es_ES
+          my_time: '23 7 18 * *'
+      - japanese:
+          my_locale: ja ja_JA
+          my_time: '42 7 18 * *'
+      - chinese:
+          my_locale: zh zh_CN
+          my_time: '23 8 18 * *'
+      - korean:
+          my_locale: ko ko_KR
+          my_time: '42 8 18 * *'
+      - russian:
+          my_locale: ru ru_RU
+          my_time: '42 9 18 * *'
+      - greek:
+          my_locale: el el_GR
+          my_time: '42 9 18 * *'
+      - vietnamese:
+          my_locale: vi vi_VI
+          my_time: '42 9 18 * *'
+      - hebrew:
+          my_locale: he he_IL
+          my_time: '23 10 18 * *'
+      - hindi:
+          my_locale: hi hi_IN
+          my_time: '23 10 18 * *'
+      - tamil:
+          my_locale: ta ta_IN
+          my_time: '42 10 18 * *'
+      - tibetan:
+         my_locale: bo bo_IN
+         my_time: '23 11 18 * *'
+      - gujarati:
+         my_locale: gu gu_IN
+         my_time: '42 11 18 * *'
+      - kannada:
+         my_locale: kn kn_IN
+         my_time: '23 12 18 * *'
+      - malayalam:
+         my_locale: ml ml_IN
+         my_time: '42 12 18 * *'
+      - marathi:
+         my_locale: mr mr_IN
+         my_time: '23 13 18 * *'
+      - punjabi:
+         my_locale: pa pa_IN
+         my_time: '42 13 18 * *'
+      - telugu:
+         my_locale: te te_IN
+         my_time: '23 14 18 * *'
+      - arabic:
+         my_locale: ar ar_EG
+         my_time: '42 14 18 * *'
+    jobs:
+      - '{name}_debian_sid_daily_rescue_{my_langname}':
+          my_title: 'Debian (sid daily build CD) rescue mode in {my_langname}'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso {my_locale}'
+          my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-usb_standalone_mate'
+- job-group:
+    name: '{name}_debian-edu_jessie-beta1-netinst_group'
+    my_time: ''
+    my_trigger: ''
+    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+    my_de_profile:
+      - standalone:
+          my_disksize: 25
+      - standalone_mate:
+          my_disksize: 25
+      - main-server:
+          my_disksize: 40
+      - main-ltsp-server:
+          my_disksize: 60
+    my_image:
+      - beta1-netinst
+      - beta1-usb
+    jobs:
+      - '{name}_debian-edu_jessie-{my_image}_{my_de_profile}':
+         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile} (Default)'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-usb_main-server'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-beta1-usb_main-ltsp-server'
+# =-=-=-=
 
 - project:
     name: g-i-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
       - '{name}_maintenance'
-      - '{name}_debian-edu_wheezy_minimal':
-         my_title: 'Debian Edu (wheezy) minimal'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy minimal profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_minimal_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '23 20 15 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_standalone':
-         my_title: 'Debian Edu (wheezy) standalone'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 20 15 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_workstation':
-         my_title: 'Debian Edu (wheezy) workstation'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy workstation profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_workstation_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 22 16 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_combi-server':
-         my_title: 'Debian Edu (wheezy) combi-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 30 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy combi-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_combi-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 0 16 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_main-server':
-         my_title: 'Debian Edu (wheezy) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 30 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_main-server_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 2 16 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian_wheezy_kde':
-         my_title: 'Debian (wheezy) KDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian KDE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 15 2,9,16,23 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_wheezy_xfce':
-         my_title: 'Debian (wheezy) Xfce desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian Xfce desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 16 4 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+      - '{name}_debian-edu'
+      - '{name}_debian_wheezy_desktops'
+      - '{name}_debian_jessie_desktops'
+      - '{name}_debian_sid_daily_rescue_translations'
+      - '{name}_debian-edu_jessie-beta1-netinst_group'
+
       - '{name}_debian_wheezy_kfreebsd_xfce':
          my_title: 'Debian (wheezy) kfreebsd XFCE desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz'
          my_description: 'Do a fully automated installation of Debian kfreebsd-amd64 with XFCE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kfreebsd_preseed.cfg">this preseed.cfg</a>) using PXE netboot gtk.'
          my_time: '42 16 21 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_wheezy_lxde':
-         my_title: 'Debian (wheezy) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 19 4 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_wheezy_gnome':
-         my_title: 'Debian (wheezy) GNOME desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 19 4 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_jessie_kde':
-         my_title: 'Debian (jessie) KDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian KDE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_kde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 15 */2 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_jessie_xfce':
-         my_title: 'Debian (jessie) Xfce desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian Xfce desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 16 */2 * *'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - '{name}_debian_jessie_kfreebsd_xfce':
@@ -454,34 +413,6 @@
          #my_time: '42 16 2,9,16,23 * *'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_jessie_lxde':
-         my_title: 'Debian (jessie) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 19 */2 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_jessie_gnome':
-         my_title: 'Debian (jessie) GNOME desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 19 */2 * *'
-         my_trigger: 'g-i-installation_debian_jessie_gnome_brltty, g-i-installation_debian_jessie_gnome_speakup'
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_jessie_gnome_brltty':
-         my_title: 'Debian (jessie) GNOME desktop install with braille display support'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop with braille display support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_brltty_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
-      - '{name}_debian_jessie_gnome_speakup':
-         my_title: 'Debian (jessie) GNOME desktop install with Speakup support'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop with Speakup support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_gnome_speakup_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
       - '{name}_debian_sid_daily_gnome':
          my_title: 'Debian (sid daily build CD) GNOME desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
@@ -567,132 +498,6 @@
          my_time: '44 15 23 * *'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_spanish':
-         my_title: 'Debian (sid daily build CD) rescue mode in Spanish'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso es es_ES'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 7 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_japanese':
-         my_title: 'Debian (sid daily build CD) rescue mode in Japanese'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ja ja_JA'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 7 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_chinese':
-         my_title: 'Debian (sid daily build CD) rescue mode in Chinese (China)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso zh zh_CN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 8 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_korean':
-         my_title: 'Debian (sid daily build CD) rescue mode in Korean'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ko ko_KR'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 8 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_russian':
-         my_title: 'Debian (sid daily build CD) rescue mode in Russian'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ru ru_RU'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 9 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_greek':
-         my_title: 'Debian (sid daily build CD) rescue mode in Greek'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso el el_GR'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 9 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_vietnamese':
-         my_title: 'Debian (sid daily build CD) rescue mode in Vietnamese'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso vi vi_VI'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 9 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_hebrew':
-         my_title: 'Debian (sid daily build CD) rescue mode in Hebrew'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso he he_IL'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 10 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_hindi':
-         my_title: 'Debian (sid daily build CD) rescue mode in Hindi'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso hi hi_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 10 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_tamil':
-         my_title: 'Debian (sid daily build CD) rescue mode in Tamil'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ta ta_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 10 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_tibetan':
-         my_title: 'Debian (sid daily build CD) rescue mode in Tibetan'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso bo bo_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 11 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_gujarati':
-         my_title: 'Debian (sid daily build CD) rescue mode in Gujarati'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso gu gu_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 11 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_kannada':
-         my_title: 'Debian (sid daily build CD) rescue mode in Kannada'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso kn kn_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 12 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_malayalam':
-         my_title: 'Debian (sid daily build CD) rescue mode in Malayalam'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ml ml_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 12 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_marathi':
-         my_title: 'Debian (sid daily build CD) rescue mode in Marathi'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso mr mr_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 13 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_punjabi':
-         my_title: 'Debian (sid daily build CD) rescue mode in Punjabi (Gurmukhi)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso pa pa_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 13 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_telugu':
-         my_title: 'Debian (sid daily build CD) rescue mode in Telugu'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso te te_IN'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '23 14 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_arabic':
-         my_title: 'Debian (sid daily build CD) rescue mode in Arabic'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso ar ar_EG'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 14 18 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - '{name}_debian_sid_daily_rescue_dark_theme':
          my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
@@ -775,62 +580,6 @@
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
          my_time: '42 0 * * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-netinst_standalone':
-         my_title: 'Debian Edu (jessie beta1 netinst) standalone (Default)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-netinst_standalone_mate':
-         my_title: 'Debian Edu (jessie beta1 netinst) standalone (Mate Desktop)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-netinst_main-server':
-         my_title: 'Debian Edu (jessie beta1 netinst) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-netinst_main-ltsp-server':
-         my_title: 'Debian Edu (jessie beta1 netinst) main+ltsp-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 netinst image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-usb_standalone':
-         my_title: 'Debian Edu (jessie beta1 usb) standalone (Default)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-usb_standalone_mate':
-         my_title: 'Debian Edu (jessie beta1 usb) standalone (Mate Desktop)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-usb_main-server':
-         my_title: 'Debian Edu (jessie beta1 usb) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-beta1-usb_main-ltsp-server':
-         my_title: 'Debian Edu (jessie beta1 usb) main+ltsp-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-beta1-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the beta1 usb image.<br />This job is only triggered manually.'
-         my_time: ''
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 

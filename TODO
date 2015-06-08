@@ -217,12 +217,18 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** runs pbuilder inside the kmv guest
 
 * enable people to upload test packages, to be built in jenkins:
-	<mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything 
-	<mapreri> jenkins tests.
-	<h01ger> mapreri: please add the feature request to the todo. i'm thinking now that it maybe should just be a jenkins job not integrated into the rp.d.n webui, but... maybe we find a nice way to do it
-	<mapreri> h01ger: I'm instead thinking about a repo defining a reproducible-specific suite or something on that line, that integrates well with the current setup. but this is really something wild.
-	<h01ger> well, and everybody in debian-keyring from sid can uplood? :)
-	<mapreri> that would be wonderful.
+----
+  <mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything
+  <mapreri> jenkins tests.
+  <h01ger> mapreri: please add the feature request to the todo. i'm thinking now that it maybe should just be a jenkins job not integrated into the rp.d.n webui, but... maybe we find a nice way to do it
+  <mapreri> h01ger: I'm instead thinking about a repo defining a reproducible-specific suite or something on that line, that integrates well with the current setup. but this is really something wild.
+  <h01ger> well, and everybody in debian-keyring from sid can uplood? :)
+  <mapreri> that would be wonderful.
+----
+
+* debootstrap
+** add the test (something weekly or so)
+** https://wiki.debian.org/ReproducibleInstalls
 
 * coreboot
 ** add more variations: domain+hostname, uid+gid, USER, UTS namespace

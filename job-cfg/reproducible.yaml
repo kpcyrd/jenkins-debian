@@ -120,6 +120,40 @@
           recipients: '{my_recipients}'
           notify-every-unstable-build: false
 
+- defaults:
+    name: reproducible_other_projects
+    project-type: freestyle
+    triggers:
+      - timed: '{my_timed}'
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/reproducible
+          text: reproducible builds jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
+
 - job-template:
     defaults: reproducible
     name: '{name}_maintenance'
@@ -229,7 +263,7 @@
     name: '{name}_builder_theta'
 
 - job-template:
-    defaults: reproducible
+    defaults: reproducible_other_projects
     name: '{name}_coreboot'
 
 - project:

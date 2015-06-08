@@ -1,0 +1,9 @@
+# see https://wiki.jenkins-ci.org/display/JENKINS/Log+Parser+Plugin
+
+# list of warnings here...
+
+# coreboot
+warning /.+recipe for target.+ failed/
+warning /skipping.+because we're missing compilers for.+/
+warning /make: *** .+ Error 1/
+

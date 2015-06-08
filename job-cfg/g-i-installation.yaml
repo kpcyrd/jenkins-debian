@@ -38,15 +38,15 @@
       - timeout:
           timeout: 360
     properties:
-      - sidebar:
+      - sidebar: &sb01
           url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
+      - sidebar: &sb10
           url: https://jenkins.debian.net/view/g-i-installation/
           text: All g-i-installation jobs
           icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
+      - sidebar: &sb99
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
@@ -79,18 +79,9 @@
       - email:
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/g-i-installation/
-          text: All g-i-installation jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb01
+      - sidebar: *sb10
+      - sidebar: *sb99
       - priority:
           job-prio: '175'
 

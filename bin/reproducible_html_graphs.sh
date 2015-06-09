@@ -555,7 +555,7 @@ create_main_stats_page() {
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
 	done
-	write_page "</p><p>"
+	write_page "</p><p><center>"
 	# write meta pkg graphs per suite
 	for SUITE in $SUITES ; do
 		if [ "$SUITE" != "unstable" ] ; then
@@ -568,7 +568,7 @@ create_main_stats_page() {
 			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 		done
 	done
-	write_page "</p><p>"
+	write_page "</center></p><p>"
 	# write inventory table
 	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct issues</a></td><td>$ISSUES</td></tr>"

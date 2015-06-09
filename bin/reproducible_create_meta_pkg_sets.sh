@@ -91,7 +91,7 @@ get_installable_set() {
 
 update_pkg_sets() {
 	# the essential package set
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[1]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[1]}.pkgset

@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for different architectures
-ARCHS="i386 mips arm arm64 riscv"
+ARCHS="i386-elf x86_64-elf armv7a-eabi aarch64-elf mipsel-elf riscv-elf"
 
 cleanup_tmpdir() {
 	cd
@@ -96,7 +96,8 @@ GOT_XTOOLCHAIN=false
 set +e
 for ARCH in ${ARCHS} ; do
 	echo "$(date -u) - Building cross compiler for ${ARCH}."
-	nice ionice -c 3 make -j $NUM_CPU crossgcc-$ARCH
+	# taken from util/crossgcc/Makefile:
+	nice ionice -c 3 bash util/crossgcc/buildgcc -j $NUM_CPU -p $ARCH
 	RESULT=$?
 	if [ $RESULT -eq 0 ] ; then
 		GOT_XTOOLCHAIN=true

@@ -123,8 +123,8 @@ nice ionice -c 3 \
 
 cd coreboot-builds
 for i in * ; do
-	# abuild is a build result but not the result we are looking for...
-	if [ "$i" != "abuild" ] ; then
+	# abuild and sharedutils are build results but not the results we are looking for...
+	if [ "$i" != "abuild" ] && [ "$i" != "sharedutils" ] ; then
 		mkdir $TMPDIR/b1/$i
 		if [ -f $i/coreboot.rom ] ; then
 			cp -p $i/coreboot.rom $TMPDIR/b1/$i/

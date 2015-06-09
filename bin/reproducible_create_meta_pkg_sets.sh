@@ -57,7 +57,7 @@ update_if_similar() {
 				KEEP=$(mktemp)
 				mv $TARGET.new $KEEP
 				echo "The new pkg-set has been saved as $KEEP for further investigation."
-				echo "  wc -l $TARGET $KEEP)"
+				echo "wc -l $TARGET $KEEP)"
 				wc -l $TARGET $KEEP | grep -v " total"
 				echo
 				echo "To update the package set run:"

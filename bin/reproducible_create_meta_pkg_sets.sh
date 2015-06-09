@@ -33,7 +33,8 @@ convert_from_deb822_into_source_packages_only() {
 
 update_target() {
 	mv $TMPFILE $TARGET
-	echo "$(date) - $TARGET updated."
+	echo "$(date -u) - $TARGET updated."
+	echo "============================================================================="
 }
 
 update_if_similar() {
@@ -48,15 +49,21 @@ update_if_similar() {
 			if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
 				mv $TMPFILE $TARGET.new
 				echo
+				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually:"
+				echo
 				echo diff -u $TARGET $TARGET.new
 				diff -u $TARGET $TARGET.new || true
 				echo
-				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually."
 				KEEP=$(mktemp)
 				mv $TARGET.new $KEEP
 				echo "The new pkg-set has been saved as $KEEP for further investigation."
-				echo "wc -l $TARGET: $(wc -l $TARGET)"
-				echo "wc -l $KEEP: $(wc -l $KEEP)"
+				echo "  wc -l $TARGET $KEEP)"
+				wc -l $TARGET $KEEP | grep -v " total"
+				echo
+				echo "To update the package set run:"
+				echo "cp $KEEP $TARGET"
+				echo
+				echo "============================================================================="
 			else
 				update_target
 			fi
@@ -366,8 +373,8 @@ for SUITE in $SUITES ; do
 		# no pkg sets in experimental
 		continue
 	fi
-	echo
-	echo "$(date) - Creating meta package sets for $SUITE now."
+	echo "============================================================================="
+	echo "$(date -u) - Creating meta package sets for $SUITE now."
 	echo
 
 	DISTNAME="$SUITE-$ARCH"
@@ -386,10 +393,14 @@ for SUITE in $SUITES ; do
 
 	PACKAGES=$(ls $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages)
 	SOURCES=$(ls $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources)
-
+	echo "============================================================================="
+	echo "$(date -u) - Creating meta package sets for $SUITE now."
+	echo "============================================================================="
 	# finally
 	update_pkg_sets
-	echo "$(date) - Done updating all meta package sets for $SUITE."
+	echo
+	echo "============================================================================="
+	echo "$(date -u) - Done updating all meta package sets for $SUITE."
 done
 
 rm -f $TMPFILE ${TMPFILE2}

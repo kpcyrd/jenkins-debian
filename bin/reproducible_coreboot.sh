@@ -86,6 +86,9 @@ cd coreboot
 git submodule update --init --checkout 3rdparty/blobs
 COREBOOT="$(git log -1)"
 COREBOOT_VERSION=$(git describe)
+echo "This is coreboot $COREBOOT_VERSION."
+echo
+git log -1
 NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 
 echo "============================================================================="

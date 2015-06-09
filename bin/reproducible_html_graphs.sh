@@ -343,7 +343,7 @@ create_png_from_table() {
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		echo "Creating $2 dummy."
-		convert -size 1600x800 xc:#aaaaaa -depth 8 $2
+		convert -size 1920x960 xc:#aaaaaa -depth 8 $2
 		if [ "$3" != "" ] ; then
 			local THUMB="${TABLE[1]}_${3}-thumbnail.png"
 			convert $2 -adaptive-resize 160x80 ${THUMB}

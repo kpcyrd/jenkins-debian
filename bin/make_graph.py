@@ -23,7 +23,7 @@ def main():
     countsfile = os.path.join(filein)
     pngfile = os.path.join(fileout)
     grdevices = importr('grDevices')
-    grdevices.png(file=pngfile, width=1600, height=800, pointsize=10, res=100, antialias="none")
+    grdevices.png(file=pngfile, width=1920, height=960, pointsize=10, res=100, antialias="none")
     r = robjects.r
     r('t <- (read.table("'+countsfile+'",sep=",",header=1,row.names=1))')
     r('cname <- c("date",rep(colnames(t)))')

@@ -215,7 +215,7 @@ update_pkg_sets() {
 	# all build depends of gnome
 	rm -f $TMPFILE
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[10]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[8]}.pkgset) ; do
+		for PKG in $(cat $TPATH/${META_PKGSET[9]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" >> $TMPFILE
 		done
 		packages_list_to_deb822

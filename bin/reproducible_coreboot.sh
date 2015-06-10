@@ -27,6 +27,7 @@ create_results_dirs() {
 
 call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
+	local msg=""
 	set +e
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
@@ -48,21 +49,22 @@ call_debbindiff() {
 			echo "$(date -u) - $DBDVERSION found issues, please investigate $1/coreboot.rom"
 			;;
 		2)
-			echo "$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/coreboot.rom"
+			msg="$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/coreboot.rom"
 			;;
 		124)
 			if [ ! -s $TMPDIR/$1.html ] ; then
-				echo "$(date -u) - $DBDVERSION produced no output for $1/coreboot.rom and was killed after running into timeout after ${TIMEOUT}..."
+				msg="$(date -u) - $DBDVERSION produced no output for $1/coreboot.rom and was killed after running into timeout after ${TIMEOUT}..."
 			else
-				local msg="$DBDVERSION was killed after running into timeout after $TIMEOUT"
-				msg="$msg, but there is still $TMPDIR/$1.html"
+				msg="$DBDVERSION was killed after running into timeout after $TIMEOUT, but there is still $TMPDIR/$1.html"
 			fi
-			echo $msg
 			;;
 		*)
-			echo "$(date -u) - Something weird happened when running $DBDVERSION on $1/coreboot.rom (which exited with $RESULT) and I don't know how to handle it"
+			msg="$(date -u) - Something weird happened when running $DBDVERSION on $1/coreboot.rom (which exited with $RESULT) and I don't know how to handle it."
 			;;
 	esac
+	if [ ! -z $msg ] ; then
+		echo $msg | tee -a $TMPDIR/$1.html
+	fi
 }
 
 #
@@ -201,7 +203,7 @@ cat > $PAGE <<- EOF
 EOF
 write_page "       <h1>Reproducible Coreboot</h1>"
 write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, si that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>.<br />"
-write_page "        <em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice, with a few varitations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all and the rebuild happens on exactly the same system and so more variations are to be expected in the wild.</p>"
+write_page "        <em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice, with a few varitations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_coreboot/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"https://review.coreboot.org/p/coreboot.git\">coreboot.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_coreboot.sh\">reproducible_coreboot.sh</a> in a Debian environemnt and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"
 write_page "<p><pre>"
 echo -n "$COREBOOT" >> $PAGE
@@ -224,8 +226,9 @@ for i in * ; do
 			write_page "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> (${SIZE}K) is unreproducible.</li>"
 		else
 			SHASUM=$(sha256sum $i/coreboot.rom|cut -d " " -f1)
-			write_page "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, ${SIZE}K) had no debbindiff output so it's probably reproducible :)</li>"
+			write_page "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, ${SIZE}K) is reproducible.</li>"
 			let GOOD_ROMS+=1
+			rm -f $BASE/coreboot/dbd/$i.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	else
 		write_page "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source.</li>"

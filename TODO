@@ -235,9 +235,10 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * coreboot
 ** add more variations: domain+hostname, uid+gid, USER, UTS namespace
-** split into two jobs, one to build the toolchain, the other to test, keep the git repo and update it. run both jobs weekly.
+** split into two jobs? one to build the toolchain, the other to test, keep the git repo and update it. run both jobs weekly.
 *** call script with "init" or "run-tests"
-*** not sure how to best keep the git repo and the toolchain (not on tmpfs) while building in tmpfs...
+*** not sure how to best keep the git repo and the toolchain (not on tmpfs) while building in tmpfs... maybe just do it in one job...
+** build the docs?
 
 * openwrt
 ----

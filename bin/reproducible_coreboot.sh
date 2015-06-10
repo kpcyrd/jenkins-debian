@@ -95,11 +95,11 @@ NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 
 echo "============================================================================="
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."
-echo "============================================================================="
 
 GOT_XTOOLCHAIN=false
 set +e
 for ARCH in ${ARCHS} ; do
+	echo "============================================================================="
 	echo "$(date -u) - Building cross compiler for ${ARCH}."
 	# taken from util/crossgcc/Makefile:
 	nice ionice -c 3 bash util/crossgcc/buildgcc -j $NUM_CPU -p $ARCH
@@ -249,6 +249,7 @@ publish_page
 calculate_build_duration
 print_out_duration
 irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated."
+echo "============================================================================="
 
 # remove coreboot tree, we don't need it anymore...
 rm coreboot -r

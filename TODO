@@ -20,6 +20,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * replace amd64 in scripts with $HOSTARCH
 * put /etc/rc.local in git and extend it to do cleanup of lockfiles etc
+* explain in README how to write jobs, eg which pathes are on tmpfs
 
 === proper backup
 
@@ -180,6 +181,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ----
 
 * misc
+** html_graphs.sh rewrite: split out html_pkg_sets.py first, thats the easiest and the biggest speed gain
 ** more graphs: graph average build duration by day
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible

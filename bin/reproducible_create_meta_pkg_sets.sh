@@ -187,8 +187,6 @@ update_pkg_sets() {
 		rm -f ${TMPFILE2}
 		svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
 		grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5|sort -u > $TMPFILE
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[8]}.pkgset
 		rm -f ${TMPFILE2}
 	fi

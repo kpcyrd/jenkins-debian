@@ -95,8 +95,10 @@ NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 
 echo "============================================================================="
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."
-
 GOT_XTOOLCHAIN=false
+#
+# build the cross toolchains
+#
 set +e
 for ARCH in ${ARCHS} ; do
 	echo "============================================================================="
@@ -112,6 +114,26 @@ set -e
 if ! $GOT_XTOOLCHAIN ; then
 	echo "Need at least one cross toolchain, aborting."
 fi
+#
+# create html about toolchains used
+#
+TOOLCHAIN_HTML=$(mktemp)
+echo "<table><tr><th>cross toolchain source</th><th>sha256sum</th></tr>" > $TOOLCHAIN_HTML
+cd util/crossgcc/tarballs
+for i in * ; do
+	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
+	sha256sum $i | cut -d " " -f1 >> $TOOLCHAIN_HTML
+	echo " </td></tr>" >> $TOOLCHAIN_HTML
+done
+echo "</table>" >> $TOOLCHAIN_HTML
+echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
+for i in gcc g++ make cmake flex bison iasl ; do
+	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
+	dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $TOOLCHAIN_HTML
+	echo " </td></tr>" >> $TOOLCHAIN_HTML
+done
+echo "</table>" >> $TOOLCHAIN_HTML
+cd ../../..
 
 echo "============================================================================="
 echo "$(date -u) - Building coreboot ${COREBOOT_VERSION} images now - first build run."
@@ -202,7 +224,7 @@ cat > $PAGE <<- EOF
        </center></p>
 EOF
 write_page "       <h1>Reproducible Coreboot</h1>"
-write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, si that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>.<br />"
+write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki has a lot more information, eg. why this is useful, what common issues exist and which workaround and solutions are known.<br />"
 write_page "        <em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice, with a few varitations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_coreboot/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"https://review.coreboot.org/p/coreboot.git\">coreboot.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_coreboot.sh\">reproducible_coreboot.sh</a> in a Debian environemnt and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"
 write_page "<p><pre>"
@@ -237,8 +259,10 @@ for i in * ; do
 done
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_ROMS*100/$ALL_ROMS)" | bc)
 BAD_PERCENT=$(echo "scale=1 ; ($BAD_ROMS*100/$ALL_ROMS)" | bc)
-write_page "       </ul><p>$GOOD_ROMS ($GOOD_PERCENT%) out of $ALL_ROMS built coreboot images were reproducible, while $BAD_ROMS ($BAD_PERCENT%) failed to build from source."
+write_page "       </ul><p>$GOOD_ROMS ($GOOD_PERCENT%) out of $ALL_ROMS built coreboot images were reproducible in our test setup, while $BAD_ROMS ($BAD_PERCENT%) failed to build from source."
 write_page "       These tests were last run on $DATE for version ${COREBOOT_VERSION}.</p>"
+cat $TOOLCHAIN_HTML >> $PAGE
+rm -f $TOOLCHAIN_HTML
 write_page "    </div></div>"
 write_page_footer coreboot
 cd ..

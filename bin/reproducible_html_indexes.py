@@ -148,13 +148,13 @@ pages = {
                 'icon_status': 'FTBR',
                 'icon_link': '/index_unreproducible.html',
                 'query': 'FTBR_all_abc',
-                'text': Template('$tot packages ($percent%) failed to built reproducibly in total in $suite/$arch:')
+                'text': Template('$tot packages ($percent%) failed to build reproducibly in total in $suite/$arch:')
             },
             {
                 'icon_status': 'FTBFS',
                 'icon_link': '/index_FTBFS.html',
                 'query': 'FTBFS_all_abc',
-                'text': Template('$tot packages ($percent%) failed to built from source in total $suite/$arch:')
+                'text': Template('$tot packages ($percent%) failed to build from source in total $suite/$arch:')
             },
             {
                 'icon_status': 'not_for_us',
@@ -191,7 +191,7 @@ pages = {
                 'query': 'FTBR_last24h',
                 'query2': 'FTBR_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to built reproducibly in total, $tot of them in the last 24h in $suite/$arch:'),
+                                 'failed to build reproducibly in total, $tot of them in the last 24h in $suite/$arch:'),
                 'timely': True
             },
             {
@@ -200,7 +200,7 @@ pages = {
                 'query': 'FTBFS_last24h',
                 'query2': 'FTBFS_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to built from source in total, $tot of them  in the last 24h in $suite/$arch:'),
+                                 'failed to build from source in total, $tot of them  in the last 24h in $suite/$arch:'),
                 'timely': True
             },
             {
@@ -223,7 +223,7 @@ pages = {
                 'query': 'FTBR_last48h',
                 'query2': 'FTBR_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to built reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
+                                 'failed to build reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
                 'timely': True
             },
             {
@@ -232,7 +232,7 @@ pages = {
                 'query': 'FTBFS_last48h',
                 'query2': 'FTBFS_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to built from source in total, $tot of them  in the last 48h in $suite/$arch:'),
+                                 'failed to build from source in total, $tot of them  in the last 48h in $suite/$arch:'),
                 'timely': True
             },
             {

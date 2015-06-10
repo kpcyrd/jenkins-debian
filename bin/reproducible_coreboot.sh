@@ -237,7 +237,7 @@ for i in * ; do
 done
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_ROMS*100/$ALL_ROMS)" | bc)
 BAD_PERCENT=$(echo "scale=1 ; ($BAD_ROMS*100/$ALL_ROMS)" | bc)
-write_page "       </ul><p>$GOOD_ROMS ($GOOD_PERCENT%) out of $ALL_ROMS built coreboot images were reproducible, while $BAD_ROMS ($BAD_PERCENT%) failed to built from source."
+write_page "       </ul><p>$GOOD_ROMS ($GOOD_PERCENT%) out of $ALL_ROMS built coreboot images were reproducible, while $BAD_ROMS ($BAD_PERCENT%) failed to build from source."
 write_page "       These tests were last run on $DATE for version ${COREBOOT_VERSION}.</p>"
 write_page "    </div></div>"
 write_page_footer coreboot

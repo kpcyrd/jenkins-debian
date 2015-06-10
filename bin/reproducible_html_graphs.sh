@@ -404,7 +404,7 @@ create_suite_stats_page() {
 	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH."
 	set_icon unreproducible
 	write_icon
-	write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to built reproducibly."
+	write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to build reproducibly."
 	set_icon FTBFS
 	write_icon
 	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
@@ -495,7 +495,7 @@ create_pkg_sets_pages() {
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />&nbsp;<br />"
 			set_icon unreproducible
 			write_icon
-			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to built reproducibly:"
+			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to build reproducibly:"
 			link_packages $META_BAD
 			write_page "<br />"
 			if [ $COUNT_META_UGLY -gt 0 ] ; then

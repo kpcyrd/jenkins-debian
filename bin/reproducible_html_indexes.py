@@ -258,7 +258,7 @@ pages = {
                 'icon_link': '/index_FTBR.html',
                 'query': 'notes',
                 'nosuite': True,
-                'text': Template('$tot unreproducible packages in $suite/$arch :')
+                'text': Template('$tot unreproducible packages in $suite/$arch:')
             },
             {
                 'icon_status': 'FTBFS',
@@ -329,7 +329,7 @@ pages = {
         'notes': True,
         'nosuite': True,
         'title': 'Packages with notification enabled',
-        'header': '<p>The following {tot} packages have notifications enabled in {suite}/{arch}. When a status change happens (e.g. reproducible → unreproducible) the system sends an email to $srcpackage@packages.debian.org, notifying the maintainer and relevant parties (please subscribe through the PTS or Tracker if you are interested in such emails).<br />Please ask us to enable the notification for your package in our IRC channel!</p>',
+        'header': '<p>The following {tot} packages have notifications enabled in {suite}/{arch}. When a status change happens (e.g. reproducible → unreproducible) the system sends an email to $srcpackage@packages.debian.org, notifying the maintainer and relevant parties.  (You can subscribe through the PTS or Tracker if you are interested in such emails).<br />Please ask us to enable the notification for your package(s) in our IRC channel #debian-reproducible or via <a href="reproducible-builds@lists.alioth.debian.org">mail</a>!</p>',
         'header_query': 'SELECT COUNT(*) FROM sources WHERE suite="{suite}" AND architecture="{arch}" AND notify_maintainer = 1',
         'body': [
             {
@@ -337,7 +337,7 @@ pages = {
                 'db_status': 'unreproducible',
                 'icon_link': '/index_FTBR.html',
                 'query': 'notification',
-                'text': Template('$tot unreproducible packages in $suite/$arch'),
+                'text': Template('$tot unreproducible packages in $suite/$arch:'),
                 'nosuite': True
             },
             {
@@ -345,7 +345,7 @@ pages = {
                 'db_status': 'FTBFS',
                 'icon_link': '/index_FTBFS.html',
                 'query': 'notification',
-                'text': Template('$tot FTBFS packages in $suite/$arch'),
+                'text': Template('$tot FTBFS packages in $suite/$arch:'),
                 'nosuite': True
             },
             {
@@ -353,7 +353,7 @@ pages = {
                 'db_status': 'reproducible',
                 'icon_link': '/index_reproducible.html',
                 'query': 'notification',
-                'text': Template('$tot reproducible packages in $suite/$arch'),
+                'text': Template('$tot reproducible packages in $suite/$arch:'),
                 'nosuite': True
             }
         ]

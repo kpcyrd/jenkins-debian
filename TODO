@@ -190,6 +190,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 ** replace submit form by one without javascript (maybe with more url rewriting)
+** html_indexes.py creates /index_notify.html three times, even though one is enough.
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed

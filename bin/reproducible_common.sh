@@ -41,6 +41,8 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 SUITES="testing unstable experimental"
 # arches being tested
 ARCHES="amd64"
+# number of cores to be used
+NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 
 # existing usertags
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
@@ -270,7 +272,6 @@ write_explaination_table() {
 	write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	write_page "<tr><td>env LC_ALL</td><td><em>unset</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
 	write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
-	local NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=\"1111\"</td><td>BUILDUSERID=\"2222\"</td></tr>"
 		write_page "<tr><td>env BUILDUSERNAME</td><td>BUILDUSERNAME=\"pbuilder1\"</td><td>BUILDUSERNAME=\"pbuilder2\"</td></tr>"

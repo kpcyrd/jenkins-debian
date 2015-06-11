@@ -91,7 +91,6 @@ COREBOOT_VERSION=$(git describe)
 echo "This is coreboot $COREBOOT_VERSION."
 echo
 git log -1
-NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
 
 echo "============================================================================="
 echo "$(date -u) - Building cross compilers for ${ARCHS} now."

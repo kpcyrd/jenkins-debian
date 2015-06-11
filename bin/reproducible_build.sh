@@ -372,11 +372,8 @@ check_suitability() {
 	if ! $SUITABLE ; then handle_not_for_us $ARCHITECTURES ; fi
 }
 
-build_rebuild() {
-	FTBFS=1
+first_build(){
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-	local NUM_CPU=$(cat /proc/cpuinfo |grep '^processor'|wc -l)
-	mkdir b1 b2
 	set -x
 	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
 	( timeout -k 12h 12h nice ionice -c 3 sudo \
@@ -390,6 +387,13 @@ build_rebuild() {
 		${SRCPACKAGE}_*.dsc \
 	) 2>&1 | tee -a $RBUILDLOG
 	if ! "$DEBUG" ; then set +x ; fi
+	rm $TMPCFG
+}
+
+build_rebuild() {
+	FTBFS=1
+	mkdir b1 b2
+	first_build
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
@@ -397,6 +401,7 @@ build_rebuild() {
 		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
 		echo "============================================================================="
 		set -x
+		local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
 		( timeout -k 12h 12h nice ionice -c 3 sudo \
 		  DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)" \
@@ -421,13 +426,12 @@ build_rebuild() {
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
 		fi
+		rm $TMPCFG
 	fi
 	cleanup_userContent
 	update_rbuildlog
-	rm $TMPCFG
 	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }
-
 
 #
 # below is what controls the world

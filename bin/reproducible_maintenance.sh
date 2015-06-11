@@ -128,7 +128,7 @@ fi
 rm $HAYSTACK $RESULT $TOKILL
 # There are naughty processes spawning childs and leaving them to their grandparents
 PSCALL=""
-for i in "$PBUIDS" ; do
+for i in $PBUIDS ; do
 	for p in $(pgrep -u $i) ; do
 		AGE=$(ps -p $p -o etimes= || echo 0)
 		# let's be generous and consider 14 hours here...

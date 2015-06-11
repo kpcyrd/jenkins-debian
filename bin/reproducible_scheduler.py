@@ -304,12 +304,39 @@ def scheduler():
     # update the scheduled page
     generate_schedule()  # from reproducible_html_indexes
     # build the kgb message text
-    message = 'Scheduled in ' + '+'.join(SUITES) + ': ' + \
-              add_up_numbers(untested) + ' new and untested packages, ' + \
-              add_up_numbers(new) + ' packages with new versions and ' + \
-              add_up_numbers(old) + ' old packages with the same version, ' + \
-              'for ' + str(total) + ' or ' + \
-              '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
+    message = 'Scheduled in ' + '+'.join(SUITES) + ': '
+    msgs = 0
+    if add_up_numbers(untested) != '0':
+      msg_untested = add_up_numbers(untested) + ' new and untested packages'
+      msgs += 1
+    else:
+      msg_untested = ''
+    if add_up_numbers(new) != '0':
+      msg_versions = add_up_numbers(new) + ' packages with new versions'
+      msgs += 1
+    else:
+      msg_versions = ''
+    if add_up_numbers(old) != '0':
+      msg_old = add_up_numbers(old) + ' old packages with the same version'
+      msgs += 1
+    else:
+      msg_old = ''
+    if len(msg_untested) != 0
+      message += msg_untested
+      if msgs == 2:
+        message += ' and'
+      else:
+        message += ','
+    if len(msg_versions) != 0
+      message += msg_versions
+      if msgs == 3:
+        message += ' and'
+      else:
+        message += ','
+    if len(msg_old) != 0
+      message += msg_old + ','
+    message += 'for ' + str(total) + ' or ' + \
+               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
     log.info('\n\n\n')
     log.info(message)
     # only notifiy irc if there were packages scheduled in any suite

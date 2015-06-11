@@ -383,7 +383,6 @@ check_buildinfo() {
 	diff $TMPFILE1 $TMPFILE2
 	RESULT=$?
 	set -e
-	rm $TMPFILE1 $TMPFILE2
 	if [ $RESULT -eq 1 ] ; then
 		irc_message "$BUILDINFO varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..."
 		first_build

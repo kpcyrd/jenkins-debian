@@ -104,7 +104,7 @@ if [ -s $RESULT ] ; then
 	for PROCESS in $(cat $RESULT | cut -d " " -f1 | xargs echo) ; do
 		AGE=$(ps -p $PROCESS -o etimes= || echo 0)
 		# a single build may only take half a day, so...
-		if [ $AGE -gt 43200 ] ; then
+		if [ $AGE -gt $(( 12*60*60 )) ] ; then
 			echo "$PROCESS" >> $TOKILL
 		fi
 	done
@@ -126,6 +126,22 @@ if [ -s $RESULT ] ; then
 	fi
 fi
 rm $HAYSTACK $RESULT $TOKILL
+# There are naughty processes spawning childs and leaving them to their grandparents
+PSCALL=""
+for i in "$PBUIDS" ; do
+	for p in $(pgrep -u $i) ; do
+		AGE=$(ps -p $p -o etimes= || echo 0)
+		# let's be generous and consider 14 hours here...
+		if [ $AGE -gt $(( 14*60*60 )) ] ; then
+			PSCALL=${PSCALL:+"$PSCALL,"}"$p"
+		fi
+	done
+done
+if [ ! -z "$PSCALL" ] ; then
+	echo -e "Warning: processes found which should not be there, please fix up manually:"
+	ps -F -p "$PSCALL"
+	echo
+fi
 
 # find packages which build didnt end correctly
 QUERY="

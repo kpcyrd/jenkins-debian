@@ -271,8 +271,6 @@ echo -n "$COREBOOT" >> $PAGE
 write_page "     </pre></p>"
 write_page "    </div></div>"
 write_page_footer coreboot
-cd ..
-PAGE=coreboot/coreboot.html
 publish_page
 
 # the end
@@ -282,6 +280,7 @@ irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated."
 echo "============================================================================="
 
 # remove coreboot tree, we don't need it anymore...
+cd
 rm coreboot -r
 cleanup_tmpdir
 trap - INT TERM EXIT

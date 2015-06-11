@@ -224,22 +224,6 @@ dbd_timeout() {
 	handle_ftbr "$msg"
 }
 
-check_buildinfo() {
-	local TMPFILE1=$(mktemp)
-	local TMPFILE2=$(mktemp)
-	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
-	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
-	set +e
-	diff $TMPFILE1 $TMPFILE2
-	RESULT=$?
-	set -e
-	rm $TMPFILE1 $TMPFILE2
-	if [ $RESULT -eq 1 ] ; then
-		irc_message "$BUILDINFO varies, probably due to mirror update."
-		# FIXME: rebuild again, probably just the first though
-	fi
-}
-
 call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
@@ -390,6 +374,31 @@ first_build(){
 	rm $TMPCFG
 }
 
+check_buildinfo() {
+	local TMPFILE1=$(mktemp)
+	local TMPFILE2=$(mktemp)
+	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
+	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
+	set +e
+	diff $TMPFILE1 $TMPFILE2
+	RESULT=$?
+	set -e
+	rm $TMPFILE1 $TMPFILE2
+	if [ $RESULT -eq 1 ] ; then
+		irc_message "$BUILDINFO varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..."
+		first_build
+		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
+		set +e
+		diff $TMPFILE1 $TMPFILE2
+		RESULT=$?
+		set -e
+		if [ $RESULT -eq 1 ] ; then
+			irc_message "$BUILDINFO varies again, what??? Please investigate"
+		fi
+	fi
+	rm $TMPFILE1 $TMPFILE2
+}
+
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
@@ -428,9 +437,6 @@ build_rebuild() {
 		fi
 		rm $TMPCFG
 	fi
-	cleanup_userContent
-	update_rbuildlog
-	if [ $FTBFS -eq 1 ] ; then handle_ftbfs ; fi
 }
 
 #
@@ -467,6 +473,12 @@ check_for_race_conditions
 build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
 	check_buildinfo
+fi
+cleanup_userContent
+update_rbuildlog
+if [ $FTBFS -eq 1 ] ; then
+	handle_ftbfs
+elif [ $FTBFS -eq 0 ] ; then
 	call_debbindiff  # defines DBDVERSION, update_db_and_html defines STATUS
 fi
 

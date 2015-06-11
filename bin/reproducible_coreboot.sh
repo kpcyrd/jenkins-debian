@@ -193,7 +193,6 @@ for i in * ; do
 done
 cd ..
 rm coreboot-builds -r
-cd ..
 
 # run debbindiff on the results
 TIMEOUT="30m"
@@ -208,7 +207,7 @@ BAD_ROMS=0
 GOOD_ROMS=0
 ALL_ROMS=0
 create_results_dirs
-cd b1
+cd $TMPDIR/b1
 for i in * ; do
 	let ALL_ROMS+=1
 	if [ -f $i/coreboot.rom ] ; then
@@ -236,7 +235,8 @@ BAD_PERCENT=$(echo "scale=1 ; ($BAD_ROMS*100/$ALL_ROMS)" | bc)
 #
 #  finally create the webpage
 #
-PAGE=$PWD/coreboot/coreboot.html
+cd $TMPDIR
+PAGE=coreboot/coreboot.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">

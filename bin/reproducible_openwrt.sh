@@ -93,27 +93,6 @@ echo "==========================================================================
 make defconfig
 make -j $NUM_CPU tools/install
 
-#
-# create html about toolchain used
-#
-TOOLCHAIN_HTML=$(mktemp)
-TARGET=$(ls -1d staging_dir/toolchain*|cut -d "-" -f2-)
-echo "<table><tr><th>Contents of <pre>build_dir/host/</pre></th></tr>" > $TOOLCHAIN_HTML
-for i in $(ls -1 build_dir/host/) ; do
-	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
-echo "</table>" >> $TOOLCHAIN_HTML
-echo "<table><tr><th>Downloaded software built for <pre>$TARGET</pre></th></tr>" >> $TOOLCHAIN_HTML
-for i in $(ls -1 dl/) ; do
-	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
-echo "</table>" >> $TOOLCHAIN_HTML
-echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
-for i in gcc binutils bzip2 flex python perl make findutils grep diff unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
-	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
-	dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $TOOLCHAIN_HTML
-	echo " </td></tr>" >> $TOOLCHAIN_HTML
-done
-echo "</table>" >> $TOOLCHAIN_HTML
-
 echo "============================================================================="
 echo "$(date -u) - Building openwrt ${OPENWRT_VERSION} images now - first build run."
 echo "============================================================================="
@@ -199,6 +178,27 @@ done
 cd ..
 rm bin -r
 
+#
+# create html about toolchain used
+#
+TOOLCHAIN_HTML=$(mktemp)
+TARGET=$(ls -1d staging_dir/toolchain*|cut -d "-" -f2-)
+echo "<table><tr><th>Contents of <pre>build_dir/host/</pre></th></tr>" > $TOOLCHAIN_HTML
+for i in $(ls -1 build_dir/host/) ; do
+	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
+echo "</table>" >> $TOOLCHAIN_HTML
+echo "<table><tr><th>Downloaded software built for <pre>$TARGET</pre></th></tr>" >> $TOOLCHAIN_HTML
+for i in $(ls -1 dl/) ; do
+	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
+echo "</table>" >> $TOOLCHAIN_HTML
+echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
+for i in gcc binutils bzip2 flex python perl make findutils grep diff unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
+	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
+	dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $TOOLCHAIN_HTML
+	echo " </td></tr>" >> $TOOLCHAIN_HTML
+done
+echo "</table>" >> $TOOLCHAIN_HTML
+
 # run debbindiff on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
@@ -258,8 +258,10 @@ cat > $PAGE <<- EOF
 	  <br />
           <strong>OpenWRT</strong>: <em>reproducible</em> wireless freedom?
         </blockquote>
-       </center></p>
+        <pre>
 EOF
+cat $(find openwrt/build_dir/ -name banner | grep etc/banner|head -1) >> $PAGE
+write_page "       </pre></center></p>"
 write_page "       <h1>Reproducible OpenWRT</h1>"
 write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki has a lot more information, eg. why this is useful, what common issues exist and which workarounds and solutions are known.<br />"
 write_page "        <em>Reproducible OpenWRT</em> is an effort to apply this to OpenWRT. Thus each OpenWR target is build twice, with a few varitations added and then the resulting images from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"

@@ -52,6 +52,13 @@ except KeyError:
                  'schedule packages. Ask in #debian-reproducible if you have '
                  'trouble with that.' + bcolors.ENDC)
     sys.exit(1)
+# this variable is setted by reproducible scripts, and it's clearly available
+# only on calls made by the local host
+try:
+    local = True if os.environ['LOCAL_CALL'] == 'true' else False
+except KeyError:
+    local = False
+
 suite = scheduling_args.suite
 reason = ' '.join(scheduling_args.message)
 packages = scheduling_args.packages
@@ -137,7 +144,7 @@ try:
 except IndexError:
     amount = 0
 log.debug(requester + ' already scheduled ' + str(amount) + ' packages today')
-if amount + len(ids) > 50:
+if amount + len(ids) > 50 and not local:
     log.error(bcolors.FAIL + 'You have exceeded the maximum number of manual ' +
               'reschedulings allowed for a day. Please ask in ' +
               '#debian-reproducible if you need to schedule more packages.' +

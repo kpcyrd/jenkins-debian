@@ -179,14 +179,16 @@ save_openwrt_results b2
 # create html about toolchain used
 #
 TOOLCHAIN_HTML=$(mktemp)
-TARGET=$(ls -1d staging_dir/toolchain*|cut -d "-" -f2-)
+TARGET=$(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo)
 echo "<table><tr><th>Contents of <pre>build_dir/host/</pre></th></tr>" > $TOOLCHAIN_HTML
 for i in $(ls -1 build_dir/host/) ; do
 	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
+done
 echo "</table>" >> $TOOLCHAIN_HTML
 echo "<table><tr><th>Downloaded software built for <pre>$TARGET</pre></th></tr>" >> $TOOLCHAIN_HTML
 for i in $(ls -1 dl/) ; do
 	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
+done
 echo "</table>" >> $TOOLCHAIN_HTML
 echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
 for i in gcc binutils bzip2 flex python perl make findutils grep diff unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do

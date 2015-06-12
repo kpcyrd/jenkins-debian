@@ -264,14 +264,14 @@ write_page "       <p>$GOOD_ROMS ($GOOD_PERCENT%) out of $ALL_ROMS built coreboo
 write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION}.</p>"
 write_explaination_table coreboot
 cat $ROMS_HTML >> $PAGE
-cat $TOOLCHAIN_HTML >> $PAGE
-rm -f $ROMS_HTML $TOOLCHAIN_HTML
 write_page "     <p><pre>"
 echo -n "$COREBOOT" >> $PAGE
 write_page "     </pre></p>"
+cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div></div>"
 write_page_footer coreboot
 publish_page
+rm -f $ROMS_HTML $TOOLCHAIN_HTML
 
 # the end
 calculate_build_duration

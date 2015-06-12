@@ -328,7 +328,7 @@ def scheduler():
     generate_schedule()  # from reproducible_html_indexes
     # build the kgb message text
     message = 'Scheduled in ' + '+'.join(SUITES) + ': '
-    if != msg_untested:
+    if msg_untested:
         message += msg_untested
         message += ' and ' if msg_new and msg_old else ', ' if msg_new or msg_old else ''
     message += msg_new if msg_new else ''

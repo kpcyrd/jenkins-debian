@@ -252,6 +252,12 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/coreboot/$
 	RewriteRule ^/(.*) /coreboot/coreboot.html [R,L]
 
+	# redirect /openwrt/ to openwrt/openwrt.html
+	# note: the missing slash in the RewriteRule is wanted to avoid a double slash
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/openwrt/$
+	RewriteRule ^/(.*) /openwrt/openwrt.html [R,L]
+
 	<Proxy *>
 		Require all granted
 	</Proxy>

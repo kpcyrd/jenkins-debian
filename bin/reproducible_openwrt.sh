@@ -104,9 +104,9 @@ echo "==========================================================================
 echo "$(date -u) - Building the toolchain now."
 echo "============================================================================="
 make defconfig
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU tools/install
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU toolchain/install
 
 echo "============================================================================="
@@ -114,17 +114,17 @@ echo "$(date -u) - Building openwrt ${OPENWRT_VERSION} images now - first build 
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU target/compile
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU package/cleanup
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU package/compile
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU package/install
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU target/install
-nice ionice -c 3 \
+ionice -c 3 nice \
 	make -j $NUM_CPU package/index
 
 # save results in b1
@@ -146,22 +146,22 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NUM_CPU target/compile
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/cleanup
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/compile
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/install
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU target/install
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/index
 

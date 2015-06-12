@@ -114,7 +114,7 @@ for ARCH in ${ARCHS} ; do
 	echo "============================================================================="
 	echo "$(date -u) - Building cross compiler for ${ARCH}."
 	# taken from util/crossgcc/Makefile:
-	nice ionice -c 3 bash util/crossgcc/buildgcc -j $NUM_CPU -p $ARCH
+	ionice -c 3 nice bash util/crossgcc/buildgcc -j $NUM_CPU -p $ARCH
 	RESULT=$?
 	if [ $RESULT -eq 0 ] ; then
 		GOT_XTOOLCHAIN=true
@@ -155,7 +155,7 @@ sed -i 's#MAKE=$i#MAKE=make#' util/abuild/abuild
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything
-nice ionice -c 3 \
+ionice -c 3 nice \
 	bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
 
 # save results in b1
@@ -173,7 +173,7 @@ umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
-nice ionice -c 3 \
+ionice -c 3 nice \
 	linux64 --uname-2.6 \
 	bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
 

@@ -101,6 +101,12 @@ echo
 git log -1
 
 echo "============================================================================="
+echo "$(date -u) - Updating package feeds."
+echo "============================================================================="
+./scripts/feeds update -a
+./scripts/feeds install -a
+
+echo "============================================================================="
 echo "$(date -u) - Building the toolchain now."
 echo "============================================================================="
 make defconfig
@@ -191,7 +197,7 @@ for i in $(ls -1 dl/) ; do
 done
 echo "</table>" >> $TOOLCHAIN_HTML
 echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
-for i in gcc binutils bzip2 flex python perl make findutils grep diff unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
+for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
 	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
 	dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $TOOLCHAIN_HTML
 	echo " </td></tr>" >> $TOOLCHAIN_HTML

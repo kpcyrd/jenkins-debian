@@ -19,6 +19,7 @@ TMPFILE=$(mktemp)
 TMP2FILE=$(mktemp)
 
 MODIFIED_IN_SID=0
+MODIFIED_IN_EXP=0
 
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
@@ -164,6 +165,9 @@ for PKG in $SOURCES ; do
 	if ! $OBSOLETE_IN_SID ; then
 		let "MODIFIED_IN_SID+=1"
 	fi
+	if ! $OBSOLETE_IN_EXP ; then
+		let "MODIFIED_IN_EXP+=1"
+	fi
 	write_page " </td>"
 	write_page " <td><a href=\"https://tracker.debian.org/pkg/$PKG\">PTS</a></td>"
 	URL="https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=$PKG&users=reproducible-builds@lists.alioth.debian.org&archive=both"
@@ -183,3 +187,4 @@ rm $TMPFILE $TMP2FILE
 write_page_footer
 publish_page
 echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt
+echo "$MODIFIED_IN_EXP" > /srv/reproducible-results/modified_in_exp.txt

@@ -583,12 +583,18 @@ create_main_stats_page() {
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 	write_page "<tr><td>&nbsp;&nbsp;- failing to build</a></td><td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td></tr>"
 	write_page "<tr><td>packages in $SUITE which need to be fixed</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
+	SUITE="testing"
+	gather_suite_stats
+	write_page "<tr><td>&nbsp;&nbsp;- in $SUITE</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
+	SUITE="unstable"
 	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
 		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td></tr>"
 		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td></tr>"
+	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
+	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td></tr>"
 	write_page "</table>"
 	# write bugs with usertags table
 	write_usertag_table

@@ -279,8 +279,6 @@ print_out_duration
 irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated."
 echo "============================================================================="
 
-# remove coreboot tree, we don't need it anymore...
-cd
-rm coreboot -r
+# remove everything, we don't need it anymore...
 cleanup_tmpdir
 trap - INT TERM EXIT

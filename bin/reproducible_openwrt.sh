@@ -148,7 +148,7 @@ umask 0002
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 ionice -c 3 nice \
 	linux64 --uname-2.6 \
-		make -j $NUM_CPU target/compile
+		make -j $NEW_NUM_CPU target/compile
 ionice -c 3 nice \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/cleanup

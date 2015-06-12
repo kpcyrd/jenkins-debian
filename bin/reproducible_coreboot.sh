@@ -192,6 +192,9 @@ done
 cd ..
 rm coreboot-builds -r
 
+# clean up builddir to save space on tmpfs
+rm -r $TMPBUILDDIR/coreboot
+
 # run debbindiff on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
@@ -233,7 +236,7 @@ BAD_PERCENT=$(echo "scale=1 ; ($BAD_ROMS*100/$ALL_ROMS)" | bc)
 #
 #  finally create the webpage
 #
-cd $TMPDIR
+cd $TMPDIR ; mkdir coreboot
 PAGE=coreboot/coreboot.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>

@@ -206,6 +206,9 @@ for i in gcc binutils bzip2 flex python perl make findutils grep diff unzip gawk
 done
 echo "</table>" >> $TOOLCHAIN_HTML
 
+# clean up builddir to save space on tmpfs
+rm -r $TMPBUILDDIR/openwrt
+
 # run debbindiff on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
@@ -245,7 +248,7 @@ GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
 #
 #  finally create the webpage
 #
-cd $TMPDIR
+cd $TMPDIR ; mkdir openwrt
 PAGE=openwrt/openwrt.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>

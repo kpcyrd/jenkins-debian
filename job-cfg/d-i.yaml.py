@@ -13,32 +13,32 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-langs = {
-    'ca': 'Catalan',
-    'cs': 'Czech',
-    'de': 'German',
-    'en': 'English',
-    'fr': 'French',
-    'it': 'Italian',
-    'pt_BR': 'Brazilian Portuguese',
-    'da': 'Danish',
-    'el': 'Greek',
-    'es': 'Spanish',
-    'fi': 'Finnish',
-    'hu': 'Hungarian',
-    'ja': 'Japanese',
-    'ko': 'Korean',
-    'nl': 'Dutch',
-    'nn': 'Norwegian Nynorsk',
-    'pt': 'Portuguese',
-    'ro': 'Romanian',
-    'ru': 'Russian',
-    'sv': 'Swedish',
-    'tl': 'Tagalog',
-    'vi': 'Vietnamese',
-    'zh_CN': 'Chinese (zh_CN)',
-    'zh_TW': 'Chinese (zh_TW)',
-}
+langs = [
+    {'ca': {'langname': 'Catalan'}},
+    {'cs': {'langname': 'Czech'}},
+    {'de': {'langname': 'German'}},
+    {'en': {'langname': 'English'}},
+    {'fr': {'langname': 'French'}},
+    {'it': {'langname': 'Italian'}},
+    {'pt_BR': {'langname': 'Brazilian Portuguese'}},
+    {'da': {'langname': 'Danish'}},
+    {'el': {'langname': 'Greek'}},
+    {'es': {'langname': 'Spanish'}},
+    {'fi': {'langname': 'Finnish'}},
+    {'hu': {'langname': 'Hungarian'}},
+    {'ja': {'langname': 'Japanese'}},
+    {'ko': {'langname': 'Korean'}},
+    {'nl': {'langname': 'Dutch'}},
+    {'nn': {'langname': 'Norwegian Nynorsk'}},
+    {'pt': {'langname': 'Portuguese'}},
+    {'ro': {'langname': 'Romanian'}},
+    {'ru': {'langname': 'Russian'}},
+    {'sv': {'langname': 'Swedish'}},
+    {'tl': {'langname': 'Tagalog'}},
+    {'vi': {'langname': 'Vietnamese'}},
+    {'zh_CN': {'langname': 'Chinese (zh_CN)'}},
+    {'zh_TW': {'langname': 'Chinese (zh_TW)'}}
+ ]
 
 non_pdf_langs = ['el', 'vi', 'ja', 'zh_CN', 'zh_TW']
 non_po_langs  = ['ca', 'cs', 'de', 'en', 'fr', 'it', 'pt_BR']
@@ -161,20 +161,16 @@ def scm_svn(po, inc_regs=None):
 
 
 def svn_desc(po, fmt):
-    s =  'Builds the {languagename} ' + fmt + ' version of the installation-guide for all architectures. '
+    s =  'Builds the {langname} ' + fmt + ' version of the installation-guide for all architectures. '
     s += 'Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual'
     s += '/po' if po else ''
     s += '/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered.'
     return s
 
 
-def pdf_desc():
-    s = 'Builds the {languagename} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>.'
-    return s
+pdf_desc_str = 'Builds the {langname} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>.'
 
-
-def instguide_desc():
-    return 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>' + str(manual_includes) + '</pre>'
+instguide_desc_str = 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre>'
 
 
 def lr(keep):
@@ -187,9 +183,9 @@ def publ_email(irc=None):
     return {'email': {'recipients': ' '.join(r)}}
 
 
-def publ(fmt=None,trigger=False,irc=None):
+def publ(fmt=None,trigger=None,irc=None):
     p = []
-    if trigger:
+    if trigger != None:
         p = [{'trigger': {'project': 'd-i_manual_{lang}_pdf', 'threshold': 'UNSTABLE'}}]
     p.extend([
         {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian-installer.rules',
@@ -200,48 +196,50 @@ def publ(fmt=None,trigger=False,irc=None):
         p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest-only': True}})
     return p
 
+# make the yaml a bit shorter, with aliases -- if that's unhelpful move the variables inside prop()
+sb_about = {'sidebar': {'url': 'https://jenkins.debian.net/userContent/about.html',
+                        'text': 'About jenkins.debian.net',
+                        'icon': '/userContent/images/debian-swirl-24x24.png'}}
+
+sb_profitbricks = {'sidebar': {'url': 'http://www.profitbricks.co.uk',
+                               'text': 'Sponsored by Profitbricks',
+                               'icon': '/userContent/images/profitbricks-24x24.png'}}
 
 def prop(type='manual', priority=None):
-    p = [{'sidebar': {'url': 'https://jenkins.debian.net/userContent/about.html',
-                      'text': 'About jenkins.debian.net',
-                      'icon': '/userContent/images/debian-swirl-24x24.png'}},
+    p = [sb_about,
          {'sidebar': {'url': 'https://jenkins.debian.net/view/d-i_' + type + '/',
                       'text': 'debian-installer ' + type + ' jobs',
                       'icon': '/userContent/images/debian-jenkins-24x24.png'}},
-         {'sidebar': {'url': 'http://www.profitbricks.co.uk',
-                      'text': 'Sponsored by Profitbricks',
-                      'icon': '/userContent/images/profitbricks-24x24.png'}}]
+         sb_profitbricks]
     if priority != None:
         p.append( {'priority-sorter': {'priority': str(priority)}} )
     return p
 
 
-def jtmpl(act, target, fmt=None, po=False):
+def jtmpl(act, target, fmt=None, po=''):
     n = ['{name}', act, target]
-    d = [ 'd-i', act ]
+    d = ['{name}', act ]
     if fmt:
         n.append(fmt)
         d.append(fmt)
-    if po:
-        d.append('po2xml')
+    if po != '':
+        n.append(po)
+        d.append(po)
     return {'job-template': {'name': '_'.join(n), 'defaults': '-'.join(d)}}
 
 
 def jobspec_svn(key, name, desc=None, defaults=None,
                 priority=120, logkeep=None, trigger=None, publishers=None,
-                lang=None, fmt=None, po=False, inc_regs=None ):
+                lang='', fmt='', po='', inc_regs=None ):
     j = {'scm': scm_svn(po=po,inc_regs=inc_regs),
          'project-type': 'freestyle',
-         'builders': [{'shell': '/srv/jenkins/bin/d-i_manual.sh'
-                       + (' ' + lang if lang else '')
-                       + (' ' + fmt if fmt else '')
-                       + (' po2xml' if po else '')}],
+         'builders': [{'shell': ' '.join(['/srv/jenkins/bin/d-i_manual.sh', lang, fmt, po])}],
          'properties': prop(priority=priority),
          'name': name}
     j['publishers'] = publishers if publishers != None else publ(fmt=fmt,trigger=trigger,irc='debian-boot')
 
     if desc != None:
-        j['description'] = desc()
+        j['description'] = desc
     else:
         if fmt != None:
             j['description'] = svn_desc(po=po,fmt=fmt)
@@ -250,43 +248,12 @@ def jobspec_svn(key, name, desc=None, defaults=None,
     if defaults != None:
         j['defaults'] = defaults
     if trigger != None:
-        j['triggers'] = [{'pollscm': 'H/' + str(trigger) + ' * * * *'}]
+        j['triggers'] = [{'pollscm': trigger}]
     if logkeep != None:
         j['logrotate'] = lr(logkeep)
     return { key : j }
 
 
-def templs_jobs():
-    templates = []
-    jobs = [ '{name}_maintenance',
-             '{name}_check_jenkins_jobs',
-             '{name}_manual',
-           ]
-    def tj_append(t, j):
-        templates.append(t)
-        jobs.append(j)
-
-    # this is a bit contrived: in order to only need to go through each loop once
-    # we're producing the template and it's job at the same time in a tuple, then
-    # using a local function to append those results onto their apropriate lists
-    # This is done mostly as a stepping ston to discarding the teplates (assuming
-    # that is possible, which we'll find out...)
-    [tj_append(t,j) for (t,j) in [
-        (
-            jtmpl(act='manual',target=l,fmt=f,po=(l not in non_po_langs)),
-            {'_'.join(['{name}','manual',l,f]): {'lang': l, 'languagename': langs[l]}}
-        )
-        for f in ['html', 'pdf']
-        for l in sorted(langs.keys())
-        if not (f=='pdf' and l in non_pdf_langs)]]
-    [tj_append(t,j) for (t,j) in [
-        (
-            jtmpl(act=act,target=pkg),
-            {'_'.join(['{name}',act,pkg]): {'gitrepo': 'git://git.debian.org/git/d-i/' + pkg}}
-        )
-        for act in ['build', 'pu-build']
-        for pkg in pkgs]]
-    return (templates, jobs)
 
 # -- here we build the data to be dumped as yaml
 data = []
@@ -297,74 +264,149 @@ data.append(
                    'project-type': 'freestyle',
                    'properties': prop(type='misc')}})
 
-data.extend(
-    [jobspec_svn(key='defaults',
-                 name='d-i-manual-' + fmt + ('-po2xml' if po else ''),
-                 fmt=fmt,
-                 lang='{lang}',
-                 trigger=None if fmt == 'pdf' else 15 if not po else 30,
-                 desc=pdf_desc if fmt == 'pdf' else None,
-                 po=po,
-                 logkeep=90)
-     for fmt in ['html', 'pdf']
-     for po  in [False, True]])
+templs = []
+
+for f in ['html', 'pdf']:
+    for po in ['', 'po2xml']:
+        n = ['{name}','manual', f]
+        if po != '':
+            n.append(po)
+        data.append(
+            jobspec_svn(key='defaults',
+                        name='-'.join(n),
+                        fmt=f,
+                        lang='{lang}',
+                        trigger='{trg}' if not (f == 'pdf' and po == '') else None,
+                        desc=svn_desc(po=po,fmt=f) if f == 'html' else pdf_desc_str,
+                        po=po,
+                        logkeep=90))
+        templs.append(jtmpl(act='manual',target='{lang}',fmt=f,po=po))
 
 data.extend(
-    [{'defaults': { 'name': n,
-                   'description': 'Builds debian packages in sid from git '+ bdsc +', triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
-                   'triggers': [{'pollscm': trg}],
-                   'scm': [{'git': {'url': '{gitrepo}',
-                                    'branches': [br]}}],
-                   'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
-                   'project-type': 'freestyle',
-                   'properties': prop(type='packages', priority=99),
-                   'logrotate': lr(90),
-                   'publishers': publ(irc=irc)}}
-     for (n,bdsc,br,trg,irc)
-     in [('d-i-build',    'master branch', 'origin/master', 'H/6 * * * *',  None),     # irc should be 'debian-boot' but disabled due to gcc5 transition
-         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', None)]])   # same
+    [{'defaults': {
+        'name': '{name}-{act}',
+        'description': 'Builds debian packages in sid from git {branchdesc}, triggered by pushes to <pre>{gitrepo}</pre> {do_not_edit}',
+        'triggers': [{'pollscm': '{trg}'}],
+        'scm': [{'git': {'url': '{gitrepo}',
+                         'branches': ['{branch}']}}],
+        'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+        'project-type': 'freestyle',
+        'properties': prop(type='packages', priority=99),
+        'logrotate': lr(90),
+        'publishers': publ(irc='debian-boot')}}])
 
-manual_includes = [ '/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*', '/trunk/manual/scripts/.*' ]
+templs.append(jtmpl(act='{act}',target='{pkg}'))
+data.extend(templs)
 
 data.append(
     jobspec_svn(key='job-template',
                 defaults='d-i',
                 name='{name}_manual',
-                desc=instguide_desc,
-                trigger=15,
+                desc=instguide_desc_str,
+                trigger='{trg}',
                 priority=125,
-                publishers=[publ_email()],
-                inc_regs=manual_includes))
+                publishers=[publ_email('debian-boot')],
+                inc_regs='{include}'))
 
 data.append(
-    {'job-template': { 'defaults': 'd-i',
-                       'name': '{name}_check_jenkins_jobs',
-                       'description': 'Checks daily for missing jenkins jobs. {do_not_edit}',
-                       'triggers': [{'timed': '23 0 * * *'}],
-                       'builders': [{'shell': '/srv/jenkins/bin/d-i_check_jobs.sh'}],
-                       'publishers': [{'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
-                                                     'unstable-on-warning': 'true',
-                                                     'fail-on-error': 'true'}},
-                                      publ_email()]}})
+    {'job-template': {
+        'defaults': 'd-i',
+        'name': '{name}_check_jenkins_jobs',
+        'description': 'Checks daily for missing jenkins jobs. {do_not_edit}',
+        'triggers': [{'timed': '23 0 * * *'}],
+        'builders': [{'shell': '/srv/jenkins/bin/d-i_check_jobs.sh'}],
+        'publishers': [
+            {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
+                           'unstable-on-warning': 'true',
+                           'fail-on-error': 'true'}},
+            publ_email()]}})
 
 data.append(
-    {'job-template': { 'defaults': 'd-i',
-                       'name': '{name}_maintenance',
-                       'description': 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}',
-                       'triggers': [{'timed': '30 5 * * *'}],
-                       'builders': [{'shell': '/srv/jenkins/bin/maintenance.sh {name}'}],
-                       'properties': prop(priority=150),
-                       'publishers': [{'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
-                                                     'unstable-on-warning': 'true',
-                                                     'fail-on-error': 'true'}},
-                                      publ_email('debian-boot')]}})
-(templs, jobs) = templs_jobs()
-
-data.extend(templs)
+    {'job-template': {
+        'defaults': 'd-i',
+        'name': '{name}_maintenance',
+        'description': 'Cleanup and monitor so that there is a predictable environment.{do_not_edit}',
+        'triggers': [{'timed': '30 5 * * *'}],
+        'builders': [{'shell': '/srv/jenkins/bin/maintenance.sh {name}'}],
+        'properties': prop(priority=150),
+        'publishers': [
+            {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
+                           'unstable-on-warning': 'true',
+                           'fail-on-error': 'true'}},
+            publ_email('debian-boot')]}})
 
 data.append(
-    {'project': { 'name': 'd-i',
-                  'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">d-i.yaml.py</a>.',
-                  'jobs': jobs}})
+    {'job-group': {
+        'name': '{name}_html-manual-group',
+        'jobs': ['{name}_manual_{lang}_html'],
+        'lang': [l for l in langs if list(l.keys())[0] in non_po_langs],
+        'trg': 'H/15 * * * *',
+        'fmt': 'html'}})
+
+data.append(
+    {'job-group': {
+        'name': '{name}_pdf-manual-group',
+        'jobs': ['{name}_manual_{lang}_pdf'],
+        'lang': [l for l in langs if (list(l.keys())[0] not in non_pdf_langs) and (list(l.keys())[0] in non_po_langs)],
+        'trg': '',
+        'fmt': 'pdf'}})
+
+data.append(
+    {'job-group': {
+        'name': '{name}_html-po2xml-manual-group',
+        'jobs': ['{name}_manual_{lang}_html_po2xml'],
+        'lang': [l for l in langs if list(l.keys())[0] not in non_po_langs],
+        'trg': 'H/30 * * * *',
+        'fmt': 'html'}})
+
+data.append(
+    {'job-group': {
+        'name': '{name}_pdf-po2xml-manual-group',
+        'jobs': ['{name}_manual_{lang}_pdf_po2xml'],
+        'lang': [l for l in langs if (list(l.keys())[0] not in non_pdf_langs) and (list(l.keys())[0] not in non_po_langs)],
+        'trg': '',
+        'fmt': 'pdf'}})
+
+data.append(
+    {'job-group': {
+        'name': '{name}_build-group',
+        'jobs': ['{name}_{act}_{pkg}'],
+        'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
+        'act': 'build',
+        'branchdesc': 'master branch',
+        'branch': 'origin/master',
+        'trg': 'H/6 * * * *',
+        'pkg': pkgs}})
+
+data.append(
+    {'job-group': {
+        'name': '{name}_pu-build-group',
+        'jobs': ['{name}_{act}_{pkg}'],
+        'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
+        'act': 'pu-build',
+        'branchdesc': 'pu/ branches',
+        'branch': 'origin/pu/**',
+        'trg': 'H/10 * * * *',
+        'pkg': pkgs}})
+
+data.append(
+    {'project': {
+        'name': 'd-i',
+        'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">d-i.yaml.py</a>.',
+        'jobs': [
+            '{name}_maintenance',
+            '{name}_check_jenkins_jobs',
+            {'{name}_manual': {
+                'include': ( '/trunk/manual/debian/.*\n'
+                             '/trunk/manual/po/.*\n'
+                             '/trunk/manual/doc/.*\n'
+                             '/trunk/manual/scripts/.*' ),
+                'trg': 'H/15 * * * *'}},
+            '{name}_html-manual-group',
+            '{name}_pdf-manual-group',
+            '{name}_html-po2xml-manual-group',
+            '{name}_pdf-po2xml-manual-group',
+            '{name}_build-group',
+            '{name}_pu-build-group']}})
 
 sys.stdout.write( dump(data, Dumper=Dumper) )

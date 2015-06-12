@@ -91,27 +91,30 @@ echo "==========================================================================
 echo "$(date -u) - Building the toolchain now."
 echo "============================================================================="
 make defconfig
-make -j $NUM_CPU tools/install
+nice ionice -c 3 \
+	make -j $NUM_CPU tools/install
+nice ionice -c 3 \
+	make -j $NUM_CPU toolchain/install
 
 echo "============================================================================="
 echo "$(date -u) - Building openwrt ${OPENWRT_VERSION} images now - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
+#nice ionice -c 3 \
+#	make
 nice ionice -c 3 \
-	make
-#nice ionice -c 3 \
-#	make target/compile
-#nice ionice -c 3 \
-#	make -j $NUM_CPU package/cleanup
-#nice ionice -c 3 \
-#	make -j $NUM_CPU package/compile
-#nice ionice -c 3 \
-#	make -j $NUM_CPU package/install
-#nice ionice -c 3 \
-#	make -j $NUM_CPU target/install
-#nice ionice -c 3 \
-#	make -j $NUM_CPU package/index
+	make target/compile
+nice ionice -c 3 \
+	make -j $NUM_CPU package/cleanup
+nice ionice -c 3 \
+	make -j $NUM_CPU package/compile
+nice ionice -c 3 \
+	make -j $NUM_CPU package/install
+nice ionice -c 3 \
+	make -j $NUM_CPU target/install
+nice ionice -c 3 \
+	make -j $NUM_CPU package/index
 
 cd bin
 for i in * ; do
@@ -128,8 +131,8 @@ rm bin -r
 #
 # clean up between builds
 #
-rm staging_dir -r
-rm target -r
+rm build_dir/target-* -r
+rm taging_dir/target-* -r
 
 echo "============================================================================="
 echo "$(date -u) - Building openwrt images now - second build run."
@@ -142,27 +145,27 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+#nice ionice -c 3 \
+#	linux64 --uname-2.6 \
+#		make
 nice ionice -c 3 \
 	linux64 --uname-2.6 \
-		make
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make target/compile
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make -j $NEW_NUM_CPU package/cleanup
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make -j $NEW_NUM_CPU package/compile
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make -j $NEW_NUM_CPU package/install
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make -j $NEW_NUM_CPU target/install
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make -j $NEW_NUM_CPU package/index
+		make target/compile
+nice ionice -c 3 \
+	linux64 --uname-2.6 \
+		make -j $NEW_NUM_CPU package/cleanup
+nice ionice -c 3 \
+	linux64 --uname-2.6 \
+		make -j $NEW_NUM_CPU package/compile
+nice ionice -c 3 \
+	linux64 --uname-2.6 \
+		make -j $NEW_NUM_CPU package/install
+nice ionice -c 3 \
+	linux64 --uname-2.6 \
+		make -j $NEW_NUM_CPU target/install
+nice ionice -c 3 \
+	linux64 --uname-2.6 \
+		make -j $NEW_NUM_CPU package/index
 
 # reset environment to default values again
 export LANG="en_GB.UTF-8"
@@ -273,7 +276,7 @@ write_page "        <em>Reproducible OpenWRT</em> is an effort to apply this to 
 write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_openwrt/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"git://git.openwrt.org/openwrt.git\">openwrt.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_openwrt.sh\">reproducible_openwrt.sh</a> in a Debian environemnt and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"
 write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT%) out of $ALL_IMAGES built openwrt images were reproducible in our test setup."
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION}.</p>"
-write_explaination_table openwrt
+write_explaination_table OpenWRT
 cat $IMAGES_HTML >> $PAGE
 write_page "     <p><pre>"
 echo -n "$OPENWRT" >> $PAGE

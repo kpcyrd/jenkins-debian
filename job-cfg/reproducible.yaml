@@ -414,7 +414,7 @@
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_coreboot':
+        - '{name}_openwrt':
             my_description: 'Try to rebuild OpenWRT (some targets, some packages) twice (with variations) and investigate them regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh'

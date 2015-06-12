@@ -385,6 +385,13 @@ check_buildinfo() {
 	set -e
 	if [ $RESULT -eq 1 ] ; then
 		irc_message "$BUILDINFO varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..."
+		echo
+		echo "============================================================================="
+		echo ".buildinfo's Build-Environment varies, probably due to mirror update."
+		echo "Doing the first build again."
+		echo "Building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
+		echo "============================================================================="
+		echo
 		first_build
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e

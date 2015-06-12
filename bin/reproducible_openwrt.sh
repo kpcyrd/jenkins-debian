@@ -12,9 +12,10 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 set -e
 
-cleanup_tmpdir() {
+cleanup_tmpdirs() {
 	cd
 	rm -r $TMPDIR
+	rm -r $TMPBUILDDIR
 }
 
 create_results_dirs() {
@@ -67,15 +68,13 @@ call_debbindiff() {
 #
 # main
 #
-
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actually happens
-trap cleanup_tmpdir INT TERM EXIT
-cd $TMPDIR
-
+TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t openwrt-XXXXXXXX)  # used to build on tmpfs
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # accessable in schroots, used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
-mkdir b1 b2
+trap cleanup_tmpdirs INT TERM EXIT
 
+cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning the OpenWRT git repository now."
 echo "============================================================================="
@@ -119,7 +118,7 @@ nice ionice -c 3 \
 cd bin
 for i in * ; do
 	cd $i
-	mkdir $TMPDIR/b1/$i
+	mkdir -p $TMPDIR/b1/$i
 	for j in $(find . -name "*.bin") ; do
 		cp -p $j $TMPDIR/b1/$i/
 	done
@@ -177,7 +176,7 @@ umask 0022
 cd bin
 for i in * ; do
 	cd $i
-	mkdir $TMPDIR/b2/$i
+	mkdir -p $TMPDIR/b2/$i
 	for j in $(find . -name "*.bin") ; do
 		cp -p $j $TMPDIR/b2/$i/
 	done
@@ -294,5 +293,5 @@ irc_message "$REPRODUCIBLE_URL/openwrt/ has been updated. ($GOOD_PERCENT% reprod
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...
-cleanup_tmpdir
+cleanup_tmpdirs
 trap - INT TERM EXIT

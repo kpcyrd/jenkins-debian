@@ -16,9 +16,10 @@ set -e
 # build for different architectures
 ARCHS="i386-elf x86_64-elf armv7a-eabi aarch64-elf mipsel-elf riscv-elf"
 
-cleanup_tmpdir() {
+cleanup_tmpdirs() {
 	cd
 	rm -r $TMPDIR
+	rm -r $TMPBUILDDIR
 }
 
 create_results_dirs() {
@@ -70,15 +71,13 @@ call_debbindiff() {
 #
 # main
 #
-
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actually happens
-trap cleanup_tmpdir INT TERM EXIT
-cd $TMPDIR
-
+TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t coreboot-XXXXXXXX)  # used to build on tmpfs
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # accessable in schroots, used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
-mkdir b1 b2
+trap cleanup_tmpdirs INT TERM EXIT
 
+cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning the coreboot git repository with submodules now."
 echo "============================================================================="
@@ -151,7 +150,7 @@ cd coreboot-builds
 for i in * ; do
 	# abuild and sharedutils are build results but not the results we are looking for...
 	if [ "$i" != "abuild" ] && [ "$i" != "sharedutils" ] ; then
-		mkdir $TMPDIR/b1/$i
+		mkdir -p $TMPDIR/b1/$i
 		if [ -f $i/coreboot.rom ] ; then
 			cp -p $i/coreboot.rom $TMPDIR/b1/$i/
 		fi
@@ -186,7 +185,7 @@ umask 0022
 cd coreboot-builds
 for i in * ; do
 	if [ -f $i/coreboot.rom ] ; then
-		mkdir $TMPDIR/b2/$i
+		mkdir -p $TMPDIR/b2/$i
 		cp -p $i/coreboot.rom $TMPDIR/b2/$i/
 	fi
 done
@@ -280,5 +279,5 @@ irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated. ($GOOD_PERCENT% repro
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...
-cleanup_tmpdir
+cleanup_tmpdirs
 trap - INT TERM EXIT

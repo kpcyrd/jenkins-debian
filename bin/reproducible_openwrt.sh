@@ -131,7 +131,7 @@ rm bin -r
 # clean up between builds
 #
 rm build_dir/target-* -r
-rm taging_dir/target-* -r
+rm staging_dir/target-* -r
 
 echo "============================================================================="
 echo "$(date -u) - Building openwrt images now - second build run."

@@ -82,7 +82,7 @@ echo "==========================================================================
 git clone git://git.openwrt.org/openwrt.git
 cd openwrt
 OPENWRT="$(git log -1)"
-OPENWRT_VERSION=$(git describe -always)
+OPENWRT_VERSION=$(git describe --always)
 echo "This is openwrt $OPENWRT_VERSION."
 echo
 git log -1

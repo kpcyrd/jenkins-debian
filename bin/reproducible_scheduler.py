@@ -234,7 +234,11 @@ def schedule_untested_packages(total):
         log.info('Received ' + str(len(packages[suite])) +
                  ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    return packages
+    if add_up_numbers(packages) != '0':
+        msg = add_up_numbers(packages) + ' new and untested packages'
+    else:
+        msg = ''
+    return packages, msg
 
 
 def schedule_new_versions(total):
@@ -250,7 +254,11 @@ def schedule_new_versions(total):
         new[suite] = query_new_versions(suite, many_new)
         log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    return packages
+    if add_up_numbers(packages) != '0':
+        msg = add_up_numbers(packages) + ' packages with new versions'
+    else:
+        msg = ''
+    return packages, msg
 
 
 def schedule_old_versions(total):
@@ -272,7 +280,11 @@ def schedule_old_versions(total):
         old[suite] = query_old_versions(suite, suite_many_old)
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    return packages
+    if add_up_numbers(packages) != '0':
+        msg = add_up_numbers(packages) + ' old packages with the same version'
+    else:
+        msg = ''
+    return packages, msg
 
 
 def scheduler():
@@ -289,9 +301,9 @@ def scheduler():
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
         log.info('==============================================================')
-    untested = schedule_untested_packages(total)
-    new = schedule_new_versions(total+len(untested))
-    old = schedule_old_versions(total+len(untested)+len(new))
+    untested, msg_untested = schedule_untested_packages(total)
+    new, msg_new  = schedule_new_versions(total+len(untested))
+    old, msg_old  = schedule_old_versions(total+len(untested)+len(new))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first
@@ -299,7 +311,8 @@ def scheduler():
         query = 'SELECT count(*) ' + \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
                 'WHERE s.suite="{suite}"'.format(suite=suite)
-        now_queued_here[suite] = int(query_db(query)[0][0]) + len(untested[suite]+new[suite]+old[suite])
+        queued[suite] = int(query_db(query)[0][0]) + \
+                        len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
         schedule_packages(untested[suite], datetime.now())
         schedule_packages(new[suite], datetime.now()+timedelta(minutes=-720))
@@ -309,11 +322,13 @@ def scheduler():
     # update the scheduled page
     generate_schedule()  # from reproducible_html_indexes
     # build the kgb message text
-    message = 'Scheduled in ' + '+'.join(SUITES) + ': ' + \
-              add_up_numbers(untested) + ' new and untested packages, ' + \
-              add_up_numbers(new) + ' packages with new versions and ' + \
-              add_up_numbers(old) + ' old packages with the same version, ' + \
-              'for ' + str(total) + ' or ' + \
+    message = 'Scheduled in ' + '+'.join(SUITES) + ': '
+    if != msg_untested
+        message += msg_untested
+        message += ' and ' if msg_new and msg_old else ', ' if msg_new or msg_old else ''
+    message += msg_new if msg_new else ''
+    message += ' and ' + msg_old if msg_old else ''
+    message += ', for ' + str(total) + ' or ' + \
               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
     log.info('\n\n\n')
     log.info(message)

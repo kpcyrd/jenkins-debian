@@ -170,6 +170,13 @@ def schedule_packages(packages, date):
     log.info('--------------------------------------------------------------')
 
 
+def add_up_numbers(package_type):
+    package_type_sum = '+'.join([str(len(package_type[x])) for x in SUITES])
+    if package_type_sum == '0+0+0':
+        package_type_sum = '0'
+    return package_type_sum
+
+
 def query_untested_packages(suite, limit):
     criteria = 'not tested before, randomly sorted'
     query = """SELECT DISTINCT sources.id, sources.name FROM sources
@@ -197,7 +204,7 @@ def query_new_versions(suite, limit):
                ORDER BY r.build_date
                LIMIT {limit}""".format(suite=suite, limit=limit)
     pkgs = query_db(query)
-    # this is to avoid perpetual rescheduling of packages in our exp repository
+    # this is to avoid costant rescheduling of packages in our exp repository
     packages = [(x[0], x[1]) for x in pkgs if version_compare(x[2], x[3]) > 0]
     print_schedule_result(suite, criteria, packages)
     return packages
@@ -218,37 +225,20 @@ def query_old_versions(suite, limit):
     print_schedule_result(suite, criteria, packages)
     return packages
 
-def add_up_numbers(package_type):
-    package_type_sum = '+'.join([str(len(package_type[x])) for x in SUITES])
-    if package_type_sum == '0+0+0':
-        package_type_sum = '0'
-    return package_type_sum
 
-def scheduler():
-    query = 'SELECT count(*) ' + \
-            'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id '
-    total = int(query_db(query)[0][0])
-    log.info('Currently scheduled packages in all suites: ' + str(total))
-    if total > 750:
-        generate_schedule()  # from reproducible_html_indexes
-        log.info(str(total) + ' packages already scheduled' +
-                 ', nothing to do here.')
-        return
-    else:
-        log.info(str(total) + ' packages already scheduled' +
-                 ', scheduling some more...')
-        log.info('==============================================================')
-    # untested packages
-    untested = {}
+def schedule_untested_packages(total):
+    packages = {}
     for suite in SUITES:
         log.info('Requesting 444 untested packages in ' + suite + '...')
-        untested[suite] = query_untested_packages(suite, 444)
-        total += len(untested[suite])
-        log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
+        packages[suite] = query_untested_packages(suite, 444)
+        log.info('Received ' + str(len(packages[suite])) +
+                 ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
+    return packages
 
-    # packages with new versions
-    new = {}
+
+def schedule_new_versions(total):
+    packages = {}
     if total <= 100:
         many_new = 250
     elif total <= 200:
@@ -258,12 +248,13 @@ def scheduler():
     log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
         new[suite] = query_new_versions(suite, many_new)
-        total += len(new[suite])
         log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
+    return packages
 
-    # old packages
-    old = {}
+
+def schedule_old_versions(total):
+    packages = {}
     if total <= 250:
         many_old_base = 35 # multiplied by 20 or 10 or 1, see below
     elif total <= 350:
@@ -279,9 +270,28 @@ def scheduler():
             suite_many_old = int(many_old_base)    # experimental is roughly one twentieth of the size of the other suites
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
         old[suite] = query_old_versions(suite, suite_many_old)
-        total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
+    return packages
+
+
+def scheduler():
+    query = 'SELECT count(*) ' + \
+            'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id '
+    total = int(query_db(query)[0][0])
+    log.info('Currently scheduled packages in all suites: ' + str(total))
+    if total > 750:
+        generate_schedule()  # from reproducible_html_indexes
+        log.info(str(total) + ' packages already scheduled' +
+                 ', nothing to do here.')
+        return
+    else:
+        log.info(str(total) + ' packages already scheduled' +
+                 ', scheduling some more...')
+        log.info('==============================================================')
+    untested = schedule_untested_packages(total)
+    new = schedule_new_versions(total+len(untested))
+    old = schedule_old_versions(total+len(untested)+len(new))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first

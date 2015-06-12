@@ -204,7 +204,7 @@ GOOD_ROMS=0
 ALL_ROMS=0
 create_results_dirs
 cd $TMPDIR/b1
-for i in * ; do
+for i in $(ls -1d *| sort -u) ; do
 	let ALL_ROMS+=1
 	if [ -f $i/coreboot.rom ] ; then
 		call_debbindiff $i

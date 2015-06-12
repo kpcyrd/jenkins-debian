@@ -82,8 +82,8 @@ setup_pbuilder() {
 	PACKAGES="$@"
 	EXTRA_PACKAGES="locales-all"
 	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
-	TMPFILE=$(mktemp)
-	LOG=$(mktemp)
+	TMPFILE=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXXX)
+	LOG=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXX)
 	if [ "$SUITE" = "experimental" ] ; then
 		SUITE=unstable
 		echo "echo 'deb $MIRROR experimental main' > /etc/apt/sources.list.d/experimental.list" > ${TMPFILE}
@@ -105,7 +105,7 @@ setup_pbuilder() {
 	for PKG in ${PACKAGES} ; do
 		grep "http://reproducible.alioth.debian.org/debian/ ./ Packages" ${LOG} \
 			| grep -v grep | grep "${PKG} " \
-			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; exit 1 )
+			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $TMPFILE $LOG ; exit 1 )
 	done
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
 	# create stamp file to record initial creation date

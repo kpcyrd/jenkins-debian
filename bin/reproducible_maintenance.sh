@@ -89,9 +89,9 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 fi
 
 # find+terminate processes which should not be there
-HAYSTACK=$(mktemp)
-RESULT=$(mktemp)
-TOKILL=$(mktemp)
+HAYSTACK=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXX)
+RESULT=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXX)
+TOKILL=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXX)
 PBUIDS="1234 1111 2222"
 ps axo pid,user,size,pcpu,cmd > $HAYSTACK
 for i in $PBUIDS ; do
@@ -152,7 +152,7 @@ QUERY="
 		AND p.date_build_started < datetime('now', '-36 hours')
 		ORDER BY p.date_scheduled
 	"
-PACKAGES=$(mktemp)
+PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
 if grep -q '|' $PACKAGES ; then
 	echo
@@ -179,7 +179,7 @@ if [ ! -z "$LOCKFILES" ] ; then
 fi
 
 # find packages which have been removed from the archive
-PACKAGES=$(mktemp)
+PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXX)
 QUERY="SELECT name, suite, architecture FROM removed_packages
 		LIMIT 25"
 sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."

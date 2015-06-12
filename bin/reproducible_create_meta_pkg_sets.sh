@@ -54,7 +54,7 @@ update_if_similar() {
 				echo diff -u $TARGET $TARGET.new
 				diff -u $TARGET $TARGET.new || true
 				echo
-				KEEP=$(mktemp)
+				KEEP=$(mktemp --tmpdir=$TEMPDIR pkg-set-check-XXXXXXXXXX)
 				mv $TARGET.new $KEEP
 				echo "The new pkg-set has been saved as $KEEP for further investigation."
 				echo "wc -l $TARGET $KEEP)"
@@ -364,8 +364,8 @@ update_pkg_sets() {
 
 }
 
-TMPFILE=$(mktemp)
-TMPFILE2=$(mktemp)
+TMPFILE=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
+TMPFILE2=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
 for SUITE in $SUITES ; do
 	if [ "$SUITE" = "experimental" ] ; then
 		# no pkg sets in experimental

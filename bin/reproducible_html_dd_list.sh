@@ -19,8 +19,8 @@ for SUITE in $SUITES ; do
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Maintainers of unreproducible packages in $SUITE"
-	TMPFILE=$(mktemp)
-	SOURCES=$(mktemp)
+	TMPFILE=$(mktemp --tmpdir=$TEMPDIR dd-list-XXXXXXXX)
+	SOURCES=$(mktemp --tmpdir=$TEMPDIR dd-list-XXXXXXXX)
 	schroot --directory /tmp -c source:jenkins-reproducible-$SUITE cat /var/lib/apt/lists/*_source_Sources > $SOURCES || \
 	    wget ${MIRROR}/dists/$SUITE/main/source/Sources.xz -O - | xzcat > $SOURCES
 	BAD=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status='unreproducible' AND s.suite='$SUITE' ORDER BY r.build_date DESC" | xargs echo)

@@ -15,8 +15,8 @@ ARCH="amd64"		# same
 
 VIEW=repositories
 PAGE=index_${VIEW}.html
-TMPFILE=$(mktemp)
-TMP2FILE=$(mktemp)
+TMPFILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
+TMP2FILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 
 MODIFIED_IN_SID=0
 MODIFIED_IN_EXP=0

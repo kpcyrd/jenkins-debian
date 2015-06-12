@@ -128,7 +128,7 @@ fi
 #
 # create html about toolchains used
 #
-TOOLCHAIN_HTML=$(mktemp)
+TOOLCHAIN_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "<table><tr><th>cross toolchain source</th><th>sha256sum</th></tr>" > $TOOLCHAIN_HTML
 cd util/crossgcc/tarballs
 for i in * ; do
@@ -198,7 +198,7 @@ DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE
 echo "============================================================================="
 echo "$(date -u) - Running $DBDVERSION on coreboot images."
 echo "============================================================================="
-ROMS_HTML=$(mktemp)
+ROMS_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "       <ul>" > $ROMS_HTML
 BAD_ROMS=0
 GOOD_ROMS=0

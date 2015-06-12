@@ -375,8 +375,8 @@ first_build(){
 }
 
 check_buildinfo() {
-	local TMPFILE1=$(mktemp)
-	local TMPFILE2=$(mktemp)
+	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
+	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
 	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
 	set +e

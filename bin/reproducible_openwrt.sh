@@ -196,7 +196,7 @@ save_openwrt_results b2
 #
 # create html about toolchain used
 #
-TOOLCHAIN_HTML=$(mktemp)
+TOOLCHAIN_HTML=$(mktemp --tmpdir=$TMPDIR)
 TARGET=$(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo)
 echo "<table><tr><th>Contents of <code>build_dir/host/</code></th></tr>" > $TOOLCHAIN_HTML
 for i in $(ls -1 build_dir/host/) ; do
@@ -216,7 +216,7 @@ for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip
 done
 echo "</table>" >> $TOOLCHAIN_HTML
 # get banner
-BANNER_HTML=$(mktemp)
+BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
 cat $(find build_dir/ -name banner | grep etc/banner|head -1) >> $BANNER_HTML
 
 # clean up builddir to save space on tmpfs
@@ -230,7 +230,7 @@ DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE
 echo "============================================================================="
 echo "$(date -u) - Running $DBDVERSION on OpenWrt images and packages."
 echo "============================================================================="
-DBD_HTML=$(mktemp)
+DBD_HTML=$(mktemp --tmpdir=$TMPDIR)
 # run debbindiff on the images
 echo "       <table><tr><th>Images for <code>$TARGET</code></th></tr>" > $DBD_HTML
 GOOD_IMAGES=0

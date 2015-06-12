@@ -53,6 +53,10 @@ declare -A SPOKENTARGET
 BASE="/var/lib/jenkins/userContent/reproducible"
 mkdir -p "$BASE"
 
+# to hold reproducible temporary files/directories without polluting /tmp
+TEMPDIR="/tmp/reproducible"
+mkdir -p "$TMPDIR"
+
 # create subdirs for suites
 for i in $SUITES ; do
 	mkdir -p "$BASE/$i"
@@ -95,7 +99,7 @@ schedule_packages() {
 	HOURS=$(echo "$(date +'%H')*2"|bc)
 	MINS=$(date +'%M')	# schedule on the full hour so we can recognize them easily
 	DATE=$(date +'%Y-%m-%d %H:%M' -d "$DAYS day ago - $HOURS hours - $MINS minutes")
-	TMPFILE=$(mktemp)
+	TMPFILE=$(mktemp --tmpdir=$TEMPDIR)
 	for PKG_ID in $@ ; do
 		echo "REPLACE INTO schedule (package_id, date_scheduled, date_build_started, save_artifacts, notify) VALUES ('$PKG_ID', '$DATE', '', '$ARTIFACTS', '$NOTIFY');" >> $TMPFILE
 	done

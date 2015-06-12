@@ -13,7 +13,6 @@ common_init "$@"
 
 blacklist_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
-	TMPFILE=$(mktemp)
 	for PKG in $PACKAGES ; do
 		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE';")
 		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE';")
@@ -23,7 +22,6 @@ blacklist_packages() {
 
 revert_blacklisted_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
-	TMPFILE=$(mktemp)
 	for PKG in $PACKAGES ; do
 		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE';")
 		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE';")

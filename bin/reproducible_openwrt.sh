@@ -65,6 +65,20 @@ call_debbindiff() {
 	fi
 }
 
+save_openwrt_results(){
+	RUN=$1
+	cd bin
+	for i in * ; do
+		cd $i
+		mkdir -p $TMPDIR/$RUN/$i
+		for j in $(find . -name "*.bin") ; do
+			cp -p $j $TMPDIR/$RUN/$i/
+		done
+		cd ..
+	done
+	cd ..
+}
+
 #
 # main
 #
@@ -100,10 +114,8 @@ echo "$(date -u) - Building openwrt ${OPENWRT_VERSION} images now - first build 
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-#nice ionice -c 3 \
-#	make
 nice ionice -c 3 \
-	make target/compile
+	make -j $NUM_CPU target/compile
 nice ionice -c 3 \
 	make -j $NUM_CPU package/cleanup
 nice ionice -c 3 \
@@ -115,23 +127,13 @@ nice ionice -c 3 \
 nice ionice -c 3 \
 	make -j $NUM_CPU package/index
 
-cd bin
-for i in * ; do
-	cd $i
-	mkdir -p $TMPDIR/b1/$i
-	for j in $(find . -name "*.bin") ; do
-		cp -p $j $TMPDIR/b1/$i/
-	done
-	cd ..
-done
-cd ..
-rm bin -r
+# save results in b1
+save_openwrt_results b1
 
-#
 # clean up between builds
-#
 rm build_dir/target-* -r
 rm staging_dir/target-* -r
+rm bin/* -r
 
 echo "============================================================================="
 echo "$(date -u) - Building openwrt images now - second build run."
@@ -144,12 +146,9 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-#nice ionice -c 3 \
-#	linux64 --uname-2.6 \
-#		make
 nice ionice -c 3 \
 	linux64 --uname-2.6 \
-		make target/compile
+		make -j $NUM_CPU target/compile
 nice ionice -c 3 \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/cleanup
@@ -173,17 +172,8 @@ export TZ="/usr/share/zoneinfo/UTC"
 export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 umask 0022
 
-cd bin
-for i in * ; do
-	cd $i
-	mkdir -p $TMPDIR/b2/$i
-	for j in $(find . -name "*.bin") ; do
-		cp -p $j $TMPDIR/b2/$i/
-	done
-	cd ..
-done
-cd ..
-rm bin -r
+# save results in b2
+save_openwrt_results b2
 
 #
 # create html about toolchain used

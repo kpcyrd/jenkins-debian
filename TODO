@@ -182,7 +182,9 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * misc
 ** html_graphs.sh rewrite: split out html_pkg_sets.py first, thats the easiest and the biggest speed gain
-** more graphs: graph average build duration by day
+** more graphs:
+*** graph average build duration by day
+*** graph packages in testing+unstable which need to be fixed
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** repo-comparison: check for binaries without source
@@ -235,9 +237,6 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * coreboot
 ** add more variations: domain+hostname, uid+gid, USER, UTS namespace
-** split into two jobs? one to build the toolchain, the other to test, keep the git repo and update it. run both jobs weekly.
-*** call script with "init" or "run-tests"
-*** not sure how to best keep the git repo and the toolchain (not on tmpfs) while building in tmpfs... maybe just do it in one job...
 ** build the docs?
 ** also build with payloads. x86 use seabios as default, arm boards dont have a default. grub is another payload. and these: bayou  coreinfo  external  filo  libpayload  nvramcui - and:
 *** CONFIG_PAYLOAD_NONE=y
@@ -250,7 +249,6 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 
 * openwrt
 ----
- <nbd> auschecken / updaten macht man ja einfach global auf dem tree mit git
  <nbd> wenn man einmal make defconfig ausgeführt hat, gibt's paket und target metadaten in tmp/.packageinfo und tmp/.targetinfo
  <nbd> man kann ne .config mit der target auswahl und CONFIG_ALL=y erstellen und mit make defconfig auffüllen
  <nbd> macht wahrscheinlich sinn vom prozess her das bauen von paketen und das bauen der toolchain zusammen laufen zu lassen

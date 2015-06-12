@@ -77,8 +77,9 @@ save_coreboot_results(){
 			cp -p $i/coreboot.rom $TMPDIR/$RUN/$i/
 		fi
 	done
-cd ..
-rm coreboot-builds -r
+	cd ..
+	rm coreboot-builds -r
+}
 
 #
 # main

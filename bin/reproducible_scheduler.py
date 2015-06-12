@@ -170,7 +170,7 @@ def schedule_packages(packages, date):
     log.info('--------------------------------------------------------------')
 
 
-def scheduler_untested_packages(suite, limit):
+def query_untested_packages(suite, limit):
     criteria = 'not tested before, randomly sorted'
     query = """SELECT DISTINCT sources.id, sources.name FROM sources
                WHERE sources.suite='{suite}'
@@ -185,7 +185,7 @@ def scheduler_untested_packages(suite, limit):
     return packages
 
 
-def scheduler_new_versions(suite, limit):
+def query_new_versions(suite, limit):
     criteria = 'tested before, new version available, sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name, s.version, r.version
                FROM sources AS s JOIN results AS r ON s.id = r.package_id
@@ -203,7 +203,7 @@ def scheduler_new_versions(suite, limit):
     return packages
 
 
-def scheduler_old_versions(suite, limit):
+def query_old_versions(suite, limit):
     criteria = 'tested at least two weeks ago, no new version available, ' + \
                'sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name
@@ -242,7 +242,7 @@ def scheduler():
     untested = {}
     for suite in SUITES:
         log.info('Requesting 444 untested packages in ' + suite + '...')
-        untested[suite] = scheduler_untested_packages(suite, 444)
+        untested[suite] = query_untested_packages(suite, 444)
         total += len(untested[suite])
         log.info('Received ' + str(len(untested[suite])) + ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
@@ -257,7 +257,7 @@ def scheduler():
         many_new = 150
     log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
-        new[suite] = scheduler_new_versions(suite, many_new)
+        new[suite] = query_new_versions(suite, many_new)
         total += len(new[suite])
         log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
@@ -278,7 +278,7 @@ def scheduler():
         else:
             suite_many_old = int(many_old_base)    # experimental is roughly one twentieth of the size of the other suites
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
-        old[suite] = scheduler_old_versions(suite, suite_many_old)
+        old[suite] = query_old_versions(suite, suite_many_old)
         total += len(old[suite])
         log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')

@@ -276,7 +276,7 @@ rm -f $ROMS_HTML $TOOLCHAIN_HTML
 # the end
 calculate_build_duration
 print_out_duration
-irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated."
+irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated. ($GOOD_PERCENT% reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

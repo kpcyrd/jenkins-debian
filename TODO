@@ -251,8 +251,6 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ----
  <nbd> wenn man einmal make defconfig ausgeführt hat, gibt's paket und target metadaten in tmp/.packageinfo und tmp/.targetinfo
  <nbd> man kann ne .config mit der target auswahl und CONFIG_ALL=y erstellen und mit make defconfig auffüllen
- <nbd> macht wahrscheinlich sinn vom prozess her das bauen von paketen und das bauen der toolchain zusammen laufen zu lassen
- <nbd> weil openwrt das ja alles in einem durchgang macht
  <nbd> reicht ja erstmal, mit dem basis paketsatz anzufangen
  <nbd> das wird für ein target deutlich weniger als 12h brauchen
  <nbd> default config ohne CONFIG_ALL dauert bei meinem laptop in der regel <30 min

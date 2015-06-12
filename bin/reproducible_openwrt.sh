@@ -99,7 +99,7 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
 nice ionice -c 3 \
-	make -j $NUM_CPU target/compile
+	make -j1 V=s target/compile
 nice ionice -c 3 \
 	make -j $NUM_CPU package/cleanup
 nice ionice -c 3 \
@@ -142,7 +142,7 @@ umask 0002
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 nice ionice -c 3 \
 	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU target/compile
+		make -j1 V=s target/compile
 nice ionice -c 3 \
 	linux64 --uname-2.6 \
 		make -j $NEW_NUM_CPU package/cleanup

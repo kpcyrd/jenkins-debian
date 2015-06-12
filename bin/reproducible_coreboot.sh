@@ -68,6 +68,18 @@ call_debbindiff() {
 	fi
 }
 
+save_coreboot_results(){
+	RUN=$1
+	cd coreboot-builds
+	for i in * ; do
+		if [ -f $i/coreboot.rom ] ; then
+			mkdir -p $TMPDIR/$RUN/$i
+			cp -p $i/coreboot.rom $TMPDIR/$RUN/$i/
+		fi
+	done
+cd ..
+rm coreboot-builds -r
+
 #
 # main
 #
@@ -146,18 +158,8 @@ sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 nice ionice -c 3 \
 	bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
 
-cd coreboot-builds
-for i in * ; do
-	# abuild and sharedutils are build results but not the results we are looking for...
-	if [ "$i" != "abuild" ] && [ "$i" != "sharedutils" ] ; then
-		mkdir -p $TMPDIR/b1/$i
-		if [ -f $i/coreboot.rom ] ; then
-			cp -p $i/coreboot.rom $TMPDIR/b1/$i/
-		fi
-	fi
-done
-cd ..
-rm coreboot-builds -rf
+# save results in b1
+save_coreboot_results b1
 
 echo "============================================================================="
 echo "$(date -u) - Building coreboot images now - second build run."
@@ -182,15 +184,8 @@ export TZ="/usr/share/zoneinfo/UTC"
 export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 umask 0022
 
-cd coreboot-builds
-for i in * ; do
-	if [ -f $i/coreboot.rom ] ; then
-		mkdir -p $TMPDIR/b2/$i
-		cp -p $i/coreboot.rom $TMPDIR/b2/$i/
-	fi
-done
-cd ..
-rm coreboot-builds -r
+# save results in b2
+save_coreboot_results b2
 
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/coreboot

@@ -119,11 +119,11 @@ message += ': ' + ' '.join(pkgs)[0:256] + blablabla + artifacts_txt
 # schedule on the full hour so we can recognize them easily
 epoch = int(time.time())
 yesterday = epoch - 60*60*24
-now = datetime.datetime.now()
+now = datetime.now()
 days = int(now.strftime('%j'))*2
 hours = int(now.strftime('%H'))*2
 minutes = int(now.strftime('%M'))
-time_delta = datetime.timedelta(days=days, hours=hours, minutes=minutes)
+time_delta = timedelta(days=days, hours=hours, minutes=minutes)
 date = (now - time_delta).strftime('%Y-%m-%d %H:%M')
 log.debug('date_scheduled = ' + date + ' time_delta = ' + str(time_delta))
 

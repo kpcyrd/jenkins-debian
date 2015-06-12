@@ -17,12 +17,12 @@ import errno
 import sqlite3
 import logging
 import argparse
-import datetime
 import psycopg2
 import html as HTML
 from string import Template
 from subprocess import call
 from traceback import print_exception
+from datetime import datetime, timedelta
 
 DEBUG = False
 QUIET = False
@@ -229,7 +229,7 @@ def _gen_links(suite, arch):
 
 
 def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False):
-    now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
+    now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     html += html_header.substitute(page_title=title)
     if not noheader:

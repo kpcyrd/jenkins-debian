@@ -301,9 +301,9 @@ def scheduler():
                 'WHERE s.suite="{suite}"'.format(suite=suite)
         now_queued_here[suite] = int(query_db(query)[0][0]) + len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
-        schedule_packages(untested[suite], datetime.datetime.now())
-        schedule_packages(new[suite], datetime.datetime.now()+datetime.timedelta(minutes=-720))
-        schedule_packages(old[suite], datetime.datetime.now()+datetime.timedelta(minutes=720))
+        schedule_packages(untested[suite], datetime.now())
+        schedule_packages(new[suite], datetime.now()+timedelta(minutes=-720))
+        schedule_packages(old[suite], datetime.now()+timedelta(minutes=720))
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
     # update the scheduled page

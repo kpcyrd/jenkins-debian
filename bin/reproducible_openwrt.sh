@@ -260,6 +260,7 @@ GOOD_PACKAGES=0
 ALL_PACKAGES=0
 create_results_dirs
 cd $TMPDIR/b1
+tree .
 for i in * ; do
 	cd $i
 	for j in $(find * -name "*.ipk" |sort -u ) ; do

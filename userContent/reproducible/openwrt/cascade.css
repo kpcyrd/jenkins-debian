@@ -22,13 +22,7 @@ body {
 code {
 	font-family: monospace;
 	white-space: pre;
-	margin-left: 2em;
 }
-
-ul {
-	margin-left: 2em;
-}
-
 
 #header {
 	min-height: 98px;

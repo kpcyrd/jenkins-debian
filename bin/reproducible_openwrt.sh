@@ -320,7 +320,7 @@ write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES bu
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION}.</p>"
 write_explaination_table OpenWRT
 cat $DBD_HTML >> $PAGE
-write_page "     <table><tr><th>git commit built</th></tr><tr><td>><code>"
+write_page "     <table><tr><th>git commit built</th></tr><tr><td><code>"
 echo -n "$OPENWRT" >> $PAGE
 write_page "     </code></td></tr></table>"
 cat $TOOLCHAIN_HTML >> $PAGE

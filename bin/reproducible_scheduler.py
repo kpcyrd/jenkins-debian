@@ -316,7 +316,7 @@ def scheduler():
         query = 'SELECT count(*) ' + \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
                 'WHERE s.suite="{suite}"'.format(suite=suite)
-        queued[suite] = int(query_db(query)[0][0]) + \
+        now_queued_here[suite] = int(query_db(query)[0][0]) + \
                         len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
         schedule_packages(untested[suite], datetime.now())

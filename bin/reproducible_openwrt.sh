@@ -78,8 +78,8 @@ save_openwrt_results(){
 		# save packages
 		cd packages
 		for j in $(find * -name "*.ipk") ; do
-			mkdir -p $TMPDIR/$RUN/$i/ipk/$(dirname $j)
-			cp -p $j $TMPDIR/$RUN/$i/ipk/$(dirname $j)/
+			mkdir -p $TMPDIR/$RUN/$i/$(dirname $j)
+			cp -p $j $TMPDIR/$RUN/$i/$(dirname $j)/
 		done
 		cd ../..
 	done

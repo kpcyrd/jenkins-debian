@@ -337,7 +337,7 @@ data.append(
 
 data.append(
     {'job-group': {
-        'name': '{name}_html-manual-group',
+        'name': '{name}_manual_html_group',
         'jobs': ['{name}_manual_{lang}_html'],
         'lang': [l for l in langs if list(l.keys())[0] in non_po_langs],
         'trg': 'H/15 * * * *',
@@ -345,7 +345,7 @@ data.append(
 
 data.append(
     {'job-group': {
-        'name': '{name}_pdf-manual-group',
+        'name': '{name}_manual_pdf_group',
         'jobs': ['{name}_manual_{lang}_pdf'],
         'lang': [l for l in langs if (list(l.keys())[0] not in non_pdf_langs) and (list(l.keys())[0] in non_po_langs)],
         'trg': '',
@@ -353,7 +353,7 @@ data.append(
 
 data.append(
     {'job-group': {
-        'name': '{name}_html-po2xml-manual-group',
+        'name': '{name}_manual_html_po2xml_group',
         'jobs': ['{name}_manual_{lang}_html_po2xml'],
         'lang': [l for l in langs if list(l.keys())[0] not in non_po_langs],
         'trg': 'H/30 * * * *',
@@ -361,7 +361,7 @@ data.append(
 
 data.append(
     {'job-group': {
-        'name': '{name}_pdf-po2xml-manual-group',
+        'name': '{name}_manual_pdf_po2xml_group',
         'jobs': ['{name}_manual_{lang}_pdf_po2xml'],
         'lang': [l for l in langs if (list(l.keys())[0] not in non_pdf_langs) and (list(l.keys())[0] not in non_po_langs)],
         'trg': '',
@@ -402,10 +402,10 @@ data.append(
                              '/trunk/manual/doc/.*\n'
                              '/trunk/manual/scripts/.*' ),
                 'trg': 'H/15 * * * *'}},
-            '{name}_html-manual-group',
-            '{name}_pdf-manual-group',
-            '{name}_html-po2xml-manual-group',
-            '{name}_pdf-po2xml-manual-group',
+            '{name}_manual_html_group',
+            '{name}_manual_pdf_group',
+            '{name}_manual_html_po2xml_group',
+            '{name}_manual_pdf_po2xml_group',
             '{name}_build-group',
             '{name}_pu-build-group']}})
 

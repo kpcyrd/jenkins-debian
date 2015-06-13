@@ -97,7 +97,7 @@ trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 echo "============================================================================="
-echo "$(date -u) - Cloning the OpenWRT git repository."
+echo "$(date -u) - Cloning the OpenWrt git repository."
 echo "============================================================================="
 git clone git://git.openwrt.org/openwrt.git
 cd openwrt
@@ -123,7 +123,7 @@ ionice -c 3 nice \
 	make -j $NUM_CPU toolchain/install
 
 echo "============================================================================="
-echo "$(date -u) - Building OpenWRT ${OPENWRT_VERSION} - first build run."
+echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
@@ -149,7 +149,7 @@ rm staging_dir/target-* -r
 rm bin/* -r
 
 echo "============================================================================="
-echo "$(date -u) - Building OpenWRT - second build run."
+echo "$(date -u) - Building OpenWrt - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
@@ -223,7 +223,7 @@ TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DBDVERSION on OpenWRT images and packages."
+echo "$(date -u) - Running $DBDVERSION on OpenWrt images and packages."
 echo "============================================================================="
 DBD_HTML=$(mktemp)
 # run debbindiff on the images
@@ -312,20 +312,20 @@ EOF
 cat $BANNER_HTML >> $PAGE
 write_page "       </code></center></p>"
 write_page "     </div><div id=\"main-content\">"
-write_page "       <h1>OpenWRT - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
+write_page "       <h1>OpenWrt - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
 write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki has a lot more information, eg. why this is useful, what common issues exist and which workarounds and solutions are known.<br />"
-write_page "        <em>Reproducible OpenWRT</em> is an effort to apply this to OpenWRT. Thus each OpenWR target is build twice, with a few varitations added and then the resulting images from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>, <em>which currently cannot detect <code>.bin</code> files as squashfs filesystems and also doesn't know how to handle the <code>.ipk</code> package format.</em> Thus the resulting debbindiff output is not nearly as clear as it could be - hopefully these limitations will be overcome soon. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+write_page "        <em>Reproducible OpenWrt</em> is an effort to apply this to OpenWrt Thus each OpenWR target is build twice, with a few varitations added and then the resulting images from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>, <em>which currently cannot detect <code>.bin</code> files as squashfs filesystems and also doesn't know how to handle the <code>.ipk</code> package format.</em> Thus the resulting debbindiff output is not nearly as clear as it could be - hopefully these limitations will be overcome soon. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_openwrt/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"git://git.openwrt.org/openwrt.git\">openwrt.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_openwrt.sh\">reproducible_openwrt.sh</a> in a Debian environment and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"
 write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES built images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES built packages were reproducible in our test setup."
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION}.</p>"
-write_explaination_table OpenWRT
+write_explaination_table OpenWrt
 cat $DBD_HTML >> $PAGE
 write_page "     <table><tr><th>git commit built</th></tr><tr><td><code>"
 echo -n "$OPENWRT" >> $PAGE
 write_page "     </code></td></tr></table>"
 cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div>"
-write_page_footer OpenWRT
+write_page_footer OpenWrt
 publish_page
 rm -f $DBD_HTML $TOOLCHAIN_HTML $BANNER_HTML
 

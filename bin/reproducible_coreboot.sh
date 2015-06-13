@@ -228,6 +228,12 @@ done
 echo "       </ul>" >> $ROMS_HTML
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_ROMS*100/$ALL_ROMS)" | bc)
 BAD_PERCENT=$(echo "scale=1 ; ($BAD_ROMS*100/$ALL_ROMS)" | bc)
+# are we there yet?
+if [ "$GOOD_PERCENT" = "100.0" ] ; then
+	MAGIC_SIGN="!"
+else
+	MAGIC_SIGN="?"
+fi
 
 #
 #  finally create the webpage
@@ -250,7 +256,7 @@ cat > $PAGE <<- EOF
         <p><center><img src="coreboot.png" width="300" class="alignnone size-medium wp-image-6" alt="coreboot" height="231" /><br />
         <blockquote>
 	  <br />
-          <strong>coreboot&trade;</strong>: fast, flexible <em>and reproducible</em> Open Source firmware?
+          <strong>coreboot&trade;</strong>: fast, flexible <em>and reproducible</em> Open Source firmware$MAGIC_SIGN
         </blockquote>
        </center></p>
 EOF

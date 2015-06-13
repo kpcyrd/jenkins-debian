@@ -249,6 +249,12 @@ for i in * ; do
 done
 echo "       </table>" >> $IMAGES_HTML
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
+# are we there yet?
+if [ "$GOOD_PERCENT" = "100.0" ] ; then
+	MAGIC_SIGN="!"
+else
+	MAGIC_SIGN="?"
+fi
 
 #
 #  finally create the webpage
@@ -272,7 +278,7 @@ EOF
 cat $(find openwrt/build_dir/ -name banner | grep etc/banner|head -1) >> $PAGE
 write_page "       </code></center></p>"
 write_page "     </div><div id=\"main-content\">"
-write_page "       <h1>Reproducible OpenWRT - <em>reproducible</em> wireless freedom?</h1>"
+write_page "       <h1>Reproducible OpenWRT - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
 write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki has a lot more information, eg. why this is useful, what common issues exist and which workarounds and solutions are known.<br />"
 write_page "        <em>Reproducible OpenWRT</em> is an effort to apply this to OpenWRT. Thus each OpenWR target is build twice, with a few varitations added and then the resulting images from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_openwrt/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"git://git.openwrt.org/openwrt.git\">openwrt.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_openwrt.sh\">reproducible_openwrt.sh</a> in a Debian environemnt and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"

@@ -249,8 +249,8 @@ def schedule_new_versions(total):
         many_new = 200
     else:
         many_new = 150
-    log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
     for suite in SUITES:
+        log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
         new[suite] = query_new_versions(suite, many_new)
         log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')

@@ -248,6 +248,8 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 *** CONFIG_PAYLOAD_GRUB2 is not set
 *** CONFIG_PAYLOAD_TIANOCORE is not set
 ** do bi-weekly runs
+** treat this job as one of the builder jobs? (=currently limited to 8)
+** libreboot ships images, verify those?
 
 * openwrt
 ** add credit for logo/artwork
@@ -256,6 +258,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** build all packages? (set CONFIG_ALL=y and run 'make defconfig')
 ** file dbd bug about unable to inspect these .bin files
 ** do bi-weekly runs
+** treat this job as one of the builder jobs? (=currently limited to 8)
 
 * remote scheduling:
 ----

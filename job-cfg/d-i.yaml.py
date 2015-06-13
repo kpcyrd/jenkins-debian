@@ -160,17 +160,11 @@ def scm_svn(po, inc_regs=None):
                       'viewvc-url': 'http://anonscm.debian.org/viewvc/d-i/trunk'}}]
 
 
-def svn_desc(po, fmt):
-    s =  'Builds the {langname} ' + fmt + ' version of the installation-guide for all architectures. '
-    s += 'Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual'
-    s += '/po' if po else ''
-    s += '/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_pdf</a> is triggered.'
-    return s
-
-
-pdf_desc_str = 'Builds the {langname} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>.'
-
-instguide_desc_str = 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre>'
+desc_str = {
+    'html': 'Builds the {langname} html version of the installation-guide for all architectures. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/trunk/manual{popath}/{lang}/<code>. After successful build <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_pdf">d-i_manual_{lang}_pdf</a> is triggered.',
+    'pdf': 'Builds the {langname} pdf version of the installation-guide for all architectures. Triggered by successful build of <a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">d-i_manual_{lang}_html</a>.',
+    'instguide': 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre>'
+    }
 
 
 def lr(keep):
@@ -228,21 +222,18 @@ def jtmpl(act, target, fmt=None, po=''):
     return {'job-template': {'name': '_'.join(n), 'defaults': '-'.join(d)}}
 
 
-def jobspec_svn(key, name, desc=None, defaults=None,
+def jobspec_svn(key, name, desc, defaults=None,
                 priority=120, logkeep=None, trigger=None, publishers=None,
                 lang='', fmt='', po='', inc_regs=None ):
+    shell_cmd = [p for p in ['/srv/jenkins/bin/d-i_manual.sh',lang,fmt,po] if p != '']
     j = {'scm': scm_svn(po=po,inc_regs=inc_regs),
          'project-type': 'freestyle',
-         'builders': [{'shell': ' '.join(['/srv/jenkins/bin/d-i_manual.sh', lang, fmt, po])}],
+         'builders': [{'shell': ' '.join(shell_cmd)}],
          'properties': prop(priority=priority),
          'name': name}
     j['publishers'] = publishers if publishers != None else publ(fmt=fmt,trigger=trigger,irc='debian-boot')
 
-    if desc != None:
-        j['description'] = desc
-    else:
-        if fmt != None:
-            j['description'] = svn_desc(po=po,fmt=fmt)
+    j['description'] = desc
     j['description'] += ' {do_not_edit}'
 
     if defaults != None:
@@ -274,11 +265,11 @@ for f in ['html', 'pdf']:
         data.append(
             jobspec_svn(key='defaults',
                         name='-'.join(n),
-                        fmt=f,
                         lang='{lang}',
-                        trigger='{trg}' if not (f == 'pdf' and po == '') else None,
-                        desc=svn_desc(po=po,fmt=f) if f == 'html' else pdf_desc_str,
+                        fmt=f,
                         po=po,
+                        trigger='{trg}' if not (f == 'pdf' and po == '') else None,
+                        desc=desc_str[f],
                         logkeep=90))
         templs.append(jtmpl(act='manual',target='{lang}',fmt=f,po=po))
 
@@ -302,7 +293,7 @@ data.append(
     jobspec_svn(key='job-template',
                 defaults='d-i',
                 name='{name}_manual',
-                desc=instguide_desc_str,
+                desc=desc_str['instguide'],
                 trigger='{trg}',
                 priority=125,
                 publishers=[publ_email('debian-boot')],
@@ -341,7 +332,8 @@ data.append(
         'jobs': ['{name}_manual_{lang}_html'],
         'lang': [l for l in langs if list(l.keys())[0] in non_po_langs],
         'trg': 'H/15 * * * *',
-        'fmt': 'html'}})
+        'fmt': 'html',
+        'popath': ''}})
 
 data.append(
     {'job-group': {
@@ -357,7 +349,8 @@ data.append(
         'jobs': ['{name}_manual_{lang}_html_po2xml'],
         'lang': [l for l in langs if list(l.keys())[0] not in non_po_langs],
         'trg': 'H/30 * * * *',
-        'fmt': 'html'}})
+        'fmt': 'html',
+        'popath': '/po'}})
 
 data.append(
     {'job-group': {

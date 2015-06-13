@@ -210,6 +210,9 @@ for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip
 	echo " </td></tr>" >> $TOOLCHAIN_HTML
 done
 echo "</table>" >> $TOOLCHAIN_HTML
+# get banner
+BANNER_HTML=$(mktemp)
+find build_dir/ -name banner | grep etc/banner|head -1 >> $BANNER_HTML
 
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/openwrt
@@ -305,7 +308,7 @@ cat > $PAGE <<- EOF
         <p><center>
         <code>
 EOF
-cat $(find openwrt/build_dir/ -name banner | grep etc/banner|head -1) >> $PAGE
+cat $BANNER_HTML >> $PAGE
 write_page "       </code></center></p>"
 write_page "     </div><div id=\"main-content\">"
 write_page "       <h1>Reproducible OpenWRT - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
@@ -323,7 +326,7 @@ cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div>"
 write_page_footer OpenWRT
 publish_page
-rm -f $DBD_HTML $TOOLCHAIN_HTML
+rm -f $DBD_HTML $TOOLCHAIN_HTML $BANNER_HTML
 
 # the end
 calculate_build_duration

@@ -247,16 +247,15 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 *** CONFIG_PAYLOAD_FILO is not set
 *** CONFIG_PAYLOAD_GRUB2 is not set
 *** CONFIG_PAYLOAD_TIANOCORE is not set
+** do bi-weekly runs
 
 * openwrt
-----
- <nbd> wenn man einmal make defconfig ausgeführt hat, gibt's paket und target metadaten in tmp/.packageinfo und tmp/.targetinfo
- <nbd> man kann ne .config mit der target auswahl und CONFIG_ALL=y erstellen und mit make defconfig auffüllen
- <nbd> reicht ja erstmal, mit dem basis paketsatz anzufangen
- <nbd> das wird für ein target deutlich weniger als 12h brauchen
- <nbd> default config ohne CONFIG_ALL dauert bei meinem laptop in der regel <30 min
- <nbd> mit CONFIG_ALL vielleicht 2-3 stunden oder so
-----
+** add credit for logo/artwork
+** build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
+** build less images from ar71xx? (and other archs too)
+** build all packages? (set CONFIG_ALL=y and run 'make defconfig')
+** file dbd bug about unable to inspect these .bin files
+** do bi-weekly runs
 
 * remote scheduling:
 ----

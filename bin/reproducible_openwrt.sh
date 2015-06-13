@@ -23,7 +23,7 @@ create_results_dirs() {
 }
 
 call_debbindiff() {
-	mkdir -p $TMPDIR/$1
+	mkdir -p $TMPDIR/$1/$(dirname $2)
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	local msg=""
 	set +e
@@ -215,14 +215,16 @@ echo "</table>" >> $TOOLCHAIN_HTML
 rm -r $TMPBUILDDIR/openwrt
 
 # run debbindiff on the results
+# (this needs refactoring rather badly)
 TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
 echo "$(date -u) - Running $DBDVERSION on OpenWRT images and packages."
 echo "============================================================================="
-IMAGES_HTML=$(mktemp)
-echo "       <table><tr><th>Images for <code>$TARGET</code></th></tr>" > $IMAGES_HTML
+DBD_HTML=$(mktemp)
+# run debbindiff on the images
+echo "       <table><tr><th>Images for <code>$TARGET</code></th></tr>" > $DBD_HTML
 GOOD_IMAGES=0
 ALL_IMAGES=0
 create_results_dirs
@@ -237,20 +239,48 @@ for i in * ; do
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i
 			mv $TMPDIR/$i/$j.html $BASE/openwrt/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $IMAGES_HTML
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $DBD_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, ${SIZE}K) is reproducible.</td></tr>" >> $IMAGES_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, ${SIZE}K) is reproducible.</td></tr>" >> $DBD_HTML
 			let GOOD_IMAGES+=1
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	done
 	cd ..
 done
-echo "       </table>" >> $IMAGES_HTML
-GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
+echo "       </table>" >> $DBD_HTML
+GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
+# run debbindiff on the packages
+echo "       <table><tr><th>Packages for <code>$TARGET</code></th></tr>" >> $DBD_HTML
+GOOD_PACKAGES=0
+ALL_PACKAGES=0
+create_results_dirs
+cd $TMPDIR/b1
+for i in * ; do
+	cd $i
+	for j in $(find * -name "*.ipk" |sort -u ) ; do
+		let ALL_PACKAGES+=1
+		call_debbindiff $i $j
+		SIZE="$(du -h -b $j | cut -f1)"
+		SIZE="$(echo $SIZE/1024|bc)"
+		if [ -f $TMPDIR/$i/$j.html ] ; then
+			mkdir -p $BASE/openwrt/dbd/$i/$(dirname $j)
+			mv $TMPDIR/$i/$j.html $BASE/openwrt/dbd/$i/$j.html
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $DBD_HTML
+		else
+			SHASUM=$(sha256sum $j|cut -d " " -f1)
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, ${SIZE}K) is reproducible.</td></tr>" >> $DBD_HTML
+			let GOOD_PACKAGES+=1
+			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
+		fi
+	done
+	cd ..
+done
+echo "       </table>" >> $DBD_HTML
+GOOD_PERCENT_PACKAGES=$(echo "scale=1 ; ($GOOD_PACKAGES*100/$ALL_PACKAGES)" | bc)
 # are we there yet?
-if [ "$GOOD_PERCENT" = "100.0" ] ; then
+if [ "$GOOD_PERCENT_IMAGES" = "100.0" ] || [ "$GOOD_PERCENT_PACKAGES" = "100.0" ]; then
 	MAGIC_SIGN="!"
 else
 	MAGIC_SIGN="?"
@@ -282,10 +312,10 @@ write_page "       <h1>Reproducible OpenWRT - <em>reproducible</em> wireless fre
 write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki has a lot more information, eg. why this is useful, what common issues exist and which workarounds and solutions are known.<br />"
 write_page "        <em>Reproducible OpenWRT</em> is an effort to apply this to OpenWRT. Thus each OpenWR target is build twice, with a few varitations added and then the resulting images from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_openwrt/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"git://git.openwrt.org/openwrt.git\">openwrt.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_openwrt.sh\">reproducible_openwrt.sh</a> in a Debian environemnt and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"
-write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT%) out of $ALL_IMAGES built openwrt images were reproducible in our test setup."
+write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES built images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES built packages were reproducible in our test setup."
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION}.</p>"
 write_explaination_table OpenWRT
-cat $IMAGES_HTML >> $PAGE
+cat $DBD_HTML >> $PAGE
 write_page "     <table><tr><th>git commit built</th></tr><tr><td>><code>"
 echo -n "$OPENWRT" >> $PAGE
 write_page "     </code></td></tr></table>"
@@ -293,12 +323,12 @@ cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div>"
 write_page_footer OpenWRT
 publish_page
-rm -f $IMAGES_HTML $TOOLCHAIN_HTML
+rm -f $DBD_HTML $TOOLCHAIN_HTML
 
 # the end
 calculate_build_duration
 print_out_duration
-irc_message "$REPRODUCIBLE_URL/openwrt/ has been updated. ($GOOD_PERCENT% reproducible)"
+irc_message "$REPRODUCIBLE_URL/openwrt/ has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

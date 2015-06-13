@@ -73,7 +73,15 @@ save_openwrt_results(){
 		# save images
 		mkdir -p $TMPDIR/$RUN/$i
 		for j in $(find . -name "*.bin" -exec basename \{\} \; ) ; do
-			cp -p $j $TMPDIR/$RUN/$i/
+			# rename *-squashfs*.bin to *.bin.squashfs
+			# (needed for debbindiff 20)
+			if (echo $j| grep -q -- '-squashfs') ; then
+				k=$(echo $j| sed "s#-squashfs##g")
+				k=${j}.squashfs
+			else
+				k=$j
+			fi
+			cp -p $j $TMPDIR/$RUN/$i/$k
 		done
 		# save packages
 		cd packages
@@ -229,7 +237,7 @@ create_results_dirs
 cd $TMPDIR/b1
 for i in * ; do
 	cd $i
-	for j in $(find . -name "*.bin" -exec basename \{\} \; |sort -u ) ; do
+	for j in $(find . -name "*.bin" -o -name "*.squashfs" -exec basename \{\} \; |sort -u ) ; do
 		let ALL_IMAGES+=1
 		call_debbindiff $i $j
 		SIZE="$(du -h -b $j | cut -f1)"

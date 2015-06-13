@@ -212,7 +212,7 @@ done
 echo "</table>" >> $TOOLCHAIN_HTML
 # get banner
 BANNER_HTML=$(mktemp)
-find build_dir/ -name banner | grep etc/banner|head -1 >> $BANNER_HTML
+cat $(find build_dir/ -name banner | grep etc/banner|head -1) >> $BANNER_HTML
 
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/openwrt

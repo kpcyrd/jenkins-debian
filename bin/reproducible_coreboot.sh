@@ -92,7 +92,7 @@ trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 echo "============================================================================="
-echo "$(date -u) - Cloning the coreboot git repository with submodules now."
+echo "$(date -u) - Cloning the coreboot git repository with submodules."
 echo "============================================================================="
 git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot
@@ -105,7 +105,7 @@ echo
 git log -1
 
 echo "============================================================================="
-echo "$(date -u) - Building cross compilers for ${ARCHS} now."
+echo "$(date -u) - Building cross compilers for ${ARCHS}."
 GOT_XTOOLCHAIN=false
 #
 # build the cross toolchains
@@ -147,7 +147,7 @@ echo "</table>" >> $TOOLCHAIN_HTML
 cd ../../..
 
 echo "============================================================================="
-echo "$(date -u) - Building coreboot ${COREBOOT_VERSION} images now - first build run."
+echo "$(date -u) - Building coreboot ${COREBOOT_VERSION} images - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # prevent failing using more than one CPU
@@ -163,7 +163,7 @@ ionice -c 3 nice \
 save_coreboot_results b1
 
 echo "============================================================================="
-echo "$(date -u) - Building coreboot images now - second build run."
+echo "$(date -u) - Building coreboot images - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
@@ -196,7 +196,7 @@ TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DBDVERSION on coreboot images now"
+echo "$(date -u) - Running $DBDVERSION on coreboot images."
 echo "============================================================================="
 ROMS_HTML=$(mktemp)
 echo "       <ul>" > $ROMS_HTML

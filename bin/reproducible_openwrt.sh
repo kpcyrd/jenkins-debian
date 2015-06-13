@@ -79,7 +79,7 @@ save_openwrt_results(){
 		cd packages
 		for j in $(find * -name "*.ipk") ; do
 			mkdir -p $TMPDIR/$RUN/$i/ipk/$(dirname $j)
-			cp -p $j $TMPDIR/$RUN/$i/ipk/$(dirname $j)
+			cp -p $j $TMPDIR/$RUN/$i/ipk/$(dirname $j)/
 		done
 		cd ../..
 	done
@@ -97,7 +97,7 @@ trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 echo "============================================================================="
-echo "$(date -u) - Cloning the OpenWRT git repository now."
+echo "$(date -u) - Cloning the OpenWRT git repository."
 echo "============================================================================="
 git clone git://git.openwrt.org/openwrt.git
 cd openwrt
@@ -114,7 +114,7 @@ echo "==========================================================================
 ./scripts/feeds install -a
 
 echo "============================================================================="
-echo "$(date -u) - Building the toolchain now."
+echo "$(date -u) - Building the toolchain."
 echo "============================================================================="
 make defconfig
 ionice -c 3 nice \
@@ -123,7 +123,7 @@ ionice -c 3 nice \
 	make -j $NUM_CPU toolchain/install
 
 echo "============================================================================="
-echo "$(date -u) - Building openwrt ${OPENWRT_VERSION} images now - first build run."
+echo "$(date -u) - Building OpenWRT ${OPENWRT_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
@@ -149,7 +149,7 @@ rm staging_dir/target-* -r
 rm bin/* -r
 
 echo "============================================================================="
-echo "$(date -u) - Building openwrt images now - second build run."
+echo "$(date -u) - Building OpenWRT - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
@@ -219,7 +219,7 @@ TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DBDVERSION on openwrt images now"
+echo "$(date -u) - Running $DBDVERSION on OpenWRT images and packages."
 echo "============================================================================="
 IMAGES_HTML=$(mktemp)
 echo "       <table><tr><th>Images for <code>$TARGET</code></th></tr>" > $IMAGES_HTML

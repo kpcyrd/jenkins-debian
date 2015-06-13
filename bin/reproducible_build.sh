@@ -384,7 +384,7 @@ check_buildinfo() {
 	RESULT=$?
 	set -e
 	if [ $RESULT -eq 1 ] ; then
-		irc_message "$BUILDINFO varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..."
+		printf "$(date) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-hit-mirror-update.log
 		echo
 		echo "============================================================================="
 		echo ".buildinfo's Build-Environment varies, probably due to mirror update."

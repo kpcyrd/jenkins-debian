@@ -251,8 +251,8 @@ def schedule_new_versions(total):
         many_new = 150
     for suite in SUITES:
         log.info('Requesting ' + str(many_new) + ' new versions in ' + suite + '...')
-        new[suite] = query_new_versions(suite, many_new)
-        log.info('Received ' + str(len(new[suite])) + ' new packages in ' + suite + ' to schedule.')
+        packages[suite] = query_new_versions(suite, many_new)
+        log.info('Received ' + str(len(packages[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
     if add_up_numbers(packages) != '0':
         msg = add_up_numbers(packages) + ' packages with new versions'
@@ -277,8 +277,8 @@ def schedule_old_versions(total):
         else:
             suite_many_old = int(many_old_base)    # experimental is roughly one twentieth of the size of the other suites
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
-        old[suite] = query_old_versions(suite, suite_many_old)
-        log.info('Received ' + str(len(old[suite])) + ' old packages in ' + suite + ' to schedule.')
+        packages[suite] = query_old_versions(suite, suite_many_old)
+        log.info('Received ' + str(len(packages[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
     if add_up_numbers(packages) != '0':
         msg = add_up_numbers(packages) + ' old packages with the same version'

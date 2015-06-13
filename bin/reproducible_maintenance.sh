@@ -77,13 +77,9 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo
 	echo "Rescheduling packages: "
 	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
+		REQUESTER="jenkins maintenance job"
 		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo -n "$PKG " ; done)
-		check_candidates
-		if [ $TOTAL -ne 0 ] ; then
-			echo " - in $SUITE: $CANDIDATES"
-			ARTIFACTS=0
-			schedule_packages $PACKAGE_IDS
-		fi
+		schedule_packages $SUITE $CANDIDATES
 	done
 	DIRTY=true
 fi

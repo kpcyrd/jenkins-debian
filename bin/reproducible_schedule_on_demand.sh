@@ -11,9 +11,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-#
-# main
-#
 set +x
 ARTIFACTS=0
 NOTIFY=''
@@ -31,6 +28,13 @@ if [ "$SUITE" = "sid" ] ; then
 	SUITE=unstable
 fi
 
+if [ ! -z "$SUDO_USER" ] ; then
+	REQUESTER="$SUDO_USER"
+else
+	echo "Looks like you logged into this host as the jenkins user without sudoing to it. How can that be possible?!?!"
+	REQUESTER="$USER"
+fi
+
 CANDIDATES="$@"
 if [ ${#} -gt 50 ] && [ "$NOTIFY" = "true" ] ; then
 	echo
@@ -39,29 +43,6 @@ if [ ${#} -gt 50 ] && [ "$NOTIFY" = "true" ] ; then
 	echo
 	exit 1
 fi
-check_candidates
-if [ ${#PACKAGE_IDS} -gt 256 ] ; then
-	BLABLABLA="✂…"
-fi
-ACTION="manually rescheduled"
-if [ -n "${BUILD_URL:-}" ] ; then
-	ACTION="rescheduled by $BUILD_URL"
-fi
-MESSAGE="$TOTAL $PACKAGES_TXT $ACTION in $SUITE: ${PACKAGES_NAMES:0:256}$BLABLABLA"
-if [ $ARTIFACTS -eq 1 ] ; then
-	MESSAGE="$MESSAGE - artifacts will be preserved."
-elif [ "$NOTIFY" = "true" ] ; then
-	MESSAGE="$MESSAGE - notification once finished."
-fi
 
 # finally
-schedule_packages $PACKAGE_IDS
-echo
-echo "$MESSAGE"
-if [ -z "${BUILD_URL:-}" ] && [ $TOTAL -ne 0 ] ; then
-	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
-fi
-echo "============================================================================="
-echo "The following $TOTAL source $PACKAGES_TXT $ACTION for $SUITE: $PACKAGES_NAMES"
-echo "============================================================================="
-echo
+schedule_packages $CANDIDATES

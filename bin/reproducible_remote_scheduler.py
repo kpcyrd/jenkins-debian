@@ -173,6 +173,7 @@ cursor.executemany(query2, save_schedule)
 conn_db.commit()
 
 log.info(bcolors.GOOD + message + bcolors.ENDC)
-irc_msg(message)
+if requester != "jenkins maintenance job" and not local:
+    irc_msg(message)
 
 generate_schedule()  # the html page

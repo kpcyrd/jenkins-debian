@@ -343,7 +343,7 @@
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.py'
-            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_all_packages':
             my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is rather redudant and just run to give a fuzzy warm feeling all pages are good.'
             my_timed: '37 13 * * 1'

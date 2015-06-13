@@ -13,6 +13,7 @@ import json
 import yaml
 from apt_pkg import version_compare
 from reproducible_common import *
+import os
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -50,7 +51,7 @@ def load_notes():
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
             irc_msg('There is problem with the note for ' + pkg +
-                    ' - please investigate')
+                    ' - please have a look at ' + os.environ['BUILD_URL'])
         else:
             notes[pkg] = []
             for suite in result:

@@ -21,19 +21,6 @@ if [ $# -lt 2 ]; then
 	exit 1
 fi
 
-TARGET="$1"
-shift
-SUITE="$1"
-shift
-
-declare -a EXTRA_SOURCES
-if [ "$SUITE" = "experimental" ] ; then
-	# experimental cannot be bootstrapped
-	SUITE=sid
-	EXTRA_SOURCES[0]="deb $MIRROR experimental main"
-	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
-fi
-
 if [ "$1" = "backports" ] ; then
 	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main"
 	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main"
@@ -45,6 +32,19 @@ if [ "$1" = "reproducible" ] ; then
 	EXTRA_SOURCES[5]="deb-src http://reproducible.alioth.debian.org/debian/ ./"
 	REPRODUCIBLE=true
 	shift
+fi
+
+TARGET="$1"
+shift
+SUITE="$1"
+shift
+
+declare -a EXTRA_SOURCES
+if [ "$SUITE" = "experimental" ] ; then
+	# experimental cannot be bootstrapped
+	SUITE=sid
+	EXTRA_SOURCES[0]="deb $MIRROR experimental main"
+	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
 fi
 
 if [ ! -d "$CHROOT_BASE" ]; then

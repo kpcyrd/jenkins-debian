@@ -38,9 +38,10 @@ from reproducible_html_indexes import generate_schedule
 class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    RED = '\033[91m'
     GOOD = '\033[92m'
     WARN = '\033[93m' + UNDERLINE
-    FAIL = '\033[91m' + BOLD + UNDERLINE
+    FAIL = RED + BOLD + UNDERLINE
     ENDC = '\033[0m'
 
 
@@ -76,6 +77,14 @@ log.debug('Packages: ' + ' '.join(packages))
 if suite not in SUITES:
     log.critical('The specified suite is not being tested.')
     log.critical('Please chose between ' + ', '.join(SUITES))
+    sys.exit(1)
+
+if len(packages) > 50 and notify:
+    log.critical(bcolors.RED + bcolors.BOLD)
+    call(['figlet', 'No.'])
+    log.critical(bcolors.FAIL + 'Do not reschedule more than 50 packages ' +
+                 'with notification.\nIf you really need to spam the IRC ' +
+                 'channel this much use a loop to achive that.' + bcolors.ENDC)
     sys.exit(1)
 
 if scheduling_args.artifacts:

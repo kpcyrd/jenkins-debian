@@ -60,7 +60,7 @@ call_debbindiff() {
 			msg="$(date -u) - Something weird happened when running $DBDVERSION on $1/$2 (which exited with $RESULT) and I don't know how to handle it."
 			;;
 	esac
-	if [ ! -z $msg ] ; then
+	if [ ! -z "$msg" ] ; then
 		echo $msg | tee -a $TMPDIR/$1/$2.html
 	fi
 }

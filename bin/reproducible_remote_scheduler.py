@@ -67,6 +67,7 @@ artifacts = scheduling_args.artifacts
 notify = not scheduling_args.no_notify  # note the notify vs no-notify
 
 log.debug('Requester: ' + requester)
+log.debug('Local call: ' + str(local))
 log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
 log.debug('Notify: ' + str(notify))
@@ -164,6 +165,7 @@ if amount + len(ids) > 50 and not local:
 # do the actual scheduling
 to_schedule = []
 save_schedule = []
+notify = '' if not notify else notify
 for id in ids:
     artifacts_value = 1 if artifacts else 0
     to_schedule.append((id, date, artifacts_value, str(notify).lower(), requester))
@@ -182,7 +184,7 @@ cursor.executemany(query2, save_schedule)
 conn_db.commit()
 
 log.info(bcolors.GOOD + message + bcolors.ENDC)
-if requester != "jenkins maintenance job" and not local:
+if not (local and requester == "jenkins maintenance job"):
     irc_msg(message)
 
 generate_schedule()  # the html page

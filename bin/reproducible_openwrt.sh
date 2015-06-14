@@ -72,7 +72,7 @@ save_openwrt_results(){
 		cd $i
 		# save images
 		mkdir -p $TMPDIR/$RUN/$i
-		for j in $(find * -name "*.bin") ; do
+		for j in $(find * -name "*.bin" -o -name "*.squashfs") ; do
 			cp -p $j $TMPDIR/$RUN/$i/
 		done
 		# save packages
@@ -239,7 +239,7 @@ create_results_dirs
 cd $TMPDIR/b1
 for i in * ; do
 	cd $i
-	for j in $(find * -name "*.bin" |sort -u ) ; do
+	for j in $(find * -name "*.bin" -o -name "*.squashfs" |sort -u ) ; do
 		let ALL_IMAGES+=1
 		call_debbindiff $i $j
 		SIZE="$(du -h -b $j | cut -f1)"

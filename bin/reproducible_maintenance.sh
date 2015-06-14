@@ -78,6 +78,7 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 	echo "Rescheduling packages: "
 	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
 		REQUESTER="jenkins maintenance job"
+		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
 		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo -n "$PKG " ; done)
 		schedule_packages $SUITE $CANDIDATES
 	done

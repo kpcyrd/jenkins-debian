@@ -92,7 +92,13 @@ META_PKGSET[26]="maint_debian-boot"
 META_PKGSET[27]="maint_debian-ocaml"
 
 schedule_packages() {
-	LC_USER="$REQUESTER" LOCAL_CALL="true" /srv/jenkins/bin/reproducible_remote_scheduler.py --no-notify --suite "$UITE" $@
+	LC_USER="$REQUESTER" \
+	LOCAL_CALL="true" \
+	/srv/jenkins/bin/reproducible_remote_scheduler.py \
+		--message "$REASON" \
+		--no-notify \
+		--suite "$UITE" \
+		$@
 }
 
 write_page() {

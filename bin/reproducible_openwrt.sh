@@ -86,6 +86,92 @@ save_openwrt_results(){
 	cd ..
 }
 
+openwrt_config() {
+	TARGET=$1
+
+	echo "CONFIG_TARGET_$TARGET=y" > .config
+	make defconfig
+}
+
+openwrt_build_toolchain() {
+	echo "============================================================================="
+	echo "$(date -u) - Building the toolchain."
+	echo "============================================================================="
+
+	ionice -c 3 nice \
+		make -j $NUM_CPU tools/install
+	ionice -c 3 nice \
+		make -j $NUM_CPU toolchain/install
+}
+
+openwrt_build() {
+	RUN=$1
+	TARGET=$2
+
+	echo "============================================================================="
+	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
+	echo "============================================================================="
+	ionice -c 3 nice \
+		$MAKE -j $NUM_CPU target/compile
+	ionice -c 3 nice \
+		$MAKE -j $NUM_CPU package/cleanup
+	ionice -c 3 nice \
+		$MAKE -j $NUM_CPU package/compile || true # don't let some packages fail the whole build
+	ionice -c 3 nice \
+		$MAKE -j $NUM_CPU package/install
+	ionice -c 3 nice \
+		$MAKE -j $NUM_CPU target/install
+	ionice -c 3 nice \
+		$MAKE -j $NUM_CPU package/index
+}
+
+openwrt_cleanup() {
+	rm build_dir/target-* -r
+	rm staging_dir/target-* -r
+	rm bin/* -r
+}
+
+build_two_times() {
+	$TARGET=$1
+	openwrt_config $TARGET
+	openwrt_build_toolchain
+
+	# FIRST BUILD
+	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
+	MAKE=make
+
+	# first build
+	openwrt_build "first" "$TARGET"
+
+	# save results in b1
+	save_openwrt_results b1
+
+	# clean up between builds
+	openwrt_cleanup
+
+	# SECOND BUILD
+	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
+	export LANG="fr_CH.UTF-8"
+	export LC_ALL="fr_CH.UTF-8"
+	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
+	export CAPTURE_ENVIRONMENT="I capture the environment"
+	umask 0002
+	# use allmost all cores for second build
+	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+	MAKE="linux64 --uname-2.6 make"
+	openwrt_build "second" "$TARGET"
+
+	# save results in b2
+	save_openwrt_results b2
+
+	# reset environment to default values again
+	export LANG="en_GB.UTF-8"
+	unset LC_ALL
+	export TZ="/usr/share/zoneinfo/UTC"
+	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
+	umask 0022
+}
+
 #
 # main
 #
@@ -113,85 +199,9 @@ echo "==========================================================================
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-echo "============================================================================="
-echo "$(date -u) - Building the toolchain."
-echo "============================================================================="
-make defconfig
-# Replace default target with a specific one
-sed 's/CONFIG_TARGET_ar71xx_generic_Default=y/# CONFIG_TARGET_ar71xx_generic_Default is not set/g' -i .config
-sed 's/# CONFIG_TARGET_ar71xx_generic_ARCHERC7 is not set/CONFIG_TARGET_ar71xx_generic_ARCHERC7=y/g' -i .config
-make oldconfig
-
-ionice -c 3 nice \
-	make -j $NUM_CPU tools/install
-ionice -c 3 nice \
-	make -j $NUM_CPU toolchain/install
-
-echo "============================================================================="
-echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} - first build run."
-echo "============================================================================="
-export TZ="/usr/share/zoneinfo/Etc/GMT+12"
-# actually build everything
-ionice -c 3 nice \
-	make -j $NUM_CPU target/compile
-ionice -c 3 nice \
-	make -j $NUM_CPU package/cleanup
-ionice -c 3 nice \
-	make -j $NUM_CPU package/compile || true # don't let some packages fail the whole build
-ionice -c 3 nice \
-	make -j $NUM_CPU package/install
-ionice -c 3 nice \
-	make -j $NUM_CPU target/install
-ionice -c 3 nice \
-	make -j $NUM_CPU package/index
-
-# save results in b1
-save_openwrt_results b1
-
-# clean up between builds
-rm build_dir/target-* -r
-rm staging_dir/target-* -r
-rm bin/* -r
-
-echo "============================================================================="
-echo "$(date -u) - Building OpenWrt - second build run."
-echo "============================================================================="
-export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-export LANG="fr_CH.UTF-8"
-export LC_ALL="fr_CH.UTF-8"
-export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
-export CAPTURE_ENVIRONMENT="I capture the environment"
-umask 0002
-# use allmost all cores for second build
-NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU target/compile
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU package/cleanup
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU package/compile || true # don't let some packages fail the whole build
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU package/install
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU target/install
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-		make -j $NEW_NUM_CPU package/index
-
-# reset environment to default values again
-export LANG="en_GB.UTF-8"
-unset LC_ALL
-export TZ="/usr/share/zoneinfo/UTC"
-export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
-umask 0022
-
-# save results in b2
-save_openwrt_results b2
+build_two_times ar71xx_generic_ARCHERC7
+build_two_times x86_64
+build_two_times ramips_rt288x_RTN15
 
 #
 # create html about toolchain used

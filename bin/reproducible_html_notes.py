@@ -347,8 +347,8 @@ def iterate_over_notes(notes):
 
 def iterate_over_issues(issues):
     num_issues = str(len(issues))
-    i = 0
     for suite in SUITES:
+        i = 0
         for issue in sorted(issues):
             log.debug('iterating over issues in ' + suite +'... ' + str(i) + '/' + num_issues)
             log.debug('\t' + str(issue))

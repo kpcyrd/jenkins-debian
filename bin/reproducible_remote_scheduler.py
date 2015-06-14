@@ -105,7 +105,7 @@ for pkg in packages:
         # tests whether the package is already building
         result2 = query_db(query2.format(pkg=pkg, suite=suite))
         try:
-            if result2[0][0] != '':
+            if not result2[0][0]:
                 ids.append(result[0][0])
                 pkgs.append(pkg)
             else:

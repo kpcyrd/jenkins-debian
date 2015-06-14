@@ -154,7 +154,7 @@ def gen_extra_links(package, version, suite, arch, status):
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:
             default_view = url
-    else:
+    elif status not in ('untested', 'blacklisted', 'FTBFS', 'not for us'):
         log.critical('buildinfo not detected at ' + buildinfo)
     rbuild = pkg_has_rbuild(package, version, suite, arch)
     if rbuild:  # being a tuple (rbuild path, size), empty if non existant

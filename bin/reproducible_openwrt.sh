@@ -117,6 +117,11 @@ echo "==========================================================================
 echo "$(date -u) - Building the toolchain."
 echo "============================================================================="
 make defconfig
+# Replace default target with a specific one
+sed 's/CONFIG_TARGET_ar71xx_generic_Default=y/# CONFIG_TARGET_ar71xx_generic_Default is not set/g' -i .config
+sed 's/# CONFIG_TARGET_ar71xx_generic_ARCHERC7 is not set/CONFIG_TARGET_ar71xx_generic_ARCHERC7=y/g' -i .config
+make oldconfig
+
 ionice -c 3 nice \
 	make -j $NUM_CPU tools/install
 ionice -c 3 nice \

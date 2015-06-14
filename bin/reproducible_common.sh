@@ -55,7 +55,7 @@ mkdir -p "$BASE"
 
 # to hold reproducible temporary files/directories without polluting /tmp
 TEMPDIR="/tmp/reproducible"
-mkdir -p "$TMPDIR"
+mkdir -p "$TEMPDIR"
 
 # create subdirs for suites
 for i in $SUITES ; do

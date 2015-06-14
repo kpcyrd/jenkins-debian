@@ -258,6 +258,10 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/openwrt/$
 	RewriteRule ^/(.*) /openwrt/openwrt.html [R,L]
 
+	# redirect /issues/ to /index_issues.html
+	RewriteCond %{REQUEST_URI} ^/issues/$
+	RewriteRule ^/(.*) /index_issues.html [R,L]
+
 	<Proxy *>
 		Require all granted
 	</Proxy>

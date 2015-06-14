@@ -132,7 +132,7 @@ openwrt_cleanup() {
 }
 
 build_two_times() {
-	$TARGET=$1
+	TARGET=$1
 	openwrt_config $TARGET
 	openwrt_build_toolchain
 

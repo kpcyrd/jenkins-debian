@@ -313,17 +313,17 @@
         - '{name}_setup_schroot_unstable':
             my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-unstable unstable reproducible botch'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable botch'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_schroot_testing':
             my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-testing testing reproducible'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_schroot_experimental':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible-experimental experimental reproducible'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'

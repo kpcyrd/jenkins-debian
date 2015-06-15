@@ -329,7 +329,7 @@ init() {
 		handle_race_condition init
 	fi
 	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
-	echo "The jenkins build log is/was available at $BUILD_URL/console" | tee -a ${RBUILDLOG}
+	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
 }
 
 get_source_package() {

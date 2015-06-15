@@ -94,8 +94,8 @@
       - priority:
           job-prio: '150'
       - throttle:
-          max-total: 3
-          max-per-node: 3
+          max-total: 9
+          max-per-node: 9
           enabled: true
           option: category
           categories:
@@ -138,6 +138,13 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - throttle:
+          max-total: 9
+          max-per-node: 9
+          enabled: true
+          option: category
+          categories:
+            - reproducible      # no special category yet
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
     logrotate:
       daysToKeep: 90

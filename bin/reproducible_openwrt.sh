@@ -87,9 +87,9 @@ save_openwrt_results(){
 }
 
 openwrt_config() {
-	TARGET=$1
+	CONFIG=$1
 
-	echo "CONFIG_TARGET_$TARGET=y" > .config
+	printf "$CONFIG" > .config
 	make defconfig
 }
 
@@ -133,7 +133,8 @@ openwrt_cleanup() {
 
 build_two_times() {
 	TARGET=$1
-	openwrt_config $TARGET
+	CONFIG=$2
+	openwrt_config $CONFIG
 	openwrt_build_toolchain
 
 	# FIRST BUILD
@@ -199,9 +200,9 @@ echo "==========================================================================
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-build_two_times ar71xx_generic_ARCHERC7
-build_two_times x86_64
-build_two_times ramips_rt288x_RTN15
+build_two_times ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
+build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"
+build_two_times ramips_rt288x_RTN15 "CONFIG_TARGET_ramips=y\nCONFIG_TARGET_ramips_rt288x=y\nCONFIG_TARGET_ramips_rt288x_RTN15=y\n"
 
 #
 # create html about toolchain used

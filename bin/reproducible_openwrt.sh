@@ -140,8 +140,6 @@ build_two_times() {
 	# FIRST BUILD
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	MAKE=make
-
-	# first build
 	openwrt_build "first" "$TARGET"
 
 	# save results in b1
@@ -171,6 +169,9 @@ build_two_times() {
 	export TZ="/usr/share/zoneinfo/UTC"
 	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 	umask 0022
+
+	# clean up again
+	openwrt_cleanup
 }
 
 #

@@ -97,7 +97,7 @@ schedule_packages() {
 	/srv/jenkins/bin/reproducible_remote_scheduler.py \
 		--message "$REASON" \
 		--no-notify \
-		--suite "$UITE" \
+		--suite "$SUITE" \
 		$@
 }
 

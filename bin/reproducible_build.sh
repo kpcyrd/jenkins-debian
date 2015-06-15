@@ -368,7 +368,8 @@ first_build(){
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	set -x
 	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
-	( timeout -k 12h 12h ionice -c 3 nice sudo \
+	# remember to change the sudoers setting if you change the following command
+	( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
 	  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
 	  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
 	  pbuilder --build \
@@ -426,7 +427,8 @@ build_rebuild() {
 		set -x
 		local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
-		( timeout -k 12h 12h ionice -c 3 nice sudo \
+		# remember to change the sudoers setting if you change the following command
+		( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
 		  DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)" \
 		  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
 		  LANG="fr_CH.UTF-8" \

@@ -6,7 +6,7 @@ About jenkins.debian.net
 :Status:           working, in progress
 :lang:             en
 :Doctype:          article
-:Licence:	   GPLv2
+:License:          GPLv2
 
 == About jenkins.debian.net
 
@@ -17,6 +17,8 @@ Get the source by running `git clone git://git.debian.org/git/qa/jenkins.debian.
 The (virtualized) hardware is sponsored since October 2012 by http://www.profitbricks.co.uk - currently it's using 23 cores and 75 GB memory, thanks a lot!
 
 Some stats are available using link:https://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
+
+Three persons have shell access to the machine: link:mailto:holger@layer-acht.org[Holger Levsen], link:mailto:helmut@debian.org[Helmut Grohne] (both with root powers) and link:mailto:mattia@mapreri.org[Mattia Rizzolo]. All of them have also access to the web intereface, where tasks like stopping and scheduling job runs can be done, also they enough rights to edit the jenkins scripts (i.e. what jenkins executes), though this is done in case of firefighting (e.g. changes throught the git repository are really preferred). The deploying of changes is still limited to people with root powers.
 
 == Getting involved
 
@@ -34,7 +36,7 @@ All job result notifications should be sent to https://lists.alioth.debian.org/m
 
 == Jobs being run
 
-There are over 400 jobs being run currently. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
+There are nearly 900 jobs being run currently. If you can think of ways to improve the usefulness of certain jobs, please do give feedback!
 
 === g-i-installation jobs
 
@@ -138,6 +140,8 @@ Installation tests inside chroot environments.
 
 * Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through eight concurrent builder jobs which are each constantly testing packages and saving the results of these tests.
 
+* There are 2 jobs tesing the link:https://openwrt.org/[OpenWrt] and link:http://www.coreboot.org/[coreboot] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/openwrt and https://reproducible.debian.net/coreboot.
+
 * Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and which schedules "new packages" to be tested if the queue is below a certain threshold. New packages" in this context means:
 ** truly new packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
 ** new versions of existing packages.
@@ -160,14 +164,7 @@ Installation tests inside chroot environments.
 ** log into alioth.debian.org, in the team home (/home/groups/reproducible/) there is a reschedule.sh script you can call. Use the --help switch to get the online help.
 ** The team IRC channel will get a notification both when the scheduling is done and once the build finishes.
 
-* If you are not in the reproducible team or if you want to reschedule big sets of packages please ask for a manual rescheduling in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins need to run this command:
-
-----
-jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_schedule_on_demand.sh --$option $suite $package1 $package2
-----
-
-The script can be called with either one of the two options: with "--artifacts" the build job will preserve the produced packages and publish them under reproducible.debian.net, to allow easy+deeper investigation of reproducible issues. The URL is published in the build log and on IRC.
-Alternatively it's possible to use "--notify" to make the build job notify the team IRC channel when a package finishes building.
+* If you are not in the reproducible team or if you want to reschedule big sets of packages please ask for a manual rescheduling in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins can bypass the limitations imposed to remote calls (and e.g. schedule a lot of packages (remotes are limited at 50 per day) without notifications at the end).
 
 * Blacklisting packages can be done similarly:
 

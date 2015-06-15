@@ -12,12 +12,12 @@ Patches can be submitted by mail (git format-patch, see below)
 or as requests to pull from a publicly-visible git repository.
 In either case, please make a topic branch based on the 'master' branch.
 
-You can send patches or requests to the development list,
+You can send patches or requests to the link:mailto:qa-jenkins-dev@lists.alioth.debian.org[development list],
 or to the tracking bug: <bugnumber>@bugs.debian.org.
 
 One possible workflow:
 ----
-  git clone git://anonscm.debian.org/debian-qa/jenkins.debian.net.git
+  git clone git://anonscm.debian.org/qa/jenkins.debian.net.git
   git checkout origin/master -b <topicname>
   # <edits>
   git commit -a

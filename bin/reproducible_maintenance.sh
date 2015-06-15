@@ -80,7 +80,7 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 		REQUESTER="jenkins maintenance job"
 		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
 		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo -n "$PKG " ; done)
-		schedule_packages $SUITE $CANDIDATES
+		schedule_packages $CANDIDATES
 	done
 	DIRTY=true
 fi

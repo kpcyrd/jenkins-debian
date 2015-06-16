@@ -15,12 +15,5 @@ export -n http_proxy
 BINDMOUNTS="$BINDMOUNTS /sys"
 # set PATH to predictable values, see #780729 and #780725
 PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
-# Use a different umask, but only do so when the UTS namespace differs from pid 1's UTS namespace.
-# This is only the case for the 2nd pbuilder run, which is started by bin/reproducible_build.sh
-# using 'unshare --uts'...
-if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then
-	umask 0002
-	PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
-fi
 
 USEDEVSHM=yes

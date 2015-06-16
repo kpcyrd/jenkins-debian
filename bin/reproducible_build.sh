@@ -367,11 +367,14 @@ check_suitability() {
 first_build(){
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	set -x
-	printf "BUILDUSERID=1111\nBUILDUSERNAME=pbuilder1\n" > $TMPCFG
+	cat > "$TMPCFG" << EOF
+BUILDUSERID=1111
+BUILDUSERNAME=pbuilder1
+DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
+TZ="/usr/share/zoneinfo/Etc/GMT+12"
+EOF
 	# remember to change the sudoers setting if you change the following command
 	( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
-	  DEB_BUILD_OPTIONS="parallel=$NUM_CPU" \
-	  TZ="/usr/share/zoneinfo/Etc/GMT+12" \
 	  pbuilder --build \
 		--configfile $TMPCFG \
 		--debbuildopts "-b" \
@@ -426,13 +429,18 @@ build_rebuild() {
 		echo "============================================================================="
 		set -x
 		local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-		printf "BUILDUSERID=2222\nBUILDUSERNAME=pbuilder2\n" > $TMPCFG
+		cat > "$TMPCFG" << EOF
+BUILDUSERID=2222
+BUILDUSERNAME=pbuilder2
+DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
+TZ="/usr/share/zoneinfo/Etc/GMT-14"
+LANG="fr_CH.UTF-8"
+LC_ALL="fr_CH.UTF-8"
+PATH="${PATHH:+"$PATH:"}/i/capture/the/path"
+umask 0002
+EOF
 		# remember to change the sudoers setting if you change the following command
 		( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
-		  DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)" \
-		  TZ="/usr/share/zoneinfo/Etc/GMT-14" \
-		  LANG="fr_CH.UTF-8" \
-		  LC_ALL="fr_CH.UTF-8" \
 		  /usr/bin/linux64 --uname-2.6 \
 			/usr/bin/unshare --uts -- \
 				/usr/sbin/pbuilder --build \

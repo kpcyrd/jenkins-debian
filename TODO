@@ -199,6 +199,7 @@ properties:
 ** reproducible_blacklist.sh should delete rbuild logs and debbindiff output too
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/de/sslcheck?host=jenkins.debian.net#46.16.73.183
+** include "ftbfs" usertag in table+graph on dashboard
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed

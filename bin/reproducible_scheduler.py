@@ -332,7 +332,8 @@ def scheduler():
         message += msg_untested
         message += ' and ' if msg_new and msg_old else ', ' if msg_new or msg_old else ''
     message += msg_new if msg_new else ''
-    message += ' and ' + msg_old if msg_old else ''
+    message += ' and ' if msg_new or msg_old else ''
+    message += msg_old if msg_old else ''
     message += ', for ' + str(total) + ' or ' + \
               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
     log.info('\n\n\n')

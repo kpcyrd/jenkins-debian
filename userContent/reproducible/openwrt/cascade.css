@@ -24,6 +24,16 @@ code {
 	white-space: pre;
 }
 
+a {
+        color:#0044cc;
+}
+a:hover, a:focus, {
+        color:#0044cc;
+}
+a:visited {
+        color:#aa2200;
+}
+
 #header {
 	min-height: 98px;
 	background-image: url(header.png);

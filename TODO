@@ -172,17 +172,16 @@ properties:
 
 === reproducible
 
-* r_build.sh
-** keep+display both html+txt output from debbindiff
-** Store the two buildlogs in separated gzipped files and propose a diff of the two
+* higher prio:
+** r_build.sh:
+*** keep+display both html+txt output from debbindiff
+*** Store the two buildlogs in separated gzipped files and propose a diff of the two
+** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
+** use pbuilder with a fix for "#677666 pbuilder: using BUILDUSERNAME does not change USER" again, to prevent ocaml+ruby packages from ftbfs
+*** NMU to sid, install manually on jenkins.d.n
+*** upload to jessie-backports once its in stretch + use that version then
 
-* issues with debbindiff:
-** find debbindiff problems - is this caught by bin/reproducible_breakages.py already?
-----
-egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/jenkins/userContent/rbuild/
-----
-
-* misc
+* lesser prio
 ** html_graphs.sh rewrite: split out html_pkg_sets.py first, thats the easiest and the biggest speed gain
 ** more graphs:
 *** graph average build duration by day
@@ -197,6 +196,8 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** html_indexes.py creates /index_notify.html three times, even though one is enough.
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** reproducible_blacklist.sh should delete rbuild logs and debbindiff output too
+** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
+** fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/de/sslcheck?host=jenkins.debian.net#46.16.73.183
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed

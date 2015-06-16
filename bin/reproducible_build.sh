@@ -375,7 +375,7 @@ TZ="/usr/share/zoneinfo/Etc/GMT+12"
 EOF
 	# remember to change the sudoers setting if you change the following command
 	( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
-	  pbuilder --build \
+	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
 		--debbuildopts "-b" \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \

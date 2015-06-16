@@ -20,11 +20,12 @@ ARCH="amd64"
 /bin/sleep $(echo "scale=1 ; $(shuf -i 1-120 -n 1)/10" | bc )
 
 create_results_dirs() {
-	mkdir -p $BASE/dbd/${SUITE}/${ARCH}
-	mkdir -p $BASE/logs/${SUITE}/${ARCH}
-	mkdir -p $BASE/logdiffs/${SUITE}/${ARCH}
-	mkdir -p $BASE/rbuild/${SUITE}/${ARCH}
-	mkdir -p $BASE/buildinfo/${SUITE}/${ARCH}
+	mkdir -vp $BASE/dbd/${SUITE}/${ARCH}
+	mkdir -vp $BASE/dbdtxt/${SUITE}/${ARCH}
+	mkdir -vp $BASE/logs/${SUITE}/${ARCH}
+	mkdir -vp $BASE/logdiffs/${SUITE}/${ARCH}
+	mkdir -vp $BASE/rbuild/${SUITE}/${ARCH}
+	mkdir -vp $BASE/buildinfo/${SUITE}/${ARCH}
 }
 
 handle_race_condition() {
@@ -105,11 +106,12 @@ cleanup_all() {
 }
 
 cleanup_userContent() {
-	rm -f $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log > /dev/null 2>&1
-	rm -f $BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log > /dev/null 2>&1
-	rm -f $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html > /dev/null 2>&1
-	rm -f $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo > /dev/null 2>&1
-	rm -f $BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff > /dev/null 2>&1
+	rm -vf $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log{,.gz}
+	rm -vf $BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log{,.gz}
+	rm -vf $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html
+	rm -vf $BASE/dbdtxt/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.txt{,.gz}
+	rm -vf $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo
+	rm -vf $BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff{,.gz}
 }
 
 update_db_and_html() {

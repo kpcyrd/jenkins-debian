@@ -370,8 +370,8 @@ first_build(){
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
 BUILDUSERNAME=pbuilder1
-DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
-TZ="/usr/share/zoneinfo/Etc/GMT+12"
+export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
+export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 EOF
 	# remember to change the sudoers setting if you change the following command
 	( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
@@ -432,10 +432,10 @@ build_rebuild() {
 		cat > "$TMPCFG" << EOF
 BUILDUSERID=2222
 BUILDUSERNAME=pbuilder2
-DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
-TZ="/usr/share/zoneinfo/Etc/GMT-14"
-LANG="fr_CH.UTF-8"
-LC_ALL="fr_CH.UTF-8"
+export DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
+export TZ="/usr/share/zoneinfo/Etc/GMT-14"
+export LANG="fr_CH.UTF-8"
+export LC_ALL="fr_CH.UTF-8"
 #PATH="${PATHH:+"$PATH:"}/i/capture/the/path"  # FIXME there must be something fishy on this, since only /i/capture/the/path is in PATH inside pbuilder
 umask 0002
 EOF

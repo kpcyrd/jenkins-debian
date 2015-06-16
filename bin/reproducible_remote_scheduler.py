@@ -21,11 +21,11 @@ group.add_argument('-a', '--artifacts', default=False, action='store_true',
                    help='Save artifacts (for further offline study)')
 group.add_argument('-n', '--no-notify', default=False, action='store_true',
                    help='Do not notify the channel when the build finish')
-parser.add_argument('-s', '--suite', required=True,
-                    help='Specify the suite to schedule in')
 parser.add_argument('-m', '--message', default='', nargs='+',
                     help='A text to be sent to the IRC channel when notifying' +
                     ' about the scheduling')
+parser.add_argument('-s', '--suite', required=True,
+                    help='Specify the suite to schedule in')
 parser.add_argument('packages', metavar='package', nargs='+',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]

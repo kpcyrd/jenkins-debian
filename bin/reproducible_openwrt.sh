@@ -257,6 +257,7 @@ GOOD_IMAGES=0
 ALL_IMAGES=0
 create_results_dirs
 cd $TMPDIR/b1
+tree .
 for i in * ; do
 	cd $i
 	echo "       <table><tr><th>Images for <code>$i</code></th></tr>" >> $DBD_HTML
@@ -285,7 +286,6 @@ GOOD_PACKAGES=0
 ALL_PACKAGES=0
 create_results_dirs
 cd $TMPDIR/b1
-tree .
 for i in * ; do
 	cd $i
 	echo "       <table><tr><th>Packages for <code>$i</code></th></tr>" >> $DBD_HTML

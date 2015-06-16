@@ -436,7 +436,6 @@ export DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
-#PATH="${PATHH:+"$PATH:"}/i/capture/the/path"  # FIXME there must be something fishy on this, since only /i/capture/the/path is in PATH inside pbuilder
 umask 0002
 EOF
 		# remember to change the sudoers setting if you change the following command

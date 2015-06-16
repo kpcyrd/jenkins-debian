@@ -114,8 +114,10 @@ properties:
 * cleanup h01ger's patches (eg add documentation) and send pull requests on github:
 ** publisher:logparse
 ** publisher:htmlpublisher
-** svn:scm
-** wrappers:live-screenshot
+** svn:scm upstreamed at https://review.openstack.org/#/c/192095/
+** wrappers:live-screenshot upstreamed at https://review.openstack.org/#/c/191708/
+** image-gallery: https://review.openstack.org/#/c/175747/ superseeds h01gers patch: https://review.openstack.org/#/c/191950/
+** sidebar: upstreamed at https://review.openstack.org/#/c/191585/
 
 === livescreenshot plugin
 

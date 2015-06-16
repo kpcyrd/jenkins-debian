@@ -45,7 +45,7 @@ ARCHES="amd64"
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 
 # existing usertags
-USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask"
+USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs"
 
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET

@@ -376,6 +376,10 @@ schema_updates = {
     14: [ # column to enable mail notification to maintainers
         'ALTER TABLE sources ADD COLUMN notify_maintainer INTEGER NOT NULL DEFAULT 0',
         'INSERT INTO rb_schema VALUES ("14", "' + now + '")'],
+    15: [ # add columns to stats_bugs for new usertag ftbfs
+        '''ALTER TABLE stats_bugs ADD COLUMN open_ftbfs INTEGER''',
+        '''ALTER TABLE stats_bugs ADD COLUMN done_ftbfs INTEGER''',
+        'INSERT INTO rb_schema VALUES ("15", "' + now + '")'],
 }
 
 

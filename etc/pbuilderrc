@@ -17,3 +17,9 @@ BINDMOUNTS="$BINDMOUNTS /sys"
 PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
 
 USEDEVSHM=yes
+
+# used on reproducible builds
+if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then
+       PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
+fi
+

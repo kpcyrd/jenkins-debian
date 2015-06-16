@@ -122,6 +122,7 @@ properties:
 === livescreenshot plugin
 
 * publish forked livescreenshot plugin and send pull request for h01ger's bugfix
+** see ssh://git.debian.org/git/users/holger/livescreenshot-plugin.git and 0b407b70025 there
 
 == lvc, work in progress, just started
 

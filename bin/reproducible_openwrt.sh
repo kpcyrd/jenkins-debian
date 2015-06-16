@@ -209,13 +209,17 @@ build_two_times ramips_rt288x_RTN15 "CONFIG_TARGET_ramips=y\nCONFIG_TARGET_ramip
 # create html about toolchain used
 #
 TOOLCHAIN_HTML=$(mktemp --tmpdir=$TMPDIR)
-TARGET=$(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo)
-echo "<table><tr><th>Contents of <code>build_dir/host/</code></th></tr>" > $TOOLCHAIN_HTML
+echo "<table><tr><th>Target toolchains built</th></tr>" > $TOOLCHAIN_HTML
+for i in $(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo) ; do
+	echo " <tr><td><code>$i</code></td></tr>" >> $TOOLCHAIN_HTML
+done
+echo "</table>" >> $TOOLCHAIN_HTML
+echo "<table><tr><th>Contents of <code>build_dir/host/</code></th></tr>" >> $TOOLCHAIN_HTML
 for i in $(ls -1 build_dir/host/) ; do
 	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
 done
 echo "</table>" >> $TOOLCHAIN_HTML
-echo "<table><tr><th>Downloaded software built for <code>$TARGET</code></th></tr>" >> $TOOLCHAIN_HTML
+echo "<table><tr><th>Downloaded software</th></tr>" >> $TOOLCHAIN_HTML
 for i in $(ls -1 dl/) ; do
 	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
 done
@@ -244,13 +248,13 @@ echo "$(date -u) - Running $DBDVERSION on OpenWrt images and packages."
 echo "============================================================================="
 DBD_HTML=$(mktemp --tmpdir=$TMPDIR)
 # run debbindiff on the images
-echo "       <table><tr><th>Images for <code>$TARGET</code></th></tr>" > $DBD_HTML
 GOOD_IMAGES=0
 ALL_IMAGES=0
 create_results_dirs
 cd $TMPDIR/b1
 for i in * ; do
 	cd $i
+	echo "       <table><tr><th>Images for <code>$i</code></th></tr>" >> $DBD_HTML
 	for j in $(find * -name "*.bin" -o -name "*.squashfs" |sort -u ) ; do
 		let ALL_IMAGES+=1
 		call_debbindiff $i $j
@@ -268,11 +272,10 @@ for i in * ; do
 		fi
 	done
 	cd ..
+	echo "       </table>" >> $DBD_HTML
 done
-echo "       </table>" >> $DBD_HTML
 GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
 # run debbindiff on the packages
-echo "       <table><tr><th>Packages for <code>$TARGET</code></th></tr>" >> $DBD_HTML
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
 create_results_dirs
@@ -280,6 +283,7 @@ cd $TMPDIR/b1
 tree .
 for i in * ; do
 	cd $i
+	echo "       <table><tr><th>Packages for <code>$i</code></th></tr>" >> $DBD_HTML
 	for j in $(find * -name "*.ipk" |sort -u ) ; do
 		let ALL_PACKAGES+=1
 		call_debbindiff $i $j
@@ -297,8 +301,8 @@ for i in * ; do
 		fi
 	done
 	cd ..
+	echo "       </table>" >> $DBD_HTML
 done
-echo "       </table>" >> $DBD_HTML
 GOOD_PERCENT_PACKAGES=$(echo "scale=1 ; ($GOOD_PACKAGES*100/$ALL_PACKAGES)" | bc)
 # are we there yet?
 if [ "$GOOD_PERCENT_IMAGES" = "100.0" ] || [ "$GOOD_PERCENT_PACKAGES" = "100.0" ]; then

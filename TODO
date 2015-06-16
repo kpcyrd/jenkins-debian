@@ -194,6 +194,7 @@ egrep -R -l '(debbindiff had trouble comparing|maybe there is still )' /var/lib/
 ** replace submit form by one without javascript (maybe with more url rewriting)
 ** html_indexes.py creates /index_notify.html three times, even though one is enough.
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
+** reproducible_blacklist.sh should delete rbuild logs and debbindiff output too
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed

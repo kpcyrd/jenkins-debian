@@ -199,6 +199,7 @@ properties:
 ** reproducible_blacklist.sh should delete rbuild logs and debbindiff output too
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/de/sslcheck?host=jenkins.debian.net#46.16.73.183
+** when irc notification is enabled and a package changes from reproducible to unreproducible, we get two notifications on irc, saying (basically) the same. there should only be one in these cases.
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed

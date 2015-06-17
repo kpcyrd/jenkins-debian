@@ -123,11 +123,6 @@ openwrt_build() {
 		$MAKE -j $NUM_CPU target/install
 	ionice -c 3 nice \
 		$MAKE -j $NUM_CPU package/index
-
-	# temporary workaround. we see openssl _sometimes_ failing.
-	# build it explicitely again with verbose output
-	ionice -c 3 nice \
-		$MAKE package/openssl/{clean,compile} -j1 V=99
 }
 
 openwrt_cleanup() {

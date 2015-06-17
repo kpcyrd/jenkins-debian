@@ -130,7 +130,7 @@ def pbuilder_dep_fail():
 def alien_log(directory=None):
     if directory is None:
         bad_files = []
-        for path in RBUILD_PATH, LOGS_PATH:
+        for path in RBUILD_PATH, LOGS_PATH, DIFFS_PATH:
             bad_files.extend(alien_log(path))
         return bad_files
     log.info('running alien_log check over ' + directory + '...')
@@ -140,7 +140,7 @@ def alien_log(directory=None):
                AND s.architecture="{arch}"
                ORDER BY s.name ASC, s.suite DESC'''
     bad_files = []
-    for root, dirs, files in os.walk(RBUILD_PATH):
+    for root, dirs, files in os.walk(directory):
         if not files:
             continue
         suite, arch = root.rsplit('/', 2)[1:]

@@ -191,6 +191,10 @@ handle_ftbr() {
 		MESSAGE="status changed from reproducible → unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 		irc_message "$MESSAGE"
+		# disable ("regular") irc notification unless it's due to debbindiff problems
+		if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "debbindiff" ] ; then
+			NOTIFY=""
+		fi
 	fi
 }
 

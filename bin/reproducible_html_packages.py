@@ -111,13 +111,15 @@ def gen_status_link_icon(status, icon, suite, arch):
 
 def link_buildlogs(package, eversion, suite, arch):
     html = ''
-    path = suite + '/' + arch + '/' + package + '_' + eversion + '.build{}.log.gz'
-    log = LOGS_PATH + '/' + path
-    uri = LOGS_URI + '/' + path
-    if os.access(log.format('1'), os.R_OK):
-        html += '<a href="' + uri.format('1') + '" target="main">log1</a>\n'
-    if os.access(log.format('2'), os.R_OK):
-        html += '<a href="' + uri.format('2') + '" target="main">2</a>\n'
+    log = suite + '/' + arch + '/' + package + '_' + eversion + '.build2.log.gz'
+    diff = suite + '/' + arch + '/' + package + '_' + eversion + '.diff.gz'
+    if os.access(LOGS_PATH+'/'+log, os.R_OK):
+        uri = LOGS_URI + '/' + log
+        size = sizeof_fmt(os.stat(LOGS_PATH+'/'+log).st_size)
+        html += '<a href="' + uri + '" target="main">build2 (' + size + ')</a>\n'
+    if os.access(DIFFS_PATH+'/'+diff, os.R_OK):
+        uri = DIFFS_URI + '/' + diff
+        html += '<a href="' + uri + '" target="main">diff</a>\n'
     return html
 
 

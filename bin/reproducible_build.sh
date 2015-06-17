@@ -238,7 +238,7 @@ call_debbindiff() {
 		DBDSUITE="unstable"
 	fi
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
-	export TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
+	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	local OLD_DEBBINDIFF_TMP_COUNT=$(find "$TEMP" -maxdepth 1 -name tmp*debbindiff | wc -l)
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds:" | tee -a ${RBUILDLOG}
@@ -247,10 +247,10 @@ call_debbindiff() {
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
 		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
-		debbindiff -- \
-			--html ./${DBDREPORT} \
-			./b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
-			./b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes 2>&1 \
+		-- sh -c "export TMPDIR=$TEMP ; debbindiff \
+			--html $TMPDIR/${DBDREPORT} \
+			$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
+			$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
 	) 2>&1 >> $TMPLOG
 	RESULT=$?
 	if ! "$DEBUG" ; then set +x ; fi
@@ -262,7 +262,6 @@ call_debbindiff() {
 	if [ "$OLD_DEBBINDIFF_TMP_COUNT" != "$NEW_DEBBINDIFF_TMP_COUNT" ]; then
 		irc_msg "debbindiff calls on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE or ${BUILD_URL}console left cruft, please help investigate and fix 788568"
 	fi
-	unset TEMP
 	case $RESULT in
 		0)
 			handle_reproducible

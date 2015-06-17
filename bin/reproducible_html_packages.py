@@ -130,6 +130,8 @@ def gen_extra_links(package, version, suite, arch, status):
                 '_' + eversion + '_amd64.buildinfo'
     dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
           eversion + '.debbindiff.html'
+    dbdtxt = DBDTXT_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
+          eversion + '.debbindiff.txt.gz'
 
     links = ''
     default_view = ''
@@ -150,6 +152,12 @@ def gen_extra_links(package, version, suite, arch, status):
         if status == 'unreproducible':
             log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without debbindiff output.')
+    if os.access(dbdtxt, os.R_OK):
+        url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+              eversion + '.debbindiff.txt'
+        links += '<a href="' + url + '" target="main">(txt)</a>\n'
+        if not default_view:
+            default_view = url
     if pkg_has_buildinfo(package, version, suite):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
               '_' + eversion + '_amd64.buildinfo'

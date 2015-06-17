@@ -158,7 +158,12 @@ def alien_log(directory=None):
     return bad_files
 
 
-def alien_dbd():
+def alien_dbd(directory=None):
+    if directory is None:
+        bad_files = []
+        for path in DBD_PATH, DBDTXT_PATH:
+            bad_files.extend(alien_log(path))
+        return bad_files
     log.info('running alien_dbd check...')
     query = '''SELECT r.status
                FROM sources AS s JOIN results AS r on r.package_id=s.id
@@ -166,7 +171,7 @@ def alien_dbd():
                AND s.architecture="{arch}"
                ORDER BY s.name ASC, s.suite DESC'''
     bad_files = []
-    for root, dirs, files in os.walk(DBD_PATH):
+    for root, dirs, files in os.walk(directory):
         if not files:
             continue
         suite, arch = root.rsplit('/', 2)[1:]

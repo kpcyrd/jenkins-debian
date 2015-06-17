@@ -228,6 +228,10 @@ handle_ftbr() {
 	else
 		echo "$(date) - $DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
+	if [ -f ./$DBDTXT ] ; then
+		mv ./$DBDTXT $BASE/dbdtxt/$SUITE/$ARCH/
+		gzip -9n $BASE/dbdtxt/$SUITE/$ARCH/$DBDTXT
+	fi
 	calculate_build_duration
 	update_db_and_html "unreproducible"
 }
@@ -283,6 +287,7 @@ call_debbindiff() {
 		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
 		-- sh -c "export TMPDIR=$TEMP ; debbindiff \
 			--html $TMPDIR/${DBDREPORT} \
+			--text $TMPDIR/$DBDTXT \
 			$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
 			$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
 	) 2>&1 >> $TMPLOG
@@ -524,6 +529,7 @@ get_source_package
 VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
 EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION was too long
 DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
+DBDTXT="${SRCPACKAGE}_${EVERSION}.debbindiff.txt"
 BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}

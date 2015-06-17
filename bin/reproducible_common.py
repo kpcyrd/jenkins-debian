@@ -43,6 +43,7 @@ REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
 
 DBD_URI = '/dbd'
 LOGS_URI = '/logs'
+DIFFS_URI = '/logdiffs'
 NOTES_URI = '/notes'
 ISSUES_URI = '/issues'
 RB_PKG_URI = '/rb-pkg'
@@ -50,6 +51,7 @@ RBUILD_URI = '/rbuild'
 BUILDINFO_URI = '/buildinfo'
 DBD_PATH = BASE + DBD_URI
 LOGS_PATH = BASE + LOGS_URI
+DIFFS_PATH = BASE + DIFFS_URI
 NOTES_PATH = BASE + NOTES_URI
 ISSUES_PATH = BASE + ISSUES_URI
 RB_PKG_PATH = BASE + RB_PKG_URI
@@ -83,6 +85,8 @@ log.debug("DBD_URI:\t\t" + DBD_URI)
 log.debug("DBD_PATH:\t" + DBD_PATH)
 log.debug("LOGS_URI:\t" + LOGS_URI)
 log.debug("LOGS_PATH:\t" + LOGS_PATH)
+log.debug("DIFFS_URI:\t" + DIFFS_URI)
+log.debug("DIFFS_PATH:\t" + DIFFS_PATH)
 log.debug("NOTES_URI:\t" + NOTES_URI)
 log.debug("ISSUES_URI:\t" + ISSUES_URI)
 log.debug("NOTES_PATH:\t" + NOTES_PATH)

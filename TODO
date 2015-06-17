@@ -174,9 +174,6 @@ properties:
 === reproducible
 
 * higher prio:
-** r_build.sh:
-*** keep+display both html+txt output from debbindiff
-*** Store the two buildlogs in separated gzipped files and propose a diff of the two
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** use pbuilder with a fix for "#677666 pbuilder: using BUILDUSERNAME does not change USER" again, to prevent ocaml+ruby packages from ftbfs
 *** NMU to sid, install manually on jenkins.d.n

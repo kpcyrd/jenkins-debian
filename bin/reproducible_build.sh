@@ -113,8 +113,8 @@ update_db_and_html() {
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# notification for changing status
 	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ]; then
-		echo "More information on <URL:$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE>, feel free to reply to this email to get more help." | \
-			mail -s "Reproducibility state of package $SRCPACKAGE changed: $OLD_STATUS -> $STATUS" \
+		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
+			mail -s "$SRCPACKAGE status changed: $OLD_STATUS -> $STATUS" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				"$SRCPACKAGE@packages.debian.org"
 	fi

@@ -231,7 +231,7 @@ dbd_timeout() {
 call_debbindiff() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
-	local TIMEOUT="30m"  # don't forget to also change the "seq 0 200" loop 33 lines above
+	local TIMEOUT="30m"
 	DBDSUITE=$SUITE
 	if [ "$SUITE" = "experimental" ] ; then
 		# there is no extra debbindiff-schroot for experimental because we specical case ghc enough already ;)

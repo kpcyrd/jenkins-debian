@@ -12,11 +12,12 @@ COMPRESSPROG="pigz"
 unset http_proxy
 export -n http_proxy
 # /sys and /proc were added as workarounds for #773767
-BINDMOUNTS="$BINDMOUNTS /sys"
+# there are software wanting /dev/shm writable, so give them so. There are tons
+# of bug shm related in pbuilder, that's just a workaround for all of them.
+# /run/shm is already mounted as a tmpfs by default.
+BINDMOUNTS="$BINDMOUNTS /sys /dev/shm"
 # set PATH to predictable values, see #780729 and #780725
 PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
-
-USEDEVSHM=yes
 
 # used on reproducible builds
 if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then

@@ -112,6 +112,17 @@ update_db_and_html() {
 	fi
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# notification for changing status
+	if [ "${OLD_STATUS}" = "reproducible" ] ; then
+		if [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ; then
+			MESSAGE="status changed from reproducible → ${STATUS}. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
+			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
+			irc_message "$MESSAGE"
+			# disable ("regular") irc notification unless it's due to debbindiff problems
+			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "debbindiff" ] ; then
+				NOTIFY=""
+			fi
+		fi
+	fi
 	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ]; then
 		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
 			mail -s "$SRCPACKAGE status changed: $OLD_STATUS -> $STATUS" \
@@ -184,18 +195,7 @@ handle_ftbr() {
 		echo "$(date) - $DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	calculate_build_duration
-	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	update_db_and_html "unreproducible"
-	# notification for changing status
-	if [ "${OLD_STATUS}" = "reproducible" ]; then
-		MESSAGE="status changed from reproducible → unreproducible. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
-		echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
-		irc_message "$MESSAGE"
-		# disable ("regular") irc notification unless it's due to debbindiff problems
-		if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "debbindiff" ] ; then
-			NOTIFY=""
-		fi
-	fi
 }
 
 handle_reproducible() {

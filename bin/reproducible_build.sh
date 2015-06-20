@@ -325,7 +325,7 @@ call_debbindiff() {
 }
 
 choose_package () {
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.builder FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id WHERE sch.date_build_started = '' ORDER BY date_scheduled LIMIT 1")
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
@@ -342,6 +342,10 @@ choose_package () {
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
+	local DEBUG_URL=$(echo $RESULT|cut -d "|" -f8)
+	if [ "$DEBUG_URL" = "TBD" ] ; then
+		irc_message "The build of $SRCPACKAGE/$SUITE is starting at ${BUILD_URL}consoleFull"
+	fi
 	if [ -z "$RESULT" ] ; then
 		echo "No packages scheduled, sleeping 30m."
 		sleep 30m

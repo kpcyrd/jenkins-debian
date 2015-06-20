@@ -260,7 +260,7 @@ call_debbindiff() {
 	echo | tee -a ${RBUILDLOG}
 	NEW_DEBBINDIFF_TMP_COUNT=$(find "$TEMP" -maxdepth 1 -name tmp*debbindiff | wc -l)
 	if [ "$OLD_DEBBINDIFF_TMP_COUNT" != "$NEW_DEBBINDIFF_TMP_COUNT" ]; then
-		irc_msg "debbindiff calls on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE or ${BUILD_URL}console left cruft, please help investigate and fix 788568"
+		irc_message "debbindiff calls on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE or ${BUILD_URL}console left cruft, please help investigate and fix 788568"
 	fi
 	case $RESULT in
 		0)

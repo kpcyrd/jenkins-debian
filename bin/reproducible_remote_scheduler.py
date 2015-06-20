@@ -172,13 +172,15 @@ for pkg in packages:
 
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
 packages_txt = ' packages ' if len(pkgs) > 1 else ' package '
-artifacts_txt = ' - artifacts will be preserved' if artifacts else ''
+trailing = ' - artifacts will be preserved' if artifacts else ''
+trailing += ' - there will be no notification at the end' if not notify else ''
+trailing += ' - notify when the build start too' if debug_url else ''
 
 message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + ' by ' + \
     requester
 if reason:
     message += ' (reason: ' + reason + ')'
-message += ': ' + ' '.join(pkgs)[0:256] + blablabla + artifacts_txt
+message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing
 
 
 # these packages are manually scheduled, so should have high priority,

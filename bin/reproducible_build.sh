@@ -139,9 +139,9 @@ update_db_and_html() {
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				"$SRCPACKAGE@packages.debian.org"
 	fi
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration) VALUES ('${SRCPKGID}', '$VERSION', '$STATUS', '$DATE', '$DURATION')"
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration) VALUES ('${SRCPACKAGE}', '${VERSION}', '${SUITE}', '${ARCH}', '${STATUS}', '${DATE}', '${DURATION}')"
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	fi
 	# unmark build since it's properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
@@ -359,7 +359,7 @@ init() {
 	echo "============================================================================="
 	# mark build attempt
 	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")" ] ; then
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE' WHERE package_id = '$SRCPKGID'"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID'"
 	else
 		BAD_LOCKFILE=true
 		handle_race_condition db
@@ -517,6 +517,7 @@ DATE=$(date +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 BAD_LOCKFILE=false
+BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
 

@@ -418,6 +418,11 @@ schema_updates = {
         'DROP TABLE stats_bugs',
         'ALTER TABLE stats_bugs_tmp RENAME TO stats_bugs',
         'INSERT INTO rb_schema VALUES ("16", "' + now + '")'],
+    17: [ # save what builders builds what. This is tied to the current setup
+        'ALTER TABLE schedule ADD COLUMN builder TEXT',
+        'ALTER TABLE results ADD COLUMN builder TEXT NOT NULL DEFAULT ""',
+        'ALTER TABLE stats_build ADD COLUMN builder TEXT NOT NULL DEFAULT ""',
+        'INSERT INTO rb_schema VALUES ("17", "' + now + '")'],
 }
 
 

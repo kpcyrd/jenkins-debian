@@ -153,7 +153,7 @@ PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
 if grep -q '|' $PACKAGES ; then
 	echo
-	echo "Warning: packages found where the build was started more than 36h ago:"
+	echo "Packages found where the build was started more than 36h ago:"
 	printf ".width 0 25 \n $QUERY ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	echo
 	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do

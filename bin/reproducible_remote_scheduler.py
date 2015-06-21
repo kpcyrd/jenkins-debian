@@ -28,7 +28,9 @@ parser.add_argument('-m', '--message', default='', nargs='+',
                     ' about the scheduling')
 parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule in')
-parser.add_argument('packages', metavar='package', nargs='+',
+parser.add_argument('-i', '--issue', required=False,
+                    help='Schedule all packages with this issue(s)')
+parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
 
@@ -64,6 +66,7 @@ except KeyError:
 
 suite = scheduling_args.suite
 reason = ' '.join(scheduling_args.message)
+issue = scheduling_args.issue
 packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
 notify = not scheduling_args.no_notify or scheduling_args.noisy
@@ -76,6 +79,7 @@ log.debug('Artifacts: ' + str(artifacts))
 log.debug('Notify: ' + str(notify))
 log.debug('Debug url: ' + str(debug_url))
 log.debug('Architecture: ' + defaultarch)
+log.debug('Issue: ' + issue if issue else str(None))
 log.debug('Suite: ' + suite)
 log.debug('Packages: ' + ' '.join(packages))
 
@@ -83,6 +87,16 @@ if suite not in SUITES:
     log.critical('The specified suite is not being tested.')
     log.critical('Please chose between ' + ', '.join(SUITES))
     sys.exit(1)
+
+if issue:
+    log.info('Querying packages with given issues in the given suite...')
+    query = 'SELECT s.name ' + \
+            'FROM sources AS s JOIN notes AS n ON n.package_id=s.id ' + \
+            'WHERE n.issues like "%{issue}%" and s.suite = "{suite}"'
+    results = query_db(query.format(issue=issue, suite=suite))
+    results = [x for (x,) in results]
+    log.info('Selected packages: ' + ' '.join(results))
+    packages.extend(results)
 
 if len(packages) > 50 and notify:
     log.critical(bcolors.RED + bcolors.BOLD)

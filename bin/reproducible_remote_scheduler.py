@@ -33,6 +33,10 @@ parser.add_argument('-r', '--status', required=False,
                     help='Schedule all package with this status')
 parser.add_argument('-i', '--issue', required=False,
                     help='Schedule all packages with this issue')
+parser.add_argument('-t', '--after', required=False,
+                    help='Schedule all packages build after this date')
+parser.add_argument('-b', '--before', required=False,
+                    help='Schedule all packages build before this date')
 parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
@@ -71,6 +75,8 @@ suite = scheduling_args.suite
 reason = ' '.join(scheduling_args.message)
 issue = scheduling_args.issue
 status = scheduling_args.status
+built_after = scheduling_args.after
+built_before = scheduling_args.before
 packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
 notify = not scheduling_args.no_notify or scheduling_args.noisy
@@ -85,6 +91,8 @@ log.debug('Debug url: ' + str(debug_url))
 log.debug('Architecture: ' + defaultarch)
 log.debug('Issue: ' + issue if issue else str(None))
 log.debug('Status: ' + status if status else str(None))
+log.debug('Date: after ' + built_after if built_after else str(None) +
+          ' before ' + built_before if built_before else str(None))
 log.debug('Suite: ' + suite)
 log.debug('Packages: ' + ' '.join(packages))
 
@@ -93,7 +101,7 @@ if suite not in SUITES:
     log.critical('Please chose between ' + ', '.join(SUITES))
     sys.exit(1)
 
-if issue or status:
+if issue or status or built_after or built_before:
     formatter = dict(suite=suite)
     log.info('Querying packages with given issues/status...')
     query = 'SELECT s.name ' + \
@@ -106,6 +114,12 @@ if issue or status:
     if status:
         query += 'AND r.status = "{status}"'
         formatter['status'] = status
+    if built_after:
+        query += 'AND r.build_date > "{built_after}" '
+        formatter['built_after'] = built_after
+    if built_before:
+        query += 'AND r.build_date < "{built_before}" '
+        formatter['built_before'] = built_before
     results = query_db(query.format_map(formatter))
     results = [x for (x,) in results]
     log.info('Selected packages: ' + ' '.join(results))

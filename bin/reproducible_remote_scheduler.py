@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser(
            ' IRC channel unless -n is provided.\nSpecifying both -r and -i ' +
            'means "all packages with that issue AND that status"')
 group = parser.add_mutually_exclusive_group()
+parser.add_argument('--dry-run', action='store_true')
 group.add_argument('-a', '--artifacts', default=False, action='store_true',
                    help='Save artifacts (for further offline study)')
 group.add_argument('-n', '--no-notify', default=False, action='store_true',
@@ -81,8 +82,10 @@ packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
 notify = not scheduling_args.no_notify or scheduling_args.noisy
 debug_url = scheduling_args.noisy
+dry_run = scheduling_args.dry_run
 
 log.debug('Requester: ' + requester)
+log.debug('Dry run: ' + str(dry_run))
 log.debug('Local call: ' + str(local))
 log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
@@ -229,13 +232,17 @@ query1 = '''REPLACE INTO schedule
 query2 = '''INSERT INTO manual_scheduler
     (package_id, requester, date_request) VALUES (?, ?, ?)'''
 
-cursor = conn_db.cursor()
-cursor.executemany(query1, to_schedule)
-cursor.executemany(query2, save_schedule)
-conn_db.commit()
+if not dry_run:
+    cursor = conn_db.cursor()
+    cursor.executemany(query1, to_schedule)
+    cursor.executemany(query2, save_schedule)
+    conn_db.commit()
+else:
+    log.info('Ran with --dry-run, I did scheduled nothing')
 
 log.info(bcolors.GOOD + message + bcolors.ENDC)
 if not (local and requester == "jenkins maintenance job") and len(ids) != 0:
-    irc_msg(message)
+    if not dry_run:
+        irc_msg(message)
 
 generate_schedule()  # the html page

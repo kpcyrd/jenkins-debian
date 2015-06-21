@@ -15,7 +15,8 @@ import argparse
 parser = argparse.ArgumentParser(
     description='Reschedule packages to re-test their reproducibility',
     epilog='The build results will be announced on the #debian-reproducible' +
-           ' IRC channel.')
+           ' IRC channel unless -n is provided.\nSpecifying both -r and -i ' +
+           'means "all packages with that issue AND that status"')
 group = parser.add_mutually_exclusive_group()
 group.add_argument('-a', '--artifacts', default=False, action='store_true',
                    help='Save artifacts (for further offline study)')
@@ -28,8 +29,10 @@ parser.add_argument('-m', '--message', default='', nargs='+',
                     ' about the scheduling')
 parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule in')
+parser.add_argument('-r', '--status', required=False,
+                    help='Schedule all package with this status')
 parser.add_argument('-i', '--issue', required=False,
-                    help='Schedule all packages with this issue(s)')
+                    help='Schedule all packages with this issue')
 parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
@@ -67,6 +70,7 @@ except KeyError:
 suite = scheduling_args.suite
 reason = ' '.join(scheduling_args.message)
 issue = scheduling_args.issue
+status = scheduling_args.status
 packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
 notify = not scheduling_args.no_notify or scheduling_args.noisy
@@ -80,6 +84,7 @@ log.debug('Notify: ' + str(notify))
 log.debug('Debug url: ' + str(debug_url))
 log.debug('Architecture: ' + defaultarch)
 log.debug('Issue: ' + issue if issue else str(None))
+log.debug('Status: ' + status if status else str(None))
 log.debug('Suite: ' + suite)
 log.debug('Packages: ' + ' '.join(packages))
 
@@ -88,12 +93,20 @@ if suite not in SUITES:
     log.critical('Please chose between ' + ', '.join(SUITES))
     sys.exit(1)
 
-if issue:
-    log.info('Querying packages with given issues in the given suite...')
+if issue or status:
+    formatter = dict(suite=suite)
+    log.info('Querying packages with given issues/status...')
     query = 'SELECT s.name ' + \
-            'FROM sources AS s JOIN notes AS n ON n.package_id=s.id ' + \
-            'WHERE n.issues like "%{issue}%" and s.suite = "{suite}"'
-    results = query_db(query.format(issue=issue, suite=suite))
+            'FROM sources AS s, notes AS n, results AS r ' + \
+            'WHERE n.package_id=s.id AND r.package_id=s.id ' + \
+            'AND s.suite = "{suite}" '
+    if issue:
+        query += 'AND n.issues LIKE "%{issue}%" '
+        formatter['issue'] = issue
+    if status:
+        query += 'AND r.status = "{status}"'
+        formatter['status'] = status
+    results = query_db(query.format_map(formatter))
     results = [x for (x,) in results]
     log.info('Selected packages: ' + ' '.join(results))
     packages.extend(results)

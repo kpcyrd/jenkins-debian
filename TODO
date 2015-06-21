@@ -209,9 +209,6 @@ properties:
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 ** add lua package set (all packages build-depending on dh-lua and starting with lua*)
 
-* new script to schedule set of packages:
-*** all/unreproducible packages affected by a particular issue
-
 * missing tests: variation in kernel and date and cpu type and user group
 ** prebuilder does group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4

@@ -34,7 +34,7 @@ done
 mkdir -p /srv/workspace
 
 if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
-	echo "tmpfs		/srv/workspace	tmpfs	defaults,size=60g	0	0" >> /etc/fstab
+	echo "tmpfs		/srv/workspace	tmpfs	defaults,size=100g	0	0" >> /etc/fstab
 fi
 
 if ! mountpoint -q /srv/workspace; then

@@ -379,12 +379,14 @@
       - main+ltsp-server:
           my_disksize: 60
     my_image:
-      - beta1-netinst
-      - beta1-usb
+      - beta1-netinst:
+          my_image_flavour: CD
+      - beta1-usb:
+          my_image_flavour: USB
     jobs:
       - '{name}_debian-edu_jessie-{my_image}_{my_de_profile}':
          my_title: 'Debian Edu (jessie {my_image}) {my_de_profile} (Default)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-{my_image_flavour}.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
 
 # =-=-=-=

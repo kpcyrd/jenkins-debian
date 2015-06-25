@@ -28,11 +28,11 @@
           body: 'See $BUILD_URL and $BUILD_URL/console and $BUILD_URL/artifact/results/ if there are any.'
       - archive:
           artifacts: 'results/*.*, results/log/*, results/log/installer/*'
-          latest_only: false
-      - imagegallery:
-          title: '{my_title}'
-          includes: 'results/*.png'
-          image-width: 300
+          latest-only: false
+      - image-gallery:
+          - title: '{my_title}'
+            includes: 'results/*.png'
+            image-width: 300
     wrappers:
       - live-screenshot
       - timeout:
@@ -50,8 +50,8 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-      - priority:
-          job-prio: '140'
+      - priority-sorter:
+          priority: '140'
       - throttle:
           max-total: 3
           max-per-node: 3
@@ -82,8 +82,8 @@
       - sidebar: *sb01
       - sidebar: *sb10
       - sidebar: *sb99
-      - priority:
-          job-prio: '175'
+      - priority-sorter:
+          priority: '175'
 
 - job-template:
     defaults: g-i-installation-maintenance

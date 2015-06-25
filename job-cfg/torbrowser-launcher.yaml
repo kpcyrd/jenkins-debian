@@ -74,11 +74,11 @@
           fail-on-error: 'true'
       - archive:
           artifacts: 'results/*.*'
-          latest_only: false
-      - imagegallery:
-          title: '{my_description}'
-          includes: 'results/screenshot_*.png'
-          image-width: 300
+          latest-only: false
+      - image-gallery:
+          - title: '{my_description}'
+            includes: 'results/screenshot_*.png'
+            image-width: 300
       - email:
           recipients: '{my_recipients}'
     wrappers:
@@ -130,11 +130,11 @@
           fail-on-error: 'true'
       - archive:
           artifacts: 'results/*.*'
-          latest_only: false
-      - imagegallery:
-          title: '{my_description}'
-          includes: 'results/screenshot_*.png'
-          image-width: 300
+          latest-only: false
+      - image-gallery:
+          - title: '{my_description}'
+            includes: 'results/screenshot_*.png'
+            image-width: 300
       - email:
           recipients: '{my_recipients}'
     wrappers:

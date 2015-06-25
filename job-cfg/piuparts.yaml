@@ -28,10 +28,21 @@
 
 - job-template:
     defaults: piuparts
+    name: '{name}_testsuite_wheezy'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: piuparts
     name: '{name}_testsuite_jessie'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+      - trigger:
+          project: '{my_trigger}'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -61,13 +72,25 @@
 
 - job-template:
     defaults: piuparts
+    name: '{name}_build_wheezy'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+      - archive:
+          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
+          latest-only: true
+    builders:
+      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: piuparts
     name: '{name}_build_jessie'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest_only: true
+          latest-only: true
     builders:
       - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -81,7 +104,7 @@
           project: '{my_trigger}'
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest_only: true
+          latest-only: true
     builders:
       - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -95,7 +118,7 @@
           project: '{my_trigger}'
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest_only: true
+          latest-only: true
     builders:
       - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -116,6 +139,7 @@
             my_distro: 'jessie'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on jessie.'
+            my_trigger: ''
         - '{name}_build_sid':
             my_distro: 'sid'
             my_shell: 'debuild -uc -us'

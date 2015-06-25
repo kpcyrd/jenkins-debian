@@ -26,8 +26,8 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-      - priority:
-          job-prio: '125'
+      - priority-sorter:
+          priority: '125'
 
 - job-template:
     defaults: self-maintenance
@@ -41,8 +41,12 @@
 - job-template:
     defaults: self-maintenance
     name: '{name}_sub-maintenance'
+
+- job-template:
     defaults: self-maintenance
     name: '{name}_sub-maintenance-squid'
+
+- job-template:
     defaults: self-maintenance
     name: 'rebootstrap_maintenance'
 

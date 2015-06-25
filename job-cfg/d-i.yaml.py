@@ -197,7 +197,7 @@ def publ(fmt=None,trigger=False,irc=None):
                        'fail-on-error': 'true'}}])
     p.append(publ_email(irc=irc))
     if fmt != None:
-        p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest_only': True}})
+        p.append({'archive': {'artifacts': fmt + '/**/*.*', 'latest-only': True}})
     return p
 
 
@@ -212,7 +212,7 @@ def prop(type='manual', priority=None):
                       'text': 'Sponsored by Profitbricks',
                       'icon': '/userContent/images/profitbricks-24x24.png'}}]
     if priority != None:
-        p.append( {'priority': {'job-prio': str(priority)}} )
+        p.append( {'priority-sorter': {'priority': str(priority)}} )
     return p
 
 

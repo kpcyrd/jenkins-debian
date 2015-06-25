@@ -92,8 +92,8 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-      - priority:
-          job-prio: '150'
+      - priority-sorter:
+          priority: '150'
       - throttle:
           max-total: 58
           max-per-node: 58
@@ -140,8 +140,8 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-      - priority:
-          job-prio: '150'
+      - priority-sorter:
+          priority: '150'
       - throttle:
           max-total: 58
           max-per-node: 58

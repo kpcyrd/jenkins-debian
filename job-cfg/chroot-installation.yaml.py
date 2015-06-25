@@ -188,8 +188,8 @@ print("""
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-      - priority:
-          job-prio: '{my_prio}'
+      - priority-sorter:
+          priority: '{my_prio}'
       - throttle:
           max-total: 6
           max-per-node: 6

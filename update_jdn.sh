@@ -8,6 +8,7 @@ PVNAME=/dev/vdb      # LVM physical volume for jobs
 VGNAME=jenkins01     # LVM volume group
 STAMP=/var/log/jenkins/update-jenkins.stamp
 TMPFILE=$(mktemp)
+JJB=jenkins-job-builder
 
 explain() {
 	echo "$HOSTNAME: $1"
@@ -434,7 +435,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rm -f $TMPFILE
 	for config in *.yaml ; do
 		if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
-			sudo jenkins-jobs update $config
+			$JJB update $config
 		else
 			echo "$config has not changed, nothing to do."
 		fi

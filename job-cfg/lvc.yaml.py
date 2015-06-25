@@ -67,11 +67,11 @@ print("""
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
           artifacts: '*.webm, {my_pngs}'
-          latest_only: false
-      - imagegallery:
-          title: '{my_title}'
-          includes: '{my_pngs}'
-          image-width: 300
+          latest-only: false
+      - image-gallery:
+          - title: '{my_title}'
+            includes: '{my_pngs}'
+            image-width: 300
     wrappers:
       - live-screenshot
     builders:

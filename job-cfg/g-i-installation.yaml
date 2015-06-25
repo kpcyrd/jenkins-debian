@@ -197,7 +197,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-netinst_main-ltsp-server'
+    name: '{name}_debian-edu_jessie-daily-netinst_main+ltsp-server'
 
 - job-template:
     defaults: g-i-installation
@@ -213,7 +213,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-usb_main-ltsp-server'
+    name: '{name}_debian-edu_jessie-daily-usb_main+ltsp-server'
 
 # =-=-=-=
 
@@ -374,7 +374,7 @@
           my_disksize: 25
       - main-server:
           my_disksize: 40
-      - main-ltsp-server:
+      - main+ltsp-server:
           my_disksize: 60
     my_image:
       - beta1-netinst
@@ -547,7 +547,7 @@
          my_time: '42 3 * * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-netinst_main-ltsp-server':
+      - '{name}_debian-edu_jessie-daily-netinst_main+ltsp-server':
          my_title: 'Debian Edu (jessie daily netinst) main+ltsp-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily netinst image.'
@@ -575,7 +575,7 @@
          my_time: '42 3 * * *'
          my_trigger: ''
          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-usb_main-ltsp-server':
+      - '{name}_debian-edu_jessie-daily-usb_main+ltsp-server':
          my_title: 'Debian Edu (jessie daily usb) main+ltsp-server'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'

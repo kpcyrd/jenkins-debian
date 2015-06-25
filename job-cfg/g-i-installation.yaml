@@ -228,8 +228,10 @@
           my_disksize: 25
       - standalone:
           my_time: '42 20 15 * *'
+          my_disksize: 25
       - workstation:
           my_time: '42 22 16 * *'
+          my_disksize: 25
       - combi-server:
           my_time: '42 0 16 * *'
       - main-server:

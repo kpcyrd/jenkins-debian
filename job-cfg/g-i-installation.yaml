@@ -117,21 +117,9 @@
     defaults: g-i-installation
     name: '{name}_debian_{my_dist}_presentation'
 
-# =-=-=-=
-
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian_sid_daily_hurd_lxde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue_dark_theme'
-
-# =-=-=-=
+    name: '{name}_debian_sid_daily_rescue{my_theme}'
 
 - job-group:
     name: '{name}_debian-edu_group'
@@ -217,6 +205,7 @@
     my_optdesc: ''
     my_trigger: ''
     my_time: ''
+    my_trigdesc: ''
     my_instdesc: ' using netboot gtk'
     my_inst_url: http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
@@ -239,18 +228,27 @@
           my_preseed: 'xfce'
           my_time: '42 8 * * *'
       - kfreebsd_xfce:
-          my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
           my_preseed: 'kfreebsd'
+          my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
           my_time: '42 8 */7 * *'
           my_instdesc: 'using PXE netboot gtk'
       - lxde:
           my_preseed: 'lxde'
           my_time: '42 10 * * *'
+      - hurd_lxde:
+          my_preseed: hurd_lxde
+          my_inst_url: 'http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
+          my_instdesc: ''
+          my_trigdesc: '<br />This job is only triggered manually.'
+          my_optdesc2: ' on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a>'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
+
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist} build CD) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.{my_trigdesc}'
           my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
+
 
 - job-group:
     name: '{name}_debian_jessie_desktops_group'
@@ -470,26 +468,18 @@
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 
-      - '{name}_debian_sid_daily_rescue':
-         my_title: 'Debian (sid daily build CD) rescue mode'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 6 * * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_rescue_dark_theme':
-         my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Just go into rescue mode, using theme=dark, via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_dark_theme_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 6 * * 7'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_hurd_lxde':
-         my_title: 'Debian (sid daily build CD) LXDE desktop install on Hurd'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of Debian LXDE desktop on Hurd - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_hurd_lxde_preseed.cfg">this preseed.cfg</a>).<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
+      - '{name}_debian_sid_daily_rescue{my_theme}':
+          my_theme:
+            - '':
+                my_theme_desc: ''
+                my_time: '42 6 * * *'
+            - '_dark_theme':
+                my_theme_desc: ', using theme=dark'
+                my_time: '42 6 * * 7'
+          my_title: 'Debian (sid daily build CD) rescue mode{my_theme_desc}'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+          my_description: 'Just go into rescue mode{my_theme_desc}, via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue{my_theme}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_trigger: ''
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 

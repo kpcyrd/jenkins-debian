@@ -11,7 +11,7 @@
     triggers:
       - timed: "{my_time}"
     builders:
-      - shell: "{my_shell}"
+      - shell: "/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_inst_url}"
     publishers:
       - trigger:
           project: '{my_trigger}'
@@ -127,7 +127,7 @@
     jobs:
       - '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}':
           my_title: 'Debian Edu ({my_dist}) {my_de_profile}{my_dtdesc}'
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/cd-{my_dist}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+          my_inst_url: 'http://ftp.skolelinux.org/cd-{my_dist}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_description: 'Do a fully automated installation of a Debian Edu {my_dist} {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_{my_dist}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
@@ -152,14 +152,13 @@
           my_disksize: 60
     my_image:
       - beta1-netinst:
-          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
+          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
       - beta1-usb:
-          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
+          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
 
     jobs:
       - '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}':
          my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
 
 - job-group:
@@ -186,13 +185,12 @@
           my_disksize: 60
     my_image:
       - daily-usb:
-          my_image_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
+          my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
       - daily-netinst:
-          my_image_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
+          my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
     jobs:
       - '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}':
          my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.'
 
 - job-group:
@@ -207,7 +205,7 @@
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_mediadesc}) {my_desktop} desktop install{my_optdesc}'
           my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc}{my_optdesc2} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.{my_trigdesc}'
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
+          my_disksize: 10
 
 
 - job-group:
@@ -273,7 +271,8 @@
     jobs:
       - '{name}_debian_sid_daily_rescue_{my_langname}':
           my_title: 'Debian (sid daily build CD) rescue mode in {my_langname}'
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso {my_locale}'
+          my_disksize: 1
+          my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso {my_locale}'
           my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
@@ -445,7 +444,7 @@
                 my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                 my_time: '42 15 23 * *'
           my_title: 'Debian-Installer ({my_mediadesc}) used for presentations'
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 {my_inst_url}'
+          my_disksize: 1
           my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_presentation_preseed.cfg">this preseed.cfg</a>).'
           my_trigger: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
@@ -459,9 +458,8 @@
                 my_theme_desc: ', using theme=dark'
                 my_time: '42 6 * * 7'
           my_title: 'Debian (sid daily build CD) rescue mode{my_theme_desc}'
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+          my_disksize: 1
+          my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
           my_description: 'Just go into rescue mode{my_theme_desc}, via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue{my_theme}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
           my_trigger: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-
-

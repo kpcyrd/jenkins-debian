@@ -382,11 +382,6 @@
             - xfce:
                 my_preseed: 'xfce'
                 my_time: '42 8 * * *'
-            - kfreebsd_xfce:
-                my_preseed: 'kfreebsd'
-                my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
-                my_time: '42 8 */7 * *'
-                my_instdesc: 'using PXE netboot gtk'
             - lxde:
                 my_preseed: 'lxde'
                 my_time: '42 10 * * *'
@@ -404,6 +399,10 @@
                 my_mediadesc: jessie
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
                 my_time: '42 16 */7 * *'
+            - sid_daily:
+                my_mediadesc: 'sid daily build CD'
+                my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
+                my_time: '42 8 */7 * *'
 
       - '{name}_debian_{my_dist}_desktops_group':
           my_desktop:

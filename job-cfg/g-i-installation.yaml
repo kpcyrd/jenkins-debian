@@ -113,6 +113,10 @@
     defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue_{my_langname}'
 
+- job-template:
+    defaults: g-i-installation
+    name: '{name}_debian_{my_dist}_presentation'
+
 # =-=-=-=
 
 - job-template:
@@ -121,27 +125,11 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian_jessie_hurd_lxde'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue'
 
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue_dark_theme'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_presentation'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_jessie_presentation'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_wheezy_presentation'
 
 # =-=-=-=
 
@@ -194,7 +182,7 @@
 - job-group:
     name: '{name}_debian_wheezy_desktops_group'
     my_optdesc: ''
-    my_pxedesc: ''
+    my_instdesc: ' using netboot gtk'
     my_dist:
       - wheezy:
           my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
@@ -215,12 +203,11 @@
           my_time: '42 16 21 * *'
           my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz'
           my_preseed: 'kfreebsd'
-          my_pxedesc: 'PXE '
-
+          my_instdesc: 'using PXE netboot gtk'
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using {my_pxedesc}netboot gtk.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.'
           my_trigger: ''
           my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
@@ -230,7 +217,7 @@
     my_optdesc: ''
     my_trigger: ''
     my_time: ''
-    my_pxedesc: ''
+    my_instdesc: ' using netboot gtk'
     my_inst_url: http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_dist:
@@ -255,21 +242,22 @@
           my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
           my_preseed: 'kfreebsd'
           my_time: '42 8 */7 * *'
-          my_pxedesc: 'PXE '
+          my_instdesc: 'using PXE netboot gtk'
       - lxde:
           my_preseed: 'lxde'
           my_time: '42 10 * * *'
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist} build CD) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using {my_pxedesc}netboot gtk.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.'
           my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
 
 - job-group:
     name: '{name}_debian_jessie_desktops_group'
     my_trigger: ''
     my_optdesc: ''
-    my_pxedesc: ''
+    my_optdesc2: ''
+    my_instdesc: ' using netboot gtk'
     my_dist:
       - jessie:
           my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
@@ -298,18 +286,23 @@
           my_time: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
       - kfreebsd_xfce:
-          my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
           my_preseed: kfreebsd # FIXME: if this was 'kfreebsd_xfce' we could do without my_preseed
+          my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
           my_time: '42 16 */7 * *'
-          my_pxedesc: 'PXE '
-
+          my_instdesc: ' using PXE netboot gtk'
+      - hurd_lxde:
+          my_preseed: hurd_lxde
+          my_inst_url: 'http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
+          my_instdesc: ''
+          my_time: '42 10 */2 * *'
+          my_optdesc2: ' on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a>'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using {my_pxedesc}netboot gtk.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc}{my_optdesc2} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.'
           my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-
 
 
 - job-group:
@@ -456,36 +449,27 @@
       - '{name}_debian_sid_daily_desktops_group'
 
 
-      - '{name}_debian_sid_daily_presentation':
-         my_title: 'Debian-Installer (sid daily build CD) used for presentations'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_presentation_preseed.cfg">this preseed.cfg</a>).'
-         my_time: '42 15 23 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_jessie_presentation':
-         my_title: 'Debian-Installer (jessie netboot) used for presentations'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://d-i.debian.org/daily-images/amd64/daily/netboot/debian-installer/amd64/'
-         my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_presentation_preseed.cfg">this preseed.cfg</a>).'
-         my_time: '43 15 23 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_wheezy_presentation':
-         my_title: 'Debian-Installer (wheezy netboot) used for presentations'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/debian-installer/amd64/'
-         my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_presentation_preseed.cfg">this preseed.cfg</a>).'
-         my_time: '44 15 23 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+      - '{name}_debian_{my_dist}_presentation':
+          my_dist:
+            - wheezy:
+                my_instdesc: 'netboot'
+                my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/debian-installer/amd64/'
+                my_time: '44 15 23 * *'
+            - jessie:
+                my_instdesc: 'netboot'
+                my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/debian-installer/amd64/'
+                my_time: '43 15 23 * *'
+            - sid_daily:
+                my_instdesc: 'build CD'
+                my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+                my_time: '42 15 23 * *'
+          my_title: 'Debian-Installer ({my_dist} {my_instdesc}) used for presentations'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 {my_inst_url}'
+          my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_presentation_preseed.cfg">this preseed.cfg</a>).'
+          my_trigger: ''
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 
-      - '{name}_debian_jessie_hurd_lxde':
-         my_title: 'Debian (jessie CD) LXDE desktop install on Hurd'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a LXDE desktop on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a> - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_hurd_lxde_preseed.cfg">this preseed.cfg</a>).'
-         my_time: '42 10 */2 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
       - '{name}_debian_sid_daily_rescue':
          my_title: 'Debian (sid daily build CD) rescue mode'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'

@@ -304,13 +304,13 @@
           my_dist: wheezy
           my_de_profile: standalone
           my_desktop:
-            - _gnome:
+            - gnome:
                 my_dtdesc: ' (gnome)'
                 my_time: '42 18 17 * *'
-            - _lxde:
+            - lxde:
                 my_dtdesc: ' (lxde)'
                 my_time: '42 22 17 * *'
-            - _xfce:
+            - xfce:
                 my_dtdesc: ' (xfce)'
                 my_time: '42 2 * * 1'
 

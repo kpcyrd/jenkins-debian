@@ -91,10 +91,6 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian_{my_desktop}'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian_{my_ver}_{my_desktop}'
 
 - job-template:
@@ -111,7 +107,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian_sid_daily_rescue{my_theme}'
+    name: '{name}_debian_{my_ver}_{my_profile}_{my_theme}'
 
 - job-group:
     name: '{name}_{my_dist}_group'
@@ -125,71 +121,16 @@
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
 - job-group:
-    name: '{name}_{my_dist}_jessie-beta1-netinst_group'
-    my_dist:
-      - debian-edu:
-          my_distname: 'Debian Edu'
-    my_ver:
-      - jessie-beta1-netinst:
-          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
-      - jessie-beta1-usb:
-          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
-    my_time: ''
-    my_desktop: ''
-    my_trigger: ''
-    my_trigdesc: '<br />This job is only triggered manually.'
-    my_title_extra: ''
-    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-    my_profile:
-      - standalone:
-          my_title_extra: ' (Default)'
-          my_disksize: 25
-      - standalone_mate:
-          my_disksize: 25
-      - main-server:
-          my_disksize: 40
-      - main+ltsp-server:
-          my_disksize: 60
-
-    jobs:
-      - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
-         my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
-         my_description: 'Do a fully automated installation of a {my_distname} Jessie {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
-
-- job-group:
-    name: '{name}_{my_dist}_jessie-daily_group'
-    my_dist:
-      - debian-edu:
-          my_distname: 'Debian Edu'
-    my_ver:
-      - jessie-daily-usb:
-          my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
-      - jessie-daily-netinst:
-          my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
+    name: '{name}_{my_dist}_{my_ver}_group'
     my_time: ''
     my_desktop: ''
     my_trigger: ''
     my_trigdesc: ''
     my_title_extra: ''
-    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-    my_profile:
-      - standalone:
-          my_time: '42 1 */2 * *'
-          my_title_extra: ' (Default)'
-          my_disksize: 25
-      - standalone_mate:
-          my_time: '42 1 */2 * *' # FIXME: really meant to be the same as above?
-          my_disksize: 25
-      - main-server:
-          my_time: '42 3 * * *'
-          my_disksize: 40
-      - main+ltsp-server:
-          my_time: '42 0 * * *'
-          my_disksize: 60
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
          my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
-         my_description: 'Do a fully automated installation of a {my_distname} Jessie {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
+         my_description: 'Do a fully automated installation of a {my_distname} {my_vername} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
 
 - job-group:
     name: '{name}_debian_{my_ver}_desktops_group'
@@ -271,7 +212,7 @@
           my_title: 'Debian (sid daily build CD) rescue mode in {my_langname}'
           my_disksize: 1
           my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso {my_locale}'
-          my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_description: 'Just go into rescue mode, via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 # =-=-=-=
@@ -429,9 +370,57 @@
                 my_mediadesc: 'sid daily build CD'
 
       - '{name}_debian_sid_daily_rescue_translations_group'
-      - '{name}_{my_dist}_jessie-beta1-netinst_group'
-      - '{name}_{my_dist}_jessie-daily_group'
 
+      - '{name}_{my_dist}_{my_ver}_group':
+          my_dist:
+            - debian-edu:
+                my_distname: 'Debian Edu'
+                my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+                my_trigdesc: '<br />This job is only triggered manually.'
+          my_ver:
+            - jessie-beta1-netinst:
+                my_vername: Jessie
+                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
+            - jessie-beta1-usb:
+                my_vername: Jessie
+                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
+          my_profile:
+            - standalone:
+                my_title_extra: ' (Default)'
+                my_disksize: 25
+            - standalone_mate:
+                my_disksize: 25
+            - main-server:
+                my_disksize: 40
+            - main+ltsp-server:
+                my_disksize: 60
+
+      - '{name}_{my_dist}_{my_ver}_group':
+          my_dist:
+            - debian-edu:
+                my_distname: 'Debian Edu'
+                my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+          my_ver:
+            - jessie-daily-usb:
+                my_vername: Jessie
+                my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
+            - jessie-daily-netinst:
+                my_vername: Jessie
+                my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
+          my_profile:
+            - standalone:
+                my_time: '42 1 */2 * *'
+                my_title_extra: ' (Default)'
+                my_disksize: 25
+            - standalone_mate:
+                my_time: '42 1 */2 * *' # FIXME: really meant to be the same as above?
+                my_disksize: 25
+            - main-server:
+                my_time: '42 3 * * *'
+                my_disksize: 40
+            - main+ltsp-server:
+                my_time: '42 0 * * *'
+                my_disksize: 60
 
       - '{name}_debian_{my_ver}_presentation':
           my_ver:
@@ -453,12 +442,14 @@
           my_trigger: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
-      - '{name}_debian_sid_daily_rescue{my_theme}':
+      - '{name}_debian_{my_ver}_{my_profile}_{my_theme}':
+          my_ver: sid_daily
+          my_profile: rescue
           my_theme:
-            - '':
+            - 'default_theme':
                 my_theme_desc: ''
                 my_time: '42 6 * * *'
-            - '_dark_theme':
+            - 'dark_theme':
                 my_theme_desc: ', using theme=dark'
                 my_time: '42 6 * * 7'
           my_title: 'Debian (sid daily build CD) rescue mode{my_theme_desc}'

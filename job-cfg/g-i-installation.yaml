@@ -215,8 +215,6 @@
           my_description: 'Just go into rescue mode, via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
-# =-=-=-=
-
 - project:
     name: g-i-installation
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
@@ -354,7 +352,7 @@
       - '{name}_debian_{my_ver}_desktops_group':
           my_desktop:
             - hurd_lxde:
-                # for some reason, putting these variables below 'my_desktop' makes them work
+                # putting these at the outer level doesn't work for some reason, so put them in here
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
                 my_preseed: hurd_lxde
                 my_instdesc: ''
@@ -413,7 +411,7 @@
                 my_title_extra: ' (Default)'
                 my_disksize: 25
             - standalone_mate:
-                my_time: '42 1 */2 * *' # FIXME: really meant to be the same as above?
+                my_time: '42 1 */2 * *' # FIXME: is this really meant to be the same as above?
                 my_disksize: 25
             - main-server:
                 my_time: '42 3 * * *'

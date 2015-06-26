@@ -117,10 +117,6 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian_jessie_kfreebsd_xfce'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian_sid_daily_hurd_lxde'
 
 - job-template:
@@ -199,9 +195,9 @@
     name: '{name}_debian_wheezy_desktops_group'
     my_optdesc: ''
     my_pxedesc: ''
-    my_inst_url: http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/
     my_dist:
-      - wheezy
+      - wheezy:
+          my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
     my_desktop:
       - kde:
           my_time: '42 15 2,9,16,23 * *'
@@ -217,7 +213,7 @@
           my_preseed: 'gnome'
       - kfreebsd_xfce:
           my_time: '42 16 21 * *'
-          my_inst_url: http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz
+          my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz'
           my_preseed: 'kfreebsd'
           my_pxedesc: 'PXE '
 
@@ -273,32 +269,48 @@
     name: '{name}_debian_jessie_desktops_group'
     my_trigger: ''
     my_optdesc: ''
+    my_pxedesc: ''
     my_dist:
-      - jessie
+      - jessie:
+          my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
     my_desktop:
       - kde:
+          my_preseed: kde
           my_time: '42 15 */2 * *'
       - xfce:
+          my_preseed: xfce
           my_time: '42 16 */2 * *'
       - lxde:
+          my_preseed: lxde
           my_time: '42 19 */2 * *'
       - gnome:
+          my_preseed: gnome
           my_time: '42 19 */2 * *'
           my_trigger: 'g-i-installation_debian_{my_dist}_gnome_brltty, g-i-installation_debian_{my_dist}_gnome_speakup'
       - gnome_brltty:
+          my_preseed: gnome_brltty
           my_optdesc: ' with braille display support'
           my_time: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
       - gnome_speakup:
+          my_preseed: gnome_speakup
           my_optdesc: ' with Speakup support'
           my_time: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
+      - kfreebsd_xfce:
+          my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
+          my_preseed: kfreebsd # FIXME: if this was 'kfreebsd_xfce' we could do without my_preseed
+          my_time: '42 16 */7 * *'
+          my_pxedesc: 'PXE '
+
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_desktop}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using {my_pxedesc}netboot gtk.'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+
+
 
 - job-group:
     name: '{name}_debian_sid_daily_rescue_translations_group'
@@ -442,15 +454,6 @@
       - '{name}_debian-edu_jessie-beta1-netinst_group'
       - '{name}_debian-edu_jessie-daily_group'
       - '{name}_debian_sid_daily_desktops_group'
-
-      - '{name}_debian_jessie_kfreebsd_xfce':
-         my_title: 'Debian (jessie) kfreebsd XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/jessie-kfreebsd/main/installer-kfreebsd-amd64/current/images/netboot-10/gtk/netboot.tar.gz'
-         my_description: 'Do a fully automated installation of Debian kfreebsd-amd64 with XFCE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_kfreebsd_preseed.cfg">this preseed.cfg</a>) using PXE netboot gtk.'
-         my_time: '42 16 */7 * *'
-         #my_time: '42 16 2,9,16,23 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 
       - '{name}_debian_sid_daily_presentation':

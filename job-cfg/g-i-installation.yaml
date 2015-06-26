@@ -198,6 +198,7 @@
 - job-group:
     name: '{name}_debian_wheezy_desktops_group'
     my_optdesc: ''
+    my_pxedesc: ''
     my_inst_url: http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/
     my_dist:
       - wheezy
@@ -218,11 +219,12 @@
           my_time: '42 16 21 * *'
           my_inst_url: http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz
           my_preseed: 'kfreebsd'
+          my_pxedesc: 'PXE '
 
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using {my_pxedesc}netboot gtk.'
           my_trigger: ''
           my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
@@ -232,6 +234,7 @@
     my_optdesc: ''
     my_trigger: ''
     my_time: ''
+    my_pxedesc: ''
     my_inst_url: http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_dist:
@@ -256,13 +259,14 @@
           my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
           my_preseed: 'kfreebsd'
           my_time: '42 8 */7 * *'
+          my_pxedesc: 'PXE '
       - lxde:
           my_preseed: 'lxde'
           my_time: '42 10 * * *'
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist} build CD) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using {my_pxedesc}netboot gtk.'
           my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
 
 - job-group:

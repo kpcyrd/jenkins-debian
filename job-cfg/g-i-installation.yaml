@@ -99,14 +99,6 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_{my_dist}_{my_de_profile}'
-
-- job-template:
-    defaults: g-i-installation
     name: '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}'
 
 - job-template:
@@ -135,9 +127,14 @@
 - job-group:
     name: '{name}_debian-edu_jessie-beta1-netinst_group'
     my_dist:
-      - jessie
+      - jessie-beta1-netinst:
+          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
+      - jessie-beta1-usb:
+          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
     my_time: ''
+    my_desktop: ''
     my_trigger: ''
+    my_trigdesc: '<br />This job is only triggered manually.'
     my_default_desc: ''
     my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
     my_de_profile:
@@ -150,23 +147,23 @@
           my_disksize: 40
       - main+ltsp-server:
           my_disksize: 60
-    my_image:
-      - beta1-netinst:
-          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
-      - beta1-usb:
-          my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
 
     jobs:
-      - '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}':
-         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
+      - '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}':
+         my_title: 'Debian Edu ({my_dist}) {my_de_profile}{my_default_desc}'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_{my_dist}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_dist} image.{my_trigdesc}'
 
 - job-group:
     name: '{name}_debian-edu_jessie-daily_group'
     my_dist:
-      - jessie
+      - jessie-daily-usb:
+          my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
+      - jessie-daily-netinst:
+          my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
     my_time: ''
+    my_desktop: ''
     my_trigger: ''
+    my_trigdesc: ''
     my_default_desc: ''
     my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
     my_de_profile:
@@ -183,15 +180,10 @@
       - main+ltsp-server:
           my_time: '42 0 * * *'
           my_disksize: 60
-    my_image:
-      - daily-usb:
-          my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
-      - daily-netinst:
-          my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
     jobs:
-      - '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}':
-         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.'
+      - '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}':
+         my_title: 'Debian Edu ({my_dist}) {my_de_profile}{my_default_desc}'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_{my_dist}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_dist} image.{my_trigdesc}'
 
 - job-group:
     name: '{name}_debian_{my_dist}_desktops_group'

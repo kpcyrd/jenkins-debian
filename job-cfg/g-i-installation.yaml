@@ -99,7 +99,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_{my_dist}_{my_ver}_{my_de_profile}_{my_desktop}'
+    name: '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}'
 
 - job-template:
     defaults: g-i-installation
@@ -117,10 +117,10 @@
     name: '{name}_{my_dist}_group'
     my_disksize: 25
     jobs:
-      - '{name}_{my_dist}_{my_ver}_{my_de_profile}_{my_desktop}':
-          my_title: '{my_distname} ({my_ver}) {my_de_profile}{my_title_extra}'
+      - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
+          my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
           my_inst_url: 'http://ftp.skolelinux.org/cd-{my_ver}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-          my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+          my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
@@ -140,7 +140,7 @@
     my_trigdesc: '<br />This job is only triggered manually.'
     my_title_extra: ''
     my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-    my_de_profile:
+    my_profile:
       - standalone:
           my_title_extra: ' (Default)'
           my_disksize: 25
@@ -152,9 +152,9 @@
           my_disksize: 60
 
     jobs:
-      - '{name}_{my_dist}_{my_ver}_{my_de_profile}_{my_desktop}':
-         my_title: '{my_distname} ({my_ver}) {my_de_profile}{my_title_extra}'
-         my_description: 'Do a fully automated installation of a {my_distname} Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
+      - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
+         my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
+         my_description: 'Do a fully automated installation of a {my_distname} Jessie {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
 
 - job-group:
     name: '{name}_{my_dist}_jessie-daily_group'
@@ -172,7 +172,7 @@
     my_trigdesc: ''
     my_title_extra: ''
     my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-    my_de_profile:
+    my_profile:
       - standalone:
           my_time: '42 1 */2 * *'
           my_title_extra: ' (Default)'
@@ -187,9 +187,9 @@
           my_time: '42 0 * * *'
           my_disksize: 60
     jobs:
-      - '{name}_{my_dist}_{my_ver}_{my_de_profile}_{my_desktop}':
-         my_title: '{my_distname} ({my_ver}) {my_de_profile}{my_title_extra}'
-         my_description: 'Do a fully automated installation of a {my_distname} Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
+      - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
+         my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
+         my_description: 'Do a fully automated installation of a {my_distname} Jessie {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
 
 - job-group:
     name: '{name}_debian_{my_ver}_desktops_group'
@@ -288,7 +288,7 @@
           my_ver: wheezy
           my_desktop: ''
           my_title_extra: ''
-          my_de_profile:
+          my_profile:
             - minimal:
                 my_time: '23 20 15 * *'
             - standalone:
@@ -306,7 +306,7 @@
             - debian-edu:
                 my_distname: "Debian Edu"
           my_ver: wheezy
-          my_de_profile: standalone
+          my_profile: standalone
           my_desktop:
             - gnome:
                 my_title_extra: ' (gnome)'

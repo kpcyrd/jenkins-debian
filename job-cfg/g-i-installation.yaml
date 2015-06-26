@@ -130,7 +130,7 @@
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
          my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
-         my_description: 'Do a fully automated installation of a {my_distname} {my_vername} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
+         my_description: 'Do a fully automated installation of a {my_distname} {my_verdesc} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
 
 - job-group:
     name: '{name}_debian_{my_ver}_desktops_group'
@@ -142,7 +142,7 @@
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     jobs:
       - '{name}_debian_{my_ver}_{my_desktop}':
-          my_title: 'Debian ({my_mediadesc}) {my_desktop} desktop install{my_optdesc}'
+          my_title: 'Debian ({my_verdesc}) {my_desktop} desktop install{my_optdesc}'
           my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc}{my_optdesc2} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.{my_trigdesc}'
           my_disksize: 10
 
@@ -261,7 +261,7 @@
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: wheezy
-          my_mediadesc: wheezy
+          my_verdesc: wheezy
           my_instdesc: ' using netboot gtk'
           my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
           my_desktop:
@@ -280,7 +280,7 @@
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: jessie
-          my_mediadesc: jessie
+          my_verdesc: jessie
           my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
           my_instdesc: ' using netboot gtk'
           my_desktop:
@@ -311,7 +311,7 @@
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: sid_daily
           my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-          my_mediadesc: 'sid daily build CD'
+          my_verdesc: 'sid daily build CD'
           my_instdesc: ' using netboot gtk'
           my_desktop:
             - gnome:
@@ -339,15 +339,15 @@
           my_instdesc: ' using PXE netboot gtk'
           my_ver:
             - wheezy:
-                my_mediadesc: wheezy
+                my_verdesc: wheezy
                 my_time: '42 16 21 * *'
                 my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz'
             - jessie:
-                my_mediadesc: jessie
+                my_verdesc: jessie
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
                 my_time: '42 16 */7 * *'
             - sid_daily:
-                my_mediadesc: 'sid daily build CD'
+                my_verdesc: 'sid daily build CD'
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
                 my_time: '42 8 */7 * *'
 
@@ -362,12 +362,12 @@
             - jessie:
                 my_inst_url: 'http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
                 my_time: '42 10 */2 * *'
-                my_mediadesc: jessie
+                my_verdesc: jessie
                 my_optdesc2: ' on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a>'
             - sid_daily:
                 my_inst_url: 'http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
                 my_trigdesc: '<br />This job is only triggered manually.'
-                my_mediadesc: 'sid daily build CD'
+                my_verdesc: 'sid daily build CD'
 
       - '{name}_debian_sid_daily_rescue_translations_group'
 
@@ -379,10 +379,10 @@
                 my_trigdesc: '<br />This job is only triggered manually.'
           my_ver:
             - jessie-beta1-netinst:
-                my_vername: Jessie
+                my_verdesc: Jessie
                 my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
             - jessie-beta1-usb:
-                my_vername: Jessie
+                my_verdesc: Jessie
                 my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
           my_profile:
             - standalone:
@@ -402,10 +402,10 @@
                 my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
           my_ver:
             - jessie-daily-usb:
-                my_vername: Jessie
+                my_verdesc: Jessie
                 my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
             - jessie-daily-netinst:
-                my_vername: Jessie
+                my_verdesc: Jessie
                 my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
           my_profile:
             - standalone:
@@ -425,18 +425,18 @@
       - '{name}_debian_{my_ver}_presentation':
           my_ver:
             - wheezy:
-                my_mediadesc: 'wheezy netboot'
+                my_verdesc: 'wheezy netboot'
                 my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/debian-installer/amd64/'
                 my_time: '44 15 23 * *'
             - jessie:
-                my_mediadesc: 'jessie netboot'
+                my_verdesc: 'jessie netboot'
                 my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/debian-installer/amd64/'
                 my_time: '43 15 23 * *'
             - sid_daily:
-                my_mediadesc: 'sid daily build CD'
+                my_verdesc: 'sid daily build CD'
                 my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                 my_time: '42 15 23 * *'
-          my_title: 'Debian-Installer ({my_mediadesc}) used for presentations'
+          my_title: 'Debian-Installer ({my_verdesc}) used for presentations'
           my_disksize: 1
           my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_presentation_preseed.cfg">this preseed.cfg</a>).'
           my_trigger: ''

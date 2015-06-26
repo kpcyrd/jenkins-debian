@@ -99,7 +99,7 @@
 
 - job-template:
     defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-{my_image}_{my_de_profile}'
+    name: '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}'
 
 - job-template:
     defaults: g-i-installation
@@ -124,8 +124,6 @@
 - job-group:
     name: '{name}_debian-edu_group'
     my_disksize: 25
-    my_dist:
-      - wheezy
     jobs:
       - '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}':
           my_title: 'Debian Edu ({my_dist}) {my_de_profile}{my_dtdesc}'
@@ -133,6 +131,69 @@
           my_description: 'Do a fully automated installation of a Debian Edu {my_dist} {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_{my_dist}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+
+- job-group:
+    name: '{name}_debian-edu_jessie-beta1-netinst_group'
+    my_dist:
+      - jessie
+    my_time: ''
+    my_trigger: ''
+    my_default_desc: ''
+    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+    my_de_profile:
+      - standalone:
+          my_default_desc: ' (Default)'
+          my_disksize: 25
+      - standalone_mate:
+          my_disksize: 25
+      - main-server:
+          my_disksize: 40
+      - main+ltsp-server:
+          my_disksize: 60
+    my_image:
+      - beta1-netinst:
+          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
+      - beta1-usb:
+          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
+
+    jobs:
+      - '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}':
+         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
+
+- job-group:
+    name: '{name}_debian-edu_jessie-daily_group'
+    my_dist:
+      - jessie
+    my_time: ''
+    my_trigger: ''
+    my_default_desc: ''
+    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+    my_de_profile:
+      - standalone:
+          my_time: '42 1 */2 * *'
+          my_default_desc: ' (Default)'
+          my_disksize: 25
+      - standalone_mate:
+          my_time: '42 1 */2 * *' # FIXME: really meant to be the same as above?
+          my_disksize: 25
+      - main-server:
+          my_time: '42 3 * * *'
+          my_disksize: 40
+      - main+ltsp-server:
+          my_time: '42 0 * * *'
+          my_disksize: 60
+    my_image:
+      - daily-usb:
+          my_image_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
+      - daily-netinst:
+          my_image_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
+    jobs:
+      - '{name}_debian-edu_{my_dist}-{my_image}_{my_de_profile}':
+         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.'
 
 - job-group:
     name: '{name}_debian_{my_dist}_desktops_group'
@@ -216,66 +277,6 @@
           my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
-- job-group:
-    name: '{name}_debian-edu_jessie-beta1-netinst_group'
-    my_time: ''
-    my_trigger: ''
-    my_default_desc: ''
-    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-    my_de_profile:
-      - standalone:
-          my_disksize: 25
-          my_default_desc: ' (Default)'
-      - standalone_mate:
-          my_disksize: 25
-      - main-server:
-          my_disksize: 40
-      - main+ltsp-server:
-          my_disksize: 60
-    my_image:
-      - beta1-netinst:
-          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
-      - beta1-usb:
-          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
-
-    jobs:
-      - '{name}_debian-edu_jessie-{my_image}_{my_de_profile}':
-         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
-
-- job-group:
-    name: '{name}_debian-edu_jessie-daily_group'
-    my_time: ''
-    my_trigger: ''
-    my_default_desc: ''
-    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-    my_de_profile:
-      - standalone:
-          my_time: '42 1 */2 * *'
-          my_disksize: 25
-          my_default_desc: ' (Default)'
-      - standalone_mate:
-          my_time: '42 1 */2 * *' # FIXME: really meant to be the same as above?
-          my_disksize: 25
-      - main-server:
-          my_time: '42 3 * * *'
-          my_disksize: 40
-      - main+ltsp-server:
-          my_time: '42 0 * * *'
-          my_disksize: 60
-    my_image:
-      - daily-usb:
-          my_image_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
-      - daily-netinst:
-          my_image_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
-    jobs:
-      - '{name}_debian-edu_jessie-{my_image}_{my_de_profile}':
-         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.'
-
-
 # =-=-=-=
 
 - project:
@@ -284,6 +285,7 @@
     jobs:
       - '{name}_maintenance'
       - '{name}_debian-edu_group':
+          my_dist: wheezy
           my_desktop: ''
           my_dtdesc: ''
           my_de_profile:
@@ -300,6 +302,7 @@
                 my_time: '42 2 16 * *'
                 my_disksize: 30
       - '{name}_debian-edu_group':
+          my_dist: wheezy
           my_de_profile: standalone
           my_desktop:
             - _gnome:

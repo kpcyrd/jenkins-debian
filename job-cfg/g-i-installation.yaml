@@ -107,6 +107,10 @@
 
 - job-template:
     defaults: g-i-installation
+    name: '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}'
+
+- job-template:
+    defaults: g-i-installation
     name: '{name}_debian_sid_daily_rescue_{my_langname}'
 
 # =-=-=-=
@@ -114,34 +118,6 @@
 - job-template:
     defaults: g-i-installation
     name: '{name}_debian_jessie_kfreebsd_xfce'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_wheezy_kfreebsd_xfce'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_gnome'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_gnome_brltty'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_gnome_speakup'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_xfce'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_kfreebsd_xfce'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian_sid_daily_lxde'
 
 - job-template:
     defaults: g-i-installation
@@ -171,71 +147,26 @@
     defaults: g-i-installation
     name: '{name}_debian_wheezy_presentation'
 
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_standalone_gnome'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_standalone_lxde'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_wheezy_standalone_xfce'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-netinst_standalone'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-netinst_standalone_mate'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-netinst_main-server'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-netinst_main+ltsp-server'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-usb_standalone'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-usb_standalone_mate'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-usb_main-server'
-
-- job-template:
-    defaults: g-i-installation
-    name: '{name}_debian-edu_jessie-daily-usb_main+ltsp-server'
-
 # =-=-=-=
 
 - job-group:
-    name: '{name}_debian-edu'
-    my_disksize: 30
+    name: '{name}_debian-edu_group'
+    my_disksize: 25
     my_dist:
       - wheezy
     my_de_profile:
       - minimal:
           my_time: '23 20 15 * *'
-          my_disksize: 25
       - standalone:
           my_time: '42 20 15 * *'
-          my_disksize: 25
       - workstation:
           my_time: '42 22 16 * *'
-          my_disksize: 25
       - combi-server:
           my_time: '42 0 16 * *'
+          my_disksize: 30
       - main-server:
           my_time: '42 2 16 * *'
+          my_disksize: 30
     jobs:
       - '{name}_debian-edu_{my_dist}_{my_de_profile}':
           my_title: 'Debian Edu ({my_dist}) {my_de_profile}'
@@ -245,29 +176,97 @@
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
 - job-group:
-    name: '{name}_debian_wheezy_desktops'
+    name: '{name}_debian-edu_desktops_group'
+    my_disksize: 25
+    my_dist: wheezy
+    my_de_profile: standalone
+    my_desktop:
+      - gnome:
+          my_time: '42 18 17 * *'
+      - lxde:
+          my_time: '42 22 17 * *'
+      - xfce:
+          my_time: '42 2 * * 1'
+    jobs:
+      - '{name}_debian-edu_{my_dist}_{my_de_profile}_{my_desktop}':
+          my_title: 'Debian Edu ({my_dist}) {my_de_profile} ({my_desktop})'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/cd-{my_dist}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+          my_description: 'Do a fully automated installation of a Debian Edu {my_dist} {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_{my_dist}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
+          my_trigger: ''
+          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+
+- job-group:
+    name: '{name}_debian_wheezy_desktops_group'
     my_optdesc: ''
+    my_inst_url: http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/
     my_dist:
       - wheezy
     my_desktop:
       - kde:
           my_time: '42 15 2,9,16,23 * *'
+          my_preseed: 'kde'
       - xfce:
           my_time: '42 16 4 * *'
+          my_preseed: 'xfce'
       - lxde:
           my_time: '42 19 4 * *'
+          my_preseed: 'lxde'
       - gnome:
           my_time: '42 19 4 * *'
+          my_preseed: 'gnome'
+      - kfreebsd_xfce:
+          my_time: '42 16 21 * *'
+          my_inst_url: http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz
+          my_preseed: 'kfreebsd'
+
     jobs:
       - '{name}_debian_{my_dist}_{my_desktop}':
           my_title: 'Debian ({my_dist}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_desktop}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
           my_trigger: ''
-          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 - job-group:
-    name: '{name}_debian_jessie_desktops'
+    name: '{name}_debian_sid_daily_desktops_group'
+    my_optdesc: ''
+    my_trigger: ''
+    my_time: ''
+    my_inst_url: http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso
+    my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+    my_dist:
+      - sid_daily
+    my_desktop:
+      - gnome:
+          my_time: '42 8 * * *'
+          my_preseed: gnome
+          my_trigger: 'g-i-installation_debian_sid_gnome_brltty, g-i-installation_debian_sid_gnome_speakup'
+      - gnome_brltty:
+          my_preseed: 'gnome_brltty'
+          my_optdesc: ' with braille display support'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
+      - gnome_speakup:
+          my_preseed: 'gnome_speakup'
+          my_optdesc: ' with Speakup support'
+          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
+      - xfce:
+          my_preseed: 'xfce'
+          my_time: '42 8 * * *'
+      - kfreebsd_xfce:
+          my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
+          my_preseed: 'kfreebsd'
+          my_time: '42 8 */7 * *'
+      - lxde:
+          my_preseed: 'lxde'
+          my_time: '42 10 * * *'
+    jobs:
+      - '{name}_debian_{my_dist}_{my_desktop}':
+          my_title: 'Debian ({my_dist} build CD) {my_desktop} desktop install{my_optdesc}'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_dist}_{my_preseed}_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 {my_inst_url}'
+
+- job-group:
+    name: '{name}_debian_jessie_desktops_group'
     my_trigger: ''
     my_optdesc: ''
     my_dist:
@@ -298,7 +297,7 @@
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 
 - job-group:
-    name: '{name}_debian_sid_daily_rescue_translations'
+    name: '{name}_debian_sid_daily_rescue_translations_group'
     my_langname: ''
     my_time: ''
     my_trigger: ''
@@ -368,10 +367,12 @@
     name: '{name}_debian-edu_jessie-beta1-netinst_group'
     my_time: ''
     my_trigger: ''
+    my_default_desc: ''
     my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
     my_de_profile:
       - standalone:
           my_disksize: 25
+          my_default_desc: ' (Default)'
       - standalone_mate:
           my_disksize: 25
       - main-server:
@@ -380,14 +381,47 @@
           my_disksize: 60
     my_image:
       - beta1-netinst:
-          my_image_flavour: CD
+          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
       - beta1-usb:
-          my_image_flavour: USB
+          my_image_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
+
     jobs:
       - '{name}_debian-edu_jessie-{my_image}_{my_de_profile}':
-         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile} (Default)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-{my_image_flavour}.iso'
+         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
          my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.<br />This job is only triggered manually.'
+
+- job-group:
+    name: '{name}_debian-edu_jessie-daily_group'
+    my_time: ''
+    my_trigger: ''
+    my_default_desc: ''
+    my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+    my_de_profile:
+      - standalone:
+          my_time: '42 1 */2 * *'
+          my_disksize: 25
+          my_default_desc: ' (Default)'
+      - standalone_mate:
+          my_time: '42 1 */2 * *' # FIXME: really meant to be the same as above?
+          my_disksize: 25
+      - main-server:
+          my_time: '42 3 * * *'
+          my_disksize: 40
+      - main+ltsp-server:
+          my_time: '42 0 * * *'
+          my_disksize: 60
+    my_image:
+      - daily-usb:
+          my_image_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
+      - daily-netinst:
+          my_image_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
+    jobs:
+      - '{name}_debian-edu_jessie-{my_image}_{my_de_profile}':
+         my_title: 'Debian Edu (jessie {my_image}) {my_de_profile}{my_default_desc}'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh {my_disksize} {my_image_url}'
+         my_description: 'Do a fully automated installation of a Debian Edu Jessie {my_de_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-{my_image}_{my_de_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_image} image.'
+
 
 # =-=-=-=
 
@@ -396,19 +430,15 @@
     do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
       - '{name}_maintenance'
-      - '{name}_debian-edu'
-      - '{name}_debian_wheezy_desktops'
-      - '{name}_debian_jessie_desktops'
-      - '{name}_debian_sid_daily_rescue_translations'
+      - '{name}_debian-edu_group'
+      - '{name}_debian-edu_desktops_group'
+      - '{name}_debian_wheezy_desktops_group'
+      - '{name}_debian_jessie_desktops_group'
+      - '{name}_debian_sid_daily_rescue_translations_group'
       - '{name}_debian-edu_jessie-beta1-netinst_group'
+      - '{name}_debian-edu_jessie-daily_group'
+      - '{name}_debian_sid_daily_desktops_group'
 
-      - '{name}_debian_wheezy_kfreebsd_xfce':
-         my_title: 'Debian (wheezy) kfreebsd XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz'
-         my_description: 'Do a fully automated installation of Debian kfreebsd-amd64 with XFCE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_wheezy_kfreebsd_preseed.cfg">this preseed.cfg</a>) using PXE netboot gtk.'
-         my_time: '42 16 21 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - '{name}_debian_jessie_kfreebsd_xfce':
          my_title: 'Debian (jessie) kfreebsd XFCE desktop install'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/jessie-kfreebsd/main/installer-kfreebsd-amd64/current/images/netboot-10/gtk/netboot.tar.gz'
@@ -417,70 +447,8 @@
          #my_time: '42 16 2,9,16,23 * *'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_gnome':
-         my_title: 'Debian (sid daily build CD) GNOME desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 8 * * *'
-         my_trigger: 'g-i-installation_debian_sid_gnome_brltty, g-i-installation_debian_sid_gnome_speakup'
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_gnome_brltty':
-         my_title: 'Debian (sid daily build CD) GNOME desktop install with braille display support'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop with braille display support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_brltty_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
-      - '{name}_debian_sid_daily_gnome_speakup':
-         my_title: 'Debian (sid daily build CD) GNOME desktop install with Speakup support'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian GNOME desktop with Speakup support - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_gnome_speakup_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
-      - '{name}_debian_sid_daily_xfce':
-         my_title: 'Debian (sid daily build CD) Xfce desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian Xfce desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_xfce_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 8 * * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_kfreebsd_xfce':
-         my_title: 'Debian (sid daily build PXE) kfreebsd XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
-         my_description: 'Do a fully automated installation of Debian kfreebsd-amd64 with XFCE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_kfreebsd_preseed.cfg">this preseed.cfg</a>) using PXE netboot gtk.'
-         my_time: '42 8 */7 * *'
-         #my_time: '42 8 * * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_lxde':
-         my_title: 'Debian (sid daily build CD) LXDE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Do a fully automated installation of Debian LXDE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_lxde_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 10 * * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian_sid_daily_hurd_lxde':
-         my_title: 'Debian (sid daily build CD) LXDE desktop install on Hurd'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of Debian LXDE desktop on Hurd - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_hurd_lxde_preseed.cfg">this preseed.cfg</a>).<br />This job is only triggered manually.'
-         my_time: ''
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
-      - '{name}_debian_jessie_hurd_lxde':
-         my_title: 'Debian (jessie CD) LXDE desktop install on Hurd'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a LXDE desktop on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a> - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_hurd_lxde_preseed.cfg">this preseed.cfg</a>).'
-         my_time: '42 10 */2 * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
-      - '{name}_debian_sid_daily_rescue':
-         my_title: 'Debian (sid daily build CD) rescue mode'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
-         my_time: '42 6 * * *'
-         my_trigger: ''
-         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+
+
       - '{name}_debian_sid_daily_presentation':
          my_title: 'Debian-Installer (sid daily build CD) used for presentations'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
@@ -502,6 +470,22 @@
          my_time: '44 15 23 * *'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+
+
+      - '{name}_debian_jessie_hurd_lxde':
+         my_title: 'Debian (jessie CD) LXDE desktop install on Hurd'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of a LXDE desktop on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a> - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_hurd_lxde_preseed.cfg">this preseed.cfg</a>).'
+         my_time: '42 10 */2 * *'
+         my_trigger: ''
+         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
+      - '{name}_debian_sid_daily_rescue':
+         my_title: 'Debian (sid daily build CD) rescue mode'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+         my_description: 'Just go into rescue mode via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_rescue_preseed.cfg">this preseed.cfg</a>) using netboot gtk.'
+         my_time: '42 6 * * *'
+         my_trigger: ''
+         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - '{name}_debian_sid_daily_rescue_dark_theme':
          my_title: 'Debian (sid daily build CD) rescue mode, using theme=dark'
          my_shell: '/srv/jenkins/bin/g-i-installation.sh 1 http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
@@ -509,81 +493,12 @@
          my_time: '42 6 * * 7'
          my_trigger: ''
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_standalone_gnome':
-         my_title: 'Debian Edu (wheezy) standalone (gnome)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 18 17 * *'
+      - '{name}_debian_sid_daily_hurd_lxde':
+         my_title: 'Debian (sid daily build CD) LXDE desktop install on Hurd'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
+         my_description: 'Do a fully automated installation of Debian LXDE desktop on Hurd - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_sid_daily_hurd_lxde_preseed.cfg">this preseed.cfg</a>).<br />This job is only triggered manually.'
+         my_time: ''
          my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_standalone_lxde':
-         my_title: 'Debian Edu (wheezy) standalone (lxde)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 22 17 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_wheezy_standalone_xfce':
-         my_title: 'Debian Edu (wheezy) standalone (xfce)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-wheezy-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Wheezy standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_wheezy_standalone_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-         my_time: '42 2 * * 1'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-netinst_standalone':
-         my_title: 'Debian Edu (jessie daily netinst) standalone (Default)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-netinst_standalone_preseed.cfg">this preseed.cfg</a>) using the daily netinst image.'
-         my_time: '42 1 */2 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-netinst_standalone_mate':
-         my_title: 'Debian Edu (jessie daily netinst) standalone (Mate Desktop)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-netinst_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the daily netinst image.'
-         my_time: '42 1 */2 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-netinst_main-server':
-         my_title: 'Debian Edu (jessie daily netinst) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-netinst_main-server_preseed.cfg">this preseed.cfg</a>) using the daily netinst image.'
-         my_time: '42 3 * * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-netinst_main+ltsp-server':
-         my_title: 'Debian Edu (jessie daily netinst) main+ltsp-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-netinst_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily netinst image.'
-         my_time: '42 0 * * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-usb_standalone':
-         my_title: 'Debian Edu (jessie daily usb) standalone (Default)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_standalone_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
-         my_time: '42 1 */2 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-usb_standalone_mate':
-         my_title: 'Debian Edu (jessie daily usb) standalone (Mate Desktop)'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 25 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie standalone profile with Mate desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_standalone_mate_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
-         my_time: '42 1 */2 * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-usb_main-server':
-         my_title: 'Debian Edu (jessie daily usb) main-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 40 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_main-server_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
-         my_time: '42 3 * * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-      - '{name}_debian-edu_jessie-daily-usb_main+ltsp-server':
-         my_title: 'Debian Edu (jessie daily usb) main+ltsp-server'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 60 http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso'
-         my_description: 'Do a fully automated installation of a Debian Edu Jessie main+ltsp-server profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian-edu_jessie-daily-usb_main+ltsp-server_preseed.cfg">this preseed.cfg</a>) using the daily usb image.'
-         my_time: '42 0 * * *'
-         my_trigger: ''
-         my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+         my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
+
 

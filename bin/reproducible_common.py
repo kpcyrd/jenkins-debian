@@ -541,6 +541,8 @@ def get_trailing_bug_icon(bug, bugs, package=None):
                     html += 'bug-done" title="#' + str(bug) + ', done">#'
                 elif bugs[package][bug]['patch']:
                     html += 'bug-patch" title="#' + str(bug) + ', with patch">+'
+                else:
+                    html += 'bug">'
                 html += '</span>'
         except KeyError:
             pass

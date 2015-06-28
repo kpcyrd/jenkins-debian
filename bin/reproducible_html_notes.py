@@ -299,6 +299,7 @@ def gen_html_issue(issue, suite):
                                    affected_pkgs=affected,
                                    suite=suite, suite_links=suite_links)
 
+
 def purge_old_notes(notes):
     removed_pages = []
     to_rebuild = []
@@ -322,6 +323,23 @@ def purge_old_notes(notes):
                 pass            # a package got removed from the archive
     if to_rebuild:
         gen_packages_html(to_rebuild)
+
+
+def purge_old_issues(issues):
+    for root, dirs, files in os.walk(ISSUES_PATH):
+        if not files:
+            continue
+        for file in files:
+            try:
+                issue = file.rsplit('_', 1)[0]
+            except ValueError:
+                log.critical('/'.join([root, file]) + ' does not seems like '
+                             + 'a file that should be there')
+                sys.exit(1)
+            if issue not in issues:
+                log.warning('removing ' + '/'.join([root, file]) + '...')
+                #os.remove('/'.join([root, file]))
+                log.warning('\t not removing for real now, please enable this')
 
 
 def iterate_over_notes(notes):
@@ -413,6 +431,7 @@ if __name__ == '__main__':
     iterate_over_issues(issues)
     index_issues(issues)
     purge_old_notes(notes)
+    purge_old_issues(issues)
     gen_packages_html(notes) # regenerate all rb-pkg/ pages
     for suite in SUITES:
         for arch in ARCHES:

@@ -373,7 +373,7 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_breakages':
             my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
-            my_timed: '1 0 * * *'
+            my_timed: '30 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_breakages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_builder_alpha':

@@ -329,7 +329,7 @@ pages = {
         'notes': True,
         'nosuite': True,
         'title': 'Packages with notification enabled',
-        'header': '<p>The following {tot} packages in {suite}/{arch} have notifications enabled. On status changes (e.g. reproducible → unreproducible) the system sends an email to $srcpackage@packages.debian.org, notifying the maintainer and relevant parties.  (You can subscribe through the PTS or Tracker if you are interested in such emails).<br />Please ask us to enable notifications for your package(s) in our IRC channel #debian-reproducible or via <a href="reproducible-builds@lists.alioth.debian.org">mail</a>!</p>',
+        'header': '<p>The following {tot} packages in {suite}/{arch} have notifications enabled. On status changes (e.g. reproducible → unreproducible) the system sends an email to $srcpackage@packages.debian.org, notifying the maintainer and relevant parties.  (You can subscribe through the PTS or Tracker if you are interested in such emails).<br />Please ask us to enable notifications for your package(s) in our IRC channel #debian-reproducible or via <a href="mailto:reproducible-builds@lists.alioth.debian.org">mail</a>!</p>',
         'header_query': 'SELECT COUNT(*) FROM sources WHERE suite="{suite}" AND architecture="{arch}" AND notify_maintainer = 1',
         'body': [
             {

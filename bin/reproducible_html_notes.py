@@ -280,7 +280,7 @@ def gen_html_issue(issue, suite):
             affected += ' alt="' + status + ' icon" />\n'
             affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
             affected += tab*5 + '<code>\n'
-            for pkg in pkgs:
+            for pkg in sorted(pkgs, key=lambda x: x in bugs):
                 affected += tab*6 + link_package(pkg, suite, arch, bugs)
             affected += tab*5 + '</code>\n'
             affected += tab*4 + '</p>\n'

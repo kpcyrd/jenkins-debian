@@ -338,8 +338,7 @@ def purge_old_issues(issues):
                 sys.exit(1)
             if issue not in issues:
                 log.warning('removing ' + '/'.join([root, file]) + '...')
-                #os.remove('/'.join([root, file]))
-                log.warning('\t not removing for real now, please enable this')
+                os.remove('/'.join([root, file]))
 
 
 def iterate_over_notes(notes):

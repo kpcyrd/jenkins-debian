@@ -362,6 +362,12 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[27]}.pkgset
 	fi
 
+	# debian-x@l.d.o maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[28]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[28]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[28]}.pkgset
+	fi
+
 }
 
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)

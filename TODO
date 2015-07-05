@@ -244,20 +244,23 @@ properties:
 ** CONFIG_PAYLOAD_GRUB2 is not set
 ** CONFIG_PAYLOAD_TIANOCORE is not set
 * libreboot ships images, verify those?
+* explain status in plain english
 
 ==== reproducible openwrt
 
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
 * build all packages? (set CONFIG_ALL=y and run 'make defconfig')
+** just build some first...
 * file dbd bug about unable to inspect these .bin files
 * file dbd bug about crashing on certain squashfs files
+* explain status in plain english
 
 ==== reproducible netbsd
 
 * use NetBSD css and logo
-* link from dashboard
 * announce on their list
+* explain status in plain english
 
 ==== reproducible fedora
 

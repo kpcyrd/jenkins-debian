@@ -13,8 +13,8 @@ common_init "$@"
 
 set -e
 
-# build for different architectures
-ARCHS="sparc64" # FIXME: actually use this...
+# build for these architectures
+ARCHS="sparc64"
 
 cleanup_tmpdirs() {
 	cd
@@ -27,12 +27,15 @@ create_results_dirs() {
 }
 
 save_netbsd_results(){
-	RUN=$1
-	cd obj/releasedir/sparc64/
-	mkdir -p $TMPDIR/$RUN/
-	cp -pr * $TMPDIR/$RUN/
-	cd ../../..
-	rm obj/releasedir/sparc64/ -r
+	local RUN=$1
+	local ARCH
+	cd obj/releasedir/
+	for ARCH in $ARCHS ; do
+		mkdir -p $TMPDIR/$RUN/${ARCH}
+		cp -pr ${ARCH} $TMPDIR/$RUN/
+		rm ./${ARCH} -r
+	done
+	cd ../..
 }
 
 #
@@ -62,8 +65,10 @@ echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-ionice -c 3 nice \
-	./build.sh -j $NUM_CPU -U -u -m sparc64 release
+for ARCH in $ARCHS ; do
+	ionice -c 3 nice \
+		./build.sh -j $NUM_CPU -U -u -m ${ARCH} release
+done
 # save results in b1
 save_netbsd_results b1
 
@@ -78,9 +83,11 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-	./build.sh -j $NEW_NUM_CPU -U -u -m sparc64 release
+for ARCH in $ARCHS ; do
+	ionice -c 3 nice \
+		linux64 --uname-2.6 \
+		./build.sh -j $NEW_NUM_CPU -U -u -m ${ARCH} release
+done
 
 # reset environment to default values again
 export LANG="en_GB.UTF-8"

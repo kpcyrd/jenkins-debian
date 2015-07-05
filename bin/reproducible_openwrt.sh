@@ -22,49 +22,6 @@ create_results_dirs() {
 	mkdir -p $BASE/openwrt/dbd
 }
 
-call_debbindiff() {
-	mkdir -p $TMPDIR/$1/$(dirname $2)
-	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
-	local msg=""
-	set +e
-	( timeout $TIMEOUT schroot \
-		--directory $TMPDIR \
-		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
-		debbindiff -- \
-			--html $TMPDIR/$1/$2.html \
-			$TMPDIR/b1/$1/$2 \
-			$TMPDIR/b2/$1/$2 2>&1 \
-	) 2>&1 >> $TMPLOG
-	RESULT=$?
-	if ! "$DEBUG" ; then set +x ; fi
-	set -e
-	cat $TMPLOG # print dbd output
-	rm -f $TMPLOG
-	case $RESULT in
-		0)	echo "$(date -u) - $1/$2 is reproducible, yay!"
-			;;
-		1)
-			echo "$(date -u) - $DBDVERSION found issues, please investigate $1/$2"
-			;;
-		2)
-			msg="$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/$2"
-			;;
-		124)
-			if [ ! -s $TMPDIR/$1.html ] ; then
-				msg="$(date -u) - $DBDVERSION produced no output for $1/$2 and was killed after running into timeout after ${TIMEOUT}..."
-			else
-				msg="$DBDVERSION was killed after running into timeout after $TIMEOUT, but there is still $TMPDIR/$1/$2.html"
-			fi
-			;;
-		*)
-			msg="$(date -u) - Something weird happened when running $DBDVERSION on $1/$2 (which exited with $RESULT) and I don't know how to handle it."
-			;;
-	esac
-	if [ ! -z "$msg" ] ; then
-		echo $msg | tee -a $TMPDIR/$1/$2.html
-	fi
-}
-
 save_openwrt_results(){
 	RUN=$1
 	cd bin
@@ -258,7 +215,7 @@ for i in * ; do
 	echo "       <table><tr><th>Images for <code>$i</code></th></tr>" >> $DBD_HTML
 	for j in $(find * -name "*.bin" -o -name "*.squashfs" |sort -u ) ; do
 		let ALL_IMAGES+=1
-		call_debbindiff $i $j
+		call_debbindiff_on_any_file $i $j
 		SIZE="$(du -h -b $j | cut -f1)"
 		SIZE="$(echo $SIZE/1024|bc)"
 		if [ -f $TMPDIR/$i/$j.html ] ; then
@@ -286,7 +243,7 @@ for i in * ; do
 	echo "       <table><tr><th>Packages for <code>$i</code></th></tr>" >> $DBD_HTML
 	for j in $(find * -name "*.ipk" |sort -u ) ; do
 		let ALL_PACKAGES+=1
-		call_debbindiff $i $j
+		call_debbindiff_on_any_file $i $j
 		SIZE="$(du -h -b $j | cut -f1)"
 		SIZE="$(echo $SIZE/1024|bc)"
 		if [ -f $TMPDIR/$i/$j.html ] ; then

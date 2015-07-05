@@ -277,6 +277,10 @@
     defaults: reproducible_other_projects
     name: '{name}_openwrt'
 
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_netbsd'
+
 - project:
     name: reproducible
     jobs:
@@ -417,13 +421,18 @@
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_coreboot':
-            my_description: 'Try to rebuild all coreboot ROMs twice (with variations) and investigate them regarding reproducibility.'
+            my_description: 'Try to rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_openwrt':
-            my_description: 'Try to rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate them regarding reproducibility.'
+            my_description: 'Try to rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_netbsd':
+            my_description: 'Try to rebuild NetBSD (some archs) twice (with variations) and investigate regarding reproducibility.'
+            my_timed: '23 42 23 * *'
+            my_shell: '/srv/jenkins/bin/reproducible_netbsd.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
 

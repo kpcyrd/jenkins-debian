@@ -258,6 +258,12 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/openwrt/$
 	RewriteRule ^/(.*) /openwrt/openwrt.html [R,L]
 
+	# redirect /netbsd/ to netbsd/netbsd.html
+	# note: the missing slash in the RewriteRule is wanted to avoid a double slash
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/netbsd/$
+	RewriteRule ^/(.*) /netbsd/netbsd.html [R,L]
+
 	# redirect /issues/ to /index_issues.html
 	RewriteCond %{REQUEST_URI} ^/issues/$
 	RewriteRule ^/(.*) /index_issues.html [R,L]

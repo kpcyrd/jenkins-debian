@@ -224,9 +224,13 @@ write_page_intro() {
 		local PROJECTNAME="$1"
 		local PROJECTURL="https://review.coreboot.org/p/coreboot.git"
 	elif [ "$1" = "OpenWrt" ] ; then
-		write_page "        <em>Reproducible OpenWrt</em> is an effort to apply this to OpenWrt. Thus each OpenWR target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>, <em>which currently cannot detect <code>.bin</code> files as squashfs filesystems.</em> Thus the resulting debbindiff output is not nearly as clear as it could be - hopefully this limitation will be overcome soon. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <em>Reproducible OpenWrt</em> is an effort to apply this to OpenWrt. Thus each OpenWrt target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>, <em>which currently cannot detect <code>.bin</code> files as squashfs filesystems.</em> Thus the resulting debbindiff output is not nearly as clear as it could be - hopefully this limitation will be overcome soon. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="openwrt"
 		local PROJECTURL="git://git.openwrt.org/openwrt.git"
+	elif [ "$1" = "NetBSD" ] ; then
+		write_page "        <em>Reproducible NetBSD</em> is an effort to apply this to NetBSD. Thus each NetBSD target is build twice, with a few varitations added and then the resulting files from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		local PROJECTNAME="NetBSD"
+		local PROJECTURL="https://github.com/jsonn/src"
 	fi
 	write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>master</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is simply running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a> in a Debian environment and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated!</p>"
 }
@@ -235,6 +239,8 @@ write_page_footer() {
 	write_page "<hr/><p style=\"font-size:0.9em;\">There is more information <a href=\"$JENKINS_URL/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere. Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2015 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and others, GPL2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>."
 	if [ "$1" = "coreboot" ] ; then
 		write_page "The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."
+	elif [ "$1" = "NetBSD" ] ; then
+		write_page "NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
 	fi
 	write_page "</p></body></html>"
 }
@@ -363,3 +369,45 @@ irc_message() {
 	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 }
 
+call_debbindiff_on_any_file() {
+	mkdir -p $TMPDIR/$1/$(dirname $2)
+	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
+	local msg=""
+	set +e
+	( timeout $TIMEOUT schroot \
+		--directory $TMPDIR \
+		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
+		debbindiff -- \
+			--html $TMPDIR/$1/$2.html \
+			$TMPDIR/b1/$1/$2 \
+			$TMPDIR/b2/$1/$2 2>&1 \
+	) 2>&1 >> $TMPLOG
+	RESULT=$?
+	if ! "$DEBUG" ; then set +x ; fi
+	set -e
+	cat $TMPLOG # print dbd output
+	rm -f $TMPLOG
+	case $RESULT in
+		0)	echo "$(date -u) - $1/$2 is reproducible, yay!"
+			;;
+		1)
+			echo "$(date -u) - $DBDVERSION found issues, please investigate $1/$2"
+			;;
+		2)
+			msg="$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/$2"
+			;;
+		124)
+			if [ ! -s $TMPDIR/$1.html ] ; then
+				msg="$(date -u) - $DBDVERSION produced no output for $1/$2 and was killed after running into timeout after ${TIMEOUT}..."
+			else
+				msg="$DBDVERSION was killed after running into timeout after $TIMEOUT, but there is still $TMPDIR/$1/$2.html"
+			fi
+			;;
+		*)
+			msg="$(date -u) - Something weird happened when running $DBDVERSION on $1/$2 (which exited with $RESULT) and I don't know how to handle it."
+			;;
+	esac
+	if [ ! -z "$msg" ] ; then
+		echo $msg | tee -a $TMPDIR/$1/$2.html
+	fi
+}

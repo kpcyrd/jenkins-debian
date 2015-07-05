@@ -111,7 +111,6 @@ echo "$(date -u) - Running $DBDVERSION on netbsd..."
 echo "============================================================================="
 FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "       <ul>" > $FILES_HTML
-BAD_FILES=0
 GOOD_FILES=0
 ALL_FILES=0
 SIZE=""
@@ -140,7 +139,6 @@ for i in * ; do
 	echo "       </table>" >> $FILES_HTML
 done
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_FILES*100/$ALL_FILES)" | bc)
-BAD_PERCENT=$(echo "scale=1 ; ($BAD_FILES*100/$ALL_FILES)" | bc)
 # are we there yet?
 if [ "$GOOD_PERCENT" = "100.0" ] ; then
 	MAGIC_SIGN="!"
@@ -172,7 +170,7 @@ write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES built netbs
 if [ "$GOOD_PERCENT" = "100.0" ] ; then
 	write_page "!"
 else
-	write_page ", while $BAD_FILES ($BAD_PERCENT%) failed to build from source."
+	write_page "."
 fi
 write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION}.</p>"
 write_explaination_table NetBSD

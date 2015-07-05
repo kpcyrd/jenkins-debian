@@ -423,6 +423,10 @@ schema_updates = {
         'ALTER TABLE results ADD COLUMN builder TEXT NOT NULL DEFAULT ""',
         'ALTER TABLE stats_build ADD COLUMN builder TEXT NOT NULL DEFAULT ""',
         'INSERT INTO rb_schema VALUES ("17", "' + now + '")'],
+    18: [ # add columns to stats_bugs for new usertag locale
+        '''ALTER TABLE stats_bugs ADD COLUMN open_locale INTEGER DEFAULT "0"''',
+        '''ALTER TABLE stats_bugs ADD COLUMN done_locale INTEGER DEFAULT "0"''',
+        'INSERT INTO rb_schema VALUES ("18", "' + now + '")'],
 }
 
 

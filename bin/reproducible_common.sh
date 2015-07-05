@@ -414,7 +414,8 @@ call_debbindiff_on_any_file() {
 
 get_filesize() {
 		local BYTESIZE="$(du -h -b $1 | cut -f1)"
-		if [ $BYTESIZE -gt 1048576 ] ; then
+		# numbers below 16384K are understood and more meaningful than 16M...
+		if [ $BYTESIZE -gt 16777216 ] ; then
 			SIZE="$(echo $BYTESIZE/1048576|bc)M"
 		elif [ $BYTESIZE -gt 1024 ] ; then
 			SIZE="$(echo $BYTESIZE/1024|bc)K"

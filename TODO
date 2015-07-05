@@ -255,7 +255,6 @@ properties:
 
 ==== reproducible netbsd
 
-* make it work
 * use NetBSD css and logo
 * link from dashboard
 * announce on their list

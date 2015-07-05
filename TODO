@@ -85,12 +85,10 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === To be done once jenkins.d.n runs jessie
 
-* Apply the patch from https://bugs.debian.org/cgi-bin/bugreport.cgi?msg=26;filename=pbuilder.patch;att=1;bug=677666 to the installed pbuilder package(s)
-** also the other pbuilder patches
 * replace with bin/setsid.py workaround with setsid from the util-linux package from jessie
 * bin/g-i-installation: use lvcreate without --virtualsize
 * check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
-* install pbuilder from jessie-backports
+* the work on pbuilder has to finish, then upload ti to jessie-bpo and install pbuilder from it
 * install botch from jessie-backports (and remove botch from the reproducible-unstable schroot)
 
 === To be done once bugs are fixed
@@ -175,9 +173,6 @@ properties:
 
 * higher prio:
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
-** use pbuilder with a fix for "#677666 pbuilder: using BUILDUSERNAME does not change USER" again, to prevent ocaml+ruby packages from ftbfs
-*** NMU to sid, install manually on jenkins.d.n
-*** upload to jessie-backports once its in stretch + use that version then
 
 * lesser prio
 ** html_graphs.sh rewrite: split out html_pkg_sets.py first, thats the easiest and the biggest speed gain

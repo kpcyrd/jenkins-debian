@@ -246,7 +246,7 @@ cat > $PAGE <<- EOF
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>coreboot</title>
+    <title>Reproducible coreboot</title>
     <link rel='stylesheet' id='twentyfourteen-style-css'  href='landing_style.css?ver=4.0' type='text/css' media='all' />
   </head>
   <body>

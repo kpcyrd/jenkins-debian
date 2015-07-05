@@ -278,7 +278,7 @@ cat > $PAGE <<- EOF
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>openwrt</title>
+    <title>Repoducible OpenWrt ?</title>
     <link rel='stylesheet' id='kamikaze-style-css'  href='cascade.css?ver=4.0' type='text/css' media='all'>
   </head>
   <body>

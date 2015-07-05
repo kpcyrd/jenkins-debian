@@ -22,9 +22,9 @@ parser.add_argument('--dry-run', action='store_true')
 group.add_argument('-a', '--artifacts', default=False, action='store_true',
                    help='Save artifacts (for further offline study)')
 group.add_argument('-n', '--no-notify', default=False, action='store_true',
-                   help='Do not notify the channel when the build finish')
+                   help='Do not notify the channel when the build finishes')
 parser.add_argument('--noisy', action='store_true', help='Also notify when ' +
-                    'the build start, linking the build url. This disables -n.')
+                    'the build starts, linking to the build url. This disables -n.')
 parser.add_argument('-m', '--message', default='', nargs='+',
                     help='A text to be sent to the IRC channel when notifying' +
                     ' about the scheduling')
@@ -35,9 +35,9 @@ parser.add_argument('-r', '--status', required=False,
 parser.add_argument('-i', '--issue', required=False,
                     help='Schedule all packages with this issue')
 parser.add_argument('-t', '--after', required=False,
-                    help='Schedule all packages build after this date')
+                    help='Schedule all packages built after this date')
 parser.add_argument('-b', '--before', required=False,
-                    help='Schedule all packages build before this date')
+                    help='Schedule all packages built before this date')
 parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
@@ -174,7 +174,7 @@ blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
 packages_txt = ' packages ' if len(pkgs) > 1 else ' package '
 trailing = ' - artifacts will be preserved' if artifacts else ''
 trailing += ' - there will be no notification at the end' if not notify else ''
-trailing += ' - notify when the build start too' if debug_url else ''
+trailing += ' - notify when the build starts too' if debug_url else ''
 
 message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + ' by ' + \
     requester

@@ -119,7 +119,7 @@ for i in * ; do
 		SIZE="$(du -h -b $j | cut -f1)"
 		SIZE="$(echo $SIZE/1024|bc)"
 		if [ -f $TMPDIR/$i/$j.html ] ; then
-			mkdir -p $BASE/netbsd/dbd/$i
+			mkdir -p $BASE/netbsd/dbd/$i/$(dirname $j)
 			mv $TMPDIR/$i/$j.html $BASE/netbsd/dbd/$i/$j.html
 			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $FILES_HTML
 		else

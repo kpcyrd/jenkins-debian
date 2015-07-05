@@ -207,6 +207,7 @@ DBD_HTML=$(mktemp --tmpdir=$TMPDIR)
 # run debbindiff on the images
 GOOD_IMAGES=0
 ALL_IMAGES=0
+SIZE=""
 create_results_dirs
 cd $TMPDIR/b1
 tree .
@@ -216,15 +217,14 @@ for i in * ; do
 	for j in $(find * -name "*.bin" -o -name "*.squashfs" |sort -u ) ; do
 		let ALL_IMAGES+=1
 		call_debbindiff_on_any_file $i $j
-		SIZE="$(du -h -b $j | cut -f1)"
-		SIZE="$(echo $SIZE/1024|bc)"
+		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i
 			mv $TMPDIR/$i/$j.html $BASE/openwrt/dbd/$i/$j.html
 			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $DBD_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, ${SIZE}K) is reproducible.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
 			let GOOD_IMAGES+=1
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi
@@ -244,15 +244,14 @@ for i in * ; do
 	for j in $(find * -name "*.ipk" |sort -u ) ; do
 		let ALL_PACKAGES+=1
 		call_debbindiff_on_any_file $i $j
-		SIZE="$(du -h -b $j | cut -f1)"
-		SIZE="$(echo $SIZE/1024|bc)"
+		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i/$(dirname $j)
 			mv $TMPDIR/$i/$j.html $BASE/openwrt/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $DBD_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, ${SIZE}K) is reproducible.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
 			let GOOD_PACKAGES+=1
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi

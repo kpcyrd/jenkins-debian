@@ -114,6 +114,7 @@ echo "       <ul>" > $FILES_HTML
 BAD_FILES=0
 GOOD_FILES=0
 ALL_FILES=0
+SIZE=""
 create_results_dirs
 cd $TMPDIR/b1
 tree .
@@ -123,15 +124,14 @@ for i in * ; do
 	for j in $(find * -type f |sort -u ) ; do
 		let ALL_FILES+=1
 		call_debbindiff_on_any_file $i $j
-		SIZE="$(du -h -b $j | cut -f1)"
-		SIZE="$(echo $SIZE/1024|bc)"
+		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/netbsd/dbd/$i/$(dirname $j)
 			mv $TMPDIR/$i/$j.html $BASE/netbsd/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $FILES_HTML
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $FILES_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, ${SIZE}K) is reproducible.</td></tr>" >> $FILES_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $FILES_HTML
 			let GOOD_FILES+=1
 			rm -f $BASE/netbsd/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi

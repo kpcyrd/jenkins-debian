@@ -203,20 +203,20 @@ echo "       <ul>" > $ROMS_HTML
 BAD_ROMS=0
 GOOD_ROMS=0
 ALL_ROMS=0
+SIZE=""
 create_results_dirs
 cd $TMPDIR/b1
 for i in $(ls -1d *| sort -u) ; do
 	let ALL_ROMS+=1
 	if [ -f $i/coreboot.rom ] ; then
 		call_debbindiff $i
-		SIZE="$(du -h -b $i/coreboot.rom | cut -f1)"
-		SIZE="$(echo $SIZE/1024|bc)"
+		get_filesize $j
 		if [ -f $TMPDIR/$i.html ] ; then
 			mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html
-			echo "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> (${SIZE}K) is unreproducible.</li>" >> $ROMS_HTML
+			echo "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> ($SIZE) is unreproducible.</li>" >> $ROMS_HTML
 		else
 			SHASUM=$(sha256sum $i/coreboot.rom|cut -d " " -f1)
-			echo "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, ${SIZE}K) is reproducible.</li>" >> $ROMS_HTML
+			echo "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, $SIZE) is reproducible.</li>" >> $ROMS_HTML
 			let GOOD_ROMS+=1
 			rm -f $BASE/coreboot/dbd/$i.html # cleanup from previous (unreproducible) tests - if needed
 		fi

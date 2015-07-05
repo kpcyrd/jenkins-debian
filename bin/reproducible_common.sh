@@ -411,3 +411,14 @@ call_debbindiff_on_any_file() {
 		echo $msg | tee -a $TMPDIR/$1/$2.html
 	fi
 }
+
+get_filesize() {
+		local BYTESIZE="$(du -h -b $1 | cut -f1)"
+		if [ $BYTESIZE -gt 1048576 ] ; then
+			SIZE="$(echo $BYTESIZE/1048576|bc)M"
+		elif [ $BYTESIZE -gt 1024 ] ; then
+			SIZE="$(echo $BYTESIZE/1024|bc)K"
+		else
+			SIZE="$(echo $BYTESIZE/1024|bc) bytes"
+		fi
+}

@@ -172,7 +172,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION}.</p>"
+write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} using ${DBDVERSION}.</p>"
 write_explaination_table NetBSD
 cat $FILES_HTML >> $PAGE
 write_page "     <p><pre>"

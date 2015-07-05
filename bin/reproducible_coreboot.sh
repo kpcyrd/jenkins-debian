@@ -268,7 +268,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page ", while $BAD_ROMS ($BAD_PERCENT%) failed to build from source."
 fi
-write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION}.</p>"
+write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION} using ${DBDVERSION}.</p>"
 write_explaination_table coreboot
 cat $ROMS_HTML >> $PAGE
 write_page "     <p><pre>"

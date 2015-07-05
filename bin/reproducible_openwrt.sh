@@ -292,7 +292,7 @@ write_page "     </div><div id=\"main-content\">"
 write_page "       <h1>OpenWrt - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
 write_page_intro OpenWrt
 write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES built images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES built packages were reproducible in our test setup."
-write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION}.</p>"
+write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION} using ${DBDVERSION}.</p>"
 write_explaination_table OpenWrt
 cat $DBD_HTML >> $PAGE
 write_page "     <table><tr><th>git commit built</th></tr><tr><td><code>"

@@ -570,7 +570,7 @@ create_main_stats_page() {
 	done
 	write_page "</center></p><p>"
 	# write inventory table
-	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
+	write_page "<table class=\"main\"><tr><th colspan=\"2\">Various reproducibility statistics</th></tr>"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct issues</a></td><td>$ISSUES</td></tr>"
 	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
@@ -623,7 +623,7 @@ create_main_stats_page() {
 		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE\"></a>"
 	done
 	# write build performace stats
-	write_page "<table class=\"main\"><tr><th>&nbsp;</th><th>amount</th></tr>"
+	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics</th></tr>"
 	AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND datum='$DATE'")
 	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND datum='$DATE'")
 	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND datum='$DATE'")

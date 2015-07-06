@@ -3,7 +3,7 @@
 # list of warnings here...
 
 # coreboot
-warning /.+recipe for target.+ failed/
+#warning /.+recipe for target.+ failed/
 warning /skipping.+because we're missing compilers for.+/
-warning /make: .+ Error 1/
+#warning /make: .+ Error 1/
 

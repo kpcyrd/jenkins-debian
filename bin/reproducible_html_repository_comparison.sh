@@ -118,7 +118,7 @@ for PKG in $SOURCES ; do
 	write_page "<tr><td><pre>src:$PKG</pre></td>"
 	write_page " <td>"
 	case $PKG in
-		strip-nondeterminism)
+		strip-nondeterminism|debbindiff)
 			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git" ;;
 		*)
 			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds" ;;
@@ -148,7 +148,7 @@ for PKG in $SOURCES ; do
 		fi
 	else
 		write_page "<a href=\"$URL\">$PKG.git</a>"
-		if [ "$PKG" != "strip-nondeterminism" ] ; then
+		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "debbindiff" ] ; then
 			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_page "<br />(unused?"
 				write_page "<br /><span class=\"purple\">Then the branch should probably renamed.</span>"
@@ -158,7 +158,7 @@ for PKG in $SOURCES ; do
 			elif $OBSOLETE_IN_EXP ; then
 				write_page "<br />(only used in testing and unstable, fixed in experimental)"
 			fi
-		elif [ "$PKG" = "strip-nondeterminism" ] && $OBSOLETE_IN_SID ; then
+		elif ( [ "$PKG" = "strip-nondeterminism" ] || [ "$PKG" = "debbindiff" ] ) && $OBSOLETE_IN_SID ; then
 			write_page "<br />(this repo is always used)"
 		fi
 	fi

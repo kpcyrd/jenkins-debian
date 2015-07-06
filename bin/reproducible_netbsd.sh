@@ -73,6 +73,13 @@ done
 save_netbsd_results b1
 
 echo "============================================================================="
+echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - cleaning up between builds."
+echo "============================================================================="
+rm obj/releasedir -r
+rm obj/destdir.* -r
+# we keep the toolchain(s)
+
+echo "============================================================================="
 echo "$(date -u) - Building netbsd - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"

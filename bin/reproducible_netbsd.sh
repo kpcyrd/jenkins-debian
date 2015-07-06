@@ -158,13 +158,16 @@ cat > $PAGE <<- EOF
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Reproducible NetBSD ?</title>
-    <link rel='stylesheet' id='twentyfourteen-style-css'  href='landing_style.css?ver=4.0' type='text/css' media='all' />
+    <link rel='stylesheet' href='global.css' type='text/css' media='all' />
   </head>
   <body>
+    <div id="logo">
+      <img src="NetBSD-smaller.png" />
+      <h1>Reproducible NetBSD ?</h1>
+    </div>
     <div class="content">
       <div class="page-content">
 EOF
-write_page "       <h1>Reproducible NetBSD ?</h1>"
 write_page_intro NetBSD
 write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES built netbsd files were reproducible in our test setup"
 if [ "$GOOD_PERCENT" = "100.0" ] ; then

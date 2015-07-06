@@ -420,6 +420,6 @@ get_filesize() {
 		elif [ $BYTESIZE -gt 1024 ] ; then
 			SIZE="$(echo $BYTESIZE/1024|bc)K"
 		else
-			SIZE="$(echo $BYTESIZE/1024|bc) bytes"
+			SIZE="$BYTESIZE bytes"
 		fi
 }

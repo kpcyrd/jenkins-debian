@@ -26,48 +26,6 @@ create_results_dirs() {
 	mkdir -p $BASE/coreboot/dbd
 }
 
-call_debbindiff() {
-	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
-	local msg=""
-	set +e
-	( timeout $TIMEOUT schroot \
-		--directory $TMPDIR \
-		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
-		debbindiff -- \
-			--html $TMPDIR/$1.html \
-			$TMPDIR/b1/$1/coreboot.rom \
-			$TMPDIR/b2/$1/coreboot.rom 2>&1 \
-	) 2>&1 >> $TMPLOG
-	RESULT=$?
-	if ! "$DEBUG" ; then set +x ; fi
-	set -e
-	cat $TMPLOG # print dbd output
-	rm -f $TMPLOG
-	case $RESULT in
-		0)	echo "$(date -u) - $1/coreboot.rom is reproducible, yay!"
-			;;
-		1)
-			echo "$(date -u) - $DBDVERSION found issues, please investigate $1/coreboot.rom"
-			;;
-		2)
-			msg="$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/coreboot.rom"
-			;;
-		124)
-			if [ ! -s $TMPDIR/$1.html ] ; then
-				msg="$(date -u) - $DBDVERSION produced no output for $1/coreboot.rom and was killed after running into timeout after ${TIMEOUT}..."
-			else
-				msg="$DBDVERSION was killed after running into timeout after $TIMEOUT, but there is still $TMPDIR/$1.html"
-			fi
-			;;
-		*)
-			msg="$(date -u) - Something weird happened when running $DBDVERSION on $1/coreboot.rom (which exited with $RESULT) and I don't know how to handle it."
-			;;
-	esac
-	if [ ! -z $msg ] ; then
-		echo $msg | tee -a $TMPDIR/$1.html
-	fi
-}
-
 save_coreboot_results(){
 	RUN=$1
 	cd coreboot-builds
@@ -209,7 +167,7 @@ cd $TMPDIR/b1
 for i in $(ls -1d *| sort -u) ; do
 	let ALL_ROMS+=1
 	if [ -f $i/coreboot.rom ] ; then
-		call_debbindiff $i
+		call_debbindiff $i coreboot.rom
 		get_filesize $i/coreboot.rom
 		if [ -f $TMPDIR/$i.html ] ; then
 			mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html

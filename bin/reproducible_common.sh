@@ -369,7 +369,7 @@ irc_message() {
 	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 }
 
-call_debbindiff_on_any_file() {
+call_debbindiff() {
 	mkdir -p $TMPDIR/$1/$(dirname $2)
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	local msg=""

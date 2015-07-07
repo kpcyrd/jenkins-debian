@@ -266,7 +266,7 @@ dbd_timeout() {
 	handle_ftbr "$msg"
 }
 
-call_debbindiff() {
+call_debbindiff_on_changes_files() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="30m"
@@ -552,7 +552,7 @@ update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
-	call_debbindiff  # defines DBDVERSION, update_db_and_html defines STATUS
+	call_debbindiff_on_changes_files  # defines DBDVERSION, update_db_and_html defines STATUS
 fi
 
 check_for_race_conditions

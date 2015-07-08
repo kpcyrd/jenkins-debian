@@ -498,12 +498,15 @@ def get_bugs():
     global conn_udd
     if not conn_udd:
         conn_udd = start_udd_connection()
+    global bugs
+    if bugs:
+        return bugs
     rows = query_udd(query)
     log.info("finding out which usertagged bugs have been closed or at least have patches")
     packages = {}
 
-    bugs = [str(x[0]) for x in rows]
-    bugs_patches = bugs_have_patches(bugs)
+    bugs_nr = [str(x[0]) for x in rows]
+    bugs_patches = bugs_have_patches(bugs_nr)
 
     pkgs = [str(x[1]) for x in rows]
     pkgs_real = are_virtual_packages(pkgs)
@@ -569,5 +572,7 @@ def irc_msg(msg):
 conn_db = start_db_connection()  # the local sqlite3 reproducible db
 # get_bugs() is the only user of this, let it initialize the connection itself,
 # during it's first call to speed up things when unneeded
+# also "share" the bugs, to avoid collecting them multiple times per run
 conn_udd = None
+bugs = None
 

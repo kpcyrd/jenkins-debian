@@ -67,6 +67,8 @@ parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-d", "--debug", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
+parser.add_argument("--ignore-missing-files", action="store_true",
+                    help="useful for local testing, where you don't have all the build logs, etc..")
 args, unknown_args = parser.parse_known_args()
 log_level = logging.INFO
 if args.debug or DEBUG:
@@ -106,6 +108,8 @@ log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
 log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
 log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
 
+if args.ignore_missing_files:
+    log.warning("Missing files will be ignored!")
 
 tab = '  '
 

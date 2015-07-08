@@ -149,7 +149,7 @@ def gen_extra_links(package, version, suite, arch, status):
             default_view = url
     else:
         log.debug('debbindiff not detetected at ' + dbd)
-        if status == 'unreproducible':
+        if status == 'unreproducible' and not args.ignore_missing_files:
             log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without debbindiff output.')
     if os.access(dbdtxt, os.R_OK):
@@ -164,8 +164,9 @@ def gen_extra_links(package, version, suite, arch, status):
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:
             default_view = url
-    elif status not in ('untested', 'blacklisted', 'FTBFS', 'not for us'):
-        log.critical('buildinfo not detected at ' + buildinfo)
+    elif status not in ('untested', 'blacklisted', 'FTBFS', 'not for us') and \
+        not args.ignore_missing_files:
+            log.critical('buildinfo not detected at ' + buildinfo)
     rbuild = pkg_has_rbuild(package, version, suite, arch)
     if rbuild:  # being a tuple (rbuild path, size), empty if non existant
         url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
@@ -174,7 +175,7 @@ def gen_extra_links(package, version, suite, arch, status):
                 sizeof_fmt(rbuild[1]) + ')</a>\n'
         if not default_view:
             default_view = url
-    elif status not in ('untested', 'blacklisted'):
+    elif status not in ('untested', 'blacklisted') and not args.ignore_missing_files:
         log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even though it has been built.')
     links += link_buildlogs(package, eversion, suite, arch)

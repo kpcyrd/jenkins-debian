@@ -328,37 +328,6 @@ def query_udd(query):
         return []
     return cursor.fetchall()
 
-def is_virtual_package(package):
-    rows = query_udd("""SELECT source FROM sources WHERE source='%s'""" % package)
-    if len(rows) > 0:
-            return False
-    return True
-
-
-def are_virtual_packages(packages):
-    pkgs = "source='" + "' OR source='".join(packages) + "'"
-    query = 'SELECT source FROM sources WHERE %s' % pkgs
-    rows = query_udd(query)
-    result = {x: False for x in packages if (x,) in rows}
-    result.update({x: True for x in packages if (x,) not in rows})
-    return result
-
-
-def bug_has_patch(bug):
-    query = """SELECT id FROM bugs_tags WHERE id=%s AND tag='patch'""" % bug
-    if len(query_udd(query)) > 0:
-        return True
-    return False
-
-
-def bugs_have_patches(bugs):
-    '''
-    This returns a list of tuples where every tuple has a bug with patch
-    '''
-    bugs = 'id=' + ' OR id='.join(bugs)
-    query = """SELECT id FROM bugs_tags WHERE (%s) AND tag='patch'""" % bugs
-    return query_udd(query)
-
 
 def package_has_notes(package):
     # not a really serious check, it'd be better to check the yaml file
@@ -481,9 +450,13 @@ def get_bugs():
     }
     """
     query = """
-        SELECT bugs.id, bugs.source, bugs.done
-        FROM bugs JOIN bugs_tags on bugs.id = bugs_tags.id
-                  JOIN bugs_usertags on bugs_tags.id = bugs_usertags.id
+        SELECT DISTINCT bugs.id, bugs.source, bugs.done, tags.tag
+        FROM bugs JOIN bugs_tags ON bugs.id = bugs_tags.id
+                  JOIN bugs_usertags ON bugs_tags.id = bugs_usertags.id
+                  JOIN sources ON bugs.source=sources.source
+                  LEFT JOIN (
+                    SELECT id, tag FROM bugs_tags WHERE tag='patch'
+                  ) AS tags ON bugs.id = tags.id
         WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
         AND bugs.id NOT IN (
             SELECT id
@@ -505,26 +478,16 @@ def get_bugs():
     log.info("finding out which usertagged bugs have been closed or at least have patches")
     packages = {}
 
-    bugs_nr = [str(x[0]) for x in rows]
-    bugs_patches = bugs_have_patches(bugs_nr)
-
-    pkgs = [str(x[1]) for x in rows]
-    pkgs_real = are_virtual_packages(pkgs)
-
     for bug in rows:
         if bug[1] not in packages:
             packages[bug[1]] = {}
-        # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done
-        if pkgs_real[str(bug[1])]:
-            continue  # package is virtual, I don't care about virtual pkgs
+        # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done,
+        # bug[3] = tag (patch)
         packages[bug[1]][bug[0]] = {'done': False, 'patch': False}
-        if bug[2]: # if the bug is done
+        if bug[2]:  # if the bug is done
             packages[bug[1]][bug[0]]['done'] = True
-        try:
-            if (bug[0],) in bugs_patches:
-                packages[bug[1]][bug[0]]['patch'] = True
-        except KeyError:
-            log.error('item: ' + str(bug))
+        if bug[3]:  # the bug is patched
+            packages[bug[1]][bug[0]]['patch'] = True
     return packages
 
 def get_trailing_icon(package, bugs):

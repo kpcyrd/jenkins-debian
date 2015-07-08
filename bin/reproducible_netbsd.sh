@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for these architectures
-ARCHS="sparc64 i386"
+ARCHS="sparc64 amiga"
 
 cleanup_tmpdirs() {
 	cd

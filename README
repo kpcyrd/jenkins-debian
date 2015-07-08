@@ -140,7 +140,7 @@ Installation tests inside chroot environments.
 
 * Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through eight concurrent builder jobs which are each constantly testing packages and saving the results of these tests.
 
-* There are 2 jobs tesing the link:https://openwrt.org/[OpenWrt] and link:http://www.coreboot.org/[coreboot] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/openwrt and https://reproducible.debian.net/coreboot.
+* There are 3 jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt] and link:http://www.netbsd.org/[NetBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/ and https://reproducible.debian.net/netbsd/.
 
 * Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and which schedules "new packages" to be tested if the queue is below a certain threshold. New packages" in this context means:
 ** truly new packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),

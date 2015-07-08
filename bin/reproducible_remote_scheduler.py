@@ -15,14 +15,14 @@ import argparse
 parser = argparse.ArgumentParser(
     description='Reschedule packages to re-test their reproducibility',
     epilog='The build results will be announced on the #debian-reproducible' +
-           ' IRC channel unless -n is provided.\nSpecifying both -r and -i ' +
+           ' IRC channel if -n is provided.\nSpecifying both -r and -i ' +
            'means "all packages with that issue AND that status"')
 group = parser.add_mutually_exclusive_group()
 parser.add_argument('--dry-run', action='store_true')
 group.add_argument('-a', '--artifacts', default=False, action='store_true',
                    help='Save artifacts (for further offline study)')
-group.add_argument('-n', '--no-notify', default=False, action='store_true',
-                   help='Do not notify the channel when the build finishes')
+group.add_argument('-n', '--notify', default=False, action='store_true',
+                   help='Notify the channel when the build finishes')
 parser.add_argument('--noisy', action='store_true', help='Also notify when ' +
                     'the build starts, linking to the build url. This disables -n.')
 parser.add_argument('-m', '--message', default='', nargs='+',
@@ -80,7 +80,7 @@ built_after = scheduling_args.after
 built_before = scheduling_args.before
 packages = scheduling_args.packages
 artifacts = scheduling_args.artifacts
-notify = not scheduling_args.no_notify or scheduling_args.noisy
+notify = scheduling_args.notify or scheduling_args.noisy
 debug_url = scheduling_args.noisy
 dry_run = scheduling_args.dry_run
 
@@ -132,8 +132,8 @@ if len(packages) > 50 and notify:
     log.critical(bcolors.RED + bcolors.BOLD)
     call(['figlet', 'No.'])
     log.critical(bcolors.FAIL + 'Do not reschedule more than 50 packages ' +
-                 'with notification.\nIf you really need to spam the IRC ' +
-                 'channel this much use a loop to achive that.' + bcolors.ENDC)
+                 'with notification.\nIf you think you need to do this, ' +
+                 'please discuss this with the IRC channel first.' + bcolors.ENDC)
     sys.exit(1)
 
 if artifacts:

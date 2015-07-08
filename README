@@ -162,9 +162,9 @@ Installation tests inside chroot environments.
 
 * If you are in the reproducible team you can reschedule packages by yourself:
 ** log into alioth.debian.org via ssh, in the team home (/home/groups/reproducible/) there is a reschedule.sh script you can call. Use the --help switch to get the online help.
-** The team IRC channel will get a notification both when the scheduling is done and once the build finishes.
+** The team IRC channel will get a notification about the scheduling and optionally when the build finishes too.
 
-* If you are not in the reproducible team or if you want to reschedule big sets of packages please ask for a manual rescheduling in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins can bypass the limitations imposed to remote calls (and e.g. schedule a lot of packages (remotes are limited at 50 per day) without notifications at the end).
+* If you are not in the reproducible team or if you want to reschedule big sets of packages please ask for a manual rescheduling in the '#debian-reproducible' IRC channel on OFTC. Those with shell access to jenkins can bypass the limitations imposed to remote calls, which are limited to 50 schedulings per day.
 
 * Blacklisting packages can be done similarly:
 

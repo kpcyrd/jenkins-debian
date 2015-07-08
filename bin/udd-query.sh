@@ -68,43 +68,33 @@ multiarch_versionskew() {
 orphaned_without_o_bug() {
 	WNPPRM=$(mktemp)
 	SORTED_UDD=$(mktemp)
-	RES1=$(mktemp)
 
-	SQL_QUERY="SELECT DISTINCT source
-		FROM sources
-		WHERE maintainer LIKE '%packages@qa.debian.org%'
-		AND release='sid'
-		ORDER BY source ; "
+	SQL_QUERY="SELECT DISTINCT u.source
+		FROM upload_history AS u
+		JOIN (
+				SELECT s.source, max(u.date) AS date
+				FROM upload_history AS u
+				JOIN sources AS s ON s.source=u.source
+				WHERE s.release = 'sid' OR s.release = 'experimental'
+				GROUP BY s.source
+			) AS foo ON foo.source=u.source AND foo.date=u.date
+		WHERE maintainer like '%packages@qa.debian.org%';"
 
 	udd_query
 	cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
 	curl --silent https://qa.debian.org/data/bts/wnpp_rm \
 		| cut -d ' ' -f 1 | tr -d ':' | sort | uniq > "$WNPPRM"
-	comm -23 "$SORTED_UDD" "$WNPPRM" > "$RES1"
+	RES=$(comm -23 "$SORTED_UDD" "$WNPPRM")
 
-	# $RES1 now contains all packages that have packages@qa.debian.org as the
-	# maintainer but do not appear on https://qa.debian.org/data/bts/wnpp_rm
-	# (because they are missing a bug)
-	# we have to remove all the packages that appear in experimental but do not
-	# have packages@qa.debian.org as a maintainer (i.e: they found a new one)
-	SQL_QUERY="SELECT DISTINCT source
-		FROM sources
-		WHERE maintainer NOT LIKE '%packages@qa.debian.org%'
-		AND release='experimental'
-		ORDER BY source ; "
-	udd_query
-
-	if [ -s $UDD ] ; then
-		cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"
-
+	if [ -n "$RES" ] ; then
 		echo "Warning: The following packages are maintained by packages@qa.debian.org"
 		echo "but are missing a wnpp bug according to https://qa.debian.org/data/bts/wnpp_rm"
 		echo
 		# TODO: turn source package names into links
-		comm -13 "$SORTED_UDD" "$RES1"
+		echo $RES
 	fi
 
-	rm -f "$UDD" "$WNPPRM" "$RES1" "$SORTED_UDD"
+	rm -f "$UDD" "$WNPPRM" "$SORTED_UDD"
 }
 
 #

@@ -19,7 +19,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 == General ToDo
 
 * replace amd64 in scripts with $HOSTARCH
-* put /etc/rc.local in git and extend it to do cleanup of lockfiles etc
+* extend /etc/rc.local to do cleanup of lockfiles (or do it properly the systemd way...)
 * explain in README how to write jobs, eg which pathes are on tmpfs
 
 === proper backup

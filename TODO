@@ -24,7 +24,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === proper backup
 
-* postpone til we run on .debian.org?
 * gpg encrypted to some keys
 * run on alioth or paradis
 * '/var/lib/jenkins/jobs' (the results - the configs are in .git)
@@ -36,6 +35,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
 * '/srv/jenkins.debian.net-scm-sync.git'
 * '/etc/.git' and '/etc'
+* postpone til we run on .debian.org?
 
 === TODO for testing stretch
 

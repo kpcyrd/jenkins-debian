@@ -90,8 +90,9 @@ orphaned_without_o_bug() {
 		echo "Warning: The following packages are maintained by packages@qa.debian.org"
 		echo "but are missing a wnpp bug according to https://qa.debian.org/data/bts/wnpp_rm"
 		echo
-		# TODO: turn source package names into links
-		echo $RES
+		for i in $RES ; do
+			echo "https://tracker.debian.org/$i"
+		done
 	fi
 
 	rm -f "$UDD" "$WNPPRM" "$SORTED_UDD"

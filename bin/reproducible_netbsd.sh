@@ -29,6 +29,7 @@ create_results_dirs() {
 save_netbsd_results(){
 	local RUN=$1
 	local ARCH
+	cd obj/releasedir/
 	for ARCH in $ARCHS ; do
 		mkdir -p $TMPDIR/$RUN/${ARCH}
 		cp -pr ${ARCH} $TMPDIR/$RUN/

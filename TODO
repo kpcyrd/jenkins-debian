@@ -202,7 +202,6 @@ properties:
 * pkg sets related:
 ** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 ** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
-** add lua package set (all packages build-depending on dh-lua and starting with lua*)
 
 * missing tests:
 ** variation in kernel

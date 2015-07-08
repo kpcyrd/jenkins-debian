@@ -368,6 +368,17 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[28]}.pkgset
 	fi
 
+	# lua packages
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[29]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[29]}.pkgset ] ; then
+		# get a bunch of binary packages names and convert them to source package names
+		grep-dctrl -sPackage -n -FPackage -e ^lua.* $PACKAGES > $TMPFILE
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
+		# add some more source package names
+		grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		update_if_similar ${META_PKGSET[29]}.pkgset
+	fi
+
 }
 
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)

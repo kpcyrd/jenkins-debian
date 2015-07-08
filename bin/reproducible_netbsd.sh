@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for these architectures
-ARCHS="sparc64"
+ARCHS="sparc64 xen"
 
 cleanup_tmpdirs() {
 	cd

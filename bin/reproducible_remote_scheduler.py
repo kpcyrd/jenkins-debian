@@ -173,8 +173,8 @@ for pkg in packages:
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
 packages_txt = ' packages ' if len(pkgs) > 1 else ' package '
 trailing = ' - artifacts will be preserved' if artifacts else ''
-trailing += ' - there will be no notification at the end' if not notify else ''
-trailing += ' - notify when the build starts too' if debug_url else ''
+trailing += ' - with irc notification' if notify else ''
+trailing += ' - notify on start too' if debug_url else ''
 
 message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + ' by ' + \
     requester

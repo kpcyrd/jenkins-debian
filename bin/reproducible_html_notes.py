@@ -322,7 +322,7 @@ def purge_old_notes(notes):
             except IndexError:  # the package is not tested. this can happen if
                 pass            # a package got removed from the archive
     if to_rebuild:
-        gen_packages_html(to_rebuild)
+        gen_packages_html(to_rebuild, no_clean=True)
 
 
 def purge_old_issues(issues):

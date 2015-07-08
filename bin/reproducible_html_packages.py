@@ -235,7 +235,9 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
     if nocheck and (not suite or not arch):
         for lsuite in SUITES:
             for larch in ARCHES:
-                gen_packages_html(packages, lsuite, larch, no_clean, True)
+                gen_packages_html(packages, lsuite, larch, True, True)
+        if not no_clean:
+            purge_old_pages()
         return
     for pkg in sorted(packages):
         pkg = str(pkg)

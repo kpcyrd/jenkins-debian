@@ -124,7 +124,7 @@ update_db_and_html() {
 	# notification for changing status
 	if [ "${OLD_STATUS}" = "reproducible" ] ; then
 		if [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ; then
-			MESSAGE="status changed from reproducible → ${STATUS}. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
+			MESSAGE="Changed from reproducible → ${STATUS}. ${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to debbindiff problems
@@ -135,7 +135,7 @@ update_db_and_html() {
 	fi
 	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ]; then
 		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
-			mail -s "$SRCPACKAGE status changed: $OLD_STATUS -> $STATUS" \
+			mail -s "$SRCPACKAGE changed: $OLD_STATUS -> $STATUS" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				"$SRCPACKAGE@packages.debian.org"
 	fi

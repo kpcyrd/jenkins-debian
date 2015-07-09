@@ -71,6 +71,9 @@ for MACHINE in $MACHINES ; do
 		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
 	# save results in b1
 	save_netbsd_results b1 ${MACHINE}
+	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
+	./build.sh -m ${MACHINE} cleandir
+	rm obj/tooldir.* -rf
 	echo "${MACHINE} done, first time."
 done
 
@@ -98,6 +101,9 @@ for MACHINE in $MACHINES ; do
 		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
 	# save results in b2
 	save_netbsd_results b2 ${MACHINE}
+	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
+	./build.sh -m ${MACHINE} cleandir
+	rm obj/tooldir.* -r
 	echo "${MACHINE} done, second time."
 done
 

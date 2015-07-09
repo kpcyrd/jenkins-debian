@@ -28,13 +28,9 @@ create_results_dirs() {
 
 save_netbsd_results(){
 	local RUN=$1
-	local MACHINE
-	cd obj/releasedir/
-	for MACHINE in $MACHINES ; do
-		mkdir -p $TMPDIR/$RUN/${MACHINE}
-		cp -pr ${MACHINE} $TMPDIR/$RUN/
-	done
-	cd ../..
+	local MACHINE=$2
+	mkdir -p $TMPDIR/$RUN/${MACHINE}
+	cp -pr obj/releasedir/${MACHINE} $TMPDIR/$RUN/
 }
 
 #
@@ -74,7 +70,7 @@ for MACHINE in $MACHINES ; do
 	ionice -c 3 nice \
 		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
 	# save results in b1
-	save_netbsd_results b1
+	save_netbsd_results b1 ${MACHINE}
 	echo "${MACHINE} done, first time."
 done
 
@@ -101,7 +97,7 @@ for MACHINE in $MACHINES ; do
 		linux64 --uname-2.6 \
 		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
 	# save results in b2
-	save_netbsd_results b2
+	save_netbsd_results b2 ${MACHINE}
 	echo "${MACHINE} done, second time."
 done
 

@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for these architectures
-ARCHS="amiga"
+MACHINES="amiga"
 
 cleanup_tmpdirs() {
 	cd
@@ -28,11 +28,11 @@ create_results_dirs() {
 
 save_netbsd_results(){
 	local RUN=$1
-	local ARCH
+	local MACHINE
 	cd obj/releasedir/
-	for ARCH in $ARCHS ; do
-		mkdir -p $TMPDIR/$RUN/${ARCH}
-		cp -pr ${ARCH} $TMPDIR/$RUN/
+	for MACHINE in $MACHINES ; do
+		mkdir -p $TMPDIR/$RUN/${MACHINE}
+		cp -pr ${MACHINE} $TMPDIR/$RUN/
 	done
 	cd ../..
 }
@@ -70,9 +70,9 @@ echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-for ARCH in $ARCHS ; do
+for MACHINE in $MACHINES ; do
 	ionice -c 3 nice \
-		./build.sh -j $NUM_CPU -U -u -m ${ARCH} release
+		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
 done
 # save results in b1
 save_netbsd_results b1
@@ -95,10 +95,10 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-for ARCH in $ARCHS ; do
+for MACHINE in $MACHINES ; do
 	ionice -c 3 nice \
 		linux64 --uname-2.6 \
-		./build.sh -j $NEW_NUM_CPU -U -u -m ${ARCH} release
+		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
 done
 
 # reset environment to default values again

@@ -262,6 +262,7 @@ properties:
 
 * announce on their list
 * explain status in plain english
+** MKREPRO is set to "yes"
 
 ==== reproducible fedora
 

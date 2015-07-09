@@ -59,6 +59,12 @@ echo "This is netbsd $NETBSD_VERSION."
 echo
 git log -1
 
+# from $src/share/mk/bsd.README:
+# MKREPRO         If "yes", create reproducable builds. This enables
+#                 different switches to make two builds from the same source tree
+#                 result in the same build results.
+export MKREPRO="yes"
+
 echo "============================================================================="
 echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - first build run."
 echo "============================================================================="

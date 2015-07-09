@@ -14,7 +14,7 @@ common_init "$@"
 set -e
 
 # build for these architectures
-MACHINES="amiga"
+MACHINES="sparc64 amd64"
 
 cleanup_tmpdirs() {
 	cd
@@ -73,9 +73,10 @@ export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 for MACHINE in $MACHINES ; do
 	ionice -c 3 nice \
 		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
+	# save results in b1
+	save_netbsd_results b1
+	echo "${MACHINE} done, first time."
 done
-# save results in b1
-save_netbsd_results b1
 
 echo "============================================================================="
 echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - cleaning up between builds."
@@ -99,6 +100,9 @@ for MACHINE in $MACHINES ; do
 	ionice -c 3 nice \
 		linux64 --uname-2.6 \
 		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
+	# save results in b2
+	save_netbsd_results b2
+	echo "${MACHINE} done, second time."
 done
 
 # reset environment to default values again
@@ -107,9 +111,6 @@ unset LC_ALL
 export TZ="/usr/share/zoneinfo/UTC"
 export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 umask 0022
-
-# save results in b2
-save_netbsd_results b2
 
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/netbsd

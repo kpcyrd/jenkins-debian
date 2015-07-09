@@ -347,7 +347,7 @@
         - '{name}_html_dd_list':
             my_description: 'Generate HTML results (dd-list) for reproducible builds.'
             my_timed: '55 23 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_notes':
             my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_blank">notes.git</a> repository.'

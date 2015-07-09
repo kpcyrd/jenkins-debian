@@ -170,13 +170,13 @@ cat > $PAGE <<- EOF
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Reproducible NetBSD ?</title>
+    <title>Reproducible NetBSD $MAGIC_SIGN</title>
     <link rel='stylesheet' href='global.css' type='text/css' media='all' />
   </head>
   <body>
     <div id="logo">
       <img src="NetBSD-smaller.png" />
-      <h1>Reproducible NetBSD ?</h1>
+      <h1>Reproducible NetBSD $MAGIC_SIGN</h1>
     </div>
     <div class="content">
       <div class="page-content">

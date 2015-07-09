@@ -44,7 +44,7 @@ for suite in SUITES:
                   stdout=PIPE, stdin=PIPE, stderr=PIPE)
         out, err = p.communicate(input=('\n'.join(pkgs)).encode())
         if err:
-            log.error('dd-list errored:\n' + err.decode())
+            log.error('dd-list printed some errors:\n' + err.decode())
         log.debug('dd-list output:\n' + out.decode())
 
         html = '<p>The following maintainers and uploaders are listed '

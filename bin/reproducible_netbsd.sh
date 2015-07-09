@@ -72,7 +72,7 @@ for MACHINE in $MACHINES ; do
 	# save results in b1
 	save_netbsd_results b1 ${MACHINE}
 	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
-	./build.sh -m ${MACHINE} cleandir
+	./build.sh -U -m ${MACHINE} cleandir
 	rm obj/tooldir.* -rf
 	echo "${MACHINE} done, first time."
 done
@@ -102,7 +102,7 @@ for MACHINE in $MACHINES ; do
 	# save results in b2
 	save_netbsd_results b2 ${MACHINE}
 	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
-	./build.sh -m ${MACHINE} cleandir
+	./build.sh -U -m ${MACHINE} cleandir
 	rm obj/tooldir.* -r
 	echo "${MACHINE} done, second time."
 done

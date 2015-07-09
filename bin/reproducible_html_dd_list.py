@@ -67,4 +67,5 @@ for suite in SUITES:
         html += '</pre></p>'
         title = 'Maintainers of unreproducible packages in ' + suite
         destfile = BASE + '/' + suite + '/index_dd-list.html'
-        write_html_page(title, html, destfile, suite, arch)
+        write_html_page(title, html, destfile, suite, arch, style_note=True)
+        log.info('%s/%s/index_dd-list.html published', REPRODUCIBLE_URL, suite)

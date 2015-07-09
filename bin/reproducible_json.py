@@ -36,12 +36,12 @@ for row in result:
     log.debug(pkg)
     output.append(pkg)
 
-tmpfile = tempfile.NamedTemporaryFile(dir=os.path.dirname(REPRODUCIBLE_JSON))
+tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_JSON))[1]
 
-with open(tmpfile.name, 'w') as fd:
+with open(tmpfile, 'w') as fd:
     json.dump(output, fd, indent=4, sort_keys=True)
 
-os.rename(tmpfile.name, REPRODUCIBLE_JSON)
+os.rename(tmpfile, REPRODUCIBLE_JSON)
 os.chmod(REPRODUCIBLE_JSON, 0o644)
 
 log.info(REPRODUCIBLE_URL + '/reproducible.json has been updated.')

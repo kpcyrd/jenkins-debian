@@ -124,7 +124,7 @@ update_db_and_html() {
 	# notification for changing status
 	if [ "${OLD_STATUS}" = "reproducible" ] ; then
 		if [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ; then
-			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible → ${STATUS}"
+			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} ♻ reproducible ➤ ${STATUS}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to debbindiff problems

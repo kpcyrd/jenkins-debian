@@ -346,7 +346,7 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_dd_list':
             my_description: 'Generate HTML results (dd-list) for reproducible builds.'
-            my_timed: '55 23 * * *'
+            my_timed: '55 */2 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_notes':

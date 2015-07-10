@@ -8,7 +8,7 @@
 #
 # Depends: python3
 #
-# Build the reproducible.json file, to provide a nice datasource
+# Build the reproducible.json and reproducibe-tracker.json files, to provide nice datasources
 
 from reproducible_common import *
 
@@ -18,6 +18,7 @@ import tempfile
 
 
 output = []
+output4tracker = []
 
 log.info('Creating json dump of current reproducible status')
 
@@ -35,14 +36,23 @@ for row in result:
     pkg = dict(zip(keys, row))
     log.debug(pkg)
     output.append(pkg)
+    # tracker.d.o should only care about results in unstable
+    if row['suite'] == 'unstable':
+        output4tracker.append(pkg)
 
+# normal json
 tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_JSON))[1]
-
 with open(tmpfile, 'w') as fd:
-    json.dump(output, fd, indent=4, sort_keys=True)
-
+    json.dump(outputa, fd, indent=4, sort_keys=True)
 os.rename(tmpfile, REPRODUCIBLE_JSON)
 os.chmod(REPRODUCIBLE_JSON, 0o644)
 
-log.info(REPRODUCIBLE_URL + '/reproducible.json has been updated.')
+# json for tracker.d.o, thanks to #785531
+tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_TRACKER_JSON))[1]
+with open(tmpfile, 'w') as fd:
+    json.dump(output4tracker, fd, indent=4, sort_keys=True)
+os.rename(tmpfile, REPRODUCIBLE_TRACKER_JSON)
+os.chmod(REPRODUCIBLE_TRACKER_JSON, 0o644)
+
+log.info(REPRODUCIBLE_URL + '/reproducible.json and /reproducible-tracker.json have been updated.')
 

@@ -115,7 +115,7 @@ Installation tests inside chroot environments.
 === qa.debian.org related jobs
 
 * There are jobs for lintian and for piuparts:
-** they simply run a build and/or the tests of the master branch of their git repository on every commit against sid. If that succeeds, the same source will be built on jessie and then (only for lintian) on wheezy.
+** they simply run a build and/or the tests of the master branch of their git repository on every commit against sid. If that succeeds, the same source will be built on stretch, then on jessie and - in the lintian case only - also for wheezy.
 * There are also jobs related to link:https://udd.debian.org[UDD]:
 ** they check for multiarch version screws in various suites or issues with orphaned packages without the correct the relevant bug.
 *** the UDD schema is available at https://udd.debian.org/schema/udd.html

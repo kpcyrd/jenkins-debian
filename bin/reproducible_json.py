@@ -37,13 +37,13 @@ for row in result:
     log.debug(pkg)
     output.append(pkg)
     # tracker.d.o should only care about results in unstable
-    if row['suite'] == 'unstable':
+    if pkg['suite'] == 'unstable':
         output4tracker.append(pkg)
 
 # normal json
 tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_JSON))[1]
 with open(tmpfile, 'w') as fd:
-    json.dump(outputa, fd, indent=4, sort_keys=True)
+    json.dump(output, fd, indent=4, sort_keys=True)
 os.rename(tmpfile, REPRODUCIBLE_JSON)
 os.chmod(REPRODUCIBLE_JSON, 0o644)
 

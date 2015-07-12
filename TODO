@@ -101,6 +101,11 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === jenkins-job-builder related
 
+* use fil's package: http://ftp.hands.com/hands-deb/pool/main/j/jenkins-job-builder/jenkins-job-builder_1.2.0~git-0~1.gbp1ae299.dsc
+** needs at least some of the stuff on fil's j.d.n.git/needs-jjb-1.2.0 branch to work with that
+
+==== old jenkins-job-builder TODO, mostly (all?) obsolete thanks to fil's work:
+
 * use jessie version plus h01ger's patches from kali
 * change of syntax:
 ----

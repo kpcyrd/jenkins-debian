@@ -49,17 +49,6 @@ scheduling_args = parser.parse_known_args()[0]
 from reproducible_common import *
 from reproducible_html_indexes import generate_schedule
 
-
-class bcolors:
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    RED = '\033[91m'
-    GOOD = '\033[92m'
-    WARN = '\033[93m' + UNDERLINE
-    FAIL = RED + BOLD + UNDERLINE
-    ENDC = '\033[0m'
-
-
 # this variable is expected to come from the remote host
 try:
     requester = os.environ['LC_USER']

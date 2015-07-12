@@ -238,6 +238,16 @@ def print_critical_message(msg):
     print('\n\n\n')
 
 
+class bcolors:
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    RED = '\033[91m'
+    GOOD = '\033[92m'
+    WARN = '\033[93m' + UNDERLINE
+    FAIL = RED + BOLD + UNDERLINE
+    ENDC = '\033[0m'
+
+
 def _gen_links(suite, arch):
     links = [
         ('last_24h', '<li><a href="/{suite}/{arch}/index_last_24h.html">packages tested in the last 24h</a></li>'),

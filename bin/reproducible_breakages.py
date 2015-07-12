@@ -11,14 +11,6 @@
 from reproducible_common import *
 
 
-class bcolors:
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    WARN = '\033[93m' + UNDERLINE
-    FAIL = '\033[91m' + BOLD + UNDERLINE
-    ENDC = '\033[0m'
-
-
 def unrep_with_dbd_issues():
     log.info('running unrep_with_dbd_issues check...')
     without_dbd = []

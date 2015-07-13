@@ -14,6 +14,7 @@ import re
 import sys
 import json
 import errno
+import atexit
 import sqlite3
 import logging
 import argparse
@@ -83,6 +84,8 @@ sh = logging.StreamHandler()
 sh.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
 log.addHandler(sh)
 
+started_at = datetime.now()
+log.info('Starting at %s', started_at)
 
 log.debug("BIN_PATH:\t" + BIN_PATH)
 log.debug("BASE:\t\t" + BASE)
@@ -217,6 +220,12 @@ for issue in filtered_issues:
     else:
         filter_query += ' OR n.issues LIKE "%' + issue + '%"'
         filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+
+
+@atexit.register
+def print_time():
+    log.info('Finished at %s, took: %s', datetime.now(),
+             datetime.now()-started_at)
 
 
 def print_critical_message(msg):

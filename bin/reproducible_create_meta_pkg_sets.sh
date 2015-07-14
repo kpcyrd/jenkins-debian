@@ -84,6 +84,7 @@ get_installable_set() {
 	if [ $RESULT -ne 0 ] ; then
 		rm -f $TMPFILE
 		echo "Warning: dose-deb-coinstall cannot calculate the installable set for $1"
+		dose-deb-coinstall --explain --failures --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2}
 	fi
 	rm -f ${TMPFILE2}
 	set -e

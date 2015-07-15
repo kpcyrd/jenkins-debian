@@ -191,6 +191,15 @@ update_pkg_sets() {
 		rm -f ${TMPFILE2}
 	fi
 
+	# packages from the cii-census
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[30]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[30]}.pkgset ] ; then
+		CII=$(mktemp)
+		git clone https://github.com/linuxfoundation/cii-census.git $CII
+		csvtool -t ',' col 1 $CII|results.csv|grep -v "project name" > $TMPFILE
+		update_if_similar ${META_PKGSET[30]}.pkgset
+		rm $CII -r
+	fi
+
 	# gnome and everything it depends on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[9]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[9]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}

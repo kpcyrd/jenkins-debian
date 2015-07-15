@@ -92,6 +92,7 @@ META_PKGSET[26]="maint_debian-boot"
 META_PKGSET[27]="maint_debian-ocaml"
 META_PKGSET[28]="maint_debian-x"
 META_PKGSET[29]="maint_lua"
+META_PKGSET[30]="cii-census"
 
 schedule_packages() {
 	LC_USER="$REQUESTER" \

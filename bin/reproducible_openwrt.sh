@@ -307,7 +307,7 @@ rm -f $DBD_HTML $TOOLCHAIN_HTML $BANNER_HTML
 # the end
 calculate_build_duration
 print_out_duration
-irc_message "$REPRODUCIBLE_URL/openwrt/ has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% reproducible)"
+irc_message "$REPRODUCIBLE_URL/openwrt/ has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% packages reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

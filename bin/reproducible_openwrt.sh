@@ -47,6 +47,7 @@ openwrt_config() {
 	CONFIG=$1
 
 	printf "$CONFIG" > .config
+	printf "CONFIG_ALL=y" >> .config
 	make defconfig
 }
 
@@ -69,17 +70,7 @@ openwrt_build() {
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU target/compile
-	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/cleanup
-	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/compile || true # don't let some packages fail the whole build
-	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/install
-	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU target/install
-	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/index
+		$MAKE -j $NUM_CPU IGNORE_ERRORS=1
 }
 
 openwrt_cleanup() {

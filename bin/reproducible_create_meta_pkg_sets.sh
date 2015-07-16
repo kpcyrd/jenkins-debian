@@ -195,7 +195,7 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[30]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[30]}.pkgset ] ; then
 		CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
 		git clone https://github.com/linuxfoundation/cii-census.git $CII
-		csvtool -t ',' col 1 $CII/results.csv | grep -v "project name" > $TMPFILE
+		csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
 		update_if_similar ${META_PKGSET[30]}.pkgset
 		rm $CII -r
 	fi

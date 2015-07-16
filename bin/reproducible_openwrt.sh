@@ -216,9 +216,21 @@ cd $TMPDIR/b1
 tree .
 for i in * ; do
 	cd $i
+
+	# search images in both paths to find non-existing ones
+	IMGS1=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
+	pushd $TMPDIR/b2/$i
+	IMGS2=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
+	popd
+
 	echo "       <table><tr><th>Images for <code>$i</code></th></tr>" >> $DBD_HTML
-	for j in $(find * -name "*.bin" -o -name "*.squashfs" |sort -u ) ; do
+	for j in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
 		let ALL_IMAGES+=1
+		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}K) failed to build once.</td></tr>" >> $DBD_HTML
+			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
+			continue
+		fi
 		call_debbindiff $i $j
 		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
@@ -243,9 +255,21 @@ create_results_dirs
 cd $TMPDIR/b1
 for i in * ; do
 	cd $i
+
+	# search packages in both paths to find non-existing ones
+	PKGS1=$(find * -type f -name "*.ipk" | sort -u )
+	pushd $TMPDIR/b2/$i
+	PKGS2=$(find * -type f -name "*.ipk" | sort -u )
+	popd
+
 	echo "       <table><tr><th>Packages for <code>$i</code></th></tr>" >> $DBD_HTML
-	for j in $(find * -name "*.ipk" |sort -u ) ; do
+	for j in $(printf "$PKGS1\n$PKGS2" | sort -u ) ; do
 		let ALL_PACKAGES+=1
+		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}K) failed to build once.</td></tr>" >> $DBD_HTML
+			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
+			continue
+		fi
 		call_debbindiff $i $j
 		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then

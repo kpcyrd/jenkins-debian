@@ -31,6 +31,7 @@ save_netbsd_results(){
 	local MACHINE=$2
 	mkdir -p $TMPDIR/$RUN/${MACHINE}
 	cp -pr obj/releasedir/${MACHINE} $TMPDIR/$RUN/
+	find $TMPDIR/$RUN/ -name MD5 -o -name SHA512 -exec rm {} \;
 }
 
 #

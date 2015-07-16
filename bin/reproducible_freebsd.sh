@@ -38,8 +38,8 @@ save_freebsd_results(){
 # main
 #
 RSSH="ssh freebsd-jenkins.debian.net"
-TMPBUILDDIR=$($RSSH mktemp --tmpdir=/srv/workspace/chroots/ -d -t freebsd-XXXXXXXX)  # used to build on tmpfs
-TMPDIR=$($RSSH mktemp --tmpdir=/srv/reproducible-results -d)  # accessable in schroots, used to compare results
+TMPBUILDDIR=$($RSSH 'TMPDIR=/srv/workspace/chroots/ mktemp -d -t freebsd-XXXXXXXX')  # FIXME: not used to build on tmpfs
+TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
 trap cleanup_tmpdirs INT TERM EXIT

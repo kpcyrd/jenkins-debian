@@ -50,10 +50,10 @@ echo "$(date -u) - Cloning the freebsd git repository (which is autosynced with 
 echo "============================================================================="
 $RSSH git clone https://github.com/freebsd/freebsd.git $TMPBUILDDIR/freebsd
 FREEBSD="$($RSSH 'cd $TMPBUILDDIR/freebsd ; git log -1')"
-FREEBSD_VERSION=$($RSSH 'cd $TMPBUILDDIR/freebsd ; git describe --always')
+FREEBSD_VERSION="$($RSSH 'cd $TMPBUILDDIR/freebsd ; git describe --always')"
 echo "This is freebsd $FREEBSD_VERSION."
 echo
-$RSSH 'cd $TMPBUILDDIR/freebsd ; git log -1'
+$RSSH "cd $TMPBUILDDIR/freebsd ; git log -1"
 
 
 echo "so far so good, to be continued..."

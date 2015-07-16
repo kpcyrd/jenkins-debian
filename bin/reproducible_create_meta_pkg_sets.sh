@@ -192,21 +192,21 @@ update_pkg_sets() {
 	fi
 
 	# packages from the cii-census
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[30]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[30]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[9]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[9]}.pkgset ] ; then
 		CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
 		git clone https://github.com/linuxfoundation/cii-census.git $CII
 		csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
-		update_if_similar ${META_PKGSET[30]}.pkgset
+		update_if_similar ${META_PKGSET[9]}.pkgset
 		rm $CII -r
 	fi
 
 	# gnome and everything it depends on
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[9]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[9]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[10]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[9]}.pkgset
+		get_installable_set ${META_PKGSET[10]}.pkgset
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
-			update_if_similar ${META_PKGSET[9]}.pkgset
+			update_if_similar ${META_PKGSET[10]}.pkgset
 		fi
 	fi
 
@@ -221,82 +221,84 @@ update_pkg_sets() {
 
 	# all build depends of gnome
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[10]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[9]}.pkgset) ; do
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[10]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[10]}.pkgset
+		update_if_similar ${META_PKGSET[11]}.pkgset
 	fi
 
 	# kde and everything it depends on
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[12]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[11]}.pkgset
+		get_installable_set ${META_PKGSET[12]}.pkgset
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
-			update_if_similar ${META_PKGSET[11]}.pkgset
+			update_if_similar ${META_PKGSET[12]}.pkgset
 		fi
 	fi
+
 	# all build depends of kde
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[12]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[11]}.pkgset) ; do
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[12]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[12]}.pkgset
+		update_if_similar ${META_PKGSET[13]}.pkgset
 	fi
 
 	# xfce and everything it depends on
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[14]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[14]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage xfce4 \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[13]}.pkgset
+		get_installable_set ${META_PKGSET[14]}.pkgset
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
-			update_if_similar ${META_PKGSET[13]}.pkgset
+			update_if_similar ${META_PKGSET[14]}.pkgset
 		fi
 	fi
+
 	# all build depends of xfce
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[14]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[14]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[13]}.pkgset) ; do
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[15]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[15]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[14]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[14]}.pkgset
-	fi
-
-	# tails
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[15]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[15]}.pkgset ] ; then
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[15]}.pkgset
 	fi
 
-	# all build depends of tails
-	rm -f $TMPFILE
-	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[15]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
+	# tails
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[16]}.pkgset
 	fi
 
+	# all build depends of tails
+	rm -f $TMPFILE
+	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[16]}.pkgset) ; do
+			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		done
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
+		update_if_similar ${META_PKGSET[17]}.pkgset
+	fi
+
 	# grml
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[18]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
 		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
-			update_if_similar ${META_PKGSET[17]}.pkgset
+			update_if_similar ${META_PKGSET[18]}.pkgset
 		else
 			echo "Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
 		fi
@@ -304,84 +306,84 @@ update_pkg_sets() {
 
 	# all build depends of grml
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[18]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[17]}.pkgset) ; do
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[19]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[19]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[18]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[18]}.pkgset
-	fi
-
-	# pkg-perl-maintainers
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[19]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[19]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[19]}.pkgset
 	fi
 
-	# pkg-java-maintainers
+	# pkg-perl-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends default-jdk -o -FBuild-Depends-Indep default-jdk $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[20]}.pkgset
 	fi
 
-	# pkg-haskell-maintainers
+	# pkg-java-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends default-jdk -o -FBuild-Depends-Indep default-jdk $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[21]}.pkgset
 	fi
 
-	# pkg-ruby-extras-maintainers
+	# pkg-haskell-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[22]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[22]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[22]}.pkgset
 	fi
 
-	# pkg-golang-maintainers
+	# pkg-ruby-extras-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[23]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[23]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[23]}.pkgset
 	fi
 
-	# pkg-php-pear
+	# pkg-golang-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[24]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[24]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[24]}.pkgset
 	fi
 
-	# pkg-javascript-devel
+	# pkg-php-pear
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[25]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[25]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-javascript-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[25]}.pkgset
 	fi
 
-	# debian-boot@l.d.o maintainers
+	# pkg-javascript-devel
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[26]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[26]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-javascript-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[26]}.pkgset
 	fi
 
-	# debian-ocaml-maint@l.d.o maintainers
+	# debian-boot@l.d.o maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[27]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[27]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[27]}.pkgset
 	fi
 
-	# debian-x@l.d.o maintainers
+	# debian-ocaml-maint@l.d.o maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[28]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[28]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[28]}.pkgset
 	fi
 
-	# lua packages
+	# debian-x@l.d.o maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[29]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[29]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[29]}.pkgset
+	fi
+
+	# lua packages
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[30]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[30]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
 		grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		update_if_similar ${META_PKGSET[29]}.pkgset
+		update_if_similar ${META_PKGSET[30]}.pkgset
 	fi
 
 }

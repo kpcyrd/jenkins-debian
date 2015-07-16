@@ -281,6 +281,11 @@ properties:
 * first build world, later build ports
 * use this setup as the first test bed for remote scheduling:
 
+==== reproducible...
+
+* openembedded.org!
+* Arch? Gentoo?
+
 ==== remote scheduling:
 ----
 <weasel> | h01ger: I have a slave configured, named buildbot.pixelminers.

@@ -93,6 +93,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			calamaris \
 			cmake \
 			cron-apt \
+			csvtool \
 			cucumber \
 			curl \
 			debootstrap \

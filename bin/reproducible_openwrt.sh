@@ -57,9 +57,11 @@ openwrt_build_toolchain() {
 	echo "============================================================================="
 
 	ionice -c 3 nice \
-		make -j $NUM_CPU tools/install
+		make -j 1 V=s tools/install
+		#make -j $NUM_CPU tools/install
 	ionice -c 3 nice \
-		make -j $NUM_CPU toolchain/install
+		make -j 1 V=s toolchain/install
+		#make -j $NUM_CPU toolchain/install
 }
 
 openwrt_build() {

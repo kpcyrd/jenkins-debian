@@ -14,9 +14,12 @@ import argparse
 
 parser = argparse.ArgumentParser(
     description='Reschedule packages to re-test their reproducibility',
-    epilog='The build results will be announced on the #debian-reproducible' +
-           ' IRC channel if -n is provided.\nSpecifying both -r and -i ' +
-           'means "all packages with that issue AND that status"')
+    epilog='The build results will be announced on the #debian-reproducible'
+           ' IRC channel if -n is provided. Specifying two or more filters'
+           ' (namely two or more -r/-i/-t/-b) means "all packages with that'
+           ' issue AND that status AND that date". Blacklisted package '
+           "can't be selected by a filter, but needs to be explitely listed"
+           'in the package list.')
 group = parser.add_mutually_exclusive_group()
 parser.add_argument('--dry-run', action='store_true')
 group.add_argument('-a', '--artifacts', default=False, action='store_true',

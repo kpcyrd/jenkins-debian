@@ -110,7 +110,7 @@ if issue or status or built_after or built_before:
     query = 'SELECT s.name ' + \
             'FROM sources AS s, notes AS n, results AS r ' + \
             'WHERE n.package_id=s.id AND r.package_id=s.id ' + \
-            'AND s.suite = "{suite}" '
+            'AND s.suite = "{suite}" AND r.status != "blacklisted" '
     if issue:
         query += 'AND n.issues LIKE "%{issue}%" '
         formatter['issue'] = issue

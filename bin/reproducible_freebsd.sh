@@ -13,9 +13,6 @@ common_init "$@"
 
 set -e
 
-# build for these architectures
-MACHINES="sparc64 amd64"
-
 cleanup_tmpdirs() {
 	cd
 	$RSSH "rm -r $TMPDIR"
@@ -28,9 +25,8 @@ create_results_dirs() {
 
 save_freebsd_results(){
 	local RUN=$1
-	local MACHINE=$2
-	mkdir -p $TMPDIR/$RUN/${MACHINE}
-	cp -pr obj/releasedir/${MACHINE} $TMPDIR/$RUN/
+	mkdir -p $TMPDIR/$RUN/
+	cp -pr obj/releasedir/ $TMPDIR/$RUN/
 	find $TMPDIR/$RUN/ -name MD5 -o -name SHA512 -exec rm {} \;
 }
 
@@ -56,25 +52,20 @@ echo
 $RSSH "cd $TMPBUILDDIR/freebsd ; git log -1"
 
 
-echo "so far so good, to be continued..."
-echo
-exit 1
-
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-for MACHINE in $MACHINES ; do
-	ionice -c 3 nice \
-		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
-	# save results in b1
-	save_freebsd_results b1 ${MACHINE}
-	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
-	./build.sh -U -m ${MACHINE} cleandir
-	rm obj/tooldir.* -rf
-	echo "${MACHINE} done, first time."
-done
+$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ make buildworld"
+# save results in b1
+save_freebsd_results b1
+# cleanup ...
+
+echo "so far so good, to be continued..."
+echo
+exit 1
+
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - cleaning up between builds."
@@ -94,17 +85,12 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-for MACHINE in $MACHINES ; do
-	ionice -c 3 nice \
-		linux64 --uname-2.6 \
-		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
-	# save results in b2
-	save_freebsd_results b2 ${MACHINE}
-	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
-	./build.sh -U -m ${MACHINE} cleandir
-	rm obj/tooldir.* -r
-	echo "${MACHINE} done, second time."
-done
+ionice -c 3 nice \
+	linux64 --uname-2.6 \
+	./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
+# save results in b2
+save_freebsd_results b2
+# cleanup... 
 
 # reset environment to default values again
 export LANG="en_GB.UTF-8"

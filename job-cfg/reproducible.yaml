@@ -344,7 +344,7 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_dashboards':
             my_description: 'Generate HTML results (dashboards with graphs) for reproducible builds.'
-            my_timed: '*/15 * * * *'
+            my_timed: '*/5 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dashboards.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_pkg_sets':

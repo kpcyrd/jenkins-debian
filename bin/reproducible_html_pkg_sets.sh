@@ -19,8 +19,7 @@ ARCH="amd64"  # we only care about amd64 status here (for now)
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
 
-# variables related to the stats we do
-TABLE[6]=stats_meta_pkg_state
+# variables related to the stats we update
 FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
 COLOR[6]=4
 

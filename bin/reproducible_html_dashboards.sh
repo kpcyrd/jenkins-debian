@@ -20,15 +20,7 @@ DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
 NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 
-# variables related to the stats we do
-TABLE[0]=stats_pkg_state
-TABLE[1]=stats_builds_per_day
-TABLE[2]=stats_builds_age
-TABLE[3]=stats_bugs
-TABLE[4]=stats_notes
-TABLE[5]=stats_issues
-TABLE[6]=stats_meta_pkg_state
-TABLE[7]=stats_bugs_state
+# variables related to the stats we update
 FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
 FIELDS[1]="datum"
 for i in reproducible unreproducible FTBFS other ; do
@@ -58,7 +50,6 @@ COLOR[2]=1
 COLOR[3]=32
 COLOR[4]=1
 COLOR[5]=1
-#COLOR[6]
 COLOR[7]=2
 MAINLABEL[1]="Amount of packages built each day"
 MAINLABEL[3]="Usertags on bugs for user reproducible-builds@lists.alioth.debian.org"

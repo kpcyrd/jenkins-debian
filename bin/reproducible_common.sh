@@ -62,6 +62,16 @@ for i in $SUITES ; do
 	mkdir -p "$BASE/$i"
 done
 
+# tables for stats
+TABLE[0]=stats_pkg_state
+TABLE[1]=stats_builds_per_day
+TABLE[2]=stats_builds_age
+TABLE[3]=stats_bugs
+TABLE[4]=stats_notes
+TABLE[5]=stats_issues
+TABLE[6]=stats_meta_pkg_state
+TABLE[7]=stats_bugs_state
+
 # known package sets
 META_PKGSET[1]="essential"
 META_PKGSET[2]="required"

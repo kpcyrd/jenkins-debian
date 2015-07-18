@@ -144,7 +144,7 @@ general_maintenance() {
 	df -h 2>/dev/null || true
 
 	echo
-	for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ /chroots /schroots ; do
+	for DIR in /var/cache/apt/archives/ /var/spool/squid3/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ /chroots /schroots ; do
 		sudo du -shx $DIR 2>/dev/null
 	done
 	JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -f -u)

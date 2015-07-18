@@ -170,6 +170,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			shorewall \
 			shorewall6 \
 			sqlite3 \
+			squid3 \
 			subversion \
 			subversion-tools \
 			sudo \

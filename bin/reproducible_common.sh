@@ -425,3 +425,83 @@ get_filesize() {
 			SIZE="$BYTESIZE bytes"
 		fi
 }
+
+#
+# create the png (and query the db to populate a csv file...)
+#
+create_png_from_table() {
+	echo "Checking whether to update $2..."
+	# $1 = id of the stats table
+	# $2 = image file name
+	# $3 = meta package set, only sensible if $1=6
+	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
+	# prepare query
+	WHERE_EXTRA="WHERE suite = '$SUITE'"
+	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] ; then
+		# TABLE[3+4+5] don't have a suite column:
+		WHERE_EXTRA=""
+	elif [ $1 -eq 6 ] ; then
+		# 6 is special too:
+		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
+	fi
+	# run query
+	if [ $1 -eq 1 ] ; then
+		# not sure if it's worth to generate the following query...
+		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing'),0) as 'reproducible_testing',
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='unstable'),0) as 'reproducible_unstable', 
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental',
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS unreproducible_testing,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS unreproducible_unstable,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS FTBFS_testing,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS FTBFS_unstable,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS other_testing,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS other_unstable,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
+			 FROM stats_builds_per_day AS s GROUP BY s.datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 2 ] ; then
+		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 7 ] ; then
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
+	else
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+	fi
+	# this is a gross hack: normally we take the number of colors a table should have...
+	#  for the builds_age table we only want one color, but different ones, so this hack:
+	COLORS=${COLOR[$1]}
+	if [ $1 -eq 2 ] ; then
+		case "$SUITE" in
+			testing)	COLORS=40 ;;
+			unstable)	COLORS=41 ;;
+			experimental)	COLORS=42 ;;
+		esac
+	fi
+	# only generate graph if the query returned data
+	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
+		echo "Updating $2..."
+		DIR=$(dirname $2)
+		mkdir -p $DIR
+		echo "Generating $2."
+		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
+		mv $2 $BASE/$DIR
+		[ "$DIR" = "." ] || rmdir $(dirname $2)
+	# create empty dummy png if there havent been any results ever
+	elif [ ! -f $BASE/$DIR/$(basename $2) ] ; then
+		DIR=$(dirname $2)
+		mkdir -p $DIR
+		echo "Creating $2 dummy."
+		convert -size 1920x960 xc:#aaaaaa -depth 8 $2
+		if [ "$3" != "" ] ; then
+			local THUMB="${TABLE[1]}_${3}-thumbnail.png"
+			convert $2 -adaptive-resize 160x80 ${THUMB}
+			mv ${THUMB} $BASE/$DIR
+		fi
+		mv $2 $BASE/$DIR
+		[ "$DIR" = "." ] || rmdir $(dirname $2)
+	fi
+	rm ${TABLE[$1]}.csv
+}
+

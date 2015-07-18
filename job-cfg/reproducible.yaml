@@ -203,7 +203,11 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_html_graphs'
+    name: '{name}_html_dashboards'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_pkg_sets'
 
 - job-template:
     defaults: reproducible
@@ -338,10 +342,15 @@
             my_timed: '42 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-        - '{name}_html_graphs':
-            my_description: 'Generate HTML results (stats with graphs) for reproducible builds.'
+        - '{name}_html_dashboards':
+            my_description: 'Generate HTML results (dashboards with graphs) for reproducible builds.'
+            my_timed: '*/15 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_dashboards.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_html_pkg_sets':
+            my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_graphs.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_html_pkg_sets.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_html_indexes':
             my_description: 'Generate HTML results (indexes) for reproducible builds.'

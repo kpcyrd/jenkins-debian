@@ -27,7 +27,7 @@ TABLE[2]=stats_builds_age
 TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
 TABLE[5]=stats_issues
-TABLE[6]=stats_meta_pkg_state
+#TABLE[6]
 TABLE[7]=stats_bugs_state
 FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
 FIELDS[1]="datum"
@@ -43,7 +43,7 @@ for TAG in $USERTAGS ; do
 done
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
-FIELDS[6]="datum, reproducible, unreproducible, FTBFS, other"
+#FIELDS[6]
 FIELDS[7]="datum, done_bugs, open_bugs"
 SUM_DONE="(0"
 SUM_OPEN="(0"
@@ -59,7 +59,7 @@ COLOR[2]=1
 COLOR[3]=32
 COLOR[4]=1
 COLOR[5]=1
-COLOR[6]=4
+#COLOR[6]
 COLOR[7]=2
 MAINLABEL[1]="Amount of packages built each day"
 MAINLABEL[3]="Usertags on bugs for user reproducible-builds@lists.alioth.debian.org"
@@ -174,69 +174,6 @@ gather_suite_stats() {
 }
 
 #
-# gather meta pkg stats
-#
-gather_meta_stats() {
-	PKGSET_PATH=/srv/reproducible-results/meta_pkgsets-$SUITE/${META_PKGSET[$1]}.pkgset
-	if [ -f $PKGSET_PATH ] ; then
-		META_LIST=$(cat $PKGSET_PATH)
-		if [ ! -z "$META_LIST" ] ; then
-			META_WHERE=""
-			# gather data about all packages we know about
-			# as a result, unknown packages in the package set
-			# are silently ignored
-			set +x
-			for PKG in $META_LIST ; do
-				if [ -z "$META_WHERE" ] ; then
-					META_WHERE="s.name in ('$PKG'"
-				else
-					META_WHERE="$META_WHERE, '$PKG'"
-				fi
-			done
-			if "$DEBUG" ; then set -x ; fi
-			META_WHERE="$META_WHERE)"
-		else
-			META_WHERE="name = 'meta-name-does-not-exist'"
-		fi
-		COUNT_META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
-		COUNT_META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
-		COUNT_META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE' AND $META_WHERE;")
-		COUNT_META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND date(r.build_date)<='$DATE' AND $META_WHERE;")
-		let META_ALL=COUNT_META_GOOD+COUNT_META_BAD+COUNT_META_UGLY+COUNT_META_REST || META_ALL=1
-		PERCENT_META_GOOD=$(echo "scale=1 ; ($COUNT_META_GOOD*100/$META_ALL)" | bc)
-		PERCENT_META_BAD=$(echo "scale=1 ; ($COUNT_META_BAD*100/$META_ALL)" | bc)
-		PERCENT_META_UGLY=$(echo "scale=1 ; ($COUNT_META_UGLY*100/$META_ALL)" | bc)
-		PERCENT_META_REST=$(echo "scale=1 ; ($COUNT_META_REST*100/$META_ALL)" | bc)
-		# order reproducible packages by name, the rest by build_date
-		META_GOOD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE ORDER BY s.name;")
-		META_BAD=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE' AND $META_WHERE ORDER BY r.build_date;")
-		META_UGLY=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE' AND $META_WHERE ORDER BY r.build_date;")
-		META_REST=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT s.name AS NAME FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND date(r.build_date)<='$DATE' AND $META_WHERE ORDER BY r.build_date;")
-	else
-		META_RESULT=false
-	fi
-}
-
-#
-# update meta pkg stats
-#
-update_meta_pkg_stats() {
-	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
-		if [ -z $RESULT ] ; then
-			META_RESULT=true
-			gather_meta_stats $i
-			if $META_RESULT ; then
-				 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
-			fi
-			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
-			touch -d "$FORCE_DATE 00:00" $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
-		fi
-	done
-}
-
-#
 # update bug stats
 #
 update_bug_stats() {
@@ -274,85 +211,6 @@ update_bug_stats() {
 			touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[7]}.png
 		fi
 	fi
-}
-
-#
-# create the png (and query the db to populate a csv file...)
-#
-create_png_from_table() {
-	echo "Checking whether to update $2..."
-	# $1 = id of the stats table
-	# $2 = image file name
-	# $3 = meta package set, only sensible if $1=6
-	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
-	# prepare query
-	WHERE_EXTRA="WHERE suite = '$SUITE'"
-	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] ; then
-		# TABLE[3+4+5] don't have a suite column:
-		WHERE_EXTRA=""
-	elif [ $1 -eq 6 ] ; then
-		# 6 is special too:
-		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
-	fi
-	# run query
-	if [ $1 -eq 1 ] ; then
-		# not sure if it's worth to generate the following query...
-		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing'),0) as 'reproducible_testing',
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='unstable'),0) as 'reproducible_unstable', 
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental',
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS unreproducible_testing,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS unreproducible_unstable,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS FTBFS_testing,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS FTBFS_unstable,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS other_testing,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS other_unstable,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
-			 FROM stats_builds_per_day AS s GROUP BY s.datum" >> ${TABLE[$1]}.csv
-	elif [ $1 -eq 2 ] ; then
-		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
-	elif [ $1 -eq 7 ] ; then
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
-	else
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
-	fi
-	# this is a gross hack: normally we take the number of colors a table should have...
-	#  for the builds_age table we only want one color, but different ones, so this hack:
-	COLORS=${COLOR[$1]}
-	if [ $1 -eq 2 ] ; then
-		case "$SUITE" in
-			testing)	COLORS=40 ;;
-			unstable)	COLORS=41 ;;
-			experimental)	COLORS=42 ;;
-		esac
-	fi
-	# only generate graph if the query returned data
-	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
-		echo "Updating $2..."
-		DIR=$(dirname $2)
-		mkdir -p $DIR
-		echo "Generating $2."
-		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
-		mv $2 $BASE/$DIR
-		[ "$DIR" = "." ] || rmdir $(dirname $2)
-	# create empty dummy png if there havent been any results ever
-	elif [ ! -f $BASE/$DIR/$(basename $2) ] ; then
-		DIR=$(dirname $2)
-		mkdir -p $DIR
-		echo "Creating $2 dummy."
-		convert -size 1920x960 xc:#aaaaaa -depth 8 $2
-		if [ "$3" != "" ] ; then
-			local THUMB="${TABLE[1]}_${3}-thumbnail.png"
-			convert $2 -adaptive-resize 160x80 ${THUMB}
-			mv ${THUMB} $BASE/$DIR
-		fi
-		mv $2 $BASE/$DIR
-		[ "$DIR" = "." ] || rmdir $(dirname $2)
-	fi
-	rm ${TABLE[$1]}.csv
 }
 
 #
@@ -433,101 +291,6 @@ create_suite_stats_page() {
 	write_page "</p>"
 	write_page_footer
 	publish_page $SUITE
-}
-
-#
-# create pkg set navigation
-#
-create_pkg_sets_navigation() {
-	local i
-	write_page "<ul><li>Tracked package sets in $SUITE: </li>"
-	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
-			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
-			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
-			write_page "<li>"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\">${META_PKGSET[$i]}</a>"
-			write_page "</li>"
-		fi
-	done
-	write_page "</ul>"
-}
-
-#
-# create pkg sets pages
-#
-create_pkg_sets_pages() {
-	#
-	# create index page
-	#
-	VIEW=pkg_sets
-	PAGE=index_${VIEW}.html
-	echo "$(date) - starting to write $PAGE page."
-	write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
-	create_pkg_sets_navigation
-	write_page_footer
-	publish_page $SUITE/$ARCH
-	#
-	# create individual pages for all the sets
-	#
-	local i
-	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		PAGE="pkg_set_${META_PKGSET[$i]}.html"
-		echo "$(date) - starting to write $PAGE page."
-		write_page_header $VIEW "Overview about reproducible builds for the ${META_PKGSET[$i]} package set in $SUITE/$ARCH"
-		create_pkg_sets_navigation
-		write_page "<hr />"
-		META_RESULT=true
-		gather_meta_stats $i
-		if $META_RESULT ; then
-			MAINLABEL[6]="Reproducibility status for packages in $SUITE from '${META_PKGSET[$i]}'"
-			YLABEL[6]="Amount (${META_PKGSET[$i]} packages)"
-			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
-			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
-			# redo pngs once a day
-			if [ ! -f $BASE/$SUITE/$ARCH/$PNG ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
-				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
-				convert $BASE/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 $BASE/$SUITE/$ARCH/$THUMB
-			fi
-			LABEL="package set '${META_PKGSET[$j]}' in $SUITE/$ARCH"
-			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
-			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of: <br />&nbsp;<br />"
-			set_icon unreproducible
-			write_icon
-			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to build reproducibly:"
-			link_packages $META_BAD
-			write_page "<br />"
-			if [ $COUNT_META_UGLY -gt 0 ] ; then
-				set_icon FTBFS
-				write_icon
-				write_page "$COUNT_META_UGLY ($PERCENT_META_UGLY%) packages failed to build from source:"
-				link_packages $META_UGLY
-				write_page "<br />"
-			fi
-			if [ $COUNT_META_REST -gt 0 ] ; then
-				set_icon not_for_us
-				write_icon
-				set_icon blacklisted
-				write_icon
-				set_icon 404
-				write_icon
-				write_page "$COUNT_META_REST ($PERCENT_META_REST%) packages are either blacklisted, not for us or cannot be downloaded:"
-				link_packages $META_REST
-				write_page "<br />"
-			fi
-			write_page "&nbsp;<br />"
-			set_icon reproducible
-			write_icon
-			write_page "$COUNT_META_GOOD packages ($PERCENT_META_GOOD%) successfully built reproducibly:"
-			link_packages $META_GOOD
-			write_page "<br />"
-			write_page "</p>"
-			write_page_meta_sign
-		fi
-		write_page_footer
-		publish_page $SUITE/$ARCH
-	done
 }
 
 #
@@ -661,12 +424,6 @@ for SUITE in $SUITES ; do
 	update_suite_stats
 	gather_suite_stats
 	create_suite_stats_page
-	if [ "$SUITE" = "experimental" ] ; then
-		# no pkg sets in experimental
-		continue
-	fi
-	update_meta_pkg_stats
-	create_pkg_sets_pages
 done
 SUITE="unstable"
 create_main_stats_page

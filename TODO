@@ -180,7 +180,6 @@ properties:
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 
 * lesser prio
-** html_graphs.sh rewrite: split out html_pkg_sets.py first, thats the easiest and the biggest speed gain
 ** more graphs:
 *** graph average build duration by day
 *** graph packages in testing+unstable which need to be fixed

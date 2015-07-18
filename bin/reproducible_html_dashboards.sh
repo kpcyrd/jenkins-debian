@@ -27,7 +27,7 @@ TABLE[2]=stats_builds_age
 TABLE[3]=stats_bugs
 TABLE[4]=stats_notes
 TABLE[5]=stats_issues
-#TABLE[6]
+TABLE[6]=stats_meta_pkg_state
 TABLE[7]=stats_bugs_state
 FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
 FIELDS[1]="datum"
@@ -43,7 +43,6 @@ for TAG in $USERTAGS ; do
 done
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
-#FIELDS[6]
 FIELDS[7]="datum, done_bugs, open_bugs"
 SUM_DONE="(0"
 SUM_OPEN="(0"

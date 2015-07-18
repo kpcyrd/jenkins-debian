@@ -47,6 +47,7 @@ openwrt_config() {
 	CONFIG=$1
 
 	printf "$CONFIG" > .config
+	printf "CONFIG_ALL=y" >> .config
 	make defconfig
 }
 

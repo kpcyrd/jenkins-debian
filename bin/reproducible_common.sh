@@ -222,8 +222,9 @@ write_page_header() {
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
 	write_page "</ul>"
 	if [ "$1" = "$MAINVIEW" ] ; then
+		LATEST=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status = 'unreproducible' order by build_date desc limit 1")
 		write_page "<form onsubmit=\"location.href='https://reproducible.debian.net/' + document.getElementById('SrcPkg').value; return false;\">"
-		write_page "https://reproducible.debian.net/<input type=\"text\" id=\"SrcPkg\" />"
+		write_page "https://reproducible.debian.net/<input type=\"text\" id=\"SrcPkg\" value=\"$LATEST\"/>"
 		write_page "<input type=\"submit\" value=\"submit source package name\" />"
 	fi
 	write_page "</header>"

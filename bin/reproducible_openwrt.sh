@@ -68,21 +68,23 @@ openwrt_build() {
 	RUN=$1
 	TARGET=$2
 
+	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=1"
+
 	echo "============================================================================="
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU target/compile
+		$MAKE $OPTIONS target/compile
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/cleanup
+		$MAKE $OPTIONS package/cleanup
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/compile || true # don't let some packages fail the whole build
+		$MAKE $OPTIONS package/compile || true # don't let some packages fail the whole build
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/install
+		$MAKE $OPTIONS package/install
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU target/install
+		$MAKE $OPTIONS target/install
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/index || true # don't let some packages fail the whole build
+		$MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
 }
 
 openwrt_cleanup() {

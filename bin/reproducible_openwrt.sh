@@ -82,7 +82,7 @@ openwrt_build() {
 	ionice -c 3 nice \
 		$MAKE -j $NUM_CPU target/install
 	ionice -c 3 nice \
-		$MAKE -j $NUM_CPU package/index
+		$MAKE -j $NUM_CPU package/index || true # don't let some packages fail the whole build
 }
 
 openwrt_cleanup() {

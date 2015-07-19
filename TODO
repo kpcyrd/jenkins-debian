@@ -89,7 +89,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * bin/g-i-installation: use lvcreate without --virtualsize
 * check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
 * upload pbuilder to jessie-bpo once its ready and install pbuilder from there
-* install botch from jessie-backports (and remove botch from the reproducible-unstable schroot)
+* install botch from jessie-backports once its available (and remove botch from the reproducible-unstable schroot)
 
 === To be done once bugs are fixed
 
@@ -198,7 +198,7 @@ properties:
 ** create a symbol for pending bugs or use a different color to indicate them
 
 * notes related
-** #786396: classify issue by "toolchain" or "package" fix needed
+** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 ** new page with annoted packages without categorized issues
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already? no.
@@ -276,16 +276,15 @@ properties:
 
 ==== reproducible freebsd
 
-* needs a freebsd system to build
+* document how the freebsd build VM was set up
 * first build world, later build ports
-* use this setup as the first test bed for remote scheduling:
 
 ==== reproducible...
 
 * openembedded.org!
 * Arch? Gentoo?
 
-==== remote scheduling:
+==== remote jenkins job scheduling:
 ----
 <weasel> | h01ger: I have a slave configured, named buildbot.pixelminers.
 <weasel> remote root is /home/jenkins/pseudo-hosts/buildbot.pixelminers.net

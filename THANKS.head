@@ -2,7 +2,9 @@
 
 === Sponsors
 
- * The (virtualized) hardware is sponsored since October 2012 by link:https://www.profitbricks.co.uk[Profitbricks] - currently it's using 23 cores and 75 GB memory, thanks a lot!
+ * The (virtualized) hardware is sponsored since October 2012 by link:https://www.profitbricks.co.uk[Profitbricks] - Thanks a lot! Currently it's using:
+  * 23 cores and 75 GB memory for jenkins.debian.net
+  * 3 cores and 6 GB memory for freebsd-jenkins.debian.net
  * link:https://globalsign.com[GlobalSign] in January 2015 kindly provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
 
 === Contributors

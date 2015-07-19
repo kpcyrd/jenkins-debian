@@ -125,9 +125,13 @@ update_notes_stats() {
 		# retry. sometimes these files vanish for a moment, probably when jenkins automatically updates the clones or such.
 		sleep 5
 		if [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-			echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
-			echo "Please investigate and fix!"
-			exit 1
+			# retry. sometimes these files vanish for a moment, probably when jenkins automatically updates the clones or such.
+			sleep 5
+			if [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
+				echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
+				echo "Please investigate and fix!"
+				exit 1
+			fi
 		fi
 	fi
 	NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)

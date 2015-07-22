@@ -332,7 +332,7 @@ def scheduler():
         message += msg_untested
         message += ' and ' if msg_new and msg_old else ', ' if msg_new or msg_old else ''
     message += msg_new if msg_new else ''
-    message += ' and ' if msg_untested or msg_old and msg_untested else ''
+    message += ' and ' if ( msg_untested and not msg_new ) or ( msg_old and msg_untested ) else ''
     message += msg_old if msg_old else ''
     total = [now_queued_here[x] for x in SUITES]
     message += ', for ' + str(sum(total)) + ' or ' + \

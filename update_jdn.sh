@@ -127,6 +127,7 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			libvpx1 \
 			libxslt1-dev \
 			linux-image-amd64 \
+			mock \
 			molly-guard \
 			moreutils \
 			mr \

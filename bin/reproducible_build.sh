@@ -123,7 +123,7 @@ update_db_and_html() {
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# notification for changing status
 	if [ "${OLD_STATUS}" = "reproducible" ] ; then
-		if [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ; then
+		if [ "$STATUS" = "unreproducible" ] || ( [ "$STATUS" = "FTBFS" ] && [ "$SUITE" = "testing" ] ) ; then
 			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message "$MESSAGE"

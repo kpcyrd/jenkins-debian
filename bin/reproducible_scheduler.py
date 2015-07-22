@@ -235,7 +235,7 @@ def schedule_untested_packages(total):
                  ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
     if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' new and untested packages'
+        msg = add_up_numbers(packages) + ' new packages'
     else:
         msg = ''
     return packages, msg
@@ -255,7 +255,7 @@ def schedule_new_versions(total):
         log.info('Received ' + str(len(packages[suite])) + ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
     if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' packages with new versions'
+        msg = add_up_numbers(packages) + ' with new versions'
     else:
         msg = ''
     return packages, msg
@@ -281,7 +281,7 @@ def schedule_old_versions(total):
         log.info('Received ' + str(len(packages[suite])) + ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
     if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' old packages with the same version'
+        msg = add_up_numbers(packages) + ' known versions'
     else:
         msg = ''
     return packages, msg

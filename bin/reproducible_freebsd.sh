@@ -15,8 +15,9 @@ set -e
 
 cleanup_tmpdirs() {
 	cd
-	$RSSH "rm -r $TMPDIR"
-	$RSSH "rm -r $TMPBUILDDIR"
+	echo "cleanup disabled, please check $TMPDIR and $TMPBUILDDIR and cleanup manually"
+	#$RSSH "rm -r $TMPDIR"
+	#$RSSH "rm -r $TMPBUILDDIR"
 }
 
 create_results_dirs() {

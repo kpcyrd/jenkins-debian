@@ -328,7 +328,7 @@ create_main_stats_page() {
 	write_page "</center></p><p>"
 	# write inventory table
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Various reproducibility statistics</th></tr>"
-	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct issues</a></td><td>$ISSUES</td></tr>"
+	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td></tr>"
 	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
 	SUITE="unstable"

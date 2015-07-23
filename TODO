@@ -88,7 +88,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * replace with bin/setsid.py workaround with setsid from the util-linux package from jessie
 * bin/g-i-installation: use lvcreate without --virtualsize
 * check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
-* install pbuilder from jessie-bpo once it has passed through NEW there...
 * install botch from jessie-backports once its available (and remove botch from the reproducible-unstable schroot)
 
 === To be done once bugs are fixed

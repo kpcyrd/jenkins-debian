@@ -190,8 +190,8 @@ if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			zutils \
 			sysvinit-core
 
-	#sudo apt-get install -t jessie-backports \
-	#		pbuilder \
+	sudo apt-get install -t jessie-backports \
+			pbuilder
 	#		botch
 
 	explain "Packages installed."

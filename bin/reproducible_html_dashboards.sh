@@ -117,12 +117,14 @@ update_suite_stats() {
 # update notes stats
 #
 update_notes_stats() {
-	NOTES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(package_id) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues != \"[]\"")
+	NOTES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(package_id) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\"")
 	ISSUES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(name) FROM issues")
 	# the following is a hack to workaround the bad sql db design which is the issue_s_ column in the notes table...
 	# it assumes we don't have packages with more than 7 issues. (we have one with 6...)
 	COUNT_ISSUES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues != \"[]\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues = \"[]\") \
+		+ \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues != \"[]\" AND n.issues NOT LIKE \"%,%\") \
 		+ \
 		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues LIKE \"%,%\") \
 		+ \

@@ -117,32 +117,30 @@ update_suite_stats() {
 # update notes stats
 #
 update_notes_stats() {
-	if [ ! -d ${NOTES_GIT_PATH} ] ; then
-		echo "Warning: ${NOTES_GIT_PATH} does not exist, has the job been renamed???"
-		echo "Please investigate and fix!"
-		exit 1
-	elif [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		# retry. sometimes these files vanish for a moment, probably when jenkins automatically updates the clones or such.
-		sleep 5
-		if [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-			# retry. sometimes these files vanish for a moment, probably when jenkins automatically updates the clones or such.
-			sleep 5
-			if [ ! -f ${NOTES_GIT_PATH}/packages.yml ] || [ ! -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-				echo "Warning: ${NOTES_GIT_PATH}/packages.yml or issues.yml does not exist, something has changed in notes.git it seems."
-				echo "Please investigate and fix!"
-				exit 1
-			fi
-		fi
-	fi
-	NOTES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/packages.yml)
-	ISSUES=$(grep -c -v "^ " ${NOTES_GIT_PATH}/issues.yml)
-	COUNT_ISSUES=$(grep "    -" ${NOTES_GIT_PATH}/packages.yml | egrep -v "    - [0-9]+"|wc -l)
+	NOTES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(package_id) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues != \"[]\"")
+	ISSUES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(name) FROM issues")
+	# the following is a hack to workaround the bad sql db design which is the issue_s_ column in the notes table...
+	# it assumes we don't have packages with more than 7 issues. (we have one with 6...)
+	COUNT_ISSUES=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues != \"[]\") \
+		+ \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues LIKE \"%,%\") \
+		+ \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues LIKE \"%,%,%\") \
+		+ \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues LIKE \"%,%,%,%\") \
+		+ \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues LIKE \"%,%,%,%,%\") \
+		+ \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND n.issues LIKE \"%,%,%,%,%,%\") \
+		")
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
 	if [ -z $RESULT ] ; then
 		echo "Updating notes stats for $DATE."
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 	fi
+	echo "Adhoc-Debug: $NOTES $ISSUES $COUNT_ISSUES"
 }
 
 #

@@ -34,6 +34,7 @@ save_freebsd_results(){
 #
 # main
 #
+FREEBSD_TARGET="release/10.1.0"
 RSSH="ssh freebsd-jenkins.debian.net"
 TMPBUILDDIR=$($RSSH 'TMPDIR=/srv/workspace/chroots/ mktemp -d -t freebsd')  # FIXME: not used to build on tmpfs
 TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
@@ -46,6 +47,7 @@ echo "==========================================================================
 echo "$(date -u) - Cloning the freebsd git repository (which is autosynced with their CVS repository)"
 echo "============================================================================="
 $RSSH git clone https://github.com/freebsd/freebsd.git $TMPBUILDDIR/freebsd
+$RSSH "cd $TMPBUILDDIR/freebsd ; git checkout $FREEBSD_TARGET"
 FREEBSD=$($RSSH "cd $TMPBUILDDIR/freebsd ; git log -1")
 FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR/freebsd ; git describe --always")
 echo "This is freebsd $FREEBSD_VERSION."

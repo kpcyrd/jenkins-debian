@@ -232,7 +232,7 @@ write_usertag_table() {
 				let "TTOTAL=TTOTAL+TOTAL"
 			fi
 		done
-		write_page "<tr><td>Total number of usertags on $DATE<br />(this is not the number of bugs as bugs can have several tags)</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
+		write_page "<tr><td>Total number of <a href=\"https://wiki.debian.org/ReproducibleBuilds/Contribute#How_to_report_bugs\">usertags related to reproducible builds</a> on $DATE<br />(this is not the number of bugs as bugs can have several tags)</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
 		write_page "</table>"
 	fi
 }

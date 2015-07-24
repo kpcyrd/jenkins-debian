@@ -34,7 +34,7 @@
 ##
 ## Uncomment if needed to preserve environmental variables related to the
 ## FreeBSD pkg_* utilities and fetch.
-# Defaults     env_keep += "PKG_PATH PKG_DBDIR PKG_TMPDIR TMPDIR PACKAGEROOT PACKAGESITE PKGDIR FTP_PASSIVE_MODE"
+Defaults     env_keep += "PKG_PATH PKG_DBDIR PKG_TMPDIR TMPDIR PACKAGEROOT PACKAGESITE PKGDIR FTP_PASSIVE_MODE"
 ##
 ## Additionally uncomment if needed to preserve environmental variables
 ## related to portupgrade
@@ -44,7 +44,9 @@
 ## when running commands via sudo.
 ##
 ## Locale settings
-# Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
+Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
+# for reproducible builds:
+Defaults env_keep += "TZ"
 ##
 ## Run X applications through sudo; HOME is used to find the
 ## .Xauthority file.  Note that other programs use HOME to find   
@@ -88,6 +90,9 @@ root ALL=(ALL) ALL
 
 ## Uncomment to allow members of group sudo to execute any command
 # %sudo	ALL=(ALL) ALL
+
+# for reproducible builds:
+jenkins ALL= NOPASSWD: /usr/bin/make buildworld
 
 ## Uncomment to allow any user to run sudo if they know the password
 ## of the user they are running the command as (root by default).

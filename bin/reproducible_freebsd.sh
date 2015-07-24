@@ -60,9 +60,9 @@ echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ make buildworld" || true
+$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ sudo make buildworld" || true
 # try again, to work around failure in cleanup (stage 2.1)
-$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ make buildworld"
+$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ sudo make buildworld"
 # save results in b1
 save_freebsd_results b1
 # cleanup ...

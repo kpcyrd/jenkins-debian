@@ -344,7 +344,7 @@ def scheduler():
     untested, msg_untested = schedule_untested_packages(total)
     new, msg_new  = schedule_new_versions(total+len(untested))
     old_ftbfs, msg_old_ftbfs  = schedule_old_ftbfs_versions(total+len(untested)+len(new))
-    old, msg_old  = schedule_old_versions(total+len(untested)+len(new))+len(old_ftbfs)
+    old, msg_old  = schedule_old_versions(total+len(untested)+len(new)+len(old_ftbfs))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first

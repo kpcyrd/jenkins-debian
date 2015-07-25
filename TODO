@@ -279,7 +279,7 @@ properties:
 ==== reproducible freebsd
 
 * document how the freebsd build VM was set up:
-** base 10.1 install
+** base 10.1 install following https://www.urbas.eu/freebsd-10-and-profitbricks/
 ** modified files:
 *** /etc/rc.conf
 *** /etc/resolv.conf

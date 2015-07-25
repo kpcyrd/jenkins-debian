@@ -271,6 +271,8 @@ properties:
 ==== reproducible fedora
 
 * use mock to create a fedora chroot to build in
+** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/
+** http://blog.packagecloud.io/eng/2015/04/20/working-with-source-rpms/
 * start with building a single package
 * then build the full base system (100-500 packages)
 

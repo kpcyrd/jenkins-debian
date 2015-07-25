@@ -372,15 +372,15 @@ def scheduler():
     message = 'Scheduled in ' + '+'.join(SUITES) + ': '
     if msg_untested:
         message += msg_untested
-        message += ' and ' if msg_new and not msg_old_ftbfs and not msg_old
-        message += ', ' if not msg_new and not msg_old_ftbfs and not msg_old
+        message += ' and ' if msg_new and not msg_old_ftbfs and not msg_old else ''
+        message += ', ' if not msg_new and not msg_old_ftbfs and not msg_old else ''
     if msg_new:
         message += msg_new
-        message += ' and ' if msg_old_ftbfs and not msg_old
-        message += ', ' if msg_old_ftbfs and msg_old
+        message += ' and ' if msg_old_ftbfs and not msg_old else ''
+        message += ', ' if msg_old_ftbfs and msg_old else ''
     if msg_old_ftbfs:
         message += msg_old_ftbfs
-        message += ' and ' if msg_old_ftbfs
+        message += ' and ' if msg_old_ftbfs else ''
     if msg_old:
         message += msg_old
     total = [now_queued_here[x] for x in SUITES]

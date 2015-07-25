@@ -135,7 +135,7 @@ update_db_and_html() {
 	fi
 	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ]; then
 		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
-			mail -s "$SRCPACKAGE changed: $OLD_STATUS -> $STATUS" \
+			mail -s "$SRCPACKAGE changed in $SUITE: $OLD_STATUS -> $STATUS" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				"$SRCPACKAGE@packages.debian.org"
 	fi

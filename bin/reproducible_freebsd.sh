@@ -41,7 +41,10 @@ TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare 
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
 trap cleanup_tmpdirs INT TERM EXIT
-
+echo "============================================================================="
+echo "$(date -u) - FreeBSD host info"
+echo "============================================================================="
+$RSSH freebsd-version
 
 echo "============================================================================="
 echo "$(date -u) - Cloning the freebsd git repository (which is autosynced with their CVS repository)"

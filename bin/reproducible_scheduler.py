@@ -210,6 +210,24 @@ def query_new_versions(suite, limit):
     return packages
 
 
+def query_old_ftbfs_versions(suite, limit):
+    criteria = 'status ftbfs, no bug filed, tested at least ten days ago, ' + \
+               'no new version available, sorted by last build date'
+    query = """SELECT DISTINCT s.id, s.name
+                FROM sources AS s JOIN results AS r ON s.id = r.package_id
+		JOIN notes AS n ON n.package_id=s.id
+                WHERE s.suite='{suite}'
+                AND r.status = 'FTBFS'
+		AND n.bugs = '[]'
+                AND r.build_date < datetime('now', '-10 day')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                ORDER BY r.build_date
+                LIMIT {limit}""".format(suite=suite, limit=limit)
+    packages = query_db(query)
+    print_schedule_result(suite, criteria, packages)
+    return packages
+
+
 def query_old_versions(suite, limit):
     criteria = 'tested at least two weeks ago, no new version available, ' + \
                'sorted by last build date'
@@ -261,6 +279,28 @@ def schedule_new_versions(total):
     return packages, msg
 
 
+def schedule_old_ftbfs_versions(total):
+    packages = {}
+    if total <= 250:
+        old_ftbfs = 23
+    elif total <= 350:
+        old_ftbfs = 10
+    else:
+        old_ftbfs = 0
+    for suite in SUITES:
+        if suite == 'experimental':
+            old_ftbfs = 0	# experiemental rarely get's fixed over time...
+        log.info('Requesting ' + str(old_ftbfs) + ' old ftbfs packages in ' + suite + '...')
+        packages[suite] = query_old_ftbfs_versions(suite, old_ftbfs)
+        log.info('Received ' + str(len(packages[suite])) + ' old ftbfs packages in ' + suite + ' to schedule.')
+    log.info('==============================================================')
+    if add_up_numbers(packages) != '0':
+        msg = add_up_numbers(packages) + ' ftbfs versions without bugs filed'
+    else:
+        msg = ''
+    return packages, msg
+
+
 def schedule_old_versions(total):
     packages = {}
     if total <= 250:
@@ -303,7 +343,8 @@ def scheduler():
         log.info('==============================================================')
     untested, msg_untested = schedule_untested_packages(total)
     new, msg_new  = schedule_new_versions(total+len(untested))
-    old, msg_old  = schedule_old_versions(total+len(untested)+len(new))
+    old_ftbfs, msg_old_ftbfs  = schedule_old_ftbfs_versions(total+len(untested)+len(new))
+    old, msg_old  = schedule_old_versions(total+len(untested)+len(new))+len(old_ftbfs)
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first
@@ -321,6 +362,7 @@ def scheduler():
         # schedule packages differently in the queue...
         schedule_packages(untested[suite], datetime.now())
         schedule_packages(new[suite], datetime.now()+timedelta(minutes=-720))
+        schedule_packages(old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
         schedule_packages(old[suite], datetime.now()+timedelta(minutes=720))
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
@@ -330,10 +372,17 @@ def scheduler():
     message = 'Scheduled in ' + '+'.join(SUITES) + ': '
     if msg_untested:
         message += msg_untested
-        message += ' and ' if msg_new and not msg_old else ', ' if msg_new or msg_old else ''
-    message += msg_new if msg_new else ''
-    message += ' and ' if ( msg_untested and not msg_new ) or ( msg_old and msg_untested ) else ''
-    message += msg_old if msg_old else ''
+        message += ' and ' if msg_new and not msg_old_ftbfs and not msg_old
+        message += ', ' if not msg_new and not msg_old_ftbfs and not msg_old
+    if msg_new:
+        message += msg_new
+        message += ' and ' if msg_old_ftbfs and not msg_old
+        message += ', ' if msg_old_ftbfs and msg_old
+    if msg_old_ftbfs:
+        message += msg_old_ftbfs
+        message += ' and ' if msg_old_ftbfs
+    if msg_old:
+        message += msg_old
     total = [now_queued_here[x] for x in SUITES]
     message += ', for ' + str(sum(total)) + ' or ' + \
               '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'

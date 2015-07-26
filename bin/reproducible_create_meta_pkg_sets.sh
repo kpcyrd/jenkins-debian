@@ -197,6 +197,11 @@ update_pkg_sets() {
 		CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
 		git clone https://github.com/linuxfoundation/cii-census.git $CII
 		csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
+		# convert binary packages into source packages
+		for i in $(cat $TMPFILE) ; do
+			chdist --data-dir=$CHPATH apt-cache show $i >> ${TMPFILE2}
+		done
+		mv ${TMPFILE2} $TMPFILE
 		update_if_similar ${META_PKGSET[9]}.pkgset
 		rm $CII -r
 	fi

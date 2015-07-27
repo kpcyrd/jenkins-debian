@@ -14,7 +14,6 @@ archs = """
     powerpc
     ppc64el
     s390x
-    sparc
    """.split()
 
 print("""

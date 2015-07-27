@@ -204,7 +204,7 @@ fi
 # deploy package configuration in /etc
 #
 cd $BASEDIR
-sudo cp --preserve=mode,timestamps -r etc/* /etc
+sudo cp --preserve=mode,timestamps -r hosts/jenkins/etc/* /etc
 
 #
 # more configuration than a simple cp can do

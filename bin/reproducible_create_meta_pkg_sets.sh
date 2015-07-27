@@ -199,9 +199,10 @@ update_pkg_sets() {
 		csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
 		# convert binary packages into source packages
 		for i in $(cat $TMPFILE) ; do
-			chdist --data-dir=$CHPATH apt-cache show $i >> ${TMPFILE2}
+			chdist --data-dir=$CHPATH apt-cache $DISTNAME show $i >> ${TMPFILE2} || echo $i
 		done
 		mv ${TMPFILE2} $TMPFILE
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[9]}.pkgset
 		rm $CII -r
 	fi

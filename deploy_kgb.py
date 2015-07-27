@@ -27,7 +27,6 @@ channels = [
     {'name': 'debian-qa', 'id': 'jenkins-debian-qa'},
     {'name': 'debian-reproducible', 'id': 'jenkins-debian-reproducible'},
     {'name': 'debian-ruby', 'id': 'pkg-ruby-extras'},
-    {'name': 'dvswitch', 'id': 'jenkins-dvswitch'},
 ]
 
 template = """repo-id: '{repo_id}'

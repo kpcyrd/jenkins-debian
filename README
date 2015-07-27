@@ -175,13 +175,6 @@ jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh $suite $package1
 
 * Finally, there are also three jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt] and link:http://www.netbsd.org/[NetBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/ and https://reproducible.debian.net/netbsd/.
 
-=== dvswitch jobs
-
-* There are three jobs currently:
-** 'dvswitch_sid' and 'dvswitch_jessie' build the master branch of dvswitch against that environment.
-** while 'dvswitch_against_libav_git' builds the master branch of dvswitch using libav also build from it's master branch. This is done in an sid environment.
-** Except for 'dvswitch_jessie' which is triggered by a successful 'dvswitch_sid' run, the jobs are triggered by git commits.
-
 === jenkins.d.n jobs
 
 These are jobs for making sure jenkins.debian.net is running smoothly.

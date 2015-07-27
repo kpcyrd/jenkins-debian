@@ -41,6 +41,8 @@ update_if_similar() {
 	# this is mostly done to not accidently overwrite the lists
 	# with garbage, eg. when external services are down
 	if [ -s $TMPFILE ] ; then
+		sort -u $TMPFILE > ${TMPFILE2}
+		mv ${TMPFILE2} $TMPFILE
 		TARGET=$TPATH/$1
 		if [ -f $TARGET ] ; then
 			LENGTH=$(cat $TARGET | wc -w)
@@ -147,8 +149,7 @@ update_pkg_sets() {
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-create-graph --quiet --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-buildgraph2packages - "$PACKAGES" \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
-			| grep-dctrl --no-field-names --show-field=Package '' \
-			| sort -u > $TMPFILE
+			| grep-dctrl --no-field-names --show-field=Package ''
 		update_if_similar ${META_PKGSET[4]}.pkgset
 	fi
 
@@ -187,9 +188,8 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[8]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[8]}.pkgset ] ; then
 		rm -f ${TMPFILE2}
 		svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
-		grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5|sort -u > $TMPFILE
+		grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5 > $TMPFILE
 		update_if_similar ${META_PKGSET[8]}.pkgset
-		rm -f ${TMPFILE2}
 	fi
 
 	# packages from the cii-census

@@ -277,7 +277,6 @@ call_debbindiff_on_changes_files() {
 	fi
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	local OLD_DEBBINDIFF_TMP_COUNT=$(find "$TEMP" -maxdepth 1 -name tmp*debbindiff | wc -l)
 	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 	echo "$(date) - $DBDVERSION will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
@@ -297,10 +296,6 @@ call_debbindiff_on_changes_files() {
 	cat $TMPLOG | tee -a $RBUILDLOG  # print dbd output
 	rm $TMPLOG
 	echo | tee -a ${RBUILDLOG}
-	NEW_DEBBINDIFF_TMP_COUNT=$(find "$TEMP" -maxdepth 1 -name tmp*debbindiff | wc -l)
-	if [ "$OLD_DEBBINDIFF_TMP_COUNT" != "$NEW_DEBBINDIFF_TMP_COUNT" ]; then
-		irc_message "debbindiff calls on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE or ${BUILD_URL}console left cruft, please help investigate and fix 788568"
-	fi
 	case $RESULT in
 		0)
 			handle_reproducible

@@ -87,7 +87,7 @@ Though actually https://github.com/h01ger/jenkins-job-builder is used atm.
 
 ==== Using jenkins-job-builder
 
-'update_jdn.sh' takes care of this too, so this is just for quick documentation. The real documentation is at http://ci.openstack.org/jenkins-job-builder/
+'update_jdn.sh' takes care of this too, so this is just a quick run through. Make sure to also look at the upstream documentation at http://ci.openstack.org/jenkins-job-builder/
 
 * run `cd /srv/jenkins/job-cfg ; jenkins-jobs update .` to update jobs
 * for testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-jobs test . -o test-output/ ; ls test-output/`

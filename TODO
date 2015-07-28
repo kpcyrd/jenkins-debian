@@ -199,6 +199,7 @@ properties:
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 ** new page with annoted packages without categorized issues
+** new page with packages that have notes with comments (which are often useful / contain solutions / low-hanging fruits for newcomers)
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already? no.
 

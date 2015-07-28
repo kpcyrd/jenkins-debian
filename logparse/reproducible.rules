@@ -6,7 +6,7 @@ warning /Warning: Download of .+ sources failed./
 warning /Warning: .+ contains invalid yaml, please fix./
 warning /Warning: old temp directories found in .+/
 warning /Warning: lock .+ still exists, exiting./
-warning /Warning: old schroots found in /schroots, which have been deleted:/
+warning /Warning: Tried, but failed to delete these:/
 warning /Warning: processes found which should not be there/
 warning /Warning: Found files with bad permissions.+/
 warning /Warning: .+ could not be fully removed./

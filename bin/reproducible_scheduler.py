@@ -282,9 +282,9 @@ def schedule_new_versions(total):
 def schedule_old_ftbfs_versions(total):
     packages = {}
     if total <= 250:
-        old_ftbfs = 23
+        old_ftbfs = 42
     elif total <= 350:
-        old_ftbfs = 10
+        old_ftbfs = 23
     else:
         old_ftbfs = 0
     for suite in SUITES:
@@ -303,9 +303,9 @@ def schedule_old_ftbfs_versions(total):
 
 def schedule_old_versions(total):
     packages = {}
-    if total <= 250:
+    if total <= 300:
         many_old_base = 35 # multiplied by 20 or 10 or 1, see below
-    elif total <= 350:
+    elif total <= 400:
         many_old_base = 25 # also...
     else:
         many_old_base = 0  # ...

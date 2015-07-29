@@ -215,10 +215,10 @@ def query_old_ftbfs_versions(suite, limit):
                'no new version available, sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
-		JOIN notes AS n ON n.package_id=s.id
+		OUTER JOIN notes AS n ON n.package_id=s.id
                 WHERE s.suite='{suite}'
                 AND r.status = 'FTBFS'
-		AND n.bugs = '[]'
+		AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < datetime('now', '-10 day')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date

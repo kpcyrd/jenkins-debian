@@ -30,8 +30,8 @@ write_page "</pre></p>"
 write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
-SOURCES=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
-for PKG in $SOURCES ; do
+SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
+for PKG in $SOURCEPKGS ; do
 	echo "Processing $PKG..."
 	if [ "${PKG:0:3}" = "lib" ] ; then
 		PREFIX=${PKG:0:4}

@@ -15,8 +15,8 @@ ARCH="amd64"		# same
 
 VIEW=repositories
 PAGE=index_${VIEW}.html
+SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
-TMP2FILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 
 MODIFIED_IN_SID=0
 MODIFIED_IN_EXP=0
@@ -29,8 +29,8 @@ write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
 write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
-curl http://reproducible.alioth.debian.org/debian/Sources > $TMPFILE
-SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $TMPFILE | sort -u)
+curl http://reproducible.alioth.debian.org/debian/Sources > $SOURCES
+SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $SOURCES | sort -u)
 for PKG in $SOURCEPKGS ; do
 	echo "Processing $PKG..."
 	if [ "${PKG:0:3}" = "lib" ] ; then
@@ -38,7 +38,7 @@ for PKG in $SOURCEPKGS ; do
 	else
 		PREFIX=${PKG:0:1}
 	fi
-	VERSIONS=$(grep-dctrl -n -s version -S $PKG $TMPFILE|sort -u)
+	VERSIONS=$(grep-dctrl -n -s version -S $PKG $SOURCES|sort -u)
 	CRUFT=""
 	BET=""
 	OBSOLETE_IN_SID=false
@@ -123,13 +123,13 @@ for PKG in $SOURCEPKGS ; do
 		*)
 			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds" ;;
 	esac
-	curl $URL > $TMP2FILE
-	if [ "$(grep "'error'>No repositories found" $TMP2FILE 2>/dev/null)" ] ; then
+	curl $URL > $TMPFILE
+	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
 		write_page "$URL<br /><span class=\"red\">(no git repository found)</span>"
-	elif [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
+	elif [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 		URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=merged/reproducible_builds"
-		curl $URL > $TMP2FILE
-		if [ "$(grep "'error'>Invalid branch" $TMP2FILE 2>/dev/null)" ] ; then
+		curl $URL > $TMPFILE
+		if [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 			if ! $OBSOLETE_IN_SID ; then
 				write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
 			else
@@ -183,7 +183,7 @@ for PKG in $SOURCEPKGS ; do
 	write_page "</tr>"
 done
 write_page "</table></p>"
-rm $TMPFILE $TMP2FILE
+rm $SOURCES $TMPFILE
 write_page_footer
 publish_page
 echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt

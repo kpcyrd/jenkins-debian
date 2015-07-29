@@ -10,9 +10,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-SUITE="unstable"	# for links in page
-ARCH="amd64"		# same
-
 VIEW=repositories
 PAGE=index_${VIEW}.html
 SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)

@@ -86,12 +86,26 @@ if [ -f /etc/debian_version ] ; then
 	# install packages we need
 	#
 	if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
-		sudo apt-get install \
+		DEBS=" \
+				bash-completion \
+				bc \
+				curl \
+				debootstrap \
+				devscripts \
+				git
+				schroot \
+				screen \
+				subversion \
+				subversion-tools \
+				sudo \
+				unzip \
+				vim \
+			"
+		if [ "$HOSTNAME" = "jenkins" ] ; then
+			MASTERDEBS=" \
 				apache2 \
 				apt-file \
 				apt-listchanges \
-				bash-completion \
-				bc \
 				binfmt-support \
 				bison \
 				build-essential \
@@ -100,9 +114,6 @@ if [ -f /etc/debian_version ] ; then
 				cron-apt \
 				csvtool \
 				cucumber \
-				curl \
-				debootstrap \
-				devscripts \
 				dnsmasq-base \
 				dose-extra \
 				dstat \
@@ -170,21 +181,14 @@ if [ -f /etc/debian_version ] ; then
 				ruby-packetfu \
 				ruby-rjb \
 				ruby-rspec \
-				schroot \
-				screen \
 				seabios \
 				shorewall \
 				shorewall6 \
 				sqlite3 \
 				squid3 \
-				subversion \
-				subversion-tools \
-				sudo \
 				syslinux \
 				tcpdump \
 				unclutter \
-				unzip \
-				vim \
 				virt-viewer \
 				vncsnapshot \
 				vnstat \
@@ -193,7 +197,11 @@ if [ -f /etc/debian_version ] ; then
 				xtightvncviewer \
 				xvfb \
 				zutils \
-				sysvinit-core
+				sysvinit-core"
+		else
+			MASTERDEBS=""
+		fi
+		sudo apt-get install "$DEBS $MASTERDEBS"
 		sudo apt-get install -t jessie-backports \
 				pbuilder
 		#		botch

@@ -373,7 +373,7 @@ def scheduler():
     if msg_untested:
         message += msg_untested
         message += ' and ' if msg_new and not msg_old_ftbfs and not msg_old else ''
-        message += ', ' if not msg_new and not msg_old_ftbfs and not msg_old else ''
+        message += '' if not msg_new and not msg_old_ftbfs and not msg_old else ', '
     if msg_new:
         message += msg_new
         message += ' and ' if msg_old_ftbfs and not msg_old else ''

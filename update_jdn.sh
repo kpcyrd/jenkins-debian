@@ -97,6 +97,8 @@ if [ -f /etc/debian_version ] ; then
 			debootstrap 
 			devscripts 
 			git
+			munin-node
+			munin-plugins-extra 
 			schroot 
 			screen 
 			subversion 
@@ -153,7 +155,6 @@ if [ -f /etc/debian_version ] ; then
 				mr 
 				mtr-tiny 
 				munin 
-				munin-plugins-extra 
 				ntp 
 				openbios-ppc 
 				openbios-sparc 
@@ -255,7 +256,7 @@ sudo service munin-node force-reload
 #
 cd $BASEDIR
 for dir in bin logparse job-cfg features live ; do
-	cp --preserve=mode,timestamps -r $dir /srv/jenkins/
+	sudo cp --preserve=mode,timestamps -r $dir /srv/jenkins/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
 sudo mkdir -p /var/lib/jenkins/.ssh
@@ -369,6 +370,6 @@ rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 #
 # finally
 #
-touch $STAMP	# so on the next run, only configs newer than this file will be updated
+sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 rm -f $TMPFILE
 explain "$(hostname -f) successfully updated."

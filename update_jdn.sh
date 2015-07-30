@@ -3,7 +3,7 @@
 # Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-BASEDIR=/root/jenkins.debian.net
+BASEDIR=$HOME/jenkins.debian.net
 PVNAME=/dev/vdb      # LVM physical volume for jobs
 VGNAME=jenkins01     # LVM volume group
 STAMP=/var/log/jenkins/update-jenkins.stamp

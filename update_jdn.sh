@@ -18,7 +18,7 @@ explain() {
 #
 # set up users and groups
 #
-if ! getent group jenkins-adm > /dev/nnull ; then
+if ! getent group jenkins-adm > /dev/null ; then
 	sudo addgroup --system jenkins-adm
 fi
 if ! getent passwd jenkins-adm > /dev/null  ; then

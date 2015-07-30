@@ -67,7 +67,7 @@ for directory in /srv/jenkins ; do
 done
 
 if ! test -h /chroots; then
-	rmdir /chroots || rm -f /chroots # do not recurse
+	sudo rmdir /chroots || sudo rm -f /chroots # do not recurse
 	if test -e /chroots; then
 		explain "could not clear /chroots"
 	else
@@ -205,7 +205,7 @@ if [ -f /etc/debian_version ] ; then
 		else
 			MASTERDEBS=""
 		fi
-		sudo apt-get install "$DEBS $MASTERDEBS"
+		sudo apt-get install $DEBS $MASTERDEBS
 		sudo apt-get install -t jessie-backports \
 				pbuilder
 		#		botch

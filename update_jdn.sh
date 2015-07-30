@@ -20,7 +20,7 @@ explain() {
 #
 if ! getent passwd jenkins > /dev/null ; then
 	sudo addgroup --system jenkins
-	sudo adduser --system --no-create-home --ingroup jenkins --disabled-login jenkins
+	sudo adduser --system --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
 fi
 if ! getent group jenkins-adm > /dev/null ; then
 	sudo addgroup --system jenkins-adm

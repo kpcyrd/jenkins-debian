@@ -18,6 +18,9 @@ explain() {
 #
 # set up users and groups
 #
+if ! getent passwd jenkins > /dev/null ; then
+	sudo adduser --system --no-create-home --ingroup jenkins --disabled-login jenkins
+fi
 if ! getent group jenkins-adm > /dev/null ; then
 	sudo addgroup --system jenkins-adm
 fi

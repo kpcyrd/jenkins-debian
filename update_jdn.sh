@@ -27,12 +27,12 @@ if ! getent group jenkins-adm > /dev/null ; then
 fi
 if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo adduser --system --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
-	sudo usermod -G jenkins
+	sudo usermod -G jenkins jenkins-adm
 fi
 for user in helmut holger mattia ; do
 	if ! getent passwd $user > /dev/null ; then
 		sudo adduser --gecos "" --disabled-password $user
-		sudo usermod -G jenkins,jenkins-adm
+		sudo usermod -G jenkins,jenkins-adm $USER
 	fi
 done
 

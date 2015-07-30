@@ -19,6 +19,7 @@ explain() {
 # set up users and groups
 #
 if ! getent passwd jenkins > /dev/null ; then
+	sudo addgroup --system jenkins
 	sudo adduser --system --no-create-home --ingroup jenkins --disabled-login jenkins
 fi
 if ! getent group jenkins-adm > /dev/null ; then
@@ -35,7 +36,7 @@ for user in helmut holger mattia ; do
 	fi
 done
 
-mkdir -p /srv/workspace
+sudo mkdir -p /srv/workspace
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
@@ -70,7 +71,7 @@ if ! test -h /chroots; then
 	if test -e /chroots; then
 		explain "could not clear /chroots"
 	else
-		ln -s /srv/workspace/chroots /chroots
+		sudo ln -s /srv/workspace/chroots /chroots
 	fi
 fi
 
@@ -81,7 +82,7 @@ if [ -f /etc/debian_version ] ; then
 		if test -e /var/cache/pbuilder/build; then
 			explain "could not clear /var/cache/pbuilder/build"
 		else
-			ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build
+			sudo ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build
 		fi
 	fi
 
@@ -283,7 +284,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	diff THANKS .THANKS >/dev/null || asciidoc $ASCIIDOC_PARAMS -o thanks.html THANKS
 	mv THANKS .THANKS
 	rm TODO README INSTALL CONTRIBUTING
-	chown -R jenkins.jenkins /var/lib/jenkins/userContent
+	sudo chown -R jenkins.jenkins /var/lib/jenkins/userContent
 	explain "Updated user content for Jenkins."
 
 	#

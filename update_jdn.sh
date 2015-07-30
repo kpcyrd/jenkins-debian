@@ -90,117 +90,117 @@ if [ -f /etc/debian_version ] ; then
 	# install packages we need
 	#
 	if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
-		DEBS=" \
-				bash-completion \
-				bc \
-				curl \
-				debootstrap \
-				devscripts \
-				git
-				schroot \
-				screen \
-				subversion \
-				subversion-tools \
-				sudo \
-				unzip \
-				vim \
+		DEBS=" 
+			bash-completion 
+			bc 
+			curl 
+			debootstrap 
+			devscripts 
+			git
+			schroot 
+			screen 
+			subversion 
+			subversion-tools 
+			sudo 
+			unzip 
+			vim 
 			"
 		if [ "$HOSTNAME" = "jenkins" ] ; then
-			MASTERDEBS=" \
-				apache2 \
-				apt-file \
-				apt-listchanges \
-				binfmt-support \
-				bison \
-				build-essential \
-				calamaris \
-				cmake \
-				cron-apt \
-				csvtool \
-				cucumber \
-				dnsmasq-base \
-				dose-extra \
-				dstat \
-				etckeeper \
-				figlet \
-				flex \
-				gawk \
-				ghc \
-				gocr \
-				graphviz \
-				haveged \
-				iasl \
-				imagemagick \
-				ip2host \
-				less \
-				libapache2-mod-macro \
-				libav-tools \
-				libcap2-bin \
-				libfile-touch-perl \
-				libguestfs-tools \
-				libjson-rpc-perl \
-				libsikuli-script-java \
-				libsoap-lite-perl \
-				libvirt0 \
-				libvirt-bin \
-				libvirt-dev \
-				libvpx1 \
-				libxslt1-dev \
-				linux-image-amd64 \
-				mock \
-				molly-guard \
-				moreutils \
-				mr \
-				mtr-tiny \
-				munin \
-				munin-plugins-extra \
-				ntp \
-				openbios-ppc \
-				openbios-sparc \
-				openjdk-7-jre \
-				ovmf \
-				pigz \
-				postgresql-client-9.4 \
-				poxml \
-				procmail \
-				python3-debian \
-				python3-psycopg2 \
-				python3-yaml \
-				python-arpy \
-				python-hachoir-metadata \
-				python-imaging \
-				python-lzma \
-				python-pip \
-				python-rpy2 \
-				python-setuptools \
-				python-twisted \
-				python-yaml \
-				qemu \
-				qemu-kvm \
-				qemu-system-x86 \
-				qemu-user-static \
-				radvd \
-				ruby-json \
-				ruby-libvirt \
-				ruby-packetfu \
-				ruby-rjb \
-				ruby-rspec \
-				seabios \
-				shorewall \
-				shorewall6 \
-				sqlite3 \
-				squid3 \
-				syslinux \
-				tcpdump \
-				unclutter \
-				virt-viewer \
-				vncsnapshot \
-				vnstat \
-				x11-apps \
-				x11vnc \
-				xtightvncviewer \
-				xvfb \
-				zutils \
+			MASTERDEBS=" 
+				apache2 
+				apt-file 
+				apt-listchanges 
+				binfmt-support 
+				bison 
+				build-essential 
+				calamaris 
+				cmake 
+				cron-apt 
+				csvtool 
+				cucumber 
+				dnsmasq-base 
+				dose-extra 
+				dstat 
+				etckeeper 
+				figlet 
+				flex 
+				gawk 
+				ghc 
+				gocr 
+				graphviz 
+				haveged 
+				iasl 
+				imagemagick 
+				ip2host 
+				less 
+				libapache2-mod-macro 
+				libav-tools 
+				libcap2-bin 
+				libfile-touch-perl 
+				libguestfs-tools 
+				libjson-rpc-perl 
+				libsikuli-script-java 
+				libsoap-lite-perl 
+				libvirt0 
+				libvirt-bin 
+				libvirt-dev 
+				libvpx1 
+				libxslt1-dev 
+				linux-image-amd64 
+				mock 
+				molly-guard 
+				moreutils 
+				mr 
+				mtr-tiny 
+				munin 
+				munin-plugins-extra 
+				ntp 
+				openbios-ppc 
+				openbios-sparc 
+				openjdk-7-jre 
+				ovmf 
+				pigz 
+				postgresql-client-9.4 
+				poxml 
+				procmail 
+				python3-debian 
+				python3-psycopg2 
+				python3-yaml 
+				python-arpy 
+				python-hachoir-metadata 
+				python-imaging 
+				python-lzma 
+				python-pip 
+				python-rpy2 
+				python-setuptools 
+				python-twisted 
+				python-yaml 
+				qemu 
+				qemu-kvm 
+				qemu-system-x86 
+				qemu-user-static 
+				radvd 
+				ruby-json 
+				ruby-libvirt 
+				ruby-packetfu 
+				ruby-rjb 
+				ruby-rspec 
+				seabios 
+				shorewall 
+				shorewall6 
+				sqlite3 
+				squid3 
+				syslinux 
+				tcpdump 
+				unclutter 
+				virt-viewer 
+				vncsnapshot 
+				vnstat 
+				x11-apps 
+				x11vnc 
+				xtightvncviewer 
+				xvfb 
+				zutils 
 				sysvinit-core"
 		else
 			MASTERDEBS=""

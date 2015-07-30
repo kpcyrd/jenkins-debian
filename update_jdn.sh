@@ -53,7 +53,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
-for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build ; do
+for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory
@@ -78,7 +78,7 @@ fi
 # only on Debian systems
 if [ -f /etc/debian_version ] ; then
 	if ! test -h /var/cache/pbuilder/build; then
-		rmdir /var/cache/pbuilder/build || rm -f /var/cache/pbuilder/build
+		sudo rmdir /var/cache/pbuilder/build || sudo rm -f /var/cache/pbuilder/build
 		if test -e /var/cache/pbuilder/build; then
 			explain "could not clear /var/cache/pbuilder/build"
 		else

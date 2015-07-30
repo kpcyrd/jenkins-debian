@@ -27,7 +27,7 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 fi
 for user in helmut holger mattia ; do
 	if ! getent passwd $user > /dev/null ; then
-		sudo adduser --gecos "" $user
+		sudo adduser --gecos "" --disabled-password $user
 		sudo usermod -G jenkins,jenkins-adm
 	fi
 done

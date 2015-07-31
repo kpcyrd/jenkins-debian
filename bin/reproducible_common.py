@@ -397,6 +397,7 @@ def join_status_icon(status, package=None, version=None):
              'FTBFS': 'weather-storm.png',
              'FTBR' : 'weather-showers-scattered.png',
              '404': 'weather-severe-alert.png',
+             'depwait': 'weather-snow.png',
              'not for us': 'weather-few-clouds-night.png',
              'not_for_us': 'weather-few-clouds-night.png',
              'untested': 'weather-clear-night.png',

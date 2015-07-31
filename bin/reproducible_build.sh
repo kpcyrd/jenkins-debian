@@ -195,6 +195,16 @@ handle_404() {
 	exit 0 # RBUILDLOG and SAVE_ARTIFACTS and NOTIFY are used in cleanup_all called at exit
 }
 
+handle_depwait() {
+	echo "Downloading the build dependencies failed" | tee -a "$RBUILDLOG"
+	echo "Maybe there was a network problem, or the build dependencies are currently uninstallable; consider filing a bug in the last case."
+	echo "Network problems are automatically retried after some hours."
+	calculate_build_duration
+	update_db_and_html "depwait"
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
+	if [ -n "$NOTIFY" ] ; then NOTIFY="depwait" ; fi
+}
+
 handle_not_for_us() {
 	# a list of valid architecture for this package should be passed to this function
 	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
@@ -207,7 +217,14 @@ handle_not_for_us() {
 }
 
 handle_ftbfs() {
+	local BUILD
 	echo "${SRCPACKAGE} failed to build from source."
+	for BUILD in "1" "2"; do
+		if zgrep -F "E: pbuilder-satisfydepends failed." "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+			handle_depwait
+			return
+		fi
+	done
 	calculate_build_duration
 	update_db_and_html "FTBFS"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi

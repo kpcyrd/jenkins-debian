@@ -66,6 +66,8 @@ queries = {
     'FTBFS_caused_by_us': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id IN (SELECT n.package_id FROM NOTES AS n WHERE ' + filter_query + ' ) ORDER BY s.name',
     '404_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY build_date DESC',
     '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
+    'depwait_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" ORDER BY build_date DESC',
+    'depwait_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" ORDER BY name',
     'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY build_date DESC',
     'not_for_us_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY name',
     'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name',
@@ -121,6 +123,16 @@ pages = {
             }
         ]
     },
+    'depwait': {
+        'title': 'Packages in {suite}/{arch} where the build dependencies failed to be satisfied',
+        'body': [
+            {
+                'icon_status': 'depwait',
+                'query': 'depwait_all',
+                'text': Template('$tot ($percent%) packages where the build dependencies failed to be satisfied. Note that temporary failures to due network problem are automatically rescheduled every 4 hours.')
+            }
+        ]
+    },
     'not_for_us': {
         'title': 'Packages in {suite}/{arch} which should not be build on "amd64"',
         'body': [
@@ -167,6 +179,12 @@ pages = {
                 'icon_link': '/index_404.html',
                 'query': '404_all_abc',
                 'text': Template('$tot ($percent%) source packages could not be downloaded in $suite/$arch:')
+            },
+            {
+                'icon_status': 'depwait',
+                'icon_link': '/index_depwait.html',
+                'query': 'depwait_all_abc',
+                'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies:')
             },
             {
                 'icon_status': 'blacklisted',
@@ -269,6 +287,13 @@ pages = {
                 'text': Template('$tot FTBFS packages in $suite/$arch:')
             },
             {
+                'icon_status': 'depwait',
+                'db_status': 'depwait',
+                'icon_link': '/index_depwait.html',
+                'query': 'depwait_all_abc',
+                'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies:')
+            },
+            {
                 'icon_status': 'not_for_us',
                 'db_status': 'not for us',
                 'icon_link': '/index_not_for_us.html',
@@ -314,6 +339,13 @@ pages = {
                 'icon_link': '/index_FTBFS.html',
                 'query': 'no_notes',
                 'text': Template('$tot FTBFS packages in $suite/$arch:')
+            },
+            {
+                'icon_status': 'depwait',
+                'db_status': 'depwait',
+                'icon_link': '/index_depwait.html',
+                'query': 'depwait_all_abc',
+                'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies:')
             },
             {
                 'icon_status': 'blacklisted',

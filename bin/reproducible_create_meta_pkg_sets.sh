@@ -197,10 +197,12 @@ update_pkg_sets() {
 		CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
 		git clone https://github.com/linuxfoundation/cii-census.git $CII
 		csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
+		MISSES=""
 		# convert binary packages into source packages
 		for i in $(cat $TMPFILE) ; do
-			chdist --data-dir=$CHPATH apt-cache $DISTNAME show $i >> ${TMPFILE2} || echo $i
+			chdist --data-dir=$CHPATH apt-cache $DISTNAME show $i >> ${TMPFILE2} || MISSES="$i $MISSES"
 		done
+		echo "The following unknown packages have been ignored: $MISSES"
 		mv ${TMPFILE2} $TMPFILE
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[9]}.pkgset

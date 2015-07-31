@@ -272,8 +272,8 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
 	echo "----" >> $TMPFILE
 	sudo cat THANKS.head > /var/lib/jenkins/userContent/THANKS
-	# samuel and lunar committed with several commiters, only display one
-	grep -v "samuel.thibault@ens-lyon.org" $TMPFILE | sudo grep -v Lunar >> /var/lib/jenkins/userContent/THANKS
+	# samuel, lunar and josch committed with several commiters, only display one
+	grep -v "samuel.thibault@ens-lyon.org" $TMPFILE | grep -v Lunar | sudo grep -v "j.schauer@email.de" >> /var/lib/jenkins/userContent/THANKS
 	rm $TMPFILE
 	sudo cp -pr userContent /var/lib/jenkins/
 	cd /var/lib/jenkins/userContent/

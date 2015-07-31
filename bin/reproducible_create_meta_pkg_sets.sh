@@ -200,7 +200,7 @@ update_pkg_sets() {
 		MISSES=""
 		# convert binary packages into source packages
 		for i in $(cat $TMPFILE) ; do
-			chdist --data-dir=$CHPATH apt-cache $DISTNAME show $i >> ${TMPFILE2} || MISSES="$i $MISSES"
+			chdist --data-dir=$CHPATH apt-cache $DISTNAME show $i >> ${TMPFILE2} 2>/dev/null || MISSES="$i $MISSES"
 		done
 		echo "The following unknown packages have been ignored: $MISSES"
 		mv ${TMPFILE2} $TMPFILE

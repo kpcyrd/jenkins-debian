@@ -154,20 +154,27 @@ def print_schedule_result(suite, criteria, packages):
     log.info('Packages: ' + ' '.join([x[1] for x in packages]))
 
 
-def schedule_packages(packages, date):
+def queue_packages(all_pkgs, packages, date):
     date = date.strftime('%Y-%m-%d %H:%M')
-    pkgs = [(x[0], date) for x in packages]
-    log.debug('IDs about to be scheduled: ' + str([x[0] for x in packages]))
+    pkgs = [x for x in packages if x[0] not in all_pkgs]
+    log.info('--------------------------------------------------------------')
+    log.info('The following ' + str(len(pkgs)) + ' source packages have ' +
+             'been queued up for scheduling at ' + date + ': ' +
+             ' '.join([str(x[1]) for x in pkgs]))
+    log.info('--------------------------------------------------------------')
+    all_pkgs.update({x[0]: date for x in pkgs})
+    return all_pkgs
+
+
+def schedule_packages(packages):
+    pkgs = ((x, packages[x]) for x in packages)
+    log.debug('IDs about to be scheduled: ' + str(x[0] for x in pkgs))
     query = 'INSERT INTO schedule ' + \
             '(package_id, date_scheduled, date_build_started) ' + \
             'VALUES (?, ?, "")'
     cursor = conn_db.cursor()
     cursor.executemany(query, pkgs)
     conn_db.commit()
-    log.info('--------------------------------------------------------------')
-    log.info('The following ' + str(len(pkgs)) + ' source packages have ' +
-             'been scheduled at ' + date + ': ' + ' '.join([str(x[1]) for x in packages]))
-    log.info('--------------------------------------------------------------')
 
 
 def add_up_numbers(package_type):
@@ -360,10 +367,12 @@ def scheduler():
         now_queued_here[suite] = int(query_db(query)[0][0]) + \
                         len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
-        schedule_packages(untested[suite], datetime.now())
-        schedule_packages(new[suite], datetime.now()+timedelta(minutes=-720))
-        schedule_packages(old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
-        schedule_packages(old[suite], datetime.now()+timedelta(minutes=720))
+        tbs = queue_packages({}, untested[suite], datetime.now())
+        assert(isinstance(tbs, dict))
+        tbs = queue_packages(tbs, new[suite], datetime.now()+timedelta(minutes=-720))
+        tbs = queue_packages(tbs, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
+        tbs = queue_packages(tbs, old[suite], datetime.now()+timedelta(minutes=720))
+        schedule_packages(tbs)
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
     # update the scheduled page

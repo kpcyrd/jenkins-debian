@@ -122,7 +122,7 @@ update_db_and_html() {
 	fi
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# notification for changing status
-	if [ "${OLD_STATUS}" = "reproducible" ] ; then
+	if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] ; then
 		if [ "$STATUS" = "unreproducible" ] || ( [ "$STATUS" = "FTBFS" ] && [ "$SUITE" = "testing" ] ) ; then
 			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
@@ -133,7 +133,9 @@ update_db_and_html() {
 			fi
 		fi
 	fi
-	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ]; then
+	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
+			[ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \
+			[ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
 		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
 			mail -s "$SRCPACKAGE changed in $SUITE: $OLD_STATUS -> $STATUS" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \

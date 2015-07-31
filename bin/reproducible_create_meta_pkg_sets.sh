@@ -146,7 +146,7 @@ update_pkg_sets() {
 		grep-dctrl --exact-match --field Package build-essential "$PACKAGES" \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-latest-version - - \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
-			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-create-graph --quiet --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
+			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-create-graph --drop-b-d-indep --quiet --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-buildgraph2packages - "$PACKAGES" \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
 			| grep-dctrl --no-field-names --show-field=Package '' > $TMPFILE

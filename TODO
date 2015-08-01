@@ -302,6 +302,15 @@ properties:
 * openembedded.org!
 * Arch? Gentoo?
 
+==== reproducible Debian armhf
+
+* use ftp.us.d.o on these machines
+* use http://10.0.0.15:8000/ as proxy
+* next: run pbuilder create jobs via remote job scheduling as described below
+* then: repo overview with binary packages
+* then: armhf scheduling (only for testing for now)
+* then: armhf building…
+
 ==== remote jenkins job scheduling:
 ----
 <weasel> | h01ger: I have a slave configured, named buildbot.pixelminers.

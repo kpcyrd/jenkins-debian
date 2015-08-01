@@ -81,6 +81,7 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
 		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
 		# double check those builds actually failed
+		TO_SCHEDULE=""
 		for pkg in $CANDIDATES ; do
 			QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status='FTBFS' AND s.name='$pkg'"
 			TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 $INIT $PACKAGES_DB "$QUERY")

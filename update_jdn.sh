@@ -32,7 +32,11 @@ fi
 for user in helmut holger mattia ; do
 	if ! getent passwd $user > /dev/null ; then
 		sudo adduser --gecos "" --disabled-password $user
-		sudo usermod -G jenkins,jenkins-adm $USER
+		if [ "$user" = "holger" ; then
+			sudo usermod -G jenkins,jenkins-adm,sudo,adm $user
+		else
+			sudo usermod -G jenkins,jenkins-adm $user
+		fi
 	fi
 done
 
@@ -99,6 +103,7 @@ if [ -f /etc/debian_version ] ; then
 			git
 			munin-node
 			munin-plugins-extra 
+			pigz 
 			schroot 
 			screen 
 			subversion 
@@ -160,7 +165,6 @@ if [ -f /etc/debian_version ] ; then
 				openbios-sparc 
 				openjdk-7-jre 
 				ovmf 
-				pigz 
 				postgresql-client-9.4 
 				poxml 
 				procmail 
@@ -220,7 +224,7 @@ fi
 # deploy package configuration in /etc
 #
 cd $BASEDIR
-sudo cp --preserve=mode,timestamps -r hosts/jenkins/etc/* /etc
+sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/* /etc
 
 #
 # more configuration than a simple cp can do

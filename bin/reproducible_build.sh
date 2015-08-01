@@ -475,7 +475,7 @@ check_buildinfo() {
 		RESULT=$?
 		set -e
 		if [ $RESULT -eq 1 ] ; then
-			irc_message "$BUILDINFO varies again, what??? Please investigate"
+			irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE had different packages installed in the 1st+2nd build, and then also in the 2nd+3rd builds. Please investigate, this should not happen."
 		fi
 	fi
 	rm $TMPFILE1 $TMPFILE2

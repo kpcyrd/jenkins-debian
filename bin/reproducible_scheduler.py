@@ -367,12 +367,12 @@ def scheduler():
         now_queued_here[suite] = int(query_db(query)[0][0]) + \
                         len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
-        tbs = queue_packages({}, untested[suite], datetime.now())
-        assert(isinstance(tbs, dict))
-        tbs = queue_packages(tbs, new[suite], datetime.now()+timedelta(minutes=-720))
-        tbs = queue_packages(tbs, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
-        tbs = queue_packages(tbs, old[suite], datetime.now()+timedelta(minutes=720))
-        schedule_packages(tbs)
+        to_be_scheduled = queue_packages({}, untested[suite], datetime.now())
+        assert(isinstance(to_be_scheduled, dict))
+        to_be_scheduled = queue_packages(to_be_scheduled, new[suite], datetime.now()+timedelta(minutes=-720))
+        to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
+        to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
+        schedule_packages(to_be_scheduled)
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
     # update the scheduled page

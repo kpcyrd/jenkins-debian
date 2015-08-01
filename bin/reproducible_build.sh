@@ -199,8 +199,8 @@ handle_404() {
 
 handle_depwait() {
 	echo "Downloading the build dependencies failed" | tee -a "$RBUILDLOG"
-	echo "Maybe there was a network problem, or the build dependencies are currently uninstallable; consider filing a bug in the last case."
-	echo "Network problems are automatically retried after some hours."
+	echo "Maybe there was a network problem, or the build dependencies are currently uninstallable; consider filing a bug in the last case." | tee -a "$RBUILDLOG"
+	echo "Network problems are automatically retried after some hours." | tee -a "$RBUILDLOG"
 	calculate_build_duration
 	update_db_and_html "depwait"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi

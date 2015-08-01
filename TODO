@@ -310,6 +310,7 @@ properties:
 * then: repo overview with binary packages
 * then: armhf scheduling (only for testing for now)
 * then: armhf building…
+* monitor their temperatures via munin, probably using munin-async via ssh…
 
 ==== remote jenkins job scheduling:
 ----

@@ -83,7 +83,7 @@ if [ ! -z "$FAILED_BUILDS" ] ; then
 		# double check those builds actually failed
 		TO_SCHEDULE=""
 		for pkg in $CANDIDATES ; do
-			QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status='FTBFS' AND s.name='$pkg'"
+			QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status='FTBFS' OR r.status='depwait') AND s.name='$pkg'"
 			TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
 		done
 		schedule_packages $TO_SCHEDULE

@@ -13,6 +13,10 @@ common_init "$@"
 VIEW=repositories
 PAGE=index_${VIEW}.html
 SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
+declare -a PACKAGES
+for ARCH in $ARCHES ; do
+	PACKAGES[$ARCH]=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
+done
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 
 MODIFIED_IN_SID=0
@@ -180,8 +184,14 @@ for PKG in $SOURCEPKGS ; do
 	write_page "</tr>"
 done
 write_page "</table></p>"
-rm $SOURCES $TMPFILE
 write_page_footer
 publish_page
 echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt
 echo "$MODIFIED_IN_EXP" > /srv/reproducible-results/modified_in_exp.txt
+
+# cleanup
+rm $SOURCES $TMPFILE
+for ARCH in $ARCHES ; do
+	rm ${PACKAGES[$ARCH]}
+done
+

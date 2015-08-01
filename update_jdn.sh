@@ -100,7 +100,9 @@ if [ -f /etc/debian_version ] ; then
 			curl 
 			debootstrap 
 			devscripts 
+			etckeeper
 			git
+			less
 			munin-node
 			munin-plugins-extra 
 			pigz 
@@ -128,7 +130,6 @@ if [ -f /etc/debian_version ] ; then
 				dnsmasq-base 
 				dose-extra 
 				dstat 
-				etckeeper 
 				figlet 
 				flex 
 				gawk 
@@ -139,7 +140,6 @@ if [ -f /etc/debian_version ] ; then
 				iasl 
 				imagemagick 
 				ip2host 
-				less 
 				libapache2-mod-macro 
 				libav-tools 
 				libcap2-bin 

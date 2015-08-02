@@ -1,1 +1,44 @@
-../../../jenkins/etc/sudoers.d/jenkins
+jenkins ALL=  \
+	NOPASSWD: /usr/sbin/debootstrap *, \
+	/usr/bin/tee /chroots/*, \
+	/usr/bin/tee -a /chroots/*, \
+	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \
+	/bin/chmod +x /chroots/*, \
+	/usr/sbin/chroot /chroots/*, \
+	/usr/sbin/chroot /media/*, \
+	/bin/ls -la /media/*, \
+	/bin/rm -rf --one-file-system /chroots/*, \
+	/bin/rm -rf --one-file-system /schroots/*, \
+	/bin/rm -rf --one-file-system /srv/live-build/*, \
+	/bin/cp -v *.iso /srv/live-build/results/*, \
+	/bin/mv /chroots/* /schroots/*, \
+	/bin/mv /schroots/* /schroots/*, \
+	/bin/umount -l /chroots/*, \
+	/bin/umount -l /media/*, \
+	/bin/rmdir /media/*, \
+	/bin/mount -o loop*, \
+	/bin/mount --bind *, \
+	/usr/bin/du *, \
+	/bin/kill *, \
+	/usr/bin/file *, \
+	/bin/dd if=/dev/zero of=/dev/jenkins*, \
+	/usr/bin/qemu-system-x86_64 *, \
+	/usr/bin/qemu-img *, \
+	/sbin/lvcreate *, /sbin/lvremove *, \
+	/bin/mkdir -p /media/*, \
+	/usr/bin/guestmount *, \
+	/bin/cp -rv /media/*, \
+	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
+	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/bin/linux64 --uname-2.6 /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
+	/bin/mv /var/cache/pbuilder/*base*.tgz /var/cache/pbuilder/*base*.tgz, \
+	/bin/rm /var/cache/pbuilder/*base*.tgz, \
+	/bin/rm -v /var/cache/pbuilder/*base*.tgz, \
+	/bin/rm /var/cache/pbuilder/result/*, \
+	/usr/bin/dcmd rm *.changes, \
+	/usr/bin/dcmd rm *.dsc, \
+	/usr/bin/apt-get update
+
+# keep these environment variables
+Defaults        env_keep += "http_proxy", env_reset

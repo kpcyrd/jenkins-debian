@@ -20,6 +20,7 @@ TMPFILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 
 MODIFIED_IN_SID=0
 MODIFIED_IN_EXP=0
+BINNMUS_NEEDED=0
 
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
@@ -121,6 +122,7 @@ for PKG in $SOURCEPKGS ; do
 				i="$ARCH: $i"
 			elif [ -z "$i" ] && [ "$ARCH" != "all" ] && ! $ONLYALL ; then
 				i="<span class=\"red\">no binaries for $ARCH</span>"
+				let "BINNMUS_NEEDED+=1"
 			fi
 			CBINARIES="$CBINARIES<br />$i"
 		done
@@ -206,6 +208,7 @@ write_page_footer
 publish_page
 echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt
 echo "$MODIFIED_IN_EXP" > /srv/reproducible-results/modified_in_exp.txt
+echo "$BINNMUS_NEEDED" > /srv/reproducible-results/binnmus_needed.txt
 
 # cleanup
 rm $SOURCES $PACKAGES $TMPFILE

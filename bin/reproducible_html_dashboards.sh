@@ -352,6 +352,10 @@ create_main_stats_page() {
 	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td></tr>"
 	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td></tr>"
+	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
+	if [ "$RESULT" != "0" ] ; then
+		write_page "<tr><td>packages in our repo which need \"binNMU\"s<br />(work in progress)</td><td>$(echo $RESULT)</td></tr>"
+	fi
 	write_page "</table>"
 	# write bugs with usertags table
 	write_usertag_table

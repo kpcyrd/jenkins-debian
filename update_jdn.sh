@@ -32,7 +32,7 @@ fi
 for user in helmut holger mattia ; do
 	if ! getent passwd $user > /dev/null ; then
 		sudo adduser --gecos "" --disabled-password $user
-		if [ "$user" = "holger" ; then
+		if [ "$user" = "holger" ] ; then
 			sudo usermod -G jenkins,jenkins-adm,sudo,adm $user
 		else
 			sudo usermod -G jenkins,jenkins-adm $user

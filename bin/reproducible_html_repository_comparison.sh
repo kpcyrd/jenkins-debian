@@ -106,7 +106,7 @@ for PKG in $SOURCEPKGS ; do
 	if [ ! -z "$BET" ] ; then
 		BINARIES=""
 		for ARCH in $ARCHS ; do
-			i="$ARCH: $(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH Packages|xargs -r echo)"
+			i="$ARCH: $(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
 			BINARIES="$BINARIES$i<br />"
 		done
 		BET="<span class=\"green\">$BET</span>"

@@ -79,7 +79,8 @@ def lack_buildinfo():
     bad_pkgs = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status NOT IN ("blacklisted", "not for us", "FTBFS", "")
+               WHERE r.status NOT IN
+                ("blacklisted", "not for us", "FTBFS", "depwait", "")
                ORDER BY s.name ASC, s.suite DESC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:

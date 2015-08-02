@@ -234,7 +234,7 @@ def gen_packages_html(packages, suite=None, arch=None, no_clean=False, nocheck=F
         nocheck = True
     if nocheck and (not suite or not arch):
         for lsuite in SUITES:
-            for larch in ARCHES:
+            for larch in ARCHS:
                 gen_packages_html(packages, lsuite, larch, True, True)
         if not no_clean:
             purge_old_pages()
@@ -282,7 +282,7 @@ def gen_all_rb_pkg_pages(suite='unstable', arch='amd64', no_clean=False):
 
 def purge_old_pages():
     for suite in SUITES:
-        for arch in ARCHES:
+        for arch in ARCHS:
             log.info('Removing old pages from ' + suite + '/' + arch + '.')
             try:
                 presents = sorted(os.listdir(RB_PKG_PATH + '/' + suite + '/' +

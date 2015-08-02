@@ -36,7 +36,7 @@ Reference doc for the folowing lists:
       * $count_total being the number of all tested packages
       * $count being the len() of the query indicated by `query2`
     - `query2`: useful only if `timely` is True.
-    - `nosuite`: if true do not iterate over the suite/arches, use only the
+    - `nosuite`: if true do not iterate over the suite/archs, use only the
       defaults
   + global: if true, then the page will saved on the root of rb.d.n, and:
     - the query also takes the value "status"
@@ -499,7 +499,7 @@ def build_page(page, suite=None, arch=None):
                 html += build_page_section(page, section, None, None)[0]
             else:
                 for suite in SUITES:
-                    for arch in ARCHES:
+                    for arch in ARCHS:
                         log.debug('global page §' + section['db_status'] +
                                   ' in ' + page + ' for ' + suite + '/' + arch)
                         html += build_page_section(page, section, suite, arch)[0]
@@ -553,6 +553,6 @@ bugs = get_bugs()
 if __name__ == '__main__':
     generate_schedule()
     for suite in SUITES:
-        for arch in ARCHES:
+        for arch in ARCHS:
             for page in pages.keys():
                 build_page(page, suite, arch)

@@ -30,8 +30,8 @@ QUIET = False
 
 # tested suites
 SUITES = ['testing', 'unstable', 'experimental']
-# tested arches
-ARCHES = ['amd64']
+# tested architectures
+ARCHS = ['amd64']
 # defaults
 defaultsuite = 'unstable'
 defaultarch = 'amd64'

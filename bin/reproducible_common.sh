@@ -39,8 +39,8 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 
 # suites being tested
 SUITES="testing unstable experimental"
-# arches being tested
-ARCHES="amd64"
+# architectures being tested
+ARCHS="amd64"
 # number of cores to be used
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 

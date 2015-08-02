@@ -171,13 +171,13 @@ html_head_page = Template((tab*2).join("""
       </a>
     </li>
     <li>
-      <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
-        <img src="/static/error.png" alt="blacklisted icon" />
+      <a href="/$suite/$arch/index_404.html" target="_parent">
+        <img src="/static/weather-severe-alert.png" alt="404 icon" />
       </a>
     </li>
     <li>
-      <a href="/$suite/$arch/index_404.html" target="_parent">
-        <img src="/static/weather-severe-alert.png" alt="404 icon" />
+      <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
+        <img src="/static/error.png" alt="blacklisted icon" />
       </a>
     </li>
     <li><a href="/index_issues.html">issues</a></li>

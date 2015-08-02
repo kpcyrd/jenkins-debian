@@ -311,7 +311,8 @@ properties:
 * next: run pbuilder create jobs via remote job scheduling as described below
 * then: repo overview with binary packages
 * then: armhf scheduling (only for testing for now)
-* then: armhf building…
+* then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
+* then: run maintenance job via remote job scheduling
 * monitor their temperatures via munin, probably using munin-async via ssh…
 
 ==== remote jenkins job scheduling:

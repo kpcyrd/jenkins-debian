@@ -129,6 +129,8 @@ set_icon() {
 					;;
 		FTBFS)			ICON=weather-storm.png
 					;;
+		depwait)		ICON=weather-snow.png
+					;;
 		404)			ICON=weather-severe-alert.png
 					;;
 		not_for_us|"not for us")	ICON=weather-few-clouds-night.png
@@ -148,7 +150,7 @@ write_icon() {
 write_page_header() {
 	rm -f $PAGE
 	MAINVIEW="stats"
-	ALLSTATES="reproducible FTBR FTBFS 404 not_for_us blacklisted"
+	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us blacklisted 404"
 	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats repositories stats"
 	GLOBALVIEWS="issues scheduled notify repositories stats"
 	SUITEVIEWS="dd-list suite_stats"

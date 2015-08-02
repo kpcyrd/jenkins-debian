@@ -109,7 +109,7 @@ for PKG in $SOURCEPKGS ; do
 	if [ ! -z "$BET" ] ; then
 		for ARCH in $ARCHS ; do
 			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
-			if [ ! -z $i ] ; then
+			if [ ! -z "$i" ] ; then
 				i="$ARCH+all: $i"
 			else
 				i="<span class=\"red\">no binaries for $ARCH</span>"

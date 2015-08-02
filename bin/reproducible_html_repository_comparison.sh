@@ -27,7 +27,7 @@ write_page "<p>These source packages are different from unstable in our apt repo
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
+write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo<br />(available binary packages per architecture)</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $SOURCES
 curl http://reproducible.alioth.debian.org/debian/Packages > $PACKAGES
@@ -105,16 +105,24 @@ for PKG in $SOURCEPKGS ; do
 			CSID="$CSID$i<br />"
 		fi
 	done
-	BINARIES=""
+	CBINARIES=""
 	if [ ! -z "$BET" ] ; then
-		for ARCH in $ARCHS ; do
-			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
+		ONLYALL=true
+		for ARCH in all ${ARCHS} ; do
+			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
+			if [ "$ARCH" != "all" ] && [ ! -z "$i" ] ; then
+				ONLYALL=false
+			fi
+			echo "$ARCH: $i"
+		done
+		for ARCH in all ${ARCHS} ; do
+			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
 			if [ ! -z "$i" ] ; then
-				i="$ARCH+all: $i"
-			else
+				i="$ARCH: $i"
+			elif [ -z "$i" ] && [ "$ARCH" != "all" ] && ! $ONLYALL ; then
 				i="<span class=\"red\">no binaries for $ARCH</span>"
 			fi
-			BINARIES="$BINARIES<br />$i"
+			CBINARIES="$CBINARIES<br />$i"
 		done
 		BET="<span class=\"green\">$BET</span>"
 	else
@@ -187,7 +195,7 @@ for PKG in $SOURCEPKGS ; do
 	 done
 	write_page " <td><a href=\"$URL\">bugs</a></td>"
 	write_page " <td>$CRUFT</td>"
-	write_page " <td>$BET $BINARIES</td>"
+	write_page " <td>$BET $CBINARIES</td>"
 	write_page " <td>$CTEST</td>"
 	write_page " <td>$CSID</td>"
 	write_page " <td>$CEXP</td>"

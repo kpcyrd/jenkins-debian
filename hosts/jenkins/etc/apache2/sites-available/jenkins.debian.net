@@ -232,6 +232,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/index_reproducible.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_FTBR.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_FTBFS.html$ [or]
+	RewriteCond %{REQUEST_URI} ^/index_depwait.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_404.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_not_for_us.html$ [or]
 	RewriteCond %{REQUEST_URI} ^/index_blacklisted.html$ [or]

@@ -105,15 +105,19 @@ for PKG in $SOURCEPKGS ; do
 			CSID="$CSID$i<br />"
 		fi
 	done
+	BINARIES=""
 	if [ ! -z "$BET" ] ; then
-		BINARIES=""
 		for ARCH in $ARCHS ; do
-			i="$ARCH: $(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
-			BINARIES="$BINARIES$i<br />"
+			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
+			if [ ! -z $i ] ; then
+				i="$ARCH+all: $i"
+			else
+				i="<span class=\"red\">no binaries for $ARCH</span>"
+			fi
+			BINARIES="$BINARIES<br />$i"
 		done
 		BET="<span class=\"green\">$BET</span>"
 	else
-		BINARIES=""
 		BET="&nbsp;"
 	fi
 	if [ ! -z "$CRUFT" ] ; then

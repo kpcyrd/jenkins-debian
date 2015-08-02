@@ -173,7 +173,7 @@ curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&p
 	tmpdir=`mktemp -d --tmpdir="$scratch"`
 	# curl is allowed to fail with exit status 23 because we want to stop
 	# downloading immediately after control.tar.gz has been extracted
-	( curl --retry 3 --retry-delay 10 --location --silent "$url" || [ "$?" -eq 23 ] || ( echo "curl failed">&2 && exit 1 ) ) \
+	( curl --retry 3 --retry-delay 10 --location --silent "$url" || [ "$?" -eq 23 ] || ( echo "curl failed">&2 && /srv/jenkins/bin/abort.sh ) ) \
 		| dpkg-deb --ctrl-tarfile /dev/stdin \
 		| tar -C "$tmpdir" --exclude=./md5sums -x
 	if [ ! -f "$tmpdir/triggers" ]; then

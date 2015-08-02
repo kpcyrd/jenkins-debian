@@ -13,10 +13,7 @@ common_init "$@"
 VIEW=repositories
 PAGE=index_${VIEW}.html
 SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
-declare -a PACKAGES
-for ARCH in $ARCHES ; do
-	PACKAGES[$ARCH]=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
-done
+PACKAGES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 
 MODIFIED_IN_SID=0
@@ -31,6 +28,7 @@ write_page "</pre></p>"
 write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
 curl http://reproducible.alioth.debian.org/debian/Sources > $SOURCES
+curl http://reproducible.alioth.debian.org/debian/Packages > $PACKAGES
 SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $SOURCES | sort -u)
 for PKG in $SOURCEPKGS ; do
 	echo "Processing $PKG..."
@@ -106,8 +104,14 @@ for PKG in $SOURCEPKGS ; do
 		fi
 	done
 	if [ ! -z "$BET" ] ; then
+		BINARIES=""
+		for ARCH in $ARCHS ; do
+			i="$ARCH: $(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture all --or -FArchitecture $ARCH Packages|xargs -r echo)"
+			BINARIES="$BINARIES$i<br />"
+		done
 		BET="<span class=\"green\">$BET</span>"
 	else
+		BINARIES=""
 		BET="&nbsp;"
 	fi
 	if [ ! -z "$CRUFT" ] ; then
@@ -177,7 +181,7 @@ for PKG in $SOURCEPKGS ; do
 	 done
 	write_page " <td><a href=\"$URL\">bugs</a></td>"
 	write_page " <td>$CRUFT</td>"
-	write_page " <td>$BET</td>"
+	write_page " <td>$BET $BINARIES</td>"
 	write_page " <td>$CTEST</td>"
 	write_page " <td>$CSID</td>"
 	write_page " <td>$CEXP</td>"
@@ -190,8 +194,5 @@ echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt
 echo "$MODIFIED_IN_EXP" > /srv/reproducible-results/modified_in_exp.txt
 
 # cleanup
-rm $SOURCES $TMPFILE
-for ARCH in $ARCHES ; do
-	rm ${PACKAGES[$ARCH]}
-done
+rm $SOURCES $PACKAGES $TMPFILE
 

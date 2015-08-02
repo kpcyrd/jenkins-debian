@@ -354,7 +354,7 @@ create_main_stats_page() {
 	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td></tr>"
 	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	if [ "$RESULT" != "0" ] ; then
-		write_page "<tr><td>packages in our repo which need \"binNMU\"s<br />(work in progress)</td><td>$(echo $RESULT)</td></tr>"
+		write_page "<tr><td>&nbsp;&nbsp;- which need \"binNMU\"s<br />(work in progress)</td><td>$(echo $RESULT)</td></tr>"
 	fi
 	write_page "</table>"
 	# write bugs with usertags table

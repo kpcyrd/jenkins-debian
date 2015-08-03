@@ -57,7 +57,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
-for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ ; do
+for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory
@@ -78,6 +78,14 @@ if ! test -h /chroots; then
 		sudo ln -s /srv/workspace/chroots /chroots
 	fi
 fi
+
+# create homedirectories for build hosts (needed for jenkins remote nodes)
+case $HOSTNAME in
+	bpi0|hb0|wbq0|cbxi4pro0)	sudo mkdir /srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb
+					sudo chown jenkins.jenkins /srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb
+					;;
+	*)				;;
+esac
 
 # only on Debian systems
 if [ -f /etc/debian_version ] ; then

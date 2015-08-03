@@ -20,13 +20,13 @@ explain() {
 #
 if ! getent passwd jenkins > /dev/null ; then
 	sudo addgroup --system jenkins
-	sudo adduser --system --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
+	sudo adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
 fi
 if ! getent group jenkins-adm > /dev/null ; then
 	sudo addgroup --system jenkins-adm
 fi
 if ! getent passwd jenkins-adm > /dev/null  ; then
-	sudo adduser --system --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
+	sudo adduser --system --shell /bin/bash --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
 for user in helmut holger mattia ; do

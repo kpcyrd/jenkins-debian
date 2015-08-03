@@ -195,7 +195,7 @@ update_pkg_sets() {
 	# packages from the cii-census
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[9]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[9]}.pkgset ] ; then
 		CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
-		git clone https://github.com/linuxfoundation/cii-census.git $CII
+		git clone --depth 1 https://github.com/linuxfoundation/cii-census.git $CII
 		csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
 		MISSES=""
 		# convert binary packages into source packages

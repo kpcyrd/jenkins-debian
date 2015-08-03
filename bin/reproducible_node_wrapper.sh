@@ -59,10 +59,7 @@ info "remote_host called with $*"
 
 allowed_cmds=()
 
-# (cd ~/jenkins-tools/ && git pull)
-
-if   [ "$*" = "tor-ci-freebsd-amd64-master" ]; then exec ~/jenkins-tools/slaves/other/tor-ci-freebsd-amd64-master/build; croak "Exec failed";
-elif [ "$*" = "tor-ci-freebsd-amd64-0.2.6" ]; then exec ~/jenkins-tools/slaves/other/tor-ci-freebsd-amd64-0.2.6/build; croak "Exec failed";
+if   [ "$*" = "reproducible_setup_pbuilder_testing_armhf_bpi0" ]; then exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing; croak "Exec failed";
 elif [ "$*" = "tor-ci-freebsd-amd64-0.2.5" ]; then exec ~/jenkins-tools/slaves/other/tor-ci-freebsd-amd64-0.2.5/build; croak "Exec failed";
 fi
 

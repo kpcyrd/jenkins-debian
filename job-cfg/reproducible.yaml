@@ -33,6 +33,44 @@
           recipients: '{my_recipients}'
 
 - defaults:
+    name: reproducible_armhf
+    project-type: freestyle
+    triggers:
+      - timed: '{my_timed}'
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/reproducible
+          text: reproducible builds jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
+    parameters:
+      - label:
+          name: node
+          default: armhf
+
+- defaults:
     name: reproducible_notes
     project-type: freestyle
     triggers:
@@ -174,6 +212,10 @@
     name: '{name}_setup_pbuilder_testing'
 
 - job-template:
+    defaults: reproducible_armhf
+    name: '{name}_setup_pbuilder_testing_armhf_bpi0'
+
+- job-template:
     defaults: reproducible
     name: '{name}_setup_pbuilder_experimental'
 
@@ -301,6 +343,11 @@
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh testing'
+            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_setup_pbuilder_testing_armhf_bpi0':
+            my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '23 0,4,8,12,16,20 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_node_wrapper.sh'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_pbuilder_unstable':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'

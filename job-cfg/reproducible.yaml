@@ -65,10 +65,7 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
-    parameters:
-      - label:
-          name: node
-          default: armhf
+    node: armhf
 
 - defaults:
     name: reproducible_notes

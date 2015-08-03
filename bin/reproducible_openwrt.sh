@@ -157,11 +157,12 @@ echo "This is openwrt $OPENWRT_VERSION."
 echo
 git log -1
 
-echo "============================================================================="
-echo "$(date -u) - Updating package feeds."
-echo "============================================================================="
-./scripts/feeds update -a
-./scripts/feeds install -a
+# External feeds disabled for now as they break building (especially with CONFIG_ALL=y).
+#echo "============================================================================="
+#echo "$(date -u) - Updating package feeds."
+#echo "============================================================================="
+#./scripts/feeds update -a
+#./scripts/feeds install -a
 
 build_two_times ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
 build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"

@@ -151,6 +151,33 @@ def alien_log(directory=None):
     return bad_files
 
 
+def alien_buildinfo():
+    log.info('running alien_log check...')
+    query = '''SELECT s.name
+               FROM sources AS s JOIN results AS r ON r.package_id=s.id
+               WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
+               AND s.architecture="{arch}"
+               AND r.status IN ("reproducible", "unreproducible")
+               ORDER BY s.name ASC, s.suite DESC'''
+    bad_files = []
+    for root, dirs, files in os.walk(BUILDINFO_PATH):
+        if not files:
+            continue
+        suite, arch = root.rsplit('/', 2)[1:]
+        for file in files:
+            try:
+                pkg, version = file.rsplit('.', 1)[0].split('_')[:2]
+            except ValueError:
+                log.critical(bcolors.FAIL + '/'.join([root, file]) +
+                             ' does not seem to be a file that should be there'
+                             + bcolors.ENDC)
+                continue
+            if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
+                bad_files.append('/'.join([root, file]))
+                log.warning('/'.join([root, file]) + ' should not be there')
+    return bad_files
+
+
 def alien_dbd(directory=None):
     if directory is None:
         bad_files = []
@@ -239,6 +266,8 @@ def gen_html():
                          entries=alien_dbd())
     html += _gen_section('rb-pkg pages that should not be there:', None,
                          entries=alien_rbpkg())
+    html += _gen_section('buildinfo files that should not be there:', None,
+                         entries=alien_buildinfo())
     # debbindiff report where it shouldn't be
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a debbindiff file:', not_unrep_with_dbd_file())

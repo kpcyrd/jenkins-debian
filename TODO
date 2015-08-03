@@ -179,6 +179,7 @@ properties:
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** exclude depwait from no_notes
 ** include depwait in graphs
+** repo-comparison: check for binaries without source
 
 * lesser prio
 ** more graphs:
@@ -186,7 +187,6 @@ properties:
 *** graph packages in testing+unstable which need to be fixed
 ** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
-** repo-comparison: check for binaries without source
 ** move "untested" field in stats table too? (as in csv output...)
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
@@ -310,7 +310,7 @@ properties:
 * use http://10.0.0.15:8000/ as proxy
 * next: run pbuilder create jobs via remote job scheduling as described below
 * then: repo overview with binary packages
-* then: armhf scheduling (only for testing for now)
+* then: armhf scheduling (only for testing for now, introduce "arch-factor", eg. amd64=10 and armhf=3, to schedule less on some archs)
 * then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
 * then: run maintenance job via remote job scheduling
 * monitor their temperatures via munin, probably using munin-async via ssh…

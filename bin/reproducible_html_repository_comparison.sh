@@ -17,10 +17,16 @@ PAGE=index_${VIEW}.html
 SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 PACKAGES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
+TABLE_TODO=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
+TABLE_DONE=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
 
 MODIFIED_IN_SID=0
 MODIFIED_IN_EXP=0
 BINNMUS_NEEDED=0
+
+write_row() {
+        echo "$1" >> $ROW
+}
 
 echo "$(date) - starting to write $PAGE page."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
@@ -127,8 +133,10 @@ for PKG in $SOURCEPKGS ; do
 			CBINARIES="$CBINARIES<br />$i"
 		done
 		BET="<span class=\"green\">$BET</span>"
+		ROW=$TABLE_TODO
 	else
 		BET="&nbsp;"
+		ROW=$TABLE_DONE
 	fi
 	if [ ! -z "$CRUFT" ] ; then
 		CRUFT="$(echo $CRUFT|sed 's# #<br />#g')"
@@ -136,8 +144,8 @@ for PKG in $SOURCEPKGS ; do
 	#
 	# write output
 	#
-	write_page "<tr><td><pre>src:$PKG</pre></td>"
-	write_page " <td>"
+	write_row "<tr><td><pre>src:$PKG</pre></td>"
+	write_row " <td>"
 	case $PKG in
 		strip-nondeterminism|debbindiff)
 			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git" ;;
@@ -146,41 +154,41 @@ for PKG in $SOURCEPKGS ; do
 	esac
 	curl $URL > $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
-		write_page "$URL<br /><span class=\"red\">(no git repository found)</span>"
+		write_row "$URL<br /><span class=\"red\">(no git repository found)</span>"
 	elif [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 		URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=merged/reproducible_builds"
 		curl $URL > $TMPFILE
 		if [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 			if ! $OBSOLETE_IN_SID ; then
-				write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
+				write_row "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
 			else
-				write_page "<a href=\"$URL\">$PKG.git</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package aint't used in unstable)"
+				write_row "<a href=\"$URL\">$PKG.git</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package aint't used in unstable)"
 			fi
 		else
-			write_page "<a href=\"$URL\">$PKG.git</a>"
-			write_page "<br />(<span class=\"green\">merged</span>"
+			write_row "<a href=\"$URL\">$PKG.git</a>"
+			write_row "<br />(<span class=\"green\">merged</span>"
 			if $OBSOLETE_IN_TESTING ; then
-				write_page "and available in testing and unstable)"
+				write_row "and available in testing and unstable)"
 			elif $OBSOLETE_IN_SID ; then
-				write_page "and available in unstable)"
+				write_row "and available in unstable)"
 			elif $OBSOLETE_IN_EXP ; then
-				write_page "and available in experimental)"
+				write_row "and available in experimental)"
 			fi
 		fi
 	else
-		write_page "<a href=\"$URL\">$PKG.git</a>"
+		write_row "<a href=\"$URL\">$PKG.git</a>"
 		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "debbindiff" ] ; then
 			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
-				write_page "<br />(unused?"
-				write_page "<br /><span class=\"purple\">Then the branch should probably renamed.</span>"
+				write_row "<br />(unused?"
+				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>"
 			elif $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
-				write_page "<br />(only used in testing, fixed in sid,"
-				write_page "<br /><span class=\"purple\">branch should probably renamed</span>)"
+				write_row "<br />(only used in testing, fixed in sid,"
+				write_row "<br /><span class=\"purple\">branch should probably renamed</span>)"
 			elif $OBSOLETE_IN_EXP ; then
-				write_page "<br />(only used in testing and unstable, fixed in experimental)"
+				write_row "<br />(only used in testing and unstable, fixed in experimental)"
 			fi
 		elif ( [ "$PKG" = "strip-nondeterminism" ] || [ "$PKG" = "debbindiff" ] ) && $OBSOLETE_IN_SID ; then
-			write_page "<br />(this repo is always used)"
+			write_row "<br />(this repo is always used)"
 		fi
 	fi
 	if ! $OBSOLETE_IN_SID ; then
@@ -189,20 +197,24 @@ for PKG in $SOURCEPKGS ; do
 	if ! $OBSOLETE_IN_EXP ; then
 		let "MODIFIED_IN_EXP+=1"
 	fi
-	write_page " </td>"
-	write_page " <td><a href=\"https://tracker.debian.org/pkg/$PKG\">PTS</a></td>"
+	write_row " </td>"
+	write_row " <td><a href=\"https://tracker.debian.org/pkg/$PKG\">PTS</a></td>"
 	URL="https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=$PKG&users=reproducible-builds@lists.alioth.debian.org&archive=both"
 	for TAG in $USERTAGS ; do
 		URL="$URL&tag=$TAG"
 	 done
-	write_page " <td><a href=\"$URL\">bugs</a></td>"
-	write_page " <td>$CRUFT</td>"
-	write_page " <td>$BET $CBINARIES</td>"
-	write_page " <td>$CTEST</td>"
-	write_page " <td>$CSID</td>"
-	write_page " <td>$CEXP</td>"
-	write_page "</tr>"
+	write_row " <td><a href=\"$URL\">bugs</a></td>"
+	write_row " <td>$CRUFT</td>"
+	write_row " <td>$BET $CBINARIES</td>"
+	write_row " <td>$CTEST</td>"
+	write_row " <td>$CSID</td>"
+	write_row " <td>$CEXP</td>"
+	write_row "</tr>"
 done
+cat $TABLE_TODO >> $PAGE
+write_page "</table></p>"
+write_page "<p><table><tr><th>package (obsolete in our repo)</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo<br />(available binary packages per architecture)</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
+cat $TABLE_DONE >> $PAGE
 write_page "</table></p>"
 write_page_footer
 publish_page
@@ -212,4 +224,5 @@ echo "$BINNMUS_NEEDED" > /srv/reproducible-results/binnmus_needed.txt
 
 # cleanup
 rm $SOURCES $PACKAGES $TMPFILE
+rm $TABLE_TODO $TABLE_DONE
 

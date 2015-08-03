@@ -324,8 +324,8 @@ data.extend(
                    'logrotate': lr(90),
                    'publishers': publ(irc=irc)}}
      for (n,bdsc,br,trg,irc)
-     in [('d-i-build',    'master branch', 'origin/master', 'H/6 * * * *',  'debian-boot'),
-         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', 'debian-boot')]])
+     in [('d-i-build',    'master branch', 'origin/master', 'H/6 * * * *',  None),     # irc should be 'debian-boot' but disabled due to gcc5 transition
+         ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', None)]])   # same
 
 data.append(
     jobspec_svn(key='job-template',

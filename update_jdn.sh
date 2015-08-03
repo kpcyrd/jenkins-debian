@@ -80,9 +80,9 @@ if ! test -h /chroots; then
 fi
 
 # create homedirectories for build hosts (needed for jenkins remote nodes)
+NODEHOME=/srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb
 case $HOSTNAME in
-	bpi0|hb0|wbq0|cbxi4pro0)	sudo mkdir /srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb
-					sudo chown jenkins.jenkins /srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb
+	bpi0|hb0|wbq0|cbxi4pro0)	[ -d $NODEHOME ] || ( sudo mkdir $NODEHOME ; sudo chown jenkins.jenkins $NODEHOME )
 					;;
 	*)				;;
 esac

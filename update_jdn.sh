@@ -259,7 +259,9 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
-[ -L apache_accesses ] || for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
+if [ "$HOSTNAME" = "jenkins" ] ; then
+	[ -L apache_accesses ] || for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
+fi
 explain "Packages configured."
 sudo service munin-node force-reload
 
@@ -272,8 +274,12 @@ for dir in bin logparse job-cfg features live ; do
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
 sudo mkdir -p /var/lib/jenkins/.ssh
-sudo cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
-sudo cp jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
+if [ "$HOSTNAME" = "jenkins" ] ; then
+	sudo cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
+	sudo cp jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
+else
+	sudo cp jenkins-nodes-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
+fi
 sudo chown -R jenkins:jenkins /var/lib/jenkins/.ssh
 sudo chmod 700 /var/lib/jenkins/.ssh
 sudo chmod 600 /var/lib/jenkins/.ssh/authorized_keys

@@ -11,10 +11,11 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 DIRTY=false
+REP_RESULTS=/srv/reproducible-results
 
+# backup db
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	# prepare backup
-	REP_RESULTS=/srv/reproducible-results
 	mkdir -p $REP_RESULTS/backup
 	cd $REP_RESULTS/backup
 
@@ -67,30 +68,101 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	DIRTY=true
 fi
 
-# find failed builds due to network problems and reschedule them
-# only grep through the last 5h (300 minutes) of builds...
-# (ignore "*None.rbuild.log" because these are build which were just started)
-# this job runs every 4h
-FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
-if [ ! -z "$FAILED_BUILDS" ] ; then
-	echo
-	echo "The following builds have failed due to network problems and will be rescheduled now:"
-	echo "$FAILED_BUILDS"
-	echo
-	echo "Rescheduling packages: "
-	for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
-		REQUESTER="jenkins maintenance job"
-		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
-		CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
-		# double check those builds actually failed
-		TO_SCHEDULE=""
-		for pkg in $CANDIDATES ; do
-			QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status='FTBFS' OR r.status='depwait') AND s.name='$pkg'"
-			TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
+if [ "$HOSTNAME" = "jenkins" ] ; then
+	#
+	# find failed builds due to network problems and reschedule them
+	#
+	# only grep through the last 5h (300 minutes) of builds...
+	# (ignore "*None.rbuild.log" because these are build which were just started)
+	# this job runs every 4h
+	FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
+	if [ ! -z "$FAILED_BUILDS" ] ; then
+		echo
+		echo "The following builds have failed due to network problems and will be rescheduled now:"
+		echo "$FAILED_BUILDS"
+		echo
+		echo "Rescheduling packages: "
+		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
+			REQUESTER="jenkins maintenance job"
+			REASON="maintenance reschedule: reschedule builds which failed due to network errors"
+			CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
+			# double check those builds actually failed
+			TO_SCHEDULE=""
+			for pkg in $CANDIDATES ; do
+				QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status='FTBFS' OR r.status='depwait') AND s.name='$pkg'"
+				TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
+			done
+			schedule_packages $TO_SCHEDULE
 		done
-		schedule_packages $TO_SCHEDULE
-	done
-	DIRTY=true
+		DIRTY=true
+	fi
+
+	#
+	# find packages which build didnt end correctly
+	#
+	QUERY="
+		SELECT s.id, s.name, p.date_scheduled, p.date_build_started
+			FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
+			WHERE p.date_scheduled != ''
+			AND p.date_build_started != ''
+			AND p.date_build_started < datetime('now', '-36 hours')
+			ORDER BY p.date_scheduled
+		"
+	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
+	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
+	if grep -q '|' $PACKAGES ; then
+		echo
+		echo "Packages found where the build was started more than 36h ago:"
+		printf ".width 0 25 \n $QUERY ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+		echo
+		for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
+			echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
+			sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id = '$PKG';"
+		done
+		echo "Packages have been removed from scheduling."
+		echo
+		DIRTY=true
+	fi
+	rm $PACKAGES
+
+	#
+	# find packages which have been removed from the archive
+	#
+	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXX)
+	QUERY="SELECT name, suite, architecture FROM removed_packages
+			LIMIT 25"
+	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+	if grep -q '|' $PACKAGES ; then
+		DIRTY=true
+		echo
+		echo "Found files relative to old packages, no more in the archive:"
+		echo "Removing these removed packages from database:"
+		printf ".width 25 12 \n $QUERY ;" | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+		echo
+		for pkg in $(cat $PACKAGES) ; do
+			PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)
+			SUITE=$(echo "$pkg" | cut -d '|' -f 2)
+			ARCH=$(echo "$pkg" | cut -d '|' -f 3)
+			QUERY="DELETE FROM removed_packages
+				WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
+			sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
+			cd $BASE
+			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$Arch -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
+		done
+		cd - > /dev/null
+	fi
+	rm $PACKAGES
+
+	#
+	# delete jenkins html logs from reproducible_builder_* jobs as they are mostly redundant
+	# (they only provide the extended value of parsed console output, which we dont need here.)
+	#
+	OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime +0 -name log_content.html  -exec rm -v {} \; | wc -l)
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo
+		echo "Removed $OLDSTUFF jenkins html logs."
+		echo
+	fi
 fi
 
 # find+terminate processes which should not be there
@@ -148,31 +220,6 @@ if [ ! -z "$PSCALL" ] ; then
 	echo
 fi
 
-# find packages which build didnt end correctly
-QUERY="
-	SELECT s.id, s.name, p.date_scheduled, p.date_build_started
-		FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
-		WHERE p.date_scheduled != ''
-		AND p.date_build_started != ''
-		AND p.date_build_started < datetime('now', '-36 hours')
-		ORDER BY p.date_scheduled
-	"
-PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
-sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
-if grep -q '|' $PACKAGES ; then
-	echo
-	echo "Packages found where the build was started more than 36h ago:"
-	printf ".width 0 25 \n $QUERY ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
-	echo
-	for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
-		echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
-		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id = '$PKG';"
-	done
-	echo "Packages have been removed from scheduling."
-	echo
-	DIRTY=true
-fi
-rm $PACKAGES
 
 # remove lockfiles older than 2 days
 LOCKFILES=$(find /tmp/reproducible-lockfile-* -maxdepth 1 -type f -mtime +2 -exec ls -lad {} \; || true)
@@ -183,40 +230,6 @@ if [ ! -z "$LOCKFILES" ] ; then
 	echo
 fi
 
-# find packages which have been removed from the archive
-PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXX)
-QUERY="SELECT name, suite, architecture FROM removed_packages
-		LIMIT 25"
-sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
-if grep -q '|' $PACKAGES ; then
-	DIRTY=true
-	echo
-	echo "Found files relative to old packages, no more in the archive:"
-	echo "Removing these removed packages from database:"
-	printf ".width 25 12 \n $QUERY ;" | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
-	echo
-	for pkg in $(cat $PACKAGES) ; do
-		PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)
-		SUITE=$(echo "$pkg" | cut -d '|' -f 2)
-		ARCH=$(echo "$pkg" | cut -d '|' -f 3)
-		QUERY="DELETE FROM removed_packages
-			WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
-		sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
-		cd $BASE
-		find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$Arch -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
-	done
-	cd - > /dev/null
-fi
-rm $PACKAGES
-
-# delete jenkins html logs from reproducible_builder_* jobs as they are mostly redundant
-# (they only provide the extended value of parsed console output, which we dont need here.)
-OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime +0 -name log_content.html  -exec rm -v {} \; | wc -l)
-if [ ! -z "$OLDSTUFF" ] ; then
-	echo
-	echo "Removed $OLDSTUFF jenkins html logs."
-	echo
-fi
 
 # remove artifacts older than 3 days
 ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; || true)
@@ -228,7 +241,7 @@ if [ ! -z "$ARTIFACTS" ] ; then
 fi
 
 # find + chmod files with bad permissions
-BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f)
+BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f|| true)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo

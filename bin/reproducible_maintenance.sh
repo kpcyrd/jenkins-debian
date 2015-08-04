@@ -241,7 +241,7 @@ if [ ! -z "$ARTIFACTS" ] ; then
 fi
 
 # find + chmod files with bad permissions
-BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f|| true)
+BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo

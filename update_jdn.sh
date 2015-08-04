@@ -41,6 +41,7 @@ for user in helmut holger mattia ; do
 done
 
 sudo mkdir -p /srv/workspace
+[ -d /srv/workspace/pbuilder ] || sudo mkdir -p /srv/workspace/pbuilder
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
@@ -80,18 +81,18 @@ if ! test -h /chroots; then
 fi
 
 # create homedirectories for build hosts (needed for jenkins remote nodes)
-NODEHOME=/srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb
 case $HOSTNAME in
-	bpi0|hb0|wbq0|cbxi4pro0)	[ -d $NODEHOME ] || ( sudo mkdir $NODEHOME ; sudo chown jenkins.jenkins $NODEHOME )
+	bpi0|hb0|wbq0|cbxi4pro0)	NODEHOME=/srv/jenkins/pseudo-hosts/
+					[ -d $NODEHOME ] || ( sudo mkdir $NODEHOME ; sudo chown jenkins.jenkins $NODEHOME )
 					;;
 	*)				;;
 esac
 
 # only on Debian systems
 if [ -f /etc/debian_version ] ; then
-	if ! test -h /var/cache/pbuilder/build; then
+	if [ ! -h /var/cache/pbuilder/build ] ; then
 		sudo rmdir /var/cache/pbuilder/build || sudo rm -f /var/cache/pbuilder/build
-		if test -e /var/cache/pbuilder/build; then
+		if [ -e /var/cache/pbuilder/build ] ; then
 			explain "could not clear /var/cache/pbuilder/build"
 		else
 			sudo ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build

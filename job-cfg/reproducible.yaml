@@ -178,7 +178,7 @@
     name: '{name}_setup_pbuilder_testing'
 
 - job-template:
-    defaults: reproducible_armhf
+    defaults: reproducible
     name: '{name}_setup_pbuilder_testing_armhf_bpi0'
 
 - job-template:

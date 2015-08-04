@@ -114,6 +114,7 @@ if [ -f /etc/debian_version ] ; then
 			munin-node
 			munin-plugins-extra 
 			pigz 
+			python3-psycopg2 
 			schroot 
 			screen 
 			subversion 
@@ -177,7 +178,6 @@ if [ -f /etc/debian_version ] ; then
 				poxml 
 				procmail 
 				python3-debian 
-				python3-psycopg2 
 				python3-yaml 
 				python-arpy 
 				python-hachoir-metadata 

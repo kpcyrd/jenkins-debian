@@ -313,6 +313,8 @@ properties:
 ** http://munin-monitoring.org/wiki/Native_ssh
 ** http://guide.munin-monitoring.org/en/latest/example/transport/ssh.html
 * make systems send mail
+* change TZ on systems?
+* change date on 2nd build hosts
 
 === qa.debian.org*
 

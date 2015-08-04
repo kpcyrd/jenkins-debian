@@ -137,10 +137,9 @@ bootstrap() {
 			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 			sudo chroot $CHROOT_TARGET apt-get update
 			# install debbindiff from unstable without re-adding all recommends...
-			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff
+			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff || echo "Warning: debbindiff from unstable is uninstallable at the moment."
 		fi
 		if ! $DEBUG ; then set +x ; fi
-		# double check debbindiff version
 		if [ "$1" = "debbindiff" ] ; then
 			echo
 			sudo chroot $CHROOT_TARGET dpkg -l debbindiff

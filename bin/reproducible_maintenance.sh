@@ -12,29 +12,31 @@ common_init "$@"
 
 DIRTY=false
 
-# prepare backup
-REP_RESULTS=/srv/reproducible-results
-mkdir -p $REP_RESULTS/backup
-cd $REP_RESULTS/backup
+if [ "$HOSTNAME" = "jenkins" ] ; then
+	# prepare backup
+	REP_RESULTS=/srv/reproducible-results
+	mkdir -p $REP_RESULTS/backup
+	cd $REP_RESULTS/backup
 
-# keep 30 days and the 1st of the month
-DAY=(date -d "30 day ago" '+%d')
-DATE=$(date -d "30 day ago" '+%Y-%m-%d')
-if [ "$DAY" != "01" ] &&  [ -f reproducible_$DATE.db.xz ] ; then
-	rm -f reproducible_$DATE.db.xz
-fi
+	# keep 30 days and the 1st of the month
+	DAY=(date -d "30 day ago" '+%d')
+	DATE=$(date -d "30 day ago" '+%Y-%m-%d')
+	if [ "$DAY" != "01" ] &&  [ -f reproducible_$DATE.db.xz ] ; then
+		rm -f reproducible_$DATE.db.xz
+	fi
 
-# actually do the backup
-DATE=$(date '+%Y-%m-%d')
-if [ ! -f reproducible_$DATE.db.xz ] ; then
-	cp -v $PACKAGES_DB .
+	# actually do the backup
 	DATE=$(date '+%Y-%m-%d')
-	mv -v reproducible.db reproducible_$DATE.db
-	xz reproducible_$DATE.db
-fi
+	if [ ! -f reproducible_$DATE.db.xz ] ; then
+		cp -v $PACKAGES_DB .
+		DATE=$(date '+%Y-%m-%d')
+		mv -v reproducible.db reproducible_$DATE.db
+		xz reproducible_$DATE.db
+	fi
 
-# provide copy for external backups
-cp -v $PACKAGES_DB $BASE/
+	# provide copy for external backups
+	cp -v $PACKAGES_DB $BASE/
+fi
 
 # delete old temp directories
 OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)

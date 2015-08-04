@@ -232,7 +232,7 @@ fi
 
 
 # remove artifacts older than 3 days
-ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; || true)
+ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"

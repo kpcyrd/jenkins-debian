@@ -344,7 +344,7 @@
         - '{name}_setup_pbuilder_testing_armhf_bpi0':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_node_wrapper.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_setup_pbuilder_unstable':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'

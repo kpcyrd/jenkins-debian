@@ -308,7 +308,8 @@ properties:
 
 * use ftp.us.d.o on these machines
 * use http://10.0.0.15:8000/ as proxy
-* next: run pbuilder create jobs via remote job scheduling as described below
+* next: fix dpkg '1.18.1.0~reproducible5' to not ftbfs
+* next: run pbuilder create jobs via remote job scheduling
 * then: repo overview with binary packages
 * then: armhf scheduling (only for testing for now, introduce "arch-factor", eg. amd64=10 and armhf=3, to schedule less on some archs)
 * then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
@@ -316,23 +317,6 @@ properties:
 * monitor their temperatures via munin via ssh:
 ** http://munin-monitoring.org/wiki/Native_ssh
 ** http://guide.munin-monitoring.org/en/latest/example/transport/ssh.html
-
-==== remote jenkins job scheduling:
-----
-<weasel> | h01ger: I have a slave configured, named buildbot.pixelminers.
-<weasel> remote root is /home/jenkins/pseudo-hosts/buildbot.pixelminers.net
-<weasel> and launch command is ssh localhost ~/pseudo-hosts/jenkins-tools/slaves/linux/start-slave.sh
-<weasel> https://www.palfrader.org/volatile/2015-06-06-sP55pjoGcN8/screenshot.png
-<weasel> https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux
-<weasel> - job:
-<weasel>     name: tor-ci-freebsd-amd64-master
-<weasel>     project-type: freestyle
-<weasel>     node: freebsd-amd64
-<weasel>     builders:
-<weasel>         - shell: '~/jenkins-tools/slaves/other/build-wrapper'
-<weasel> https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/other/build-wrapper
-<weasel> https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/other/tor-ci-freebsd-amd64-master/build
-----
 
 === qa.debian.org*
 

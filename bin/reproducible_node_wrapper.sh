@@ -61,6 +61,8 @@ allowed_cmds=()
 
 if   [ "$*" = "reproducible_setup_pbuilder_testing_armhf_bpi0" ]; then exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
 elif [ "$*" = "reproducible_maintenance_armhf_bpi0" ]; then exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
+elif [ "$*" = "reproducible_setup_pbuilder_testing_armhf_cbxi4pro0" ]; then exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
+elif [ "$*" = "reproducible_maintenance_armhf_cbxi4pro0" ]; then exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
 fi
 
 croak "Command '$*' not found in allowed commands."

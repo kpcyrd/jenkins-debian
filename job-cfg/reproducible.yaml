@@ -31,41 +31,7 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
-
-- defaults:
-    name: reproducible_armhf
-    project-type: freestyle
-    triggers:
-      - timed: '{my_timed}'
-    properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 30
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
-    builders:
-      - shell: '{my_shell}'
-    publishers:
-      - logparser:
-          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
-          unstable-on-warning: 'true'
-          fail-on-error: 'true'
-      - email:
-          recipients: '{my_recipients}'
-    node: armhf
+    node: '{my_node}'
 
 - defaults:
     name: reproducible_notes
@@ -107,6 +73,7 @@
           url: '{my_gitrepo}'
           branches:
             - master
+    node: '{my_node}'
 
 - defaults:
     name: reproducible_builder
@@ -154,6 +121,7 @@
       - email:
           recipients: '{my_recipients}'
           notify-every-unstable-build: false
+    node: '{my_node}'
 
 - defaults:
     name: reproducible_other_projects
@@ -195,6 +163,7 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
+    node: '{my_node}'
 
 - job-template:
     defaults: reproducible
@@ -336,165 +305,198 @@
             my_timed: '5 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_pbuilder_testing':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh testing'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_pbuilder_testing_armhf_bpi0':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'bpi0'
         - '{name}_setup_pbuilder_unstable':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_pbuilder_experimental':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_unstable_debbindiff':
             my_description: 'Setup schroot for running debbindiff in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-debbindiff unstable debbindiff locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_testing_debbindiff':
             my_description: 'Setup schroot for running debbindiff in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-debbindiff testing debbindiff locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_unstable':
             my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable botch'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_testing':
             my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_experimental':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'
             my_timed: '42 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_dashboards':
             my_description: 'Generate HTML results (dashboards with graphs) for reproducible builds.'
             my_timed: '*/5 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dashboards.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_pkg_sets':
             my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
             my_timed: '0 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_pkg_sets.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_indexes':
             my_description: 'Generate HTML results (indexes) for reproducible builds.'
             my_timed: '*/15 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_indexes.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_dd_list':
             my_description: 'Generate HTML results (dd-list) for reproducible builds.'
             my_timed: '55 */2 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_dd_list.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_notes':
             my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_blank">notes.git</a> repository.'
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_all_packages':
             my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is rather redudant and just run to give a fuzzy warm feeling all pages are good.'
             my_timed: '37 13 * * 1'
             my_shell: '/srv/jenkins/bin/reproducible_html_all_packages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_repository_comparison':
             my_description: 'Generate HTML results (repository_comparison) for reproducible builds.'
             my_timed: '0 1 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_repository_comparison.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_json':
             my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
             my_timed: '1 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_json.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_create_meta_pkg_sets':
             my_description: 'Create meta package sets for later consumption when generating HTML stats.'
             my_timed: '0 6 * * H/3'
             my_shell: '/srv/jenkins/bin/reproducible_create_meta_pkg_sets.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_breakages':
             my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
             my_timed: '30 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_breakages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_alpha':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_beta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_gamma':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_delta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_epsilon':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_zeta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_eta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_builder_theta':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_coreboot':
             my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_openwrt':
             my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_netbsd':
             my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_netbsd.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_freebsd':
             my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
             my_timed: '23 42 23 * *'
             my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
 

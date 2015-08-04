@@ -23,7 +23,7 @@ if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
 			exit 1
 		fi
 	fi
-elif [ ! -f ${PACKAGES_DB} ] ; then
+elif [ ! -f ${PACKAGES_DB} ] && [ "$HOSTNAME" = "jenkins" ] ; then
 	echo "Warning: $PACKAGES_DB doesn't exist, creating it now."
 		/srv/jenkins/bin/reproducible_db_maintenance.py
 	# 60 seconds timeout when trying to get a lock

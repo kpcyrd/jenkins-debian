@@ -42,7 +42,7 @@ done
 
 sudo mkdir -p /srv/workspace
 [ -d /srv/workspace/pbuilder ] || sudo mkdir -p /srv/workspace/pbuilder
-[ -h /chroots ] || ( sudo mkdir /srv/workspace/chroots ; sudo ln -s /srv/workspace/chroots chroots )
+[ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
@@ -59,7 +59,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
-for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts ; do
+for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 		sudo chown jenkins.jenkins $directory

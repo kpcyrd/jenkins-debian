@@ -53,10 +53,18 @@ else
 		export LC_ALL=C.UTF-8
 	fi
 	if [ -z "$MIRROR" ]; then
-		export MIRROR=http://ftp.de.debian.org/debian
+		case $HOSTNAME in
+			jenkins)			export MIRROR=http://ftp.de.debian.org/debian ;;
+			bpi0|cbxi4pro0|hb0|wbq0)	export MIRROR=http://ftp.de.debian.org/debian ;;
+			*)				echo "unsupported host, exiting." ; exit 1 ;;
+		esac
 	fi
 	if [ -z "$http_proxy" ]; then
-		export http_proxy="http://localhost:3128"
+		case $HOSTNAME in
+			jenkins)			export http_proxy="http://localhost:3128" ;;
+			bpi0|cbxi4pro0|hb0|wbq0)	export http_proxy="http://10.0.0.15:8000/" ;;
+			*)				echo "unsupported host, exiting." ; exit 1 ;;
+		esac
 	fi
 	if [ -z "$CHROOT_BASE" ]; then
 		export CHROOT_BASE=/chroots

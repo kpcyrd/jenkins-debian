@@ -306,11 +306,8 @@ properties:
 
 ==== reproducible Debian armhf
 
-* use ftp.us.d.o on these machines
-* use http://10.0.0.15:8000/ as proxy
 * next: fix dpkg '1.18.1.0~reproducible5' to not ftbfs
 * next: run pbuilder create jobs via remote job scheduling
-* then: repo overview with binary packages
 * then: armhf scheduling (only for testing for now, introduce "arch-factor", eg. amd64=10 and armhf=3, to schedule less on some archs)
 * then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
 * then: run maintenance job via remote job scheduling

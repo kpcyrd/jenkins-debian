@@ -71,6 +71,18 @@ elif [ "$*" = "reproducible_maintenance_armhf_cbxi4pro0" ] ; then
 	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
 elif [ "$*" = "reproducible_setup_schroot_testing_debbindiff_armhf_cbxi4pro0" ] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-debbindiff testing debbindiff locales-all ; croak "Exec failed";
+elif   [ "$*" = "reproducible_setup_pbuilder_testing_armhf_hb0" ] ; then
+	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
+elif [ "$*" = "reproducible_maintenance_armhf_hb0" ] ; then
+	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
+elif [ "$*" = "reproducible_setup_schroot_testing_debbindiff_armhf_hb0" ] ; then
+	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-debbindiff testing debbindiff locales-all ; croak "Exec failed";
+elif   [ "$*" = "reproducible_setup_pbuilder_testing_armhf_wbq0" ] ; then
+	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
+elif [ "$*" = "reproducible_maintenance_armhf_wbq0" ] ; then
+	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
+elif [ "$*" = "reproducible_setup_schroot_testing_debbindiff_armhf_wbq0" ] ; then
+	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-debbindiff testing debbindiff locales-all ; croak "Exec failed";
 fi
 
 croak "Command '$*' not found in allowed commands."

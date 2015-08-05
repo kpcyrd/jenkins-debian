@@ -22,9 +22,9 @@ parser = argparse.ArgumentParser(
            'in the package list.')
 group = parser.add_mutually_exclusive_group()
 parser.add_argument('--dry-run', action='store_true')
-group.add_argument('-a', '--artifacts', default=False, action='store_true',
+group.add_argument('-a', '--artifacts',  action='store_true',
                    help='Save artifacts (for further offline study)')
-group.add_argument('-n', '--notify', default=False, action='store_true',
+group.add_argument('-n', '--notify', action='store_true',
                    help='Notify the channel when the build finishes')
 parser.add_argument('--noisy', action='store_true', help='Also notify when ' +
                     'the build starts, linking to the build url. This disables -n.')

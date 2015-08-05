@@ -194,7 +194,7 @@ properties:
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** reproducible_blacklist.sh should delete rbuild logs and debbindiff output too
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
-** fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/de/sslcheck?host=jenkins.debian.net#46.16.73.183
+** fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/de/sslcheck?host=jenkins.debian.net#46.16.73.236
 ** create a symbol for pending bugs or use a different color to indicate them
 
 * notes related

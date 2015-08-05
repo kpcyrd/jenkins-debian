@@ -33,6 +33,8 @@ parser.add_argument('-m', '--message', default='', nargs='+',
                     ' about the scheduling')
 parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule in')
+parser.add_argument('-a', '--architecture', required=False, default='unstable',
+                    help='Specify the architecture to schedule for')
 parser.add_argument('-r', '--status', required=False,
                     help='Schedule all package with this status')
 parser.add_argument('-i', '--issue', required=False,
@@ -65,6 +67,7 @@ except KeyError:
     local = False
 
 suite = scheduling_args.suite
+arch = scheduling_args.architecture
 reason = ' '.join(scheduling_args.message)
 issue = scheduling_args.issue
 status = scheduling_args.status
@@ -89,11 +92,17 @@ log.debug('Status: ' + status if status else str(None))
 log.debug('Date: after ' + built_after if built_after else str(None) +
           ' before ' + built_before if built_before else str(None))
 log.debug('Suite: ' + suite)
+log.debug('Architecture: ' + arch)
 log.debug('Packages: ' + ' '.join(packages))
 
 if suite not in SUITES:
     log.critical('The specified suite is not being tested.')
-    log.critical('Please chose between ' + ', '.join(SUITES))
+    log.critical('Please choose between ' + ', '.join(SUITES))
+    sys.exit(1)
+
+if arch not in ARCHS:
+    log.critical('The specified architecture is not being tested.')
+    log.critical('Please choose between ' + ', '.join(ARCHS))
     sys.exit(1)
 
 if issue or status or built_after or built_before:
@@ -123,9 +132,10 @@ if issue or status or built_after or built_before:
 if len(packages) > 50 and notify:
     log.critical(bcolors.RED + bcolors.BOLD)
     call(['figlet', 'No.'])
-    log.critical(bcolors.FAIL + 'Do not reschedule more than 50 packages ' +
-                 'with notification.\nIf you think you need to do this, ' +
-                 'please discuss this with the IRC channel first.' + bcolors.ENDC)
+    log.critical(bcolors.FAIL + 'Do not reschedule more than 50 packages ',
+                 'with notification.\nIf you think you need to do this, ',
+                 'please discuss this with the IRC channel first.',
+                 bcolors.ENDC)
     sys.exit(1)
 
 if artifacts:
@@ -138,16 +148,18 @@ if debug_url:
 ids = []
 pkgs = []
 
-query1 = 'SELECT id FROM sources WHERE name="{pkg}" AND suite="{suite}"'
+query1 = '''SELECT id FROM sources WHERE name="{pkg}" AND suite="{suite}"
+            AND architecture="{arch}"'''
 query2 = '''SELECT p.date_build_started
             FROM sources AS s JOIN schedule as p ON p.package_id=s.id
-            WHERE s.name="{pkg}" AND suite="{suite}"'''
+            WHERE s.name="{pkg}"
+            AND s.suite="{suite}" AND s.architecture="{arch}"'''
 for pkg in packages:
     # test whether the package actually exists
-    result = query_db(query1.format(pkg=pkg, suite=suite))
+    result = query_db(query1.format(pkg=pkg, suite=suite, arch=arch))
     try:
         # tests whether the package is already building
-        result2 = query_db(query2.format(pkg=pkg, suite=suite))
+        result2 = query_db(query2.format(pkg=pkg, suite=suite, arch=arch))
         try:
             if not result2[0][0]:
                 ids.append(result[0][0])
@@ -159,7 +171,8 @@ for pkg in packages:
             ids.append(result[0][0])
             pkgs.append(pkg)
     except IndexError:
-        log.critical('The package ' + pkg + ' is not available in ' + suite)
+        log.critical('The package %s is not available in %s/%s',
+                     pkg, suite, arch)
         sys.exit(1)
 
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
@@ -168,8 +181,8 @@ trailing = ' - artifacts will be preserved' if artifacts else ''
 trailing += ' - with irc notification' if notify else ''
 trailing += ' - notify on start too' if debug_url else ''
 
-message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + ' by ' + \
-    requester
+message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + '/' + \
+    arch + ' by ' + requester
 if reason:
     message += ' (reason: ' + reason + ')'
 message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing

@@ -34,7 +34,7 @@
     node: '{my_node}'
 
 - defaults:
-    name: reproducible_notes
+    name: reproducible_git
     project-type: freestyle
     triggers:
       - timed: '{my_timed}'
@@ -60,7 +60,6 @@
       artifactNumToKeep: -1
     builders:
       - shell: '{my_shell}'
-      - shell: '/srv/jenkins/bin/reproducible_notes.py'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
@@ -322,7 +321,7 @@
     name: '{name}_html_dd_list'
 
 - job-template:
-    defaults: reproducible_notes
+    defaults: reproducible_git
     name: '{name}_html_notes'
 
 - job-template:
@@ -638,7 +637,7 @@
             my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_blank">notes.git</a> repository.'
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
-            my_shell: '/srv/jenkins/bin/reproducible_html_notes.py'
+            my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh && /srv/jenkins/bin/reproducible_notes.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_html_all_packages':

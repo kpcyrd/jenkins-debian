@@ -22,7 +22,7 @@ parser = argparse.ArgumentParser(
            'in the package list.')
 group = parser.add_mutually_exclusive_group()
 parser.add_argument('--dry-run', action='store_true')
-group.add_argument('-a', '--artifacts',  action='store_true',
+group.add_argument('-k', '--keep-artifacts',  action='store_true',
                    help='Save artifacts (for further offline study)')
 group.add_argument('-n', '--notify', action='store_true',
                    help='Notify the channel when the build finishes')
@@ -71,7 +71,7 @@ status = scheduling_args.status
 built_after = scheduling_args.after
 built_before = scheduling_args.before
 packages = scheduling_args.packages
-artifacts = scheduling_args.artifacts
+artifacts = scheduling_args.keep_artifacts
 notify = scheduling_args.notify or scheduling_args.noisy
 debug_url = scheduling_args.noisy
 dry_run = scheduling_args.dry_run

@@ -325,6 +325,10 @@
     name: '{name}_html_notes'
 
 - job-template:
+    defaults: reproducible_git
+    name: '{name}_html_howto'
+
+- job-template:
     defaults: reproducible
     name: '{name}_html_all_packages'
 
@@ -639,6 +643,13 @@
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_notes.sh && /srv/jenkins/bin/reproducible_notes.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_html_howto':
+            my_description: 'Generate the HTML of the reproducible builds howto, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/reproducible-builds-howto.git" target="_blank">notes.git</a> repository.'
+            my_timed: '57 0 * * *'
+            my_gitrepo: 'git://git.debian.org/git/reproducible/reproducible-builds-howto.git'
+            my_shell: '/srv/jenkins/bin/reproducible_html_howto.sh'
+            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_html_all_packages':
             my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is rather redudant and just run to give a fuzzy warm feeling all pages are good.'

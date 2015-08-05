@@ -157,12 +157,14 @@ gather_suite_stats() {
 	COUNT_SOURCELESS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"404\"")
 	COUNT_NOTFORUS=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"not for us\"")
 	COUNT_BLACKLISTED=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"blacklisted\"")
-	COUNT_OTHER=$(( $COUNT_SOURCELESS+$COUNT_NOTFORUS+$COUNT_BLACKLISTED ))
+	COUNT_DEPWAIT=$(sqlite3 -init $INIT $PACKAGES_DB "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND r.status = \"depwait\"")
+	COUNT_OTHER=$(( $COUNT_SOURCELESS+$COUNT_NOTFORUS+$COUNT_BLACKLISTED+$COUNT_DEPWAIT ))
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc)
 	PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc)
 	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc)
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc)
+	PERCENT_DEPWAIT=$(echo "scale=1 ; ($COUNT_DEPWAIT*100/$COUNT_TOTAL)" | bc)
 	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc)
 	PERCENT_OTHER=$(echo "scale=1 ; ($COUNT_OTHER*100/$COUNT_TOTAL)" | bc)
 }
@@ -261,11 +263,17 @@ create_suite_stats_page() {
 	write_icon
 	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
 	write_page "<p>"
+	if [ $COUNT_DEPWAIT -gt 0 ] ; then
+		write_page "For "
+		set_icon depwait
+		write_icon
+		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages the build-depends cannot be satisfied."
+	fi
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
 		write_page "For "
 		set_icon 404
 		write_icon
-		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) packages sources could not be downloaded,"
+		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded,"
 	fi
 	set_icon not_for_us
 	write_icon

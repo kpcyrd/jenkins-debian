@@ -178,7 +178,6 @@ properties:
 * higher prio:
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** exclude depwait from no_notes
-** include depwait in graphs
 ** repo-comparison: check for binaries without source
 
 * lesser prio

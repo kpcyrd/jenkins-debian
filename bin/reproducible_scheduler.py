@@ -222,10 +222,10 @@ def query_old_ftbfs_versions(suite, limit):
                'no new version available, sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
-		JOIN notes AS n ON n.package_id=s.id
+                JOIN notes AS n ON n.package_id=s.id
                 WHERE s.suite='{suite}'
                 AND r.status = 'FTBFS'
-		AND ( n.bugs = '[]' OR n.bugs IS NULL )
+                AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < datetime('now', '-10 day')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
@@ -296,7 +296,7 @@ def schedule_old_ftbfs_versions(total):
         old_ftbfs = 0
     for suite in SUITES:
         if suite == 'experimental':
-            old_ftbfs = 0	# experiemental rarely get's fixed over time...
+            old_ftbfs = 0  # experiemental rarely get's fixed over time...
         log.info('Requesting ' + str(old_ftbfs) + ' old ftbfs packages in ' + suite + '...')
         packages[suite] = query_old_ftbfs_versions(suite, old_ftbfs)
         log.info('Received ' + str(len(packages[suite])) + ' old ftbfs packages in ' + suite + ' to schedule.')

@@ -44,21 +44,27 @@ def call_apt_update(suite):
     sys.exit(1)
 
 
-def update_sources_tables(suite):
+def update_sources(suite):
     # download the sources file for this suite
     mirror = 'http://ftp.de.debian.org/debian'
     remotefile = mirror + '/dists/' + suite + '/main/source/Sources.xz'
-    log.info('Downloading sources file for ' + suite + ': ' + remotefile)
+    log.info('Downloading sources file for %s: %s', suite, remotefile)
     sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
+    for arch in ARCHS:
+        log.info('Updating sources for %s...', arch)
+        update_sources_tables(suite, arch, sources)
+
+
+def update_sources_tables(suite, arch, sources):
     # extract relevant info (package name and version) from the sources file
     new_pkgs = []
     for src in deb822.Sources.iter_paragraphs(sources.split('\n')):
-        pkg = (src['Package'], src['Version'], suite)
+        pkg = (src['Package'], src['Version'], suite, arch)
         new_pkgs.append(pkg)
     # get the current packages in the database
-    query = 'SELECT name, version, suite FROM sources ' + \
-            'WHERE suite="{}"'.format(suite)
+    query = 'SELECT name, version, suite, architecture FROM sources ' + \
+            'WHERE suite="{}" AND architecture="{}"'.format(suite, arch)
     cur_pkgs = query_db(query)
     pkgs_to_add = []
     updated_pkgs = []
@@ -66,13 +72,14 @@ def update_sources_tables(suite):
     log.debug('Packages different in the archive and in the db: ' +
               str(different_pkgs))
     for pkg in different_pkgs:
+        # pkg: (name, version, suite, arch)
         query = 'SELECT id, version, notify_maintainer FROM sources ' + \
-                'WHERE name="{name}" AND suite="{suite}"'
-        query = query.format(name=pkg[0], suite=pkg[2])
+                'WHERE name="{}" AND suite="{}" AND architecture="{}"'
+        query = query.format(pkg[0], pkg[2], pkg[3])
         try:
             result = query_db(query)[0]
         except IndexError:  # new package
-            pkgs_to_add.append((pkg[0], pkg[1], pkg[2], 'amd64'))
+            pkgs_to_add.append(pkg)
             continue
         pkg_id = result[0]
         old_version = result[1]
@@ -80,7 +87,8 @@ def update_sources_tables(suite):
         if version_compare(pkg[1], old_version) > 0:
             log.debug('New version: ' + str(pkg) + ' (we had  ' +
                       old_version + ')')
-            updated_pkgs.append((pkg_id, pkg[0], pkg[1], pkg[2], notify_maint))
+            updated_pkgs.append(
+                (pkg_id, pkg[0], pkg[1], pkg[2], pkg[3], notify_maint))
     # Now actually update the database:
     cursor = conn_db.cursor()
     # updated packages
@@ -89,7 +97,7 @@ def update_sources_tables(suite):
     cursor.executemany(
         'REPLACE INTO sources ' +
         '(id, name, version, suite, architecture, notify_maintainer) ' +
-        'VALUES (?, ?, ?, ?, "{arch}", ?)'.format(arch='amd64'),
+        'VALUES (?, ?, ?, ?, ?, ?)',
         updated_pkgs)
     conn_db.commit()
     # new packages
@@ -108,12 +116,12 @@ def update_sources_tables(suite):
              ' removed packages: ' + str(rmed_pkgs))
     rmed_pkgs_id = []
     pkgs_to_rm = []
+    query = 'SELECT id FROM sources WHERE name="{}" AND suite="{}" ' + \
+            'AND architecture="{}"'
     for pkg in rmed_pkgs:
-        result = query_db(('SELECT id FROM sources ' +
-                          'WHERE name="{name}" ' +
-                          'AND suite="{suite}"').format(name=pkg, suite=suite))
+        result = query_db(query.format(pkg, suite, arch))
         rmed_pkgs_id.extend(result)
-        pkgs_to_rm.append((pkg, suite, 'amd64'))
+        pkgs_to_rm.append((pkg, suite, arch))
     log.debug('removed packages ID: ' + str([str(x[0]) for x in rmed_pkgs_id]))
     log.debug('removed packages: ' + str(pkgs_to_rm))
     cursor.executemany('DELETE FROM sources ' +
@@ -127,7 +135,9 @@ def update_sources_tables(suite):
                        'VALUES (?, ?, ?)', pkgs_to_rm)
     conn_db.commit()
     # finally check whether the db has the correct number of packages
-    pkgs_end = query_db('SELECT count(*) FROM sources WHERE suite="%s"' % suite)
+    query = 'SELECT count(*) FROM sources WHERE suite="{}" ' + \
+            'AND architecture="{}"'
+    pkgs_end = query_db(query.format(suite, arch))
     count_new_pkgs = len(set([x[0] for x in new_pkgs]))
     if int(pkgs_end[0][0]) != count_new_pkgs:
         print_critical_message('AH! The number of source in the Sources file' +
@@ -408,7 +418,7 @@ if __name__ == '__main__':
     log.info('Updating schroots and sources tables for all suites.')
     for suite in SUITES:
         call_apt_update(suite)
-        update_sources_tables(suite)
+        update_sources(suite)
     purge_old_pages()
     try:
         overall = int(query_db('SELECT count(*) FROM schedule')[0][0])

@@ -3,8 +3,6 @@
 # Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-HOSTNAME=jenkins
-
 common_cleanup(){
 	echo "$(date) - $0 stopped running as $TTT, which will now be removed."
 	rm -f $TTT

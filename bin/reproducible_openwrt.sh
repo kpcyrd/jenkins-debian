@@ -82,7 +82,7 @@ openwrt_build() {
 	ionice -c 3 nice \
 		$MAKE $OPTIONS package/install
 	ionice -c 3 nice \
-		$MAKE $OPTIONS target/install
+		$MAKE $OPTIONS target/install V=s || true
 	ionice -c 3 nice \
 		$MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
 }

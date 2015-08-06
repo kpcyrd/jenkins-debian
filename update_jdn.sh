@@ -182,7 +182,8 @@ if [ -f /etc/debian_version ] ; then
 				openbios-ppc 
 				openbios-sparc 
 				openjdk-7-jre 
-				ovmf 
+				ovmf
+				pandoc
 				postgresql-client-9.4 
 				poxml 
 				procmail 

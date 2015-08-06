@@ -216,6 +216,7 @@ if [ -f /etc/debian_version ] ; then
 		else
 			MASTERDEBS=""
 		fi
+		sudo apt-get update
 		sudo apt-get install $DEBS $MASTERDEBS
 		sudo apt-get install -t jessie-backports \
 				pbuilder

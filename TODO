@@ -216,13 +216,15 @@ properties:
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 
-* a test VM using this build-slave design has been setup:
-** 9 cores, 36gb ram, 80gb disk, 50gb /, 30gb /srv/kvm
+* remote building on amd64
+** profitbricks-build1-amd64 is setup
+*** squid needs proper configuration
+
+* a VM for running kvm on kvm (profitbricks-build2-amd64) has been set up too
 ** runs squid3 + kvm
 *** though squid is not configured yet
 ** kvm guest with different cpu, 32gb ram, 8 cores, 30gb /
-** date changed in /etc/rc.local to today plus two days, one month and one year and hoping that the apt-signing key is still valid
-** runs pbuilder inside the kvm guest
+** networking doesnt work yet...
 
 * enable people to upload test packages, to be built in jenkins:
 ----

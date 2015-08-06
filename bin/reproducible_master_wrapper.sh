@@ -16,7 +16,7 @@ case "$NODE_NAME" in
   cbxi4pro0-armhf-rb.debian.net)
     exec ssh -p 2226 $NODE_NAME "$JOB_NAME"
     ;;
-  profitbricks-build?-amd64)
+  profitbricks-build?-amd64.debian.net)
     exec ssh $NODE_NAME "$JOB_NAME"
     ;;
   *)

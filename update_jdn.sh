@@ -81,17 +81,6 @@ if ! test -h /chroots; then
 	fi
 fi
 
-# create homedirectories for build hosts (needed for jenkins remote nodes)
-case $HOSTNAME in
-	bpi0|hb0|wbq0|cbxi4pro0)	NODEHOME=/srv/jenkins/pseudo-hosts/$HOSTNAME-armhf-rb ;;
-	profitbricks-build?-amd64)	NODEHOME=/srv/jenkins/pseudo-hosts/$HOSTNAME ;;
-	*)				;;
-esac
-if [ ! -z "$NODEHOME" ] && [ -d $NODEHOME ] ; then
-	sudo mkdir $NODEHOME 
-	sudo chown jenkins.jenkins $NODEHOME
-fi
-
 # only on Debian systems
 if [ -f /etc/debian_version ] ; then
 	if [ ! -h /var/cache/pbuilder/build ] ; then

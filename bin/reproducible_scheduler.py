@@ -318,11 +318,11 @@ def schedule_old_versions(total):
         many_old_base = 0  # ...
     for suite in SUITES:
         if suite == 'unstable':
-            suite_many_old = int(many_old_base*5) # unstable changes the most and is most relevant ### was 20, lowered due to gcc5 transition
+            suite_many_old = int(many_old_base*0) # unstable changes the most and is most relevant ### was 20, set to 0 due to gcc5 transition
         elif suite == 'testing':
             suite_many_old = int(many_old_base*25)  # re-schedule testing less than unstable as we care more more about unstable (atm) ### was 10, raised due to gcc5...
         else:
-            suite_many_old = int(many_old_base)    # experimental is roughly one twentieth of the size of the other suites
+            suite_many_old = 0 # set to 0 due to gcc5 transition # int(many_old_base)    # experimental is roughly one twentieth of the size of the other suites
         log.info('Requesting ' + str(suite_many_old) + ' old packages in ' + suite + '...')
         packages[suite] = query_old_versions(suite, suite_many_old)
         log.info('Received ' + str(len(packages[suite])) + ' old packages in ' + suite + ' to schedule.')

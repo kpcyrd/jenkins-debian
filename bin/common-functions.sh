@@ -61,7 +61,7 @@ else
 	fi
 	if [ -z "$http_proxy" ]; then
 		case $HOSTNAME in
-			jenkins|profitbricks-build1-amd64)	export http_proxy="http://localhost:3128" ;;
+			jenkins|profitbricks-build?-amd64)	export http_proxy="http://localhost:3128" ;;
 			bpi0|cbxi4pro0|hb0|wbq0)		export http_proxy="http://10.0.0.15:8000/" ;;
 			*)					echo "unsupported host, exiting." ; exit 1 ;;
 		esac

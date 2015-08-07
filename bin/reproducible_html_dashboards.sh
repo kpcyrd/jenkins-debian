@@ -305,14 +305,19 @@ create_main_stats_page() {
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
 	# write suite table
 	write_page "<p>"
-	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
+	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th><th>&nbsp;</th></tr>"
 	for SUITE in $SUITES ; do
 		gather_suite_stats
 		write_page "<tr><td>$SUITE</td><td>$AMOUNT"
 		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
 			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 		fi
-		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+		if [ "$SUITE" = "unstable" ] ; then
+			FINALLY_SID_AGAIN="Debian <em>unstable</em> is currently experiencing <a href=\"https://release.debian.org/transitions/html/libstdc++6.html\">a massive transition</a> and thus is currently quite broken, which is also shown by our current tests."
+		else
+			FINALLY_SID_AGAIN=""
+		fi
+		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td><td>$FINALLY_SID_AGAIN</td></tr>"
 	done
         write_page "</table>"
 	# write suite graphs

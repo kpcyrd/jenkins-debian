@@ -68,6 +68,8 @@ queries = {
     '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
     'depwait_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" ORDER BY build_date DESC',
     'depwait_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" ORDER BY name',
+    'depwait_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" AND build_date > datetime("now", "-24 hours") ORDER BY name',
+    'depwait_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" AND build_date > datetime("now", "-48 hours") ORDER BY name',
     'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY build_date DESC',
     'not_for_us_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY name',
     'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name',
@@ -222,6 +224,15 @@ pages = {
                 'timely': True
             },
             {
+                'icon_status': 'depwait',
+                'icon_link': '/index_depwait.html',
+                'query': 'depwait_last24h',
+                'query2': 'depwait_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
+                                 'failed to satisfy their build-dependencies, $tot of them  in the last 24h in $suite/$arch:'),
+                'timely': True
+            },
+            {
                 'icon_status': 'reproducible',
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_last24h',
@@ -251,6 +262,15 @@ pages = {
                 'query2': 'FTBFS_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
                                  'failed to build from source in total, $tot of them  in the last 48h in $suite/$arch:'),
+                'timely': True
+            },
+            {
+                'icon_status': 'depwait',
+                'icon_link': '/index_depwait.html',
+                'query': 'depwait_last48h',
+                'query2': 'depwait_all',
+                'text': Template('$count packages ($percent% of ${count_total}) ' +
+                                 'failed to satisfy their build-dependencies, $tot of them  in the last 48h in $suite/$arch:'),
                 'timely': True
             },
             {

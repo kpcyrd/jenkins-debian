@@ -341,13 +341,6 @@ pages = {
                 'text': Template('$tot FTBFS packages in $suite/$arch:')
             },
             {
-                'icon_status': 'depwait',
-                'db_status': 'depwait',
-                'icon_link': '/index_depwait.html',
-                'query': 'depwait_all_abc',
-                'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies:')
-            },
-            {
                 'icon_status': 'blacklisted',
                 'db_status': 'blacklisted',
                 'icon_link': '/index_blacklisted.html',

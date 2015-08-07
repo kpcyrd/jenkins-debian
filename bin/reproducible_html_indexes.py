@@ -156,7 +156,7 @@ pages = {
         ]
     },
     'all_abc': {
-        'title': 'Alphabetically sorted overview of all tested packages in {suite}/{arch})',
+        'title': 'Alphabetically sorted overview of all tested packages in {suite}/{arch}',
         'body': [
             {
                 'icon_status': 'FTBR',

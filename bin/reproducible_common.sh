@@ -186,6 +186,9 @@ write_page_header() {
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general, so if you are an upstream developer or working on another distribution, we'd love to hear from you! Just now we've started to programatically test <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a> and <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> and <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_freebsd\">FreeBSD</a> soon too."
 		write_page "</p>"
 	fi
+	if [ "$1" = "$MAINVIEW" ] ; then
+		write_page "<p>There's a new HowTo <b>in early development</b>: <a href=\"/howto\">How to make your software reproducible</a>? We appreciate feedback on it, but please don't consider this document to be finished, comprehensive or correct yet.</p>"
+	fi
 	write_page "<ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do
 		set_icon $MY_STATE

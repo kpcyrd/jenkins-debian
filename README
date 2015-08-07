@@ -171,6 +171,20 @@ Installation tests inside chroot environments.
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh $suite $package1
 ----
 
+* We support sending automatic link:https://reproducible.debian.net/index_notify.html[email notification] for status changes to maintainers. Enabling/disabling suchnotifications can be done by people with shell access to jenkins:
+
+----
+jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_setup_notify.py -h
+usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
+                                    [-m MAINTAINER]
+  -h, --help            show this help message and exit
+  -o, --deactivate      Deactivate the notifications
+  -p PACKAGES [PACKAGES ...], --packages PACKAGES [PACKAGES ...]
+                        list of packages for which activate notifications
+  -m MAINTAINER, --maintainer MAINTAINER
+                        email of a maintainer interested in his packages
+----
+
 * Job configuration is at the usual location for 'jenkins.debian.net' - there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.
 
 * Finally, there are also three jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt] and link:http://www.netbsd.org/[NetBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/ and https://reproducible.debian.net/netbsd/.

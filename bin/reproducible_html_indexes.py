@@ -568,4 +568,8 @@ if __name__ == '__main__':
     for suite in SUITES:
         for arch in ARCHS:
             for page in pages.keys():
-                build_page(page, suite, arch)
+                if 'global' not in pages[page] or not pages[page]['global']:
+                    build_page(page, suite, arch)
+    for page in pages.keys():
+        if 'global' in  pages[page] and pages[page]['global']:
+            build_page(page)

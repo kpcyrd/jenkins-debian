@@ -200,7 +200,8 @@ html_foot_page_style_note = Template((tab*2).join("""
   A <code><span class="bug">&#35;</span></code> sign after the name of a
   package indicates that a bug is filed against it. Likewise, a
   <code><span class="bug-patch">&#43;</span></code> sign indicates there is
-  a patch available. <code><span class="bug-done">&#35;</span></code>
+  a patch available, a <code><span class="bug-pending">P</span></code> means a
+  pending bug while <code><span class="bug-done">&#35;</span></code>
   indicates a closed bug. In cases of several bugs, the symbol is repeated.
 </p>""".splitlines(True)))
 
@@ -476,12 +477,13 @@ def get_bugs():
     }
     """
     query = """
-        SELECT DISTINCT bugs.id, bugs.source, bugs.done, tags.tag
+        SELECT bugs.id, bugs.source, bugs.done, ARRAY_AGG(tags.tag)
         FROM bugs JOIN bugs_tags ON bugs.id = bugs_tags.id
                   JOIN bugs_usertags ON bugs_tags.id = bugs_usertags.id
                   JOIN sources ON bugs.source=sources.source
                   LEFT JOIN (
-                    SELECT id, tag FROM bugs_tags WHERE tag='patch'
+                    SELECT id, tag FROM bugs_tags
+                    WHERE tag='patch' OR tag='pending'
                   ) AS tags ON bugs.id = tags.id
         WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
         AND bugs.id NOT IN (
@@ -492,6 +494,7 @@ def get_bugs():
                 bugs_usertags.tag = 'toolchain'
                 OR bugs_usertags.tag = 'infrastructure')
             )
+        GROUP BY bugs.id, bugs.source, bugs.done
     """
     # returns a list of tuples [(id, source, done)]
     global conn_udd
@@ -508,13 +511,19 @@ def get_bugs():
         if bug[1] not in packages:
             packages[bug[1]] = {}
         # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done,
-        # bug[3] = tag (patch)
-        packages[bug[1]][bug[0]] = {'done': False, 'patch': False}
+        # bug[3] = tag (patch or pending)
+        packages[bug[1]][bug[0]] = {
+            'done': False, 'patch': False, 'pending': False
+        }
         if bug[2]:  # if the bug is done
             packages[bug[1]][bug[0]]['done'] = True
-        if bug[3]:  # the bug is patched
+        if 'patch' in bug[3]:  # the bug is patched
             packages[bug[1]][bug[0]]['patch'] = True
+        if 'pending' in bug[3]:  # the bug is pending
+            packages[bug[1]][bug[0]]['pending'] = True
+    log.debug(packages)
     return packages
+
 
 def get_trailing_icon(package, bugs):
     html = ''
@@ -523,6 +532,8 @@ def get_trailing_icon(package, bugs):
             html += '<span class="'
             if bugs[package][bug]['done']:
                 html += 'bug-done" title="#' + str(bug) + ', done">#</span>'
+            elif bugs[package][bug]['pending']:
+                html += 'bug-pending" title="#' + str(bug) + ', pending">P</span>'
             elif bugs[package][bug]['patch']:
                 html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
             else:
@@ -542,6 +553,8 @@ def get_trailing_bug_icon(bug, bugs, package=None):
                 html += '<span class="'
                 if bugs[package][bug]['done']:
                     html += 'bug-done" title="#' + str(bug) + ', done">#'
+                elif bugs[package][bug]['pending']:
+                    html += 'bug-pending" title="#' + str(bug) + ', pending">P'
                 elif bugs[package][bug]['patch']:
                     html += 'bug-patch" title="#' + str(bug) + ', with patch">+'
                 else:
@@ -550,6 +563,7 @@ def get_trailing_bug_icon(bug, bugs, package=None):
         except KeyError:
             pass
     return html
+
 
 def irc_msg(msg):
     kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',

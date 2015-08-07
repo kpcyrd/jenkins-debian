@@ -193,7 +193,6 @@ properties:
 ** replace submit form by one without javascript (maybe with more url rewriting)
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
-** create a symbol for pending bugs or use a different color to indicate them
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug

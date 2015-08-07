@@ -179,6 +179,12 @@ a.bug-patch:after {
 	font-weight: bold;
 }
 
+a.bug-pending:after {
+	content: "P";
+	color: #663300;
+	font-weight: bold;
+}
+
 a.bug-done {
 	text-decoration: line-through;
 	color: #73d216;
@@ -192,6 +198,11 @@ span.bug {
 
 span.bug-patch {
 	color: #f57900;
+	font-weight: bold;
+}
+
+span.bug-pending {
+	color: #663300;
 	font-weight: bold;
 }
 

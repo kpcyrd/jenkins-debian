@@ -177,12 +177,14 @@ a.bug-patch:after {
 	content: "+";
 	color: #cc0000;
 	font-weight: bold;
+	vertical-align: super;
 }
 
 a.bug-pending:after {
 	content: "P";
 	color: #663300;
 	font-weight: bold;
+	vertical-align: super;
 }
 
 a.bug-done {
@@ -194,22 +196,26 @@ a.bug-done {
 span.bug {
 	color: #cc0000;
 	font-weight: bold;
+	vertical-align: super;
 }
 
 span.bug-patch {
 	color: #f57900;
 	font-weight: bold;
+	vertical-align: super;
 }
 
 span.bug-pending {
 	color: #663300;
 	font-weight: bold;
+	vertical-align: super;
 }
 
 span.bug-done {
 	text-decoration: line-through;
 	color: #73d216;
 	font-weight: bold;
+	vertical-align: super;
 }
 
 td, th {

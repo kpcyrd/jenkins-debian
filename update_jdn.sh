@@ -11,10 +11,10 @@ TMPFILE=$(mktemp)
 
 explain() {
 	echo
-	echo $1
-	echo
+	echo "$HOSTNAME: $1"
 }
 
+explain "$(date) - begin deployment update."
 #
 # set up users and groups
 #
@@ -53,7 +53,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		if test -z "$(ls -A /srv/workspace)"; then
 			mount /srv/workspace
 		else
-			explain "mountpoint /srv/workspace is non-empty"
+			explain "mountpoint /srv/workspace is non-empty."
 		fi
 	fi
 fi
@@ -75,7 +75,7 @@ done
 if ! test -h /chroots; then
 	sudo rmdir /chroots || sudo rm -f /chroots # do not recurse
 	if test -e /chroots; then
-		explain "could not clear /chroots"
+		explain "/chroots could not be cleared."
 	else
 		sudo ln -s /srv/workspace/chroots /chroots
 	fi
@@ -86,7 +86,7 @@ if [ -f /etc/debian_version ] ; then
 	if [ ! -h /var/cache/pbuilder/build ] ; then
 		sudo rmdir /var/cache/pbuilder/build || sudo rm -f /var/cache/pbuilder/build
 		if [ -e /var/cache/pbuilder/build ] ; then
-			explain "could not clear /var/cache/pbuilder/build"
+			explain "/var/cache/pbuilder/build could not be cleared."
 		else
 			sudo ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build
 		fi
@@ -221,9 +221,9 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get install -t jessie-backports \
 				pbuilder
 		#		botch
-		explain "Packages installed."
+		explain "packages installed."
 	else
-		explain "No new packages to be installed."
+		explain "no new packages to be installed."
 	fi
 fi
 
@@ -258,11 +258,11 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
-if [ "$HOSTNAME" = "jenkins" ] ; then
-	[ -L apache_accesses ] || for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
+if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
+	for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
 fi
-explain "Packages configured."
 sudo service munin-node force-reload
+explain "packages configured."
 
 #
 # install the heart of jenkins.debian.net
@@ -282,7 +282,7 @@ fi
 sudo chown -R jenkins:jenkins /var/lib/jenkins/.ssh
 sudo chmod 700 /var/lib/jenkins/.ssh
 sudo chmod 600 /var/lib/jenkins/.ssh/authorized_keys
-explain "Jenkins updated."
+explain "scripts and configurations for jenkins updated."
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	sudo cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
@@ -303,7 +303,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	mv THANKS .THANKS
 	rm TODO README INSTALL CONTRIBUTING
 	sudo chown -R jenkins.jenkins /var/lib/jenkins/userContent
-	explain "Updated user content for Jenkins."
+	explain "user content for jenkins updated."
 
 	#
 	# run jenkins-job-builder to update jobs if needed
@@ -324,7 +324,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 			echo "$config has not changed, nothing to do."
 		fi
 	done
-	explain "Jenkins jobs updated."
+	explain "jenkins jobs updated."
 fi
 
 #
@@ -348,7 +348,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	#
 	if [ "$PVNAME" = "" ]; then
 	    figlet -f banner Error
-	    explain "Set \$PVNAME to physical volume pathname."
+	    explain "you must set \$PVNAME to physical volume pathname, exiting."
 	    exit 1
 	else
 	    if ! sudo pvs $PVNAME >/dev/null 2>&1; then
@@ -372,6 +372,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	        explain "kgb-client configuration unchanged, nothing to do."
 	    fi
 	else
+	    figlet -f banner Warning
 	    echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
 	    echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."
 	fi
@@ -389,4 +390,4 @@ rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 #
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 rm -f $TMPFILE
-explain "$(hostname -f) successfully updated."
+explain "$(date) - finished deployment."

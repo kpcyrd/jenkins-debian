@@ -40,7 +40,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo "This invocation of the script has been called using \"$@\" as arguments." 
 	echo
 	echo "===================================================================================="
-	echo "$(date) - start running \"$0\" as \"$TTT\"."
+	echo "$(date) - start running \"$0\" (md5sum $(md5sum $0|cat -d ' ' -f1)) as \"$TTT\"."
 	echo
 	# this is the "hack": call ourself as a copy in /tmp again
 	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)

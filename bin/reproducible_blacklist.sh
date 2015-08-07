@@ -18,7 +18,7 @@ blacklist_packages() {
 	for PKG in $PACKAGES ; do
 		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE';")
 		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE';")
-		cleanup_userContent
+		cleanup_pkg_files
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE');"
 	done
 }

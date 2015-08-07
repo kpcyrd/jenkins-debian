@@ -553,7 +553,7 @@ build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
 	check_buildinfo
 fi
-cleanup_userContent
+cleanup_pkg_files
 diff_copy_buildlogs
 update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then

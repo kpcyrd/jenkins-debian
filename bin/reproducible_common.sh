@@ -439,7 +439,7 @@ get_filesize() {
 		fi
 }
 
-cleanup_userContent() {
+cleanup_pkg_files() {
 	rm -vf $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log{,.gz}
 	rm -vf $BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log{,.gz}
 	rm -vf $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html

@@ -51,6 +51,7 @@ for suite in SUITES:
         html += 'for packages in ' + suite + ' which have built '
         html += 'unreproducibly:</p>\n<p><pre>'
         out = out.decode().splitlines()
+        get_mail = re.compile('<(.*)>')
         for line in out:
             if line[0:3] == '   ':
                 line = line.strip().split(None, 1)
@@ -61,8 +62,11 @@ for suite in SUITES:
                     html += ' ' + line[1]  # eventual uploaders sign
                 except IndexError:
                     pass
-            else:
+            elif line.strip():  # be sure this is not just an empty line
+                email = get_mail.findall(line.strip())[0]
                 html += HTML.escape(line.strip())
+                html += '<a name="{maint}" href="#{maint}">&para;</a>'.format(
+                    maint=email)
             html += '\n'
         html += '</pre></p>'
         title = 'Maintainers of unreproducible packages in ' + suite

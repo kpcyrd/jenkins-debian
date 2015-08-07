@@ -217,13 +217,13 @@ properties:
 * remote building on amd64
 ** profitbricks-build1-amd64 is setup
 *** squid needs proper configuration
-** make sure password auth is disabled...
-
-* a VM for running kvm on kvm (profitbricks-build2-amd64) has been set up too
-** runs squid3 + kvm
-*** though squid is not configured yet
-** kvm guest with different cpu, 32gb ram, 8 cores, 30gb /
-** networking doesnt work yet...
+*** tmpfs needs to be set up
+** profitbricks-build1-amd64 is setup
+*** squid needs proper configuration
+*** tmpfs needs to be set up
+*** should run in the future: +1d+1m+1y
+* profitbricks-build2-amd64 will also host a VM (profitbricks-build2-amd64, so we will be running kvm on kvm there)
+** networking doesnt work yet, so profitbricks-build3-amd64 aint accessable atm - help welcome!
 
 * enable people to upload test packages, to be built in jenkins:
 ----
@@ -234,6 +234,18 @@ properties:
   <h01ger> well, and everybody in debian-keyring from sid can uplood? :)
   <mapreri> that would be wonderful.
 ----
+
+==== reproducible Debian armhf
+
+* next: fix dpkg '1.18.2.0~reproducible1' to not ftbfs
+* then: include armhf in index_scheduled
+* then: armhf scheduling (only for testing for now, introduce "arch-factor", eg. amd64=10 and armhf=3, to schedule less on some archs, also limits (when to schedule) should be different for different archs)
+* then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
+* monitor their temperatures via munin via ssh:
+** http://munin-monitoring.org/wiki/Native_ssh
+** http://guide.munin-monitoring.org/en/latest/example/transport/ssh.html
+* make systems send mail
+* change date on 2nd build hosts (and disable systemd-timesyncd)
 
 ==== reproducible Debian installation
 
@@ -303,19 +315,6 @@ properties:
 
 * openembedded.org!
 * Arch? Gentoo?
-
-==== reproducible Debian armhf
-
-* next: fix dpkg '1.18.2.0~reproducible1' to not ftbfs
-* then: include armhf in index_scheduled
-* then: armhf scheduling (only for testing for now, introduce "arch-factor", eg. amd64=10 and armhf=3, to schedule less on some archs, also limits (when to schedule) should be different for different archs)
-* then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
-* monitor their temperatures via munin via ssh:
-** http://munin-monitoring.org/wiki/Native_ssh
-** http://guide.munin-monitoring.org/en/latest/example/transport/ssh.html
-* make systems send mail
-* change date on 2nd build hosts (and disable systemd-timesyncd)
-* make sure password auto is disabled
 
 === qa.debian.org*
 

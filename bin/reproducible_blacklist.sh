@@ -11,11 +11,14 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+ARCH=amd64  # FIXME - multiarchify
+
 blacklist_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	for PKG in $PACKAGES ; do
 		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE';")
 		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE';")
+		cleanup_userContent
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE');"
 	done
 }

@@ -191,7 +191,6 @@ properties:
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 ** replace submit form by one without javascript (maybe with more url rewriting)
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
-** reproducible_blacklist.sh should delete rbuild logs and debbindiff output too
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/de/sslcheck?host=jenkins.debian.net#78.137.96.196
 ** create a symbol for pending bugs or use a different color to indicate them

@@ -105,15 +105,6 @@ cleanup_all() {
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 }
 
-cleanup_userContent() {
-	rm -vf $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log{,.gz}
-	rm -vf $BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log{,.gz}
-	rm -vf $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.html
-	rm -vf $BASE/dbdtxt/${SUITE}/${ARCH}/${SRCPACKAGE}_*.debbindiff.txt{,.gz}
-	rm -vf $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo
-	rm -vf $BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff{,.gz}
-}
-
 update_db_and_html() {
 	# everything passed at this function is saved as a status of this package in the db
 	STATUS="$@"

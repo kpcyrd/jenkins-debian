@@ -11,7 +11,7 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-ARCH=amd64  # FIXME - multiarchify
+ARCH=amd64
 
 blacklist_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')

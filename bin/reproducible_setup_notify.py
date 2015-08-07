@@ -21,7 +21,7 @@ parser.add_argument('-o', '--deactivate', action='store_true',
 parser.add_argument('-p', '--packages', default='', nargs='+',
                     help='list of packages for which activate notifications')
 parser.add_argument('-m', '--maintainer', default='',
-                    help='email of a maintainer interested in his packages')
+                    help='email address of a maintainer')
 local_args = parser.parse_known_args()[0]
 
 # these are here as an hack to be able to parse the command line

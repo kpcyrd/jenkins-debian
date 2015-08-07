@@ -171,7 +171,7 @@ Installation tests inside chroot environments.
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh $suite $package1
 ----
 
-* We support sending automatic link:https://reproducible.debian.net/index_notify.html[email notification] for status changes to maintainers. Enabling/disabling suchnotifications can be done by people with shell access to jenkins:
+* We support sending automatic link:https://reproducible.debian.net/index_notify.html[email notification] for status changes to maintainers. Enabling/disabling these notifications can be done by people with shell access to jenkins:
 
 ----
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_setup_notify.py -h
@@ -182,7 +182,7 @@ usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
   -p PACKAGES [PACKAGES ...], --packages PACKAGES [PACKAGES ...]
                         list of packages for which activate notifications
   -m MAINTAINER, --maintainer MAINTAINER
-                        email of a maintainer interested in his packages
+                        email address of a maintainer
 ----
 
 * Job configuration is at the usual location for 'jenkins.debian.net' - there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.

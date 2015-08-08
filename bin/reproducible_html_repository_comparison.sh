@@ -9,7 +9,7 @@ common_init "$@"
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
-# FIXME:temporarily overwrite default:
+# temporarily overwrite defaults...
 ARCHS="amd64 armhf"
 
 VIEW=repositories

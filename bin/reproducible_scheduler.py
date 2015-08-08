@@ -52,11 +52,11 @@ def update_sources(suite):
     sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
     for arch in ARCHS:
-        log.info('Updating sources for %s...', arch)
-        update_sources_tables(suite, arch, sources)
+        log.info('Updating sources for %s/%s...', suite, arch)
+        update_sources_db(suite, arch, sources)
 
 
-def update_sources_tables(suite, arch, sources):
+def update_sources_db(suite, arch, sources):
     # extract relevant info (package name and version) from the sources file
     new_pkgs = []
     for src in deb822.Sources.iter_paragraphs(sources.split('\n')):

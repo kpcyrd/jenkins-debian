@@ -238,6 +238,7 @@ properties:
 
 * then: include armhf in index_scheduled
 * then: armhf scheduling (only for testing for now, introduce "arch-factor", eg. amd64=10 and armhf=3, to schedule less on some archs, also limits (when to schedule) should be different for different archs)
+** call_apt_update() needs to be moved from _scheduler.py to jobs so its run on all build nodes
 * then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
 * monitor their temperatures via munin via ssh:
 ** http://munin-monitoring.org/wiki/Native_ssh

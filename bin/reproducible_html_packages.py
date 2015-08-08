@@ -127,7 +127,7 @@ def gen_extra_links(package, version, suite, arch, status):
     eversion = strip_epoch(version)
     notes = NOTES_PATH + '/' + package + '_note.html'
     buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
-                '_' + eversion + '_amd64.buildinfo'
+                '_' + eversion + '_' + arch + '.buildinfo'
     dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
           eversion + '.debbindiff.html'
     dbdtxt = DBDTXT_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
@@ -160,7 +160,7 @@ def gen_extra_links(package, version, suite, arch, status):
             default_view = url
     if pkg_has_buildinfo(package, version, suite):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
-              '_' + eversion + '_amd64.buildinfo'
+              '_' + eversion + '_' + arch + '.buildinfo'
         links += '<a href="' + url + '" target="main">buildinfo</a>\n'
         if not default_view:
             default_view = url

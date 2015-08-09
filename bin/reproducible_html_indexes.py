@@ -131,7 +131,7 @@ pages = {
             {
                 'icon_status': 'depwait',
                 'query': 'depwait_all',
-                'text': Template('$tot ($percent%) packages where the build dependencies failed to be satisfied. Note that temporary failures to due network problems are automatically rescheduled every 4 hours.')
+                'text': Template('$tot ($percent%) packages where the build dependencies failed to be satisfied. Note that temporary failures (eg. due to network problems) are automatically rescheduled every 4 hours.')
             }
         ]
     },

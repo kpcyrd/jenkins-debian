@@ -116,14 +116,14 @@ for PKG in $SOURCEPKGS ; do
 	if [ ! -z "$BET" ] ; then
 		ONLYALL=true
 		for ARCH in all ${ARCHS} ; do
-			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
+			i="$(grep-dctrl -n -s Package \( -X -FPackage $PKG --or -X -FSource $PKG \) --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|sort -u|xargs -r echo)"
 			if [ "$ARCH" != "all" ] && [ ! -z "$i" ] ; then
 				ONLYALL=false
 			fi
 			echo "$ARCH: $i"
 		done
 		for ARCH in all ${ARCHS} ; do
-			i="$(grep-dctrl -n -s Package -r -FPackage $PKG --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|xargs -r echo)"
+			i="$(grep-dctrl -n -s Package \( -X -FPackage $PKG --or -X -FSource $PKG \) --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|sort -u|xargs -r echo)"
 			if [ ! -z "$i" ] ; then
 				i="$ARCH: $i"
 			elif [ -z "$i" ] && [ "$ARCH" != "all" ] && ! $ONLYALL ; then

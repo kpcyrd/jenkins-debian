@@ -42,7 +42,9 @@ done
 
 sudo mkdir -p /srv/workspace
 [ -d /srv/workspace/pbuilder ] || sudo mkdir -p /srv/workspace/pbuilder
+[ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
+[ -h /schroots ] || sudo ln -s /srv/schroots /schroots
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then

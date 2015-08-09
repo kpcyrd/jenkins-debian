@@ -106,6 +106,7 @@ if [ -f /etc/debian_version ] ; then
 			devscripts 
 			etckeeper
 			git
+			haveged
 			less
 			munin-node
 			munin-plugins-extra 
@@ -145,7 +146,6 @@ if [ -f /etc/debian_version ] ; then
 				ghc 
 				gocr 
 				graphviz 
-				haveged 
 				iasl 
 				imagemagick 
 				ip2host 

@@ -521,7 +521,6 @@ def get_bugs():
             packages[bug[1]][bug[0]]['patch'] = True
         if 'pending' in bug[3]:  # the bug is pending
             packages[bug[1]][bug[0]]['pending'] = True
-    log.debug(packages)
     return packages
 
 

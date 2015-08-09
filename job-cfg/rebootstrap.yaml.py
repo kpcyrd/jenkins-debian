@@ -31,8 +31,8 @@ release_architectures = """
 
 architectures += mono_architectures
 
-gcc_versions = """4.9 5""".split()
-debbindiff_gcc_versions = "4.9 5".split()
+gcc_versions = ("5",)
+debbindiff_gcc_versions = ("5",)
 
 print("""
 - defaults:

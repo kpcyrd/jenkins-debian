@@ -88,12 +88,11 @@ Installation tests inside chroot environments.
 * plus there is 'chroot-installation_squeeze_bootstrap_upgrade_to_wheezy', which bootstraps *squeeze* and upgrades that to *wheezy*
 ** on successful run of the bootstrap job, six $distro-install(+upgrade) jobs are triggered.
 
-* FIXME: describe upgrade jobs here too
-
 * $distro-install jobs (and $distro-install+upgrade jobs):
 ** `debootstrap $distro`, install a *$set_of_packages* (and upgrade to *$2nd_distro*)
 ** these $set_of_packages exist: 'gnome', 'kde', 'kde-full', 'lxde', 'xfc', 'full_desktop' (all five desktops plus `vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs` and (`libreoffice virt-manager mplayer2` (jessie/sid) or `openoffice virtualbox mplayer` (squeeze/wheezy)) and 'develop'
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
+** Then there are also all the corresponding upgrade jobs, eg 'chroot-installation_wheezy_install_gnome_upgrade_to_jessie'
 
 === Debian Edu related jobs
 

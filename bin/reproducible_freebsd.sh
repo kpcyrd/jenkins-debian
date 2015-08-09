@@ -36,7 +36,7 @@ save_freebsd_results(){
 #
 FREEBSD_TARGET="release/10.1.0"
 RSSH="ssh freebsd-jenkins.debian.net"
-TMPBUILDDIR=$($RSSH 'TMPDIR=/srv/workspace/chroots/ mktemp -d -t freebsd')  # FIXME: not used to build on tmpfs
+TMPBUILDDIR=$($RSSH 'TMPDIR=/srv/workspace/chroots/ mktemp -d -t freebsd')  # this is tmpfs on linux, we should move this to tmpfs on freebsd too
 TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')

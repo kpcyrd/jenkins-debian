@@ -195,11 +195,11 @@ These are jobs for making sure jenkins.debian.net is running smoothly.
 [[debug]]
 == Debugging certain jobs
 
-*FIXME*: To debug certain jobs, a jenkins setup is actually not needed. Make this easy and describe here.
+To debug most jobs, a jenkins setup is actually not needed.
 
-* This is work in progress too, but mostly just needs documentation!* In principle the shell commands from the various jobs should run on any Debian system just fine. Please use a test system though, as all your data might be eaten.
+* In principle the shell commands from the various jobs should run on any Debian system just fine. Please use a test system though, as all your data might be eaten.
 
-* Build this source as a debian package and install the jenkins.d.n-debug package and all it's recommends.
+** A good first step is to use this git repo as a Debian source package, build it and then install the jenkins.d.n-debug package and all it's recommends on your test system. NOTE: this ain't as helpful as it used to be as many depends have only been added to 'update_jdn.sh' and not to 'debian/control'.
 
 === Feedback
 

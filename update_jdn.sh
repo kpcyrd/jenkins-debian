@@ -10,10 +10,10 @@ STAMP=/var/log/jenkins/update-jenkins.stamp
 TMPFILE=$(mktemp)
 
 explain() {
-	echo
 	echo "$HOSTNAME: $1"
 }
 
+echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
 #
 # set up users and groups
@@ -393,3 +393,5 @@ rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 rm -f $TMPFILE
 explain "$(date) - finished deployment."
+echo "--------------------------------------------"
+

@@ -319,6 +319,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 			cp $TMPFILE ${metaconfig%.py}
 		fi
 	done
+	rm -f $TMPFILE
 	for config in *.yaml ; do
 		if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			sudo jenkins-jobs update $config
@@ -384,14 +385,17 @@ fi
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
-echo
-rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo
+rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo > $TMPFILE
+if [ -s $TMPFILE ] ; then
+	echo
+	cat $TMPFILE
+	echo
+fi
+rm -f $TMPFILE
 
 #
 # finally
 #
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
-rm -f $TMPFILE
 explain "$(date) - finished deployment."
-echo "--------------------------------------------"
 

@@ -135,7 +135,6 @@ s390-dasd
 s390-netdevice
 s390-sysconfig-writer
 sibyl-installer
-silo-installer
 tzsetup
 udpkg
 usb-discover

@@ -121,6 +121,7 @@ if [ -f /etc/debian_version ] ; then
 			munin-node
 			munin-plugins-extra 
 			pigz 
+			postfix
 			python3-psycopg2 
 			schroot 
 			screen 
@@ -271,7 +272,12 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
-	cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
+	cd /etc/munin/plugins
+	sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_* exim_* netstat fw_forwarded_local fw_packets forks open_files users 2>/dev/null
+	case $HOSTNAME in
+			jenkins|profitbricks-build?-amd64) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
+			*)	;;
+	esac
 	if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
 		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
 	fi

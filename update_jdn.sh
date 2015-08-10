@@ -242,28 +242,32 @@ sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenk
 sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
-	if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
-		sudo a2enmod proxy
-		sudo a2enmod proxy_http
-		sudo a2enmod rewrite
-		sudo a2enmod ssl
-		sudo a2enmod headers
-		sudo a2enmod macro
-		sudo a2enmod filter
+	if [ $BASEDIR/hosts/$HOSTNAME/etc/apache2 -nt $STAMP ] || [ ! -f $STAMP ] ; then
+		if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
+			sudo a2enmod proxy
+			sudo a2enmod proxy_http
+			sudo a2enmod rewrite
+			sudo a2enmod ssl
+			sudo a2enmod headers
+			sudo a2enmod macro
+			sudo a2enmod filter
+		fi
+		sudo a2ensite -q jenkins.debian.net
+		sudo a2enconf -q munin
+		sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.conf
+		# for reproducible.d.n url rewriting:
+		[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
+		sudo service apache2 reload
 	fi
-	sudo a2ensite -q jenkins.debian.net
-	sudo a2enconf -q munin
-	sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.conf
-	# for reproducible.d.n url rewriting:
-	[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
-	sudo service apache2 reload
 fi
 
-cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
-if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
-	for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
+if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
+	cd /etc/munin/plugins ; sudo rm -f postfix_* open_inodes df_inode interrupts irqstats threads proc_pri vmstat if_err_eth0 fw_forwarded_local fw_packets forks open_files users 2>/dev/null
+	if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
+		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
+	fi
+	sudo service munin-node force-reload
 fi
-sudo service munin-node force-reload
 explain "packages configured."
 
 #

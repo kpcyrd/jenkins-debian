@@ -34,27 +34,15 @@
 
 - job-template:
     defaults: dpkg
-    name: '{name}_jessie_find_trigger_cycles'
-
-- job-template:
-    defaults: dpkg
     name: '{name}_stretch_find_trigger_cycles'
 
 - job-template:
     defaults: dpkg
     name: '{name}_sid_find_trigger_cycles'
 
-- job-template:
-    defaults: dpkg
-    name: '{name}_setup_schroot_jessie'
-
 - project:
     name: dpkg
     jobs:
-       - '{name}_jessie_find_trigger_cycles':
-           my_description: 'Find dpkg trigger cycles in Debian jessie.'
-           my_time: '0 10 * * 2'
-           my_shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh jessie'
        - '{name}_stretch_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in Debian stretch.'
            my_time: '0 10 * * 2'

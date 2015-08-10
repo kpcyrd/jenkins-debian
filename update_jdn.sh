@@ -49,8 +49,8 @@ sudo mkdir -p /srv/workspace
 # prepare tmpfs on some hosts
 case $HOSTNAME in
 	jenkins)			 	TMPFSSIZE=100 ;;
-	profitbricks-build?-amd64) 		TMPFSSIZE=60 ;;
 	profitbricks-build4-amd64) 		TMPFSSIZE=10 ;;
+	profitbricks-build?-amd64) 		TMPFSSIZE=60 ;;
 	*) ;;
 esac
 case $HOSTNAME in

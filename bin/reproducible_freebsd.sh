@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
-#         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false

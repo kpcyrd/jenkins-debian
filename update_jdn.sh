@@ -56,13 +56,13 @@ esac
 case $HOSTNAME in
 	jenkins|profitbricks-build?-amd64)
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
-			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" >> /etc/fstab
+			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
 		fi
 		if ! mountpoint -q /srv/workspace; then
 			if test -z "$(ls -A /srv/workspace)"; then
-				mount /srv/workspace
+				sudo mount /srv/workspace
 			else
-				explain "mountpoint /srv/workspace is non-empty."
+				explain "WARNING: mountpoint /srv/workspace is non-empty."
 			fi
 		fi
 		;;

@@ -210,10 +210,8 @@ properties:
 * status of remote build nodes for amd64
 ** profitbricks-build1-amd64 is setup
 *** squid needs proper configuration
-*** tmpfs needs to be set up
 ** profitbricks-build1-amd64 is setup
 *** squid needs proper configuration
-*** tmpfs needs to be set up
 *** should run in the future: +1d+1m+1y
 * profitbricks-build2-amd64 will also host a VM (profitbricks-build2-amd64, so we will be running kvm on kvm there)
 ** networking doesnt work yet, so profitbricks-build3-amd64 aint accessable atm - help welcome!
@@ -354,7 +352,7 @@ properties:
 ** we build with sudo too
 *** change /usr/obj to be '~jenkins/obj' and build with WITH_INSTALL_AS_USER ?
 * first build world, later build ports (pkg info...)
-* investigate how to use tmpfs on freebsd and build there?
+* investigate how to use tmpfs on freebsd and build there
 
 ==== reproducible...
 

@@ -46,19 +46,28 @@ sudo mkdir -p /srv/workspace
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
 
-if [ "$HOSTNAME" = "jenkins" ] ; then
-	if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
-		echo "tmpfs		/srv/workspace	tmpfs	defaults,size=100g	0	0" >> /etc/fstab
-	fi
-
-	if ! mountpoint -q /srv/workspace; then
-		if test -z "$(ls -A /srv/workspace)"; then
-			mount /srv/workspace
-		else
-			explain "mountpoint /srv/workspace is non-empty."
+# prepare tmpfs on some hosts
+case $HOSTNAME in
+	jenkins)			 	TMPFSSIZE=100 ;;
+	profitbricks-build?-amd64) 		TMPFSSIZE=60 ;;
+	profitbricks-build4-amd64) 		TMPFSSIZE=10 ;;
+	*) ;;
+esac
+case $HOSTNAME in
+	jenkins|profitbricks-build?-amd64)
+		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
+			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" >> /etc/fstab
 		fi
-	fi
-fi
+		if ! mountpoint -q /srv/workspace; then
+			if test -z "$(ls -A /srv/workspace)"; then
+				mount /srv/workspace
+			else
+				explain "mountpoint /srv/workspace is non-empty."
+			fi
+		fi
+		;;
+	*) ;;
+esac
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
 for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do

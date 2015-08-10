@@ -117,6 +117,7 @@ if [ -f /etc/debian_version ] ; then
 			git
 			haveged
 			less
+			molly-guard 
 			munin-node
 			munin-plugins-extra 
 			pigz 
@@ -173,7 +174,6 @@ if [ -f /etc/debian_version ] ; then
 				libxslt1-dev 
 				linux-image-amd64 
 				mock 
-				molly-guard 
 				moreutils 
 				mr 
 				mtr-tiny 

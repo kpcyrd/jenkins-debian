@@ -341,7 +341,7 @@ properties:
 *** /etc/rc.conf
 *** /etc/resolv.conf
 *** /boot/loader.conf.local
-** pkg install screen git vim sudo denyhosts
+** pkg install screen git vim sudo denyhosts munin-node
 ** adduser holger
 ** adduser jenkins (with bash as default shell)
 ** mkdir -p /srv/workspace/chroots/

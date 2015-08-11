@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+#         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -82,17 +83,20 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		echo "$FAILED_BUILDS"
 		echo
 		echo "Rescheduling packages: "
+		REQUESTER="jenkins maintenance job"
+		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
 		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
-			REQUESTER="jenkins maintenance job"
-			REASON="maintenance reschedule: reschedule builds which failed due to network errors"
-			CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
-			# double check those builds actually failed
-			TO_SCHEDULE=""
-			for pkg in $CANDIDATES ; do
-				QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite='$SUITE' AND (r.status='FTBFS' OR r.status='depwait') AND s.name='$pkg'"
-				TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
+			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
+				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
+				# double check those builds actually failed
+				TO_SCHEDULE=""
+				for pkg in $CANDIDATES ; do
+					QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id
+						   WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND (r.status='FTBFS' OR r.status='depwait') AND s.name='$pkg'"
+					TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
+				done
+				schedule_packages $TO_SCHEDULE
 			done
-			schedule_packages $TO_SCHEDULE
 		done
 		DIRTY=true
 	fi

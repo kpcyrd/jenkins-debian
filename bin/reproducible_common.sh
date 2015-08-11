@@ -111,6 +111,7 @@ schedule_packages() {
 		--message "$REASON" \
 		--no-notify \
 		--suite "$SUITE" \
+		--architecture "$ARCH" \
 		$@
 }
 

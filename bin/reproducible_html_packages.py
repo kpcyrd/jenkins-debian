@@ -16,7 +16,7 @@ html_package_page = Template((tab*2).join(("""
     <tr>
         <td>
             <span class="avoidwrap">
-                <span style="font-size:1.2em;">$package</span> $suite: $version
+                <span style="font-size:1.2em;">$package</span> $suite/$arch: $version
 $status
                 <span style="font-size:0.9em;">$build_time:</span>
             </span>
@@ -202,6 +202,7 @@ def gen_packages_html(packages, no_clean=False):
                 html = html_package_page.substitute(
                     package=pkg,
                     suite=suite,
+                    arch=arch,
                     status=status,
                     version=version,
                     build_time=build_date,

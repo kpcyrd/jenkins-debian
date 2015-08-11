@@ -79,11 +79,9 @@ LIMITS = {
 }
 
 # define an "arch factor", so the scheduling limits differ between archs
-ARCH_SHARE = {
-    'amd64': 10,
-    'armhf': 3,
-}
+ARCH_SHARE = {'amd64': 10, 'armhf': 3}
 
+MAXIMUM = {'amd64': 750, 'armhf': 750}
 
 class Limit:
     def __init__(self, arch, queue):
@@ -539,7 +537,7 @@ if __name__ == '__main__':
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)
         overall = int(query_db(query.format(arch))[0][0])
-        if overall > 750:
+        if overall > MAXIMUM[arch]:
             log.info('%s packages already scheduled, nothing to do.', overall)
             continue
         log.info('%s packages already scheduled, scheduling some more...',

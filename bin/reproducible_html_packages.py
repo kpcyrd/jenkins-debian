@@ -148,32 +148,26 @@ def gen_extra_links(package, version, suite, arch, status):
     return (links, default_view)
 
 
-def gen_suites_links(package, suite):
-    # FIXME this function needs multiarchifing
-    arch = defaultarch
+def gen_suites_links(package, suite, arch):
     html = ''
-    for i in package._status:
-        if i == suite:  # don't link the current suite
+    for s in SUITES:
+        if s == suite:  # don't link the current suite
             continue
-        if package._status[i][arch].status == False:
-            continue  # The package is not available in that suite
-        status = package._status[i][arch].status
-        version = package._status[i][arch].version
-        if status == 'unreproducible':
-            status = 'FTBR'
-        elif status == 'not for us':
-            status = 'not_for_us'
+        status = package.get_status(s, arch)
+        if not status:  # The package is not available in that suite/arch
+            continue
+        version = package.get_tested_version(s, arch)
         html += '<span class="avoidwrap">\n' + tab
         if status != 'untested':
-            prefix = ' <a href="/' + i[0] + '/' + i[1] + '/index_' + status + '.html">'
+            prefix = '<a href="/{}/{}/index_{}.html">'.format(s, arch, status)
             suffix = '</a>\n'
         else:
-            prefix = ' '
+            prefix = ''
             suffix = '\n'
         icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
         html += icon.format(icon=join_status_icon(status)[1], status=status)
-        html += tab + ' <a href="' + RB_PKG_URI + '/' + suite + '/' + arch + \
-                '/' + package.name + '.html" target="_parent">' + suite + \
+        html += tab + ' <a href="' + RB_PKG_URI + '/' + s + '/' + arch + \
+                '/' + package.name + '.html" target="_parent">' + s + \
                 ':' + version + '</a>\n'
         html += '</span>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))
@@ -196,11 +190,12 @@ def gen_packages_html(packages, no_clean=False):
                 build_date = package.get_build_date(suite, arch)
                 if status == False:  # the package is not in the checked suite
                     continue
-                log.debug('Generating the page of ' + pkg + '/' + suite + '@' +
-                          version + ' built at ' + build_date)
+                log.debug('Generating the page of %s/%s/%s @ %s built at %s',
+                          pkg, suite, arch, version, build_date)
 
-                links, default_view = gen_extra_links(pkg, version, suite, arch, status)
-                suites_links = gen_suites_links(package, suite)
+                links, default_view = gen_extra_links(
+                    pkg, version, suite, arch, status)
+                suites_links = gen_suites_links(package, suite, arch)
                 status, icon = join_status_icon(status, pkg, version)
                 status = gen_status_link_icon(status, icon, suite, arch)
 
@@ -215,8 +210,8 @@ def gen_packages_html(packages, no_clean=False):
                     suites_links=suites_links,
                     default_view=default_view)
                 destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
-                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + '/' + \
-                          arch + '/' + pkg + '.html'
+                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
+                          '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible build results'
                 write_html_page(title=title, body=html, destfile=destfile,
                                 noheader=True, noendpage=True)
@@ -229,7 +224,8 @@ def gen_all_rb_pkg_pages(no_clean=False):
     query = 'SELECT DISTINCT name FROM sources'
     rows = query_db(query)
     pkgs = [Package(str(i[0]), no_notes=True) for i in rows]
-    log.info('Processing all ' + str(len(pkgs)) + ' package from all suites/architectures')
+    log.info('Processing all %s package from all suites/architectures',
+             len(pkgs))
     gen_packages_html(pkgs, no_clean=True)  # we clean at the end
     purge_old_pages()
 

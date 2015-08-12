@@ -344,13 +344,13 @@ properties:
 ** pkg install screen git vim sudo denyhosts munin-node
 ** adduser holger
 ** adduser jenkins (with bash as default shell)
-** mkdir -p /srv/workspace/chroots/
 ** mkdir -p /srv/reproducible-results
 ** chown -R jenkins:jenkins /srv/
 ** ln -s /srv/ /usr/obj/srv
 ** we build freebsd 10.1 (=released) atm
 ** we build with sudo too
-*** change /usr/obj to be '~jenkins/obj' and build with WITH_INSTALL_AS_USER ?
+*** rather not change /usr/obj to be '~jenkins/obj' and build with WITH_INSTALL_AS_USER. also not build in /usr/src. if so, we need to define some variable so we can do so.... but we need a stable path anyway, so whats the point.
+*** maybe build as user in /usr/src...
 * first build world, later build ports (pkg info...)
 * investigate how to use tmpfs on freebsd and build there
 

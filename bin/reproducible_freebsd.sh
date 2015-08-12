@@ -14,9 +14,8 @@ set -e
 
 cleanup_tmpdirs() {
 	cd
-	echo "cleanup disabled, please check $TMPDIR and $TMPBUILDDIR and cleanup manually"
-	#$RSSH "rm -r $TMPDIR"
-	#$RSSH "rm -r $TMPBUILDDIR"
+	$RSSH "rm -r $TMPDIR"
+	$RSSH 'sudo rm -r /usr/src /usr/obj'
 }
 
 create_results_dirs() {
@@ -26,7 +25,7 @@ create_results_dirs() {
 save_freebsd_results(){
 	local RUN=$1
 	mkdir -p $TMPDIR/$RUN/
-	cp -pr obj/releasedir/ $TMPDIR/$RUN/
+	cp -pr /usr/obj/releasedir/ $TMPDIR/$RUN/
 	find $TMPDIR/$RUN/ -name MD5 -o -name SHA512 -exec rm {} \;
 }
 
@@ -35,6 +34,7 @@ save_freebsd_results(){
 #
 FREEBSD_TARGET="release/10.1.0"
 RSSH="ssh freebsd-jenkins.debian.net"
+RSCP="scp -r freebsd-jenkins.debian.net"
 TMPBUILDDIR=/usr/src
 $RSSH 'sudo rm -r /usr/src /usr/obj ; sudo mkdir /usr/src /usr/obj ; sudo chown jenkins /usr/src /usr/obj'  ### this is tmpfs on linux, we should move this to tmpfs on freebsd too
 TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
@@ -62,39 +62,29 @@ echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld" || true
-### try again, to work around failure in cleanup (stage 2.1)
-###$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld"
 # save results in b1
 save_freebsd_results b1
-# cleanup ...
-
-echo "so far so good, to be continued..."
-echo
-exit 1
-
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - cleaning up between builds."
 echo "============================================================================="
-###rm obj/releasedir -r
-###rm obj/destdir.* -r
+sudo rm -r /usr/obj/releasedir /usr/obj/destdir.*
 # we keep the toolchain(s)
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-export LANG="fr_CH.UTF-8"
-export LC_ALL="fr_CH.UTF-8"
-export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
-export CAPTURE_ENVIRONMENT="I capture the environment"
-umask 0002
-# use allmost all cores for second build
-NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-ionice -c 3 nice \
-	linux64 --uname-2.6 \
-	./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
+###export LANG="fr_CH.UTF-8"
+###export LC_ALL="fr_CH.UTF-8"
+###export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
+###export CAPTURE_ENVIRONMENT="I capture the environment"
+###umask 0002
+#### use allmost all cores for second build
+###NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+# actually build everything
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld"
 # save results in b2
 save_freebsd_results b2
 # cleanup... 
@@ -106,8 +96,12 @@ export TZ="/usr/share/zoneinfo/UTC"
 export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 umask 0022
 
-# clean up builddir to save space on tmpfs
-rm -r $TMPBUILDDIR/freebsd
+# cleanup on the node
+$RSSH 'sudo rm -r /usr/src /usr/obj'
+
+# copy results over
+$RSCP:$TMPDIR $TMPDIR
+$RSSH "rm -r $TMPDIR" 
 
 # run debbindiff on the results
 TIMEOUT="30m"

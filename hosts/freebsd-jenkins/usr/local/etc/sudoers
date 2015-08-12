@@ -94,6 +94,7 @@ root ALL=(ALL) ALL
 # for reproducible builds:
 jenkins ALL= NOPASSWD: /usr/bin/make buildworld, \
 	/bin/rm -r /usr/src /usr/obj, \
+	/bin/rm -r /usr/obj/releasedir /usr/obj/destdir.*, \
 	/bin/mkdir /usr/src /usr/obj, \
 	/usr/sbin/chown jenkins /usr/src /usr/obj
 

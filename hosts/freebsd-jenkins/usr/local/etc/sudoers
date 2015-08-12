@@ -93,9 +93,9 @@ root ALL=(ALL) ALL
 
 # for reproducible builds:
 jenkins ALL= NOPASSWD: /usr/bin/make buildworld, \
-	rm -r /usr/src /usr/obj, \
-	mkdir /usr/src /usr/obj, \
-	chown jenkins /usr/src /usr/obj
+	/bin/rm -r /usr/src /usr/obj, \
+	/bin/mkdir /usr/src /usr/obj, \
+	/usr/sbin/chown jenkins /usr/src /usr/obj
 
 ## Uncomment to allow any user to run sudo if they know the password
 ## of the user they are running the command as (root by default).

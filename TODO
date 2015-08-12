@@ -173,9 +173,10 @@ properties:
 * higher prio:
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** repo-comparison: check for binaries without source
-** document (in README) the multihost setup
 
 * lesser prio
+** document (in README) the multihost setup
+** the setup pbuilder+schroot scripts should detect network problems such as "Bad gateway" and sleep 5m and retry once
 ** more graphs:
 *** graph average build duration by day
 *** graph packages in testing+unstable which need to be fixed

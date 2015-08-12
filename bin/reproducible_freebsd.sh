@@ -35,7 +35,8 @@ save_freebsd_results(){
 #
 FREEBSD_TARGET="release/10.1.0"
 RSSH="ssh freebsd-jenkins.debian.net"
-TMPBUILDDIR=$($RSSH 'TMPDIR=/srv/workspace/chroots/ mktemp -d -t freebsd')  # this is tmpfs on linux, we should move this to tmpfs on freebsd too
+TMPBUILDDIR=/usr/src
+$RSSH 'sudo rm -r /usr/src /usr/obj ; sudo mkdir /usr/src /usr/obj ; sudo chown jenkins /usr/src /usr/obj'  ### this is tmpfs on linux, we should move this to tmpfs on freebsd too
 TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
@@ -48,12 +49,12 @@ $RSSH freebsd-version
 echo "============================================================================="
 echo "$(date -u) - Cloning the freebsd git repository (which is autosynced with their CVS repository)"
 echo "============================================================================="
-$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR/freebsd
-FREEBSD=$($RSSH "cd $TMPBUILDDIR/freebsd ; git log -1")
-FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR/freebsd ; git describe --always")
+$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
+FREEBSD=$($RSSH "cd $TMPBUILDDIR ; git log -1")
+FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
 echo "This is freebsd $FREEBSD_VERSION."
 echo
-$RSSH "cd $TMPBUILDDIR/freebsd ; git log -1"
+$RSSH "cd $TMPBUILDDIR ; git log -1"
 
 
 echo "============================================================================="
@@ -61,9 +62,9 @@ echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ sudo make buildworld" || true
-# try again, to work around failure in cleanup (stage 2.1)
-$RSSH "cd $TMPBUILDDIR/freebsd ; TZ=$TZ sudo make buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld" || true
+### try again, to work around failure in cleanup (stage 2.1)
+###$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld"
 # save results in b1
 save_freebsd_results b1
 # cleanup ...
@@ -76,8 +77,8 @@ exit 1
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - cleaning up between builds."
 echo "============================================================================="
-rm obj/releasedir -r
-rm obj/destdir.* -r
+###rm obj/releasedir -r
+###rm obj/destdir.* -r
 # we keep the toolchain(s)
 
 echo "============================================================================="

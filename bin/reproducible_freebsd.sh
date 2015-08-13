@@ -14,8 +14,9 @@ set -e
 
 cleanup_tmpdirs() {
 	cd
-	$RSSH "rm -r $TMPDIR"
-	$RSSH 'sudo rm -r /usr/src /usr/obj'
+	echo "No Cleanup..."
+#	$RSSH "rm -r $TMPDIR"
+#	$RSSH 'sudo rm -r /usr/src /usr/obj'
 }
 
 create_results_dirs() {

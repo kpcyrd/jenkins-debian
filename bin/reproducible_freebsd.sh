@@ -63,7 +63,9 @@ echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld"
+NUM_CPU=3
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildkernel"
 # save results in b1
 save_freebsd_results b1
 
@@ -84,8 +86,10 @@ export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 ###umask 0002
 #### use allmost all cores for second build
 ###NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+NEW_NUM_CPU=4
 # actually build everything
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildkernel"
 # save results in b2
 save_freebsd_results b2
 # cleanup... 

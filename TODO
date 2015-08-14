@@ -211,11 +211,10 @@ properties:
 * status of remote build nodes for amd64
 ** profitbricks-build1-amd64 is setup
 *** squid needs proper configuration
-** profitbricks-build1-amd64 is setup
+** profitbricks-build2-amd64 is setup
 *** squid needs proper configuration
 *** should run in the future: +1d+1m+1y
-* profitbricks-build2-amd64 will also host a VM (profitbricks-build2-amd64, so we will be running kvm on kvm there)
-** networking doesnt work yet, so profitbricks-build3-amd64 aint accessable atm - help welcome!
+*** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
 
 * enable people to upload test packages, to be built in jenkins:
 ----

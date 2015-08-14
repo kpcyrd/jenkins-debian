@@ -226,6 +226,7 @@ properties:
   <h01ger> well, and everybody in debian-keyring from sid can uplood? :)
   <mapreri> that would be wonderful.
 ----
+* support for arbitrary (soon to be implemented) Debian-PPAs and external repos, by just giving a source URL
 
 ==== design for reproducible remote building
 

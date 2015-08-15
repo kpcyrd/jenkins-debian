@@ -173,7 +173,7 @@ properties:
 * higher prio:
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** repo-comparison: check for binaries without source
-** s#debbindiff#diffoscope#g and s#dbd#ds#g everywhere and manually rename the jobs accordingly...
+** s#debbindiff#diffoscope#g and s#dbd#ds#g everywhere and manually rename the jobs accordingly... also the .debbindiff.html+txt files need to be renamed, as well as the dbd directories...
 
 * lesser prio
 ** document (in README) the multihost setup

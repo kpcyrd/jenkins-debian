@@ -237,15 +237,15 @@ write_page_header() {
 write_page_intro() {
 	write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki explains in more depth why this is useful, what common issues exist and which workarounds and solutions are known.<br />"
 	if [ "$1" = "coreboot" ] ; then
-		write_page "        <em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice (without payloads), with a few varitations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice (without payloads), with a few varitations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="$1"
 		local PROJECTURL="https://review.coreboot.org/p/coreboot.git"
 	elif [ "$1" = "OpenWrt" ] ; then
-		write_page "        <em>Reproducible OpenWrt</em> is an effort to apply this to OpenWrt. Thus each OpenWrt target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>, <em>which currently cannot detect <code>.bin</code> files as squashfs filesystems.</em> Thus the resulting debbindiff output is not nearly as clear as it could be - hopefully this limitation will be overcome soon. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <em>Reproducible OpenWrt</em> is an effort to apply this to OpenWrt. Thus each OpenWrt target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>, <em>which currently cannot detect <code>.bin</code> files as squashfs filesystems.</em> Thus the resulting diffoscope output is not nearly as clear as it could be - hopefully this limitation will be overcome soon. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="openwrt"
 		local PROJECTURL="git://git.openwrt.org/openwrt.git"
 	elif [ "$1" = "NetBSD" ] ; then
-		write_page "        <em>Reproducible NetBSD</em> is an effort to apply this to NetBSD. Thus each NetBSD target is build twice, with a few varitations added and then the resulting files from the two builds are compared using <a href=\"https://tracker.debian.org/debbindiff\">debbindiff</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <em>Reproducible NetBSD</em> is an effort to apply this to NetBSD. Thus each NetBSD target is build twice, with a few varitations added and then the resulting files from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="netbsd"
 		local PROJECTURL="https://github.com/jsonn/src"
 	fi
@@ -371,7 +371,7 @@ irc_message() {
 	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 }
 
-call_debbindiff() {
+call_diffoscope() {
 	mkdir -p $TMPDIR/$1/$(dirname $2)
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	local msg=""

@@ -116,7 +116,7 @@ def gen_extra_links(package, version, suite, arch, status):
         log.debug('debbindiff not detetected at ' + dbd)
         if status == 'unreproducible' and not args.ignore_missing_files:
             log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
-                         ' is unreproducible, but without debbindiff output.')
+                         ' is unreproducible, but without diffoscope output.')
     if os.access(dbdtxt, os.R_OK):
         url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
               eversion + '.debbindiff.txt'

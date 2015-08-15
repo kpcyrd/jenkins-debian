@@ -127,17 +127,17 @@ bootstrap() {
 		done
 		set -x
 		sudo chroot $CHROOT_TARGET apt-get update
-		# install debbindiff with all recommends...
+		# install diffoscope with all recommends...
 		if [ "$1" = "debbindiff" ] ; then
 			sudo chroot $CHROOT_TARGET apt-get install -y --install-recommends debbindiff
 		fi
 		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@" sudo
-		# always use debbindiff from unstable
+		# always use diffoscope from unstable
 		if [ "$SUITE" = "testing" ] && [ "$1" = "debbindiff" ] ; then
 			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 			sudo chroot $CHROOT_TARGET apt-get update
-			# install debbindiff from unstable without re-adding all recommends...
-			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff || echo "Warning: debbindiff from unstable is uninstallable at the moment."
+			# install diffoscope from unstable without re-adding all recommends...
+			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff || echo "Warning: diffoscope from unstable is uninstallable at the moment."
 		fi
 		if ! $DEBUG ; then set +x ; fi
 		if [ "$1" = "debbindiff" ] ; then

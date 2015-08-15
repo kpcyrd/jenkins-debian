@@ -27,14 +27,14 @@ def unrep_with_dbd_issues():
         if not os.access(dbd, os.R_OK):
             without_dbd.append((pkg, version, suite, arch))
             log.warning(pkg + '/' + suite + ' (' + version + ') is '
-                        'unreproducible without debbindiff file.')
+                        'unreproducible without diffoscope file.')
         else:
             log.debug(dbd + ' found.')
             data = open(dbd, 'br').read(3)
             if b'<' not in data:
                 bad_dbd.append((pkg, version, suite, arch))
                 log.warning(pkg + '/' + suite + ' (' + version + ') has '
-                            'debbindiff output, but it does not seem to '
+                            'diffoscope output, but it does not seem to '
                             'be an html page.')
     return without_dbd, bad_dbd
 
@@ -54,7 +54,7 @@ def not_unrep_with_dbd_file():
         if os.access(dbd, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(pkg + '/' + suite + ' (' + version + ') has a '
-                        'debbindiff file but it\'s not unreproducible.')
+                        'diffoscope file but it\'s not unreproducible.')
     return bad_pkgs
 
 
@@ -262,28 +262,28 @@ def gen_html():
     # files that should not be there (e.g. removed package without cleanup)
     html += _gen_section('log files that should not be there', None,
                          entries=alien_log())
-    html += _gen_section('debbindiff files that should not be there:', None,
+    html += _gen_section('diffoscope files that should not be there:', None,
                          entries=alien_dbd())
     html += _gen_section('rb-pkg pages that should not be there:', None,
                          entries=alien_rbpkg())
     html += _gen_section('buildinfo files that should not be there:', None,
                          entries=alien_buildinfo())
-    # debbindiff report where it shouldn't be
+    # diffoscope report where it shouldn't be
     html += _gen_section('are not marked as unreproducible, but they ' +
-                         'have a debbindiff file:', not_unrep_with_dbd_file())
+                         'have a diffoscope file:', not_unrep_with_dbd_file())
     # missing files
     html += _gen_section('are built but don\'t have a buildlog:',
                          lack_rbuild())
     html += _gen_section('are built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
-    # debbindiff troubles
+    # diffoscope troubles
     without_dbd, bad_dbd = unrep_with_dbd_issues()
     html += _gen_section('are marked as unreproducible, but without ' +
-                         'debbindiff output - so probably debbindiff ' +
+                         'diffoscope output - so probably diffoscope ' +
                          'crashed:', without_dbd)
     html += _gen_section('are marked as unreproducible, but their ' +
-                         'debbindiff output does not seem to be an html ' +
-                         'file - so probably debbindiff ran into a ' +
+                         'diffoscope output does not seem to be an html ' +
+                         'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
     # pbuilder-satisfydepends failed
     html += _gen_section('failed to match their build-dependencies:',

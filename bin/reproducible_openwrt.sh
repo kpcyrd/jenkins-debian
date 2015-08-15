@@ -201,7 +201,7 @@ cat $(find build_dir/ -name banner | grep etc/banner|head -1) >> $BANNER_HTML
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/openwrt
 
-# run debbindiff on the results
+# run diffoscope on the results
 # (this needs refactoring rather badly)
 TIMEOUT="30m"
 DBDSUITE="unstable"
@@ -210,7 +210,7 @@ echo "==========================================================================
 echo "$(date -u) - Running $DBDVERSION on OpenWrt images and packages."
 echo "============================================================================="
 DBD_HTML=$(mktemp --tmpdir=$TMPDIR)
-# run debbindiff on the images
+# run diffoscope on the images
 GOOD_IMAGES=0
 ALL_IMAGES=0
 SIZE=""
@@ -234,7 +234,7 @@ for i in * ; do
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
-		call_debbindiff $i $j
+		call_diffoscope $i $j
 		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i
@@ -251,7 +251,7 @@ for i in * ; do
 	echo "       </table>" >> $DBD_HTML
 done
 GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
-# run debbindiff on the packages
+# run diffoscope on the packages
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
 create_results_dirs
@@ -273,7 +273,7 @@ for i in * ; do
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
-		call_debbindiff $i $j
+		call_diffoscope $i $j
 		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i/$(dirname $j)

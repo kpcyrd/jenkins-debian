@@ -81,7 +81,7 @@ save_artifacts() {
 		# irc message
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="$URL published"
-			if [ "$NOTIFY" = "debbindiff" ] ; then
+			if [ "$NOTIFY" = "diffoscope" ] ; then
 				MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
 			fi
 			irc_message "$MESSAGE"
@@ -118,8 +118,8 @@ update_db_and_html() {
 			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message "$MESSAGE"
-			# disable ("regular") irc notification unless it's due to debbindiff problems
-			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "debbindiff" ] ; then
+			# disable ("regular") irc notification unless it's due to diffoscope problems
+			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then
 				NOTIFY=""
 			fi
 		fi
@@ -255,7 +255,7 @@ handle_reproducible() {
 		calculate_build_duration
 		update_db_and_html "reproducible"
 	elif [ -f ./$DBDREPORT ] ; then
-		echo "Debbindiff says the build is reproducible, but there is a debbindiff file. Please investigate" | tee -a $RBUILDLOG
+		echo "Debbindiff says the build is reproducible, but there is a diffoscope file. Please investigate" | tee -a $RBUILDLOG
 		handle_ftbr
 	elif [ ! -f b1/$BUILDINFO ] ; then
 		echo "Debbindiff says the build is reproducible, but there is no .buildinfo file. Please investigate" | tee -a $RBUILDLOG
@@ -271,11 +271,11 @@ dbd_timeout() {
 		msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
 	SAVE_ARTIFACTS=1
-	NOTIFY="debbindiff"
+	NOTIFY="diffoscope"
 	handle_ftbr "$msg"
 }
 
-call_debbindiff_on_changes_files() {
+call_diffoscope_on_changes_files() {
 	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="30m"
@@ -314,7 +314,7 @@ call_debbindiff_on_changes_files() {
 			;;
 		2)
 			SAVE_ARTIFACTS=1
-			NOTIFY="debbindiff"
+			NOTIFY="diffoscope"
 			handle_ftbr "$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
@@ -561,7 +561,7 @@ update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
-	call_debbindiff_on_changes_files  # defines DBDVERSION, update_db_and_html defines STATUS
+	call_diffoscope_on_changes_files  # defines DBDVERSION, update_db_and_html defines STATUS
 fi
 
 check_for_race_conditions

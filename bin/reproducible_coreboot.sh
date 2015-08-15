@@ -148,7 +148,7 @@ save_coreboot_results b2
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/coreboot
 
-# run debbindiff on the results
+# run diffoscope on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
@@ -166,7 +166,7 @@ cd $TMPDIR/b1
 for i in $(ls -1d *| sort -u) ; do
 	let ALL_ROMS+=1
 	if [ -f $i/coreboot.rom ] ; then
-		call_debbindiff $i coreboot.rom
+		call_diffoscope $i coreboot.rom
 		get_filesize $i/coreboot.rom
 		if [ -f $TMPDIR/$i.html ] ; then
 			mv $TMPDIR/$i.html $BASE/coreboot/dbd/$i.html

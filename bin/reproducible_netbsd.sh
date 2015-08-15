@@ -117,7 +117,7 @@ umask 0022
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/netbsd
 
-# run debbindiff on the results
+# run diffoscope on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
 DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
@@ -137,7 +137,7 @@ for i in * ; do
 	echo "       <table><tr><th>Release files for <code>$i</code></th></tr>" >> $FILES_HTML
 	for j in $(find * -type f |sort -u ) ; do
 		let ALL_FILES+=1
-		call_debbindiff $i $j
+		call_diffoscope $i $j
 		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/netbsd/dbd/$i/$(dirname $j)

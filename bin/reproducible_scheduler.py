@@ -81,7 +81,7 @@ LIMITS = {
 # define an "arch factor", so the scheduling limits differ between archs
 ARCH_SHARE = {'amd64': 10, 'armhf': 3}
 
-MAXIMUM = {'amd64': 750, 'armhf': 750}
+MAXIMUM = {'amd64': 750, 'armhf': 75}
 
 class Limit:
     def __init__(self, arch, queue):

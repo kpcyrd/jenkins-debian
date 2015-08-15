@@ -99,7 +99,7 @@ cleanup_all() {
 	gzip -9fvn $RBUILDLOG
 	# XXX quite ugly: this is just needed to get the correct value of the
 	# compressed files in the html. It's cheap and quite safe so, *shrugs*...
-	gen_packages_html $SUITE $SRCPACKAGE
+	gen_package_html $SRCPACKAGE
 	cd
 	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi

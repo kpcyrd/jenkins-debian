@@ -44,7 +44,7 @@ fi
 OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Warning: old temp directories found in $REP_RESULTS"
+	echo "Old temp directories found in $REP_RESULTS"
 	find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec rm -rv {} \;
 	echo "These old directories have been deleted."
 	echo

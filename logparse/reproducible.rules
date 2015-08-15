@@ -4,7 +4,6 @@
 warning /Warning: .+ is not a source package, or was removed or renamed. Please investigate./
 warning /Warning: Download of .+ sources failed./
 warning /Warning: .+ contains invalid yaml, please fix./
-warning /Warning: old temp directories found in .+/
 warning /Warning: lock .+ still exists, exiting./
 warning /Warning: Tried, but failed to delete these:/
 warning /Warning: processes found which should not be there/

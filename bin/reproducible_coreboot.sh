@@ -151,9 +151,9 @@ rm -r $TMPBUILDDIR/coreboot
 # run diffoscope on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
-DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
+DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DBDVERSION on coreboot images."
+echo "$(date -u) - Running $DIFFOSCOPE on coreboot images."
 echo "============================================================================="
 ROMS_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "       <ul>" > $ROMS_HTML
@@ -225,7 +225,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page ", while $BAD_ROMS ($BAD_PERCENT%) failed to build from source."
 fi
-write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION} using ${DBDVERSION}.</p>"
+write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION} using ${DIFFOSCOPE}.</p>"
 write_explaination_table coreboot
 cat $ROMS_HTML >> $PAGE
 write_page "     <p><pre>"

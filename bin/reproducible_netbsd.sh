@@ -120,9 +120,9 @@ rm -r $TMPBUILDDIR/netbsd
 # run diffoscope on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
-DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
+DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DBDVERSION on netbsd..."
+echo "$(date -u) - Running $DIFFOSCOPE on netbsd..."
 echo "============================================================================="
 FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "       <ul>" > $FILES_HTML
@@ -190,7 +190,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} using ${DBDVERSION}.</p>"
+write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} using ${DIFFOSCOPE}.</p>"
 write_explaination_table NetBSD
 cat $FILES_HTML >> $PAGE
 write_page "     <p><pre>"

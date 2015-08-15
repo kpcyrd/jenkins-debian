@@ -82,7 +82,7 @@ save_artifacts() {
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="$URL published"
 			if [ "$NOTIFY" = "diffoscope" ] ; then
-				MESSAGE="$MESSAGE, $DBDVERSION had troubles with these..."
+				MESSAGE="$MESSAGE, $DIFFOSCOPE had troubles with these..."
 			fi
 			irc_message "$MESSAGE"
 		fi
@@ -235,7 +235,7 @@ handle_ftbr() {
 	if [ -f ./${DBDREPORT} ] ; then
 		mv ./${DBDREPORT} $BASE/dbd/${SUITE}/${ARCH}/
 	else
-		echo "$(date) - $DBDVERSION produced no output (which is strange)." | tee -a $RBUILDLOG
+		echo "$(date) - $DIFFOSCOPE produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	if [ -f ./$DBDTXT ] ; then
 		mv ./$DBDTXT $BASE/dbdtxt/$SUITE/$ARCH/
@@ -250,7 +250,7 @@ handle_reproducible() {
 		cp b1/${BUILDINFO} $BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
 		echo | tee -a ${RBUILDLOG}
-		echo "$DBDVERSION found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
+		echo "$DIFFOSCOPE found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
 		echo "${SRCPACKAGE} from $SUITE built successfully and reproducibly on ${ARCH}." | tee -a ${RBUILDLOG}
 		calculate_build_duration
 		update_db_and_html "reproducible"
@@ -264,9 +264,9 @@ handle_reproducible() {
 }
 
 dbd_timeout() {
-	local msg="$DBDVERSION was killed after running into timeout after $1"
+	local msg="$DIFFOSCOPE was killed after running into timeout after $1"
 	if [ ! -s ./${DBDREPORT} ] ; then
-		echo "$(date) - $DBDVERSION produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
+		echo "$(date) - $DIFFOSCOPE produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
 	else
 		msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
@@ -286,8 +286,8 @@ call_diffoscope_on_changes_files() {
 	fi
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	DBDVERSION="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
-	echo "$(date) - $DBDVERSION will be used to compare the two builds:" | tee -a ${RBUILDLOG}
+	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
+	echo "$(date) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
 	set -x
 	( timeout $TIMEOUT schroot \
@@ -310,19 +310,19 @@ call_diffoscope_on_changes_files() {
 			handle_reproducible
 			;;
 		1)
-			handle_ftbr "$DBDVERSION found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
+			handle_ftbr "$DIFFOSCOPE found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
 		2)
 			SAVE_ARTIFACTS=1
 			NOTIFY="diffoscope"
-			handle_ftbr "$DBDVERSION had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
+			handle_ftbr "$DIFFOSCOPE had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
 			dbd_timeout $TIMEOUT
 			;;
 		*)
-			handle_ftbr "Something weird happened when running $DBDVERSION (which exited with $RESULT) and I don't know how to handle it"
-			irc_message "Something weird happened when running $DBDVERSION (which exited with $RESULT) and I don't know how to handle it. Check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
+			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
+			irc_message "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
 			;;
 	esac
 	print_out_duration
@@ -561,7 +561,7 @@ update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
-	call_diffoscope_on_changes_files  # defines DBDVERSION, update_db_and_html defines STATUS
+	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 fi
 
 check_for_race_conditions

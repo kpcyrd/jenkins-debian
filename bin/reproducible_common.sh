@@ -393,20 +393,20 @@ call_diffoscope() {
 		0)	echo "$(date -u) - $1/$2 is reproducible, yay!"
 			;;
 		1)
-			echo "$(date -u) - $DBDVERSION found issues, please investigate $1/$2"
+			echo "$(date -u) - $DIFFOSCOPE found issues, please investigate $1/$2"
 			;;
 		2)
-			msg="$(date -u) - $DBDVERSION had trouble comparing the two builds. Please investigate $1/$2"
+			msg="$(date -u) - $DIFFOSCOPE had trouble comparing the two builds. Please investigate $1/$2"
 			;;
 		124)
 			if [ ! -s $TMPDIR/$1.html ] ; then
-				msg="$(date -u) - $DBDVERSION produced no output for $1/$2 and was killed after running into timeout after ${TIMEOUT}..."
+				msg="$(date -u) - $DIFFOSCOPE produced no output for $1/$2 and was killed after running into timeout after ${TIMEOUT}..."
 			else
-				msg="$DBDVERSION was killed after running into timeout after $TIMEOUT, but there is still $TMPDIR/$1/$2.html"
+				msg="$DIFFOSCOPE was killed after running into timeout after $TIMEOUT, but there is still $TMPDIR/$1/$2.html"
 			fi
 			;;
 		*)
-			msg="$(date -u) - Something weird happened when running $DBDVERSION on $1/$2 (which exited with $RESULT) and I don't know how to handle it."
+			msg="$(date -u) - Something weird happened when running $DIFFOSCOPE on $1/$2 (which exited with $RESULT) and I don't know how to handle it."
 			;;
 	esac
 	if [ ! -z "$msg" ] ; then

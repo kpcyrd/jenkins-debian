@@ -83,8 +83,8 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		echo "$FAILED_BUILDS"
 		echo
 		echo "Rescheduling packages: "
-		REQUESTER="jenkins maintenance job"
-		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
+		REQUESTER="maintenance"
+		REASON="builds which failed due to network errors"
 		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
 			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
 				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)

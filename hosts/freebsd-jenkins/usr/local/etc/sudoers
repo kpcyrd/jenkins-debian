@@ -46,7 +46,7 @@ Defaults     env_keep += "PKG_PATH PKG_DBDIR PKG_TMPDIR TMPDIR PACKAGEROOT PACKA
 ## Locale settings
 Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
 # for reproducible builds:
-Defaults env_keep += "TZ"
+Defaults env_keep += "TZ DESTDIR"
 ##
 ## Run X applications through sudo; HOME is used to find the
 ## .Xauthority file.  Note that other programs use HOME to find   
@@ -94,8 +94,12 @@ root ALL=(ALL) ALL
 # for reproducible builds:
 jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/bin/make -j ? buildkernel, \
+	/usr/bin/make -j ? installworld, \
+	/usr/bin/make -j ? installkernel, \
+	/usr/bin/make -j ? distribution, \
 	/bin/rm -r /usr/src /usr/obj, \
-	/bin/rm -r /usr/obj/releasedir /usr/obj/destdir.*, \
+	/bin/rm -r /usr/obj/, \ 
+	/bin/mkdir /usr/obj, \
 	/bin/mkdir /usr/src /usr/obj, \
 	/usr/sbin/chown jenkins /usr/src /usr/obj
 

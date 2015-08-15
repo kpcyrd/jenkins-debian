@@ -26,7 +26,9 @@ create_results_dirs() {
 save_freebsd_results(){
 	local RUN=$1
 	mkdir -p $TMPDIR/$RUN/
-	cp -pr /usr/obj/releasedir/ $TMPDIR/$RUN/
+	# copy results over
+	$RSCP:$TMPDIR $TMPDIR/$RUN
+	$RSSH "rm -r $TMPDIR ; mkdir $TMPDIR" 
 	find $TMPDIR/$RUN/ -name MD5 -o -name SHA512 -exec rm {} \;
 }
 
@@ -66,14 +68,16 @@ export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 NUM_CPU=3
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU distribution"
 # save results in b1
 save_freebsd_results b1
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - cleaning up between builds."
 echo "============================================================================="
-sudo rm -r /usr/obj/releasedir /usr/obj/destdir.*
-# we keep the toolchain(s)
+$RSSH "sudo rm -r /usr/obj/ ; sudo mkdir /usr/obj"
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd - second build run."
@@ -90,6 +94,9 @@ NEW_NUM_CPU=4
 # actually build everything
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU distribution"
 # save results in b2
 save_freebsd_results b2
 # cleanup... 
@@ -103,10 +110,6 @@ umask 0022
 
 # cleanup on the node
 $RSSH 'sudo rm -r /usr/src /usr/obj'
-
-# copy results over
-$RSCP:$TMPDIR $TMPDIR
-$RSSH "rm -r $TMPDIR" 
 
 # run debbindiff on the results
 TIMEOUT="30m"

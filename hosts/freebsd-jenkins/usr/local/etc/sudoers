@@ -92,7 +92,8 @@ root ALL=(ALL) ALL
 # %sudo	ALL=(ALL) ALL
 
 # for reproducible builds:
-jenkins ALL= NOPASSWD: /usr/bin/make buildworld, \
+jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
+	/usr/bin/make -j ? buildkernel, \
 	/bin/rm -r /usr/src /usr/obj, \
 	/bin/rm -r /usr/obj/releasedir /usr/obj/destdir.*, \
 	/bin/mkdir /usr/src /usr/obj, \

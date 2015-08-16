@@ -3,7 +3,7 @@
 # Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -70,14 +70,14 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU distribution"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
 # save results in b1
 save_freebsd_results b1
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - cleaning up between builds."
 echo "============================================================================="
-$RSSH "sudo rm -r /usr/obj/ ; sudo mkdir /usr/obj"
+$RSSH "sudo rm -r /usr/obj/ ; sudo mkdir /usr/obj ; sudo chown jenkins /usr/src /usr/obj"
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd - second build run."
@@ -96,7 +96,7 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU distribution"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
 # save results in b2
 save_freebsd_results b2
 # cleanup... 

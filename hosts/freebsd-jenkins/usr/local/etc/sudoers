@@ -98,7 +98,7 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/bin/make -j ? installkernel, \
 	/usr/bin/make -j ? distribution, \
 	/bin/rm -r /usr/src /usr/obj, \
-	/bin/rm -r /usr/obj/, \ 
+	/bin/rm -r /usr/obj, \
 	/bin/mkdir /usr/obj, \
 	/bin/mkdir /usr/src /usr/obj, \
 	/usr/sbin/chown jenkins /usr/src /usr/obj

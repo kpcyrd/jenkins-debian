@@ -325,7 +325,8 @@ def start_udd_connection():
             database=db,
             user=username,
             host=host,
-            password=password
+            password=password,
+            connect_timeout=5,
         )
     except:
         log.error('Erorr connecting to the UDD database replica.' +

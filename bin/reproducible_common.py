@@ -320,23 +320,24 @@ def start_udd_connection():
     port = 5432
     db = "udd"
     try:
-        log.debug("Starting connection to the UDD database")
-        conn = psycopg2.connect(
-            database=db,
-            user=username,
-            host=host,
-            password=password,
-            connect_timeout=5,
-        )
-    except psycopg2.OperationalError as err:
-        if str(err) == 'timeout expired\n':
-            log.error('Connection to the UDD database replice timed out. '
-                      'Probably the machine is offline or just unavailable.')
-            log.error('Failing nicely anyway, all queries will return an '
-                      'empty response.')
-            return None
-        else:
-            raise
+        try:
+            log.debug("Starting connection to the UDD database")
+            conn = psycopg2.connect(
+                database=db,
+                user=username,
+                host=host,
+                password=password,
+                connect_timeout=5,
+            )
+        except psycopg2.OperationalError as err:
+            if str(err) == 'timeout expired\n':
+                log.error('Connection to the UDD database replice timed out. '
+                          'Maybe the machine is offline or just unavailable.')
+                log.error('Failing nicely anyway, all queries will return an '
+                          'empty response.')
+                return None
+            else:
+                raise
     except:
         log.error('Erorr connecting to the UDD database replica.' +
                   'The full error is:')

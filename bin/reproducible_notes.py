@@ -40,7 +40,6 @@ def load_notes():
             assert 'version' in original[pkg]
         except AssertionError:
             print_critical_message(pkg + ' did not include a version')
-            raise
         query = 'SELECT s.id, s.version, s.suite ' + \
                 'FROM results AS r JOIN sources AS s ON r.package_id=s.id' + \
                 ' WHERE s.name="{pkg}" AND r.status != ""' + \
@@ -58,11 +57,17 @@ def load_notes():
             for suite in result:
                 pkg_details = {}
 # https://image-store.slidesharecdn.com/c2c44a06-5e28-4296-8d87-419529750f6b-original.jpeg
-                if version_compare(str(original[pkg]['version']),
-                                   str(suite[1])) > 0:
-                    continue
+                try:
+                    if version_compare(str(original[pkg]['version']),
+                                       str(suite[1])) > 0:
+                        continue
+                except KeyError:
+                    pass
                 pkg_details['suite'] = suite[2]
-                pkg_details['version'] = original[pkg]['version']
+                try:
+                    pkg_details['version'] = original[pkg]['version']
+                except KeyError:
+                    pkg_details['version'] = ''
                 pkg_details['comments'] = original[pkg]['comments'] if \
                     'comments' in original[pkg] else None
                 pkg_details['bugs'] = original[pkg]['bugs'] if \

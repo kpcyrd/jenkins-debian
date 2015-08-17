@@ -50,8 +50,12 @@ def load_notes():
             print_critical_message('Warning: This query produces no results: ' + query
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
-            irc_msg('There is problem with the note for ' + pkg +
-                    ' - please have a look at ' + os.environ['BUILD_URL'])
+            try:
+                irc_msg('There is problem with the note for ' + pkg +
+                        ' - please have a look at ' + os.environ['BUILD_URL'])
+            except KeyError:
+                log.error('There is a problem with the note for %s - please '
+                          'check.', pkg)
         else:
             notes[pkg] = []
             for suite in result:

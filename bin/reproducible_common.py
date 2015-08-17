@@ -321,10 +321,12 @@ def start_udd_connection():
     db = "udd"
     try:
         log.debug("Starting connection to the UDD database")
-        conn = psycopg2.connect("dbname=" + db +
-                               " user=" + username +
-                               " host=" + host +
-                               " password=" + password)
+        conn = psycopg2.connect(
+            database=db,
+            user=username,
+            host=host,
+            password=password
+        )
     except:
         log.error('Erorr connecting to the UDD database replica.' +
                   'The full error is:')

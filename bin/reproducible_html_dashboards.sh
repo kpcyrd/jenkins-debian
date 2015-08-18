@@ -14,7 +14,6 @@ common_init "$@"
 #
 # init some variables
 #
-ARCH="amd64"  # we only care about amd64 status here (for now)
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
@@ -431,11 +430,14 @@ create_main_stats_page() {
 SUITE="unstable"
 update_bug_stats
 update_notes_stats
-for SUITE in $SUITES ; do
-	update_suite_stats
-	gather_suite_stats
-	create_suite_stats_page
+for ARCH in ${ARCHS} ; do
+	for SUITE in $SUITES ; do
+		update_suite_stats
+		gather_suite_stats
+		create_suite_stats_page
+	done
 done
+ARCH="amd64"
 SUITE="unstable"
 create_main_stats_page
 

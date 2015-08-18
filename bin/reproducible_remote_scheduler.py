@@ -8,6 +8,7 @@
 #
 # A secure script to be called from remote hosts
 
+import sys
 import time
 import argparse
 
@@ -20,6 +21,16 @@ parser = argparse.ArgumentParser(
            ' issue AND that status AND that date". Blacklisted package '
            "can't be selected by a filter, but needs to be explitely listed"
            ' in the package list.')
+parser.add_argument('--null', action='store_true', help='The arguments are '
+                    'considered null-separated and coming from stding')
+
+null_args = parser.parse_known_args()[0]
+if null_args.null:
+    input_args = sys.stdin.read().split('\0')
+else:
+    input_args = sys.argv
+
+
 parser.add_argument('--dry-run', action='store_true')
 parser.add_argument('-k', '--keep-artifacts',  action='store_true',
                    help='Save artifacts (for further offline study)')
@@ -45,7 +56,7 @@ parser.add_argument('-s', '--suite', required=True,
                     help='Specify the suite to schedule in')
 parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
-scheduling_args = parser.parse_known_args()[0]
+scheduling_args = parser.parse_known_args(args=input_args)[0]
 
 # these are here as an hack to be able to parse the command line
 from reproducible_common import *

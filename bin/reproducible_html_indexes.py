@@ -136,7 +136,7 @@ pages = {
         ]
     },
     'not_for_us': {
-        'title': 'Packages in {suite}/{arch} which should not be build on "amd64"',
+        'title': 'Packages in {suite}/{arch} which should not be build on "{arch}"',
         'body': [
             {
                 'icon_status': 'not_for_us',

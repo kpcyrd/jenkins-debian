@@ -27,7 +27,7 @@ parser.add_argument('-n', '--notify', action='store_true',
                    help='Notify the channel when the build finishes')
 parser.add_argument('--noisy', action='store_true', help='Also notify when ' +
                     'the build starts, linking to the build url.')
-parser.add_argument('-m', '--message', default='', nargs='+',
+parser.add_argument('-m', '--message', default='',
                     help='A text to be sent to the IRC channel when notifying' +
                     ' about the scheduling')
 parser.add_argument('-r', '--status', required=False,
@@ -68,7 +68,7 @@ except KeyError:
 
 suite = scheduling_args.suite
 arch = scheduling_args.architecture
-reason = ' '.join(scheduling_args.message)
+reason = scheduling_args.message
 issue = scheduling_args.issue
 status = scheduling_args.status
 built_after = scheduling_args.after

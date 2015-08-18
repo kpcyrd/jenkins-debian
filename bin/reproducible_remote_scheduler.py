@@ -30,7 +30,6 @@ if null_args.null:
 else:
     input_args = sys.argv
 
-
 parser.add_argument('--dry-run', action='store_true')
 parser.add_argument('-k', '--keep-artifacts',  action='store_true',
                    help='Save artifacts (for further offline study)')

@@ -196,6 +196,7 @@ properties:
 ** new page with packages that have notes with comments (which are often useful / contain solutions / low-hanging fruits for newcomers)
 ** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** aint that covered by reproducible_breakages.py already? no.
+** send notifications to maintainers when a note to their packages changes
 
 * pkg sets related:
 ** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)

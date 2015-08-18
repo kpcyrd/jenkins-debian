@@ -91,7 +91,7 @@ c = conn_db.cursor()
 for package in packages:
     process_pkg(package, local_args.deactivate)
 
-gen_packages_html(packages, no_clean=True)
+gen_packages_html([Package(x) for x in packages], no_clean=True)
 build_page('notify')
 
 if local_args.deactivate:

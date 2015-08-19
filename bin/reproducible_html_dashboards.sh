@@ -322,7 +322,7 @@ create_main_stats_page() {
 	# write suite graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE stats\"></a>"
+		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
 	write_page "</p><p><center>"
 	# write meta pkg graphs per suite
@@ -393,7 +393,7 @@ create_main_stats_page() {
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE\"></a>"
+		write_page " <a href=\"/$SUITE/$ARCH/\"><img src=\"/userContent/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
 	# write build performace stats
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics</th></tr>"

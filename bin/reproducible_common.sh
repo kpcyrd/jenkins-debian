@@ -152,7 +152,7 @@ write_page_header() {
 	rm -f $PAGE
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats repositories stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats arch repositories stats"
 	GLOBALVIEWS="issues scheduled notify repositories stats"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
@@ -226,6 +226,12 @@ write_page_header() {
 			done
 		elif [ "$TARGET" = "notify" ] ; then
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
+		elif [ "$TARGET" = "arch" ] ; then
+			if [ "$ARCH" ] = "amd64" ; then
+				write_page "<li><a href=\"$BASEURL/unstable/index_suite_armhf.html\">$arch: armhf</a></li>"
+			else
+				write_page "<li><a href=\"$BASEURL/unstable/index_suite_amd64.html\">$arch: amd64</a></li>"
+			fi
 		else
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		fi

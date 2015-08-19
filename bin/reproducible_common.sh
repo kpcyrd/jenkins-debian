@@ -463,7 +463,7 @@ create_png_from_table() {
 	fi
 	if [ $1 -eq 0 ] || [ $1 -eq 2 ] ; then
 		# TABLE[0+2] have a architecture column:
-		WHERE_EXTRA="$WHERE_SUITE AND architecture = \"$ARCH\""
+		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
 	fi
 	# run query
 	if [ $1 -eq 1 ] ; then

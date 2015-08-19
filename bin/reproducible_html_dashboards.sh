@@ -67,7 +67,7 @@ YLABEL[7]="Amount of bugs open / closed"
 # update package + build stats
 #
 update_suite_arch_stats() {
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\"")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND architecture = \"$ARCH\"")
 	if [ -z $RESULT ] ; then
 		echo "Updating packages and builds stats for $SUITE/$ARCH in $DATE."
 		ALL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT count(name) FROM sources WHERE suite='${SUITE}' AND architecture='$ARCH'")

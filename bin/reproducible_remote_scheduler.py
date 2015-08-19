@@ -182,9 +182,8 @@ for pkg in packages:
             ids.append(result[0][0])
             pkgs.append(pkg)
     except IndexError:
-        log.critical('The package %s is not available in %s/%s',
-                     pkg, suite, arch)
-        sys.exit(1)
+        log.error('%sThe package %s is not available in %s/%s%s',
+                  bcolors.FAIL, pkg, suite, arch, bcolors.ENDC)
 
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
 packages_txt = ' packages ' if len(pkgs) > 1 else ' package '

@@ -432,6 +432,10 @@ update_bug_stats
 update_notes_stats
 for ARCH in ${ARCHS} ; do
 	for SUITE in $SUITES ; do
+		if [ "$SUITE" != "unstable" ] && [ "$ARCH" = "armhf" ] ; then
+			# we only test unstable on armhf atm
+			continue
+		fi
 		update_suite_arch_stats
 		gather_suite_arch_stats
 		create_suite_arch_stats_page

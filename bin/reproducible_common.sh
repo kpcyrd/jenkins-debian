@@ -152,9 +152,9 @@ write_page_header() {
 	rm -f $PAGE
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats repositories stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_amd64_stats suite_armhf_stats repositories stats"
 	GLOBALVIEWS="issues scheduled notify repositories stats"
-	SUITEVIEWS="dd-list suite_stats"
+	SUITEVIEWS="dd-list suite_amd64_stats suite_armhf_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
 	SPOKENTARGET["no_notes"]="packages without notes"
@@ -199,6 +199,10 @@ write_page_header() {
 			# no pkg_sets are tested in experimental
 			continue
 		fi
+		if [ "$TARGET" = "pkg_sets" ] && [ "$ARCH" = "armhf" ] ; then
+			# no pkg_sets for armhf _yet_
+			continue
+		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		BASEURL="/$SUITE/$ARCH"
 		local i
@@ -214,7 +218,11 @@ write_page_header() {
 		done
 		if [ "$TARGET" = "suite_stats" ] ; then
 			for i in $SUITES ; do
-				write_page "<li><a href=\"/$i\">suite: $i</a></li>"
+				if [ "$SUITE" != "unstable" ] && [ "$ARCH" = "armhf" ] ; then
+					# only unstable is tested on armhf atm
+					continue
+				fi
+				write_page "<li><a href=\"/$i/$ARCH\">suite: $i</a></li>"
 			done
 		elif [ "$TARGET" = "notify" ] ; then
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
@@ -225,7 +233,7 @@ write_page_header() {
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
 	write_page "</ul>"
 	if [ "$1" = "$MAINVIEW" ] ; then
-		LATEST=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status IN ('unreproducible') AND s.suite = 'unstable' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)
+		LATEST=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status IN ('unreproducible') AND s.suite = 'unstable' AND s.arch = 'amd64' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)
 		write_page "<form onsubmit=\"location.href='https://reproducible.debian.net/' + document.getElementById('SrcPkg').value; return false;\">"
 		write_page "https://reproducible.debian.net/<input type=\"text\" id=\"SrcPkg\" value=\"$LATEST\"/>"
 		write_page "<input type=\"submit\" value=\"submit source package name\" />"

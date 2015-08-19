@@ -141,7 +141,6 @@ update_notes_stats() {
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
 	fi
-	echo "Adhoc-Debug: $NOTES $ISSUES $COUNT_ISSUES"
 }
 
 #

@@ -461,9 +461,14 @@ create_png_from_table() {
 		# 6 is special too:
 		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
 	fi
+	if [ $1 -eq 0 ] || [ $1 -eq 2 ] ; then
+		# TABLE[0+2] have a architecture column:
+		WHERE_EXTRA="$WHERE_SUITE AND architecture = \"$ARCH\""
+	fi
 	# run query
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
+		# we ignore the architecture for now here
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing'),0) as 'reproducible_testing',
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='unstable'),0) as 'reproducible_unstable', 
@@ -502,7 +507,7 @@ create_png_from_table() {
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		echo "Generating $2."
-		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
+		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}" || true	# FIXME we should fail here...
 		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	# create empty dummy png if there havent been any results ever

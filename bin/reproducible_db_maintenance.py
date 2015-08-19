@@ -427,7 +427,12 @@ schema_updates = {
         '''ALTER TABLE stats_bugs ADD COLUMN open_locale INTEGER DEFAULT "0"''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_locale INTEGER DEFAULT "0"''',
         'INSERT INTO rb_schema VALUES ("18", "' + now + '")'],
-    19: [ # add column architecture to stats_pkg_state and use (datum, suite, architecture) as primary key
+    19: [ # add column architecture to stats_pkg_state, stats_builds_per_day and stats_builds_age tables and set previous values to amd64
+        'ALTER TABLE stats_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
+        'ALTER TABLE stats_builds_per_day ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
+        'ALTER TABLE stats_builds_age ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
+        'INSERT INTO rb_schema VALUES ("19", "' + now + '")'],
+    20: [ # use (datum, suite, architecture) as primary key for stats_pkg_state
         '''CREATE TABLE stats_pkg_state_tmp
            (datum TEXT NOT NULL,
             suite TEXT NOT NULL,
@@ -438,14 +443,14 @@ schema_updates = {
             FTBFS INTEGER,
             other INTEGER,
             PRIMARY KEY (datum, suite, architecture))''',
-        '''INSERT INTO stats_pkg_state_tmp (datum, suite, untested,
+        '''INSERT INTO stats_pkg_state_tmp (datum, suite, architecture, untested,
             reproducible, unreproducible, FTBFS, other)
-            SELECT datum, suite, untested, reproducible, unreproducible,
+            SELECT datum, suite, architecture, untested, reproducible, unreproducible,
             FTBFS, other FROM stats_pkg_state;''',
         '''DROP TABLE stats_pkg_state;''',
         '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
-        'INSERT INTO rb_schema VALUES ("19", "' + now + '")'],
-    20: [ # add column architecture to stats_builds_per_day and use (datum, suite, architecture) as primary key
+        'INSERT INTO rb_schema VALUES ("20", "' + now + '")'],
+    21: [ # use (datum, suite, architecture) as primary key for stats_builds_per_day
         '''CREATE TABLE stats_builds_per_day_tmp
                      (datum TEXT NOT NULL,
                       suite TEXT NOT NULL,
@@ -455,14 +460,14 @@ schema_updates = {
                       FTBFS INTEGER,
                       other INTEGER,
                       PRIMARY KEY (datum, suite, architecture))''',
-        '''INSERT INTO stats_builds_per_day_tmp (datum, suite,
+        '''INSERT INTO stats_builds_per_day_tmp (datum, suite, architecture,
             reproducible, unreproducible, FTBFS, other)
-            SELECT datum, suite, reproducible, unreproducible,
+            SELECT datum, suite, architecture, reproducible, unreproducible,
             FTBFS, other FROM stats_builds_per_day;''',
         '''DROP TABLE stats_builds_per_day;''',
         '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
-        'INSERT INTO rb_schema VALUES ("20", "' + now + '")'],
-    21: [ # add column architecture to stats_builds_age and use (datum, suite, architecture) as primary key
+        'INSERT INTO rb_schema VALUES ("21", "' + now + '")'],
+    22: [ # use (datum, suite, architecture) as primary key for stats_builds_age
         '''CREATE TABLE stats_builds_age_tmp
                      (datum TEXT NOT NULL,
                       suite TEXT NOT NULL,
@@ -471,17 +476,12 @@ schema_updates = {
                       oldest_unreproducible REAL,
                       oldest_FTBFS REAL,
                       PRIMARY KEY (datum, suite, architecture))''',
-        '''INSERT INTO stats_builds_age_tmp (datum, suite,
+        '''INSERT INTO stats_builds_age_tmp (datum, suite, architecture,
             oldest_reproducible, oldest_unreproducible, oldest_FTBFS)
-            SELECT datum, suite, oldest_reproducible, oldest_unreproducible,
+            SELECT datum, suite, architecture, oldest_reproducible, oldest_unreproducible,
             oldest_FTBFS FROM stats_builds_age;''',
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
-        'INSERT INTO rb_schema VALUES ("21", "' + now + '")'],
-    22: [ # we've only tested amd64 so far
-        'UPDATE stats_pkg_state SET architecture = "amd64" WHERE architecture = ""',
-        'UPDATE stats_builds_per_day SET architecture = "amd64" WHERE architecture = ""',
-        'UPDATE stats_builds_age SET architecture = "amd64" WHERE architecture = ""',
         'INSERT INTO rb_schema VALUES ("22", "' + now + '")'],
 }
 

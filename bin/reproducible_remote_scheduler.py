@@ -51,7 +51,7 @@ parser.add_argument('-b', '--before', required=False,
 parser.add_argument('-a', '--architecture', required=False, default='amd64',
                     help='Specify the architecture to schedule for ' +
                     '(defaults to amd64)')
-parser.add_argument('-s', '--suite', required=True,
+parser.add_argument('-s', '--suite', required=False,
                     help='Specify the suite to schedule in')
 parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
@@ -104,6 +104,10 @@ log.debug('Date: after ' + built_after if built_after else str(None) +
 log.debug('Suite: ' + suite)
 log.debug('Architecture: ' + arch)
 log.debug('Packages: ' + ' '.join(packages))
+
+if not suite:
+    log.critical('You need to specify the suite name')
+    sys.exit(1)
 
 if suite not in SUITES:
     log.critical('The specified suite is not being tested.')

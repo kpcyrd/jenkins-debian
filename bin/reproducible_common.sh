@@ -152,9 +152,9 @@ write_page_header() {
 	rm -f $PAGE
 	MAINVIEW="stats"
 	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_amd64_stats suite_armhf_stats repositories stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats repositories stats"
 	GLOBALVIEWS="issues scheduled notify repositories stats"
-	SUITEVIEWS="dd-list suite_amd64_stats suite_armhf_stats"
+	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
 	SPOKENTARGET["no_notes"]="packages without notes"

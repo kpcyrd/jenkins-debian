@@ -209,6 +209,8 @@ properties:
 ** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
+** variation of filesystem being built on (we probably wont do that and just always build on tmpfs...)
+** variation of users shell (bash + zsh?)
 
 * status of remote build nodes for amd64
 ** profitbricks-build1-amd64 is setup

@@ -186,7 +186,6 @@ properties:
 ** move "untested" field in stats table too? (as in csv output...)
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
-** replace submit form by one without javascript (maybe with more url rewriting)
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 

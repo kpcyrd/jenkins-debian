@@ -12,38 +12,47 @@
 from reproducible_common import *
 
 html_package_page = Template((tab*2).join(("""
-<table class="head">
-    <tr>
-        <td>
-            <span class="avoidwrap">
-                <span style="font-size:1.2em;">$package</span> $suite/$arch: $version
-$status
-                <span style="font-size:0.9em;">$build_time:</span>
-            </span>
-            <span class="avoidwrap">
-$links
-                <a href="https://tracker.debian.org/$package" target="main">PTS</a>
-                <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
-                <a href="https://sources.debian.net/src/$package/$version/" target="main">sources</a>
-                <a href="https://sources.debian.net/src/$package/$version/debian/" target="main">debian</a>/<!--
-                -->{<a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a>,<!--
-                --><a href="https://sources.debian.net/src/$package/$version/debian/control" target="main">control</a>,<!--
-                --><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a>}
-            </span>
-        </td>
-        <td>
+<header class="head">
+    <h2 class="package-name">$package</h2>
+    <p style="margin-top: 4px;">
+        $version
+        <a href="/index_notify.html" target="_parent">
+            <span class="notification" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">$notify_maintainer</span>
+        </a><br />
+        $suite/$arch <br />
+        $status <br />
+        <span class="build-time">$build_time</span>
+    </p>
+    <ul class="menu">
+        <li><ul class="children">
+            $links
+        </ul></li>
+        <li>
+            <a href="https://tracker.debian.org/$package" target="main">PTS</a>
+            <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
+        </li>
+        <li>
+            <a href="https://sources.debian.net/src/$package/$version/" target="main">sources</a>
+            <a href="https://sources.debian.net/src/$package/$version/debian" target="main">debian/</a>
+            <ul class="children">
+                <li><a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a></li>
+                <li><a href="https://sources.debian.net/src/$package/$version/debian/control" target="main">control</a></li>
+                <li><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a></li>
+            </ul>
+        </li>
+    </ul>
+
 ${suites_links}
-        </td>
-        <td style="text-align:right; font-size:0.9em;">
-            <a href="/index_notify.html" target="_parent">
-                <span class="red" style="font-size:1.5em;" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">$notify_maintainer</span>
-            </a>
-            <a href="%s" target="_parent">
-                reproducible builds
-            </a>
-        </td>
-    </tr>
-</table>
+
+    <ul class="reproducible-links">
+        <li>
+            <a href="%s">Reproducible Builds</a><br />
+            <a href="https://wiki.debian.org/ReproducibleBuilds">Reproducible Wiki</a><br />
+            <a href="https://reproducible.debian.net/howto">Reproducible HowTo</a>
+        </li>
+    </ul>
+</header>
+
 <iframe id="main" name="main" src="${default_view}">
     <p>
         Your browser does not support iframes.
@@ -69,6 +78,7 @@ def gen_status_link_icon(status, icon, suite, arch):
         html += tab*6 + '<a href="/{suite}/{arch}/index_{status}.html"' + \
                 ' target="_parent" title="{status}">\n'
     html += tab*9 + '<img src="/static/{icon}" alt="{status}" />\n'
+    html += tab*9 + ' {status}\n'
     if status != 'untested':
         html += tab*8 + '</a>\n'
     return html.format(status=status, icon=icon, suite=suite, arch=arch)
@@ -88,45 +98,51 @@ def link_buildlogs(package, eversion, suite, arch):
     return html
 
 
-def gen_extra_links(package, version, suite, arch, status):
-    eversion = strip_epoch(version)
-    notes = NOTES_PATH + '/' + package + '_note.html'
-    buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
-                '_' + eversion + '_' + arch + '.buildinfo'
+def link_diffs(package, eversion, suite, arch, status):
+    html = ''
     dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
           eversion + '.debbindiff.html'
     dbdtxt = DBDTXT_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
-          eversion + '.debbindiff.txt.gz'
-
-    links = ''
-    default_view = ''
-    if os.access(notes, os.R_OK):
-        url = NOTES_URI + '/' + package + '_note.html'
-        links += '<a href="' + url + '" target="main">notes</a>\n'
-        default_view = url
-    else:
-        log.debug('notes not detected at ' + notes)
-    if os.access(dbd, os.R_OK):
-        url = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+             eversion + '.debbindiff.txt.gz'
+    dbd_url = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
               eversion + '.debbindiff.html'
-        links += '<a href="' + url + '" target="main">debbindiff</a>\n'
-        if not default_view:
-            default_view = url
+    dbdtxt_url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+                eversion + '.debbindiff.txt'
+    if os.access(dbd, os.R_OK):
+        html += '<li><a href="' + dbd_url + '" target="main">differences</a>\n'
+        if os.access(dbdtxt, os.R_OK):
+            html += '<a href="' + dbdtxt_url + '" target="main">(txt)</a>\n'
+        html += '</li>\n'
     else:
         log.debug('debbindiff not detetected at ' + dbd)
         if status == 'unreproducible' and not args.ignore_missing_files:
             log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')
-    if os.access(dbdtxt, os.R_OK):
-        url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
-              eversion + '.debbindiff.txt'
-        links += '<a href="' + url + '" target="main">(txt)</a>\n'
-        if not default_view:
-            default_view = url
+    return html, dbd_url
+
+
+def gen_extra_links(package, version, suite, arch, status):
+    eversion = strip_epoch(version)
+    notes = NOTES_PATH + '/' + package + '_note.html'
+    buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
+                '_' + eversion + '_' + arch + '.buildinfo'
+
+    links = ''
+    default_view = ''
+    if os.access(notes, os.R_OK):
+        url = NOTES_URI + '/' + package + '_note.html'
+        links += '<li><a href="' + url + '" target="main">notes</a></li>\n'
+        default_view = url
+    else:
+        log.debug('notes not detected at ' + notes)
+    dbd = link_diffs(package, eversion, suite, arch, status)
+    links += dbd[0] if dbd[0] else ''
+    if dbd[0] and not default_view:
+            default_view = dbd[1]
     if pkg_has_buildinfo(package, version, suite):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
               '_' + eversion + '_' + arch + '.buildinfo'
-        links += '<a href="' + url + '" target="main">buildinfo</a>\n'
+        links += '<li><a href="' + url + '" target="main">buildinfo</a></li>\n'
         if not default_view:
             default_view = url
     elif not args.ignore_missing_files and status not in \
@@ -136,40 +152,43 @@ def gen_extra_links(package, version, suite, arch, status):
     if rbuild:  # being a tuple (rbuild path, size), empty if non existant
         url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
               eversion + '.rbuild.log'  # apache ignores the trailing .gz
-        links +='<a href="' + url + '" target="main">rbuild (' + \
+        links +='<li><a href="' + url + '" target="main">rbuild (' + \
                 sizeof_fmt(rbuild[1]) + ')</a>\n'
         if not default_view:
             default_view = url
+        links += link_buildlogs(package, eversion, suite, arch) + '</li>\n'
     elif status not in ('untested', 'blacklisted') and not args.ignore_missing_files:
         log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even though it has been built.')
-    links += link_buildlogs(package, eversion, suite, arch)
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
 
 
-def gen_suites_links(package, suite, arch):
-    html = ''
-    for s in SUITES:
-        if s == suite:  # don't link the current suite
-            continue
-        status = package.get_status(s, arch)
-        if not status:  # The package is not available in that suite/arch
-            continue
-        version = package.get_tested_version(s, arch)
-        html += '<span class="avoidwrap">\n' + tab
-        if status != 'untested':
-            prefix = '<a href="/{}/{}/index_{}.html">'.format(s, arch, status)
-            suffix = '</a>\n'
-        else:
-            prefix = ''
-            suffix = '\n'
-        icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
-        html += icon.format(icon=join_status_icon(status)[1], status=status)
-        html += tab + ' <a href="' + RB_PKG_URI + '/' + s + '/' + arch + \
-                '/' + package.name + '.html" target="_parent">' + s + \
-                ':' + version + '</a>\n'
-        html += '</span>\n'
+def gen_suites_links(package):
+    html = '<ul>\n'
+    for a in ARCHS:
+        html += tab + '<li>{}\n'.format(a)
+        html += tab + '<ul class="children">\n'
+        for s in SUITES:
+            status = package.get_status(s, a)
+            if not status:  # The package is not available in that suite/arch
+                continue
+            version = package.get_tested_version(s, a)
+            html += '<li><span class="suite">\n' + tab
+            if status != 'untested':
+                prefix = '<a href="/{}/{}/index_{}.html">'.format(s, a, status)
+                suffix = '</a>\n'
+            else:
+                prefix = ''
+                suffix = '\n'
+            icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
+            html += icon.format(icon=join_status_icon(status)[1], status=status)
+            html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
+                     ' title="{}: {}">{}</a></li>\n').format(RB_PKG_URI,
+                     s, a, package.name, status, version, s)
+            html += '</span>\n'
+        html += tab + '</ul></li>'
+    html += '</ul>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))
 
 
@@ -195,7 +214,7 @@ def gen_packages_html(packages, no_clean=False):
 
                 links, default_view = gen_extra_links(
                     pkg, version, suite, arch, status)
-                suites_links = gen_suites_links(package, suite, arch)
+                suites_links = gen_suites_links(package)
                 status, icon = join_status_icon(status, pkg, version)
                 status = gen_status_link_icon(status, icon, suite, arch)
 
@@ -215,7 +234,7 @@ def gen_packages_html(packages, no_clean=False):
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible build results'
                 write_html_page(title=title, body=html, destfile=destfile,
-                                noheader=True, noendpage=True)
+                                noheader=True, noendpage=True, indexes=True)
                 log.debug("Package page generated at " + desturl)
     if not no_clean:
         purge_old_pages()  # housekeep is always good

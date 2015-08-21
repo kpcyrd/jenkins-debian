@@ -120,11 +120,12 @@ tab = '  '
 html_header = Template("""<!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width" />
       <link href="/static/style.css" type="text/css" rel="stylesheet" />
       <title>$page_title</title>
   </head>
-  <body>""")
+  <body $padding>""")
 html_footer = Template("""
     <hr />
     <p style="font-size:0.9em;">
@@ -143,7 +144,7 @@ html_footer = Template("""
 html_head_page = Template((tab*2).join("""
 <header>
   <h2>$page_title</h2>
-  <ul>
+  <nav><ul>
     <li>Have a look at:</li>
     <li>
       <a href="/$suite/$arch/index_reproducible.html" target="_parent">
@@ -188,7 +189,7 @@ $links
     <li><a href="/index_repositories.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
-  </ul>
+  </ul></nav>
 </header>""".splitlines(True)))
 
 
@@ -278,10 +279,14 @@ def _gen_links(suite, arch):
     return html
 
 
-def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False):
+def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False, packages=False):
     now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
-    html += html_header.substitute(page_title=title)
+    # this removes the padding if we are writing a package page
+    padding = 'class="wrapper"' if packages else ''
+    html += html_header.substitute(
+            page_title=title,
+            padding=padding)
     if not noheader:
         links = _gen_links(suite, arch)
         html += html_head_page.substitute(

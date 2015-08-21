@@ -187,7 +187,7 @@ write_page_header() {
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general, so if you are an upstream developer or working on another distribution, we'd love to hear from you! Just now we've started to programatically test <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a> and <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> and <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_freebsd\">FreeBSD</a> soon too."
 		write_page "</p>"
 	fi
-	write_page "<ul><li>Have a look at:</li>"
+	write_page "<nav><ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do
 		set_icon $MY_STATE
 		write_page "<li>"
@@ -237,7 +237,7 @@ write_page_header() {
 		fi
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
-	write_page "</ul>"
+	write_page "</ul></nav>"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		LATEST=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status IN ('unreproducible') AND s.suite = 'unstable' AND s.architecture = 'amd64' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)
 		write_page "<form action=\"https://reproducible.debian.net/redirect\" method=\"GET\">https://reproducible.debian.net/"

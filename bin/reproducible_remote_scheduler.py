@@ -50,7 +50,7 @@ parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
 if scheduling_args.null:
-    scheduling_args = parser.parse_lmown_args(sys.stdin.read().split('\0'))
+    scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))
 
 # these are here as an hack to be able to parse the command line
 from reproducible_common import *

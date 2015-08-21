@@ -188,6 +188,7 @@ properties:
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
+** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug

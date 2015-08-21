@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 architectures = """
-   i386
+   kfreebsd-amd64
+   i386 kfreebsd-i386
    mips mips64el mipsel
    powerpc ppc64
    s390x
@@ -10,7 +11,7 @@ architectures = """
    """.split()
 
 mono_architectures = """
-    armel armhf musl-linux-armhf arm64 hurd-amd64 musl-linux-arm64
+    armel armhf kfreebsd-armhf musl-linux-armhf arm64 hurd-amd64 musl-linux-arm64
     alpha
     hppa
     hurd-i386 musl-linux-i386
@@ -90,7 +91,7 @@ for arch in sorted(architectures):
             if nobiarch and arch in mono_architectures:
                 continue
             for supported in ["", "_supported"]:
-                if (nobiarch or arch.startswith("musl-linux-") or arch.startswith("hurd-")) and supported:
+                if (nobiarch or arch.startswith("musl-linux-") or arch.startswith("hurd-") or arch.startswith("kfreebsd-")) and supported:
                     continue
                 for debbindiff in ["", "_debbindiff"]:
                     if debbindiff and (arch not in release_architectures or gccver not in debbindiff_gcc_versions):
@@ -112,7 +113,7 @@ for arch in sorted(architectures):
             if nobiarch and arch in mono_architectures:
                 continue
             for supported in (False, True):
-                if (nobiarch or arch.startswith("musl-linux-") or arch.startswith("hurd-")) and supported:
+                if (nobiarch or arch.startswith("musl-linux-") or arch.startswith("hurd-") or arch.startswith("kfreebsd-")) and supported:
                     continue
                 for debbindiff in (False, True):
                     if debbindiff and (arch not in release_architectures or gccver not in debbindiff_gcc_versions):

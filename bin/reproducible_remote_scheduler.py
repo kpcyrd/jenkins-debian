@@ -50,7 +50,7 @@ parser.add_argument('packages', metavar='package', nargs='*',
                     help='list of packages to reschedule')
 scheduling_args = parser.parse_known_args()[0]
 if scheduling_args.null:
-    scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))
+    scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))[0]
 
 # these are here as an hack to be able to parse the command line
 from reproducible_common import *
@@ -162,27 +162,28 @@ query1 = '''SELECT id FROM sources WHERE name="{pkg}" AND suite="{suite}"
             AND architecture="{arch}"'''
 query2 = '''SELECT p.date_build_started
             FROM sources AS s JOIN schedule as p ON p.package_id=s.id
-            WHERE s.name="{pkg}"
-            AND s.suite="{suite}" AND s.architecture="{arch}"'''
+            WHERE p.package_id="{id}"'''
 for pkg in packages:
     # test whether the package actually exists
     result = query_db(query1.format(pkg=pkg, suite=suite, arch=arch))
+    # tests whether the package is already building
     try:
-        # tests whether the package is already building
-        result2 = query_db(query2.format(pkg=pkg, suite=suite, arch=arch))
-        try:
-            if not result2[0][0]:
-                ids.append(result[0][0])
-                pkgs.append(pkg)
-            else:
-                log.warning(bcolors.WARN + 'The package ' + pkg + ' is ' +
-                    'already building, not scheduling it.' + bcolors.ENDC)
-        except IndexError:
-            ids.append(result[0][0])
-            pkgs.append(pkg)
+        result2 = query_db(query2.format(id=result[0][0]))
     except IndexError:
         log.error('%sThe package %s is not available in %s/%s%s',
-                  bcolors.FAIL, pkg, suite, arch, bcolors.ENDC)
+              bcolors.FAIL, pkg, suite, arch, bcolors.ENDC)
+        continue
+    try:
+        if not result2[0][0]:
+            ids.append(result[0][0])
+            pkgs.append(pkg)
+        else:
+            log.warning(bcolors.WARN + 'The package ' + pkg + ' is ' +
+                'already building, not scheduling it.' + bcolors.ENDC)
+    except IndexError:
+        # it's not in the schedule
+        ids.append(result[0][0])
+        pkgs.append(pkg)
 
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
 packages_txt = ' packages ' if len(pkgs) > 1 else ' package '

@@ -240,7 +240,7 @@ write_page_header() {
 	write_page "</ul>"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		LATEST=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status IN ('unreproducible') AND s.suite = 'unstable' AND s.architecture = 'amd64' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)
-		write_page "https://reproducible.debian.net/<form action=\"https://reproducible.debian.net\" method=\"GET\">"
+		write_page "<form action=\"https://reproducible.debian.net/redirect\" method=\"GET\">https://reproducible.debian.net/"
 		write_page "<input type=\"text\" name=\"SrcPkg\" placeholder=\"Type my friend..\" value=\"$LATEST\" />"
 		write_page "<input type=\"submit\" value=\"submit source package name\" />"
 		write_page "</form>"

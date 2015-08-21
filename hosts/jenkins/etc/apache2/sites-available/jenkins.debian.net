@@ -186,6 +186,13 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/unstable/amd64/$1.html -f
 	RewriteRule ^/([a-z0-9.+-]+) /rb-pkg/unstable/amd64/$1.html [R=302,L]
 
+	# redirect rb.d.n/reproducible.html?SrcPkg=$PKG → rb.d.n/rb-pkg/unstable/amd64/$PKG.html
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/unstable/amd64/$1.html -f
+	RewriteRule ^/reproducible.html?SrcPkg=([a-z0-9.+-]+) /rb-pkg/unstable/amd64/$1.html [R=302,L]
+
 	# redirect rb.d.n/$PKG → rb.d.n/rb-pkg/experimental/amd64/$PKG.html
 	# (this is the fallback for the previous redirect and should only catch packages which are only in experimental)
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net

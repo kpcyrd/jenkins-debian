@@ -164,9 +164,11 @@ def gen_extra_links(package, version, suite, arch, status):
     return (links, default_view)
 
 
-def gen_suites_links(package):
+def gen_suites_links(package, current_arch):
     html = '<ul>\n'
     for a in ARCHS:
+        if current_arch == 'amd64' and a != 'amd64':
+            continue
         html += tab + '<li>{}\n'.format(a)
         html += tab + '<ul class="children">\n'
         for s in SUITES:
@@ -214,7 +216,7 @@ def gen_packages_html(packages, no_clean=False):
 
                 links, default_view = gen_extra_links(
                     pkg, version, suite, arch, status)
-                suites_links = gen_suites_links(package)
+                suites_links = gen_suites_links(package, arch)
                 status, icon = join_status_icon(status, pkg, version)
                 status = gen_status_link_icon(status, icon, suite, arch)
 

@@ -167,11 +167,11 @@ def gen_extra_links(package, version, suite, arch, status):
 def gen_suites_links(package, current_arch):
     html = '<ul>\n'
     for a in ARCHS:
-        if current_arch == 'amd64' and a != 'amd64':
-            continue
         html += tab + '<li>{}\n'.format(a)
         html += tab + '<ul class="children">\n'
         for s in SUITES:
+            if a == 'armhf' and s != 'unstable':
+                continue
             status = package.get_status(s, a)
             if not status:  # The package is not available in that suite/arch
                 continue

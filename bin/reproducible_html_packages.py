@@ -28,16 +28,16 @@ html_package_page = Template((tab*2).join(("""
             $links
         </ul></li>
         <li>
-            <a href="https://tracker.debian.org/$package" target="main">PTS</a>
-            <a href="https://bugs.debian.org/src:$package" target="main">BTS</a>
+            <a href="https://tracker.debian.org/$package">PTS</a>
+            <a href="https://bugs.debian.org/src:$package">BTS</a>
         </li>
         <li>
-            <a href="https://sources.debian.net/src/$package/$version/" target="main">sources</a>
-            <a href="https://sources.debian.net/src/$package/$version/debian" target="main">debian/</a>
+            <a href="https://sources.debian.net/src/$package/$version/">sources</a>
+            <a href="https://sources.debian.net/src/$package/$version/debian">debian/</a>
             <ul class="children">
-                <li><a href="https://sources.debian.net/src/$package/$version/debian/changelog" target="main">changelog</a></li>
-                <li><a href="https://sources.debian.net/src/$package/$version/debian/control" target="main">control</a></li>
-                <li><a href="https://sources.debian.net/src/$package/$version/debian/rules" target="main">rules</a></li>
+                <li><a href="https://sources.debian.net/src/$package/$version/debian/changelog">changelog</a></li>
+                <li><a href="https://sources.debian.net/src/$package/$version/debian/control">control</a></li>
+                <li><a href="https://sources.debian.net/src/$package/$version/debian/rules">rules</a></li>
             </ul>
         </li>
     </ul>

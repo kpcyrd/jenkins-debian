@@ -180,10 +180,13 @@ properties:
 === reproducible
 
 * higher prio:
+** call_apt_update() needs to be moved from _scheduler.py to jobs so its run on all build nodes
+** add support for remote building
+** use disorderfs
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** repo-comparison: check for binaries without source
+** link source-data-epoch spec from rb.d.n
 ** s#debbindiff#diffoscope#g and s#dbd#ds#g everywhere and manually rename the jobs accordingly... also the .debbindiff.html+txt files need to be renamed, as well as the dbd directories...
-*** link source-data-epoch spec from rb.d.n
 
 * lesser prio
 ** document (in README) the multihost setup
@@ -294,8 +297,6 @@ properties:
 
 ==== reproducible Debian armhf
 
-* then: include armhf in index_scheduled
-** call_apt_update() needs to be moved from _scheduler.py to jobs so its run on all build nodes
 * then: armhf building - run the job on jenkins.d.n and build1 on one host and build2 on another and then run debbindiff on jenkins.d.n…
 * monitor their temperatures via munin via ssh:
 ** http://munin-monitoring.org/wiki/Native_ssh

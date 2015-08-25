@@ -35,7 +35,7 @@ save_freebsd_results(){
 #
 # main
 #
-FREEBSD_TARGET="release/10.1.0"
+FREEBSD_TARGET="release/10.2.0"
 RSSH="ssh freebsd-jenkins.debian.net"
 RSCP="scp -r freebsd-jenkins.debian.net"
 TMPBUILDDIR=/usr/src

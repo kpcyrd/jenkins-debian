@@ -14,5 +14,5 @@ VERSION=$(git log -1 --pretty='%h')
 SPEC=$1
 make $SPEC.html
 mkdir -pv "$BASE/specs/$SPEC"
-mv -v html/* "$BASE/specs/$SPEC"
-irc_message "$REPRODUCIBLE_URL/specs/$SPEC updated to $VERSION"
+mv -v $SPEC.html "$BASE/specs/$SPEC/index.html"
+irc_message "$REPRODUCIBLE_URL/specs/$SPEC/ updated to $VERSION"

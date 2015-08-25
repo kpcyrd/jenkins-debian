@@ -10,7 +10,6 @@ common_init "$@"
 
 . /srv/jenkins/bin/reproducible_common.sh
 
-set -e
 
 VERSION=$(git log -1 --pretty='%h')
 SPEC=$1

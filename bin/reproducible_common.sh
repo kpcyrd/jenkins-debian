@@ -514,7 +514,7 @@ create_png_from_table() {
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		echo "Generating $2."
-		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}" || true	# FIXME we should fail here...
+		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
 		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	# create empty dummy png if there havent been any results ever

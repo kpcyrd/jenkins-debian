@@ -7,19 +7,12 @@
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
-
 . /srv/jenkins/bin/reproducible_common.sh
 
-
+# build and publish the html version
 VERSION=$(git log -1 --pretty='%h')
 SPEC=$1
-
 make html
-
 mkdir -pv "$BASE/specs/$1"
-
 mv -v html/* "$BASE/specs/$1"
-
 irc_message "$REPRODUCIBLE_URL/specs/$1 updated to $VERSION"
-
-

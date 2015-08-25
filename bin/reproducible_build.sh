@@ -298,7 +298,7 @@ call_diffoscope_on_changes_files() {
 			--text $TMPDIR/$DBDTXT \
 			$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
 			$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
-	) 2>&1 >> $TMPLOG
+	2>&1 ) >> $TMPLOG
 	RESULT=$?
 	if ! "$DEBUG" ; then set +x ; fi
 	set -e

@@ -367,6 +367,8 @@ properties:
 *** maybe build as user in /usr/src...
 * first build world, later build ports (pkg info...)
 * investigate how to use tmpfs on freebsd and build there
+* upgrade the VM to FreeBSD 10.2
+* find a way to be informed about updates and keep it updated
 
 ==== reproducible...
 

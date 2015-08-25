@@ -210,6 +210,8 @@ echo "==========================================================================
 echo "$(date -u) - Running $DIFFOSCOPE on OpenWrt images and packages."
 echo "============================================================================="
 DBD_HTML=$(mktemp --tmpdir=$TMPDIR)
+DBD_GOOD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
+DBD_BAD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
 # run diffoscope on the images
 GOOD_IMAGES=0
 ALL_IMAGES=0
@@ -265,11 +267,10 @@ for i in * ; do
 	PKGS2=$(find * -type f -name "*.ipk" | sort -u )
 	popd
 
-	echo "       <table><tr><th>Packages for <code>$i</code></th></tr>" >> $DBD_HTML
 	for j in $(printf "$PKGS1\n$PKGS2" | sort -u ) ; do
 		let ALL_PACKAGES+=1
 		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
-			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}K) failed to build once.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}K) failed to build once.</td></tr>" >> $DBD_BAD_PKGS_HTML
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
@@ -278,17 +279,22 @@ for i in * ; do
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i/$(dirname $j)
 			mv $TMPDIR/$i/$j.html $BASE/openwrt/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $DBD_BAD_PKGS_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_GOOD_PKGS_HTML
 			let GOOD_PACKAGES+=1
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	done
 	cd ..
-	echo "       </table>" >> $DBD_HTML
 done
+echo "       <table><tr><th>Unreproducible packages</th></tr>" >> $DBD_HTML
+cat $DBD_BAD_PKGS_HTML >> $DBD_HTML
+echo "       </table>" >> $DBD_HTML
+echo "       <table><tr><th>Reproducible packages</th></tr>" >> $DBD_HTML
+cat $DBD_GOOD_PKGS_HTML >> $DBD_HTML
+echo "       </table>" >> $DBD_HTML
 GOOD_PERCENT_PACKAGES=$(echo "scale=1 ; ($GOOD_PACKAGES*100/$ALL_PACKAGES)" | bc)
 # are we there yet?
 if [ "$GOOD_PERCENT_IMAGES" = "100.0" ] || [ "$GOOD_PERCENT_PACKAGES" = "100.0" ]; then
@@ -332,7 +338,7 @@ cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div>"
 write_page_footer OpenWrt
 publish_page
-rm -f $DBD_HTML $TOOLCHAIN_HTML $BANNER_HTML
+rm -f $DBD_HTML $DBD_GOOD_PKGS_HTML $DBD_BAD_PKGS_HTML $TOOLCHAIN_HTML $BANNER_HTML
 
 # the end
 calculate_build_duration

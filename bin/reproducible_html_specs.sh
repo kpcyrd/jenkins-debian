@@ -12,7 +12,7 @@ common_init "$@"
 # build and publish the html version
 VERSION=$(git log -1 --pretty='%h')
 SPEC=$1
-make html
-mkdir -pv "$BASE/specs/$1"
-mv -v html/* "$BASE/specs/$1"
-irc_message "$REPRODUCIBLE_URL/specs/$1 updated to $VERSION"
+make $SPEC.html
+mkdir -pv "$BASE/specs/$SPEC"
+mv -v html/* "$BASE/specs/$SPEC"
+irc_message "$REPRODUCIBLE_URL/specs/$SPEC updated to $VERSION"

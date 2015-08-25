@@ -164,12 +164,14 @@ def gen_extra_links(package, version, suite, arch, status):
     return (links, default_view)
 
 
-def gen_suites_links(package, current_arch):
+def gen_suites_links(package, current_suite, current_arch):
     html = '<ul>\n'
     for a in ARCHS:
         html += tab + '<li>{}\n'.format(a)
         html += tab + '<ul class="children">\n'
         for s in SUITES:
+            if s == current_suite and a == current_arch:
+                continue
             if a == 'armhf' and s != 'unstable':
                 continue
             status = package.get_status(s, a)
@@ -216,7 +218,7 @@ def gen_packages_html(packages, no_clean=False):
 
                 links, default_view = gen_extra_links(
                     pkg, version, suite, arch, status)
-                suites_links = gen_suites_links(package, arch)
+                suites_links = gen_suites_links(package, suite, arch)
                 status, icon = join_status_icon(status, pkg, version)
                 status = gen_status_link_icon(status, icon, suite, arch)
 

@@ -27,9 +27,11 @@ save_freebsd_results(){
 	local RUN=$1
 	mkdir -p $TMPDIR/$RUN/
 	# copy results over
-	$RSCP:$TMPDIR $TMPDIR/$RUN
-	$RSSH "rm -r $TMPDIR ; mkdir $TMPDIR" 
-	find $TMPDIR/$RUN/ -name MD5 -o -name SHA512 -exec rm {} \;
+	DUMMY_DATE="$(date -u +'%Y-%m-%d') 00:00Z"
+	$RSSH "sudo find $TMPDIR --exec touch --date='$DUMMY_DATE'"
+	$RSSH "sudo find $TMPDIR -print0 | LC_ALL=C sort -z | sudo tar --null -T - --no-recursion -cJf $TMPDIR.tar.xz"
+	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN
+	$RSSH "sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
 }
 
 #
@@ -71,6 +73,7 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
+
 # save results in b1
 save_freebsd_results b1
 
@@ -97,9 +100,9 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
+
 # save results in b2
 save_freebsd_results b2
-# cleanup... 
 
 # reset environment to default values again
 export LANG="en_GB.UTF-8"

@@ -99,9 +99,14 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/bin/make -j ? distribution, \
 	/bin/rm -r /usr/src /usr/obj, \
 	/bin/rm -r /usr/obj, \
+	/bin/rm -r /srv/reproducible-results/* /srv/reproducible-results/*.tar.xz, \
 	/bin/mkdir /usr/obj, \
 	/bin/mkdir /usr/src /usr/obj, \
-	/usr/sbin/chown jenkins /usr/src /usr/obj
+	/usr/sbin/chown jenkins /usr/src /usr/obj, \
+	/usr/bin/find /srv/reproducible-results/* -exec touch *, \
+	/usr/bin/find /srv/reproducible-results/* -print0, \
+	/usr/bin/tar --null -T - --no-recursion -cJf *.tar.xz
+
 
 ## Uncomment to allow any user to run sudo if they know the password
 ## of the user they are running the command as (root by default).

@@ -218,7 +218,7 @@ write_page_header() {
 		done
 		if [ "$TARGET" = "suite_stats" ] ; then
 			for i in $SUITES ; do
-				if [ "$SUITE" != "unstable" ] && [ "$ARCH" = "armhf" ] ; then
+				if [ "$i" != "unstable" ] && [ "$ARCH" = "armhf" ] ; then
 					# only unstable is tested on armhf atm
 					continue
 				fi

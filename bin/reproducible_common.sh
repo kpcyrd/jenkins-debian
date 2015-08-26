@@ -318,8 +318,10 @@ write_explaination_table() {
 	write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	if [ "$1" != "FreeBSD" ] ; then
 		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
+		write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>tmpfs (currently, <a href=\"https://tracker.debian.org/disorderfs\">work in progress</a>)</td></tr>"
 	else
 		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically...)</td></tr>"
+		write_page "<tr><td>Filesystem</td><td>ufs</td><td>same for both builds</td></tr>"
 	fi
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td><em>everything else...</em></td><td colspan=\"2\">is likely the same. So far, this is just about the <em>prospects</em> of <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds of Debian</a> - there will be more variations in the wild.</td></tr>"

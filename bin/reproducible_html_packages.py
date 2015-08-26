@@ -73,14 +73,18 @@ def sizeof_fmt(num):
 
 
 def gen_status_link_icon(status, icon, suite, arch):
-    html = ''
-    if status != 'untested':
-        html += tab*6 + '<a href="/{suite}/{arch}/index_{status}.html"' + \
-                ' target="_parent" title="{status}">\n'
-    html += tab*9 + '<img src="/static/{icon}" alt="{status}" />\n'
-    html += tab*9 + ' {status}\n'
-    if status != 'untested':
-        html += tab*8 + '</a>\n'
+    html = """
+        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{status}">
+            <img src="/static/{icon}" alt="{status}"></a>
+
+        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{status}">
+            {status}</a>
+    """
+
+    # There are no indices for untested packages
+    if status == 'untested':
+        html = '<img src="/static/{icon}" alt="{status}"> {status}'
+
     return html.format(status=status, icon=icon, suite=suite, arch=arch)
 
 

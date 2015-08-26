@@ -72,7 +72,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** install jenkins-job-builder "somehow", currently "only" a package from fil exists (but needs build-depends not yet even in sid atm)
 ** update DNS to point jenkins.d.o to jerea.d.o
 *** the existing jenkins.d.o host needs to be renamed to something else (thats "just work" to do but not a major obstacle)
-** zigo offers to maintain j-j-b as part of openstack. we need the package (which is not) in sid (atm) in jessie-backports.
+** j-j-b (and it's build-depends, python-jenkins) are now maintained as part of openstack. we need these packages in jessie-backports, also the j-j-b in sid/NEW currently still lacks fil/h01ger's patches from git master.
 
 ==== unsorted notes for jenkins.d.o migration
 
@@ -107,7 +107,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * use fil's package: http://ftp.hands.com/hands-deb/pool/main/j/jenkins-job-builder/jenkins-job-builder_1.2.0~git-0~1.gbp1ae299.dsc
 ** needs at least some of the stuff on fil's j.d.n.git/needs-jjb-1.2.0 branch to work with that
-* investigate whether its possible nowadays to let it delete jobs which were removed..
+* investigate whether its possible nowadays to let it delete jobs which were removed.. nope. though it is possible to compare the list of all jobs which should be generated with those which are there and delete those which should not.
 
 ==== old jenkins-job-builder TODO, mostly (all?) obsolete thanks to fil's work:
 

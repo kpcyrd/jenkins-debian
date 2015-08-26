@@ -434,6 +434,8 @@ if __name__ == '__main__':
     gen_packages_html([Package(x) for x in notes])
     for suite in SUITES:
         for arch in ARCHS:
+            if arch == 'armhf' and suite != 'unstable':
+                continue
             build_page('notes', suite, arch)
             build_page('no_notes', suite, arch)
             build_page('FTBFS', suite, arch)

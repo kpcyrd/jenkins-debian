@@ -125,7 +125,10 @@ echo "==========================================================================
 echo "$(date -u) - Running $DIFFOSCOPE on netbsd..."
 echo "============================================================================="
 FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
-echo "       <ul>" > $FILES_HTML
+GOOD_FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
+BAD_FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
+GOOD_SECTION_HTML=$(mktemp --tmpdir=$TMPDIR)
+BAD_SECTION_HTML=$(mktemp --tmpdir=$TMPDIR)
 GOOD_FILES=0
 ALL_FILES=0
 SIZE=""
@@ -134,7 +137,6 @@ cd $TMPDIR/b1
 tree .
 for i in * ; do
 	cd $i
-	echo "       <table><tr><th>Release files for <code>$i</code></th></tr>" >> $FILES_HTML
 	for j in $(find * -type f |sort -u ) ; do
 		let ALL_FILES+=1
 		call_diffoscope $i $j
@@ -142,16 +144,27 @@ for i in * ; do
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/netbsd/dbd/$i/$(dirname $j)
 			mv $TMPDIR/$i/$j.html $BASE/netbsd/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $FILES_HTML
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $BAD_FILES_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $FILES_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $GOOD_FILES_HTML
 			let GOOD_FILES+=1
 			rm -f $BASE/netbsd/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	done
 	cd ..
-	echo "       </table>" >> $FILES_HTML
+	if [ -s $GOOD_FILES_HTML ] ; then
+		echo "       <table><tr><th>Reproducible artifacts for <code>$i</code></th></tr>" >> $GOOD_SECTION_HTML
+		cat $GOOD_FILES_HTML >> $GOOD_SECTION_HTML
+		echo "       </table>" >> $GOOD_SECTION_HTML
+		rm $GOOD_FILES_HTML
+	fi
+	if [ -s $BAD_FILES_HTML ] ; then
+		echo "       <table><tr><th>Unreproducible artifacts for <code>$i</code></th></tr>" >> $BAD_SECTION_HTML
+		cat $BAD_FILES_HTML >> $BAD_SECTION_HTML
+		echo "       </table>" >> $BAD_SECTION_HTML
+		rm $BAD_FILES_HTML
+	fi
 done
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_FILES*100/$ALL_FILES)" | bc)
 # are we there yet?
@@ -192,14 +205,15 @@ else
 fi
 write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} using ${DIFFOSCOPE}.</p>"
 write_explaination_table NetBSD
-cat $FILES_HTML >> $PAGE
+cat $BAD_SECTION_HTML >> $PAGE
+cat $GOOD_SECTION_HTML >> $PAGE
 write_page "     <p><pre>"
 echo -n "$NETBSD" >> $PAGE
 write_page "     </pre></p>"
 write_page "    </div></div>"
 write_page_footer NetBSD
 publish_page
-rm -f $FILES_HTML 
+rm -f $FILES_HTML $GOOD_FILES_HTML $BAD_FILES_HTML $GOOD_SECTION_HTML $BAD_SECTION_HTML
 
 # the end
 calculate_build_duration

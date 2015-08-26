@@ -275,9 +275,9 @@ def _gen_links(suite, arch):
             continue
         html += '<li><a href="/' + i + 'index_suite_' + arch + '_stats.html">suite: ' + i + '</a></li>'
     if arch == 'amd64':
-        html += '<li><a href="/unstable/index_suite_armhf_stats.html\">armhf</a></li>'
+        html += '<li><a href="/unstable/index_suite_armhf_stats.html\">arch: armhf</a></li>'
     else:
-        html += '<li><a href="/unstable/index_suite_amd64_stats.html\">amd64</a></li>'
+        html += '<li><a href="/unstable/index_suite_amd64_stats.html\">arch: amd64</a></li>'
     return html
 
 

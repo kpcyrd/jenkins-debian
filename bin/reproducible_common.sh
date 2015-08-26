@@ -228,9 +228,9 @@ write_page_header() {
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "arch" ] ; then
 			if [ "$ARCH"  = "amd64" ] ; then
-				write_page "<li><a href=\"/unstable/index_suite_armhf_stats.html\">armhf</a></li>"
+				write_page "<li><a href=\"/unstable/index_suite_armhf_stats.html\">arch: armhf</a></li>"
 			else
-				write_page "<li><a href=\"/unstable/index_suite_amd64_stats.html\">amd64</a></li>"
+				write_page "<li><a href=\"/unstable/index_suite_amd64_stats.html\">arch: amd64</a></li>"
 			fi
 		else
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"

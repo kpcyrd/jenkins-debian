@@ -103,7 +103,7 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/bin/mkdir /usr/obj, \
 	/bin/mkdir /usr/src /usr/obj, \
 	/usr/sbin/chown jenkins /usr/src /usr/obj, \
-	/usr/bin/find /srv/reproducible-results/* --exec touch *, \
+	/usr/bin/find /srv/reproducible-results/* -newer /srv/reproducible-results/* -exec touch *, \
 	/usr/bin/find /srv/reproducible-results/* -print0, \
 	/usr/bin/tar --null -T - --no-recursion -cJf *.tar.xz
 

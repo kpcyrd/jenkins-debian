@@ -316,11 +316,14 @@ write_explaination_table() {
 	write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
+	if [ "$1" != "FreeBSD" ] ; then
+		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
+	else
+		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically...)</td></tr>"
+	fi
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>hour, minute</td><td>hour is usually the same...</td><td>usually, the minute differs... (currently, work in progress)</td></tr>"
 		write_page "<tr><td><em>everything else...</em></td><td colspan=\"2\">is likely the same. So far, this is just about the <em>prospects</em> of <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds of Debian</a> - there will be more variations in the wild.</td></tr>"
 	else
-		write_page "<tr><td>hour, minute</td><td>hour is usually the same...</td><td>the minute differs... (currently, work in progress)</td></tr>"
 		write_page "<tr><td><em>everything else...</em></td><td colspan=\"2\">is likely the same. There will be more variations in the wild.</td></tr>"
 	fi
 	write_page "</table></p>"

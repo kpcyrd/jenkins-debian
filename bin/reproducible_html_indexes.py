@@ -567,6 +567,8 @@ if __name__ == '__main__':
     generate_schedule()
     for suite in SUITES:
         for arch in ARCHS:
+            if arch == 'armhf' and suite != 'unstable':
+                continue
             for page in pages.keys():
                 if 'global' not in pages[page] or not pages[page]['global']:
                     build_page(page, suite, arch)

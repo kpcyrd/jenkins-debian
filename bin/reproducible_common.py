@@ -271,11 +271,13 @@ def _gen_links(suite, arch):
             continue
         html += link[1].format(suite=suite, arch=arch) + '\n'
     for i in SUITES:  # suite links
-            html += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
+        if arch == 'armhf' and i != 'unstable':
+            continue
+        html += '<li><a href="/' + i +'">suite: ' + i + '</a></li>'
     if arch == 'amd64':
-            html += '<li><a href="/unstable/index_suite_armhf_stats.html\">armhf</a></li>'
+        html += '<li><a href="/unstable/index_suite_armhf_stats.html\">armhf</a></li>'
     else:
-            html += '<li><a href="/unstable/index_suite_amd64_stats.html\">amd64</a></li>'
+        html += '<li><a href="/unstable/index_suite_amd64_stats.html\">amd64</a></li>'
     return html
 
 

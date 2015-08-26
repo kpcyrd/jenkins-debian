@@ -28,7 +28,7 @@ save_freebsd_results(){
 	mkdir -p $TMPDIR/$RUN/
 	# copy results over
 	DUMMY_DATE="$(date -u +'%Y-%m-%d') 00:00Z"
-	$RSSH "sudo find $TMPDIR --exec touch --date='$DUMMY_DATE'"
+	$RSSH "sudo find $TMPDIR --exec touch --date='$DUMMY_DATE' \{\} \;"
 	$RSSH "sudo find $TMPDIR -print0 | LC_ALL=C sort -z | sudo tar --null -T - --no-recursion -cJf $TMPDIR.tar.xz"
 	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN
 	$RSSH "sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"

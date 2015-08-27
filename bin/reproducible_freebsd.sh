@@ -62,7 +62,7 @@ FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
 echo "This is freebsd $FREEBSD_VERSION."
 echo
 $RSSH "cd $TMPBUILDDIR ; git log -1"
-TARGET_NAME=($echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
+TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."

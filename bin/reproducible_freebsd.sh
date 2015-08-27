@@ -15,8 +15,10 @@ set -e
 cleanup_tmpdirs() {
 	cd
 	echo "No Cleanup..."
-#	$RSSH "rm -r $TMPDIR"
-#	$RSSH 'sudo rm -r /usr/src /usr/obj'
+	#FIXME: cleanup freebsd soon and cleanup on jenkins too
+	#$RSSH "sudo chflags -R noschg $TMPDIR 
+	#$RSSH "rm -r $TMPDIR"
+	#$RSSH 'sudo rm -r /usr/src /usr/obj'
 }
 
 create_results_dirs() {
@@ -30,7 +32,7 @@ save_freebsd_results(){
 	DUMMY_DATE="$(date -u +'%Y-%m-%d')T00:00:00Z"
 	$RSSH "sudo find $TMPDIR -newer $TMPDIR -exec touch -d '$DUMMY_DATE' {} \;"
 	$RSSH "sudo find $TMPDIR -print0 | LC_ALL=C sort -z | sudo tar --null -T - --no-recursion -cJf $TMPDIR.tar.xz"
-	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN
+	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN/$TARGET_NAME.tar.xz
 	$RSSH "sudo chflags -R noschg $TMPDIR ; sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
 }
 
@@ -60,7 +62,7 @@ FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
 echo "This is freebsd $FREEBSD_VERSION."
 echo
 $RSSH "cd $TMPBUILDDIR ; git log -1"
-
+TARGET_NAME=($echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
@@ -129,9 +131,10 @@ SIZE=""
 create_results_dirs
 cd $TMPDIR/b1
 tree .
-for i in * ; do
-	cd $i
-	echo "       <table><tr><th>Release files for <code>$i</code></th></tr>" >> $FILES_HTML
+#for i in * ; do
+	#cd $i
+i="."
+	echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> $FILES_HTML
 	for j in $(find * -type f |sort -u ) ; do
 		let ALL_FILES+=1
 		call_diffoscope $i $j
@@ -147,9 +150,9 @@ for i in * ; do
 			rm -f $BASE/freebsd/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	done
-	cd ..
+	#cd ..
 	echo "       </table>" >> $FILES_HTML
-done
+#done
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_FILES*100/$ALL_FILES)" | bc)
 # are we there yet?
 if [ "$GOOD_PERCENT" = "100.0" ] ; then
@@ -187,7 +190,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}.</p>"
+write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>It is also very much work in progress...</em></p>"
 write_explaination_table FreeBSD
 cat $FILES_HTML >> $PAGE
 write_page "     <p><pre>"

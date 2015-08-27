@@ -31,7 +31,7 @@ save_freebsd_results(){
 	$RSSH "sudo find $TMPDIR -newer $TMPDIR -exec touch -d '$DUMMY_DATE' {} \;"
 	$RSSH "sudo find $TMPDIR -print0 | LC_ALL=C sort -z | sudo tar --null -T - --no-recursion -cJf $TMPDIR.tar.xz"
 	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN
-	$RSSH "sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
+	$RSSH "sudo chflags -R noschg $TMPDIR ; sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
 }
 
 #

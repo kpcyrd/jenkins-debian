@@ -100,6 +100,7 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/bin/rm -r /usr/src /usr/obj, \
 	/bin/rm -r /usr/obj, \
 	/bin/rm -r /srv/reproducible-results/* /srv/reproducible-results/*.tar.xz, \
+	/bin/chflags -R noschg /srv/reproducible-results/*, \
 	/bin/mkdir /usr/obj, \
 	/bin/mkdir /usr/src /usr/obj, \
 	/usr/sbin/chown jenkins /usr/src /usr/obj, \

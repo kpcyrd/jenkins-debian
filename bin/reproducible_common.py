@@ -273,7 +273,7 @@ def _gen_links(suite, arch):
     for i in SUITES:  # suite links
         if arch == 'armhf' and i != 'unstable':
             continue
-        html += '<li><a href="/' + i + 'index_suite_' + arch + '_stats.html">suite: ' + i + '</a></li>'
+        html += '<li><a href="/' + i + '/index_suite_' + arch + '_stats.html">suite: ' + i + '</a></li>'
     if arch == 'amd64':
         html += '<li><a href="/unstable/index_suite_armhf_stats.html\">arch: armhf</a></li>'
     else:

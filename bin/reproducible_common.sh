@@ -184,7 +184,9 @@ write_page_header() {
 	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
 		write_page "<p>Join <code>#debian-reproducible</code> on OFTC"
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>"
-		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general, so if you are an upstream developer or working on another distribution, we'd love to hear from you! Just now we've started to programatically test <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a> and <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> and <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_freebsd\">FreeBSD</a> soon too."
+		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
+		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
+		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?)  - and there are plans to also test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> soon."
 		write_page "</p>"
 	fi
 	write_page "<nav><ul><li>Have a look at:</li>"

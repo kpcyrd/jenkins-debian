@@ -1,0 +1,204 @@
+/* ##### Common Styles ##### */
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: Tahoma, sans-serif;
+  font-size: small;
+  line-height: 1.3em;
+  margin: 1.5em;
+  padding: 0;
+}
+
+img {
+  border: none;
+}
+
+a:link {
+  color: #b84e0d;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f26711;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #880000;
+  text-decoration: none;
+}
+
+a:visited:hover {
+  color: #f26711;
+  text-decoration: underline;
+}
+
+#logo {
+  height: 75px;
+  white-space: nowrap;
+  line-height: 1.3em;
+}
+
+#logo img {
+  margin: -15px 20px 0 0;
+  float: left;
+  height: 90px;
+}
+
+#logo #name, #logo #slogan {
+  height: 17px;
+  margin: 17px 0 16px 0;
+  font-weight: bold;
+}
+
+#logo #name a {
+  color: #777777;
+  font-size: xx-large;
+}
+
+#logo #slogan a {
+  color: #F26711;
+  font-style: italic;
+  font-size: 21px;
+}
+
+#logo a:hover {
+  text-decoration: none;
+}
+
+/* ##### Content ##### */
+
+.title {
+  display: block;
+}
+
+#content {
+  margin: 0;
+  clear: left;
+}
+
+#content h1 {
+  color: #777777;
+  background-color: transparent;
+  line-height: 1.3em;
+  margin: 0;
+  padding: 1ex 0 0 0;
+}
+
+#content h2 {
+  color: #777777;
+  background-color: transparent;
+  line-height: 1.3em;
+  margin: 0;
+  padding: 1ex 0 0 0;
+}
+
+#content p {
+  line-height: 1.3em;
+  margin: 1em 0 1.5em 0;
+  padding: 0;
+}
+
+.buttons {
+  text-align: center;
+  margin-top: 2em;
+  line-height: 3em;
+}
+
+.buttons img, .buttons form {
+  margin: 1ex;
+}
+
+/* ##### Footer ##### */
+
+#footer {
+  color: #777777;
+  background-color: #f2f2f2;;
+  text-align: center;
+  line-height: 1.25em;
+  margin: 2em 0 0 0;
+  clear: both;
+  border-top: 1px solid #d4d4d4;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+#footer a {
+  color: #777777;;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+#footer a:hover {
+  text-decoration: none;
+}
+
+#footerContent {
+  padding: 1ex 10px;
+}
+
+#footerLogo {
+  float: right;
+  text-align: right;
+  width: 100px;
+  margin: 0;
+  padding: 0;
+}
+
+#hackathonBox {
+  background: #f26711;
+  color: #ffffff;
+  margin: 1em 2em;
+  padding: 1em 2em;
+  text-align: left;
+}
+
+#hackathonBox a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+#warnBox {
+  font-weight: bold;
+  background: #f26711;
+  color: #ffffff;
+  margin: 5px 5px;
+  padding: 5px 5px;
+  text-align: center;
+}
+
+#warnBox a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* #### Overrides from the old NetBSD.css stylesheet ### */
+
+table {
+	font-size: 100%; /* keeps font size the same as in the body */
+	Border-Width: 0.2em;
+	Width: 90%;
+	Margin-Left: auto;
+	Margin-Right: auto;
+}
+
+table td {
+	Font-Family: Tahoma, Verdana, sans-serif;
+	padding: 3pt;
+}
+
+tr {
+	Vertical-Align: top;
+}
+
+td {
+	Vertical-Align: top;
+}
+
+th {
+	Background-Color: #f8f8f8;
+	Font-Weight: bold;
+	Vertical-Align: middle;
+	Padding: 5pt;
+}
+

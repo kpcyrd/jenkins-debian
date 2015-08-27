@@ -274,6 +274,8 @@ write_page_footer() {
 		write_page "The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."
 	elif [ "$1" = "NetBSD" ] ; then
 		write_page "NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
+	elif [ "$1" = "FreeBSD" ] ; then
+		write_page "FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
 	fi
 	write_page "</p></body></html>"
 }

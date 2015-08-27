@@ -186,8 +186,8 @@ write_page_header() {
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>"
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?)  - and there are plans to also test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a>."
-		write_page "   Also aimed the wider software world in general, we have started to write <a href=\"/howto\">How to make your software reproducible</a>? We appreciate feedback on this Howto, just please don't consider this document to be finished, comprehensive or correct yet.</p>"
+		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too."
+		write_page "   As we think that reproducible builds should become the norm, we have started to write <a href=\"/howto\">How to make your software reproducible</a>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct yet.</p>"
 	fi
 	write_page "<nav><ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do

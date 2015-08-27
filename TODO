@@ -250,6 +250,8 @@ properties:
 
 * open questions:
 ** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
+** i believe "reproducible_build.sh 1" should immediatly move /srv/workspace/reproducible-builds/$NODE/$SUITE/$ARCH/$PKG/$VERSION to /srv/workspace/reproducible-builds/pending/$SUITE/$ARCH/$PKG/$VERSION (on the node) so it's only build once and so that we can detect stale builds
+** maintenance is general, cleanup of started but interrupted builds...
 
 * reproducible_build.sh behaviour change:
 ** called without param: behave as always
@@ -293,9 +295,6 @@ properties:
 8. reproducible_build.sh on the main node then triggers the 2nd build as the 1st.
 9. voila
 
-* more open questions:
-** i believe "reproducible_build.sh 1" should immediatly move /srv/workspace/reproducible-builds/$NODE/$SUITE/$ARCH/$PKG/$VERSION to /srv/workspace/reproducible-builds/pending/$SUITE/$ARCH/$PKG/$VERSION (on the node) so it's only build once and so that we can detect stale builds
-** maintenance is general, cleanup of started but interrupted builds...
 
 ==== reproducible Debian armhf
 

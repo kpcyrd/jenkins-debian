@@ -67,14 +67,14 @@ echo "==========================================================================
 echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
+export LANG="en_GB.UTF-8"
 # actually build everything
-NUM_CPU=3
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NUM_CPU buildkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
-
+NUM_CPU=4 # if someone could tell me how to determine this on freebsd, this would be neat
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
 # save results in b1
 save_freebsd_results b1
 
@@ -87,21 +87,18 @@ echo "==========================================================================
 echo "$(date -u) - Building freebsd - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-###export LANG="fr_CH.UTF-8"
-###export LC_ALL="fr_CH.UTF-8"
-###export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
-###export CAPTURE_ENVIRONMENT="I capture the environment"
+export LANG="fr_CH.UTF-8"
+export LC_ALL="fr_CH.UTF-8"
+###export PATH="$PATH:/i/capture/the/path"
 ###umask 0002
-#### use allmost all cores for second build
-###NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-NEW_NUM_CPU=4
+# use allmost all cores for second build
+NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 # actually build everything
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ sudo make -j $NEW_NUM_CPU buildkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
-
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
+$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
 # save results in b2
 save_freebsd_results b2
 

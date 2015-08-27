@@ -173,7 +173,7 @@ cat > $PAGE <<- EOF
   </head>
   <body>
     <div id="logo">
-      <img src="FreeBSD-smaller.png" />
+      <img src="320px-Freebsd_logo.svg.png" />
       <h1>Reproducible FreeBSD $MAGIC_SIGN</h1>
     </div>
     <div class="content">
@@ -186,7 +186,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>It is also very much work in progress...</em></p>"
+write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is very much work in progress, especially the build targets should be choosen better...</em></p>"
 write_explaination_table FreeBSD
 cat $FILES_HTML >> $PAGE
 write_page "     <p><pre>"

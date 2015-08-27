@@ -92,6 +92,9 @@ check_tcp_port() {
 #
 do_start()
 {
+    # Clean up the Reproducible Builds database from running builds
+    sqlite3 /var/lib/jenkins/reproducible.db "UPDATE schedule SET date_build_started = '' WHERE date_build_started != '';" || true
+
     # the default location is /var/run/jenkins/jenkins.pid but the parent directory needs to be created
     mkdir `dirname $PIDFILE` > /dev/null 2>&1 || true
     chown $JENKINS_USER `dirname $PIDFILE`

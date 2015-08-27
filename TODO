@@ -343,6 +343,21 @@ properties:
 
 ==== reproducible FreeBSD
 
+* useful improvements:
+** investigate how to use tmpfs on freebsd and build there
+** upgrade the VM to FreeBSD 10.2
+** find a way to be informed about updates and keep it updated
+** build master branch instead of release/10.2.0
+** modify PATH, uid, gid and USER too, maybe host+domainname as well. (The VM is only used for this, so we could change the host+domainname before building... probably even the date)
+** add freebsd vm as node to jenkins and run the script directly there, saves lot of ssh hassle
+
+* random notes, to be moved to README
+** we build freebsd 10.1 (=released) atm
+** we build with sudo too
+*** rather not change /usr/obj to be '~jenkins/obj' and build with WITH_INSTALL_AS_USER. also not build in /usr/src. if so, we need to define some variable so we can do so.... but we need a stable path anyway, so whats the point.
+*** maybe build as user in /usr/src...
+* first build world, later build ports (pkg info...)
+
 * document how the freebsd build VM was set up:
 ** base 10.1 install following https://www.urbas.eu/freebsd-10-and-profitbricks/
 ** modified files:
@@ -355,17 +370,6 @@ properties:
 ** mkdir -p /srv/reproducible-results
 ** chown -R jenkins:jenkins /srv/
 ** ln -s /srv/ /usr/obj/srv
-** we build freebsd 10.1 (=released) atm
-** we build with sudo too
-*** rather not change /usr/obj to be '~jenkins/obj' and build with WITH_INSTALL_AS_USER. also not build in /usr/src. if so, we need to define some variable so we can do so.... but we need a stable path anyway, so whats the point.
-*** maybe build as user in /usr/src...
-* first build world, later build ports (pkg info...)
-* investigate how to use tmpfs on freebsd and build there
-* upgrade the VM to FreeBSD 10.2
-* find a way to be informed about updates and keep it updated
-* build master branch instead of release/10.2.0
-* modify PATH, uid, gid and USER too, maybe host+domainname as well. (The VM is only used for this, so we could change the host+domainname before building... probably even the date)
-* add freebsd vm as node to jenkins and run the script directly there, saves lot of ssh hassle
 
 ==== reproducible...
 

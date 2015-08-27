@@ -65,7 +65,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * add more pressure to DSA to get jenkins.d.o set up
 ** "having this mid september is doable, just grab some from DSA on irc"
-** the machine is already setup, it just needs the name changed.
+** the machine jerea.debian.org is already setup, it just needs the the alias added.
 ** weasel/h01ger: install jenkins.deb from jenkins-ci.org
 *** also create jenkins users in jenkins (KISS)
 ** install slaves - how (to automate)?

@@ -186,7 +186,7 @@ write_page_header() {
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>,"
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too."
+		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_Fedora\">Fedora</a> too."
 		write_page "   As we think that reproducible builds should become the norm, we have started to write <a href=\"/howto\">How to make your software reproducible</a>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct yet.</p>"
 	fi
 	write_page "<nav><ul><li>Have a look at:</li>"
@@ -273,7 +273,7 @@ write_page_intro() {
 		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.1 system"
 		local BRANCH="release/10.2.0"
 	fi
-	write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are also very much appreciated!</p>"
+	write_page "       <p>There is a monthly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_$1\">ToDo list for $1</a>, you might find something easy to contribute.</p>
 }
 
 write_page_footer() {

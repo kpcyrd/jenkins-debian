@@ -317,7 +317,7 @@ properties:
 * libreboot ships images, verify those?
 * explain status in plain english
 
-==== reproducible openwrt
+==== reproducible OpenWrt
 
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
@@ -327,13 +327,13 @@ properties:
 * file dbd bug about crashing on certain squashfs files
 * explain status in plain english
 
-==== reproducible netbsd
+==== reproducible NetBSD
 
 * announce on their list
 * explain status in plain english
 ** MKREPRO is set to "yes"
 
-==== reproducible fedora
+==== reproducible Fedora
 
 * use mock to create a fedora chroot to build in
 ** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/
@@ -341,7 +341,7 @@ properties:
 * start with building a single package
 * then build the full base system (100-500 packages)
 
-==== reproducible freebsd
+==== reproducible FreeBSD
 
 * document how the freebsd build VM was set up:
 ** base 10.1 install following https://www.urbas.eu/freebsd-10-and-profitbricks/

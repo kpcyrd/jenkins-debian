@@ -47,15 +47,6 @@ Most jobs have been converted, a few are left to do:
 * do lvc for stretch too
 * mention stretch in README where appropriate
 
-== bof 
-
-* j.d.n/Thanks
-* jenkins.d.n.git
-* jobs/foo.yaml - your domain if you want it
-* status j.d.n migration
-* timeline
-* TODO
-
 === move this setup to jenkins.d.o
 
 The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins slaves, probably/maybe also maintained by DSA (so we get them into their munin), but on which we can use sudo as we need it. (or maybe not dsa-maintained slaves, so that we can use sudo as we need, for the price of not being in DSAs munin.)

@@ -180,6 +180,8 @@ properties:
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
 ** s#debbindiff#diffoscope#g and s#dbd#ds#g everywhere and manually rename the jobs accordingly... also the .debbindiff.html+txt files need to be renamed, as well as the dbd directories...
+** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page
+** link howto on each coreboot/openwrt/netbsd/freebsd page
 
 * lesser prio
 ** document (in README) the multihost setup

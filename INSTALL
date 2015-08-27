@@ -108,7 +108,7 @@ The Jenkins EMail notification plugin is used as its state tracking is best (and
 apt-get install python-twisted python-imaging
 git clone https://github.com/sibson/vncdotool
 cd vncdotool/
-python setup.py
+python setup.py install
 ----
 
 === munin

@@ -14,11 +14,10 @@ set -e
 
 cleanup_tmpdirs() {
 	cd
-	echo "No Cleanup..."
-	#FIXME: cleanup freebsd soon and cleanup on jenkins too
-	#$RSSH "sudo chflags -R noschg $TMPDIR 
-	#$RSSH "rm -r $TMPDIR"
-	#$RSSH 'sudo rm -r /usr/src /usr/obj'
+	$RSSH "sudo chflags -R noschg $TMPDIR"
+	$RSSH "rm -r $TMPDIR"
+	rm $TMPDIR -r
+	$RSSH 'sudo rm -r /usr/src /usr/obj'
 }
 
 create_results_dirs() {

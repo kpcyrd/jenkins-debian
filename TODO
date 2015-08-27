@@ -374,6 +374,7 @@ properties:
 * find a way to be informed about updates and keep it updated
 * build master branch instead of release/10.2.0
 * modify PATH, uid, gid and USER too, maybe host+domainname as well. (The VM is only used for this, so we could change the host+domainname before building... probably even the date)
+* add freebsd vm as node to jenkins and run the script directly there, saves lot of ssh hassle
 
 ==== reproducible...
 

@@ -186,8 +186,8 @@ write_page_header() {
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>"
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?)  - and there are plans to also test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> soon."
-		write_page "</p>"
+		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?)  - and there are plans to also test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a>."
+		write_page "   Also aimed the wider software world in general, we have started to write <a href=\"/howto\">How to make your software reproducible</a>? We appreciate feedback on this Howto, just please don't consider this document to be finished, comprehensive or correct yet.</p>"
 	fi
 	write_page "<nav><ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do
@@ -246,7 +246,6 @@ write_page_header() {
 		write_page "<input type=\"text\" name=\"SrcPkg\" placeholder=\"Type my friend..\" value=\"$LATEST\" />"
 		write_page "<input type=\"submit\" value=\"submit source package name\" />"
 		write_page "</form>"
-		write_page "<p>There's a new HowTo <b>in early development</b>: <a href=\"/howto\">How to make your software reproducible</a>? We appreciate feedback on it, but please don't consider this document to be finished, comprehensive or correct yet.</p>"
 	fi
 	write_page "</header>"
 }

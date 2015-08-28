@@ -340,8 +340,10 @@ properties:
 * use mock to create a fedora chroot to build in
 ** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/
 ** http://blog.packagecloud.io/eng/2015/04/20/working-with-source-rpms/
-* start with building a single package
-* then build the full base system (100-500 packages)
+* start with building a single package (which is reproducible on Debian), only build that one, until its reproducible
+** then eventually build the full base system (100-500 packages), once that package is reprodcuible (aka the rpm toolchain has been fixed...)
+* maybe call the script reproducible_rpms.sh and also let it build OpenSuSE packages?
+* document in the initial webpage, that we don't have a clear idea yet, how to record+reproduce the build environment. +that this is essential for reproducible builds too.
 
 ==== reproducible FreeBSD
 

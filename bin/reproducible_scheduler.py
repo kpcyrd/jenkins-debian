@@ -26,7 +26,7 @@ from reproducible_html_indexes import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
 
-
+# FIXME: these limits were understandable when the code was merged but now need some explaination
 LIMITS = {
     'untested': {
         'amd64': {

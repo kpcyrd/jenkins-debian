@@ -97,13 +97,11 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/bin/make -j ? installworld, \
 	/usr/bin/make -j ? installkernel, \
 	/usr/bin/make -j ? distribution, \
-	/bin/rm -r /usr/src /usr/obj, \
-	/bin/rm -r /usr/obj, \
+	/bin/rm -rf /usr/src, \
 	/bin/rm -r /srv/reproducible-results/* /srv/reproducible-results/*.tar.xz, \
 	/bin/chflags -R noschg /srv/reproducible-results/*, \
-	/bin/mkdir /usr/obj, \
-	/bin/mkdir /usr/src /usr/obj, \
-	/usr/sbin/chown jenkins /usr/src /usr/obj, \
+	/bin/mkdir /usr/src, \
+	/usr/sbin/chown jenkins /usr/src, \
 	/usr/bin/find /srv/reproducible-results/* -newer /srv/reproducible-results/* -exec touch *, \
 	/usr/bin/find /srv/reproducible-results/* -print0, \
 	/usr/bin/tar --null -T - --no-recursion -cJf *.tar.xz

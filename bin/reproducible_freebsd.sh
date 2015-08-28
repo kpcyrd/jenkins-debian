@@ -17,7 +17,7 @@ cleanup_tmpdirs() {
 	$RSSH "sudo chflags -R noschg $TMPDIR"
 	$RSSH "rm -r $TMPDIR"
 	rm $TMPDIR -r
-	$RSSH 'sudo rm -r /usr/src /usr/obj'
+	$RSSH 'sudo rm -rf /usr/src'
 }
 
 create_results_dirs() {
@@ -26,6 +26,9 @@ create_results_dirs() {
 
 save_freebsd_results(){
 	local RUN=$1
+	echo "============================================================================="
+	echo "$(date -u) - Saving freebsd ${FREEBSD_VERSION} artifacts for $RUN."
+	echo "============================================================================="
 	mkdir -p $TMPDIR/$RUN/
 	# copy results over
 	DUMMY_DATE="$(date -u +'%Y-%m-%d')T00:00:00Z"
@@ -42,7 +45,7 @@ FREEBSD_TARGET="release/10.2.0"
 RSSH="ssh freebsd-jenkins.debian.net"
 RSCP="scp -r freebsd-jenkins.debian.net"
 TMPBUILDDIR=/usr/src
-$RSSH 'sudo rm -r /usr/src /usr/obj ; sudo mkdir /usr/src /usr/obj ; sudo chown jenkins /usr/src /usr/obj'  ### this is tmpfs on linux, we should move this to tmpfs on freebsd too
+$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on freebsd too
 TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
@@ -78,10 +81,6 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU
 # save results in b1
 save_freebsd_results b1
 
-echo "============================================================================="
-echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - cleaning up between builds."
-echo "============================================================================="
-$RSSH "sudo rm -r /usr/obj/ ; sudo mkdir /usr/obj ; sudo chown jenkins /usr/src /usr/obj"
 
 echo "============================================================================="
 echo "$(date -u) - Building freebsd - second build run."
@@ -108,9 +107,6 @@ unset LC_ALL
 export TZ="/usr/share/zoneinfo/UTC"
 export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 umask 0022
-
-# cleanup on the node
-$RSSH 'sudo rm -r /usr/src /usr/obj'
 
 # run diffoscope on the results
 TIMEOUT="30m"

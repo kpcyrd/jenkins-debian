@@ -371,7 +371,6 @@ properties:
 ** adduser jenkins (with bash as default shell)
 ** mkdir -p /srv/reproducible-results
 ** chown -R jenkins:jenkins /srv/
-** ln -s /srv/ /usr/obj/srv
 
 ==== reproducible...
 

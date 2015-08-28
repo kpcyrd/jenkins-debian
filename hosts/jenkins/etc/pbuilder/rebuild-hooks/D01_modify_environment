@@ -11,3 +11,7 @@ hostname i-capture-the-hostname
 domainname i-capture-the-domain
 echo "I: Adding a custom variable just for the fun of it..." >&2
 export CAPTURE_ENVIRONMENT="I capture the environment"
+
+# use disorderfs
+mv /tmp/buildd /tmp/disorderfs
+disorderfs /tmp/disorderfs /tmp/buildd

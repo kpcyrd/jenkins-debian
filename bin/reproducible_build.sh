@@ -159,14 +159,14 @@ diff_copy_buildlogs() {
 			if [ ${PIPESTATUS[0]} -eq 0 ] ; then
 				echo "The two build logs are identical! \o/" | tee -a $DIFF
 			fi
-			echo -e "\nCompressing the logs..."
+			echo -e "\nCompressing the 2nd log..."
 			gzip -9vn $DIFF
 			gzip -9cvn b2/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
 			chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
-		else
-			echo "Warning: No second build log" | tee -a $RBUILDLOG
-			echo "Compressing the log..."
+		elif [ $FTBFS -eq 0 ] ; then
+			echo "Warning: No second build log, what happened?" | tee -a $RBUILDLOG
 		fi
+		echo "Compressing the 1st log..."
 		gzip -9cvn b1/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 		chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 	else

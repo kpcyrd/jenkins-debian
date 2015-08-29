@@ -16,6 +16,7 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 if [ -x /usr/bin/disorderfs ] ; then
 	mknod -m 666 /dev/fuse c 10 229
 	mv /tmp/buildd /tmp/disorderfs
+	mkdir /tmp/buildd
 	su pbuilder2 -c 'disorderfs /tmp/disorderfs /tmp/buildd'
 else
 	echo "Warning: disorderfs not available."

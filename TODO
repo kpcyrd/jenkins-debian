@@ -176,6 +176,8 @@ properties:
 ** call_apt_update() needs to be moved from _scheduler.py to jobs so its run on all build nodes
 ** add support for remote building
 ** use disorderfs
+*** on all hosts
+*** document usage
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n

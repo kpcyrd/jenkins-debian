@@ -32,9 +32,9 @@ NameVirtualHost *:443
 	</VirtualHost>
 </Macro>
 
-<Macro common-directives $name>
+<Macro common-directives $name $chainfile>
 	SSLEngine on
-	SSLCertificateChainFile /etc/apache2/ssl/gsdomainvalsha2g2r1.crt
+	SSLCertificateChainFile /etc/apache2/ssl/$chainfile
 
 	ServerName $name
 	ServerAdmin holger@layer-acht.org
@@ -92,7 +92,7 @@ Use common-debian-service-https-redirect reproducible.debian.net
 Use common-debian-service-https-redirect reproducible-builds.org
 
 <VirtualHost *:443>
-	Use common-directives jenkins.debian.net
+	Use common-directives jenkins.debian.net gsdomainvalsha2g2r1.crt
 	SSLCertificateFile /etc/apache2/ssl/jenkins.debian.net.pem
 
 	DocumentRoot /var/www
@@ -133,9 +133,6 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	RewriteCond %{REQUEST_URI} ^/userContent/rbuild/
 	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
-	# redirects reproducible-builds.org to https://reproducible.debian.net
-	RewriteCond %{HTTP_HOST} reproducible-builds\.org
-	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
 	<Proxy *>
 		Require all granted
@@ -156,7 +153,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 
 
 <VirtualHost *:443>
-	Use common-directives reproducible.debian.net
+	Use common-directives reproducible.debian.net gsdomainvalsha2g2r1.crt
 	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
 
 	DocumentRoot /var/lib/jenkins/userContent/reproducible
@@ -293,3 +290,21 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	</Proxy>
 
 </VirtualHost>
+
+<VirtualHost *:443>
+	Use common-directives reproducible-builds.org startcom.crt
+	SSLCertificateFile /etc/apache2/ssl/reproducible-builds.org.pem
+
+	DocumentRoot /var/lib/jenkins/userContent/reproducible
+
+	# redirects reproducible-builds.org to https://reproducible.debian.net except for /specs/ and /howto/
+	RewriteCond %{HTTP_HOST} reproducible-builds\.org
+	RewriteCond %{REQUEST_URI} !^/specs/$
+	RewriteCond %{REQUEST_URI} !^/howto/$
+	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
+
+	<Proxy *>
+		Require all granted
+	</Proxy>
+</VirtualHost>
+

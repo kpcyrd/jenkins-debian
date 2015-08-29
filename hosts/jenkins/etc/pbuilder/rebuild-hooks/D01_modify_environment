@@ -13,6 +13,7 @@ echo "I: Adding a custom variable just for the fun of it..." >&2
 export CAPTURE_ENVIRONMENT="I capture the environment"
 
 # use disorderfs, mount it as user
+exit 0
 if [ -x /usr/bin/disorderfs ] ; then
 	mv /tmp/buildd /tmp/disorderfs
 	sudo -u pbuilder2 disorderfs /tmp/disorderfs /tmp/buildd

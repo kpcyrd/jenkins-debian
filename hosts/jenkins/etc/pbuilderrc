@@ -26,6 +26,6 @@ PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
 # used for reproducible builds tests, when doing the 2nd build
 if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then
 	PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
-	BINDMOUNTS="$BINDMOUNTS /dev/fuse"
+	#BINDMOUNTS="$BINDMOUNTS /dev/fuse"
 fi
 

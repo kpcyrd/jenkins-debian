@@ -7,6 +7,6 @@ set -e
 
 # cease using disorderfs
 if [ -d /tmp/disorderfs ] ; then
-	sudo -u pbuilder2 fusermount -u /tmp/buildd
+	su -u pbuilder2 fusermount -u /tmp/buildd
 	mv /tmp/disorderfs /tmp/buildd
 fi

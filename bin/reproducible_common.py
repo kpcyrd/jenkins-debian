@@ -552,6 +552,7 @@ def get_trailing_icon(package, bugs):
     html = ''
     if package in bugs:
         for bug in bugs[package]:
+            html += '<a href="https://bugs.debian.org/{bug}">'.format(bug=bug)
             html += '<span class="'
             if bugs[package][bug]['done']:
                 html += 'bug-done" title="#' + str(bug) + ', done">#</span>'
@@ -561,6 +562,7 @@ def get_trailing_icon(package, bugs):
                 html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
             else:
                 html += 'bug" title="#' + str(bug) + '">#</span>'
+            html += '</a>'
     return html
 
 

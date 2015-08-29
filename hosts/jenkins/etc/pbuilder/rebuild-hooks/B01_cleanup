@@ -6,5 +6,7 @@ set -e
 [ "$(readlink /proc/1/ns/uts)" = "$(readlink /proc/self/ns/uts)" ] && exit 0
 
 # cease using disorderfs
-sudo -u pbuilder2 fusermount -u /tmp/buildd
-mv /tmp/disorderfs /tmp/buildd
+if [ -d /tmp/disorderfs ] ; then
+	sudo -u pbuilder2 fusermount -u /tmp/buildd
+	mv /tmp/disorderfs /tmp/buildd
+fi

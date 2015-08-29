@@ -12,6 +12,6 @@ domainname i-capture-the-domain
 echo "I: Adding a custom variable just for the fun of it..." >&2
 export CAPTURE_ENVIRONMENT="I capture the environment"
 
-# use disorderfs
+# use disorderfs, mount it as user
 mv /tmp/buildd /tmp/disorderfs
-disorderfs /tmp/disorderfs /tmp/buildd
+sudo -u pbuilder2 disorderfs /tmp/disorderfs /tmp/buildd

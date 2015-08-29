@@ -48,7 +48,7 @@ ${suites_links}
         <li>
             <a href="%s">Reproducible Dashboard</a><br />
             <a href="https://wiki.debian.org/ReproducibleBuilds">Reproducible Wiki</a><br />
-            <a href="https://reproducible.debian.net/howto">Reproducible HowTo</a>
+            <a href="https://reproducible-builds.org/howto">Reproducible HowTo</a>
         </li>
     </ul>
 </header>

@@ -89,6 +89,7 @@ Use localhost-directives 10.0.2.1
 
 Use common-debian-service-https-redirect jenkins.debian.net
 Use common-debian-service-https-redirect reproducible.debian.net
+Use common-debian-service-https-redirect reproducible-builds.org
 
 <VirtualHost *:443>
 	Use common-directives jenkins.debian.net
@@ -130,6 +131,10 @@ Use common-debian-service-https-redirect reproducible.debian.net
 	RewriteCond %{REQUEST_URI} ^/userContent/notes/ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/artifacts/ [or]
 	RewriteCond %{REQUEST_URI} ^/userContent/rbuild/
+	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
+
+	# redirects reproducible-builds.org to https://reproducible.debian.net
+	RewriteCond %{HTTP_HOST} reproducible-builds\.org
 	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
 	<Proxy *>

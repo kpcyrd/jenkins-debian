@@ -299,8 +299,8 @@ Use common-debian-service-https-redirect reproducible-builds.org
 
 	# redirects reproducible-builds.org to https://reproducible.debian.net except for /specs/ and /howto/
 	RewriteCond %{HTTP_HOST} reproducible-builds\.org
-	RewriteCond %{REQUEST_URI} !^/specs/$
-	RewriteCond %{REQUEST_URI} !^/howto/$
+	RewriteCond %{REQUEST_URI} !^/specs($|/)
+	RewriteCond %{REQUEST_URI} !^/howto($|/)
 	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
 
 	<Proxy *>

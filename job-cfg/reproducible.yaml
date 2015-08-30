@@ -421,6 +421,10 @@
     name: '{name}_builder_theta'
 
 - job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_armhf1'
+
+- job-template:
     defaults: reproducible_other_projects
     name: '{name}_coreboot'
 
@@ -828,6 +832,12 @@
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_armhf1':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh wbq0-armhf-rb bpi0-armhf-rb'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_coreboot':

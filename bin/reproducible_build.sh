@@ -391,7 +391,7 @@ init() {
 
 get_source_package() {
 	local RESULT
-	schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
+	schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 	RESULT=$?
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
@@ -400,7 +400,7 @@ get_source_package() {
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		schroot --directory $PWD -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
@@ -504,7 +504,13 @@ check_buildinfo() {
 		echo "Building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
 		echo "============================================================================="
 		echo
-		first_build
+		if [ "$MODE" = "legacy" ] ; then
+			first_build
+		else
+			ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 .
+			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR/b1"
+		fi
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
 		diff $TMPFILE1 $TMPFILE2
@@ -524,8 +530,8 @@ build_rebuild() {
 		first_build
 	else
 		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-		rsync -e "ssh -p $PORT1" -r $NODE1:$PWD/b1 .
-		ssh -p $PORT1 $NODE1 "rm -r $PWD/b1"
+		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 .
+		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR/b1"
 	fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
@@ -537,8 +543,8 @@ build_rebuild() {
 			second_build
 		else
 			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-			rsync -e "ssh -p $PORT2" -r $NODE2:$PWD/b2 .
-			ssh -p $PORT2 $NODE2 "rm -r $PWD/b2"
+			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 .
+			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR/b2"
 		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
@@ -584,6 +590,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
+	echo "$(date -u) - build #$MODE for $SRCPACKAGE/$SUITE/$ARCH on $HOSTNAME done"
 	exit 0
 elif [ "$2" != "" ] ; then
 	MODE="ng"

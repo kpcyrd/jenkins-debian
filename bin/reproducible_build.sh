@@ -523,7 +523,7 @@ build_rebuild() {
 	if [ "$MODE" = "legacy" ] ; then
 		first_build
 	else
-		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE}
+		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 		rsync -e "ssh -p $PORT1" -r $NODE1:$PWD/b1 .
 		ssh -p $PORT1 $NODE1 "rm -r $PWD/b1"
 	fi
@@ -536,7 +536,7 @@ build_rebuild() {
 		if [ "$MODE" = "legacy" ] ; then
 			second_build
 		else
-			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2
+			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 			rsync -e "ssh -p $PORT2" -r $NODE2:$PWD/b2 .
 			ssh -p $PORT2 $NODE2 "rm -r $PWD/b2"
 		fi
@@ -574,6 +574,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	SRCPACKAGE="$2"
 	SUITE="$3"
 	SAVE_ARTIFACTS=0
+	TMPDIR="$4" ; mkdir $TMPDIR ; cd $$TMPDIR
 	get_source_package
 	mkdir b$MODE
 	if [ "$MODE" = "1" ] ; then

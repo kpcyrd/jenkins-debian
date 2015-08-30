@@ -576,13 +576,13 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	exit 0
 elif [ "$2" != "" ] ; then
 	MODE="ng"
-	NODE1="$1"
-	NODE2="$2"
+	NODE1="$1.debian.net"
+	NODE2="$2.debian.net"
 	# overwrite ARCH for remote builds
 	for i in $ARCHS ; do
 		# try to match ARCH in nodenames
 		if [[ "$NODE1" =~ .*-$i.* ]] ; then
-			ARCH=i
+			ARCH=$i
 		fi
 	done
 	if [ -z "$ARCH" ] ; then

@@ -210,19 +210,19 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_armhf_bpi0'
+    name: '{name}_setup_pbuilder_unstable_armhf_bpi0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_armhf_cbxi4pro0'
+    name: '{name}_setup_pbuilder_unstable_armhf_cbxi4pro0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_armhf_hb0'
+    name: '{name}_setup_pbuilder_unstable_armhf_hb0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_armhf_wbq0'
+    name: '{name}_setup_pbuilder_unstable_armhf_wbq0'
 
 - job-template:
     defaults: reproducible
@@ -262,19 +262,19 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_debbindiff_armhf_bpi0'
+    name: '{name}_setup_schroot_unstable_debbindiff_armhf_bpi0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_debbindiff_armhf_cbxi4pro0'
+    name: '{name}_setup_schroot_unstable_debbindiff_armhf_cbxi4pro0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_debbindiff_armhf_hb0'
+    name: '{name}_setup_schroot_unstable_debbindiff_armhf_hb0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_debbindiff_armhf_wbq0'
+    name: '{name}_setup_schroot_unstable_debbindiff_armhf_wbq0'
 
 - job-template:
     defaults: reproducible
@@ -302,19 +302,19 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_armhf_bpi0'
+    name: '{name}_setup_schroot_unstable_armhf_bpi0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_armhf_cbxi4pro0'
+    name: '{name}_setup_schroot_unstable_armhf_cbxi4pro0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_armhf_hb0'
+    name: '{name}_setup_schroot_unstable_armhf_hb0'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_armhf_wbq0'
+    name: '{name}_setup_schroot_unstable_armhf_wbq0'
 
 - job-template:
     defaults: reproducible
@@ -495,25 +495,25 @@
             my_shell: '/srv/jenkins/bin/reproducible_setup_pbuilder.sh testing'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_setup_pbuilder_testing_armhf_bpi0':
+        - '{name}_setup_pbuilder_unstable_armhf_bpi0':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'bpi0'
-        - '{name}_setup_pbuilder_testing_armhf_cbxi4pro0':
+        - '{name}_setup_pbuilder_unstable_armhf_cbxi4pro0':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'cbxi4pro0'
-        - '{name}_setup_pbuilder_testing_armhf_hb0':
+        - '{name}_setup_pbuilder_unstable_armhf_hb0':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'hb0'
-        - '{name}_setup_pbuilder_testing_armhf_wbq0':
+        - '{name}_setup_pbuilder_unstable_armhf_wbq0':
             my_description: 'Setup and update pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 0,4,8,12,16,20 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
@@ -591,25 +591,25 @@
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-debbindiff testing debbindiff locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_setup_schroot_testing_debbindiff_armhf_bpi0':
+        - '{name}_setup_schroot_unstable_debbindiff_armhf_bpi0':
             my_description: 'Setup schroot for running debbindiff in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'bpi0'
-        - '{name}_setup_schroot_testing_debbindiff_armhf_cbxi4pro0':
+        - '{name}_setup_schroot_unstable_debbindiff_armhf_cbxi4pro0':
             my_description: 'Setup schroot for running debbindiff in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'cbxi4pro0'
-        - '{name}_setup_schroot_testing_debbindiff_armhf_hb0':
+        - '{name}_setup_schroot_unstable_debbindiff_armhf_hb0':
             my_description: 'Setup schroot for running debbindiff in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'hb0'
-        - '{name}_setup_schroot_testing_debbindiff_armhf_wbq0':
+        - '{name}_setup_schroot_unstable_debbindiff_armhf_wbq0':
             my_description: 'Setup schroot for running debbindiff in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
@@ -651,26 +651,26 @@
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_setup_schroot_testing_armhf_bpi0':
-            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+        - '{name}_setup_schroot_unstable_armhf_bpi0':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'bpi0'
-        - '{name}_setup_schroot_testing_armhf_cbxi4pro0':
-            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+        - '{name}_setup_schroot_unstable_armhf_cbxi4pro0':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'cbxi4pro0'
-        - '{name}_setup_schroot_testing_armhf_hb0':
-            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+        - '{name}_setup_schroot_unstable_armhf_hb0':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'hb0'
-        - '{name}_setup_schroot_testing_armhf_wbq0':
-            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+        - '{name}_setup_schroot_unstable_armhf_wbq0':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '23 1 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'

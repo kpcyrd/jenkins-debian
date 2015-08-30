@@ -386,7 +386,7 @@ init() {
 		BAD_LOCKFILE=true
 		handle_race_condition init
 	fi
-	echo "Starting to build ${SRCPACKAGE}/${SUITE} on $DATE" | tee ${RBUILDLOG}
+	echo "Starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
 }
 

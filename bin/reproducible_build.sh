@@ -574,7 +574,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	SRCPACKAGE="$2"
 	SUITE="$3"
 	SAVE_ARTIFACTS=0
-	TMPDIR="$4" ; mkdir $TMPDIR ; cd $$TMPDIR
+	TMPDIR="$4" ; mkdir $TMPDIR ; cd $TMPDIR
 	get_source_package
 	mkdir b$MODE
 	if [ "$MODE" = "1" ] ; then

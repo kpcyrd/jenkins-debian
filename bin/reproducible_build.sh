@@ -410,6 +410,11 @@ get_source_package() {
 			exit 404	# FIXME: this is unhandled atm
 		fi
 	fi
+	VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
+	EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION was too long
+	DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
+	DBDTXT="${SRCPACKAGE}_${EVERSION}.debbindiff.txt"
+	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 }
 
 check_suitability() {
@@ -606,12 +611,6 @@ LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 
 init
 get_source_package
-
-VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
-EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION was too long
-DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
-DBDTXT="${SRCPACKAGE}_${EVERSION}.debbindiff.txt"
-BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 

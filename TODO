@@ -250,9 +250,8 @@ properties:
 ** maintenance is general, cleanup of started but interrupted builds...
 
 * reproducible_build.sh changes needed:
-** rbuild logs are not saved yet
-** verify $2 and $3 are ok
 ** diffoscope needs to be run on the target arch...
+*** can't this done via qemu on the host?
 
 * missing job definitions:
 ** reproducible_builder_amd64_1 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"	# 8 core machines with 32gb ram

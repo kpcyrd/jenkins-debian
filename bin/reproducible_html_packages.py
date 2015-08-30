@@ -181,7 +181,7 @@ def gen_suites_links(package, current_suite, current_arch):
                 continue
             version = package.get_tested_version(s, a)
             build_date = package.get_build_date(s, a)
-            if build_date or status != 'blacklisted':
+            if build_date and status != 'blacklisted':
                 build_date = ' on ' + build_date
             else:
                 build_date = ''
@@ -221,7 +221,7 @@ def gen_packages_html(packages, no_clean=False):
                 status = package.get_status(suite, arch)
                 version = package.get_tested_version(suite, arch)
                 build_date = package.get_build_date(suite, arch)
-                if build_date or status != 'blacklisted':
+                if build_date and status != 'blacklisted':
                     build_date = 'at ' + build_date
                 else:
                     build_date = ''

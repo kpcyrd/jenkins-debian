@@ -369,6 +369,8 @@ init() {
 		local ANNOUNCE="Artifacts will be preserved."
 	fi
 	create_results_dirs
+	# used to catch race conditions when the same package is being built by two parallel jobs
+	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 	echo "============================================================================="
 	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now. $ANNOUNCE"
 	echo "============================================================================="
@@ -387,8 +389,6 @@ init() {
 	fi
 	echo "Starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
-	# used to catch race conditions when the same package is being built by two parallel jobs
-	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 }
 
 get_source_package() {

@@ -101,7 +101,7 @@ cleanup_all() {
 		# compressed files in the html. It's cheap and quite safe so, *shrugs*...
 		gen_package_html $SRCPACKAGE
 		cd
-		rm -r $TMPDIR
+		rm -r $TMPDIR || true
 	fi
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 }

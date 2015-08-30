@@ -174,10 +174,9 @@ properties:
 
 * higher prio:
 ** call_apt_update() needs to be moved from _scheduler.py to jobs so its run on all build nodes
-** add support for remote building
-** use disorderfs
-*** on all hosts
-*** document usage
+** use disorderfs (atm its disabled)
+*** current scripts are only in hosts/jenkins/ but need to be copied to hosts/+/
+*** document usage in diff table...
 ** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
@@ -200,7 +199,6 @@ properties:
 ** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
-** document usage of -j 24/8/3 in write_explaination_table()
 
 * notes related
 ** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
@@ -223,14 +221,6 @@ properties:
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 ** variation of filesystem being built on (we probably wont do that and just always build on tmpfs...)
 ** variation of users shell (bash + zsh?)
-
-* status of remote build nodes for amd64
-** profitbricks-build1-amd64 is setup
-*** squid needs proper configuration
-** profitbricks-build2-amd64 is setup
-*** squid needs proper configuration
-*** should run in the future: +1d+1m+1y
-*** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
 
 * enable people to upload test packages, to be built in jenkins:
 ----
@@ -270,6 +260,7 @@ properties:
 
 * then we have a new script, reproducible_info.sh which just outputs key-value pairs, like "ARCH=armhf", DATETIME="Mo 10. Aug 11:56:22 CEST 2015" and "TZ=UTC" and whatever.
 ** this script is run on all nodes, but each run is triggered by a single job running on the main node (jenkins atm), so the results can be captured in /srv/reproducible-results/node-information/$NODE and then eg be used by reproducible_html_dashboard.sh to create the table with the differences between 1st and 2nd build...
+*** document usage of -j 24/8/3 in write_explaination_table()
 ** /srv/reproducible-results/node-information/$NODE could also be read by reproducible_build.sh to determine the dpkg-architecture a node is captable of building, but I think we also want that info to be encoded in the build job names, so probably there's no need to read it...
 
 ==== reproducible Debian armhf
@@ -279,6 +270,14 @@ properties:
 ** http://guide.munin-monitoring.org/en/latest/example/transport/ssh.html
 * make systems send mail
 * change date on 2nd build hosts (and disable systemd-timesyncd)
+
+==== status of new remote build nodes for amd64
+
+* profitbricks-build1-amd64: squid needs proper configuration
+* profitbricks-build2-amd64
+** squid needs proper configuration
+** should run in the future: +1d+1m+1y
+** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
 
 ==== reproducible Debian installation
 

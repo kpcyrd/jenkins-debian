@@ -566,7 +566,8 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	SRCPACKAGE="$2"
 	SUITE="$3"
-	get source_package
+	SAVE_ARTIFACTS=0
+	get_source_package
 	mkdir b$MODE
 	if [ "$MODE" = "1" ] ; then
 		first_build

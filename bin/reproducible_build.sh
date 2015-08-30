@@ -387,6 +387,8 @@ init() {
 	fi
 	echo "Starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
+	# used to catch race conditions when the same package is being built by two parallel jobs
+	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 }
 
 get_source_package() {
@@ -415,8 +417,6 @@ get_source_package() {
 	DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
 	DBDTXT="${SRCPACKAGE}_${EVERSION}.debbindiff.txt"
 	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
-	# used to catch race conditions when the same package is being built by two parallel jobs
-	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 }
 
 check_suitability() {

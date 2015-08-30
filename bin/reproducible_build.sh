@@ -486,6 +486,7 @@ EOF
 			--logfile b2/build.log \
 			${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
 	if ! "$DEBUG" ; then set +x ; fi
+	rm $TMPCFG
 }
 
 check_buildinfo() {
@@ -558,7 +559,6 @@ build_rebuild() {
 		else
 			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
 		fi
-		rm $TMPCFG
 	fi
 }
 

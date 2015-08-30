@@ -116,6 +116,7 @@ if [ -f /etc/debian_version ] ; then
 			etckeeper
 			git
 			haveged
+			htop
 			less
 			molly-guard 
 			munin-node

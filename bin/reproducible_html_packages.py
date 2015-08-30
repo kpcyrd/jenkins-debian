@@ -174,8 +174,6 @@ def gen_suites_links(package, current_suite, current_arch):
         html += tab + '<li>{}\n'.format(a)
         html += tab + '<ul class="children">\n'
         for s in SUITES:
-            if s == current_suite and a == current_arch:
-                continue
             if a == 'armhf' and s != 'unstable':
                 continue
             status = package.get_status(s, a)
@@ -183,8 +181,10 @@ def gen_suites_links(package, current_suite, current_arch):
                 continue
             version = package.get_tested_version(s, a)
             li_classes = ['suite']
+            if s == current_suite and a == current_arch:
+                li_classes.append('active')
             html += '<li class="' + ' '.join(li_classes) + '">\n' + tab
-            if status != 'untested':
+            if s != current_suite or a != current_arch or status != 'untested':
                 prefix = '<a href="/{}/{}/index_{}.html">'.format(s, a, status)
                 suffix = '</a>\n'
             else:

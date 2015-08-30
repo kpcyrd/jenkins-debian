@@ -35,6 +35,11 @@ architectures += mono_architectures
 gcc_versions = ("5",)
 debbindiff_gcc_versions = ("5",)
 
+def get_node(arch):
+    if arch == "or1k":
+        return "profitbricks4"
+    return ""
+
 print("""
 - defaults:
     name: rebootstrap
@@ -73,7 +78,7 @@ print("""
           branches:
             - '{my_branchname}'
     builders:
-      - shell: 'export LC_ALL=C ; /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
+      - shell: '{my_wrapper} LC_ALL=C /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
@@ -83,6 +88,7 @@ print("""
           recipients: 'jenkins+debian-bootstrap helmutg@debian.org'
     triggers:
       - pollscm: '*/6 * * * *'
+    node: '{my_node}'
 """)
 
 for arch in sorted(architectures):
@@ -123,7 +129,8 @@ for arch in sorted(architectures):
             my_arch: '%(arch)s'
             my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DEBBINDIFF=%(debbindiff_value)s'
             my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s%(supported_comment)s%(debbindiff_comment)s'
-            my_branchname: 'jenkins_%(suffix)s'""" %
+            my_branchname: 'jenkins_%(suffix)s'
+            my_node: '%(node)s'""" %
                 dict(arch=arch,
                      suffix=arch + "_gcc" + gccver.replace(".", "") + ("_nobiarch" if nobiarch else "") + ("_supported" if supported else "") + ("_debbindiff" if debbindiff else ""),
                      gccver=gccver,
@@ -132,4 +139,7 @@ for arch in sorted(architectures):
                      multiarch_gcc_value="no" if supported else "yes",
                      supported_comment=" using the supported method" if supported else "",
                      debbindiff_value="yes" if debbindiff else "no",
-                     debbindiff_comment=" showing debbindiffs" if debbindiff else ""))
+                     debbindiff_comment=" showing debbindiffs" if debbindiff else "",
+                     node=get_node(arch)))
+                    if get_node(arch):
+                        print("            my_wrapper: '/srv/jenkins/bin/reproducible_master_wrapper.sh'")

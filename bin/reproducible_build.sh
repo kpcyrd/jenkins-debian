@@ -453,7 +453,7 @@ EOF
 		--configfile $TMPCFG \
 		--debbuildopts "-b" \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
-		--buildresult b1 \
+		--buildresult $TMPDIR/b1 \
 		--logfile b1/build.log \
 		${SRCPACKAGE}_${EVERSION}.dsc
 	) 2>&1 | tee -a $RBUILDLOG
@@ -482,7 +482,7 @@ EOF
 			--hookdir /etc/pbuilder/rebuild-hooks \
 			--debbuildopts "-b" \
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
-			--buildresult b2 \
+			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
 			${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
 	if ! "$DEBUG" ; then set +x ; fi

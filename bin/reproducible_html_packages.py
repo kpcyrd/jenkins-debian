@@ -182,7 +182,8 @@ def gen_suites_links(package, current_suite, current_arch):
             if not status:  # The package is not available in that suite/arch
                 continue
             version = package.get_tested_version(s, a)
-            html += '<li><span class="suite">\n' + tab
+            li_classes = ['suite']
+            html += '<li class="' + ' '.join(li_classes) + '">\n' + tab
             if status != 'untested':
                 prefix = '<a href="/{}/{}/index_{}.html">'.format(s, a, status)
                 suffix = '</a>\n'
@@ -192,9 +193,9 @@ def gen_suites_links(package, current_suite, current_arch):
             icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
             html += icon.format(icon=join_status_icon(status)[1], status=status)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
-                     ' title="{}: {}">{}</a>: {}</li>\n').format(RB_PKG_URI,
+                     ' title="{}: {}">{}</a>: {}\n').format(RB_PKG_URI,
                      s, a, package.name, status, version, s, version)
-            html += '</span>\n'
+            html += '</li>\n'
         html += tab + '</ul></li>'
     html += '</ul>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))

@@ -415,6 +415,8 @@ get_source_package() {
 	DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
 	DBDTXT="${SRCPACKAGE}_${EVERSION}.debbindiff.txt"
 	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
+	# used to catch race conditions when the same package is being built by two parallel jobs
+	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 }
 
 check_suitability() {
@@ -618,9 +620,6 @@ elif [ "$2" != "" ] ; then
 fi
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
-
-# used to catch race conditions when the same package is being built by two parallel jobs
-LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 
 init
 get_source_package

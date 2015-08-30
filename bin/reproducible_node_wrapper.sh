@@ -59,10 +59,14 @@ info "remote_host called with $*"
 
 allowed_cmds=()
 
-if [ "$1" = "/srv/jenkins/bin/chroot-run.sh" ] && [ "$2" = "sid" ] && [ "$3" = "minimal" ] && [ "$4" = "./bootstrap.sh" ] ; then
-	shift
+if [[ "$*" =~ rebootstrap_.* ]] ; then
+	REBOOTSTRAPSH="/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh"
+	REBOOTSTRAPSH="$REBOOTSTRAPSH HOST_ARCH=$(echo $1 | cut -d "_" -f2)"
+	if [[ "$*" =~ .*_debbindiff.* ]] ; then
+		REBOOTSTRAPSH="$REBOOTSTRAPSH ENABLE_DEBBINDIFF=yes"
+	fi		echo $j | cut -d "_" -f2
 	export LC_ALL=C
-	exec /srv/jenkins/bin/chroot-run.sh $@ ; croak "Exec failed";
+	exec $REBOOTSTRAPSH ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh $2 $3 $4 ; croak "Exec failed";
 elif   [ "$*" = "reproducible_setup_pbuilder_unstable_armhf_bpi0" ] ; then

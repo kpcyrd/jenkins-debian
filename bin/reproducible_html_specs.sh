@@ -12,7 +12,7 @@ common_init "$@"
 # build and publish the html version
 VERSION=$(git log -1 --pretty='%h')
 SPEC=$1
-TARGET="specs/$SPEC"
+TARGET="specs/$(basename $SPEC -spec)"
 make $SPEC.html
 mkdir -pv "$BASE/$TARGET"
 mv -v $SPEC.html "$BASE/$TARGET/index.html"

@@ -247,12 +247,11 @@ properties:
 
 * open questions:
 ** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
-** i believe "reproducible_build.sh 1" should immediatly move /srv/workspace/reproducible-builds/$NODE/$SUITE/$ARCH/$PKG/$VERSION to /srv/workspace/reproducible-builds/pending/$SUITE/$ARCH/$PKG/$VERSION (on the node) so it's only build once and so that we can detect stale builds
 ** maintenance is general, cleanup of started but interrupted builds...
 
 * reproducible_build.sh behaviour change:
 ** called without param: behave as always
-** called with a single param, "1" or "2": do first or second build (as specified below)
+** called with the first param being "1" or "2" (and two more params, srcpkg and suite): do first or second build
 ** called with two params: $node1 and $node2 where the build should happen.
 
 * reproducible_build.sh (with two params) will be still always be run on the main node, that is the one holding reproducible.db, so jenkins.d.n atm
@@ -275,23 +274,6 @@ properties:
 * then we have a new script, reproducible_info.sh which just outputs key-value pairs, like "ARCH=armhf", DATETIME="Mo 10. Aug 11:56:22 CEST 2015" and "TZ=UTC" and whatever.
 ** this script is run on all nodes, but each run is triggered by a single job running on the main node (jenkins atm), so the results can be captured in /srv/reproducible-results/node-information/$NODE and then eg be used by reproducible_html_dashboard.sh to create the table with the differences between 1st and 2nd build...
 ** /srv/reproducible-results/node-information/$NODE could also be read by reproducible_build.sh to determine the dpkg-architecture a node is captable of building, but I think we also want that info to be encoded in the build job names, so probably there's no need to read it...
-
-* how to build remotely, some terms and remarks:
-** main node = the one running reproducible_build.sh with two params, so jenkins.d.n atm
-** node = generic term for node1 or node2
-** please note the difference between /srv/workspace/reproducible-builds and /srv/workspace/reproducible-results and /srv/workspace/reproducible-builds/$NODE and /srv/workspace/reproducible-builds/pending and whether these are on a node or on the main node.
-
-
-1. reproducible_build.sh on main node determines what to build,
-2. downloads the sources, and put's the sha256sum of the .dsc file into /srv/workspace/reproducible-builds/$NODE/$SUITE/$ARCH/$PKG/$VERSION on the main node
-3. throws the source files away
-4. scp's /srv/workspace/reproducible-builds/$NODE/$SUITE/$ARCH/$PKG/$VERSION on the node where this should be build 1st
-5. runs "ssh $NODE1 /srv/jenkins/bin/reproducible_build.sh 1"
-6. this causes a 1st build, which downloads the sources as specified in /srv/workspace/reproducible-builds/$NODE/$SUITE/$ARCH/$PKG/$VERSION and compares the sha256sum and builds it and copies the result to /srv/workspace/reproducible-results/$NODE/$SUITE/$ARCH/$PKG/$VERSION and exits.
-7. reproducible_build.sh on the main node then tries to scp the result from $NODE:/srv/workspace/reproducible-results/$NODE...
-8. reproducible_build.sh on the main node then triggers the 2nd build as the 1st.
-9. voila
-
 
 ==== reproducible Debian armhf
 

@@ -13,9 +13,6 @@ common_init "$@"
 
 set -e
 
-# support for different architectures
-ARCH="$(dpkg --print-architecture)"
-
 # sleep 1-12 secs to randomize start times
 delay_start() {
 	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-120 -n 1)/10" | bc )
@@ -345,7 +342,7 @@ choose_package () {
 			ruby-patron|xxxxxxx)
 			export DEBUG=true
 			set -x
-			irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE"
+			irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE/$ARCH"
 			;;
 		*)	;;
 	esac
@@ -355,7 +352,7 @@ choose_package () {
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
 	local DEBUG_URL=$(echo $RESULT|cut -d "|" -f8)
 	if [ "$DEBUG_URL" = "TBD" ] ; then
-		irc_message "The build of $SRCPACKAGE/$SUITE is starting at ${BUILD_URL}consoleFull"
+		irc_message "The build of $SRCPACKAGE/$SUITE/$ARCH is starting at ${BUILD_URL}consoleFull"
 	fi
 	if [ -z "$RESULT" ] ; then
 		echo "No packages scheduled, sleeping 30m."
@@ -405,7 +402,11 @@ get_source_package() {
 		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
-		handle_404
+		if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then
+			handle_404
+		else
+			exit 404	# FIXME: this is unhandled atm
+		fi
 	fi
 }
 
@@ -428,9 +429,9 @@ check_suitability() {
 	if ! $SUITABLE ; then handle_not_for_us $ARCHITECTURES ; fi
 }
 
-first_build(){
-	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
+first_build() {
 	set -x
+	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
 BUILDUSERNAME=pbuilder1
@@ -449,6 +450,33 @@ EOF
 	) 2>&1 | tee -a $RBUILDLOG
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
+}
+
+second_build() {
+	set -x
+	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
+	cat > "$TMPCFG" << EOF
+BUILDUSERID=2222
+BUILDUSERNAME=pbuilder2
+export DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
+export TZ="/usr/share/zoneinfo/Etc/GMT-14"
+export LANG="fr_CH.UTF-8"
+export LC_ALL="fr_CH.UTF-8"
+umask 0002
+EOF
+	# remember to change the sudoers setting if you change the following command
+	sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
+		/usr/bin/linux64 --uname-2.6 \
+		/usr/bin/unshare --uts -- \
+		/usr/sbin/pbuilder --build \
+			--configfile $TMPCFG \
+			--hookdir /etc/pbuilder/rebuild-hooks \
+			--debbuildopts "-b" \
+			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
+			--buildresult b2 \
+			--logfile b2/build.log \
+			${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
+	if ! "$DEBUG" ; then set +x ; fi
 }
 
 check_buildinfo() {
@@ -485,37 +513,26 @@ check_buildinfo() {
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
-	first_build
+	if [ "$MODE" = "legacy" ] ; then
+		first_build
+	else
+		ssh $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE}
+		scp -r $NODE1:$PWD/b1 .
+		ssh $NODE1 "rm -r $PWD/b1"
+	fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
 		echo "============================================================================="
 		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
 		echo "============================================================================="
-		set -x
-		local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-		cat > "$TMPCFG" << EOF
-BUILDUSERID=2222
-BUILDUSERNAME=pbuilder2
-export DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
-export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-export LANG="fr_CH.UTF-8"
-export LC_ALL="fr_CH.UTF-8"
-umask 0002
-EOF
-		# remember to change the sudoers setting if you change the following command
-		sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
-		  /usr/bin/linux64 --uname-2.6 \
-			/usr/bin/unshare --uts -- \
-				/usr/sbin/pbuilder --build \
-					--configfile $TMPCFG \
-					--hookdir /etc/pbuilder/rebuild-hooks \
-					--debbuildopts "-b" \
-					--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
-					--buildresult b2 \
-					--logfile b2/build.log \
-					${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
-		if ! "$DEBUG" ; then set +x ; fi
+		if [ "$MODE" = "legacy" ] ; then
+			second_build
+		else
+			ssh $NODE1 /srv/jenkins/bin/reproducible_build.sh 2
+			scp -r $NODE1:$PWD/b2 .
+			ssh $NODE1 "rm -r $PWD/b2"
+		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
@@ -540,6 +557,39 @@ START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 BAD_LOCKFILE=false
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
+ARCH="$(dpkg --print-architecture)"
+
+# determine mode
+if [ "$1" = "" ] ; then
+	MODE="legacy"
+elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
+	MODE="$1"
+	SRCPACKAGE="$2"
+	SUITE="$3"
+	get source_package
+	mkdir b$MODE
+	if [ "$MODE" = "1" ] ; then
+		first_build
+	else
+		second_build
+	fi
+	exit 0
+elif [ "$2" != "" ] ; then
+	MODE="ng"
+	NODE1="$1"
+	NODE2="$2"
+	# overwrite ARCH for remote builds
+	for i in $ARCHS ; do
+		# try to match ARCH in nodenames
+		if [[ "$NODE1" =~ .*-$i.* ]] ; then
+			ARCH=i
+		fi
+	done
+	if [ -z "$ARCH" ] ; then
+		echo "Error: could not detect architecture, exiting."
+		exit 1
+	fi
+fi
 
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
 

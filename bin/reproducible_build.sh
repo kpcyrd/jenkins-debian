@@ -17,7 +17,9 @@ set -e
 ARCH="amd64"
 
 # sleep 1-12 secs to randomize start times
-/bin/sleep $(echo "scale=1 ; $(shuf -i 1-120 -n 1)/10" | bc )
+delay_start() {
+	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-120 -n 1)/10" | bc )
+}
 
 create_results_dirs() {
 	mkdir -vp $BASE/dbd/${SUITE}/${ARCH}
@@ -363,6 +365,7 @@ choose_package () {
 }
 
 init() {
+	delay_start
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		local ANNOUNCE="Artifacts will be preserved."
 	fi

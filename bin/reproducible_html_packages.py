@@ -224,7 +224,7 @@ def gen_packages_html(packages, no_clean=False):
                 if build_date and status != 'blacklisted':
                     build_date = 'at ' + build_date
                 else:
-                    build_date = '<span style="color:red;font-weight:bold;">UNTESTED</span>'
+                    build_date = ''
                 if status == False:  # the package is not in the checked suite
                     continue
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',

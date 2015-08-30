@@ -69,6 +69,8 @@ if [[ "$*" =~ rebootstrap_.* ]] ; then
 	exec $REBOOTSTRAPSH ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh $2 $3 $4 ; croak "Exec failed";
+elif [[ "$*" =~ 'rsync --server --sender .* . /srv/reproducible-results/tmp.*/b?' ]] ; then
+	exec rsync --server --sender .* . $6 ; croak "Exec failed";
 elif   [ "$*" = "reproducible_setup_pbuilder_unstable_armhf_bpi0" ] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable ; croak "Exec failed";
 elif [ "$*" = "reproducible_maintenance_armhf_bpi0" ] ; then

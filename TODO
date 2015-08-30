@@ -255,7 +255,6 @@ properties:
 ** reproducible_builder_amd64_9 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_amd64_10 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_armhf_2 runs "reproducible_build.sh wbq0-armhf-rb:2225 cbxi4pro0-armhf-rb:2226"
-** reproducible_builder_armhf_3 runs "reproducible_build.sh cbxi4pro0-armhf-rb:2226 hb0-armhf-rb.debian.net:2224"
 ** reproducible_builder_armhf_4 runs "reproducible_build.sh cbxi4pro0-armhf-rb:2226 wbq0-armhf-rb:2225"
 
 * then we have a new script, reproducible_info.sh which just outputs key-value pairs, like "ARCH=armhf", DATETIME="Mo 10. Aug 11:56:22 CEST 2015" and "TZ=UTC" and whatever.

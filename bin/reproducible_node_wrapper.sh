@@ -64,7 +64,7 @@ if [[ "$*" =~ rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="$REBOOTSTRAPSH HOST_ARCH=$(echo $1 | cut -d "_" -f2)"
 	if [[ "$*" =~ .*_debbindiff.* ]] ; then
 		REBOOTSTRAPSH="$REBOOTSTRAPSH ENABLE_DEBBINDIFF=yes"
-	fi		echo $j | cut -d "_" -f2
+	fi
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

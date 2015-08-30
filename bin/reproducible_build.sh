@@ -13,8 +13,8 @@ common_init "$@"
 
 set -e
 
-# support for different architectures (we have actual support only for amd64)
-ARCH="amd64"
+# support for different architectures
+ARCH="$(dpkg --print-architecture)"
 
 # sleep 1-12 secs to randomize start times
 delay_start() {
@@ -414,10 +414,16 @@ check_suitability() {
 	local SUITABLE=false
 	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 	for arch in ${ARCHITECTURES} ; do
-		if [ "$arch" = "any" ] || [ "$arch" = "amd64" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-amd64" ] || [ "$arch" = "any-amd64" ] || [ "$arch" = "all" ] ; then
+		if [ "$arch" = "any" ] || [ "$arch" = "$ARCH" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-$ARCH" ] || [ "$arch" = "any-ARCH" ] || [ "$arch" = "all" ] ; then
 			SUITABLE=true
 			break
 		fi
+		# special case arm…
+		if [ "$ARCH" = "armhf" ] && [ "$arch" = "any-arm" ] ; then
+			SUITABLE=true
+			break
+		fi
+
 	done
 	if ! $SUITABLE ; then handle_not_for_us $ARCHITECTURES ; fi
 }

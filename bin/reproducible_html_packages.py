@@ -180,6 +180,7 @@ def gen_suites_links(package, current_suite, current_arch):
             if not status:  # The package is not available in that suite/arch
                 continue
             version = package.get_tested_version(s, a)
+            build_date = package.get_build_date(s, a)
             li_classes = ['suite']
             if s == current_suite and a == current_arch:
                 li_classes.append('active')
@@ -193,8 +194,8 @@ def gen_suites_links(package, current_suite, current_arch):
             icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
             html += icon.format(icon=join_status_icon(status)[1], status=status)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
-                     ' title="{}: {}">{}</a>: {}\n').format(RB_PKG_URI,
-                     s, a, package.name, status, version, s, version)
+                     ' title="{}: {} on {}">{}</a>: {}\n').format(RB_PKG_URI,
+                     s, a, package.name, status, version, build_date, s, version)
             html += '</li>\n'
         html += tab + '</ul></li>'
     html += '</ul>\n'

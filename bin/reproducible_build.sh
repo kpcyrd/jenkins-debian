@@ -277,7 +277,7 @@ dbd_timeout() {
 }
 
 call_diffoscope_on_changes_files() {
-	local TMPLOG=(mktemp --tmpdir=$TMPDIR)
+	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="30m"
 	DBDSUITE=$SUITE

@@ -519,7 +519,7 @@ build_rebuild() {
 		first_build
 	else
 		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE}
-		rsync -e 'ssh -p $PORT1' -r $NODE1:$PWD/b1 .
+		rsync -e "ssh -p $PORT1" -r $NODE1:$PWD/b1 .
 		ssh -p $PORT1 $NODE1 "rm -r $PWD/b1"
 	fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
@@ -532,7 +532,7 @@ build_rebuild() {
 			second_build
 		else
 			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2
-			scp -P $PORT2 -r $NODE2:$PWD/b2 .
+			rsync -e "ssh -p $PORT2" -r $NODE2:$PWD/b2 .
 			ssh -p $PORT2 $NODE2 "rm -r $PWD/b2"
 		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then

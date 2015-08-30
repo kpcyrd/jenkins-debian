@@ -265,9 +265,9 @@ properties:
 ** reproducible_builder_amd64_8 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_amd64_9 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_amd64_10 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
-** reproducible_builder_armhf_2 runs "reproducible_build.sh wbq0-armhf-rb:2225 cbxi4pro0-armhf-rb:2226"		# with 2gb ram and and the other two
-** reproducible_builder_armhf_3 runs "reproducible_build.sh cbxi4pro0-armhf-rb:2226 hb0-armhf-rb.debian.net:2224"	# have dual cores with 1gb ram
-** reproducible_builder_armhf_4 runs "reproducible_build.sh cbxi4pro0-armhf-rb:2226 wbq0-armhf-rb:2225"
+** reproducible_builder_armhf_2 runs "reproducible_build.sh wbq0-armhf-rb:2225 cbxi4pro0-armhf-rb:2226"			# wbq0 and cbxi4pro0 are the quad core 
+** reproducible_builder_armhf_3 runs "reproducible_build.sh cbxi4pro0-armhf-rb:2226 hb0-armhf-rb.debian.net:2224"	# with 2gb ram and and the other two
+** reproducible_builder_armhf_4 runs "reproducible_build.sh cbxi4pro0-armhf-rb:2226 wbq0-armhf-rb:2225"			# have dual cores with 1gb ram
 
 * then we have a new script, reproducible_info.sh which just outputs key-value pairs, like "ARCH=armhf", DATETIME="Mo 10. Aug 11:56:22 CEST 2015" and "TZ=UTC" and whatever.
 ** this script is run on all nodes, but each run is triggered by a single job running on the main node (jenkins atm), so the results can be captured in /srv/reproducible-results/node-information/$NODE and then eg be used by reproducible_html_dashboard.sh to create the table with the differences between 1st and 2nd build...

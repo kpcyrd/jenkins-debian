@@ -100,9 +100,9 @@ cleanup_all() {
 		# XXX quite ugly: this is just needed to get the correct value of the
 		# compressed files in the html. It's cheap and quite safe so, *shrugs*...
 		gen_package_html $SRCPACKAGE
+		cd
+		rm -r $TMPDIR
 	fi
-	cd
-	rm -r $TMPDIR
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 }
 
@@ -509,7 +509,7 @@ check_buildinfo() {
 		else
 			ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 .
-			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR/b1"
+			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 		fi
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
@@ -531,7 +531,7 @@ build_rebuild() {
 	else
 		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 .
-		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR/b1"
+		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 	fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
@@ -544,7 +544,7 @@ build_rebuild() {
 		else
 			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 .
-			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR/b2"
+			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR"
 		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.

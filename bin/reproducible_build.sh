@@ -516,9 +516,9 @@ build_rebuild() {
 	if [ "$MODE" = "legacy" ] ; then
 		first_build
 	else
-		ssh $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE}
-		scp -r $NODE1:$PWD/b1 .
-		ssh $NODE1 "rm -r $PWD/b1"
+		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE}
+		scp -P $PORT1 -r $NODE1:$PWD/b1 .
+		ssh -p $PORT1 $NODE1 "rm -r $PWD/b1"
 	fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
@@ -529,9 +529,9 @@ build_rebuild() {
 		if [ "$MODE" = "legacy" ] ; then
 			second_build
 		else
-			ssh $NODE1 /srv/jenkins/bin/reproducible_build.sh 2
-			scp -r $NODE1:$PWD/b2 .
-			ssh $NODE1 "rm -r $PWD/b2"
+			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2
+			scp -P $PORT2 -r $NODE2:$PWD/b2 .
+			ssh -p $PORT2 $NODE2 "rm -r $PWD/b2"
 		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
@@ -576,8 +576,13 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	exit 0
 elif [ "$2" != "" ] ; then
 	MODE="ng"
-	NODE1="$1.debian.net"
-	NODE2="$2.debian.net"
+	NODE1="(echo $1 | cut -d ':' -f1).debian.net"
+	NODE2="(echo $2 | cut -d ':' -f1).debian.net"
+	PORT1="(echo $1 | cut -d ':' -f2)"
+	PORT2="(echo $2 | cut -d ':' -f2)"
+	# if no port is given, assume 22
+	if [ "$NODE1" = "${PORT1}.debian.net" ] ; then PORT1 = 22 ; fi
+	if [ "$NODE2" = "${PORT2}.debian.net" ] ; then PORT2 = 22 ; fi
 	# overwrite ARCH for remote builds
 	for i in $ARCHS ; do
 		# try to match ARCH in nodenames

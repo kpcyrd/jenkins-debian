@@ -674,12 +674,8 @@ class Build:
                 return          # suite/arch, or none at all
         self.status = str(result[0])
         self.version = str(result[1])
-        # this is currently used only on rb-pkg pages, no need to have
-        if result[2]:                       # parsable timestamps and the like
-            self.build_date = 'at ' + str(result[2]) + ' UTC'
-        else:
-            self.build_date = \
-                '<span style="color:red;font-weight:bold;">UNTESTED</span>'
+        if result[2]:
+            self.build_date = str(result[2]) + ' UTC'
 
 
 class Package:

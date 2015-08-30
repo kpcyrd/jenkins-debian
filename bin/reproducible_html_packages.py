@@ -181,6 +181,10 @@ def gen_suites_links(package, current_suite, current_arch):
                 continue
             version = package.get_tested_version(s, a)
             build_date = package.get_build_date(s, a)
+            if build_date:
+                build_date = ' on ' + build_date
+            else:
+                build_date = ''
             li_classes = ['suite']
             if s == current_suite and a == current_arch:
                 li_classes.append('active')
@@ -194,7 +198,7 @@ def gen_suites_links(package, current_suite, current_arch):
             icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
             html += icon.format(icon=join_status_icon(status)[1], status=status)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
-                     ' title="{}: {} on {}">{}</a>: {}\n').format(RB_PKG_URI,
+                     ' title="{}: {}{}">{}</a>: {}\n').format(RB_PKG_URI,
                      s, a, package.name, status, version, build_date, s, version)
             html += '</li>\n'
         html += tab + '</ul></li>'
@@ -217,6 +221,10 @@ def gen_packages_html(packages, no_clean=False):
                 status = package.get_status(suite, arch)
                 version = package.get_tested_version(suite, arch)
                 build_date = package.get_build_date(suite, arch)
+                if build_date:
+                    build_date = 'at ' + build_date
+                else:
+                    build_date = '<span style="color:red;font-weight:bold;">UNTESTED</span>'
                 if status == False:  # the package is not in the checked suite
                     continue
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',

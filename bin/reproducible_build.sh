@@ -508,7 +508,8 @@ check_buildinfo() {
 			first_build
 		else
 			ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 .
+			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
+			ls -R $TMPDIR
 			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 		fi
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
@@ -530,7 +531,8 @@ build_rebuild() {
 		first_build
 	else
 		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 .
+		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
+                ls -R $TMPDIR
 		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 	fi
 	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
@@ -543,7 +545,8 @@ build_rebuild() {
 			second_build
 		else
 			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 .
+			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 $TMPDIR/
+	                ls -R $TMPDIR
 			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR"
 		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then

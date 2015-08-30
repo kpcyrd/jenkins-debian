@@ -188,6 +188,9 @@ usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
 
 * Finally, there are also three jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt] and link:http://www.netbsd.org/[NetBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/ and https://reproducible.debian.net/netbsd/.
 
+* Just as of now, we have started with building on two different systems, so for 'amd64' we are now using two hosts, profitbricks-build1-amd64 profitbricks-build2-amd64, which both have 8 cores and 32gb ram and are sponsored by Profitbricks.
+* Then we also started to test 'armhf' on four small boards donated by vagrant@d.o: two quad cores (wbq0 and cbxi4pro0) with 2gb ram and two dual cores (bpi0 and hb0) with 1gb ram, each. We hope to have powerful ARM hardware in the near future, if you can help, please talk to us!
+
 === jenkins.d.n jobs
 
 These are jobs for making sure jenkins.debian.net is running smoothly.

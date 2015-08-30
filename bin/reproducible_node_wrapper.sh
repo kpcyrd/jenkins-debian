@@ -59,7 +59,9 @@ info "remote_host called with $*"
 
 allowed_cmds=()
 
-if   [ "$*" = "reproducible_setup_pbuilder_testing_armhf_bpi0" ] ; then
+if [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
+	exec /srv/jenkins/bin/reproducible_build.sh $2 $3 $4 ; croak "Exec failed";
+elif   [ "$*" = "reproducible_setup_pbuilder_testing_armhf_bpi0" ] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
 elif [ "$*" = "reproducible_maintenance_armhf_bpi0" ] ; then
 	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";

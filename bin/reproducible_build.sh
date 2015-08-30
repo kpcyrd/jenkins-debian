@@ -576,10 +576,10 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	exit 0
 elif [ "$2" != "" ] ; then
 	MODE="ng"
-	NODE1="(echo $1 | cut -d ':' -f1).debian.net"
-	NODE2="(echo $2 | cut -d ':' -f1).debian.net"
-	PORT1="(echo $1 | cut -d ':' -f2)"
-	PORT2="(echo $2 | cut -d ':' -f2)"
+	NODE1="$(echo $1 | cut -d ':' -f1).debian.net"
+	NODE2="$(echo $2 | cut -d ':' -f1).debian.net"
+	PORT1="$(echo $1 | cut -d ':' -f2)"
+	PORT2="$(echo $2 | cut -d ':' -f2)"
 	# if no port is given, assume 22
 	if [ "$NODE1" = "${PORT1}.debian.net" ] ; then PORT1 = 22 ; fi
 	if [ "$NODE2" = "${PORT2}.debian.net" ] ; then PORT2 = 22 ; fi

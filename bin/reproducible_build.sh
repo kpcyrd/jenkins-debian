@@ -538,7 +538,14 @@ build_rebuild() {
                 ls -R $TMPDIR
 		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 	fi
-	if [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
+	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
+			echo "Version mismatch between main node and first build node, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
+			# this is wrong / not optimal but it should at least stop the false ftbfs...
+			FTBFS=0
+		        calculate_build_duration
+			update_db_and_html "depwait"
+			exit 1
+	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
 		echo "============================================================================="

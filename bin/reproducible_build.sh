@@ -606,8 +606,8 @@ elif [ "$2" != "" ] ; then
 	PORT1="$(echo $1 | cut -d ':' -f2)"
 	PORT2="$(echo $2 | cut -d ':' -f2)"
 	# if no port is given, assume 22
-	if [ "$NODE1" = "${PORT1}.debian.net" ] ; then PORT1 = 22 ; fi
-	if [ "$NODE2" = "${PORT2}.debian.net" ] ; then PORT2 = 22 ; fi
+	if [ "$NODE1" = "${PORT1}.debian.net" ] ; then PORT1= 22 ; fi
+	if [ "$NODE2" = "${PORT2}.debian.net" ] ; then PORT2= 22 ; fi
 	# overwrite ARCH for remote builds
 	for i in $ARCHS ; do
 		# try to match ARCH in nodenames

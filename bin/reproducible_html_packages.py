@@ -44,8 +44,8 @@ html_package_page = Template((tab*2).join(("""
 
 ${suites_links}
 
-    Reproducible Builds project links
     <ul class="reproducible-links">
+        Reproducible Builds project links
         <li>
             <a href="%s">Dashboard</a><br />
             <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />

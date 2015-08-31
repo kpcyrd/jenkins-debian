@@ -37,7 +37,7 @@ Reference doc for the folowing lists:
       * $count being the len() of the query indicated by `query2`
     - `query2`: useful only if `timely` is True.
     - `nosuite`: if true do not iterate over the suite/archs, use only the
-      defaults
+      current suite+arch
   + global: if true, then the page will saved on the root of rb.d.n, and:
     - the query also takes the value "status"
     - force the suite/arch to the defaults
@@ -446,8 +446,8 @@ def build_leading_text_section(section, rows, suite, arch):
 def build_page_section(page, section, suite, arch):
     try:
         if pages[page].get('global') and pages[page]['global']:
-            suite = defaultsuite if not suite else suite
-            arch = defaultarch if not arch else arch
+            suite = defaultsuite
+            arch = defaultarch
         if pages[page].get('notes') and pages[page]['notes']:
             query = queries[section['query']].format(
                 status=section['db_status'], suite=suite, arch=arch)
@@ -509,7 +509,7 @@ def build_page(page, suite=None, arch=None):
     for section in page_sections:
         if gpage:
             if section.get('nosuite') and section['nosuite']:  # only defaults
-                html += build_page_section(page, section, None, None)[0]
+                html += build_page_section(page, section, suite, arch)[0]
             else:
                 for suite in SUITES:
                     for arch in ARCHS:

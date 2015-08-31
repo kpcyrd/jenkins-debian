@@ -422,6 +422,22 @@
 
 - job-template:
     defaults: reproducible_builder
+    name: '{name}_builder_amd64_4'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_5'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_6'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_7'
+
+- job-template:
+    defaults: reproducible_builder
     name: '{name}_builder_armhf_1'
 
 - job-template:
@@ -840,6 +856,30 @@
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_4':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_5':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_6':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_7':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_builder_armhf_1':

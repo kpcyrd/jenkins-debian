@@ -241,16 +241,12 @@ properties:
 
 * reproducible_build.sh changes needed:
 ** diffoscope needs to be run on the target arch...
-*** can't this done via qemu on the host?
+*** can't this be run via qemu on the host?
 
 * missing job definitions:
 ** reproducible_builder_amd64_1 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
 ** reproducible_builder_amd64_2 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
 ** reproducible_builder_amd64_3 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
-** reproducible_builder_amd64_4 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
-** reproducible_builder_amd64_5 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
-** reproducible_builder_amd64_6 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
-** reproducible_builder_amd64_7 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_amd64_8 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_amd64_9 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
 ** reproducible_builder_amd64_10 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"

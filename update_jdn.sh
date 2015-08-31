@@ -73,8 +73,8 @@ esac
 for directory in /schroots /srv/reproducible-results /srv/d-i /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
-		sudo chown jenkins.jenkins $directory
 	fi
+	sudo chown jenkins.jenkins $directory
 done
 for directory in /srv/jenkins ; do
 	if [ ! -d $directory ] ; then

@@ -91,7 +91,6 @@ log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
 log.debug('Notify: ' + str(notify))
 log.debug('Debug url: ' + str(debug_url))
-log.debug('Architecture: ' + defaultarch)
 log.debug('Issue: ' + issue if issue else str(None))
 log.debug('Status: ' + status if status else str(None))
 log.debug('Date: after ' + built_after if built_after else str(None) +

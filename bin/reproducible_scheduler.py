@@ -142,24 +142,6 @@ class Limit:
             return self.get_limit('*')
 
 
-def call_apt_update(suite):
-    # try three times, before failing the job
-    for i in [1, 2, 3]:
-        to_call =['schroot', '--directory', '/root', '-u', 'root', \
-                  '-c', 'source:jenkins-reproducible-'+suite, '--', \
-                  'apt-get', 'update']
-        log.debug('calling ' + ' '.join(to_call))
-        if not call(to_call):
-            return
-        else:
-            log.warning('`apt-get update` failed. Retrying another ' + str(3-i)
-                        + ' times.')
-            sleep(randint(1, 70) + 30)
-    print_critical_message('`apt-get update` for suite ' + suite +
-                           ' failed three times in a row, giving up.')
-    sys.exit(1)
-
-
 def update_sources(suite):
     # download the sources file for this suite
     mirror = 'http://ftp.de.debian.org/debian'
@@ -528,7 +510,6 @@ def scheduler(arch):
 if __name__ == '__main__':
     log.info('Updating schroots and sources tables for all suites.')
     for suite in SUITES:
-        call_apt_update(suite)
         update_sources(suite)
     purge_old_pages()
     query = 'SELECT count(*) ' + \

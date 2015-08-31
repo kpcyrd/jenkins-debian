@@ -259,3 +259,13 @@ if ! $DIRTY ; then
 	echo "Everything seems to be fine."
 	echo
 fi
+
+echo "$(date -u) - updating the schroots now..."
+ARCH=$(dpkg --print-architecture)
+for s in SUITES ; do
+	if [ "$ARCH" = "armhf" ] && [ "$s" != "unstable" ] ; then
+		continue
+	fi
+	echo "$(date -u) - updating the $s/$ARCH schroot now."
+	schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
+done

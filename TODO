@@ -173,7 +173,6 @@ properties:
 === reproducible
 
 * higher prio:
-** call_apt_update() needs to be moved from _scheduler.py to jobs so its run on all build nodes
 ** use disorderfs (atm its disabled)
 *** current scripts are only in hosts/jenkins/ but need to be copied to hosts/+/
 *** document usage in diff table...
@@ -238,6 +237,7 @@ properties:
 * open questions:
 ** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
 ** maintenance is general, cleanup of started but interrupted builds...
+* grep for "locales-all" in build logs… (to confirm that its really used on the new build nodes)
 
 * reproducible_build.sh changes needed:
 ** diffoscope needs to be run on the target arch...

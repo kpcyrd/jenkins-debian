@@ -267,7 +267,7 @@ def _gen_links(suite, arch):
     html = ''
     for link in links:
         if link[0] == 'pkg_sets' and suite == 'experimental':
-            html += link[1].format(suite=defaultsuite, arch=arch) + '\n'
+            html += link[1].format(suite=suite, arch=arch) + '\n'
             continue
         html += link[1].format(suite=suite, arch=arch) + '\n'
     for i in SUITES:  # suite links

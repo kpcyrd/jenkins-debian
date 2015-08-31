@@ -59,8 +59,8 @@ info "remote_host called with $*"
 
 allowed_cmds=()
 
-if [[ "$*" =~ /bin/nc\ -q\ 0\ localhost\ 4949 ]] ; then
-	exec nc -q 0 localhost 4949 ; croak "Exec failed";
+if [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
+	exec nc localhost 4949 ; croak "Exec failed";
 elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh"
 	REBOOTSTRAPSH="$REBOOTSTRAPSH HOST_ARCH=$(echo $1 | cut -d "_" -f2)"

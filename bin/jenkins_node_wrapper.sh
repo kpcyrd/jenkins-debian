@@ -68,11 +68,11 @@ elif [[ "$0" =~ rebootstrap_.* ]] ; then
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH "$@"; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
-	exec /srv/jenkins/bin/reproducible_build.sh $2 $3 $4 $5 ; croak "Exec failed";
+	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";
 elif [[ "$*" =~ rsync\ --server\ --sender\ .*\ .\ /srv/reproducible-results/tmp.* ]] ; then
-	exec rsync --server --sender $4 . $6 ; croak "Exec failed";
+	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
-	exec rm -r $3 ; croak "Exec failed";
+	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_pbuilder_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_pbuilder_testing_.*_.* ]] ; then

@@ -62,7 +62,7 @@ allowed_cmds=()
 
 if [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
 	exec /bin/nc localhost 4949 ; croak "Exec failed";
-elif [[ "$0" =~ rebootstrap_.* ]] ; then
+elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh"
 	shift
 	export LC_ALL=C

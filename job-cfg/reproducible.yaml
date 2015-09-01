@@ -246,11 +246,11 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_unstable_debbindiff'
+    name: '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins'
 
 - job-template:
     defaults: reproducible
-    name: '{name}_setup_schroot_testing_debbindiff'
+    name: '{name}_setup_schroot_testing_diffoscope_amd64_jenkins'
 
 - job-template:
     defaults: reproducible
@@ -551,16 +551,16 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
-        - '{name}_setup_schroot_unstable_debbindiff':
-            my_description: 'Setup schroot for running debbindiff in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
+        - '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins':
+            my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-debbindiff unstable debbindiff locales-all'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_setup_schroot_testing_debbindiff':
-            my_description: 'Setup schroot for running debbindiff in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
+        - '{name}_setup_schroot_testing_diffoscope_amd64_jenkins':
+            my_description: 'Setup schroot for running diffoscope in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-debbindiff testing debbindiff locales-all'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-diffoscope testing diffoscope locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_setup_schroot_unstable':

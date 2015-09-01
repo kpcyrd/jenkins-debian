@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2009, 2010, 2012, 2015 Peter Palfrader
+#               2015 Holger Levsen
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -89,6 +90,8 @@ elif [[ "$*" =~ reproducible_setup_schroot_testing_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_schroot_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
+elif [ "$*" = "some_jenkins_job_name" ] ; then
+	exec echo run any commands here ; croak "Exec failed";
 fi
 
 croak "Command '$*' not found in allowed commands."

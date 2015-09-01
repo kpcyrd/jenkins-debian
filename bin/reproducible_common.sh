@@ -425,8 +425,8 @@ call_diffoscope() {
 	set +e
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
-		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
-		debbindiff -- \
+		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
+		diffoscope -- \
 			--html $TMPDIR/$1/$2.html \
 			$TMPDIR/b1/$1/$2 \
 			$TMPDIR/b2/$1/$2 2>&1 \

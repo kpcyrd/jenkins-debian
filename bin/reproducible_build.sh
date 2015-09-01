@@ -282,19 +282,19 @@ call_diffoscope_on_changes_files() {
 	local TIMEOUT="30m"
 	DBDSUITE=$SUITE
 	if [ "$SUITE" = "experimental" ] ; then
-		# there is no extra debbindiff-schroot for experimental because we specical case ghc enough already ;)
+		# there is no extra diffoscope-schroot for experimental because we specical case ghc enough already ;)
 		DBDSUITE="unstable"
 	fi
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
+	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 	echo "$(date) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
 	set -x
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
-		-c source:jenkins-reproducible-${DBDSUITE}-debbindiff \
-		-- sh -c "export TMPDIR=$TEMP ; debbindiff \
+		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
+		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
 			$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \

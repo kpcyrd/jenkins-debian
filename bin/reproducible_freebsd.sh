@@ -111,7 +111,7 @@ umask 0022
 # run diffoscope on the results
 TIMEOUT="30m"
 DBDSUITE="unstable"
-DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-debbindiff debbindiff -- --version 2>&1)"
+DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 echo "============================================================================="
 echo "$(date -u) - Running $DIFFOSCOPE on freebsd..."
 echo "============================================================================="

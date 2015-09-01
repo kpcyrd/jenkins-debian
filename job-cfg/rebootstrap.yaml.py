@@ -144,5 +144,5 @@ for arch in sorted(architectures):
                     if get_node(arch):
                         print("            my_wrapper: '/srv/jenkins/bin/jenkins_master_wrapper.sh'")
                     else:
-                        print("            my_wrapper: '/srv/jenkins/bin/rebootstrap.sh')
+                        print("            my_wrapper: '/srv/jenkins/bin/rebootstrap.sh'")
 

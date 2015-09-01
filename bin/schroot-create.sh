@@ -128,21 +128,21 @@ bootstrap() {
 		set -x
 		sudo chroot $CHROOT_TARGET apt-get update
 		# install diffoscope with all recommends...
-		if [ "$1" = "debbindiff" ] ; then
-			sudo chroot $CHROOT_TARGET apt-get install -y --install-recommends debbindiff
+		if [ "$1" = "diffoscope" ] ; then
+			sudo chroot $CHROOT_TARGET apt-get install -y --install-recommends diffoscope
 		fi
 		sudo chroot $CHROOT_TARGET apt-get install -y --no-install-recommends "$@" sudo
 		# always use diffoscope from unstable
-		if [ "$SUITE" = "testing" ] && [ "$1" = "debbindiff" ] ; then
+		if [ "$SUITE" = "testing" ] && [ "$1" = "diffoscope" ] ; then
 			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
 			sudo chroot $CHROOT_TARGET apt-get update
 			# install diffoscope from unstable without re-adding all recommends...
-			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends debbindiff || echo "Warning: diffoscope from unstable is uninstallable at the moment."
+			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends diffoscope || echo "Warning: diffoscope from unstable is uninstallable at the moment."
 		fi
 		if ! $DEBUG ; then set +x ; fi
-		if [ "$1" = "debbindiff" ] ; then
+		if [ "$1" = "diffoscope" ] ; then
 			echo
-			sudo chroot $CHROOT_TARGET dpkg -l debbindiff
+			sudo chroot $CHROOT_TARGET dpkg -l diffoscope
 			echo
 		fi
 		# umount in reverse order

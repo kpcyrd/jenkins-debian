@@ -17,7 +17,7 @@ case "$NODE_NAME" in
     exec ssh -p 2226 $NODE_NAME "$JOB_NAME"
     ;;
   profitbricks-build?-amd64.debian.net)
-    if [[ "$JOBNAME" =~ rebootstrap_.* ]] ; then
+    if [[ "$JOB_NAME" =~ rebootstrap_.* ]] ; then
 	    exec ssh $NODE_NAME "$JOB_NAME $@"
     else
 	    exec ssh $NODE_NAME "$JOB_NAME"

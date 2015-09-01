@@ -60,7 +60,7 @@ print("""
       - priority:
           job-prio: '150'
       - throttle:
-          max-total: 4
+          max-total: 8
           max-per-node: 4
           enabled: true
           option: category

@@ -64,7 +64,7 @@ if [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
 	exec /bin/nc localhost 4949 ; croak "Exec failed";
 elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	shift
-	REBOOTSTRAPSH="/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh $@"
+	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

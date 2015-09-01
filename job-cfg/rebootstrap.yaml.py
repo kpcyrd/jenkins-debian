@@ -78,7 +78,7 @@ print("""
           branches:
             - '{my_branchname}'
     builders:
-      - shell: '{my_wrapper} HOST_ARCH={my_arch} {my_params}'
+      - shell: '{my_wrapper} {my_branchname} HOST_ARCH={my_arch} {my_params}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
@@ -144,5 +144,5 @@ for arch in sorted(architectures):
                     if get_node(arch):
                         print("            my_wrapper: '/srv/jenkins/bin/jenkins_master_wrapper.sh'")
                     else:
-                        print("            my_wrapper: 'LC_ALL=C /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh'")
+                        print("            my_wrapper: '/srv/jenkins/bin/rebootstrap.sh')
 

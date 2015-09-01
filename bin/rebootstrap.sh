@@ -8,12 +8,12 @@ DEBUG=true
 common_init "$@"
 
 cleanup_all() {
-	rm -r $CODE
+	rm -r $CODE || true
 }
 
 CODE=$(mktemp --tmpdir=/tmp gitclone-XXXXXXXXX -u)
 trap cleanup_all INT TERM EXIT
-git clone git://anonscm.debian.org/users/helmutg/rebootstrap.git --depth 1 $CODE
+git clone --depth 1 git://anonscm.debian.org/users/helmutg/rebootstrap.git $CODE
 cd $CODE
 git checkout $1
 shift

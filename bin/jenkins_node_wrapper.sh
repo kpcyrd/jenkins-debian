@@ -83,24 +83,14 @@ elif [[ "$*" =~ reproducible_setup_pbuilder_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_maintenance_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
-elif [ "$*" = "reproducible_setup_schroot_unstable_armhf_bpi0" ] ; then
-	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable ; croak "Exec failed";
-elif [ "$*" = "reproducible_setup_schroot_unstable_armhf_cbxi4pro0" ] ; then
-	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable ; croak "Exec failed";
-elif [ "$*" = "reproducible_setup_schroot_unstable_armhf_hb0" ] ; then
-	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable ; croak "Exec failed";
-elif [ "$*" = "reproducible_setup_schroot_unstable_armhf_wbq0" ] ; then
+elif [[ "$*" =~ reproducible_setup_schroot_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable ; croak "Exec failed";
 elif [ "$*" = "reproducible_setup_schroot_testing_amd64_profitbricks1" ] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing ; croak "Exec failed";
-elif [ "$*" = "reproducible_setup_schroot_unstable_amd64_profitbricks1" ] ; then
-	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable ; croak "Exec failed";
 elif [ "$*" = "reproducible_setup_schroot_experimental_amd64_profitbricks1" ] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
 elif [ "$*" = "reproducible_setup_schroot_testing_amd64_profitbricks2" ] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing ; croak "Exec failed";
-elif [ "$*" = "reproducible_setup_schroot_unstable_amd64_profitbricks2" ] ; then
-	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable ; croak "Exec failed";
 elif [ "$*" = "reproducible_setup_schroot_experimental_amd64_profitbricks2" ] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
 fi

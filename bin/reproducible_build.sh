@@ -81,7 +81,7 @@ save_artifacts() {
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="Artifacts for ${SRCPACKAGE} (${SUITE}/${ARCH}) published: $URL"
 			if [ "$NOTIFY" = "diffoscope" ] ; then
-				MESSAGE="$MESSAGE: error when running $DIFFOSCOPE"
+				MESSAGE="$MESSAGE (error when running $DIFFOSCOPE)"
 			fi
 			irc_message "$MESSAGE"
 		fi

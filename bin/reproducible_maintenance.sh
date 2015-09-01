@@ -262,7 +262,7 @@ fi
 
 echo "$(date -u) - updating the schroots now..."
 ARCH=$(dpkg --print-architecture)
-for s in SUITES ; do
+for s in $SUITES ; do
 	if [ "$ARCH" = "armhf" ] && [ "$s" != "unstable" ] ; then
 		continue
 	fi

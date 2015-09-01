@@ -78,7 +78,7 @@ print("""
           branches:
             - '{my_branchname}'
     builders:
-      - shell: '{my_wrapper} LC_ALL=C /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh HOST_ARCH={my_arch} {my_params}'
+      - shell: '{my_wrapper} HOST_ARCH={my_arch} {my_params}'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/rebootstrap.rules'
@@ -142,4 +142,7 @@ for arch in sorted(architectures):
                      debbindiff_comment=" showing debbindiffs" if debbindiff else "",
                      node=get_node(arch)))
                     if get_node(arch):
-                        print("            my_wrapper: '/srv/jenkins/bin/reproducible_master_wrapper.sh'")
+                        print("            my_wrapper: '/srv/jenkins/bin/jenkins_master_wrapper.sh'")
+                    else:
+                        print("            my_wrapper: 'LC_ALL=C /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh'")
+

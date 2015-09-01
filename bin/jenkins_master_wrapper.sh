@@ -17,7 +17,11 @@ case "$NODE_NAME" in
     exec ssh -p 2226 $NODE_NAME "$JOB_NAME"
     ;;
   profitbricks-build?-amd64.debian.net)
-    exec ssh $NODE_NAME "$JOB_NAME"
+    if [[ "$JOBNAME" =~ rebootstrap_.* ]] ; then
+	    exec ssh $NODE_NAME "$JOB_NAME $@"
+    else
+	    exec ssh $NODE_NAME "$JOB_NAME"
+    fi
     ;;
   *)
     echo >&2 "Unknown node $NODE_NAME."

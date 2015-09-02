@@ -16,4 +16,4 @@ TARGET="specs/$(basename $SPEC -spec)"
 make $SPEC.html
 mkdir -pv "$BASE/$TARGET"
 mv -v $SPEC.html "$BASE/$TARGET/index.html"
-irc_message "$REPRODUCIBLE_URL/$TARGET/ updated to $VERSION"
+irc_message "$REPRODUCIBLE_DOT_ORG_URL/$TARGET/ updated to $VERSION"

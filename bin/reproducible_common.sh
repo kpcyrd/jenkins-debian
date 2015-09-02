@@ -34,6 +34,7 @@ fi
 
 # common variables
 REPRODUCIBLE_URL=https://reproducible.debian.net
+REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
 

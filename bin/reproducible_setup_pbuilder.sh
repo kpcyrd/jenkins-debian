@@ -114,14 +114,6 @@ setup_pbuilder() {
 }
 
 #
-# update pbuilder for reproducible builds
-#
-update_pbuilder() {
-	NAME=$1
-	sudo pbuilder --update --http-proxy $http_proxy --basetgz /var/cache/pbuilder/${NAME}.tgz
-}
-
-#
 # main
 #
 BASETGZ=/var/cache/pbuilder/$SUITE-reproducible-base.tgz
@@ -135,7 +127,6 @@ if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	fi
 	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev debhelper
 else
-	echo "Updating $BASETGZ..."
-	update_pbuilder $SUITE-reproducible-base
+	echo "Echo $BASETGZ not old enough, doing nothing..."
 fi
 echo

@@ -260,14 +260,17 @@ if ! $DIRTY ; then
 	echo
 fi
 
-echo "$(date -u) - updating the schroots now..."
+echo "$(date -u) - updating the schroots and pbuilder now..."
+set +e
 ARCH=$(dpkg --print-architecture)
 for s in $SUITES ; do
 	if [ "$ARCH" = "armhf" ] && [ "$s" != "unstable" ] ; then
 		continue
 	fi
+	#
+	# schroot update
+	#
 	echo "$(date -u) - updating the $s/$ARCH schroot now."
-	set +e
 	for i in 1 2 3 ; do
 		schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
 		RESULT=$?
@@ -283,4 +286,31 @@ for s in $SUITES ; do
 	if [ $RESULT -eq 1 ] ; then
 		echo "Warning: failed to update the $s/$ARCH schroot."
 	fi
+	#
+	# pbuilder update
+	#
+	echo "$(date -u) - updating pbuilder for $s/$ARCH now."
+	# use host apt proxy configuration for pbuilder
+	if [ ! -z "$http_proxy" ] ; then
+		pbuilder_http_proxy="--http-proxy $http_proxy"
+	fi
+	for i in 1 2 3 ; do
+		sudo pbuilder --update $pbuilder_http_proxy --basetgz /var/cache/pbuilder/$s-reproducible-base.tgz
+		RESULT=$?
+		if [ $RESULT -eq 1 ] ; then
+			# sleep 31-100 secs
+			echo "Sleeping some time... (to workaround network problems like 'Hash Sum mismatch'...)"
+			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-700 -n 1)/10)+30" | bc )
+			echo "$(date -u) - Retrying to update pbuilder for $s/$ARCH."
+		elif [ $RESULT -eq 0 ] ; then
+			continue
+		fi
+	done
+	if [ $RESULT -eq 1 ] ; then
+		echo "Warning: failed to update pbuilder for $s/$ARCH."
+	fi
 done
+set -e
+echo "$(date -u) - the end."
+
+

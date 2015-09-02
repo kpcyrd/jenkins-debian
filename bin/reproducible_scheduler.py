@@ -441,7 +441,7 @@ def scheduler(arch):
             'WHERE s.architecture="{arch}"'
     total = int(query_db(query.format(arch=arch))[0][0])
     log.info('Currently scheduled packages in all suites: ' + str(total))
-    if total > 750:
+    if total > MAXIMUM[arch]:
         generate_schedule()  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
                  ', nothing to do here.')

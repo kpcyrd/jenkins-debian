@@ -238,7 +238,6 @@ properties:
 * reproducible_build.sh changes needed:
 ** diffoscope needs to be run on the target arch...
 *** can't this be run via qemu on the host?
-* maintenance job: deal with "hash sum mismatch" see https://jenkins.debian.net/job/reproducible_maintenance_amd64_profitbricks1/148/
 * exit 404 / * detect "bad gateway" as in https://jenkins.debian.net/job/reproducible_builder_amd64_4/222/ and deal with it properly
 * deal with rsync problems as in https://jenkins.debian.net/job/reproducible_builder_armhf_4/61/:
 ----

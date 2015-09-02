@@ -267,5 +267,20 @@ for s in $SUITES ; do
 		continue
 	fi
 	echo "$(date -u) - updating the $s/$ARCH schroot now."
-	schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
+	set +e
+	for i in 1 2 3 ; do
+		schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
+		RESULT=$?
+		if [ $RESULT -eq 1 ] ; then
+			# sleep 31-100 secs
+			echo "Sleeping some time... (to workaround network problems like 'Hash Sum mismatch'...)"
+			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-700 -n 1)/10)+30" | bc )
+			echo "$(date -u) - Retrying to update the $s/$ARCH schroot."
+		elif [ $RESULT -eq 0 ] ; then
+			continue
+		fi
+	done
+	if [ $RESULT -eq 1 ] ; then
+		echo "Warning: failed to update the $s/$ARCH schroot."
+	fi
 done

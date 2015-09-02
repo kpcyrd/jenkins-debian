@@ -171,9 +171,8 @@ properties:
 
 * higher prio:
 ** use disorderfs (atm its disabled)
-*** current scripts are only in hosts/jenkins/ but need to be copied to hosts/+/
+*** current scripts are only in hosts/jenkins/ but need to be copied to hosts/*/
 *** document usage in diff table...
-** fix https://jenkins.debian.net/munin/debian.net/jenkins.debian.net/jenkins_builds.html which is broken since jessie upgrade
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
@@ -263,7 +262,7 @@ rsync: connection unexpectedly closed (55445 bytes received so far) [receiver]
 
 ==== reproducible Debian armhf
 
-* monitor their temperatures via munin via ssh:
+* monitor their temperatures via munin
 * make systems send mail
 * change date on 2nd build hosts (and disable systemd-timesyncd)
 

@@ -445,10 +445,13 @@ def scheduler(arch):
         generate_schedule()  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
                  ', only scheduling new versions.')
-        untested, msg_untested = 0, 0
+        empty_pkgs = {}
+        for suite in SUITES:
+            empty_pkgs[suite] = []
+        untested, msg_untested = empty_pkgs, ''
         new, msg_new  = schedule_new_versions(arch, total)
-        old_ftbfs, msg_old_ftbfs  = 0 ,0
-        old, msg_old  = 0, 0
+        old_ftbfs, msg_old_ftbfs  = empty_pkgs, ''
+        old, msg_old  = empty_pkgs, ''
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')

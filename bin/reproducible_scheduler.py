@@ -444,16 +444,19 @@ def scheduler(arch):
     if total > MAXIMUM[arch]:
         generate_schedule()  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
-                 ', nothing to do here.')
-        return
+                 ', only scheduling new versions.')
+        untested, msg_untested = 0, 0
+        new, msg_new  = schedule_new_versions(arch, total+len(untested))
+        old_ftbfs, msg_old_ftbfs  = 0 ,0
+        old, msg_old  = 0, 0
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
         log.info('==============================================================')
-    untested, msg_untested = schedule_untested_packages(arch, total)
-    new, msg_new  = schedule_new_versions(arch, total+len(untested))
-    old_ftbfs, msg_old_ftbfs  = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
-    old, msg_old  = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs))
+        untested, msg_untested = schedule_untested_packages(arch, total)
+        new, msg_new  = schedule_new_versions(arch, total+len(untested))
+        old_ftbfs, msg_old_ftbfs  = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
+        old, msg_old  = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first
@@ -518,9 +521,9 @@ if __name__ == '__main__':
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)
         overall = int(query_db(query.format(arch))[0][0])
-        if overall > MAXIMUM[arch]:
+        if overall > (MAXIMUM[arch]*2):
             log.info('%s packages already scheduled, nothing to do.', overall)
             continue
-        log.info('%s packages already scheduled, scheduling some more...',
+        log.info('%s packages already scheduled, probably scheduling some more...',
                  overall)
         scheduler(arch)

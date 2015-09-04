@@ -446,7 +446,7 @@ def scheduler(arch):
         log.info(str(total) + ' packages already scheduled' +
                  ', only scheduling new versions.')
         untested, msg_untested = 0, 0
-        new, msg_new  = schedule_new_versions(arch, total+len(untested))
+        new, msg_new  = schedule_new_versions(arch, total)
         old_ftbfs, msg_old_ftbfs  = 0 ,0
         old, msg_old  = 0, 0
     else:

@@ -688,14 +688,14 @@
             my_node: ''
         - '{name}_html_howto':
             my_description: 'Generate the HTML of the reproducible builds howto, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/reproducible-builds-howto.git" target="_blank">reproducible-builds-howto.git</a> repository.'
-            my_timed: '57 0 * * *'
+            my_timed: ''
             my_gitrepo: 'git://git.debian.org/git/reproducible/reproducible-builds-howto.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_howto.sh'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_html_spec_source_date_epoch':
             my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/source-date-epoch-spec.git" target="_blank">source-date-epoch-spec.git</a> repository.'
-            my_timed: '57 0 * * *'
+            my_timed: ''
             my_gitrepo: 'git://git.debian.org/git/reproducible/source-date-epoch-spec.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh source-date-epoch-spec'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'

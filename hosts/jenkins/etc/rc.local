@@ -11,6 +11,6 @@
 #
 # By default this script does nothing.
 
-echo "$(date) - system was rebooted" | mail -s "jenkins.d.n rebooted" root
+echo "$(date) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
 
 exit 0

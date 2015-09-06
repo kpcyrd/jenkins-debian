@@ -374,11 +374,15 @@
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_builder_epsilon'
+    name: '{name}_builder_amd64_1'
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_builder_zeta'
+    name: '{name}_builder_amd64_2'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_3'
 
 - job-template:
     defaults: reproducible_builder
@@ -395,6 +399,18 @@
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_amd64_7'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_8'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_9'
+
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_amd64_10'
 
 - job-template:
     defaults: reproducible_builder
@@ -754,16 +770,22 @@
             my_shell: '/srv/jenkins/bin/reproducible_build.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_builder_epsilon':
+        - '{name}_builder_amd64_1':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_builder_zeta':
+        - '{name}_builder_amd64_2':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_3':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_builder_amd64_4':
@@ -785,6 +807,24 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_builder_amd64_7':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_8':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_9':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: 'H/2 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_amd64_10':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: 'H/2 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64'

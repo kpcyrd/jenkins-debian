@@ -240,14 +240,6 @@ properties:
 ** diffoscope needs to be run on the target arch...
 *** can't this be run via qemu on the host?
 
-* missing job definitions:
-** reproducible_builder_amd64_1 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
-** reproducible_builder_amd64_2 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
-** reproducible_builder_amd64_3 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"
-** reproducible_builder_amd64_8 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
-** reproducible_builder_amd64_9 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
-** reproducible_builder_amd64_10 runs "reproducible_build.sh profitbricks-build2-amd64 profitbricks-build1-amd64"
-
 * then we have a new script, reproducible_info.sh which just outputs key-value pairs, like "ARCH=armhf", DATETIME="Mo 10. Aug 11:56:22 CEST 2015" and "TZ=UTC" and whatever.
 ** this script is run on all nodes, via a for loop on the main node (jenkins atm), as part of dashboard.sh, and the results will be captured in /srv/reproducible-results/node-information/$NODE and then used by reproducible_html_dashboard.sh to create the table with the differences between 1st and 2nd build...
 *** document usage of -j 24/8/3 in write_explaination_table()

@@ -177,11 +177,11 @@ properties:
 ** link source-data-epoch spec from rb.d.n
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
+*** get the content for freebsd/netbsd/openwrt/coreboot "<h2>status of $1</h2>" from notes.git/friends.yaml or such
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 
 * lesser prio
 ** reproducible_scheduler.py: why do we have ARCH_SHARE when LIMITS is different for each arch anyway...? legacy? if so -> cleanup...
-** get the content for freebsd/netbsd/openwrt/coreboot "<h2>status of $1</h2>" from notes.git/friends.yaml or such
 ** document (in README) the multihost setup
 ** the setup pbuilder+schroot setup scripts should detect network problems such as "Bad gateway" and sleep 5m and retry once
 ** more graphs:
@@ -210,9 +210,9 @@ properties:
 
 * missing tests:
 ** variation in kernel
+** different cpu type
 ** variation in date
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
-** different cpu type: Opteron_G3  AMD Opteron 23xx (Gen 3 Class Opteron) is the most powerful one that's different to current Opteron_G4
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 ** variation of filesystem being built on (we probably wont do that and just always build on tmpfs...)

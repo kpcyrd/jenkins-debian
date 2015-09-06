@@ -239,12 +239,6 @@ properties:
 * reproducible_build.sh changes needed:
 ** diffoscope needs to be run on the target arch...
 *** can't this be run via qemu on the host?
-* deal with rsync problems as in https://jenkins.debian.net/job/reproducible_builder_armhf_4/61/:
-----
-jenkins_node_wrapper.sh[14148] remote_host called with rsync --server --sender -re.iLsfx . /srv/reproducible-results/tmp.QhHoGHUUnP/b1
-Write failed: Broken pipe
-rsync: connection unexpectedly closed (55445 bytes received so far) [receiver]
-----
 
 * missing job definitions:
 ** reproducible_builder_amd64_1 runs "reproducible_build.sh profitbricks-build1-amd64 profitbricks-build2-amd64"

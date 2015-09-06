@@ -520,6 +520,11 @@ check_buildinfo() {
 				/srv/jenkins/bin/abort.sh
 			fi
 			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
+			RESULT=$?
+			if [ $RESULT -ne 0 ] ; then
+				echo "Unhandled error when rsyncing remote build job results, please investigate."
+				/srv/jenkins/bin/abort.sh
+			fi
 			ls -R $TMPDIR
 			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 		fi
@@ -551,7 +556,12 @@ build_rebuild() {
 			/srv/jenkins/bin/abort.sh
 		fi
 		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
-                ls -R $TMPDIR
+		RESULT=$?
+		if [ $RESULT -ne 0 ] ; then
+			echo "Unhandled error when rsyncing remote build job results, please investigate."
+			/srv/jenkins/bin/abort.sh
+		fi
+		ls -R $TMPDIR
 		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
 	fi
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
@@ -580,6 +590,11 @@ build_rebuild() {
 				/srv/jenkins/bin/abort.sh
 			fi
 			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 $TMPDIR/
+			RESULT=$?
+			if [ $RESULT -ne 0 ] ; then
+				echo "Unhandled error when rsyncing remote build job results, please investigate."
+				/srv/jenkins/bin/abort.sh
+			fi
 	                ls -R $TMPDIR
 			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR"
 		fi

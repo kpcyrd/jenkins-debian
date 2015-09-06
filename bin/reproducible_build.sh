@@ -264,6 +264,14 @@ handle_reproducible() {
 	fi
 }
 
+handle_unhandled() {
+	MESSAGE="$BUILD_URL met an unhandled $1, please investigate."
+	echo "$MESSAGE"
+	irc_msg "$MESSAGE"
+	/srv/jenkins/bin/abort.sh
+	exit 0
+}
+
 dbd_timeout() {
 	local msg="$DIFFOSCOPE was killed after running into timeout after $1"
 	if [ ! -s ./${DBDREPORT} ] ; then
@@ -516,14 +524,12 @@ check_buildinfo() {
 			if [ $RESULT -eq 148 ] ; then
 				handle_404
 			elif [ $RESULT -ne 0 ] ; then
-				echo "Unhandled exit code from remote build job, please investigate."
-				/srv/jenkins/bin/abort.sh
+				handle_unhandled "exit code from remote build job"
 			fi
 			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
 			RESULT=$?
 			if [ $RESULT -ne 0 ] ; then
-				echo "Unhandled error when rsyncing remote build job results, please investigate."
-				/srv/jenkins/bin/abort.sh
+				handle_unhandled "error when rsyncing remote build results"
 			fi
 			ls -R $TMPDIR
 			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
@@ -552,14 +558,12 @@ build_rebuild() {
 		if [ $RESULT -eq 148 ] ; then
 			handle_404
 		elif [ $RESULT -ne 0 ] ; then
-			echo "Unhandled exit code from remote build job, please investigate."
-			/srv/jenkins/bin/abort.sh
+			handle_unhandled "exit code from remote build job"
 		fi
 		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
-			echo "Unhandled error when rsyncing remote build job results, please investigate."
-			/srv/jenkins/bin/abort.sh
+			handle_unhandled "error when rsyncing remote build results"
 		fi
 		ls -R $TMPDIR
 		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
@@ -586,14 +590,12 @@ build_rebuild() {
 			if [ $RESULT -eq 148 ] ; then
 				handle_404
 			elif [ $RESULT -ne 0 ] ; then
-				echo "Unhandled exit code from remote build job, please investigate."
-				/srv/jenkins/bin/abort.sh
+				handle_unhandled "exit code from remote build job"
 			fi
 			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 $TMPDIR/
 			RESULT=$?
 			if [ $RESULT -ne 0 ] ; then
-				echo "Unhandled error when rsyncing remote build job results, please investigate."
-				/srv/jenkins/bin/abort.sh
+				handle_unhandled "error when rsyncing remote build results"
 			fi
 	                ls -R $TMPDIR
 			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR"

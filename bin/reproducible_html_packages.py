@@ -144,7 +144,7 @@ def gen_extra_links(package, version, suite, arch, status):
     links += dbd[0] if dbd[0] else ''
     if dbd[0] and not default_view:
             default_view = dbd[1]
-    if pkg_has_buildinfo(package, version, suite):
+    if pkg_has_buildinfo(package, version, suite, arch):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
               '_' + eversion + '_' + arch + '.buildinfo'
         links += '<li><a href="' + url + '" target="main">buildinfo</a></li>\n'

@@ -467,7 +467,7 @@ def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultar
         query = query.format(package, suite, arch)
         version = str(query_db(query)[0][0])
     buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
-                '_' + strip_epoch(version) + '_amd64.buildinfo'
+                '_' + strip_epoch(version) + '_' + arch + '.buildinfo'
     if os.access(buildinfo, os.R_OK):
         return True
     else:

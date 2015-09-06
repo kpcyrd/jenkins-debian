@@ -247,7 +247,6 @@ properties:
 
 ==== reproducible Debian armhf
 
-* vagrant: it appears that /etc/pbuilderrc and /etc/pbuilder/buildd-config.sh both still contain ftp.de.debian.org mirrors for some things. appears to only be using them to download .dsc and related files, but that ends up being a little suboptimal
 * monitor their temperatures via munin
 * make systems send mail
 * change date on 2nd build hosts (and disable systemd-timesyncd)

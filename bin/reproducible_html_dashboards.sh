@@ -275,7 +275,10 @@ create_suite_arch_stats_page() {
 	fi
 	set_icon not_for_us
 	write_icon
-	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH' nor 'any-$ARCH' will not be build here"
+	if [ "$ARCH" = "armhf" ] ; then
+		ARMSPECIALARCH=" 'any-arm',"
+	fi
+	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be build here"
 	write_page "and those "
 	set_icon blacklisted
 	write_icon

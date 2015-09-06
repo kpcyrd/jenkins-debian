@@ -513,6 +513,8 @@ def build_page(page, suite=None, arch=None):
             else:
                 for suite in SUITES:
                     for arch in ARCHS:
+                        if arch == 'armhf' and suite != 'unstable':
+                            continue
                         log.debug('global page §' + section['db_status'] +
                                   ' in ' + page + ' for ' + suite + '/' + arch)
                         html += build_page_section(page, section, suite, arch)[0]

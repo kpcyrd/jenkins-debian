@@ -409,7 +409,7 @@ get_source_package() {
 		if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then
 			handle_404
 		else
-			exit 404	# FIXME: this is unhandled atm
+			exit 404
 		fi
 	fi
 	VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
@@ -511,6 +511,14 @@ check_buildinfo() {
 			first_build
 		else
 			ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+			RESULT=$?
+			# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
+			if [ $RESULT -eq 148 ] ; then
+				handle_404
+			elif [ $RESULT -ne 0 ] ; then
+				echo "Unhandled exit code from remote build job, please investigate."
+				/srv/jenkins/bin/abort.sh
+			fi
 			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
 			ls -R $TMPDIR
 			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
@@ -534,6 +542,14 @@ build_rebuild() {
 		first_build
 	else
 		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+		RESULT=$?
+		# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
+		if [ $RESULT -eq 148 ] ; then
+			handle_404
+		elif [ $RESULT -ne 0 ] ; then
+			echo "Unhandled exit code from remote build job, please investigate."
+			/srv/jenkins/bin/abort.sh
+		fi
 		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
                 ls -R $TMPDIR
 		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
@@ -555,6 +571,14 @@ build_rebuild() {
 			second_build
 		else
 			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+			RESULT=$?
+			# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
+			if [ $RESULT -eq 148 ] ; then
+				handle_404
+			elif [ $RESULT -ne 0 ] ; then
+				echo "Unhandled exit code from remote build job, please investigate."
+				/srv/jenkins/bin/abort.sh
+			fi
 			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 $TMPDIR/
 	                ls -R $TMPDIR
 			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR"

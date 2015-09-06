@@ -43,8 +43,8 @@ def load_notes():
             irc_msg('The note for ' + pkg + ' does not include a version.')
         query = 'SELECT s.id, s.version, s.suite ' + \
                 'FROM results AS r JOIN sources AS s ON r.package_id=s.id' + \
-                ' WHERE s.name="{pkg}" AND r.status != ""' + \
-                ' AND s.architecture="amd64"'
+                ' WHERE s.name="{pkg}" AND r.status != ""'
+                #' AND s.architecture="amd64"'
         query = query.format(pkg=pkg)
         result = query_db(query)
         if not result:

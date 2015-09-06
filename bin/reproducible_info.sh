@@ -7,9 +7,10 @@ set -e
 
 ARCH=$(dpkg --print-architecture)
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
+CPU_MODEL=$(cat /proc/cpuinfo |grep "model name"|head -1|cut -d ":" -f2|xargs echo)
 DATETIME=$(date +'%Y-%m-%d %H:%M %Z')
 
-for i in ARCH NUM_CPU DATETIME ; do
+for i in ARCH NUM_CPU CPU_MODEL DATETIME ; do
 	if [ "$1" = "$i" ] ; then
 		echo "${!i}"
 	fi

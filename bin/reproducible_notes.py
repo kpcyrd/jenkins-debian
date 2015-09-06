@@ -39,7 +39,8 @@ def load_notes():
         try:
             assert 'version' in original[pkg]
         except AssertionError:
-            print_critical_message(pkg + ' did not include a version')
+            print_critical_message(pkg + ' does not include a version')
+            irc_msg('The note for ' + pkg + ' does not include a version.')
         query = 'SELECT s.id, s.version, s.suite ' + \
                 'FROM results AS r JOIN sources AS s ON r.package_id=s.id' + \
                 ' WHERE s.name="{pkg}" AND r.status != ""' + \
@@ -47,12 +48,12 @@ def load_notes():
         query = query.format(pkg=pkg)
         result = query_db(query)
         if not result:
-            print_critical_message('Warning: This query produces no results: ' + query
+            print_warning_message('Warning: This query produces no results: ' + query
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
             try:
                 irc_msg('There is problem with the note for ' + pkg +
-                        ' - please have a look at ' + os.environ['BUILD_URL'])
+                        ' - please check ' + os.environ['BUILD_URL'])
             except KeyError:
                 log.error('There is a problem with the note for %s - please '
                           'check.', pkg)

@@ -13,7 +13,6 @@ warning /Warning: could not download.+/
 warning /Warning: cannot update html pages for.+/
 warning /Warning: package .+is probably already building elsewhere, exiting./
 warning /Warning: too much difference for .+, aborting. Please investigate and update manually./
-warning /Warning: This query produces no results:.+/
 warning /Warning: couldn't delete old files from.+/
 warning /Warning: dose-deb-coinstall cannot.+/
 warning /Warning: failed to update the .+ schroot./

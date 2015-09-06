@@ -251,12 +251,12 @@ properties:
 * monitor their temperatures via munin
 * make systems send mail
 * change date on 2nd build hosts (and disable systemd-timesyncd)
+* make sure firewall on local network is used properly
 
 ==== status of new remote build nodes for amd64
 
-* profitbricks-build1-amd64: squid needs proper configuration
+* make sure local squid is used properly
 * profitbricks-build2-amd64
-** squid needs proper configuration
 ** should run in the future: +1d+1m+1y
 ** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
 

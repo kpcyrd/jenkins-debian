@@ -248,24 +248,14 @@ properties:
 ==== reproducible Debian armhf
 
 * make systems send mail
-* change date on 2nd build hosts (and disable systemd-timesyncd), done on bpi0 manually for testing:
-----
-sudo systemctl disable systemd-timesyncd
-sudo systemctl disable systemd-timedated
-sudo systemctl stop systemd-timesyncd
-sudo systemctl stop systemd-timedated
-sudo date --set="+400 days"
-# stills needs a rc.local script to set it to correct time on boot and then adding 400 days...
-----
+* change date on 2nd build hosts, done on bpi0 manually for testing…
 * make sure proxy on local network is used properly
-* monitor their temperatures via munin
+* monitor their temperatures via munin?
 
 ==== status of new remote build nodes for amd64
 
-* make systems send mail
-* make sure local squid is used properly
 * profitbricks-build2-amd64
-** should run in the future: +1d+1m+1y
+** should run in the future…
 ** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
 
 ==== reproducible Debian installation

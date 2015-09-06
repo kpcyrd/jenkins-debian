@@ -109,7 +109,8 @@ if [ -f /etc/debian_version ] ; then
 	if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 		DEBS=" 
 			bash-completion 
-			bc 
+			bc
+			bsd-mailx
 			curl 
 			debootstrap 
 			devscripts 
@@ -134,6 +135,11 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			jenkins|profitbricks-build?-amd64) DEBS="$DEBS squid3" ;;
+			*) ;;
+		esac
+		# needed to run the 2nd reproducible builds nodes in the future...
+		case $HOSTNAME in
+			bpi0|hb0|profitbricks-build2-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		if [ "$HOSTNAME" = "jenkins" ] ; then

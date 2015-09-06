@@ -8,7 +8,7 @@ warning /Warning: lock .+ still exists, exiting./
 warning /Warning: Tried, but failed to delete these:/
 warning /Warning: processes found which should not be there/
 warning /Warning: Found files with bad permissions.+/
-warning /Warning: .+ could not be fully removed./
+warning /Warning: .+ could not be fully removed.+/
 warning /Warning: could not download.+/
 warning /Warning: cannot update html pages for.+/
 warning /Warning: package .+is probably already building elsewhere, exiting./

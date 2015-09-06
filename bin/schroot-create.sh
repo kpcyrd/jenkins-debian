@@ -158,7 +158,7 @@ bootstrap() {
 
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed." ; fuser -mv $CHROOT_TARGET ; ls $CHROOT_TARGET -la )
+		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed on forced cleanup." ; fuser -mv $CHROOT_TARGET ; ls $CHROOT_TARGET -la )
 	fi
 }
 trap cleanup INT TERM EXIT

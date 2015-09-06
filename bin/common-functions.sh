@@ -57,7 +57,7 @@ else
 	if [ -z "$MIRROR" ]; then
 		case $HOSTNAME in
 			jenkins|profitbricks-build?-amd64)	export MIRROR=http://ftp.de.debian.org/debian ;;
-			bpi0|cbxi4pro0|hb0|wbq0)		export MIRROR=http://ftp.de.debian.org/debian ;;
+			bpi0|cbxi4pro0|hb0|wbq0)		export MIRROR=http://ftp.us.debian.org/debian ;;
 			*)					echo "unsupported host, exiting." ; exit 1 ;;
 		esac
 	fi

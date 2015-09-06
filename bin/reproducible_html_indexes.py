@@ -529,7 +529,7 @@ def build_page(page, suite=None, arch=None):
         destfile = BASE + '/' + suite + '/' + arch + '/index_' + page + '.html'
         desturl = REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/index_' + \
                   page + '.html'
-    write_html_page(title=title, body=html, destfile=destfile, suite=suite, style_note=footnote)
+    write_html_page(title=title, body=html, destfile=destfile, suite=suite, arch=arch, style_note=footnote)
     log.info('"' + title + '" now available at ' + desturl)
 
 

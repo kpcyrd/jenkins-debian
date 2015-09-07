@@ -284,7 +284,7 @@ write_suite_table() {
 			continue
 		fi
 		gather_suite_arch_stats
-		write_page "<tr><td>$SUITE</td><td>$AMOUNT"
+		write_page "<tr><td>$SUITE/$ARCH</td><td>$AMOUNT"
 		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
 			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 		fi

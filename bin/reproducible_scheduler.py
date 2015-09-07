@@ -285,13 +285,13 @@ def schedule_packages(packages):
     conn_db.commit()
 
 
-def add_up_numbers(package_type, arch):
-    package_type_sum = '+'.join([str(len(package_type[x])) for x in SUITES])
-    if package_type_sum == '0+0+0':
-        package_type_sum = '0'
+def add_up_numbers(packages, arch):
+    packages_sum = '+'.join([str(len(packages[x])) for x in SUITES])
+    if packages_sum == '0+0+0':
+        packages_sum = '0'
     elif arch == 'armhf':
-        package_type_sum = str(len(package_type['unstable']))
-    return package_type_sum
+        packages_sum = str(len(packages['unstable']))
+    return packages_sum
 
 
 def query_untested_packages(suite, arch, limit):

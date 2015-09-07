@@ -498,6 +498,29 @@ EOF
 	rm $TMPCFG
 }
 
+remote_build() {
+	local BUILDNR=$1
+	local NODE=$2
+	local PORT=$3
+	set +e
+	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+	RESULT=$?
+	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
+	if [ $RESULT -eq 148 ] ; then
+		handle_404
+	elif [ $RESULT -ne 0 ] ; then
+		handle_unhandled "exit code from remote build job"
+	fi
+	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+	RESULT=$?
+	if [ $RESULT -ne 0 ] ; then
+		handle_unhandled "error when rsyncing remote build results"
+	fi
+	ls -R $TMPDIR
+	ssh -p $PORT $NODE "rm -r $TMPDIR"
+	set -e
+}
+
 check_buildinfo() {
 	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
 	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
@@ -519,23 +542,7 @@ check_buildinfo() {
 		if [ "$MODE" = "legacy" ] ; then
 			first_build
 		else
-			set +e
-			ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-			RESULT=$?
-			# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
-			if [ $RESULT -eq 148 ] ; then
-				handle_404
-			elif [ $RESULT -ne 0 ] ; then
-				handle_unhandled "exit code from remote build job"
-			fi
-			rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
-			RESULT=$?
-			if [ $RESULT -ne 0 ] ; then
-				handle_unhandled "error when rsyncing remote build results"
-			fi
-			ls -R $TMPDIR
-			ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
-			set -e
+			remote_build 1 $NODE1 $PORT1
 		fi
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
@@ -555,23 +562,7 @@ build_rebuild() {
 	if [ "$MODE" = "legacy" ] ; then
 		first_build
 	else
-		set +e
-		ssh -p $PORT1 $NODE1 /srv/jenkins/bin/reproducible_build.sh 1 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-		RESULT=$?
-		# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
-		if [ $RESULT -eq 148 ] ; then
-			handle_404
-		elif [ $RESULT -ne 0 ] ; then
-			handle_unhandled "exit code from remote build job"
-		fi
-		rsync -e "ssh -p $PORT1" -r $NODE1:$TMPDIR/b1 $TMPDIR/
-		RESULT=$?
-		if [ $RESULT -ne 0 ] ; then
-			handle_unhandled "error when rsyncing remote build results"
-		fi
-		ls -R $TMPDIR
-		ssh -p $PORT1 $NODE1 "rm -r $TMPDIR"
-		set -e
+		remote_build 1 $NODE1 $PORT1
 	fi
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node and first build node, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
@@ -589,23 +580,7 @@ build_rebuild() {
 		if [ "$MODE" = "legacy" ] ; then
 			second_build
 		else
-			set +e
-			ssh -p $PORT2 $NODE2 /srv/jenkins/bin/reproducible_build.sh 2 ${SRCPACKAGE} ${SUITE} ${TMPDIR}
-			RESULT=$?
-			# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
-			if [ $RESULT -eq 148 ] ; then
-				handle_404
-			elif [ $RESULT -ne 0 ] ; then
-				handle_unhandled "exit code from remote build job"
-			fi
-			rsync -e "ssh -p $PORT2" -r $NODE2:$TMPDIR/b2 $TMPDIR/
-			RESULT=$?
-			if [ $RESULT -ne 0 ] ; then
-				handle_unhandled "error when rsyncing remote build results"
-			fi
-	                ls -R $TMPDIR
-			ssh -p $PORT2 $NODE2 "rm -r $TMPDIR"
-			set -e
+			remote_build 2 $NODE2 $PORT2
 		fi
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.

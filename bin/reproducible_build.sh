@@ -268,6 +268,7 @@ handle_unhandled() {
 	MESSAGE="$BUILD_URL met an unhandled $1, please investigate."
 	echo "$MESSAGE"
 	irc_msg "$MESSAGE"
+	sleep 15m
 	/srv/jenkins/bin/abort.sh
 	exit 0
 }

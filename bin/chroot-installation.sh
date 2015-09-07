@@ -59,8 +59,9 @@ execute_ctmpfile() {
 		RESULT=$(egrep "Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)" $TMPLOG || true)
 		if [ ! -z "$RESULT" ] ; then
 			echo
-			echo "Warning: Network problem detected."
-			echo "Trying to workaround temporarily failure fetching packages, trying again..."
+			echo "$(date -u) - Warning: Network problem detected."
+			echo "$(date -u) - trying to workaround temporarily failure fetching packages, sleeping 5min before trying again..."
+			sleep 5m
 			echo
 			sudo chroot $CHROOT_TARGET $TMPFILE
 		else

@@ -407,9 +407,9 @@ get_source_package() {
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		echo "Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
+		echo "$(date -u ) - download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		echo "Sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
+		echo "$(date -u ) - sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 		RESULT=$?
@@ -514,7 +514,13 @@ remote_build() {
 	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
-		handle_unhandled "error when rsyncing remote build results"
+		echo "$(date -u ) - rsync from $NODE failed, sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
+		sleep 5m
+		rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+		RESULT=$?
+		if [ $RESULT -ne 0 ] ; then
+			handle_unhandled "error when rsyncing remote build results"
+		fi
 	fi
 	ls -R $TMPDIR
 	ssh -p $PORT $NODE "rm -r $TMPDIR"

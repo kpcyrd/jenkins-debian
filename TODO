@@ -170,15 +170,16 @@ properties:
 === reproducible
 
 * higher prio:
-** _build.sh: handle_unhandled() needs to unregister the build from the db too
+** build.sh: handle_unhandled() needs to unregister the build from the db too
+** regression: navigation in index_repositories.html is completly broken
+** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
+*** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such
 ** use disorderfs (atm its disabled)
 *** current scripts are only in hosts/jenkins/ but need to be copied to hosts/*/
 *** document usage in diff table...
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
-** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
-*** get the content for freebsd/netbsd/openwrt/coreboot "<h2>status of $1</h2>" from notes.git/friends.yaml or such
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 
 * lesser prio

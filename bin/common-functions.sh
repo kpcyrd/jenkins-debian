@@ -32,7 +32,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	chmod +x $TTT
 	echo "===================================================================================="
 	echo
-	echo "$(date) - running job $JOB_NAME now."
+	echo "$(date) - running $0 ($JOB_NAME) on $(hostname) now."
 	echo
 	echo "To understand what this job does, clone git.debian.org/git/qa/jenkins.debian.net.git"
 	echo "and then have a look at bin/$(basename $0)"
@@ -40,7 +40,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo "This invocation of the script has been called using \"$@\" as arguments." 
 	echo
 	echo "===================================================================================="
-	echo "$(date) - start running \"$0\" (md5sum $(md5sum $0|cut -d ' ' -f1)) as \"$TTT\"."
+	echo "$(date) - start running \"$0\" (md5sum $(md5sum $0|cut -d ' ' -f1)) as \"$TTT\" on $(hostname)."
 	echo
 	# this is the "hack": call ourself as a copy in /tmp again
 	# (setsid is not related to this hack. see commit log for 24deda5a8 it.)

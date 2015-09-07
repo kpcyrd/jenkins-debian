@@ -382,7 +382,7 @@ create_main_stats_page() {
 	write_explaination_table debian
 	# write build per day graph
 	write_page "<p style=\"clear:both;\">"
-	write_page " <a href=\"/userContent/${TABLE[1]}.png\"><img src=\"/userContent/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page " <a href=\"/userContent/${TABLE[1]}_$ARCH.png\"><img src=\"/userContent/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo png once a day
 	for ARCH in ${ARCHS} ; do
 		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}_$ARCH.png) ] ; then

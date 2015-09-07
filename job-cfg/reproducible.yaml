@@ -310,7 +310,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_html_dashboards'
+    name: '{name}_html_dashboard'
 
 - job-template:
     defaults: reproducible
@@ -671,10 +671,10 @@
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_html_dashboards':
-            my_description: 'Generate HTML results (dashboards with graphs) for reproducible builds.'
+        - '{name}_html_dashboard':
+            my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
             my_timed: '*/5 * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_html_dashboards.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_html_dashboard.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_html_pkg_sets':

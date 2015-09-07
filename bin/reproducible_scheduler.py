@@ -285,10 +285,12 @@ def schedule_packages(packages):
     conn_db.commit()
 
 
-def add_up_numbers(package_type):
+def add_up_numbers(package_type, arch):
     package_type_sum = '+'.join([str(len(package_type[x])) for x in SUITES])
     if package_type_sum == '0+0+0':
         package_type_sum = '0'
+    elif arch == 'armhf':
+        package_type_sum = str(len(package_type['unstable']))
     return package_type_sum
 
 
@@ -371,8 +373,9 @@ def schedule_untested_packages(arch, total):
         log.info('Received ' + str(len(packages[suite])) +
                  ' untested packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' new packages'
+    msg = add_up_numbers(packages, arch)
+    if msg != '0':
+        msg += ' new packages'
     else:
         msg = ''
     return packages, msg
@@ -390,8 +393,9 @@ def schedule_new_versions(arch, total):
         log.info('Received ' + str(len(packages[suite])) +
                  ' new packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' with new versions'
+    msg = add_up_numbers(packages, arch)
+    if msg != '0':
+        msg += ' with new versions'
     else:
         msg = ''
     return packages, msg
@@ -409,8 +413,9 @@ def schedule_old_ftbfs_versions(arch, total):
         log.info('Received ' + str(len(packages[suite])) +
                  ' old ftbfs packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' ftbfs versions without bugs filed'
+    msg = add_up_numbers(packages, arch)
+    if msg != '0':
+        msg += ' ftbfs versions without bugs filed'
     else:
         msg = ''
     return packages, msg
@@ -428,8 +433,9 @@ def schedule_old_versions(arch, total):
         log.info('Received ' + str(len(packages[suite])) +
                  ' old packages in ' + suite + ' to schedule.')
     log.info('==============================================================')
-    if add_up_numbers(packages) != '0':
-        msg = add_up_numbers(packages) + ' known versions'
+    msg = add_up_numbers(packages, arch)
+    if msg != '0':
+        msg += ' known versions'
     else:
         msg = ''
     return packages, msg
@@ -487,7 +493,10 @@ def scheduler(arch):
     # update the scheduled page
     generate_schedule()  # from reproducible_html_indexes
     # build the kgb message text
-    message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
+    if arch != 'armhf':
+        message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
+    else:
+        message = 'Scheduled in unstable (' + arch + '): '
     if msg_untested:
         message += msg_untested
         message += ' and ' if msg_new and not msg_old_ftbfs and not msg_old else ''
@@ -502,8 +511,10 @@ def scheduler(arch):
     if msg_old:
         message += msg_old
     total = [now_queued_here[x] for x in SUITES]
-    message += ', for ' + str(sum(total)) + ' or ' + \
-              '+'.join([str(now_queued_here[x]) for x in SUITES]) + ' packages in total.'
+    message += ', for ' + str(sum(total))
+    if arch != 'armhf':
+        message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
+    message += ' packages in total.'
     log.info('\n\n\n')
     log.info(message)
     # only notifiy irc if there were packages scheduled in any suite

@@ -284,7 +284,7 @@ create_suite_arch_stats_page() {
 	write_icon
 	write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 	write_page "<p>"
-	write_page " <a href=\"/userContent/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/userContent/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
+	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do
 		# recreate png once a day
 		if [ ! -f $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
@@ -319,7 +319,7 @@ create_main_stats_page() {
 	# write suite graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE\"><img src=\"/userContent/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		write_page " <a href=\"/$SUITE\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
 	write_page "</p><p><center>"
 	# write meta pkg graphs per suite
@@ -331,7 +331,7 @@ create_main_stats_page() {
 		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 		done
 	done
 	write_page "</center></p><p>"
@@ -371,7 +371,7 @@ create_main_stats_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
 	for i in 3 7 4 5 ; do
-		write_page " <a href=\"/userContent/${TABLE[$i]}.png\"><img src=\"/userContent/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
+		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
@@ -382,7 +382,7 @@ create_main_stats_page() {
 	write_explaination_table debian
 	# write build per day graph
 	write_page "<p style=\"clear:both;\">"
-	write_page " <a href=\"/userContent/${TABLE[1]}_$ARCH.png\"><img src=\"/userContent/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo png once a day
 	for ARCH in ${ARCHS} ; do
 		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}_$ARCH.png) ] ; then
@@ -393,7 +393,7 @@ create_main_stats_page() {
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE/\"><img src=\"/userContent/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+		write_page " <a href=\"/$SUITE/\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
 	# write build performace stats
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics</th></tr>"

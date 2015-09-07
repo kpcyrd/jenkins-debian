@@ -127,6 +127,6 @@ if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	fi
 	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev debhelper
 else
-	echo "Echo $BASETGZ not old enough, doing nothing..."
+	echo "$BASETGZ not old enough, doing nothing..."
 fi
 echo

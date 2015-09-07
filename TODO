@@ -249,6 +249,7 @@ properties:
 
 * make systems send mail
 * change date on 2nd build hosts, done on bpi0 manually for testing…
+** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
 * make sure proxy on local network is used properly
 * monitor their temperatures via munin?
 

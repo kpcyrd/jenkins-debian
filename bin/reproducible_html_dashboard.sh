@@ -274,6 +274,27 @@ write_build_performace_stats() {
 }
 
 #
+# write suite table
+#
+write_suite_table() {
+	write_page "<p>"
+	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
+	for SUITE in $SUITES ; do
+		if [ "$ARCH" = "armhf" ] && [ "$SUITE" != "unstable" ] ; then
+			continue
+		fi
+		gather_suite_arch_stats
+		write_page "<tr><td>$SUITE</td><td>$AMOUNT"
+		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
+			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
+		fi
+		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+	done
+        write_page "</table>"
+	write_page "</p><p style=\"clear:both;\">"
+}
+
+#
 # create suite stats page
 #
 create_suite_arch_stats_page() {
@@ -340,20 +361,8 @@ create_main_stats_page() {
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
-	# write suite table
-	write_page "<p>"
-	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
-	for SUITE in $SUITES ; do
-		gather_suite_arch_stats
-		write_page "<tr><td>$SUITE</td><td>$AMOUNT"
-		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
-			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
-		fi
-		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
-	done
-        write_page "</table>"
+	write_suite_table
 	# write suite graphs
-	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
@@ -437,6 +446,7 @@ create_main_stats_page() {
 	SUITE="unstable"
 	write_page "</p><p style=\"clear:both;\">"
 	write_page " <hr />"
+	write_suite_table
 	write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[$i]}\"></a>"
 	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"

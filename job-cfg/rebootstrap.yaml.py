@@ -36,7 +36,7 @@ gcc_versions = ("5",)
 debbindiff_gcc_versions = ("5",)
 
 def get_node(arch):
-    if arch == "or1k":
+    if arch == "or1k" or arch == "arm64":
         return "profitbricks4"
     return ""
 

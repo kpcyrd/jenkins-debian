@@ -504,12 +504,17 @@ create_png_from_table() {
 	if [ $1 -eq 0 ] || [ $1 -eq 2 ] ; then
 		# TABLE[0+2] have a architecture column:
 		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
+		if [ $1 -eq 2 ] && [ "$ARCH" = "armhf" ] ; then
+			# armhf was only build since 2015-08-31
+			WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-31'"
+		fi
 	fi
 	# run query
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
 		WHERE_EXTRA="AND architecture='$ARCH'"
 		if [ "$ARCH" = "armhf" ] ; then
+			# armhf was only build since 2015-08-31
 			WHERE2_EXTRA="WHERE s.datum >= '2015-08-31'"
 		fi
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,

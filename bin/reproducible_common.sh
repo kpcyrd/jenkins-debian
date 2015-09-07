@@ -508,20 +508,19 @@ create_png_from_table() {
 	# run query
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
-		# we ignore the architecture for now here
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing'),0) as 'reproducible_testing',
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='unstable'),0) as 'reproducible_unstable', 
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental'),0) as 'reproducible_experimental',
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS unreproducible_testing,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS unreproducible_unstable,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS unreproducible_experimental,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS FTBFS_testing,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS FTBFS_unstable,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS FTBFS_experimental,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing') AS other_testing,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable') AS other_unstable,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental') AS other_experimental
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing' AND architecture='$ARCH'),0) as 'reproducible_testing',
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='unstable' AND architecture='$ARCH'),0) as 'reproducible_unstable', 
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='experimental' AND architecture='$ARCH'),0) as 'reproducible_experimental',
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' AND architecture='$ARCH') AS unreproducible_testing,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' AND architecture='$ARCH') AS unreproducible_unstable,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' AND architecture='$ARCH') AS unreproducible_experimental,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' AND architecture='$ARCH') AS FTBFS_testing,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' AND architecture='$ARCH') AS FTBFS_unstable,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' AND architecture='$ARCH') AS FTBFS_experimental,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' AND architecture='$ARCH') AS other_testing,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' AND architecture='$ARCH') AS other_unstable,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' AND architecture='$ARCH') AS other_experimental
 			 FROM stats_builds_per_day AS s GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
 		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)

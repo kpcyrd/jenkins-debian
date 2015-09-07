@@ -382,11 +382,14 @@ create_main_stats_page() {
 	write_explaination_table debian
 	# write build per day graph
 	write_page "<p style=\"clear:both;\">"
-	write_page " <a href=\"/userContent/${TABLE[1]}.png\"><img src=\"/userContent/${TABLE[1]}.png\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page " <a href=\"/userContent/${TABLE[1]}.png\"><img src=\"/userContent/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo png once a day
-	if [ ! -f $BASE/${TABLE[1]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}.png) ] ; then
-			create_png_from_table 1 ${TABLE[1]}.png
-	fi
+	for ARCH in ${ARCHS} ; do
+		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}_$ARCH.png) ] ; then
+				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
+		fi
+	done
+	ARCH="amd64"
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do

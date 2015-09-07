@@ -39,6 +39,8 @@ shift
 SUITE="$1"
 shift
 
+TMPLOG=$(mktemp)
+
 declare -a EXTRA_SOURCES
 if [ "$SUITE" = "experimental" ] ; then
 	# experimental cannot be bootstrapped
@@ -100,7 +102,17 @@ bootstrap() {
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
 	echo "Bootstraping $SUITE into $CHROOT_TARGET now."
-	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR
+	set +e
+	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR | tee $TMPLOG
+	RESULT=$(egrep "E: Couldn't download packages" $TMPLOG)
+	set -e
+	if [ -z "$RESULT" ] ; then
+		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
+		rm $CHROOT_TARGET -rf
+		sleep 5m
+		sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR
+	fi
+	rm -f $TMPLOG
 
 	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $CHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
 	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
@@ -160,6 +172,7 @@ cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
 		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed on forced cleanup." ; fuser -mv $CHROOT_TARGET ; ls $CHROOT_TARGET -la )
 	fi
+	rm -f $TMPLOG
 }
 trap cleanup INT TERM EXIT
 bootstrap $@

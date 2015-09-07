@@ -170,6 +170,7 @@ properties:
 === reproducible
 
 * higher prio:
+** _build.sh: handle_unhandled() needs to unregister the build from the db too
 ** use disorderfs (atm its disabled)
 *** current scripts are only in hosts/jenkins/ but need to be copied to hosts/*/
 *** document usage in diff table...

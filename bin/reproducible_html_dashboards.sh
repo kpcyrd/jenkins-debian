@@ -241,23 +241,34 @@ write_usertag_table() {
 # write build performace stats
 #
 write_build_performace_stats() {
+	if [ "$ARCH" != "armhf" ] ; then
+		TIMESPAN_VERBOSE="4 weeks"
+		TIMESPAN_RAW="28"
+	else
+		TIMESPAN_VERBOSE="week"
+		TIMESPAN_RAW="7"
+	fi
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics for $ARCH</th></tr>"
-	AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
 	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
-	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-	write_page "<tr><td>oldest $ARCH build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
+	if [ "$ARCH" != "armhf" ] ; then
+		AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
+		write_page "<tr><td>oldest $ARCH build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
+	else
+		write_page "<tr><td>oldest $ARCH build result in unstable </td><td>$AGE_UNSTABLE days</td></tr>"
+	fi
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
 	write_page "<tr><td>average test duration (on $DATE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-28 days') AND s.architecture='$ARCH'")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
 	write_page "<tr><td>average test duration (in the last 4 weeks)</td><td>$MIN minutes, $SEC seconds</td></tr>"
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 	write_page "<tr><td>packages tested on $DATE</td><td>$RESULT</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date > datetime('$DATE', '-28 days') AND s.architecture='$ARCH'")
-	RESULT="$(echo $RESULT/28|bc)"
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
+	RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
 	write_page "<tr><td>packages tested on average per day in the last 4 weeks</td><td>$RESULT</td></tr>"
 	write_page "</table>"
 }

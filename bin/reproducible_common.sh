@@ -510,7 +510,7 @@ create_png_from_table() {
 		# not sure if it's worth to generate the following query...
 		WHERE_EXTRA="AND architecture='$ARCH'"
 		if [ "$ARCH" = "armhf" ] ; then
-			WHERE_EXTRA="$WHERE_EXTRA and s.datum >= '2015-08-31'"
+			WHERE2_EXTRA="WHERE s.datum >= '2015-08-31'"
 		fi
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e where s.datum=e.datum and suite='testing' $WHERE_EXTRA),0) as 'reproducible_testing',
@@ -525,7 +525,7 @@ create_png_from_table() {
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA) AS other_testing,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS other_unstable,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS other_experimental
-			 FROM stats_builds_per_day AS s GROUP BY s.datum" >> ${TABLE[$1]}.csv
+			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
 		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv

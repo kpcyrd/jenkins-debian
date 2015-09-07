@@ -264,12 +264,12 @@ write_build_performace_stats() {
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
 	MIN=$(echo $RESULT/60|bc)
 	SEC=$(echo "$RESULT-($MIN*60)"|bc)
-	write_page "<tr><td>average test duration (in the last 4 weeks)</td><td>$MIN minutes, $SEC seconds</td></tr>"
+	write_page "<tr><td>average test duration (in the last $TIMESPAN_VERBOSE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 	write_page "<tr><td>packages tested on $DATE</td><td>$RESULT</td></tr>"
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
 	RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-	write_page "<tr><td>packages tested on average per day in the last 4 weeks</td><td>$RESULT</td></tr>"
+	write_page "<tr><td>packages tested on average per day in the last $TIMESPAN_VERBOSE</td><td>$RESULT</td></tr>"
 	write_page "</table>"
 }
 

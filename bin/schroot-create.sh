@@ -108,7 +108,7 @@ bootstrap() {
 	set -e
 	if [ -z "$RESULT" ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
-		rm $CHROOT_TARGET -rf
+		sudo rm -rf --one-file-system $CHROOT_TARGET
 		sleep 5m
 		sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR
 	fi

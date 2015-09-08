@@ -48,7 +48,7 @@ def load_notes():
         query = query.format(pkg=pkg)
         result = query_db(query)
         if not result:
-            print_warning_message('Warning: This query produces no results: ' + query
+            log.info('Warning: This query produces no results: ' + query
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
             try:

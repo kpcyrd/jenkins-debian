@@ -95,6 +95,9 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
 		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
 			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
+				if [ "$ARCH" = "armhf" ] && [ "$SUITE" != "unstable" ] ; then
+					continue
+				fi
 				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
 				# double check those builds actually failed
 				TO_SCHEDULE=""

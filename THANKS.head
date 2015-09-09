@@ -3,10 +3,10 @@
 === Sponsors
 
  * The (virtualized) hardware is sponsored since October 2012 by link:https://www.profitbricks.co.uk[Profitbricks] - Thanks a lot! Currently we are using:
- ** 23 cores and 75 GB memory for jenkins.debian.net
+ ** 16 cores and 64 GB memory for jenkins.debian.net
  ** 8 cores and 32 GB memory for profitbricks-build1-amd64.debian.net
  ** 8 cores and 32 GB memory for profitbricks-build2-amd64.debian.net
- ** 4 cores and 5 GB memory for profitbricks-build4-amd64.debian.net
+ ** 4 cores and 8 GB memory for profitbricks-build4-amd64.debian.net
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net
  * link:https://globalsign.com[GlobalSign] in January 2015 kindly provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
  * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] is kindly providing four 'armhf' systems, two quad-cores with 2 GB RAM each and two dual-cores with 1 GB RAM.

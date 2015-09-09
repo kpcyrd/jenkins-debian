@@ -196,9 +196,11 @@ trap - INT TERM EXIT
 rand=$RANDOM
 if [ -d $SCHROOT_BASE/"$TARGET" ]
 then
+	echo "$(date -u ) - $SCHROOT_BASE/$TARGET exists, moving it away to $SCHROOT_BASE/$TARGET-$rand"
 	sudo mv $SCHROOT_BASE/"$TARGET" $SCHROOT_BASE/"$TARGET"-"$rand"
 fi
 
+echo "$(date -u ) - renaming $CHROOT_TARGET to $SCHROOT_BASE/$TARGET"
 sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
 
 if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ] ; then

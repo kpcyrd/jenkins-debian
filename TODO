@@ -177,8 +177,7 @@ properties:
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
 ** setup builder3, distribute more ressources
-** dashboard: include host infos from info.sh in variation table
-** dashboard: document usage of -j 24/8/3 in write_explaination_table()
+** dashboard: correctly document usage of -j (24/8/4/2)-1 in write_explaination_table()
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
 *** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such
 ** repo-comparison: check for binaries without source

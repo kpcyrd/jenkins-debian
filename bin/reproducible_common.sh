@@ -303,7 +303,7 @@ write_explaination_table() {
 	write_page "<p style=\"clear:both;\">"
 	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>hostname</td><td>$(hostname)</td><td>i-capture-the-hostname</td></tr>"
+		write_page "<tr><td>hostname</td><td>one of: $(for i in $BUILD_NODES ; do echo $i | cut -d '.' -f1 ; done)</td><td>i-capture-the-hostname</td></tr>"
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	else
 		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
@@ -344,7 +344,7 @@ write_explaination_table() {
 		write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td><tr>"
 	fi
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds (currently, work in progress)</td></tr>"
+		write_page "<tr><td>CPU type</td><td>one of $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u)</td><td>sometimes varied on armhf, same for amd64 builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
 	fi

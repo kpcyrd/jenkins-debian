@@ -63,7 +63,7 @@ ps fax|grep -v grep |grep schroot || for i in $(sudo schroot --all-sessions -l )
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Old schroots found in /schroots, which have been deleted:"
+	echo "Old schroots found in /schroots, which will be deleted:"
 	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec sudo rm -rf --one-file-system {} \;
 	echo "$OLDSTUFF"
 	OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \;)

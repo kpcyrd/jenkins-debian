@@ -19,7 +19,7 @@ git checkout $1
 shift
 export LC_ALL=C
 echo "$(date -u) - Now running '/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh $@'"
-/srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh $@
+ionice -c 3 nice /srv/jenkins/bin/chroot-run.sh sid minimal ./bootstrap.sh $@
 cd
 cleanup_all
 trap - INT TERM EXIT

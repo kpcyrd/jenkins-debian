@@ -473,10 +473,15 @@ EOF
 second_build() {
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
+	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+	# on armhf we always have different number of cores between 1st+2nd build due to the chosen nodes
+	if [ "$ARCH" = "armhf" ] ; then
+		NEW_NUM_CPU=$NUM_CPU
+	fi
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=2222
 BUILDUSERNAME=pbuilder2
-export DEB_BUILD_OPTIONS="parallel=$(echo $NUM_CPU-1|bc)"
+export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"

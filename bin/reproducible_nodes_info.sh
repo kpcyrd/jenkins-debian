@@ -16,6 +16,12 @@ TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
 
 for NODE in $BUILD_NODES ; do
+	if [ "$NODE" = "jenkins.debian.net" ] ; then
+		/srv/jenkins/bin/reproducible_info.sh > $TARGET_DIR/$NODE
+		echo "$(date -u) - $TARGET_DIR/$NODE updated."
+		cat $TARGET_DIR/$NODE
+		continue
+	fi
 	# call jenkins_master_wrapper.sh so we only need to track different ssh ports in one place
 	# jenkins_master_wrapper.sh needs NODE_NAME and JOB_NAME
 	export NODE_NAME=$NODE

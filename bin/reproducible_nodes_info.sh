@@ -15,13 +15,13 @@ mkdir -p $TARGET_DIR
 TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
 
-for NODE in bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net ; do
+for NODE in $BUILD_NODES ; do
 	# call jenkins_master_wrapper.sh so we only need to track different ssh ports in one place
 	# jenkins_master_wrapper.sh needs NODE_NAME and JOB_NAME
 	export NODE_NAME=$NODE
 	export JOB_NAME=/srv/jenkins/bin/reproducible_info.sh
 	/srv/jenkins/bin/jenkins_master_wrapper.sh > $TMPFILE_SRC
-	for KEY in ARCH NUM_CPU CPU_MODEL DATETIME ; do
+	for KEY in $BUILD_ENV_VARS ; do
 		VALUE=$(egrep "^$KEY=" $TMPFILE_SRC | cut -d "=" -f2-)
 		if [ ! -z "$VALUE" ] ; then
 			echo "$KEY=$VALUE" >> $TMPFILE_NODE

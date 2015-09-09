@@ -3,6 +3,7 @@
 set -u
 set -e
 
+# these nodes also need to be listed in bin/reproducible_common.sh where they define $BUILD_NODES
 case "$NODE_NAME" in
   bpi0-armhf-rb.debian.net)
     exec ssh -p 2222 $NODE_NAME "$JOB_NAME"

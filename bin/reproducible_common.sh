@@ -42,11 +42,16 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 SUITES="testing unstable experimental"
 # architectures being tested
 ARCHS="armhf amd64"
-# number of cores to be used
-NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
+
+# define build nodes in use
+BUILD_NODES="bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh
+BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME" # these also needs to be defined in bin/reproducible_info.sh
 
 # existing usertags
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
+
+# number of cores to be used
+NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 
 # we only need them for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET

@@ -30,6 +30,7 @@ for NODE in bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debia
 	if [ -s $TMPFILE_NODE ] ; then
 		mv $TMPFILE_NODE $TARGET_DIR/$NODE
 		echo "$(date -u) - $TARGET_DIR/$NODE updated."
+		cat $TARGET_DIR/$NODE
 	fi
 	rm -f $TMPFILE_SRC $TMPFILE_NODE
 done

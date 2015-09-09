@@ -65,7 +65,7 @@ elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
-elif [ "$1" = "/srv/jenkins/bin/reproducible_info" ] ; then
+elif [ "$1" = "/srv/jenkins/bin/reproducible_info.sh" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh "$2" ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";

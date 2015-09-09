@@ -56,8 +56,6 @@ fi
 set "dummy" ${SSH_ORIGINAL_COMMAND}
 shift
 
-info "remote_host called with $*"
-
 allowed_cmds=()
 
 if [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
@@ -67,6 +65,8 @@ elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
+elif [ "$1" = "/srv/jenkins/bin/reproducible_info" ] ; then
+	exec /srv/jenkins/bin/reproducible_info.sh "$2" ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";
 elif [[ "$*" =~ rsync\ --server\ --sender\ .*\ .\ /srv/reproducible-results/tmp.* ]] ; then

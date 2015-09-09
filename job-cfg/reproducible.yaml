@@ -350,6 +350,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_nodes_info'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_json'
 
 - job-template:
@@ -738,6 +742,12 @@
             my_description: 'Create meta package sets for later consumption when generating HTML stats.'
             my_timed: '0 6 * * H/3'
             my_shell: '/srv/jenkins/bin/reproducible_create_meta_pkg_sets.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_nodes_info':
+            my_description: 'Collect various information from build nodes used for reproducible builds.'
+            my_timed: '37 13 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_nodes_info.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_breakages':

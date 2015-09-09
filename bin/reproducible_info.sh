@@ -11,7 +11,5 @@ CPU_MODEL=$(cat /proc/cpuinfo |grep "model name"|head -1|cut -d ":" -f2|xargs ec
 DATETIME=$(date +'%Y-%m-%d %H:%M %Z')
 
 for i in ARCH NUM_CPU CPU_MODEL DATETIME ; do
-	if [ "$1" = "$i" ] ; then
-		echo "${!i}"
-	fi
+	echo "$i=${!i}"
 done

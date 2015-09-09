@@ -181,6 +181,7 @@ properties:
 ** link source-data-epoch spec from rb.d.n
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
+** pkg sets are still amd64 only atm…
 
 * lesser prio
 ** reproducible_scheduler.py: why do we have ARCH_SHARE when LIMITS is different for each arch anyway...? legacy? if so -> cleanup...

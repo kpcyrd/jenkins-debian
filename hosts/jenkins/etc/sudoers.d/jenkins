@@ -6,6 +6,8 @@ jenkins ALL=  \
 	/bin/chmod +x /chroots/*, \
 	/usr/sbin/chroot /chroots/*, \
 	/usr/sbin/chroot /media/*, \
+	/usr/bin/schroot --all-sessions -l,\
+	/usr/bin/schroot -c session:jenkins-reproducible.* -e,\
 	/bin/ls -la /media/*, \
 	/bin/rm -rf --one-file-system /chroots/*, \
 	/bin/rm -rf --one-file-system /schroots/*, \

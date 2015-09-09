@@ -283,8 +283,8 @@ update_pkg_sets() {
 
 	# tails
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/lastSuccessful/archive/latest.iso.binpkgs > $TMPFILE
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/lastSuccessful/archive/latest.iso.srcpkgs >> $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only

@@ -102,7 +102,7 @@ robust_chroot_apt() {
 	sudo chroot $CHROOT_TARGET apt-get $@ | tee $TMPLOG
 	RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG)
 	set -e
-	if [ -z "$RESULT" ] ; then
+	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - 'apt-get $@' failed, sleeping 5min before retrying..."
 		sleep 5m
 		sudo chroot $CHROOT_TARGET apt-get $@
@@ -119,7 +119,7 @@ bootstrap() {
 	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR | tee $TMPLOG
 	RESULT=$(egrep "E: Couldn't download packages" $TMPLOG)
 	set -e
-	if [ -z "$RESULT" ] ; then
+	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
 		sudo rm -rf --one-file-system $CHROOT_TARGET
 		sleep 5m

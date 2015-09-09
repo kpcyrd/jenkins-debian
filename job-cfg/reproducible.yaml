@@ -752,7 +752,7 @@
             my_node: ''
         - '{name}_nodes_info':
             my_description: 'Collect various information from build nodes used for reproducible builds.'
-            my_timed: '37 13 * * *'
+            my_timed: '0 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_nodes_info.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''

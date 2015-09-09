@@ -35,11 +35,6 @@ architectures += mono_architectures
 gcc_versions = ("5",)
 debbindiff_gcc_versions = ("5",)
 
-def get_node(arch):
-    if arch == "or1k" or arch == "arm64":
-        return "profitbricks4"
-    return ""
-
 print("""
 - defaults:
     name: rebootstrap
@@ -130,7 +125,8 @@ for arch in sorted(architectures):
             my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DEBBINDIFF=%(debbindiff_value)s'
             my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s%(supported_comment)s%(debbindiff_comment)s'
             my_branchname: 'jenkins_%(suffix)s'
-            my_node: '%(node)s'""" %
+            my_node: '%(node)s'
+            my_wrapper: '/srv/jenkins/bin/jenkins_master_wrapper.sh'""" %
                 dict(arch=arch,
                      suffix=arch + "_gcc" + gccver.replace(".", "") + ("_nobiarch" if nobiarch else "") + ("_supported" if supported else "") + ("_debbindiff" if debbindiff else ""),
                      gccver=gccver,
@@ -140,9 +136,5 @@ for arch in sorted(architectures):
                      supported_comment=" using the supported method" if supported else "",
                      debbindiff_value="yes" if debbindiff else "no",
                      debbindiff_comment=" showing debbindiffs" if debbindiff else "",
-                     node=get_node(arch)))
-                    if get_node(arch):
-                        print("            my_wrapper: '/srv/jenkins/bin/jenkins_master_wrapper.sh'")
-                    else:
-                        print("            my_wrapper: '/srv/jenkins/bin/rebootstrap.sh'")
+                     node="profitbricks4"))
 

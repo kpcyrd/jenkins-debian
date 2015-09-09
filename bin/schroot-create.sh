@@ -97,6 +97,19 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 EOF
 }
 
+robust_chroot_apt_update() {
+	set +e
+	sudo chroot $CHROOT_TARGET apt-get update | tee $TMPLOG
+	RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG)
+	set -e
+	if [ -z "$RESULT" ] ; then
+		echo "$(date -u) - apt-get update failed, sleeping 5min before retrying..."
+		sleep 5m
+		sudo chroot $CHROOT_TARGET apt-get update
+	fi
+	rm -f $TMPLOG
+}
+
 bootstrap() {
 	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
@@ -132,13 +145,13 @@ bootstrap() {
 	fi
 
 
-	sudo chroot $CHROOT_TARGET apt-get update
+	robust_chroot_apt_update
 	if [ -n "$1" ] ; then
 		for d in proc dev dev/pts ; do
 			sudo mount --bind /$d $CHROOT_TARGET/$d
 		done
 		set -x
-		sudo chroot $CHROOT_TARGET apt-get update
+		robust_chroot_apt_update
 		# install diffoscope with all recommends...
 		if [ "$1" = "diffoscope" ] ; then
 			sudo chroot $CHROOT_TARGET apt-get install -y --install-recommends diffoscope
@@ -147,7 +160,7 @@ bootstrap() {
 		# always use diffoscope from unstable
 		if [ "$SUITE" = "testing" ] && [ "$1" = "diffoscope" ] ; then
 			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
-			sudo chroot $CHROOT_TARGET apt-get update
+			robust_chroot_apt_update
 			# install diffoscope from unstable without re-adding all recommends...
 			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends diffoscope || echo "Warning: diffoscope from unstable is uninstallable at the moment."
 		fi

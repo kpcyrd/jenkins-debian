@@ -167,29 +167,43 @@ properties:
 
 == Improve existing tests
 
-=== reproducible
+=== reproducible builds
 
 * higher prio:
+** setup builder3, distribute more ressources
 ** build.sh: handle_unhandled() needs to unregister the build from the db too
+** dashboard: include host infos from info.sh in variation table
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
 *** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such
-** use disorderfs (atm its disabled)
-*** current scripts are only in hosts/jenkins/ but need to be copied to hosts/*/
-*** document usage in diff table...
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm…
+** use disorderfs (atm its disabled)
+*** current scripts are only in hosts/jenkins/ but need to be copied to hosts/*/
+*** document usage in diff table...
+** notes related
+*** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
+*** new page with annoted packages without categorized issues
+*** new page with packages that have notes with comments (which are often useful / contain solutions / low-hanging fruits for newcomers)
+*** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
+**** aint that covered by reproducible_breakages.py already? no.
+*** send notifications to maintainers when a note to their packages changes?
 
 * lesser prio
 ** reproducible_scheduler.py: why do we have ARCH_SHARE when LIMITS is different for each arch anyway...? legacy? if so -> cleanup...
+** run amd64 builder 400 days in the past… (that way we will notice problems soon)
+*** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
 ** document (in README) the multihost setup
 ** the setup pbuilder+schroot setup scripts should detect network problems such as "Bad gateway" and sleep 5m and retry once
 ** more graphs:
 *** graph average build duration by day
 *** graph packages in testing+unstable which need to be fixed
-** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
+** pkg sets related:
+*** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
+*** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
+*** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** move "untested" field in stats table too? (as in csv output...)
 ** new page: packages which are orphaned but have a reproducible usertagged patch
@@ -198,38 +212,23 @@ properties:
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
 
-* notes related
-** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
-** new page with annoted packages without categorized issues
-** new page with packages that have notes with comments (which are often useful / contain solutions / low-hanging fruits for newcomers)
-** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
-*** aint that covered by reproducible_breakages.py already? no.
-** send notifications to maintainers when a note to their packages changes
-
-* pkg sets related:
-** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
-** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
-
 * missing tests:
 ** variation in kernel
-** different cpu type
-** variation in date
+** different cpu type (coming RSN)
+** variation in date (coming RSN)
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
-** variation of filesystem being built on (we probably wont do that and just always build on tmpfs...)
+** variation of filesystem being built on (work in progres, see 'higher prio' list above)
 ** variation of users shell (bash + zsh?)
 
+* support for arbitrary (soon to be implemented) Debian-PPAs and external repos, by just giving a source URL
 * enable people to upload test packages, to be built in jenkins:
 ----
-  <mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything
-  <mapreri> jenkins tests.
-  <h01ger> mapreri: please add the feature request to the todo. i'm thinking now that it maybe should just be a jenkins job not integrated into the rp.d.n webui, but... maybe we find a nice way to do it
+  <mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything jenkins tests.
+  <h01ger> maybe it should just be a jenkins job not integrated into the rp.d.n webui, but... maybe we find a nice way to do it
   <mapreri> h01ger: I'm instead thinking about a repo defining a reproducible-specific suite or something on that line, that integrates well with the current setup. but this is really something wild.
-  <h01ger> well, and everybody in debian-keyring from sid can uplood? :)
-  <mapreri> that would be wonderful.
 ----
-* support for arbitrary (soon to be implemented) Debian-PPAs and external repos, by just giving a source URL
 
 ==== todo for reproducible remote building
 
@@ -245,15 +244,13 @@ properties:
 * then we have a new script, reproducible_info.sh which just outputs key-value pairs, like "ARCH=armhf", DATETIME="Mo 10. Aug 11:56:22 CEST 2015" and "TZ=UTC" and whatever.
 ** this script is run on all nodes, via a for loop on the main node (jenkins atm), as part of dashboard.sh, and the results will be captured in /srv/reproducible-results/node-information/$NODE and then used by reproducible_html_dashboard.sh to create the table with the differences between 1st and 2nd build...
 *** document usage of -j 24/8/3 in write_explaination_table()
-** /srv/reproducible-results/node-information/$NODE could also be read by reproducible_build.sh to determine the dpkg-architecture a node is captable of building, but I think we also want that info to be encoded in the build job names, so probably there's no need to read it...
 
 ==== reproducible Debian armhf
 
-* make systems send mail
-* change date on 2nd build hosts, done on bpi0 manually for testing…
-** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
+* make systems send mail, use port 465
 * make sure proxy on local network is used properly
 * monitor their temperatures via munin?
+* bpi0 and hb0 should run in the future…
 
 ==== status of new remote build nodes for amd64
 

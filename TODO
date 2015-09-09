@@ -248,7 +248,6 @@ properties:
 ==== reproducible Debian armhf
 
 * make systems send mail, use port 465
-* make sure proxy on local network is used properly
 * monitor their temperatures via munin?
 * bpi0 and hb0 should run in the future…
 

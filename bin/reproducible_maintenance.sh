@@ -51,6 +51,14 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	DIRTY=true
 fi
 
+# remove old and unused schroot sessions
+ps fax|grep -v grep |grep schroot || for i in $(sudo schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || sudo schroot -c $i -e ; done
+# to explain this:
+# first, check if no process using "schroot" is running...
+# then loop through all schroot sessions
+# for each session
+# check that schroot is still not run, and then, delete the session
+
 # find old schroots
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then

@@ -52,7 +52,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # remove old and unused schroot sessions
-ps fax|grep -v grep |grep schroot || for i in $(sudo schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || sudo schroot -c $i -e ; done
+ps fax|grep -v grep |grep schroot || for i in $(sudo schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || sudo schroot -e -c $i ; done
 # to explain this:
 # first, check if no process using "schroot" is running...
 # then loop through all schroot sessions

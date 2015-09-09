@@ -346,6 +346,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_html_breakages'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_create_meta_pkg_sets'
 
 - job-template:
@@ -355,10 +359,6 @@
 - job-template:
     defaults: reproducible
     name: '{name}_json'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_breakages'
 
 - job-template:
     defaults: reproducible_builder
@@ -732,6 +732,12 @@
             my_shell: '/srv/jenkins/bin/reproducible_html_repository_comparison.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
+        - '{name}_html_breakages':
+            my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
+            my_timed: '30 0 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_breakages.py'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_json':
             my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
             my_timed: '1 * * * *'
@@ -748,12 +754,6 @@
             my_description: 'Collect various information from build nodes used for reproducible builds.'
             my_timed: '37 13 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_nodes_info.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: ''
-        - '{name}_breakages':
-            my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
-            my_timed: '30 0 * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_breakages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_builder_alpha':

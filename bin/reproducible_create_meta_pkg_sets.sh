@@ -285,9 +285,13 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.binpkgs > $TMPFILE
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/latest.iso.srcpkgs >> $TMPFILE
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[16]}.pkgset
+		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+			packages_list_to_deb822
+			convert_from_deb822_into_source_packages_only
+			update_if_similar ${META_PKGSET[16]}.pkgset
+		else
+			echo "Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
+		fi
 	fi
 
 	# all build depends of tails

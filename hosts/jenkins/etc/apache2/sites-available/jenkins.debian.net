@@ -257,6 +257,16 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	RewriteCond %{REQUEST_URI} ^/(testing|unstable|experimental)/$
 	RewriteRule ^/(.*) /$1index_suite_amd64_stats.html [R,L]
 
+	# redirect (/testing|unstable|/experimental)/(amd64|armhf) to (/testing|/unstable|/experimental)/index_suite_(amd64|armhf)_stats.html
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/(testing|unstable|experimental)/(amd64|armhf)/$
+	RewriteRule ^/([a-z0-9]+)/([a-z0-9]+) /$1/index_suite_$2_stats.html [R,L]
+
+	# redirect (/(amd64|armhf) to (/testing|/unstable|/experimental)/index_suite_(amd64|armhf)_stats.html
+	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
+	RewriteCond %{REQUEST_URI} ^/(amd64|armhf)(/|)$
+	RewriteRule ^/([a-z0-9]+) /unstable/index_suite_$1_stats.html [R,L]
+
 	# redirect /coreboot/ to coreboot/coreboot.html
 	# note: the missing slash in the RewriteRule is wanted to avoid a double slash
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net

@@ -326,7 +326,7 @@ write_explaination_table() {
 		write_page "<tr><td>env USER</td><td>USER=\"pbuilder1\"</td><td>USER=\"pbuilder2\"</td></tr>"
 		write_page "<tr><td>uid</td><td>uid=1111</td><td>uid=2222</td></tr>"
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"
-		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=$NUM_CPU\"</td><td>DEB_BUILD_OPTIONS=\"parallel=$(echo $NUM_CPU-1|bc)\"<br />(using a different number of cores is on the agenda)</td></tr>"
+		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX for amd64: 16 or 8<br />&nbsp;&nbsp;XXX for armhf: 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY for amd64: XXX-1<br />&nbsp;&nbsp;YYY for armhf: 2 or 4 - the opposite of the first build)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
 	else
 		write_page "<tr><td>env USER</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"

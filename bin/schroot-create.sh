@@ -181,6 +181,12 @@ bootstrap() {
 	fi
 }
 
+cleanup_schroot_sessions() {
+	# FIXME: if this works well, move to _common.sh and use the same function from _maintenance.sh
+	ps fax|grep -v grep |grep schroot || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || schroot -e -c $i ; done
+	schroot --all-sessions -l
+}
+
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
 		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed on forced cleanup." ; ls $CHROOT_TARGET -la )
@@ -196,10 +202,12 @@ trap - INT TERM EXIT
 rand=$RANDOM
 if [ -d $SCHROOT_BASE/"$TARGET" ]
 then
+	cleanup_schroot_sessions
 	echo "$(date -u ) - $SCHROOT_BASE/$TARGET exists, moving it away to $SCHROOT_BASE/$TARGET-$rand"
 	sudo mv $SCHROOT_BASE/"$TARGET" $SCHROOT_BASE/"$TARGET"-"$rand"
 fi
 
+cleanup_schroot_sessions
 echo "$(date -u ) - renaming $CHROOT_TARGET to $SCHROOT_BASE/$TARGET"
 sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
 

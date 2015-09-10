@@ -39,7 +39,7 @@ def generate_schedule(arch):
     log.info("Page generated at " + desturl)
 
 
-def generate_live_status():
+def generate_live_status(arch):
     """ the schedule pages are very different than others index pages """
     log.info('Building live status page...')
     title = 'Live status of reproducible.debian.net'
@@ -47,10 +47,10 @@ def generate_live_status():
             'p.scheduler, p.date_scheduled, p.date_build_started, ' + \
             'r.status, r.version, r.build_duration, p.builder, p.notify ' + \
             'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
-            'WHERE p.date_build_started != "" OR p.notify != "" ' + \
+            'WHERE (p.date_build_started != "" OR p.notify != "") AND s.architecture="{arch}" ' + \
             'ORDER BY p.date_build_started DESC'
     html = ''
-    rows = query_db(query)
+    rows = query_db(query.format(arch=arch))
     html += '<p>If there are more than 21 rows shown here, the list includes stale builds... we\'re working on it. Stay tuned.<table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>src pkg id</th><th>name</th><th>version</th>'
     html += '<th>suite</th><th>arch</th><th>scheduled by</th>'
@@ -76,7 +76,7 @@ def generate_live_status():
     log.info("Page generated at " + desturl)
 
 if __name__ == '__main__':
-    generate_live_status()
+    generate_live_status("*")
     for arch in ARCHS:
         generate_schedule(arch)
 

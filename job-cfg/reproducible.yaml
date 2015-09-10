@@ -350,6 +350,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_html_live_status'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_create_meta_pkg_sets'
 
 - job-template:
@@ -740,6 +744,12 @@
             my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
             my_timed: '30 0 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_breakages.py'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_html_live_status':
+            my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
+            my_timed: 'H/20 * * * *'    # should be H/2 once it works properly
+            my_shell: '/srv/jenkins/bin/reproducible_html_live_status.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_json':

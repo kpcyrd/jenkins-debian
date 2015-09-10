@@ -376,8 +376,7 @@ choose_package () {
 	fi
 }
 
-init() {
-	delay_start
+init_package_build() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		local ANNOUNCE="Artifacts will be preserved."
 	fi
@@ -684,9 +683,9 @@ elif [ "$2" != "" ] ; then
 	fi
 fi
 
+delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
-
-init
+init_package_build
 get_source_package
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}

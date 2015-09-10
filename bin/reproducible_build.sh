@@ -599,7 +599,7 @@ build_rebuild() {
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
-			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='' builder='' date_scheduled='$(date -u)' WHERE package_id='$SRCPKGID'"
+			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='', date_scheduled='$(date +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
 			NOTIFY=""
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then

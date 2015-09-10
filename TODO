@@ -171,6 +171,7 @@ properties:
 
 * higher prio:
 ** reproducible_build.sh changes needed:
+*** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
 *** handle_unhandled() needs to unregister the build from the db too
 *** rbuild.log isnt show when a package ftbfs
 *** diffoscope needs to be run on the target arch...

@@ -16,6 +16,7 @@ REP_RESULTS=/srv/reproducible-results
 
 # backup db
 if [ "$HOSTNAME" = "jenkins" ] ; then
+	echo "$(date -u) - backup db and update public copy."
 	# prepare backup
 	mkdir -p $REP_RESULTS/backup
 	cd $REP_RESULTS/backup
@@ -95,6 +96,7 @@ done
 set -e
 
 # delete old temp directories
+echo "$(date -u) - Deleting old temp directories."
 OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
@@ -106,6 +108,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # remove old and unused schroot sessions
+echo "$(date -u) - Removing unused schroot sessions."
 ps fax|grep -v grep |grep schroot || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || schroot -e -c $i ; done
 # to explain this:
 # first, check if no process using "schroot" is running...
@@ -114,6 +117,7 @@ ps fax|grep -v grep |grep schroot || for i in $(schroot --all-sessions -l ) ; do
 # check that schroot is still not run, and then, delete the session
 
 # find old schroots
+echo "$(date -u) - Removing old schroots."
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
@@ -138,6 +142,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	# only grep through the last 5h (300 minutes) of builds...
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
+	echo "$(date -u) - Rescheduling failed builds."
 	FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
@@ -169,6 +174,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	#
 	# find packages which build didnt end correctly
 	#
+	echo "$(date -u) - Rescheduling builds which didn't end correctly."
 	QUERY="
 		SELECT s.id, s.name, p.date_scheduled, p.date_build_started
 			FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
@@ -197,6 +203,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	#
 	# find packages which have been removed from the archive
 	#
+	echo "$(date -u) - Looking for packages which have been removed from the archive."
 	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXX)
 	QUERY="SELECT name, suite, architecture FROM removed_packages
 			LIMIT 25"
@@ -235,6 +242,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 fi
 
 # find+terminate processes which should not be there
+echo "$(date -u) - Looking for processes which should not be there."
 HAYSTACK=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXX)
 RESULT=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXX)
 TOKILL=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXX)
@@ -291,6 +299,7 @@ fi
 
 
 # remove lockfiles older than 2 days
+echo "$(date -u) - Checking for lockfiles older than 2 days."
 LOCKFILES=$(find /tmp/reproducible-lockfile-* -maxdepth 1 -type f -mtime +2 -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$LOCKFILES" ] ; then
 	echo
@@ -301,6 +310,7 @@ fi
 
 
 # remove artifacts older than 3 days
+echo "$(date -u) - Checking for artifacts older than 3 days."
 ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
@@ -310,6 +320,7 @@ if [ ! -z "$ARTIFACTS" ] ; then
 fi
 
 # find + chmod files with bad permissions
+echo "$(date -u) - Checking for files with bad permissions."
 BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
@@ -321,7 +332,7 @@ if [ ! -z "$BADPERMS" ] ; then
 fi
 
 if ! $DIRTY ; then
-	echo "Everything seems to be fine."
+	echo "$(date -u ) - Everything seems to be fine."
 	echo
 fi
 

@@ -602,7 +602,7 @@ build_rebuild() {
 			# FIXME: this is wrong / not optimal, the build should be aborted cleanly and the package rescheduled, not depwait.
 			FTBFS=0
 		        calculate_build_duration
-			update_db_and_html "depwait"
+			update_db_and_html "404"
 			handle_unhandled "Build of ${SRCPACKAGE} for $SUITE/$ARCH needs to be rescheduled" "5m"
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.

@@ -43,7 +43,7 @@ def generate_live_status():
     html += '</table></p>\n'
     destfile = BASE + '/live_status.html'
     desturl = REPRODUCIBLE_URL + '/live_status.html'
-    write_html_page(title=title, body=html, destfile=destfile, style_note=True)
+    write_html_page(title=title, body=html, destfile=destfile)
     log.info("Package page generated at " + desturl)
 
 if __name__ == '__main__':

@@ -122,6 +122,7 @@ html_header = Template("""<!DOCTYPE html>
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width" />
+      $meta_refresh
       <link href="/static/style.css" type="text/css" rel="stylesheet" />
       <title>$page_title</title>
   </head>
@@ -281,14 +282,17 @@ def _gen_links(suite, arch):
     return html
 
 
-def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False, packages=False):
+def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False, packages=False, refresh_every=None):
     now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     # this removes the padding if we are writing a package page
     padding = 'class="wrapper"' if packages else ''
+    meta_refresh = '<meta http-equiv="refresh" content="%d">' % \
+        refresh_every if refresh_every is not None else ''
     html += html_header.substitute(
             page_title=title,
-            padding=padding)
+            padding=padding,
+            meta_refresh=meta_refresh)
     if not noheader:
         links = _gen_links(suite, arch)
         html += html_head_page.substitute(

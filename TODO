@@ -173,7 +173,6 @@ properties:
 ** reproducible_build.sh changes needed:
 *** handle_unhandled() needs to unregister the build from the db too
 *** rbuild.log isnt show when a package ftbfs
-*** main host should not need to download sources
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
 ** setup builder3, distribute more ressources

@@ -402,8 +402,14 @@ init() {
 
 get_source_package() {
 	local RESULT
-	schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
-	RESULT=$?
+	if [ "$MODE" != "ng" ] ; then
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
+		RESULT=$?
+	else
+		# remote build, no need to download the full source package...
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget
+		RESULT=$?
+	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
@@ -411,8 +417,14 @@ get_source_package() {
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "$(date -u ) - sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
-		RESULT=$?
+		if [ "$MODE" != "ng" ] ; then
+			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
+			RESULT=$?
+		else
+			# remote build, no need to download the full source package...
+			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget
+			RESULT=$?
+		fi
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
 		if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then

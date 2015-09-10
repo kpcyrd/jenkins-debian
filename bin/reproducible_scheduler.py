@@ -22,7 +22,7 @@ from apt_pkg import version_compare
 from urllib.request import urlopen
 
 from reproducible_common import *
-from reproducible_html_indexes import generate_schedule
+from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
 

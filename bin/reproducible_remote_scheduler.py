@@ -54,7 +54,7 @@ if scheduling_args.null:
 
 # these are here as an hack to be able to parse the command line
 from reproducible_common import *
-from reproducible_html_indexes import generate_schedule
+from reproducible_html_live_status import generate_schedule
 
 # this variable is expected to come from the remote host
 try:

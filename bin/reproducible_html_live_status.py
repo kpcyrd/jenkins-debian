@@ -9,6 +9,35 @@
 #
 
 from reproducible_common import *
+from reproducible_html_indexes import build_leading_text_section
+
+def generate_schedule(arch):
+    """ the schedule pages are very different than others index pages """
+    log.info('Building the schedule index page for ' + arch + '...')
+    title = 'Packages currently scheduled on ' + arch + ' for testing for build reproducibility'
+    query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name ' + \
+            'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id ' + \
+            'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
+    text = Template('$tot packages are currently scheduled for testing on $arch:')
+    html = ''
+    rows = query_db(query.format(arch=arch))
+    html += build_leading_text_section({'text': text}, rows, defaultsuite, arch)
+    html += '<p><table class="scheduled">\n' + tab
+    html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
+    html += '<th>architecture</th><th>source package</th></tr>\n'
+    for row in rows:
+        # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name
+        pkg = row[3]
+        html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
+        html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
+        html += link_package(pkg, row[1], row[2], bugs)
+        html += '</code></td></tr>\n'
+    html += '</table></p>\n'
+    destfile = BASE + '/index_' + arch + '_scheduled.html'
+    desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'
+    write_html_page(title=title, body=html, destfile=destfile)
+    log.info("Page generated at " + desturl)
+
 
 def generate_live_status():
     """ the schedule pages are very different than others index pages """
@@ -44,8 +73,10 @@ def generate_live_status():
     destfile = BASE + '/live_status.html'
     desturl = REPRODUCIBLE_URL + '/live_status.html'
     write_html_page(title=title, body=html, destfile=destfile)
-    log.info("Package page generated at " + desturl)
+    log.info("Page generated at " + desturl)
 
 if __name__ == '__main__':
     generate_live_status()
+    for arch in ARCHS:
+        generate_schedule(arch)
 

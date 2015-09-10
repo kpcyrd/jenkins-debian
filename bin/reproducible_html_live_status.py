@@ -22,6 +22,7 @@ def generate_schedule(arch):
     html = ''
     rows = query_db(query.format(arch=arch))
     html += build_leading_text_section({'text': text}, rows, defaultsuite, arch)
+    html += generate_live_status_table(arch)
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
     html += '<th>architecture</th><th>source package</th></tr>\n'
@@ -39,10 +40,7 @@ def generate_schedule(arch):
     log.info("Page generated at " + desturl)
 
 
-def generate_live_status(arch):
-    """ the schedule pages are very different than others index pages """
-    log.info('Building live status page...')
-    title = 'Live status of reproducible.debian.net'
+def generate_live_status_table(arch):
     query = 'SELECT s.id, s.name, s.version, s.suite, s.architecture, ' + \
             'p.scheduler, p.date_scheduled, p.date_build_started, ' + \
             'r.status, r.version, r.build_duration, p.builder, p.notify ' + \
@@ -51,7 +49,7 @@ def generate_live_status(arch):
             'ORDER BY p.date_build_started DESC'
     html = ''
     rows = query_db(query.format(arch=arch))
-    html += '<p>If there are more than 21 rows shown here, the list includes stale builds... we\'re working on it. Stay tuned.<table class="scheduled">\n' + tab
+    html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>src pkg id</th><th>name</th><th>version</th>'
     html += '<th>suite</th><th>arch</th><th>scheduled by</th>'
     html += '<th>scheduled on</th><th>build started</th><th>status</th>'
@@ -70,13 +68,9 @@ def generate_live_status(arch):
         html += '<td>' + str(row[10]) + '</td><td><a href="https://jenkins.debian.net/job/reproducible_builder_' + str(row[11]) + '/console">' + str(row[11]) + '</a></td><td>' + str(row[12]) + '</td>'
         html += '</tr>\n'
     html += '</table></p>\n'
-    destfile = BASE + '/live_status.html'
-    desturl = REPRODUCIBLE_URL + '/live_status.html'
-    write_html_page(title=title, body=html, destfile=destfile)
-    log.info("Page generated at " + desturl)
+    return html
 
 if __name__ == '__main__':
-    generate_live_status("*")
     for arch in ARCHS:
         generate_schedule(arch)
 

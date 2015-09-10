@@ -55,7 +55,12 @@ def generate_live_status_table(arch):
     html += '<th>scheduled on</th><th>build started</th><th>status</th>'
     html += '<th>version building</th><th>previous build duration</th><th>builder job</th><th>notify</th>'
     html += '</tr>\n'
+    counter = 0
     for row in rows:
+        counter += 1
+        # the numbers 16 and 7 should really be derived from /var/lib/jenkins/jobs/reproducible_builder_${arch}_* instead of being hard-coded here...
+        if ( arch == 'amd64' and counter == 16 ) or ( arch = 'armhf' and counter == 7 ):
+             html += '<tr><td colspan="14">There are more builds marked as currently building in the database than there are ' + arch + ' build jobs. This does not compute. Please cleanup and please automate cleanup.</td></tr>'
         pkg = row[1]
         arch = row[4]
         suite = row[3]

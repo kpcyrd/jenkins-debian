@@ -14,9 +14,9 @@ def generate_live_status():
     """ the schedule pages are very different than others index pages """
     log.info('Building live status page...')
     title = 'Live status of reproducible.debian.net'
-    query = 'SELECT s.id, s.name, s.version, s.suite, s.architecture AS arch, ' + \
-            'p.scheduler, p.date_scheduled AS "scheduled on", p.date_build_started AS "build started on", ' + \
-            'r.status, r.version, r.build_duration AS duration, p.builder, p.notify ' + \
+    query = 'SELECT s.id, s.name, s.version, s.suite, s.architecture, ' + \
+            'p.scheduler, p.date_scheduled, p.date_build_started, ' + \
+            'r.status, r.version, r.build_duration, p.builder, p.notify ' + \
             'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
             'WHERE p.date_build_started != "" OR p.notify != "" ' + \
             'ORDER BY p.date_build_started DESC'

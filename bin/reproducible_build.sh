@@ -640,7 +640,9 @@ BAD_LOCKFILE=false
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 ARCH="$(dpkg --print-architecture)"
 
+#
 # determine mode
+#
 if [ "$1" = "" ] ; then
 	MODE="legacy"
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
@@ -684,6 +686,9 @@ elif [ "$2" != "" ] ; then
 	fi
 fi
 
+#
+# main - for both legacy and ng-mode
+#
 delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
 init_package_build

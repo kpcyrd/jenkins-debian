@@ -748,7 +748,7 @@
             my_node: ''
         - '{name}_html_live_status':
             my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
-            my_timed: 'H/20 * * * *'    # should be H/2 once it works properly
+            my_timed: '* * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_live_status.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''

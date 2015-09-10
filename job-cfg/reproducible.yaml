@@ -95,8 +95,8 @@
       - priority:
           job-prio: '150'
       - throttle:
-          max-total: 9
-          max-per-node: 9
+          max-total: 36
+          max-per-node: 36
           enabled: true
           option: category
           categories:

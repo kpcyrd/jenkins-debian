@@ -19,7 +19,7 @@ def generate_live_status():
             'r.status, r.version, r.build_duration AS duration, p.builder, p.notify ' + \
             'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
             'WHERE p.date_build_started != "" OR p.notify != "" ' + \
-            'ORDER BY p.date_build_started, date_scheduled DESC'
+            'ORDER BY p.date_build_started DESC'
     html = ''
     rows = query_db(query)
     html += '<p>If there are more than 21 rows shown here, the list includes stale builds... we\'re working on it. Stay tuned.<table class="scheduled">\n' + tab

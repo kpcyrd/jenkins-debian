@@ -31,7 +31,7 @@ def generate_schedule(arch):
         pkg = row[3]
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
-        html += link_package(pkg, row[1], row[2], bugs)
+        html += link_package(pkg, row[1], row[2])
         html += '</code></td></tr>\n'
     html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_scheduled.html'

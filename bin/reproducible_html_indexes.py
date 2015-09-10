@@ -552,7 +552,6 @@ def generate_schedule(arch):
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name
         pkg = row[3]
-        url = RB_PKG_URI + '/' + row[1] + '/' + row[2] + '/' + pkg + '.html'
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
         html += link_package(pkg, row[1], row[2], bugs)

@@ -36,7 +36,7 @@ def generate_schedule(arch):
     html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_scheduled.html'
     desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'
-    write_html_page(title=title, body=html, destfile=destfile)
+    write_html_page(title=title, body=html, destfile=destfile, arch=arch)
     log.info("Page generated at " + desturl)
 
 

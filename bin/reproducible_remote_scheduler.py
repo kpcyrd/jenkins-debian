@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(
            ' in the package list.')
 parser.add_argument('--dry-run', action='store_true')
 parser.add_argument('--null', action='store_true', help='The arguments are '
-                    'considered null-separated and coming from stding')
+                    'considered null-separated and coming from stdin')
 parser.add_argument('-k', '--keep-artifacts',  action='store_true',
                    help='Save artifacts (for further offline study)')
 parser.add_argument('-n', '--notify', action='store_true',

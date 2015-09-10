@@ -53,12 +53,23 @@ bootstrap() {
 	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
 	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
-	echo "Bootstraping $DISTRO into $CHROOT_TARGET now."
-	if ! sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR; then
-		SLEEPTIME=1800
-		echo "debootstrap failed, slowing down, sleeping $SLEEPTIME now..."
-		sleep $SLEEPTIME
-		exit 1
+	local TMPLOG=$(mktemp -p $CHROOT_BASE/ chroot-run-$DISTRO.XXXXXXXXX)
+	echo "$(date -u ) - bootstraping $DISTRO into $CHROOT_TARGET now."
+	set +e
+	sudo debootstrap BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR | tee $TMPLOG
+	local RESULT=$(egrep "E: Couldn't download packages" $TMPLOG)
+	rm $TMPLOG
+	set -e
+	if [ ! -z "$RESULT" ] ; then
+	        echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
+	        sudo rm -rf --one-file-system $CHROOT_TARGET
+	        sleep 5m
+	        if ! sudo debootstrap BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR ; then
+			SLEEPTIME="30m"
+			echo "$(date -u ) - debootstrap failed, slowing down, sleeping $SLEEPTIME now..."
+			sleep $SLEEPTIME
+			exit 1
+		fi
 	fi
 
 	cat > $CHROOT_TARGET/tmp/chroot-prepare <<-EOF

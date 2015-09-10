@@ -448,7 +448,7 @@ def scheduler(arch):
     total = int(query_db(query.format(arch=arch))[0][0])
     log.info('Currently scheduled packages in all suites: ' + str(total))
     if total > MAXIMUM[arch]:
-        generate_schedule()  # from reproducible_html_indexes
+        generate_schedule(arch)  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
                  ', only scheduling new versions.')
         empty_pkgs = {}
@@ -491,7 +491,7 @@ def scheduler(arch):
         log.info('### Suite ' + suite + ' done ###')
         log.info('==============================================================')
     # update the scheduled page
-    generate_schedule()  # from reproducible_html_indexes
+    generate_schedule(arch)  # from reproducible_html_indexes
     # build the kgb message text
     if arch != 'armhf':
         message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '

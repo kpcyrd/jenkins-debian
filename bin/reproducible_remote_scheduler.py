@@ -23,31 +23,31 @@ parser = argparse.ArgumentParser(
            ' in the package list.')
 parser.add_argument('--dry-run', action='store_true')
 parser.add_argument('--null', action='store_true', help='The arguments are '
-                    'considered null-separated and coming from stdin')
+                    'considered null-separated and coming from stdin.')
 parser.add_argument('-k', '--keep-artifacts',  action='store_true',
-                   help='Save artifacts (for further offline study)')
+                   help='Save artifacts (for further offline study).')
 parser.add_argument('-n', '--notify', action='store_true',
-                   help='Notify the channel when the build finishes')
+                   help='Notify the channel when the build finishes.')
 parser.add_argument('--noisy', action='store_true', help='Also notify when ' +
                     'the build starts, linking to the build url.')
 parser.add_argument('-m', '--message', default='',
                     help='A text to be sent to the IRC channel when notifying' +
-                    ' about the scheduling')
+                    ' about the scheduling.')
 parser.add_argument('-r', '--status', required=False,
-                    help='Schedule all package with this status')
+                    help='Schedule all package with this status.')
 parser.add_argument('-i', '--issue', required=False,
-                    help='Schedule all packages with this issue')
+                    help='Schedule all packages with this issue.')
 parser.add_argument('-t', '--after', required=False,
-                    help='Schedule all packages built after this date')
+                    help='Schedule all packages built after this date.')
 parser.add_argument('-b', '--before', required=False,
-                    help='Schedule all packages built before this date')
+                    help='Schedule all packages built before this date.')
 parser.add_argument('-a', '--architecture', required=False, default='amd64',
                     help='Specify the architecture to schedule for ' +
-                    '(defaults to amd64)')
+                    '(defaults to amd64).')
 parser.add_argument('-s', '--suite', required=False,
-                    help='Specify the suite to schedule in')
+                    help='Specify the suite to schedule in.')
 parser.add_argument('packages', metavar='package', nargs='*',
-                    help='list of packages to reschedule')
+                    help='Space seperated list of packages to reschedule.')
 scheduling_args = parser.parse_known_args()[0]
 if scheduling_args.null:
     scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))[0]

@@ -232,6 +232,8 @@ write_page_header() {
 				fi
 				write_page "<li><a href=\"/$i/index_suite_${ARCH}_stats.html\">suite: $i</a></li>"
 			done
+		elif [ "$TARGET" = "scheduled" ] ; then
+			write_page "<li><a href=\"/index_${ARCH}_scheduled.html\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "notify" ] ; then
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "arch" ] ; then

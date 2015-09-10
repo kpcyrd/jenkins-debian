@@ -535,17 +535,17 @@ def build_page(page, suite=None, arch=None):
     log.info('"' + title + '" now available at ' + desturl)
 
 
-def generate_schedule():
-    """ the schedule is very different than others index pages """
-    log.info('Building the schedule index page...')
-    title = 'Packages currently scheduled for testing for build reproducibility'
+def generate_schedule(arch):
+    """ the schedule pages are very different than others index pages """
+    log.info('Building the schedule index page for ' + arch +'...')
+    title = 'Packages currently scheduled on {arch} for testing for build reproducibility'
     query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name ' + \
             'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id ' + \
-            'WHERE sch.date_build_started = "" ORDER BY sch.date_scheduled'
-    text = Template('$tot packages are currently scheduled for testing:')
+            'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
+    text = Template('$tot packages are currently scheduled for testing on $arch:')
     html = ''
-    rows = query_db(query)
-    html += build_leading_text_section({'text': text}, rows, defaultsuite, defaultarch)
+    rows = query_db(query.format(arch=arch))
+    html += build_leading_text_section({'text': text}, rows, defaultsuite, arch)
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
     html += '<th>architecture</th><th>source package</th></tr>\n'
@@ -558,16 +558,16 @@ def generate_schedule():
         html += link_package(pkg, row[1], row[2], bugs)
         html += '</code></td></tr>\n'
     html += '</table></p>\n'
-    destfile = BASE + '/index_scheduled.html'
-    desturl = REPRODUCIBLE_URL + '/index_scheduled.html'
+    destfile = BASE + '/index_' + arch + '_scheduled.html'
+    desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'
     write_html_page(title=title, body=html, destfile=destfile, style_note=True)
 
 
 bugs = get_bugs()
 
 if __name__ == '__main__':
-    generate_schedule()
     for arch in ARCHS:
+        generate_schedule(arch)
         for suite in SUITES:
             if arch == 'armhf' and suite != 'unstable':
                 continue

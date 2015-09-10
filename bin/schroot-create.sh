@@ -183,7 +183,7 @@ bootstrap() {
 
 cleanup() {
 	if [ -d $CHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed on forced cleanup." ; fuser -mv $CHROOT_TARGET ; ls $CHROOT_TARGET -la )
+		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed on forced cleanup." ; ls $CHROOT_TARGET -la )
 	fi
 	rm -f $TMPLOG
 }
@@ -204,8 +204,7 @@ echo "$(date -u ) - renaming $CHROOT_TARGET to $SCHROOT_BASE/$TARGET"
 sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
 
 if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ] ; then
-	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand" || ( echo "Warning: $SCHROOT_BASE/${TARGET}-$rand could not be fully removed." ; fuser -mv $SCHROOT_BASE/${TARGET}-$rand ; ls $SCHROOT_BASE/${TARGET}-$rand -la )
-	# idea: ignore if 0 files are in there…
+	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand" || ( echo "Warning: $SCHROOT_BASE/${TARGET}-$rand could not be fully removed." ; ls $SCHROOT_BASE/${TARGET}-$rand -la )
 fi
 
 # write the schroot config

@@ -598,11 +598,10 @@ build_rebuild() {
 	fi
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
-			# FIXME: this is wrong / not optimal, the build should be aborted cleanly and the package rescheduled, not depwait.
-			FTBFS=0
-		        calculate_build_duration
-			update_db_and_html "404"
-			handle_unhandled "Build of ${SRCPACKAGE} for $SUITE/$ARCH needs to be rescheduled" "5m"
+			# reschedule the package for later and quit the build without saving anything
+			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='' builder='' date_scheduled='$(date -u)' WHERE package_id='$SRCPKGID'"
+			NOTIFY=""
+			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions

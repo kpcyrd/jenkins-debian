@@ -542,6 +542,9 @@ remote_build() {
 	ls -R $TMPDIR
 	ssh -p $PORT $NODE "rm -r $TMPDIR"
 	set -e
+	if [ $BUILDNR -eq 1 ] ; then
+		cat $TMPDIR/b1/build.log >> ${RBUILDLOG}
+	fi
 }
 
 check_buildinfo() {

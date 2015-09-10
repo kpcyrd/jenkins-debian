@@ -567,8 +567,8 @@ bugs = get_bugs()
 
 if __name__ == '__main__':
     generate_schedule()
-    for suite in SUITES:
-        for arch in ARCHS:
+    for arch in ARCHS:
+        for suite in SUITES:
             if arch == 'armhf' and suite != 'unstable':
                 continue
             for page in pages.keys():

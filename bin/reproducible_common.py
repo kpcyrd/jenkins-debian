@@ -184,7 +184,7 @@ html_head_page = Template((tab*2).join("""
     <li><a href="/index_issues.html">issues</a></li>
     <li><a href="/$suite/$arch/index_notes.html">packages with notes</a></li>
     <li><a href="/$suite/$arch/index_no_notes.html">packages without notes</a></li>
-    <li><a href="/index_$arch_scheduled.html">currently scheduled</a></li>
+    <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
 $links
     <li><a href="/index_repositories.html">repositories overview</a></li>
     <li><a href="/reproducible.html">reproducible stats</a></li>

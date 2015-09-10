@@ -268,7 +268,11 @@ handle_unhandled() {
 	MESSAGE="$BUILD_URL met an unhandled $1, please investigate."
 	echo "$MESSAGE"
 	irc_msg "$MESSAGE"
-	sleep 15m
+	if [ -z "$2" ] ; then
+		sleep 15m
+	else
+		sleep $2
+	fi
 	/srv/jenkins/bin/abort.sh
 	exit 0
 }
@@ -594,12 +598,12 @@ build_rebuild() {
 		remote_build 1 $NODE1 $PORT1
 	fi
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
-			echo "Version mismatch between main node and first build node, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
-			# this is wrong / not optimal but it should at least stop the false ftbfs...
+			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
+			# FIXME: this is wrong / not optimal, the build should be aborted cleanly and the package rescheduled, not depwait.
 			FTBFS=0
 		        calculate_build_duration
 			update_db_and_html "depwait"
-			exit 1
+			handle_unhandled "Build of ${SRCPACKAGE} for $SUITE/$ARCH needs to be rescheduled" "5m"
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions

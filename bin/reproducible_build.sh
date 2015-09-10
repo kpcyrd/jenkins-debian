@@ -43,8 +43,8 @@ handle_race_condition() {
 			;;
 	esac
 	printf "$msg" | tee -a $BUILDLOG
-	printf "$(date) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
-	echo "$(date) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
+	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
+	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		SAVE_ARTIFACTS=0
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
@@ -228,15 +228,15 @@ handle_ftbr() {
 	# a ftbr explaination message could be passed
 	local FTBRmessage="$@"
 	echo | tee -a ${RBUILDLOG}
-	echo "$(date) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
+	echo "$(date -u) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
 	cp b1/${BUILDINFO} $BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ ! -z "$FTRmessage" ] ; then
-		echo "$(date) - ${FTBRmessage}." | tee -a ${RBUILDLOG}
+		echo "$(date -u) - ${FTBRmessage}." | tee -a ${RBUILDLOG}
 	fi
 	if [ -f ./${DBDREPORT} ] ; then
 		mv ./${DBDREPORT} $BASE/dbd/${SUITE}/${ARCH}/
 	else
-		echo "$(date) - $DIFFOSCOPE produced no output (which is strange)." | tee -a $RBUILDLOG
+		echo "$(date -u) - $DIFFOSCOPE produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	if [ -f ./$DBDTXT ] ; then
 		mv ./$DBDTXT $BASE/dbdtxt/$SUITE/$ARCH/
@@ -280,7 +280,7 @@ handle_unhandled() {
 dbd_timeout() {
 	local msg="$DIFFOSCOPE was killed after running into timeout after $1"
 	if [ ! -s ./${DBDREPORT} ] ; then
-		echo "$(date) - $DIFFOSCOPE produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
+		echo "$(date -u) - $DIFFOSCOPE produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
 	else
 		msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
@@ -301,7 +301,7 @@ call_diffoscope_on_changes_files() {
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
-	echo "$(date) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
+	echo "$(date -u) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
 	set -x
 	( timeout $TIMEOUT schroot \
@@ -563,7 +563,7 @@ check_buildinfo() {
 	RESULT=$?
 	set -e
 	if [ $RESULT -eq 1 ] ; then
-		printf "$(date) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-hit-mirror-update.log
+		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-hit-mirror-update.log
 		echo
 		echo "============================================================================="
 		echo ".buildinfo's Build-Environment varies, probably due to mirror update."
@@ -599,7 +599,7 @@ build_rebuild() {
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
-			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='', date_scheduled='$(date +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
+			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='', date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
 			NOTIFY=""
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
@@ -631,7 +631,7 @@ TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actua
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
-DATE=$(date +'%Y-%m-%d %H:%M')
+DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 BAD_LOCKFILE=false

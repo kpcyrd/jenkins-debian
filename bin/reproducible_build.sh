@@ -407,7 +407,7 @@ get_source_package() {
 		RESULT=$?
 	else
 		# remote build, no need to download the full source package...
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget || true
 		RESULT=$?
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] ; then
@@ -422,7 +422,7 @@ get_source_package() {
 			RESULT=$?
 		else
 			# remote build, no need to download the full source package...
-			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget
+			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget || true
 			RESULT=$?
 		fi
 	fi

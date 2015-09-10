@@ -32,7 +32,6 @@ def generate_live_status():
         pkg = row[1]
         arch = row[4]
         suite = row[3]
-        url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + pkg + '.html'
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td><code>'
         html += link_package(pkg, suite, arch)

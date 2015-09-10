@@ -381,7 +381,7 @@ init() {
 	# used to catch race conditions when the same package is being built by two parallel jobs
 	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 	echo "============================================================================="
-	echo "Trying to reproducibly build ${SRCPACKAGE} in ${SUITE} on ${ARCH} now. $ANNOUNCE"
+	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
 	echo "============================================================================="
 	# mark build attempt
 	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")" ] ; then
@@ -396,7 +396,7 @@ init() {
 		BAD_LOCKFILE=true
 		handle_race_condition init
 	fi
-	echo "Starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $DATE" | tee ${RBUILDLOG}
+	echo "Starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on $DATE" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
 }
 
@@ -460,6 +460,9 @@ check_suitability() {
 }
 
 first_build() {
+	echo "============================================================================="
+	echo "Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now."
+	echo "============================================================================="
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	cat > "$TMPCFG" << EOF
@@ -562,7 +565,7 @@ check_buildinfo() {
 		echo "============================================================================="
 		echo ".buildinfo's Build-Environment varies, probably due to mirror update."
 		echo "Doing the first build again."
-		echo "Building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
+		echo "Building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} on $(hostname -f) now."
 		echo "============================================================================="
 		echo
 		if [ "$MODE" = "legacy" ] ; then
@@ -601,7 +604,7 @@ build_rebuild() {
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
 		echo "============================================================================="
-		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} now."
+		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} $(hostname -f) now."
 		echo "============================================================================="
 		if [ "$MODE" = "legacy" ] ; then
 			second_build

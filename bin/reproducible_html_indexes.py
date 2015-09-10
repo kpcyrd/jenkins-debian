@@ -537,8 +537,8 @@ def build_page(page, suite=None, arch=None):
 
 def generate_schedule(arch):
     """ the schedule pages are very different than others index pages """
-    log.info('Building the schedule index page for ' + arch +'...')
-    title = 'Packages currently scheduled on {arch} for testing for build reproducibility'
+    log.info('Building the schedule index page for ' + arch + '...')
+    title = 'Packages currently scheduled on ' + arch + ' for testing for build reproducibility'
     query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name ' + \
             'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id ' + \
             'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'

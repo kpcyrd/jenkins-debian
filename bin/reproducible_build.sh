@@ -465,6 +465,8 @@ check_suitability() {
 first_build() {
 	echo "============================================================================="
 	echo "Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now."
+	echo "Date:     $(date)"
+	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
@@ -489,6 +491,11 @@ EOF
 }
 
 second_build() {
+	echo "============================================================================="
+	echo "Re-Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now."
+	echo "Date:     $(date)"
+	echo "Date UTC: $(date -u)"
+	echo "============================================================================="
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
@@ -566,9 +573,7 @@ check_buildinfo() {
 		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-hit-mirror-update.log
 		echo
 		echo "============================================================================="
-		echo ".buildinfo's Build-Environment varies, probably due to mirror update."
-		echo "Doing the first build again."
-		echo "Building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} on $(hostname -f) now."
+		echo "$(date -u) - The build environment varies according to the two .buildinfo files, probably due to mirror update. Doing the first build again."
 		echo "============================================================================="
 		echo
 		if [ "$MODE" = "legacy" ] ; then
@@ -605,9 +610,6 @@ build_rebuild() {
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
-		echo "============================================================================="
-		echo "Re-building ${SRCPACKAGE}/${VERSION} in ${SUITE} on ${ARCH} $(hostname -f) now."
-		echo "============================================================================="
 		if [ "$MODE" = "legacy" ] ; then
 			second_build
 		else

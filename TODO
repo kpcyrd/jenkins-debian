@@ -252,6 +252,8 @@ properties:
 * profitbricks-build2-amd64
 ** should run in the future…
 ** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
+* profitbricks-build2-amd64
+** should have one more cpu then build2, so we dont need to run with NUM_CPU-1
 
 ==== reproducible Debian installation
 

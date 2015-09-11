@@ -25,7 +25,7 @@ def generate_schedule(arch):
     html += generate_live_status_table(arch)
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
-    html += '<th>architecture</th><th>source package</th></tr>\n'
+    html += '<th>arch</th><th>source package</th></tr>\n'
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name
         pkg = row[3]
@@ -50,7 +50,7 @@ def generate_live_status_table(arch):
     rows = query_db(query.format(arch=arch))
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>src pkg id</th><th>suite</th><th>arch</th>'
-    html += '<th>name</th><th>version</th></th>'
+    html += '<th>source package</th><th>version</th></th>'
     html += '<th>build started</th><th>previous build status</th>'
     html += '<th>previous build duration</th><th>builder job</th>'
     html += '</tr>\n'

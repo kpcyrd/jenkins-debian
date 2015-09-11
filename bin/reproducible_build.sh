@@ -413,7 +413,7 @@ get_source_package() {
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget || true
 		RESULT=$?
 	fi
-	PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG})
+	PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG} || true)
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
@@ -429,7 +429,7 @@ get_source_package() {
 			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget || true
 			RESULT=$?
 		fi
-	        PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG})
+	        PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG} || true)
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then

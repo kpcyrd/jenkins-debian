@@ -24,7 +24,7 @@ def convert_into_hms_string(duration):
         elif minutes > 0:
             duration = str(minutes)+'m ' + str(seconds) + 's'
         else:
-            duration = str(seconds+"s")
+            duration = str(seconds)+'s'
     return duration
 
 def generate_schedule(arch):
@@ -42,17 +42,18 @@ def generate_schedule(arch):
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
     html += '<th>arch</th><th>source package</th></tr>\n'
+    bugs = get_bugs()
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name
         pkg = row[3]
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
-        html += link_package(pkg, row[1], row[2])
+        html += link_package(pkg, row[1], row[2], bugs)
         html += '</code></td></tr>\n'
     html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_scheduled.html'
     desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'
-    write_html_page(title=title, body=html, destfile=destfile, arch=arch, refresh_every=60)
+    write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60)
     log.info("Page generated at " + desturl)
 
 

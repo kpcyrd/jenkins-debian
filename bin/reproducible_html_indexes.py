@@ -531,11 +531,11 @@ def build_page(page, suite=None, arch=None):
         destfile = BASE + '/' + suite + '/' + arch + '/index_' + page + '.html'
         desturl = REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/index_' + \
                   page + '.html'
-    write_html_page(title=title, body=html, destfile=destfile, suite=suite, arch=arch, style_note=footnote)
+    write_html_page(title=title, body=html, destfile=destfile, suite=suite, arch=arch, style_note=True)
     log.info('"' + title + '" now available at ' + desturl)
 
 
-bugs = get_bugs()
+bugs = get_bugs() # FIXME: this variable should not be global, else merely importing _html_indexes always queries UDD
 
 if __name__ == '__main__':
     for arch in ARCHS:

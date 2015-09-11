@@ -172,10 +172,9 @@ properties:
 * higher prio:
 ** reproducible_build.sh changes needed:
 *** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
-*** handle_unhandled() needs to unregister the build from the db too
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
-*** once all non remote build jobs are removed, remove the legacy code from _build.sh, turn debug off
+*** once all non remote build jobs are removed, remove the legacy code from _build.sh
 ** setup builder3, distribute more ressources
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
 *** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such

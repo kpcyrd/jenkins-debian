@@ -11,6 +11,22 @@
 from reproducible_common import *
 from reproducible_html_indexes import build_leading_text_section
 
+def convert_into_hms_string(duration):
+    if not duration:
+        duration = "None"
+    else:
+        hours = int(duration/3600)
+        minutes = int((duration-(hours*3600))/60)
+        seconds = int(duration-(hours*3600)-(minutes*60))
+        duration = ''
+        if hours > 0:
+            duration = str(hours)+'h ' + str(minutes)+'m ' + str(seconds) + 's'
+        elif minutes > 0:
+            duration = str(minutes)+'m ' + str(seconds) + 's'
+        else:
+            duration = str(seconds+"s")
+    return duration
+
 def generate_schedule(arch):
     """ the schedule pages are very different than others index pages """
     log.info('Building the schedule index page for ' + arch + '...')
@@ -63,11 +79,12 @@ def generate_live_status_table(arch):
         suite = row[1]
         arch = row[2]
         pkg = row[3]
+        duration = convert_into_hms_string(row[7])
         html += tab + '<tr><td>&nbsp;</td><td>' + str(row[0]) + '</td>'
         html += '<td>' + suite + '</td><td>' + arch + '</td>'
         html += '<td><code>' + link_package(pkg, suite, arch) + '</code></td>'
         html += '<td>' + str(row[4]) + '</td><td>' + str(row[5]) + '</td>'
-        html += '<td>' + str(row[6]) + '</td><td>' + str(row[7]) + '</td> '
+        html += '<td>' + str(row[6]) + '</td><td>' + duration + '</td> '
         html += '<td><a href="https://jenkins.debian.net/job/reproducible_builder_' + str(row[8]) + '/console">' + str(row[8]) + '</a></td>'
         html += '</tr>\n'
     html += '</table></p>\n'

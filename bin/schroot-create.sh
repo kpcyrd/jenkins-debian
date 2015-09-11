@@ -117,7 +117,7 @@ bootstrap() {
 	echo "Bootstraping $SUITE into $CHROOT_TARGET now."
 	set +e
 	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR | tee $TMPLOG
-	RESULT=$(egrep "E: Couldn't download packages" $TMPLOG)
+	RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."

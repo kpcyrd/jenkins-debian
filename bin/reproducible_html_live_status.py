@@ -42,8 +42,7 @@ def generate_schedule(arch):
 
 def generate_live_status_table(arch):
     query = 'SELECT s.id, s.suite, s.architecture, s.name, s.version, ' + \
-            'p.scheduler, p.date_build_started, ' + \
-            'r.status, r.build_duration, p.builder, p.notify ' + \
+            'p.date_build_started, r.status, r.build_duration, p.builder, p.notify ' + \
             'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
             'WHERE (p.date_build_started != "" OR p.notify != "") AND s.architecture="{arch}" ' + \
             'ORDER BY p.date_build_started DESC'
@@ -51,7 +50,7 @@ def generate_live_status_table(arch):
     rows = query_db(query.format(arch=arch))
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>src pkg id</th><th>suite</th><th>arch</th>'
-    html += '<th>name</th><th>version</th></th><th>scheduled by</th>'
+    html += '<th>name</th><th>version</th></th>'
     html += '<th>build started</th><th>previous build status</th>'
     html += '<th>previous build duration</th><th>builder job</th><th>notify</th>'
     html += '</tr>\n'
@@ -60,16 +59,16 @@ def generate_live_status_table(arch):
         counter += 1
         # the numbers 16 and 7 should really be derived from /var/lib/jenkins/jobs/reproducible_builder_${arch}_* instead of being hard-coded here...
         if ( arch == 'amd64' and counter == 16 ) or ( arch == 'armhf' and counter == 7 ):
-             html += '<tr><td colspan="12">There are more builds marked as currently building in the database than there are ' + arch + ' build jobs. This does not compute. Please cleanup and please automate cleanup.</td></tr>'
+             html += '<tr><td colspan="11">There are more builds marked as currently building in the database than there are ' + arch + ' build jobs. This does not compute. Please cleanup and please automate cleanup.</td></tr>'
         suite = row[1]
         arch = row[2]
         pkg = row[3]
         html += tab + '<tr><td>&nbsp;</td><td>' + str(row[0]) + '</td>'
         html += '<td>' + suite + '</td><td>' + arch + '</td>'
         html += '<td><code>' + link_package(pkg, suite, arch) + '</code></td>'
-        html += '<td>' + str(row[4]) + '</td><td>' + str(row[5]) + '</td><td>' + str(row[6]) + '</td>'
-        html += '<td>' + str(row[7]) + '</td><td>' + str(row[8]) + '</td> '
-        html += '<td><a href="https://jenkins.debian.net/job/reproducible_builder_' + str(row[9]) + '/console">' + str(row[9]) + '</a></td><td>' + str(row[10]) + '</td>'
+        html += '<td>' + str(row[4]) + '</td><td>' + str(row[5]) + '</td>'
+        html += '<td>' + str(row[6]) + '</td><td>' + str(row[7]) + '</td> '
+        html += '<td><a href="https://jenkins.debian.net/job/reproducible_builder_' + str(row[8]) + '/console">' + str(row[8]) + '</a></td><td>' + str(row[9]) + '</td>'
         html += '</tr>\n'
     html += '</table></p>\n'
     return html

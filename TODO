@@ -194,7 +194,6 @@ properties:
 *** send notifications to maintainers when a note to their packages changes?
 
 * lesser prio
-** reproducible_scheduler.py: why do we have ARCH_SHARE when LIMITS is different for each arch anyway...? legacy? if so -> cleanup...
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** run amd64 builder 400 days in the past… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future

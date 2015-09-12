@@ -30,56 +30,53 @@ from reproducible_html_packages import purge_old_pages
 LIMITS = {
     'untested': {
         'amd64': {
-            'testing': {'*': 44},
-            'unstable': {'*': 44},
-            'experimental': {'*': 44},
+            'testing': {'*': 440},
+            'unstable': {'*': 440},
+            'experimental': {'*': 440},
         },
         'armhf': {
             'testing': {'*': 0},
-            'unstable': {'*': 44},
+            'unstable': {'*': 130},
             'experimental': {'*': 0},
         },
     },
     'new': {
         'amd64': {
-            'testing': {1: (100, 25), 2: (200, 20), '*': 15},
-            'unstable': {1: (100, 25), 2: (200, 20), '*': 15},
-            'experimental': {1: (100, 25), 2: (200, 20), '*': 15},
+            'testing': {1: (100, 250), 2: (200, 200), '*': 150},
+            'unstable': {1: (100, 250), 2: (200, 200), '*': 150},
+            'experimental': {1: (100, 250), 2: (200, 200), '*': 150},
         },
         'armhf': {
             'testing': {1: (100, 0), 2: (200, 0), '*': 0},
-            'unstable': {1: (100, 25), 2: (200, 20), '*': 15},
+            'unstable': {1: (100, 75), 2: (200, 60), '*': 45},
             'experimental': {1: (100, 0), 2: (200, 0), '*': 0},
         },
     },
     'ftbfs': {
         'amd64': {
-            'testing': {1: (250, 4), 2: (350, 2), '*': 0},
-            'unstable': {1: (250, 4), 2: (350, 2), '*': 0},
-            'experimental': {1: (250, 4), 2: (350, 2), '*': 0},
+            'testing': {1: (250, 40), 2: (350, 20), '*': 0},
+            'unstable': {1: (250, 40), 2: (350, 20), '*': 0},
+            'experimental': {1: (250, 40), 2: (350, 20), '*': 0},
         },
         'armhf': {
             'testing': {1: (250, 0), 2: (350, 0), '*': 0},
-            'unstable': {1: (250, 4), 2: (350, 2), '*': 0},
+            'unstable': {1: (250, 12), 2: (350, 6), '*': 0},
             'experimental': {1: (250, 0), 2: (350, 0), '*': 0},
         }
     },
     'old': {
         'amd64': {
-            'testing': {1: (300, 20), 2: (400, 30), '*': 0},
-            'unstable': {1: (300, 60), 2: (400, 70), '*': 0},
-            'experimental': {1: (300, 3.5), 2: (400, 2.5), '*': 0},
+            'testing': {1: (300, 200), 2: (400, 300), '*': 0},
+            'unstable': {1: (300, 600), 2: (400, 700), '*': 0},
+            'experimental': {1: (300, 35), 2: (400, 25), '*': 0},
         },
         'armhf': {
             'testing': {1: (300, 0), 2: (400, 0), '*': 0},
-            'unstable': {1: (300, 17.5), 2: (400, 12.5), '*': 0},
+            'unstable': {1: (300, 50), 2: (400, 40), '*': 0},
             'experimental': {1: (300, 0), 2: (400, 0), '*': 0},
         }
     }
 }
-
-# define an "arch factor", so the scheduling limits differ between archs
-ARCH_SHARE = {'amd64': 10, 'armhf': 3}
 
 MAXIMUM = {'amd64': 750, 'armhf': 250}
 
@@ -88,16 +85,9 @@ class Limit:
         self.arch = arch
         self.queue = queue
 
-    def _get_arch_multiplier(self):
+    def get_level(self, stage):
         try:
-            return ARCH_SHARE[self.arch]
-        except KeyError:
-            log.error('No arch factor defined for %s, returning 1')
-            return 1
-
-    def _get_level(self, stage):
-        try:
-            return LIMITS[self.queue][self.arch][self.suite][stage][0]
+            return int(LIMITS[self.queue][self.arch][self.suite][stage][0])
         except KeyError:
             log.error('No limit defined for the %s queue on %s/%s stage %s. '
                       'Returning 1', self.queue, self.suite, self.arch, stage)
@@ -107,10 +97,7 @@ class Limit:
                          'I can\'t guess what you want, giving up')
             sys.exit(1)
 
-    def get_level(self, stage):
-        return int(self._get_level(stage) * self._get_arch_multiplier())
-
-    def _get_limit(self, stage):
+    def get_limit(self, stage):
         try:
             limit = LIMITS[self.queue][self.arch][self.suite][stage]
             limit = limit[1]
@@ -128,10 +115,7 @@ class Limit:
                 pass
             else:
                 raise
-        return limit
-
-    def get_limit(self, stage):
-        return int(self._get_limit(stage) * self._get_arch_multiplier())
+        return int(limit)
 
     def get_staged_limit(self, current_total):
         if current_total <= self.get_level(1):

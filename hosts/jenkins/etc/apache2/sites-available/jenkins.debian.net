@@ -141,6 +141,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	AllowEncodedSlashes NoDecode
 	# proxy everything but a few urls
 	ProxyPass /munin !
+	ProxyPass /munin-cgi !
 	ProxyPass /server-status !
 	ProxyPass /calamaris !
 	ProxyPass /robots.txt http://localhost:8080/userContent/robots.txt

@@ -166,7 +166,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_maintenance'
+    name: '{name}_maintenance_amd64_jenkins'
 
 - job-template:
     defaults: reproducible
@@ -431,7 +431,7 @@
 - project:
     name: reproducible
     jobs:
-        - '{name}_maintenance':
+        - '{name}_maintenance_amd64_jenkins':
             my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
             my_timed: '5 0,3,6,9,12,15,18,21 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'

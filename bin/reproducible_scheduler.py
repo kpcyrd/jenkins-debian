@@ -525,7 +525,7 @@ def scheduler(arch):
 
 
 if __name__ == '__main__':
-    log.info('Updating schroots and sources tables for all suites.')
+    log.info('Updating sources tables for all suites.')
     for suite in SUITES:
         update_sources(suite)
     purge_old_pages()

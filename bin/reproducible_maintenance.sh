@@ -45,6 +45,10 @@ echo "$(date -u) - updating the schroots and pbuilder now..."
 set +e
 ARCH=$(dpkg --print-architecture)
 for s in $SUITES ; do
+	if [ "$(hostname)" = "jenkins" ] ; then
+		echo "$(date -u) - nothing to do on $(hostname -f)..."
+		break
+	fi
 	if [ "$ARCH" = "armhf" ] && [ "$s" != "unstable" ] ; then
 		continue
 	fi

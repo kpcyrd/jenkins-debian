@@ -26,7 +26,22 @@ from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
 
-# FIXME: these limits were understandable when the code was merged but now need some explaination
+"""
+How the scheduler chose which limit to apply:
+everything depends on how many packages are already scheduled, in a 3 steps
+process.  Let's go by an example:
+    'unstable': {1: (250, 40), 2: (350, 20), '*': 5},
+if total < 250:
+    40
+elif total < 350:
+    20
+else:
+    5
+ * 1st step, if there are less than 250 packages in the queue, schedule 40
+ * 2nd step, if there are less than 350 packages in the queue, schedule 20
+ * 3rd step, schedule 5
+So, the 3rd step happens only when there are more than 350 packages queued up.
+"""
 LIMITS = {
     'untested': {
         'amd64': {

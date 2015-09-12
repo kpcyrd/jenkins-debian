@@ -80,6 +80,7 @@ LIMITS = {
 
 MAXIMUM = {'amd64': 750, 'armhf': 250}
 
+
 class Limit:
     def __init__(self, arch, queue):
         self.arch = arch
@@ -206,14 +207,14 @@ def update_sources_db(suite, arch, sources):
         pkgs_to_rm.append((pkg, suite, arch))
     log.debug('removed packages ID: ' + str([str(x[0]) for x in rmed_pkgs_id]))
     log.debug('removed packages: ' + str(pkgs_to_rm))
-    cursor.executemany('DELETE FROM sources ' +
+    cursor.executemany('DELETE FROM sources '
                        'WHERE id=?', rmed_pkgs_id)
-    cursor.executemany('DELETE FROM results ' +
+    cursor.executemany('DELETE FROM results '
                        'WHERE package_id=?', rmed_pkgs_id)
-    cursor.executemany('DELETE FROM schedule ' +
+    cursor.executemany('DELETE FROM schedule '
                        'WHERE package_id=?', rmed_pkgs_id)
-    cursor.executemany('INSERT INTO removed_packages '  +
-                       '(name, suite, architecture) ' +
+    cursor.executemany('INSERT INTO removed_packages '
+                       '(name, suite, architecture) '
                        'VALUES (?, ?, ?)', pkgs_to_rm)
     conn_db.commit()
     # finally check whether the db has the correct number of packages
@@ -439,17 +440,17 @@ def scheduler(arch):
         for suite in SUITES:
             empty_pkgs[suite] = []
         untested, msg_untested = empty_pkgs, ''
-        new, msg_new  = schedule_new_versions(arch, total)
-        old_ftbfs, msg_old_ftbfs  = empty_pkgs, ''
-        old, msg_old  = empty_pkgs, ''
+        new, msg_new = schedule_new_versions(arch, total)
+        old_ftbfs, msg_old_ftbfs = empty_pkgs, ''
+        old, msg_old = empty_pkgs, ''
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
         log.info('==============================================================')
         untested, msg_untested = schedule_untested_packages(arch, total)
-        new, msg_new  = schedule_new_versions(arch, total+len(untested))
-        old_ftbfs, msg_old_ftbfs  = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
-        old, msg_old  = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs))
+        new, msg_new = schedule_new_versions(arch, total+len(untested))
+        old_ftbfs, msg_old_ftbfs = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
+        old, msg_old = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first
@@ -459,12 +460,12 @@ def scheduler(arch):
         if suite not in priotized_suite_order:
             priotized_suite_order.append(suite)
     for suite in priotized_suite_order:
-        query = 'SELECT count(*) ' + \
-                'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
+        query = 'SELECT count(*) ' \
+                'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' \
                 'WHERE s.suite="{suite}" AND s.architecture="{arch}"'
-        query=query.format(suite=suite, arch=arch)
+        query = query.format(suite=suite, arch=arch)
         now_queued_here[suite] = int(query_db(query)[0][0]) + \
-                        len(untested[suite]+new[suite]+old[suite])
+            len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
         to_be_scheduled = queue_packages({}, untested[suite], datetime.now())
         assert(isinstance(to_be_scheduled, dict))
@@ -522,6 +523,6 @@ if __name__ == '__main__':
         if overall > (MAXIMUM[arch]*2):
             log.info('%s packages already scheduled, nothing to do.', overall)
             continue
-        log.info('%s packages already scheduled, probably scheduling some more...',
-                 overall)
+        log.info('%s packages already scheduled, probably scheduling some '
+                 'more...', overall)
         scheduler(arch)

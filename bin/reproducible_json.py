@@ -25,7 +25,7 @@ log.info('Creating json dump of current reproducible status')
 # filter_query is defined in reproducible_common.py and excludes some FTBFS issues
 query = 'SELECT s.name, r.version, s.suite, s.architecture, r.status, r.build_date ' + \
         'FROM results AS r JOIN sources AS s ON r.package_id = s.id '+ \
-        'WHERE status != "" AND (( status != "FTBFS" ) OR ' \
+        'WHERE status != "" AND status != "not-for-us" AND (( status != "FTBFS" ) OR ' \
         ' ( status = "FTBFS" and r.package_id NOT IN (SELECT n.package_id FROM NOTES AS n WHERE ' + filter_query + ' )))'
 
 result = sorted(query_db(query))

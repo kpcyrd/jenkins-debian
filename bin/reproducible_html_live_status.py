@@ -61,7 +61,7 @@ def generate_live_status_table(arch):
     query = 'SELECT s.id, s.suite, s.architecture, s.name, s.version, ' + \
             'p.date_build_started, r.status, r.build_duration, p.builder ' + \
             'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
-            'WHERE (p.date_build_started != "" OR p.notify != "") AND s.architecture="{arch}" ' + \
+            'WHERE p.date_build_started != "" AND s.architecture="{arch}" ' + \
             'ORDER BY p.date_build_started DESC'
     html = ''
     rows = query_db(query.format(arch=arch))

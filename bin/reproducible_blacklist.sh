@@ -97,5 +97,5 @@ echo "Probably edit notes.git/packages.yml now and enter/remove reasons for blac
 
 # finally, let's re-schedule them if the blacklisted was reverted
 if [ "$1" = "--revert" ] ; then
-	/srv/jenkins/bin/reproducible_schedule_on_demand.sh $SUITE $PACKAGES
+	/srv/jenkins/bin/reproducible_schedule_on_demand.sh -s $SUITE $PACKAGES
 fi

@@ -192,6 +192,7 @@ properties:
 *** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 **** aint that covered by reproducible_breakages.py already? no.
 *** send notifications to maintainers when a note to their packages changes?
+** _blacklist.sh: dont call /srv/jenkins/bin/reproducible_schedule_on_demand.sh which got removed
 
 * lesser prio
 ** cleanup old testing + diffscope schroots on armhf nodes, diffoscope schroots on pb-amd64 nodes and old schroot+pbuilder setups on jenkins

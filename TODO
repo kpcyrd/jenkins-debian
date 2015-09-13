@@ -194,6 +194,7 @@ properties:
 *** send notifications to maintainers when a note to their packages changes?
 
 * lesser prio
+** use build3 as (sudo) test system to develop a dsa approvable sudoers.d
 ** cleanup old testing + diffscope schroots on armhf nodes, diffoscope schroots on pb-amd64 nodes and old schroot+pbuilder setups on jenkins
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** run amd64 builder 400 days in the past… (that way we will notice problems soon)

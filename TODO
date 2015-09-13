@@ -243,7 +243,6 @@ properties:
 ==== reproducible Debian armhf
 
 * make systems send mail, use port 465
-* monitor their temperatures via munin?
 * bpi0 and hb0 should run in the future…
 
 ==== status of new remote build nodes for amd64

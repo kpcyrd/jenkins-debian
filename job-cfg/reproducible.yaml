@@ -607,7 +607,7 @@
             my_node: 'profitbricks2'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'
-            my_timed: '42 * * * *'
+            my_timed: '10 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_scheduler.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''

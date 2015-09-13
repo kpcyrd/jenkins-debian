@@ -11,8 +11,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-ARCH=amd64
-
 blacklist_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	for PKG in $PACKAGES ; do
@@ -44,18 +42,40 @@ check_candidates() {
 	done
 }
 
-
+explain_syntax() {
+	echo "$0 has to be called with three or more params:"
+	echo "     $0 \$arch \$suite pkg1 pkg2..."
+	echo "optionally it's possible to revert like this:"
+	echo "     $0 \$arch \$suite --revert pkg1 pkg2..."
+	echo
+	echo "Changing order of options is not possible and this should be improved."
+	echo
+}
 
 #
 # main
 #
 set +x
+ARCH="$1"
+shift
+if [ "$ARCH" != "amd64" ] && [ "$ARCH" != "armhf" ] ; then
+	explain_syntax
+	exit 1
+fi
 SUITE="$1"
 shift
-if [ "$SUITE" = "sid" ] ; then
-	echo "WARNING: sid has been renamed to unstable."
-	SUITE=unstable
-fi
+case $SUITE in
+	sid) 	echo "WARNING: sid has been renamed to unstable."
+		SUITE=unstable
+		;;
+	unstable) ;;
+	testing|experimental)	if [ "$ARCH" = "armhf" ] ; then echo "Only unstable is tested for $ARCH, exiting." ; exit 0 ; fi
+				;;
+	*)	echo "$SUITE is not a valid suite".
+		explain_syntax
+		exit 1
+		;;
+esac
 
 if [ "$1" != "--revert" ] ; then
 	REVERT=false
@@ -69,7 +89,7 @@ fi
 CANDIDATES="$@"
 check_candidates
 PACKAGES=$(echo $PACKAGES)
-MESSAGE="$TOTAL package(s) $ACTION in $SUITE: ${PACKAGES}"
+MESSAGE="$TOTAL package(s) $ACTION in $SUITE/$ARCH: ${PACKAGES}"
 if [ $TOTAL -lt 1 ] ; then
 	exit 1
 fi
@@ -90,12 +110,12 @@ echo "$MESSAGE"
 kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE"
 echo
 echo "============================================================================="
-echo "The following $TOTAL source packages from $SUITE have been $ACTION: $PACKAGES"
+echo "The following $TOTAL source packages from $SUITE/$ARCH have been $ACTION: $PACKAGES"
 echo "============================================================================="
 echo
 echo "Probably edit notes.git/packages.yml now and enter/remove reasons for blacklisting there."
 
 # finally, let's re-schedule them if the blacklisted was reverted
 if [ "$1" = "--revert" ] ; then
-	/srv/jenkins/bin/reproducible_schedule_on_demand.sh -s $SUITE $PACKAGES
+	/srv/jenkins/bin/reproducible_schedule_on_demand.sh -s $SUITE -a $ARCH $PACKAGES
 fi

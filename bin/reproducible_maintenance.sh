@@ -56,13 +56,13 @@ for s in $SUITES ; do
 	# schroot update
 	#
 	echo "$(date -u) - updating the $s/$ARCH schroot now."
-	for i in 1 2 3 ; do
+	for i in 1 2 3 4 ; do
 		schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
-			# sleep 31-100 secs
+			# sleep 61-120 secs
 			echo "Sleeping some time... (to workaround network problems like 'Hash Sum mismatch'...)"
-			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-700 -n 1)/10)+30" | bc )
+			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-600 -n 1)/10)+60" | bc )
 			echo "$(date -u) - Retrying to update the $s/$ARCH schroot."
 		elif [ $RESULT -eq 0 ] ; then
 			continue
@@ -80,13 +80,13 @@ for s in $SUITES ; do
 	if [ ! -z "$http_proxy" ] ; then
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
-	for i in 1 2 3 ; do
+	for i in 1 2 3 4 ; do
 		sudo pbuilder --update $pbuilder_http_proxy --basetgz /var/cache/pbuilder/$s-reproducible-base.tgz
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
-			# sleep 31-100 secs
+			# sleep 61-120 secs
 			echo "Sleeping some time... (to workaround network problems like 'Hash Sum mismatch'...)"
-			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-700 -n 1)/10)+30" | bc )
+			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-600 -n 1)/10)+60" | bc )
 			echo "$(date -u) - Retrying to update pbuilder for $s/$ARCH."
 		elif [ $RESULT -eq 0 ] ; then
 			continue

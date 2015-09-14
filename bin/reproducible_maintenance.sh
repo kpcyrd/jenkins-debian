@@ -65,7 +65,7 @@ for s in $SUITES ; do
 			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-600 -n 1)/10)+60" | bc )
 			echo "$(date -u) - Retrying to update the $s/$ARCH schroot."
 		elif [ $RESULT -eq 0 ] ; then
-			continue
+			break
 		fi
 	done
 	if [ $RESULT -eq 1 ] ; then
@@ -89,7 +89,7 @@ for s in $SUITES ; do
 			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-600 -n 1)/10)+60" | bc )
 			echo "$(date -u) - Retrying to update pbuilder for $s/$ARCH."
 		elif [ $RESULT -eq 0 ] ; then
-			continue
+			break
 		fi
 	done
 	if [ $RESULT -eq 1 ] ; then

@@ -45,10 +45,6 @@ echo "$(date -u) - updating the schroots and pbuilder now..."
 set +e
 ARCH=$(dpkg --print-architecture)
 for s in $SUITES ; do
-	if [ "$(hostname)" = "jenkins" ] ; then
-		echo "$(date -u) - nothing to do on $(hostname -f)..."
-		break
-	fi
 	if [ "$ARCH" = "armhf" ] && [ "$s" != "unstable" ] ; then
 		continue
 	fi
@@ -75,7 +71,12 @@ for s in $SUITES ; do
 	#
 	# pbuilder update
 	#
-	echo "$(date -u) - updating pbuilder for $s/$ARCH now."
+	# pbuilder aint used on jenkins anymore
+	if [ "$(hostname)" = "jenkins" ] ; then
+		continue
+	else
+		echo "$(date -u) - updating pbuilder for $s/$ARCH now."
+	fi
 	# use host apt proxy configuration for pbuilder
 	if [ ! -z "$http_proxy" ] ; then
 		pbuilder_http_proxy="--http-proxy $http_proxy"

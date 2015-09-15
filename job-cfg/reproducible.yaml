@@ -242,6 +242,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_schroot_unstable_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_schroot_unstable_amd64_profitbricks1'
 
 - job-template:
@@ -266,11 +270,19 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_schroot_testing_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_schroot_testing_amd64_profitbricks1'
 
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_testing_amd64_profitbricks2'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_experimental_amd64_jenkins'
 
 - job-template:
     defaults: reproducible
@@ -545,6 +557,12 @@
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-diffoscope testing diffoscope locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
+        - '{name}_setup_schroot_unstable_amd64_jenkins':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable botch'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_unstable_amd64_profitbricks1':
             my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '42 1 * * *'
@@ -581,6 +599,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbq0'
+        - '{name}_setup_schroot_testing_amd64_jenkins':
+            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_testing_amd64_profitbricks1':
             my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
             my_timed: '42 1 * * *'
@@ -593,6 +617,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_schroot_experimental_amd64_jenkins':
+            my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
+            my_timed: '33 1 * * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_setup_schroot_experimental_amd64_profitbricks1':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
             my_timed: '33 1 * * *'

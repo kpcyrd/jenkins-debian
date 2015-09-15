@@ -184,8 +184,8 @@ bootstrap() {
 cleanup_schroot_sessions() {
 	# FIXME: if this works well, move to _common.sh and use the same function from _maintenance.sh
 	local RESULT=""
-	for loop in $(seq 0 19) ; do
-		ps fax|grep -v grep |grep schroot || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || schroot -e -c $i ; done
+	for loop in $(seq 0 40) ; do
+		ps fax|grep -v grep | grep -v schroot-create.sh |grep schroot || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep -v schroot-create.sh | grep schroot || schroot -e -c $i ; done
 		RESULT=$(schroot --all-sessions -l)
 		if [ -z "$RESULT" ] ; then
 			break

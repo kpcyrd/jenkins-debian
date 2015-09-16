@@ -39,7 +39,7 @@ RESULT=$?
 if [ $RESULT -ne 0 ] ; then
 	echo "$(date -u) - $NODE_NAME seems to be down, sleeping 15min before aborting this job."
 	sleep 15m
-	/srv/jenkins/bin/abort.sh
+	exec /srv/jenkins/bin/abort.sh
 fi
 set -e
 # finally

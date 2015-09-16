@@ -1,3 +1,4 @@
+#!/bin/bash
 
 TMPFILE=$(mktemp)
 curl https://jenkins.debian.net/jnlpJars/jenkins-cli.jar -o $TMPFILE

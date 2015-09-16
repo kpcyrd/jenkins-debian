@@ -273,7 +273,7 @@ handle_unhandled() {
 	else
 		sleep $2
 	fi
-	/srv/jenkins/bin/abort.sh
+	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
 
@@ -541,7 +541,7 @@ remote_build() {
 	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u) - $NODE seems to be down, sleeping 23min before aborting this job."
 		sleep 23m
-		/srv/jenkins/bin/abort.sh
+		exec /srv/jenkins/bin/abort.sh
 	fi
 	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 	RESULT=$?

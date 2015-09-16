@@ -264,7 +264,14 @@ handle_reproducible() {
 	fi
 }
 
+unregister_build() {
+	# unregister this build so it will immeditiatly tried again
+	sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='' WHERE package_id='$SRCPKGID'"
+	NOTIFY=""
+}
+
 handle_unhandled() {
+	unregister_build
 	MESSAGE="$BUILD_URL met an unhandled $1, please investigate."
 	echo "$MESSAGE"
 	irc_msg "$MESSAGE"
@@ -540,6 +547,7 @@ remote_build() {
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u) - $NODE seems to be down, sleeping 23min before aborting this job."
+		unregister_build
 		sleep 23m
 		exec /srv/jenkins/bin/abort.sh
 	fi

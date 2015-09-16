@@ -25,8 +25,8 @@ for NODE in $BUILD_NODES ; do
 	# call jenkins_master_wrapper.sh so we only need to track different ssh ports in one place
 	# jenkins_master_wrapper.sh needs NODE_NAME and JOB_NAME
 	export NODE_NAME=$NODE
-	export JOB_NAME=/srv/jenkins/bin/reproducible_info.sh
-	/srv/jenkins/bin/jenkins_master_wrapper.sh > $TMPFILE_SRC
+	export JOB_NAME=$JOB_NAME
+	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_info.sh > $TMPFILE_SRC
 	for KEY in $BUILD_ENV_VARS ; do
 		VALUE=$(egrep "^$KEY=" $TMPFILE_SRC | cut -d "=" -f2-)
 		if [ ! -z "$VALUE" ] ; then

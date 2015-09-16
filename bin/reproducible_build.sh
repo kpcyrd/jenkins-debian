@@ -535,6 +535,14 @@ remote_build() {
 	local NODE=$2
 	local PORT=$3
 	set +e
+	ssh -p $PORT $NODE /bin/true
+	RESULT=$?
+	# abort job if host is down
+	if [ $RESULT -ne 0 ] then
+		echo "$(date -u) - $NODE seems to be down, sleeping 23min before aborting this job."
+		sleep 23m
+		/srv/jenkins/bin/abort.sh
+	fi
 	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 	RESULT=$?
 	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)

@@ -19,7 +19,7 @@ for NODE in $BUILD_NODES ; do
 	if [ "$NODE" = "jenkins.debian.net" ] ; then
 		echo "$(date -u) - Trying to update $TARGET_DIR/$NODE."
 		/srv/jenkins/bin/reproducible_info.sh > $TARGET_DIR/$NODE
-		echo "$(date -u) - $TARGET_DIR/$NODE updated."
+		echo "$(date -u) - $TARGET_DIR/$NODE updated:"
 		cat $TARGET_DIR/$NODE
 		continue
 	fi
@@ -37,7 +37,7 @@ for NODE in $BUILD_NODES ; do
 	done
 	if [ -s $TMPFILE_NODE ] ; then
 		mv $TMPFILE_NODE $TARGET_DIR/$NODE
-		echo "$(date -u) - $TARGET_DIR/$NODE updated."
+		echo "$(date -u) - $TARGET_DIR/$NODE updated:"
 		cat $TARGET_DIR/$NODE
 	fi
 	rm -f $TMPFILE_SRC $TMPFILE_NODE

@@ -27,6 +27,7 @@ for NODE in $BUILD_NODES ; do
 	# jenkins_master_wrapper.sh needs NODE_NAME and JOB_NAME
 	export NODE_NAME=$NODE
 	export JOB_NAME=$JOB_NAME
+	echo "$(date -u) - Trying to update $TARGET_DIR/$NODE."
 	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_info.sh > $TMPFILE_SRC
 	for KEY in $BUILD_ENV_VARS ; do
 		VALUE=$(egrep "^$KEY=" $TMPFILE_SRC | cut -d "=" -f2-)

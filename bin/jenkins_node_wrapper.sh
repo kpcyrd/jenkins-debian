@@ -58,7 +58,9 @@ shift
 
 allowed_cmds=()
 
-if [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
+if [[ "$*" =~ /bin/true ]] ; then
+	exec /bin/true ; croak "Exec failed";
+elif [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
 	exec /bin/nc localhost 4949 ; croak "Exec failed";
 elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	shift

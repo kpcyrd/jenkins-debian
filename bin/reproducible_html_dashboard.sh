@@ -245,8 +245,8 @@ write_build_performace_stats() {
 		TIMESPAN_VERBOSE="4 weeks"
 		TIMESPAN_RAW="28"
 	else
-		TIMESPAN_VERBOSE="week"
-		TIMESPAN_RAW="7"
+		TIMESPAN_VERBOSE="2 weeks"
+		TIMESPAN_RAW="14"
 	fi
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics for $ARCH</th></tr>"
 	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")

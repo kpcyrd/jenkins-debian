@@ -538,7 +538,7 @@ remote_build() {
 	ssh -p $PORT $NODE /bin/true
 	RESULT=$?
 	# abort job if host is down
-	if [ $RESULT -ne 0 ] then
+	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u) - $NODE seems to be down, sleeping 23min before aborting this job."
 		sleep 23m
 		/srv/jenkins/bin/abort.sh

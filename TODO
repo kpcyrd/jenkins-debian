@@ -178,6 +178,7 @@ properties:
 ** setup builder3, distribute more ressources
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
 *** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such
+** .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
 ** link howto on each coreboot/openwrt/netbsd/freebsd page

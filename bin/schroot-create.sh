@@ -218,8 +218,8 @@ then
 	echo "$(date -u ) - $SCHROOT_BASE/$TARGET exists, moving it away to $SCHROOT_BASE/$TARGET-$rand"
 	set +e
 	sudo mv $SCHROOT_BASE/"$TARGET" $SCHROOT_BASE/"$TARGET"-"$rand"
-	set -e
 	RESULT=$?
+	set -e
 	if [ $RESULT -ne 0 ] ; then
 		echo
 		ls -R $SCHROOT_BASE/"$TARGET"
@@ -232,8 +232,8 @@ cleanup_schroot_sessions
 echo "$(date -u ) - renaming $CHROOT_TARGET to $SCHROOT_BASE/$TARGET"
 set +e
 sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
-set -e
 RESULT=$?
+set -e
 if [ $RESULT -ne 0 ] ; then
 	echo
 	ls -R $SCHROOT_TARGET

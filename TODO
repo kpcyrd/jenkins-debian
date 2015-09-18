@@ -174,6 +174,7 @@ properties:
 *** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
+*** race condition with itself? https://jenkins.debian.net/job/reproducible_builder_armhf_6/716/console says Warning, package php5 in unstable on armhf is probably already building elsewhere, exiting. Please check https://jenkins.debian.net/job/reproducible_builder_armhf_6/716/ which does not compute.
 *** once all non remote build jobs are removed, remove the legacy code from _build.sh
 ** setup builder3, distribute more ressources
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"

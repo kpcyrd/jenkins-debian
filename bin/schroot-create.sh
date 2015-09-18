@@ -100,7 +100,7 @@ EOF
 robust_chroot_apt() {
 	set +e
 	sudo chroot $CHROOT_TARGET apt-get $@ | tee $TMPLOG
-	RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG)
+	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - 'apt-get $@' failed, sleeping 5min before retrying..."
@@ -117,7 +117,7 @@ bootstrap() {
 	echo "Bootstraping $SUITE into $CHROOT_TARGET now."
 	set +e
 	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR | tee $TMPLOG
-	RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG)
+	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
@@ -182,16 +182,21 @@ bootstrap() {
 }
 
 cleanup_schroot_sessions() {
+	echo
 	# FIXME: if this works well, move to _common.sh and use the same function from _maintenance.sh
 	local RESULT=""
 	for loop in $(seq 0 40) ; do
 		ps fax|grep -v grep | grep -v schroot-create.sh |grep schroot || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep -v schroot-create.sh | grep schroot || schroot -e -c $i ; done
 		RESULT=$(schroot --all-sessions -l)
 		if [ -z "$RESULT" ] ; then
+			echo "No schroot sessions in use atm..."
+			echo
 			break
 		fi
+		echo "$(date -u) - schroot session cleanup loop $loop"
 		sleep 15
 	done
+	echo
 }
 
 cleanup() {
@@ -211,12 +216,30 @@ if [ -d $SCHROOT_BASE/"$TARGET" ]
 then
 	cleanup_schroot_sessions
 	echo "$(date -u ) - $SCHROOT_BASE/$TARGET exists, moving it away to $SCHROOT_BASE/$TARGET-$rand"
+	set +e
 	sudo mv $SCHROOT_BASE/"$TARGET" $SCHROOT_BASE/"$TARGET"-"$rand"
+	set -e
+	RESULT=$?
+	if [ $RESULT -ne 0 ] ; then
+		echo
+		ls -R $SCHROOT_BASE/"$TARGET"
+		echo
+		exit 1
+	fi
 fi
 
 cleanup_schroot_sessions
 echo "$(date -u ) - renaming $CHROOT_TARGET to $SCHROOT_BASE/$TARGET"
+set +e
 sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
+set -e
+RESULT=$?
+if [ $RESULT -ne 0 ] ; then
+	echo
+	ls -R $SCHROOT_TARGET
+	echo
+	exit 1
+fi
 
 if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ] ; then
 	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand" || ( echo "Warning: $SCHROOT_BASE/${TARGET}-$rand could not be fully removed." ; ls $SCHROOT_BASE/${TARGET}-$rand -la )

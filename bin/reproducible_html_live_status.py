@@ -32,7 +32,7 @@ def generate_schedule(arch):
     log.info('Building the schedule index page for ' + arch + '...')
     title = 'Packages currently scheduled on ' + arch + ' for testing for build reproducibility'
     query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name, ' + \
-            'r.status, r.build_duration' + \
+            'r.status, r.build_duration ' + \
             'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
             'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
     text = Template('$tot packages are currently scheduled for testing on $arch:')

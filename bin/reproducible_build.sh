@@ -167,6 +167,7 @@ diff_copy_buildlogs() {
 		elif [ $FTBFS -eq 0 ] ; then
 			echo "Warning: No second build log, what happened?" | tee -a $RBUILDLOG
 		fi
+		set -x # FIXME: to debug the ".buildinfo not found" problem in eg https://jenkins.debian.net/job/reproducible_builder_armhf_5/447/console - /var/lib/jenkins/userContent/reproducible/buildinfo/unstable/armhf/ssh-import-id_3.21-1_armhf.buildinfo really didnt exist, though both builds created it...
 		echo "Compressing the 1st log..."
 		gzip -9cvn b1/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 		chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz

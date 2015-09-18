@@ -3,9 +3,9 @@
 === Sponsors
 
  * The (virtualized) hardware is sponsored since October 2012 by link:https://www.profitbricks.co.uk[Profitbricks] - Thanks a lot! Currently we are using:
- ** 16 cores and 64 GB memory for jenkins.debian.net
- ** 12 cores and 35 GB memory for profitbricks-build1-amd64.debian.net
- ** 13 cores and 35 GB memory for profitbricks-build2-amd64.debian.net
+ ** 12 cores and 50 GB memory for jenkins.debian.net
+ ** 14 cores and 42 GB memory for profitbricks-build1-amd64.debian.net
+ ** 15 cores and 42 GB memory for profitbricks-build2-amd64.debian.net
  ** 4 cores and 8 GB memory for profitbricks-build4-amd64.debian.net
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net
  * link:https://globalsign.com[GlobalSign] in January 2015 kindly provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.

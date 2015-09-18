@@ -512,8 +512,8 @@ create_png_from_table() {
 		# TABLE[0+2] have a architecture column:
 		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
 		if [ $1 -eq 2 ] && [ "$ARCH" = "armhf" ] ; then
-			# armhf was only build since 2015-08-31
-			WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-31'"
+			# armhf was only build since 2015-08-30
+			WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
 		fi
 	fi
 	# run query
@@ -521,8 +521,8 @@ create_png_from_table() {
 		# not sure if it's worth to generate the following query...
 		WHERE_EXTRA="AND architecture='$ARCH'"
 		if [ "$ARCH" = "armhf" ] ; then
-			# armhf was only build since 2015-08-31
-			WHERE2_EXTRA="WHERE s.datum >= '2015-08-31'"
+			# armhf was only build since 2015-08-30
+			WHERE2_EXTRA="WHERE s.datum >= '2015-08-30'"
 		fi
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA),0) AS 'reproducible_testing',

@@ -31,7 +31,7 @@ def generate_schedule(arch):
     """ the schedule pages are very different than others index pages """
     log.info('Building the schedule index page for ' + arch + '...')
     title = 'Packages currently scheduled on ' + arch + ' for testing for build reproducibility'
-    query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name ' + \
+    query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name, ' + \
             'r.status, r.build_duration' + \
             'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
             'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
@@ -42,7 +42,7 @@ def generate_schedule(arch):
     html += generate_live_status_table(arch)
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
-    html += '<th>arch</th><th>source package</th></tr>\n'
+    html += '<th>arch</th><th>source package</th><th>previous build status</th><th>previous build duration</th></tr>\n'
     bugs = get_bugs()
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name 4: previous status 5: previous build duration

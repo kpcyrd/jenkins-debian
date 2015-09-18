@@ -32,7 +32,8 @@ def generate_schedule(arch):
     log.info('Building the schedule index page for ' + arch + '...')
     title = 'Packages currently scheduled on ' + arch + ' for testing for build reproducibility'
     query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name ' + \
-            'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id ' + \
+            'r.status, r.build_duration' + \
+            'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
             'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
     text = Template('$tot packages are currently scheduled for testing on $arch:')
     html = ''
@@ -44,12 +45,13 @@ def generate_schedule(arch):
     html += '<th>arch</th><th>source package</th></tr>\n'
     bugs = get_bugs()
     for row in rows:
-        # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name
+        # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name 4: previous status 5: previous build duration
         pkg = row[3]
+        duration = convert_into_hms_string(row[5])
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
         html += link_package(pkg, row[1], row[2], bugs)
-        html += '</code></td></tr>\n'
+        html += '</code></td><td>'+str(row[4])+'</td><td>'+duration+'</td></tr>\n'
     html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_scheduled.html'
     desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'

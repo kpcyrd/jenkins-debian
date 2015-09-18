@@ -323,7 +323,7 @@ def query_db(query):
     try:
         cursor.execute(query)
     except:
-        print_critical_message('Error execting this query:\n' + query)
+        print_critical_message('Error executing this query:\n' + query)
         raise
     conn_db.commit()
     return cursor.fetchall()

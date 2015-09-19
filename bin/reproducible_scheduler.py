@@ -58,6 +58,8 @@ else:
 So, the 3rd step happens only when there are more than 350 packages queued up.
 
 
+Finally, MINIMUM_AGE is respected when scheduling old versions.
+
 """
 MAXIMA = {'amd64': 750, 'armhf': 250}
 
@@ -112,6 +114,8 @@ LIMITS = {
     }
 }
 
+# only old packages older than this will be rescheduled
+MINIMUM_AGE = {'amd64': 14, 'armhf': 100}
 
 
 class Limit:
@@ -370,10 +374,10 @@ def query_old_versions(suite, arch, limit):
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status != 'blacklisted'
-                AND r.build_date < datetime('now', '-14 day')
+                AND r.build_date < datetime('now', '-{minimum_age} day')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
-                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+                LIMIT {limit}""".format(suite=suite, arch=arch, minimum_age=MINIMUM_AGE[arch], limit=limit)
     packages = query_db(query)
     print_schedule_result(suite, criteria, packages)
     return packages

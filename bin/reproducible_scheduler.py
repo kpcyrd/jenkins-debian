@@ -279,7 +279,7 @@ def print_schedule_result(suite, arch, criteria, packages):
     '''
     log.info('--------------------------------------------------------------')
     log.info('Criteria:   ' + criteria)
-    log.info('Suite/Arch: ' + suite + '/' arch) 
+    log.info('Suite/Arch: ' + suite + '/' + arch)
     log.info('Amount:     ' + str(len(packages)))
     log.info('Packages:   ' + ' '.join([x[1] for x in packages]))
 

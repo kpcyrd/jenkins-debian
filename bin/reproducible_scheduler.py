@@ -287,7 +287,8 @@ def print_schedule_result(suite, criteria, packages):
 def queue_packages(all_pkgs, packages, date):
     date = date.strftime('%Y-%m-%d %H:%M')
     pkgs = [x for x in packages if x[0] not in all_pkgs]
-    log.info('The following ' + str(len(pkgs)) + ' source packages have ' +
+    if len(pkgs) > 0:
+        log.info('The following ' + str(len(pkgs)) + ' source packages have ' +
              'been queued up for scheduling at ' + date + ': ' +
              ' '.join([str(x[1]) for x in pkgs]))
     all_pkgs.update({x[0]: date for x in pkgs})

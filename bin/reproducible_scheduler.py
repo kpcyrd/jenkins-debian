@@ -393,7 +393,7 @@ def schedule_untested_packages(arch, total):
         packages[suite] = query_untested_packages(suite, arch, many_untested)
         log.info('Received ' + str(len(packages[suite])) +
                  ' untested packages in ' + suite + ' to schedule.')
-    log.info('==============================================================')
+    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' new packages'
@@ -413,7 +413,7 @@ def schedule_new_versions(arch, total):
         packages[suite] = query_new_versions(suite, arch, many_new)
         log.info('Received ' + str(len(packages[suite])) +
                  ' new packages in ' + suite + ' to schedule.')
-    log.info('==============================================================')
+    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' with new versions'
@@ -433,7 +433,7 @@ def schedule_old_ftbfs_versions(arch, total):
         packages[suite] = query_old_ftbfs_versions(suite, arch, old_ftbfs)
         log.info('Received ' + str(len(packages[suite])) +
                  ' old ftbfs packages in ' + suite + ' to schedule.')
-    log.info('==============================================================')
+    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' ftbfs versions without bugs filed'
@@ -453,7 +453,7 @@ def schedule_old_versions(arch, total):
         packages[suite] = query_old_versions(suite, arch, many_old)
         log.info('Received ' + str(len(packages[suite])) +
                  ' old packages in ' + suite + ' to schedule.')
-    log.info('==============================================================')
+    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -'
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' known versions'
@@ -467,6 +467,7 @@ def scheduler(arch):
             'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
             'WHERE s.architecture="{arch}"'
     total = int(query_db(query.format(arch=arch))[0][0])
+    log.info('==============================================================')
     log.info('Currently scheduled packages in all suites on ' + arch + ': ' + str(total))
     if total > MAXIMA[arch]:
         log.info(str(total) + ' packages already scheduled' +
@@ -481,7 +482,6 @@ def scheduler(arch):
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
-        log.info('==============================================================')
         untested, msg_untested = schedule_untested_packages(arch, total)
         new, msg_new = schedule_new_versions(arch, total+len(untested))
         old_ftbfs, msg_old_ftbfs = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
@@ -509,7 +509,7 @@ def scheduler(arch):
         to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
         schedule_packages(to_be_scheduled)
         log.info('### Suite ' + suite + '/' + arch + ' done ###')
-        log.info('==============================================================')
+        log.info('--------------------------------------------------------------')
     # update the scheduled page
     generate_schedule(arch)  # from reproducible_html_indexes
     # build the kgb message text

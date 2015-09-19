@@ -446,7 +446,7 @@ def scheduler(arch):
             'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
             'WHERE s.architecture="{arch}"'
     total = int(query_db(query.format(arch=arch))[0][0])
-    log.info('Currently scheduled packages in all suites: ' + str(total))
+    log.info('Currently scheduled packages in all suites on ' + arch + ': ' + str(total))
     if total > MAXIMUM[arch]:
         generate_schedule(arch)  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
@@ -488,7 +488,7 @@ def scheduler(arch):
         to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
         to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
         schedule_packages(to_be_scheduled)
-        log.info('### Suite ' + suite + ' done ###')
+        log.info('### Suite ' + suite + '/' + arch + ' done ###')
         log.info('==============================================================')
     # update the scheduled page
     generate_schedule(arch)  # from reproducible_html_indexes
@@ -536,8 +536,8 @@ if __name__ == '__main__':
         log.info('Scheduling for %s...', arch)
         overall = int(query_db(query.format(arch))[0][0])
         if overall > (MAXIMUM[arch]*2):
-            log.info('%s packages already scheduled, nothing to do.', overall)
+            log.info('%s packages already scheduled for %s, nothing to do.', overall, arch)
             continue
-        log.info('%s packages already scheduled, probably scheduling some '
-                 'more...', overall)
+        log.info('%s packages already scheduled for %s, probably scheduling some '
+                 'more...', overall, arch)
         scheduler(arch)

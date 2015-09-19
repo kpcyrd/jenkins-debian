@@ -170,6 +170,7 @@ properties:
 === reproducible builds
 
 * higher prio:
+** automatic scheduler: schedules old packages on armhf atm too, maybe don't do this if new packages are scheduled "on limit"? (instead of setting old limits to 0)
 ** reproducible_build.sh changes needed:
 *** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
 *** diffoscope needs to be run on the target arch...

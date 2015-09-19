@@ -27,21 +27,40 @@ from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
 
 """
-How the scheduler chose which limit to apply:
-everything depends on how many packages are already scheduled, in a 3 steps
-process.  Let's go by an example:
+How the scheduler chooses which limit to apply, based on the MAXIMA
+and LIMIT arrays:
+
+First, the scheduler is only started for an architecture if the number of
+currently scheduled packages is lower than MAXIMA*2. Then if the number of
+scheduled packages is higher than MAXIMA, only new versions are scheduled...
+
+
+Then, for each category (totally _untested_ packages, _new_ versions,
+_ftbfs_ packages and _old_ versions) it depends on how many packages are
+already scheduled in that category, in a 3 steps process.
+
+
+Let's go by an example:
     'unstable': {1: (250, 40), 2: (350, 20), '*': 5},
+is translated to:
+
 if total < 250:
     40
 elif total < 350:
     20
 else:
     5
+
  * 1st step, if there are less than 250 packages in the queue, schedule 40
  * 2nd step, if there are less than 350 packages in the queue, schedule 20
  * 3rd step, schedule 5
+
 So, the 3rd step happens only when there are more than 350 packages queued up.
+
+
 """
+MAXIMA = {'amd64': 750, 'armhf': 250}
+
 LIMITS = {
     'untested': {
         'amd64': {
@@ -93,7 +112,6 @@ LIMITS = {
     }
 }
 
-MAXIMUM = {'amd64': 750, 'armhf': 250}
 
 
 class Limit:
@@ -447,7 +465,7 @@ def scheduler(arch):
             'WHERE s.architecture="{arch}"'
     total = int(query_db(query.format(arch=arch))[0][0])
     log.info('Currently scheduled packages in all suites on ' + arch + ': ' + str(total))
-    if total > MAXIMUM[arch]:
+    if total > MAXIMA[arch]:
         log.info(str(total) + ' packages already scheduled' +
                  ', only scheduling new versions.')
         empty_pkgs = {}
@@ -534,7 +552,7 @@ if __name__ == '__main__':
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)
         overall = int(query_db(query.format(arch))[0][0])
-        if overall > (MAXIMUM[arch]*2):
+        if overall > (MAXIMA[arch]*2):
             log.info('%s packages already scheduled for %s, nothing to do.', overall, arch)
             continue
         log.info('%s packages already scheduled for %s, probably scheduling some '

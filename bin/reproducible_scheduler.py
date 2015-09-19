@@ -393,7 +393,6 @@ def schedule_untested_packages(arch, total):
         packages[suite] = query_untested_packages(suite, arch, many_untested)
         log.info('Received ' + str(len(packages[suite])) +
                  ' untested packages in ' + suite + ' to schedule.')
-    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' new packages'
@@ -413,7 +412,6 @@ def schedule_new_versions(arch, total):
         packages[suite] = query_new_versions(suite, arch, many_new)
         log.info('Received ' + str(len(packages[suite])) +
                  ' new packages in ' + suite + ' to schedule.')
-    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' with new versions'
@@ -433,7 +431,6 @@ def schedule_old_ftbfs_versions(arch, total):
         packages[suite] = query_old_ftbfs_versions(suite, arch, old_ftbfs)
         log.info('Received ' + str(len(packages[suite])) +
                  ' old ftbfs packages in ' + suite + ' to schedule.')
-    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' ftbfs versions without bugs filed'
@@ -453,7 +450,6 @@ def schedule_old_versions(arch, total):
         packages[suite] = query_old_versions(suite, arch, many_old)
         log.info('Received ' + str(len(packages[suite])) +
                  ' old packages in ' + suite + ' to schedule.')
-    log.info('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
         msg += ' known versions'

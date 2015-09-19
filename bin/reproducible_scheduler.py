@@ -272,16 +272,16 @@ def update_sources_db(suite, arch, sources):
         gen_packages_html([Package(x) for x in pkgs_to_add], no_clean=True)
 
 
-def print_schedule_result(suite, criteria, packages):
+def print_schedule_result(suite, arch, criteria, packages):
     '''
     `packages` is the usual list-of-tuples returned by SQL queries,
     where the first item is the id and the second one the package name
     '''
     log.info('--------------------------------------------------------------')
-    log.info('Criteria: ' + criteria)
-    log.info('Suite:    ' + suite)
-    log.info('Amount:   ' + str(len(packages)))
-    log.info('Packages: ' + ' '.join([x[1] for x in packages]))
+    log.info('Criteria:   ' + criteria)
+    log.info('Suite/Arch: ' + suite + '/' arch) 
+    log.info('Amount:     ' + str(len(packages)))
+    log.info('Packages:   ' + ' '.join([x[1] for x in packages]))
 
 
 def queue_packages(all_pkgs, packages, date):
@@ -326,7 +326,7 @@ def query_untested_packages(suite, arch, limit):
                ORDER BY random()
                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
     packages = query_db(query)
-    print_schedule_result(suite, criteria, packages)
+    print_schedule_result(suite, arch, criteria, packages)
     return packages
 
 
@@ -344,7 +344,7 @@ def query_new_versions(suite, arch, limit):
     pkgs = query_db(query)
     # this is to avoid constant rescheduling of packages in our exp repository
     packages = [(x[0], x[1]) for x in pkgs if version_compare(x[2], x[3]) > 0]
-    print_schedule_result(suite, criteria, packages)
+    print_schedule_result(suite, arch, criteria, packages)
     return packages
 
 
@@ -362,7 +362,7 @@ def query_old_ftbfs_versions(suite, arch, limit):
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
     packages = query_db(query)
-    print_schedule_result(suite, criteria, packages)
+    print_schedule_result(suite, arch, criteria, packages)
     return packages
 
 
@@ -378,7 +378,7 @@ def query_old_versions(suite, arch, limit):
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, minimum_age=MINIMUM_AGE[arch], limit=limit)
     packages = query_db(query)
-    print_schedule_result(suite, criteria, packages)
+    print_schedule_result(suite, arch, criteria, packages)
     return packages
 
 

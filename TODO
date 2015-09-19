@@ -170,7 +170,7 @@ properties:
 === reproducible builds
 
 * higher prio:
-** automatic scheduler: schedules old packages on armhf atm too, maybe don't do this if new packages are scheduled "on limit"? (instead of setting old limits to 0)
+** cleanup old testing + diffscope schroots on armhf nodes, diffoscope schroots on pb-amd64 nodes and old schroot+pbuilder setups on jenkins
 ** reproducible_build.sh changes needed:
 *** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
 *** diffoscope needs to be run on the target arch...
@@ -197,8 +197,8 @@ properties:
 *** send notifications to maintainers when a note to their packages changes?
 
 * lesser prio
+** scheduler: do not try to schedule other suites than unstable on armhf
 ** use build3 as (sudo) test system to develop a dsa approvable sudoers.d
-** cleanup old testing + diffscope schroots on armhf nodes, diffoscope schroots on pb-amd64 nodes and old schroot+pbuilder setups on jenkins
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** run amd64 builder 400 days in the past… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
@@ -215,7 +215,6 @@ properties:
 ** move "untested" field in stats table too? (as in csv output...)
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
-** when a package is automatically rescheduled because of the mirror was updated between the two tests, there will be three rbuild logs in one. thats confusing, the first one should be dropped.
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
 

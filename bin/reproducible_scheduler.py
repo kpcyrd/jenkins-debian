@@ -448,7 +448,6 @@ def scheduler(arch):
     total = int(query_db(query.format(arch=arch))[0][0])
     log.info('Currently scheduled packages in all suites on ' + arch + ': ' + str(total))
     if total > MAXIMUM[arch]:
-        generate_schedule(arch)  # from reproducible_html_indexes
         log.info(str(total) + ' packages already scheduled' +
                  ', only scheduling new versions.')
         empty_pkgs = {}

@@ -494,6 +494,8 @@ def scheduler(arch):
         if suite not in priotized_suite_order:
             priotized_suite_order.append(suite)
     for suite in priotized_suite_order:
+        if arch = 'armhf' and suite != 'unstable':
+            continue
         query = 'SELECT count(*) ' \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' \
                 'WHERE s.suite="{suite}" AND s.architecture="{arch}"'

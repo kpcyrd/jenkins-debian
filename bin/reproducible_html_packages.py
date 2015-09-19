@@ -219,7 +219,7 @@ def gen_packages_html(packages, no_clean=False):
         pkg = package.name
         for suite in SUITES:
             for arch in ARCHS:
-                if arch = 'armhf' and suite != 'unstable':
+                if arch == 'armhf' and suite != 'unstable':
                     continue
                 status = package.get_status(suite, arch)
                 version = package.get_tested_version(suite, arch)
@@ -274,7 +274,7 @@ def gen_all_rb_pkg_pages(no_clean=False):
 def purge_old_pages():
     for suite in SUITES:
         for arch in ARCHS:
-            if arch = 'armhf' and suite != 'unstable':
+            if arch == 'armhf' and suite != 'unstable':
                 continue
             log.info('Removing old pages from ' + suite + '/' + arch + '.')
             try:

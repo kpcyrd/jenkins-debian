@@ -308,7 +308,7 @@ call_diffoscope_on_changes_files() {
 	fi
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 	echo "$(date -u) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
 	set -x

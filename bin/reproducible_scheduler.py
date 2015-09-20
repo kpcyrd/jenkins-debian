@@ -513,8 +513,6 @@ def scheduler(arch):
         to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
         to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
         schedule_packages(to_be_scheduled)
-        log.info('### Suite ' + suite + '/' + arch + ' done ###')
-        log.info('--------------------------------------------------------------')
     # update the scheduled page
     generate_schedule(arch)  # from reproducible_html_indexes
     # build the kgb message text
@@ -540,13 +538,14 @@ def scheduler(arch):
     if arch != 'armhf':
         message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
     message += ' packages in total.'
-    log.info('\n\n\n')
-    log.info(message)
     # only notifiy irc if there were packages scheduled in any suite
     for x in SUITES:
         if len(untested[x])+len(new[x])+len(old[x]) > 0:
+            log.info(message)
             irc_msg(message)
             break
+    log.info('Scheduling for architecture ' + arch + ' done.')
+    log.info('--------------------------------------------------------------')
 
 
 if __name__ == '__main__':

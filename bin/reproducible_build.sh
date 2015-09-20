@@ -306,6 +306,7 @@ call_diffoscope_on_changes_files() {
 		# there is no extra diffoscope-schroot for experimental because we specical case ghc enough already ;)
 		DBDSUITE="unstable"
 	fi
+	set -x # FIXME: to debug diffopscpe/schroot problems
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"

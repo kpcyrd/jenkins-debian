@@ -308,10 +308,17 @@ call_diffoscope_on_changes_files() {
 	fi
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
+	LOG_RESULT=$(echo $DIFFOSCOPE | grep '^E: 15binfmt: update-binfmts: unable to open')
+	if [ ! -z "LOG_RESULT" ] ; then
+		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."
+		sleep 2m
+		DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
+	fi
 	echo "$(date -u) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
 	set +e
 	set -x
+	# remember to also modify the retry diffoscope call 15 lines below
 	( timeout $TIMEOUT schroot \
 		--directory $TMPDIR \
 		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
@@ -322,6 +329,23 @@ call_diffoscope_on_changes_files() {
 			$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
 	2>&1 ) >> $TMPLOG
 	RESULT=$?
+	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG)
+	if [ ! -z "LOG_RESULT" ] ; then
+		rm -f $TMPLOG $TMPDIR/${DBDREPORT} $TMPDIR/$DBDTXT
+		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."
+		sleep 2m
+		# remember to also modify the retry diffoscope call 15 lines above
+		( timeout $TIMEOUT schroot \
+			--directory $TMPDIR \
+			-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
+			-- sh -c "export TMPDIR=$TEMP ; diffoscope \
+				--html $TMPDIR/${DBDREPORT} \
+				--text $TMPDIR/$DBDTXT \
+				$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
+				$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
+		2>&1 ) >> $TMPLOG
+		RESULT=$?
+	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	set -e
 	cat $TMPLOG | tee -a $RBUILDLOG  # print dbd output

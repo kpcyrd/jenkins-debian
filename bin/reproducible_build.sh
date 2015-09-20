@@ -306,7 +306,7 @@ call_diffoscope_on_changes_files() {
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
-	LOG_RESULT=$(echo $DIFFOSCOPE | grep '^E: 15binfmt: update-binfmts: unable to open')
+	LOG_RESULT=$(echo $DIFFOSCOPE | grep '^E: 15binfmt: update-binfmts: unable to open' || true)
 	if [ ! -z "LOG_RESULT" ] ; then
 		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."
 		sleep 2m
@@ -326,7 +326,7 @@ call_diffoscope_on_changes_files() {
 			$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
 	2>&1 ) >> $TMPLOG
 	RESULT=$?
-	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG)
+	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG || true)
 	if [ ! -z "LOG_RESULT" ] ; then
 		rm -f $TMPLOG $TMPDIR/${DBDREPORT} $TMPDIR/$DBDTXT
 		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."

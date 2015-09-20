@@ -431,7 +431,7 @@ def schedule_old_ftbfs_versions(arch, total):
                  suite, arch)
         packages[suite] = query_old_ftbfs_versions(suite, arch, old_ftbfs)
         log.info('Received ' + str(len(packages[suite])) +
-                 ' old ftbfs packages in ' + suite '/' + arch + + ' to schedule.')
+                 ' old ftbfs packages in ' + suite '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
@@ -451,7 +451,7 @@ def schedule_old_versions(arch, total):
                  suite, arch)
         packages[suite] = query_old_versions(suite, arch, many_old)
         log.info('Received ' + str(len(packages[suite])) +
-                 ' old packages in ' + suite '/' + arch + + ' to schedule.')
+                 ' old packages in ' + suite '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':

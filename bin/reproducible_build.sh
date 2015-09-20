@@ -572,9 +572,10 @@ remote_build() {
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
-		echo "$(date -u) - $NODE seems to be down, sleeping 23min before aborting this job."
+		SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*5"|bc)
+		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		unregister_build
-		sleep 23m
+		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
 	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
@@ -588,8 +589,8 @@ remote_build() {
 	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
-		echo "$(date -u ) - rsync from $NODE failed, sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
-		sleep 5m
+		echo "$(date -u ) - rsync from $NODE failed, sleeping 2m before re-trying..." | tee -a ${RBUILDLOG}
+		sleep 2m
 		rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then

@@ -495,6 +495,7 @@ def scheduler(arch):
             priotized_suite_order.append(suite)
     for suite in priotized_suite_order:
         if arch == 'armhf' and suite != 'unstable':
+            now_queued_here[suite] = 0
             continue
         query = 'SELECT count(*) ' \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' \

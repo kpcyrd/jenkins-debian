@@ -172,8 +172,11 @@ def update_sources(suite):
     sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
     for arch in ARCHS:
-        log.info('Updating sources db for %s/%s...', suite, arch)
-        update_sources_db(suite, arch, sources)
+        if arch == 'armhf' and suite != 'unstable':
+            continue
+        else:
+            log.info('Updating sources db for %s/%s...', suite, arch)
+            update_sources_db(suite, arch, sources)
 
 
 def update_sources_db(suite, arch, sources):

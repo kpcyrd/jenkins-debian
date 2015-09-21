@@ -149,26 +149,30 @@ for PKG in $SOURCEPKGS ; do
 	#
 	write_row "<tr><td><pre>src:$PKG</pre></td>"
 	write_row " <td>"
+	GIT="$PKG.git"
 	case $PKG in
-		strip-nondeterminism|debbindiff|diffoscope)
-			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git" ;;
+		debbindiff)
+			URL="http://anonscm.debian.org/cgit/reproducible/diffoscope.git"
+			GIT="diffoscope.git" ;;
+		strip-nondeterminism|diffoscope)
+			URL="http://anonscm.debian.org/cgit/reproducible/$GIT" ;;
 		*)
-			URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=pu/reproducible_builds" ;;
+			URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=pu/reproducible_builds" ;;
 	esac
 	curl $URL > $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
 		write_row "$URL<br /><span class=\"red\">(no git repository found)</span>"
 	elif [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
-		URL="http://anonscm.debian.org/cgit/reproducible/$PKG.git/?h=merged/reproducible_builds"
+		URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=merged/reproducible_builds"
 		curl $URL > $TMPFILE
 		if [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 			if ! $OBSOLETE_IN_SID ; then
-				write_row "<a href=\"$URL\">$PKG.git</a><br /><span class=\"purple\">non-standard branch</span>"
+				write_row "<a href=\"$URL\">$GIT</a><br /><span class=\"purple\">non-standard branch</span>"
 			else
-				write_row "<a href=\"$URL\">$PKG.git</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package aint't used in unstable)"
+				write_row "<a href=\"$URL\">$GIT</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package aint't used in unstable)"
 			fi
 		else
-			write_row "<a href=\"$URL\">$PKG.git</a>"
+			write_row "<a href=\"$URL\">$GIT</a>"
 			write_row "<br />(<span class=\"green\">merged</span>"
 			if $OBSOLETE_IN_TESTING ; then
 				write_row "and available in testing and unstable)"
@@ -179,7 +183,7 @@ for PKG in $SOURCEPKGS ; do
 			fi
 		fi
 	else
-		write_row "<a href=\"$URL\">$PKG.git</a>"
+		write_row "<a href=\"$URL\">$GIT</a>"
 		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] ; then
 			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_row "<br />(unused?"

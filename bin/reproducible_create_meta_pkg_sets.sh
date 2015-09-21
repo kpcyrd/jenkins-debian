@@ -12,6 +12,10 @@ common_init "$@"
 
 ARCH=amd64
 
+# everything should be ok…
+WARNING=false
+ABORT=false
+
 # helper functions
 packages_list_to_deb822() {
 	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u | tr '\n' '|')
@@ -52,6 +56,7 @@ update_if_similar() {
 				mv $TMPFILE $TARGET.new
 				echo
 				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually:"
+				WARNING=true
 				echo
 				echo diff -u $TARGET $TARGET.new
 				diff -u $TARGET $TARGET.new || true
@@ -87,6 +92,7 @@ get_installable_set() {
 		rm -f $TMPFILE
 		echo "Warning: dose-deb-coinstall cannot calculate the installable set for $1"
 		dose-deb-coinstall --explain --failures --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2}
+		ABORT=true
 	fi
 	rm -f ${TMPFILE2}
 	set -e
@@ -291,6 +297,7 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[16]}.pkgset
 		else
 			echo "Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
+			ABORT=true
 		fi
 	fi
 
@@ -314,6 +321,7 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[18]}.pkgset
 		else
 			echo "Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
+			ABORT=true
 		fi
 	fi
 
@@ -440,3 +448,9 @@ done
 
 rm -f $TMPFILE ${TMPFILE2}
 echo
+
+# abort the job if there are problems we cannot do anything about (except filing bugs! (but these are unrelated to reproducible builds...))
+if "$ABORT" && ! "$WARNING" ; then
+	exec /srv/jenkins/bin/abort.sh
+fi
+# (if there are warnings, we want to see them. aborting a job disables its notifications...)

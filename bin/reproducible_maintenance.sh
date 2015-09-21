@@ -15,7 +15,7 @@ DIRTY=false
 REP_RESULTS=/srv/reproducible-results
 
 # backup db
-if [ "$HOSTNAME" = "jenkins" ] ; then
+if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	echo "$(date -u) - backup db and update public copy."
 	# prepare backup
 	mkdir -p $REP_RESULTS/backup
@@ -72,7 +72,7 @@ for s in $SUITES ; do
 	# pbuilder update
 	#
 	# pbuilder aint used on jenkins anymore
-	if [ "$(hostname)" = "jenkins" ] ; then
+	if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		continue
 	else
 		echo "$(date -u) - updating pbuilder for $s/$ARCH now."
@@ -140,7 +140,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 	DIRTY=true
 fi
 
-if [ "$HOSTNAME" = "jenkins" ] ; then
+if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	#
 	# find failed builds due to network problems and reschedule them
 	#
@@ -337,7 +337,7 @@ if [ ! -z "$BADPERMS" ] ; then
 fi
 
 # once a day, send mail about stale builds
-if [ "$HOSTNAME" = "jenkins" ] && [ $(date -u +%H) -eq 0 ]  ; then
+if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	if [ -s /var/lib/jenkins/stale_builds.txt ] ; then
 		TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 		mv /var/lib/jenkins/stale_builds.txt $TMPFILE

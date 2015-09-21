@@ -9,6 +9,7 @@
 # define db
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
 INIT=/var/lib/jenkins/reproducible.init
+MAINNODE="jenkins" # host which contains reproducible.db
 if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
 	if [ -f ${PACKAGES_DB}.lock ] ; then
 		for i in $(seq 0 200) ; do
@@ -23,7 +24,7 @@ if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
 			exit 1
 		fi
 	fi
-elif [ ! -f ${PACKAGES_DB} ] && [ "$HOSTNAME" = "jenkins" ] ; then
+elif [ ! -f ${PACKAGES_DB} ] && [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	echo "Warning: $PACKAGES_DB doesn't exist, creating it now."
 		/srv/jenkins/bin/reproducible_db_maintenance.py
 	# 60 seconds timeout when trying to get a lock

@@ -170,6 +170,9 @@ properties:
 === reproducible builds
 
 * higher prio:
+** more graphs:
+*** graph average build duration by day
+*** graph packages in testing+unstable which need to be fixed
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues
@@ -205,9 +208,6 @@ properties:
 ** run pb2-amd64 builder 400 days in the past… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
 ** document (in README) the multihost setup
-** more graphs:
-*** graph average build duration by day
-*** graph packages in testing+unstable which need to be fixed
 ** pkg sets related:
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 *** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control

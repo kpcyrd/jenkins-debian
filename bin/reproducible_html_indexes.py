@@ -151,7 +151,7 @@ pages = {
             {
                 'icon_status': 'blacklisted',
                 'query': 'blacklisted_all',
-                'text': Template('$tot ($percent%) packages which have been blacklisted in $suite/$arch:')
+                'text': Template('$tot ($percent%) packages which have been blacklisted in $suite/$arch: (If you see packages listed here without a bug filed against them, it \'s probably a good idea to file one.)')
             }
         ]
     },

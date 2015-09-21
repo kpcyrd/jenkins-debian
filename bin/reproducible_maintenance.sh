@@ -336,6 +336,16 @@ if [ ! -z "$BADPERMS" ] ; then
     echo
 fi
 
+# once a day, send mail about stale builds
+if [ "$HOSTNAME" = "jenkins" ] && [ $(date -u +%H) -eq 0 ]  ; then
+	if [ -s /var/lib/jenkins/stale_builds.txt ] ; then
+		TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
+		mv /var/lib/jenkins/stale_builds.txt $TMPFILE
+		cat $TMPFILE | mail -s "stale builds found" qa-jenkins-scm@lists.alioth.debian.org
+		rm -f $TMPFILE
+	fi
+fi
+
 if ! $DIRTY ; then
 	echo "$(date -u ) - Everything seems to be fine."
 	echo

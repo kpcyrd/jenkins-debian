@@ -415,6 +415,15 @@ init_package_build() {
 	echo "============================================================================="
 	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
 	echo "============================================================================="
+	# remove previous build attempts which didnt finish correctly
+	BUILDER_PREFIX="${JOB_NAME#reproducible_builder_}/"
+	BAD_BUILDS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, builder FROM schedule WHERE builder LIKE '${BUILDER_PREFIX}%'")
+	if [ ! -z "$BAD_BUILDS" ] ; then
+		# stale_builds.txt is mailed once a day by reproducible_maintenance.sh
+		echo "$(date -u) - stale builds detected, cleaning up database from these entries:" | tee -a /var/lib/jenkins/stale_builds.txt
+		echo -n $BAD_BUILDS | tee -a /var/lib/jenkins/stale_builds.txt
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='' WHERE builder LIKE '${BUILDER_PREFIX}%'"
+	fi
 	# mark build attempt
 	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")" ] ; then
 		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID'"

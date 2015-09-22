@@ -26,14 +26,14 @@ def unrep_with_dbd_issues():
             eversion + '.debbindiff.html'
         if not os.access(dbd, os.R_OK):
             without_dbd.append((pkg, version, suite, arch))
-            log.warning(pkg + '/' + suite + '/' + arch + ' (' + version + ') is '
+            log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') is '
                         'unreproducible without diffoscope file.')
         else:
             log.debug(dbd + ' found.')
             data = open(dbd, 'br').read(3)
             if b'<' not in data:
                 bad_dbd.append((pkg, version, suite, arch))
-                log.warning(pkg + '/' + suite + '/' + arch + ' (' + version + ') has '
+                log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has '
                             'diffoscope output, but it does not seem to '
                             'be an html page.')
     return without_dbd, bad_dbd
@@ -53,7 +53,7 @@ def not_unrep_with_dbd_file():
             eversion + '.debbindiff.html'
         if os.access(dbd, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
-            log.warning(pkg + '/' + suite + '/' + arch + ' (' + version + ') has a '
+            log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has a '
                         'diffoscope file but it\'s not unreproducible.')
     return bad_pkgs
 
@@ -69,7 +69,7 @@ def lack_rbuild():
     for pkg, version, suite, arch in results:
         if not pkg_has_rbuild(pkg, version, suite, arch):
             bad_pkgs.append((pkg, version, suite, arch))
-            log.warning(pkg + '/' + suite + '/' + arch + ' (' + version + ') has been '
+            log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has been '
                         'built, but a buildlog is missing.')
     return bad_pkgs
 
@@ -89,7 +89,7 @@ def lack_buildinfo():
             '_' + eversion + '_' + arch + '.buildinfo'
         if not os.access(buildinfo, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
-            log.warning(pkg + '/' + suite + '/' + arch + ' (' + version + ') has been '
+            log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has been '
                         'successfully built, but a .buildinfo is missing')
     return bad_pkgs
 
@@ -115,7 +115,7 @@ def pbuilder_dep_fail():
                 for line in fd:
                     if re.search(b'E: pbuilder-satisfydepends failed.', line):
                         bad_pkgs.append((pkg, version, suite, arch))
-                        log.warning(pkg + '/' + suite + '/' + arch + ' (' + version +
+                        log.warning(suite + '/' + arch + '/' + pkg + ' (' + version +
                                     ') failed to met its dependencies.')
     return bad_pkgs
 

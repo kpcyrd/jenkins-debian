@@ -5,8 +5,8 @@
 #
 # read pbuilderrc.5 document for notes on specific options.
 case $HOSTNAME in 
-	jenkins)			MIRRORSITE=http://ftp.de.debian.org/debian ;;
-	bpi0|cbxi4pro0|hb0|wbq0)	MIRRORSITE=http://ftp.us.debian.org/debian ;;
+	jenkins|profitbricks-build?-amd64)	MIRRORSITE=http://ftp.de.debian.org/debian ;;
+	bpi0|cbxi4pro0|hb0|wbq0)		MIRRORSITE=http://ftp.us.debian.org/debian ;;
 	*)				echo "unsupported host, exiting." ; exit 1 ;;
 esac
 EXTRAPACKAGES="fakeroot disorderfs"

@@ -80,7 +80,7 @@ setup_pbuilder() {
 	NAME=$1
 	shift
 	PACKAGES="$@"
-	EXTRA_PACKAGES="locales-all"
+	EXTRA_PACKAGES="locales-all fakeroot disorderfs"
 	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXXX)
 	LOG=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXX)

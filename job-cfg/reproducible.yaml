@@ -724,7 +724,7 @@
             my_node: ''
         - '{name}_html_breakages':
             my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
-            my_timed: '30 H/3 * * *'
+            my_timed: '30 0,12 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_html_breakages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''

@@ -544,7 +544,7 @@ def scheduler(arch):
     message += ' packages in total.'
     # only notifiy irc if there were packages scheduled in any suite
     for x in SUITES:
-        if len(untested[x])+len(new[x])+len(old[x]) > 0:
+        if len(untested[x])+len(new[x])+len(old[x])+len(old_ftbfs[x]) > 0:
             log.info(message)
             irc_msg(message)
             break

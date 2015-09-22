@@ -18,7 +18,7 @@ def unrep_with_dbd_issues():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status="unreproducible"
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -45,7 +45,7 @@ def not_unrep_with_dbd_file():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != "unreproducible"
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -64,7 +64,7 @@ def lack_rbuild():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status NOT IN ("blacklisted", "")
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         if not pkg_has_rbuild(pkg, version, suite, arch):
@@ -81,7 +81,7 @@ def lack_buildinfo():
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status NOT IN
                 ("blacklisted", "not for us", "FTBFS", "depwait", "404", "")
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -103,7 +103,7 @@ def pbuilder_dep_fail():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status = "FTBFS" AND s.suite = "testing"
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
@@ -131,7 +131,7 @@ def alien_log(directory=None):
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     bad_files = []
     for root, dirs, files in os.walk(directory):
         if not files:
@@ -158,7 +158,7 @@ def alien_buildinfo():
                WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
                AND r.status IN ("reproducible", "unreproducible")
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     bad_files = []
     for root, dirs, files in os.walk(BUILDINFO_PATH):
         if not files:
@@ -189,7 +189,7 @@ def alien_dbd(directory=None):
                FROM sources AS s JOIN results AS r on r.package_id=s.id
                WHERE s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     bad_files = []
     for root, dirs, files in os.walk(directory):
         if not files:
@@ -223,7 +223,7 @@ def alien_rbpkg():
                FROM sources AS s
                WHERE s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
-               ORDER BY s.name ASC, s.suite DESC'''
+               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     bad_files = []
     for root, dirs, files in os.walk(RB_PKG_PATH):
         if not files:

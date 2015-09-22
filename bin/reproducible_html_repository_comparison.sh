@@ -169,7 +169,7 @@ for PKG in $SOURCEPKGS ; do
 			if ! $OBSOLETE_IN_SID ; then
 				write_row "<a href=\"$URL\">$GIT</a><br /><span class=\"purple\">non-standard branch</span>"
 			else
-				write_row "<a href=\"$URL\">$GIT</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package aint't used in unstable)"
+				write_row "<a href=\"$URL\">$GIT</a><br /><span class=\"green\">non-standard branch</span> (but that is ok, our package ain't used in unstable)"
 			fi
 		else
 			write_row "<a href=\"$URL\">$GIT</a>"

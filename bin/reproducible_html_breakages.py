@@ -272,13 +272,13 @@ def gen_html():
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a diffoscope file:', not_unrep_with_dbd_file())
     # missing files
-    html += _gen_section('are built but don\'t have a buildlog:',
+    html += _gen_section('have been built but don\'t have a buildlog:',
                          lack_rbuild())
-    html += _gen_section('are built but don\'t have a .buildinfo file:',
+    html += _gen_section('have been built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
     # diffoscope troubles
     without_dbd, bad_dbd = unrep_with_dbd_issues()
-    html += _gen_section('are marked as unreproducible, but without ' +
+    html += _gen_section('are marked as unreproducible, but there is no ' +
                          'diffoscope output - so probably diffoscope ' +
                          'crashed:', without_dbd)
     html += _gen_section('are marked as unreproducible, but their ' +

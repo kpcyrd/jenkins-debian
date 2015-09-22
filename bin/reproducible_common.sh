@@ -355,7 +355,7 @@ write_explaination_table() {
 	if [ "$1" != "FreeBSD" ] ; then
 		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
 		if [ "$1" = "debian" ] ; then
-		        write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"
+		        write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\"https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"
 		else
 			write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>same for both builds (currently, this could be varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a>)</td></tr>"
 		fi

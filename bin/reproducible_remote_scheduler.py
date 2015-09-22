@@ -44,8 +44,8 @@ parser.add_argument('-b', '--before', required=False,
 parser.add_argument('-a', '--architecture', required=False, default='amd64',
                     help='Specify the architecture to schedule for ' +
                     '(defaults to amd64).')
-parser.add_argument('-s', '--suite', required=False,
-                    help='Specify the suite to schedule in.')
+parser.add_argument('-s', '--suite', required=False, default='unstable',
+                    help='Specify the suite to schedule in (defaults to unstable).')
 parser.add_argument('packages', metavar='package', nargs='*',
                     help='Space seperated list of packages to reschedule.')
 scheduling_args = parser.parse_known_args()[0]

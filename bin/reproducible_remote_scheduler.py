@@ -28,7 +28,7 @@ parser.add_argument('-k', '--keep-artifacts',  action='store_true',
                    help='Save artifacts (for further offline study).')
 parser.add_argument('-n', '--notify', action='store_true',
                    help='Notify the channel when the build finishes.')
-parser.add_argument('--noisy', action='store_true', help='Also notify when ' +
+parser.add_argument('-d', '--noisy', action='store_true', help='Also notify when ' +
                     'the build starts, linking to the build url.')
 parser.add_argument('-m', '--message', default='',
                     help='A text to be sent to the IRC channel when notifying' +

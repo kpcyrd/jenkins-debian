@@ -34,7 +34,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo
 	echo "$(date) - running $0 ($JOB_NAME) on $(hostname) now."
 	echo
-	echo "To understand what this job does, clone git.debian.org/git/qa/jenkins.debian.net.git"
+	echo "To learn to understand this, clone git.debian.org/git/qa/jenkins.debian.net.git"
 	echo "and then have a look at bin/$(basename $0)"
 	echo 
 	echo "This invocation of the script has been called using \"$@\" as arguments." 

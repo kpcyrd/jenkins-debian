@@ -39,7 +39,7 @@ shift
 SUITE="$1"
 shift
 
-TMPLOG=$(mktemp)
+TMPLOG=$(mktemp --tmpdir=$TMPDIR schroot-create-XXXXXXXX)
 
 declare -a EXTRA_SOURCES
 if [ "$SUITE" = "experimental" ] ; then

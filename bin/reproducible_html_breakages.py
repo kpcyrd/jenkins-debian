@@ -295,7 +295,8 @@ if __name__ == '__main__':
     bugs = get_bugs()
     html = '<p>This page lists unexpected things a human should look at and '
     html += 'fix, like packages with an incoherent status or files that '
-    html += 'should not be there. '
+    html += 'should not be there. Be warned that quite some of these breakages '
+    html += 'are due to bugs in <a href="http://anonscm.debian.org/cgit/reproducible/diffoscope.git">diffoscope</a>.'
     html += '<em>Please help making this page empty!</em></p>\n'
     breakages = gen_html()
     if breakages:

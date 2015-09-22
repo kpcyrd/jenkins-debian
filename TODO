@@ -198,8 +198,6 @@ properties:
 ** link source-data-epoch spec from rb.d.n
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm…
-** disorderfs:
-*** document usage in diff table...
 
 * lesser prio
 ** use build3 (or 5) as (sudo) test system to develop a dsa approvable sudoers.d
@@ -274,6 +272,7 @@ properties:
 ** CONFIG_PAYLOAD_TIANOCORE is not set
 * libreboot ships images, verify those?
 * explain status in plain english
+* use disorderfs for 2nd build?
 
 ==== reproducible OpenWrt
 
@@ -284,12 +283,14 @@ properties:
 * file dbd bug about unable to inspect these .bin files
 * file dbd bug about crashing on certain squashfs files
 * explain status in plain english
+* use disorderfs for 2nd build?
 
 ==== reproducible NetBSD
 
 * announce on their list
 * explain status in plain english
 ** MKREPRO is set to "yes"
+* use disorderfs for 2nd build?
 
 ==== reproducible Fedora
 

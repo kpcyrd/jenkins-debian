@@ -199,8 +199,7 @@ properties:
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm…
 ** use disorderfs:
-*** code is there but disabled, but scripts are only in hosts/jenkins/ and need to be copied to hosts/*/
-*** needs disorderfs 0.3.0-1 to be in testing first… (or uploaded to our repo)
+*** code is there, but scripts are only in hosts/jenkins/ and hosts/hb0/ and need to be copied to hosts/*/
 *** document usage in diff table...
 
 * lesser prio

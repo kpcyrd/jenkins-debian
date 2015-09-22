@@ -187,7 +187,7 @@ for PKG in $SOURCEPKGS ; do
 		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] ; then
 			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_row "<br />(unused?"
-				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>"
+				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>)"
 			elif $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_row "<br />(only used in testing, fixed in sid,"
 				write_row "<br /><span class=\"purple\">branch probably either should be renamed to <em>merged/reproducible_builds</em> or a new upload to our repo is needed?</span>)"

@@ -9,7 +9,7 @@ case $HOSTNAME in
 	bpi0|cbxi4pro0|hb0|wbq0)		MIRRORSITE=http://ftp.us.debian.org/debian ;;
 	*)				echo "unsupported host, exiting." ; exit 1 ;;
 esac
-EXTRAPACKAGES=""	# better list them in bin/reproducible_setup_pbuilder.sh
+EXTRAPACKAGES="fakeroot disorderfs"
 APTCACHE=""
 COMPRESSPROG="pigz"
 # unset proxy, see #780587

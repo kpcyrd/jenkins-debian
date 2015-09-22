@@ -301,7 +301,7 @@ if __name__ == '__main__':
     if breakages:
         html += breakages
     else:
-        html += '<p><b>COOL!!!</b> Everything is GOOD and not a issue was '
+        html += '<p><b>COOL!!!</b> Everything is GOOD and not a single issue was '
         html += 'detected. <i>Enjoy!</i></p>'
     title = 'Breakages on reproducible.debian.net'
     destfile = BASE + '/index_breakages.html'

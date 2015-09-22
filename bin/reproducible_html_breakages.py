@@ -53,8 +53,8 @@ def not_unrep_with_dbd_file():
             eversion + '.debbindiff.html'
         if os.access(dbd, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
-            log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has a '
-                        'diffoscope file but it\'s not unreproducible.')
+            log.warning(dbd + 'exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'
+                        'is not unreproducible.')
     return bad_pkgs
 
 

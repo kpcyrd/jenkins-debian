@@ -193,7 +193,7 @@ trailing += ' - notify on start too' if debug_url else ''
 message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + '/' + \
     arch + ' by ' + requester
 if reason:
-    message += ' (reason: ' + reason + ')'
+    message += ', reason: \'' + reason + '\''
 message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing
 
 

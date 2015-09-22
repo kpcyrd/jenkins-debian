@@ -184,7 +184,7 @@ for PKG in $SOURCEPKGS ; do
 		fi
 	else
 		write_row "<a href=\"$URL\">$GIT</a>"
-		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] ; then
+		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] && [ "$PKG" != "debbindiff" ] ; then
 			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_row "<br />(unused?"
 				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>)"
@@ -196,6 +196,8 @@ for PKG in $SOURCEPKGS ; do
 			fi
 		elif ( [ "$PKG" = "strip-nondeterminism" ] || [ "$PKG" = "diffoscope" ] ) && $OBSOLETE_IN_SID ; then
 			write_row "<br />(this repo is always used)"
+		elif [ "$PKG" = "debbindiff" ] && $OBSOLETE_IN_SID ; then
+			write_row "<br />(debbindiff has been renamed to diffoscope)"
 		fi
 	fi
 	if ! $OBSOLETE_IN_SID ; then

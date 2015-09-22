@@ -9,6 +9,7 @@
 # Build a page full of CI issues to investigate
 
 from reproducible_common import *
+import time
 
 
 def unrep_with_dbd_issues():
@@ -146,8 +147,11 @@ def alien_log(directory=None):
                              + bcolors.ENDC)
                 continue
             if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
-                bad_files.append('/'.join([root, file]))
-                log.warning('/'.join([root, file]) + ' should not be there')
+                if os.path.getmtime('/'.join([root, file]))<time.time()-1800:
+                    bad_files.append('/'.join([root, file]))
+                    log.warning('/'.join([root, file]) + ' should not be there')
+                else:
+                    log.info('ignoring ' + '/'.join([root, file]) + ' which should not be there, but is also less than 30m old and will probably soon be gone.')
     return bad_files
 
 

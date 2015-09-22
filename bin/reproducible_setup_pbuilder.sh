@@ -108,8 +108,8 @@ setup_pbuilder() {
 			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $TMPFILE $LOG ; exit 1 )
 	done
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
-	# create stamp file to record initial creation date
-	touch /var/log/jenkins/${NAME}.tgz.stamp
+	# create stamp file to record initial creation date minus some hours so the file will be older than 24h when checked in <24h...
+	touch -d "$(date -u -d '6 hours ago' '+%Y-%m-%d %H:%M')" /var/log/jenkins/${NAME}.tgz.stamp
 	rm ${TMPFILE} ${LOG}
 }
 

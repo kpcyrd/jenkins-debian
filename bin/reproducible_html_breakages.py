@@ -116,7 +116,7 @@ def pbuilder_dep_fail():
                     if re.search(b'E: pbuilder-satisfydepends failed.', line):
                         bad_pkgs.append((pkg, version, suite, arch))
                         log.warning(suite + '/' + arch + '/' + pkg + ' (' + version +
-                                    ') failed to met its dependencies.')
+                                    ') failed to meet its dependencies.')
     return bad_pkgs
 
 

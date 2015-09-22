@@ -7,7 +7,9 @@ set -e
 
 # cease using disorderfs
 if [ -d /tmp/disorderfs ] ; then
+	echo -n "Unmounting /tmp/disorderfs…"
 	fusermount -u /tmp/buildd
 	rmdir /tmp/buildd
 	mv /tmp/disorderfs /tmp/buildd
+	echo " done."
 fi

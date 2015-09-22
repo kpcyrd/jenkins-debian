@@ -212,7 +212,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	RewriteCond /var/lib/jenkins/userContent/reproducible/rb-pkg/$1/amd64/$2.html -f
 	RewriteRule ^/(unstable|testing|experimental)/amd64/([a-z0-9.+-]+) /rb-pkg/$1/amd64/$2.html [R=302,L]
 
-	# redirect rb.d.n/rb-pkg/$PKG.html → rb.d.n/rb-pkg/$suite/$arch/$PKG.html
+	# redirect rb.d.n/rb-pkg/$PKG.html → rb.d.n/rb-pkg/unstable/amd64/$PKG.html
 	RewriteCond %{HTTP_HOST} reproducible\.debian\.net
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d

@@ -79,8 +79,8 @@ setup_pbuilder() {
 	shift
 	NAME=$1
 	shift
-	PACKAGES="$@"
-	EXTRA_PACKAGES="locales-all fakeroot disorderfs"
+	PACKAGES="$@"						# from our repo
+	EXTRA_PACKAGES="locales-all fakeroot disorderfs"	# from sid
 	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXXX)
 	LOG=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXX)
@@ -94,12 +94,15 @@ setup_pbuilder() {
 		echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
-	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
+	# setup base.tgz
 	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
+	# apply further customisations, eg. install $PACKAGES from our repo
+	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
 	if [ "$DEBUG" = "true" ] ; then
 		cat "$TMPFILE"
 	fi
 	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	# finally, confirm things are as they should be
 	echo
 	echo "Now let's see whether the correct packages where installed..."
 	for PKG in ${PACKAGES} ; do

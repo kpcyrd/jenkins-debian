@@ -13,7 +13,7 @@ from reproducible_html_indexes import build_leading_text_section
 
 def convert_into_hms_string(duration):
     if not duration:
-        duration = "None"
+        duration = ''
     else:
         duration = int(duration)
         hours = int(duration/3600)

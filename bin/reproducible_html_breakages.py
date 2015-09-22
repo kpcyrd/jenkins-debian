@@ -147,11 +147,14 @@ def alien_log(directory=None):
                              + bcolors.ENDC)
                 continue
             if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
-                if os.path.getmtime('/'.join([root, file]))<time.time()-1800:
-                    bad_files.append('/'.join([root, file]))
-                    log.warning('/'.join([root, file]) + ' should not be there')
-                else:
-                    log.info('ignoring ' + '/'.join([root, file]) + ' which should not be there, but is also less than 30m old and will probably soon be gone.')
+                try:
+                    if os.path.getmtime('/'.join([root, file]))<time.time()-1800:
+                        bad_files.append('/'.join([root, file]))
+                        log.warning('/'.join([root, file]) + ' should not be there')
+                    else:
+                        log.info('ignoring ' + '/'.join([root, file]) + ' which should not be there, but is also less than 30m old and will probably soon be gone.')
+                except FileNotFoundError:
+                    pass  # that bad file is already gone.
     return bad_files
 
 

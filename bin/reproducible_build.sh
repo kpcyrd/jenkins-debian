@@ -377,7 +377,7 @@ choose_package () {
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE sch.date_build_started = ''
 		AND s.architecture='$ARCH'
-		ORDER BY date_scheduled LIMIT 1")
+		ORDER BY date_scheduled LIMIT 5"|sort -R|head -1)
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)

@@ -114,7 +114,7 @@ fi
 
 # remove old and unused schroot sessions
 echo "$(date -u) - Removing unused schroot sessions."
-ps fax|grep -v grep |grep schroot || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep schroot || schroot -e -c $i ; done
+ps fax|grep -v grep |grep "schroot --directory" || for i in $(schroot --all-sessions -l ) ; do ps fax|grep -v grep |grep "schroot --directory" || schroot -e -c $i ; done
 # to explain this:
 # first, check if no process using "schroot" is running...
 # then loop through all schroot sessions

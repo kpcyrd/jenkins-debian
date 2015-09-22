@@ -116,7 +116,7 @@ def pbuilder_dep_fail():
                     if re.search(b'E: pbuilder-satisfydepends failed.', line):
                         bad_pkgs.append((pkg, version, suite, arch))
                         log.warning(suite + '/' + arch + '/' + pkg + ' (' + version +
-                                    ') failed to meet its dependencies.')
+                                    ') failed to satisfy its dependencies.')
     return bad_pkgs
 
 
@@ -260,7 +260,7 @@ def _gen_section(header, pkgs, entries=None):
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed package without cleanup)
-    html += _gen_section('log files that should not be there', None,
+    html += _gen_section('log files that should not be there:', None,
                          entries=alien_log())
     html += _gen_section('diffoscope files that should not be there:', None,
                          entries=alien_dbd())
@@ -286,7 +286,7 @@ def gen_html():
                          'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
     # pbuilder-satisfydepends failed
-    html += _gen_section('failed to match their build-dependencies:',
+    html += _gen_section('failed to satisfy their build-dependencies:',
                          pbuilder_dep_fail())
     return html
 

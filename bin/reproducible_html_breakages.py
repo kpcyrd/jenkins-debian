@@ -54,7 +54,7 @@ def not_unrep_with_dbd_file():
         if os.access(dbd, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(dbd + 'exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'
-                        'is not unreproducible.')
+                        ' is not unreproducible.')
     return bad_pkgs
 
 

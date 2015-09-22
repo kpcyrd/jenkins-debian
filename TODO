@@ -198,8 +198,7 @@ properties:
 ** link source-data-epoch spec from rb.d.n
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm…
-** use disorderfs:
-*** code is there, but scripts are only in hosts/jenkins/ and hosts/hb0/ and need to be copied to hosts/*/
+** disorderfs:
 *** document usage in diff table...
 
 * lesser prio

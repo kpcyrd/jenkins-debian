@@ -49,6 +49,7 @@ handle_race_condition() {
 		SAVE_ARTIFACTS=0
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	fi
+	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
 

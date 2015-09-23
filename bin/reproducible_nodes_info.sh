@@ -15,7 +15,7 @@ mkdir -p $TARGET_DIR
 TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
 
-for NODE in $BUILD_NODES ; do
+for NODE in $BUILD_NODES jenkins.debian.net ; do
 	if [ "$NODE" = "jenkins.debian.net" ] ; then
 		echo "$(date -u) - Trying to update $TARGET_DIR/$NODE."
 		/srv/jenkins/bin/reproducible_info.sh > $TARGET_DIR/$NODE

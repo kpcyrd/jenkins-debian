@@ -433,9 +433,11 @@ init_package_build() {
 	fi
 	rm -f $BAD_BUILDS
 	# mark build attempt
-	if [ -z "$(sqlite3 -init $INIT ${PACKAGES_DB} 'SELECT date_build_started FROM schedule WHERE package_id = \"$SRCPKGID\"')" ] ; then
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")
+	if [ -z "$RESULT" ] ; then
 		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID'"
 	else
+		echo "query resulted in $RESULT"
 		BAD_LOCKFILE=true
 		handle_race_condition db
 	fi

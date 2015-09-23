@@ -49,6 +49,9 @@ handle_race_condition() {
 		SAVE_ARTIFACTS=0
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	fi
+	# cleanup
+	rm -r $TMPDIR || true
+	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }

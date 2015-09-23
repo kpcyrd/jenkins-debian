@@ -182,7 +182,6 @@ properties:
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** send notifications to maintainers when a note to their packages changes?
 ** new page: packages which are orphaned but have a reproducible usertagged patch
-** cleanup old testing + diffscope schroots on armhf nodes, diffoscope schroots on pb-amd64 nodes and old pbuilder setups on jenkins
 ** reproducible_build.sh changes needed:
 *** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
 *** race condition with itself? https://jenkins.debian.net/job/reproducible_builder_armhf_6/716/console says Warning, package php5 in unstable on armhf is probably already building elsewhere, exiting. Please check https://jenkins.debian.net/job/reproducible_builder_armhf_6/716/ which does not compute.
@@ -200,6 +199,8 @@ properties:
 ** pkg sets are still amd64 only atm…
 
 * lesser prio
+** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
+** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** right align all numbers in table in the dashboard
 ** use build3 (or 5) as (sudo) test system to develop a dsa approvable sudoers.d
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...

@@ -308,8 +308,8 @@ call_diffoscope_on_changes_files() {
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
 	LOG_RESULT=$(echo $DIFFOSCOPE | grep '^E: 15binfmt: update-binfmts: unable to open' || true)
-	if [ ! -z "LOG_RESULT" ] ; then
-		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."
+	if [ ! -z "$LOG_RESULT" ] ; then
+		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
 		DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
 	fi
@@ -328,9 +328,9 @@ call_diffoscope_on_changes_files() {
 	2>&1 ) >> $TMPLOG
 	RESULT=$?
 	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG || true)
-	if [ ! -z "LOG_RESULT" ] ; then
+	if [ ! -z "$LOG_RESULT" ] ; then
 		rm -f $TMPLOG $TMPDIR/${DBDREPORT} $TMPDIR/$DBDTXT
-		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."
+		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
 		# remember to also modify the retry diffoscope call 15 lines above
 		( timeout $TIMEOUT schroot \

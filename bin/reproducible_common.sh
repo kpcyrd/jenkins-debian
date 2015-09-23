@@ -447,9 +447,9 @@ call_diffoscope() {
 	) 2>&1 >> $TMPLOG
 	RESULT=$?
 	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG || true)
-	if [ ! -z "LOG_RESULT" ] ; then
+	if [ ! -z "$LOG_RESULT" ] ; then
 		rm -f $TMPLOG $TMPDIR/$1/$2.html
-		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not availble, will sleep 2min and retry."
+		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
 		# remember to also modify the retry diffoscope call 15 lines above
 		( timeout $TIMEOUT schroot \

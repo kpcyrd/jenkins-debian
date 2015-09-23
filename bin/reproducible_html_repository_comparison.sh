@@ -154,7 +154,7 @@ for PKG in $SOURCEPKGS ; do
 		debbindiff)
 			URL="http://anonscm.debian.org/cgit/reproducible/diffoscope.git"
 			GIT="diffoscope.git" ;;
-		strip-nondeterminism|diffoscope|disorderfs)
+		strip-nondeterminism|diffoscope)
 			URL="http://anonscm.debian.org/cgit/reproducible/$GIT" ;;
 		*)
 			URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=pu/reproducible_builds" ;;
@@ -184,7 +184,7 @@ for PKG in $SOURCEPKGS ; do
 		fi
 	else
 		write_row "<a href=\"$URL\">$GIT</a>"
-		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] && [ "$PKG" != "debbindiff" ] && [ "$PKG" != "disorderfs" ] ; then
+		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] && [ "$PKG" != "debbindiff" ] ; then
 			if $OBSOLETE_IN_TESTING && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_row "<br />(unused?"
 				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>)"
@@ -194,8 +194,6 @@ for PKG in $SOURCEPKGS ; do
 			elif $OBSOLETE_IN_EXP ; then
 				write_row "<br />(only used in testing and unstable, fixed in experimental)"
 			fi
-		elif [ "$PKG" = "disorderfs" ] ; then
-			write_row "<br />(only used to modify the build environment in the 2nd build)"
 		elif ( [ "$PKG" = "strip-nondeterminism" ] || [ "$PKG" = "diffoscope" ] ) && $OBSOLETE_IN_SID ; then
 			write_row "<br />(this repo is always used)"
 		elif [ "$PKG" = "debbindiff" ] && $OBSOLETE_IN_SID ; then

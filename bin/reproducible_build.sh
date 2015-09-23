@@ -708,6 +708,8 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	TMPDIR="$4"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
+	# used to catch race conditions when the same package is being built by two parallel jobs
+	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 	get_source_package
 	mkdir b$MODE
 	if [ "$MODE" = "1" ] ; then

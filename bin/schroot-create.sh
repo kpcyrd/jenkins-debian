@@ -156,7 +156,8 @@ bootstrap() {
 		if [ "$1" = "diffoscope" ] ; then
 			robust_chroot_apt install -y --install-recommends diffoscope
 		fi
-		robust_chroot_apt install -y --no-install-recommends "$@ sudo"
+		robust_chroot_apt install -y --no-install-recommends sudo
+		robust_chroot_apt install -y --no-install-recommends $@
 		# always try to use diffoscope from unstable
 		if [ "$SUITE" = "testing" ] && [ "$1" = "diffoscope" ] ; then
 			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null

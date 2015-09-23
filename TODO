@@ -214,6 +214,7 @@ properties:
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
 ** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
+** .db: stats_build table should have package ids, not just src+suite+arch as primary key
 
 * missing tests:
 ** variation in kernel

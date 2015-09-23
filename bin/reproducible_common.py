@@ -370,8 +370,8 @@ def query_udd(query):
                   'Please look for a previous error for more information.')
         log.error('Failing nicely anyway, returning an empty response.')
         return []
-    cursor = conn_udd.cursor()
     try:
+        cursor = conn_udd.cursor()
         cursor.execute(query)
     except:
         log.error('The UDD server encountered a issue while executing the ' +

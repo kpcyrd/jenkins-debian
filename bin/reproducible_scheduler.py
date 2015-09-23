@@ -500,10 +500,6 @@ def scheduler(arch):
         if arch == 'armhf' and suite != 'unstable':
             now_queued_here[suite] = 0
             continue
-        # FIXME: temporarily disable the scheduler for testing/amd64 as diffoscope 36 is uninstallable in testing atm
-        elif arch == 'amd64' and suite != 'unstable':
-            now_queued_here[suite] = 0
-            continue
         query = 'SELECT count(*) ' \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' \
                 'WHERE s.suite="{suite}" AND s.architecture="{arch}"'

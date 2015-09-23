@@ -50,6 +50,7 @@ handle_race_condition() {
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	fi
 	# cleanup
+	cd
 	rm -r $TMPDIR || true
 	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 	exec /srv/jenkins/bin/abort.sh

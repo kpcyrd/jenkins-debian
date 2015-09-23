@@ -451,7 +451,8 @@ get_source_package() {
 		RESULT=$?
 	else
 		# remote build, no need to download the full source package...
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget || true
+		# timeout wget after 3min
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs timeout -k 3m 3m wget || true
 		RESULT=$?
 	fi
 	PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG} || true)
@@ -467,7 +468,7 @@ get_source_package() {
 			RESULT=$?
 		else
 			# remote build, no need to download the full source package...
-			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs wget || true
+			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs timeout -k 3m 3m wget || true
 			RESULT=$?
 		fi
 	        PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG} || true)

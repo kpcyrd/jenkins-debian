@@ -200,6 +200,7 @@ properties:
 ** pkg sets are still amd64 only atm…
 
 * lesser prio
+** right align all numbers in table in the dashboard
 ** use build3 (or 5) as (sudo) test system to develop a dsa approvable sudoers.d
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** run pb2-amd64 builder 400 days in the past… (that way we will notice problems soon)

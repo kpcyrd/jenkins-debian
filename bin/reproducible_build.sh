@@ -30,7 +30,7 @@ create_results_dirs() {
 handle_race_condition() {
 	echo | tee -a $BUILDLOG
 	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting.\n"
-	msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/$SUITE/$ARCH/${SRCPACKAGE} for a different build.\n"
+	msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/index_${ARCH}_scheduled.html for a different build of $SUITE/$ARCH/${SRCPACKAGE}.\n"
 	case $1 in
 		"db")
 			msg="${msg}The race condition was caught while marking the build attempt in the database.\n"

@@ -142,7 +142,7 @@ update_db_and_html() {
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	gen_package_html $SRCPACKAGE
 	echo
-	echo "Successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/${ARCH}/$SRCPACKAGE.html"
+	echo "$(date -u) - successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/${ARCH}/$SRCPACKAGE.html"
 	echo
 }
 
@@ -441,7 +441,7 @@ init_package_build() {
 		BAD_LOCKFILE=true
 		handle_race_condition init
 	fi
-	echo "Starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on $DATE" | tee ${RBUILDLOG}
+	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
 }
 
@@ -675,7 +675,7 @@ build_rebuild() {
 			FTBFS=0
 			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
 		else
-			echo "The second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
+			echo "$(date -u) - the second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
 		fi
 	fi
 }

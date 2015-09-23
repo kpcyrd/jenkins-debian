@@ -186,6 +186,7 @@ properties:
 *** fix the cause for the frequent 404s or workaround it well
 *** fix: "DIFFOSCOPE='E: Failed to change to directory ‘/tmp’: Permission denied" - maybe by making sure the cause is gone…
 *** race condition with itself? https://jenkins.debian.net/job/reproducible_builder_armhf_6/716/console says Warning, package php5 in unstable on armhf is probably already building elsewhere, exiting. Please check https://jenkins.debian.net/job/reproducible_builder_armhf_6/716/ which does not compute.
+*** deal properly with out of diskspace problems, https://jenkins.debian.net/job/reproducible_builder_amd64_8/2575/ is an archived build which hit it
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
 *** once all non remote build jobs are removed, remove the legacy code from _build.sh

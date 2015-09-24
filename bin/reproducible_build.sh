@@ -428,7 +428,7 @@ init_package_build() {
 		# stale_builds.txt is mailed once a day by reproducible_maintenance.sh
 		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a /var/lib/jenkins/stale_builds.txt
 		cat $BAD_BUILDS | tee -a /var/lib/jenkins/stale_builds.txt
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='' WHERE builder LIKE '${BUILDER_PREFIX}%'"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='' WHERE builder LIKE '${BUILDER_PREFIX}%'"
 		echo >> /var/lib/jenkins/stale_builds.txt
 	fi
 	rm -f $BAD_BUILDS

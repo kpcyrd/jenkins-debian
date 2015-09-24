@@ -179,6 +179,7 @@ properties:
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
 *** once all non remote build jobs are removed, remove the legacy code from _build.sh
+** investigate why https://jenkins.debian.net/view/reproducible/job/reproducible_maintenance_armhf_cbxi4pro0/345/console didn't timeout on his own
 ** more graphs:
 *** graph average build duration by day
 *** graph packages in testing+unstable which need to be fixed

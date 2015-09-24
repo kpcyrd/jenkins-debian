@@ -184,7 +184,7 @@ properties:
 *** graph packages in testing+unstable which need to be fixed
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
-*** new page with annoted packages without categorized issues
+*** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)
 *** new page with packages that have notes with comments (which are often useful / contain solutions / low-hanging fruits for newcomers)
 *** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** new page with packages which are reproducible on one arch and unreproducible on another arch (in the same suite, so unstable only atm)

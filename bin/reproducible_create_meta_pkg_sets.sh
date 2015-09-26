@@ -292,6 +292,7 @@ update_pkg_sets() {
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/lastSuccessful/archive/latest.iso.binpkgs > $TMPFILE
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-jessie/lastSuccessful/archive/latest.iso.srcpkgs >> $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+			echo "parsing $TMPFILE now..."
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[16]}.pkgset
@@ -307,6 +308,7 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[16]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
+		echo "parsing $TMPFILE now..."
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[17]}.pkgset
@@ -316,6 +318,7 @@ update_pkg_sets() {
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[18]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
 		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+			echo "parsing $TMPFILE now..."
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[18]}.pkgset
@@ -331,6 +334,7 @@ update_pkg_sets() {
 		for PKG in $(cat $TPATH/${META_PKGSET[18]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
+		echo "parsing $TMPFILE now..."
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[19]}.pkgset

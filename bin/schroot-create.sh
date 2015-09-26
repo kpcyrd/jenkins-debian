@@ -49,13 +49,13 @@ if [ "$SUITE" = "experimental" ] ; then
 	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
 fi
 
-if [ ! -d "$CHROOT_BASE" ]; then
-	echo "Directory $CHROOT_BASE does not exist, aborting."
+if [ ! -d "$SCHROOT_BASE" ]; then
+	echo "Directory $SCHROOT_BASE does not exist, aborting."
 	exit 1
 fi
 
-export CHROOT_TARGET=$(mktemp -d -p $CHROOT_BASE/ schroot-install-$TARGET-XXXX)
-if [ -z "$CHROOT_TARGET" ]; then
+export SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
+if [ -z "$SCHROOT_TARGET" ]; then
 	echo "Could not create a directory to create the chroot in, aborting."
 	exit 1
 fi
@@ -99,56 +99,56 @@ EOF
 
 robust_chroot_apt() {
 	set +e
-	sudo chroot $CHROOT_TARGET apt-get $@ | tee $TMPLOG
+	sudo chroot $SCHROOT_TARGET apt-get $@ | tee $TMPLOG
 	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - 'apt-get $@' failed, sleeping 5min before retrying..."
 		sleep 5m
-		sudo chroot $CHROOT_TARGET apt-get $@ || ( echo "$(date -u ) - 2nd 'apt-get $@' failed, giving up..." ; exit 1 )
+		sudo chroot $SCHROOT_TARGET apt-get $@ || ( echo "$(date -u ) - 2nd 'apt-get $@' failed, giving up..." ; exit 1 )
 	fi
 	rm -f $TMPLOG
 }
 
 bootstrap() {
-	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
-	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
+	mkdir -p "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
+	echo force-unsafe-io > "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
-	echo "Bootstraping $SUITE into $CHROOT_TARGET now."
+	echo "Bootstraping $SUITE into $SCHROOT_TARGET now."
 	set +e
-	sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR | tee $TMPLOG
+	sudo debootstrap $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
-		sudo rm -rf --one-file-system $CHROOT_TARGET
+		sudo rm -rf --one-file-system $SCHROOT_TARGET
 		sleep 5m
-		sudo debootstrap $SUITE $CHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd debootstrap failed, giving up..." ; exit 1 )
+		sudo debootstrap $SUITE $SCHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd debootstrap failed, giving up..." ; exit 1 )
 	fi
 	rm -f $TMPLOG
 
-	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $CHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
-	sudo chmod +x $CHROOT_TARGET/usr/sbin/policy-rc.d
+	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $SCHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
+	sudo chmod +x $SCHROOT_TARGET/usr/sbin/policy-rc.d
 	if [ ! -z "$http_proxy" ] ; then
-		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $CHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
+		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $SCHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	fi
-	echo "deb-src $MIRROR $SUITE main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
+	echo "deb-src $MIRROR $SUITE main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
 	for i in $(seq 0 5) ; do
-		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list >/dev/null
+		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list >/dev/null
 	done
 
 	if $REPRODUCIBLE ; then
 		TMPFILE=$(mktemp -u)
-		add_repokey $CHROOT_TARGET/$TMPFILE
-		sudo chroot $CHROOT_TARGET bash $TMPFILE
-		rm $CHROOT_TARGET/$TMPFILE
+		add_repokey $SCHROOT_TARGET/$TMPFILE
+		sudo chroot $SCHROOT_TARGET bash $TMPFILE
+		rm $SCHROOT_TARGET/$TMPFILE
 	fi
 
 
 	robust_chroot_apt update
 	if [ -n "$1" ] ; then
 		for d in proc dev dev/pts ; do
-			sudo mount --bind /$d $CHROOT_TARGET/$d
+			sudo mount --bind /$d $SCHROOT_TARGET/$d
 		done
 		set -x
 		robust_chroot_apt update
@@ -160,25 +160,25 @@ bootstrap() {
 		robust_chroot_apt install -y --no-install-recommends $@
 		# always try to use diffoscope from unstable
 		if [ "$SUITE" = "testing" ] && [ "$1" = "diffoscope" ] ; then
-			echo "deb $MIRROR unstable main"        | sudo tee -a $CHROOT_TARGET/etc/apt/sources.list > /dev/null
+			echo "deb $MIRROR unstable main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
 			robust_chroot_apt update
 			# install diffoscope from unstable without re-adding all recommends...
-			sudo chroot $CHROOT_TARGET apt-get install -y -t unstable --no-install-recommends diffoscope || echo "Warning: diffoscope from unstable is uninstallable at the moment."
+			sudo chroot $SCHROOT_TARGET apt-get install -y -t unstable --no-install-recommends diffoscope || echo "Warning: diffoscope from unstable is uninstallable at the moment."
 		fi
 		if ! $DEBUG ; then set +x ; fi
 		if [ "$1" = "diffoscope" ] ; then
 			echo
-			sudo chroot $CHROOT_TARGET dpkg -l diffoscope
+			sudo chroot $SCHROOT_TARGET dpkg -l diffoscope
 			echo
 		fi
 		# umount in reverse order
 		for d in dev/pts dev proc ; do
-			sudo umount -l $CHROOT_TARGET/$d
+			sudo umount -l $SCHROOT_TARGET/$d
 		done
 		# configure sudo inside just like outside
-		echo "jenkins    ALL=NOPASSWD: ALL" | sudo tee -a $CHROOT_TARGET/etc/sudoers.d/jenkins >/dev/null
-		sudo chroot $CHROOT_TARGET chown root.root /etc/sudoers.d/jenkins
-		sudo chroot $CHROOT_TARGET chmod 700 /etc/sudoers.d/jenkins
+		echo "jenkins    ALL=NOPASSWD: ALL" | sudo tee -a $SCHROOT_TARGET/etc/sudoers.d/jenkins >/dev/null
+		sudo chroot $SCHROOT_TARGET chown root.root /etc/sudoers.d/jenkins
+		sudo chroot $SCHROOT_TARGET chmod 700 /etc/sudoers.d/jenkins
 	fi
 }
 
@@ -201,8 +201,8 @@ cleanup_schroot_sessions() {
 }
 
 cleanup() {
-	if [ -d $CHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $CHROOT_TARGET || ( echo "Warning: $CHROOT_TARGET could not be fully removed on forced cleanup." ; ls $CHROOT_TARGET -la )
+	if [ -d $SCHROOT_TARGET ]; then
+		sudo rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )
 	fi
 	rm -f $TMPLOG
 }
@@ -230,9 +230,9 @@ then
 fi
 
 cleanup_schroot_sessions
-echo "$(date -u ) - renaming $CHROOT_TARGET to $SCHROOT_BASE/$TARGET"
+echo "$(date -u ) - renaming $SCHROOT_TARGET to $SCHROOT_BASE/$TARGET"
 set +e
-sudo mv $CHROOT_TARGET $SCHROOT_BASE/"$TARGET"
+sudo mv $SCHROOT_TARGET $SCHROOT_BASE/"$TARGET"
 RESULT=$?
 set -e
 if [ $RESULT -ne 0 ] ; then

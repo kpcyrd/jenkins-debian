@@ -178,7 +178,6 @@ properties:
 **** '~jenkins/spacetest' has a list of affected logs in testing/amd64, though at least the syslinux one is a false positive
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
-*** once all non remote build jobs are removed, remove the legacy code from _build.sh
 ** investigate why https://jenkins.debian.net/view/reproducible/job/reproducible_maintenance_armhf_cbxi4pro0/345/console didn't timeout on his own
 ** more graphs:
 *** graph average build duration by day

@@ -12,8 +12,8 @@ ARCH=$(dpkg --print-architecture)
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 CPU_MODEL=$(cat /proc/cpuinfo |grep "model name"|head -1|cut -d ":" -f2|xargs echo)
 DATETIME=$(date +'%Y-%m-%d %H:%M %Z')
-KERNEL1=$(uname -a)
-KERNEL2=$(linux64 --uname-2.6 uname -a)
+KERNEL1=$(uname -smrv)
+KERNEL2=$(linux64 --uname-2.6 uname -smrv)
 for i in $BUILD_ENV_VARS ; do
 	echo "$i=${!i}"
 done

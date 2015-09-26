@@ -29,19 +29,8 @@ create_results_dirs() {
 
 handle_race_condition() {
 	echo | tee -a $BUILDLOG
-	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building elsewhere, exiting.\n"
-	msg="${msg}Please check $BUILD_URL and https://reproducible.debian.net/index_${ARCH}_scheduled.html for a different build of $SUITE/$ARCH/${SRCPACKAGE}.\n"
-	case $1 in
-		"db")
-			msg="${msg}The race condition was caught while marking the build attempt in the database.\n"
-			;;
-		"init")
-			msg="${msg}The race condition was caught while writing the lockfile.\n"
-			;;
-		"lockfile")
-			msg="${msg}The race condition was caught while checking the lockfile for pid correctness.\n"
-			;;
-	esac
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT builder FROM schedule WHERE package_id = '$SRCPKGID'")
+	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
 	printf "$msg" | tee -a $BUILDLOG
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
@@ -52,16 +41,8 @@ handle_race_condition() {
 	# cleanup
 	cd
 	rm -r $TMPDIR || true
-	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
-}
-
-check_for_race_conditions() {
-	if [ $$ -ne $(cat "$LOCKFILE") ] ; then
-		BAD_LOCKFILE=true
-		handle_race_condition lockfile
-	fi
 }
 
 save_artifacts() {
@@ -108,7 +89,6 @@ cleanup_all() {
 		cd
 		rm -r $TMPDIR || true
 	fi
-	if ! $BAD_LOCKFILE ; then rm -f $LOCKFILE ; fi
 }
 
 update_db_and_html() {
@@ -415,8 +395,6 @@ init_package_build() {
 		local ANNOUNCE="Artifacts will be preserved."
 	fi
 	create_results_dirs
-	# used to catch race conditions when the same package is build by two parallel jobs
-	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 	echo "============================================================================="
 	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
 	echo "============================================================================="
@@ -432,20 +410,17 @@ init_package_build() {
 		echo >> /var/lib/jenkins/stale_builds.txt
 	fi
 	rm -f $BAD_BUILDS
-	# mark build attempt
+	# mark build attempt…
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")
 	if [ -z "$RESULT" ] ; then
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID'"
+		# check this worked…
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID' AND date_build_started='' AND builder=''"
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
+		if [ -z "$RESULT" ] ; then
+			handle_race_condition
+		fi
 	else
-		echo "query resulted in $RESULT"
-		BAD_LOCKFILE=true
-		handle_race_condition db
-	fi
-	if [ ! -f "$LOCKFILE" ] ; then
-		echo $$ > "$LOCKFILE"
-	else
-		BAD_LOCKFILE=true
-		handle_race_condition init
+		handle_race_condition
 	fi
 	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
@@ -662,7 +637,6 @@ build_rebuild() {
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
-		check_for_race_conditions
 		remote_build 2 $NODE2 $PORT2
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
@@ -685,7 +659,6 @@ cd $TMPDIR
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
-BAD_LOCKFILE=false
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 ARCH="$(dpkg --print-architecture)"
 
@@ -703,8 +676,6 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	TMPDIR="$4"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
-	# used to catch race conditions when the same package is being built by two parallel jobs
-	LOCKFILE="/tmp/reproducible-lockfile-${SUITE}-${ARCH}-${SRCPACKAGE}"
 	get_source_package
 	mkdir b$MODE
 	if [ "$MODE" = "1" ] ; then
@@ -746,9 +717,7 @@ get_source_package
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
 
-check_for_race_conditions
 check_suitability
-check_for_race_conditions
 build_rebuild  # defines FTBFS redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
 	check_buildinfo
@@ -762,7 +731,6 @@ elif [ $FTBFS -eq 0 ] ; then
 	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 fi
 
-check_for_race_conditions
 cd ..
 cleanup_all
 trap - INT TERM EXIT

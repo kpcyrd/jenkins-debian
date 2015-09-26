@@ -121,51 +121,6 @@ properties:
 * publish forked livescreenshot plugin and send pull request for h01ger's bugfix
 ** see ssh://git.debian.org/git/users/holger/livescreenshot-plugin.git and 0b407b70025 there
 
-== lvc, work in progress, just started
-
-* put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
-
-* add another (smaller) test: download+run torbrowser daily
-
-* re-read the docs! 
-** http://live.debian.net/manual/stable/html/live-manual.en.html#321
-
-* generate feature files from templates? to cope with sub-products?
--> no. detect desktop type and set variables accordingly
--> simpler: pass an environment variable with the type
-
-* get iso
-* tables for looping through features: see tails/iuk.git/features/download_target_file/Download_Target_File.feature
-
-* to debug cucumber: --verbose --backtrace --expand
-
-* drop / remove
-* can probably go: dhcp.rb firewall_leaks.rb dhcp.feature firewall_leaks.feature
-* more occurances of "the computer boots Tails"
-* @source (only keep product tests)
-
-* disabled stuff in common_steps.rb
-** #if @vm.execute("service tor status").success?
-
-* "I set sudo password" not needed for debianlive nor debian(edu):
-** #@screen.wait("TailsGreeterAdminPassword.png", 20)
-
-* $misc_files_dir needed?
-* def sort_isos_by_creation_date
-  Dir.glob("#{Dir.pwd}/*.iso").sort_by {|f| tails_iso_creation_date(f)}
-  -> useless for us, purpose is to automatically select the latest iso if none is given
-* search case-in-sensitive for tails+tor+amnesia
-
-* put in update_jdn.sh:
-----
-    addgroup tcpdump
-    dpkg-statoverride --update --add root tcpdump 754 /usr/sbin/tcpdump
-    setcap CAP_NET_RAW+eip /usr/sbin/tcpdump
-    adduser $USER tcpdump
-    adduser $USER libvirt
-    adduser $USER libvirt-qemu
-----
-
 == Improve existing tests
 
 === reproducible builds
@@ -378,7 +333,7 @@ properties:
 
 === g-i-installation_*
 
-Development of these tests has stopped. In future the 'lvc*' tests should replace them.
+Development of these tests has stopped. In future the 'lvc*' tests (see below) should replace them.
 
 These small changes are probably still worth doing anyway:
 
@@ -396,6 +351,51 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 ** same usecase:  -monitor none -nographic -serial stdio  
 
 == Further ideas...
+
+=== lvc, work in progress, just started
+
+* put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
+
+* add another (smaller) test: download+run torbrowser daily
+
+* re-read the docs! 
+** http://live.debian.net/manual/stable/html/live-manual.en.html#321
+
+* generate feature files from templates? to cope with sub-products?
+-> no. detect desktop type and set variables accordingly
+-> simpler: pass an environment variable with the type
+
+* get iso
+* tables for looping through features: see tails/iuk.git/features/download_target_file/Download_Target_File.feature
+
+* to debug cucumber: --verbose --backtrace --expand
+
+* drop / remove
+* can probably go: dhcp.rb firewall_leaks.rb dhcp.feature firewall_leaks.feature
+* more occurances of "the computer boots Tails"
+* @source (only keep product tests)
+
+* disabled stuff in common_steps.rb
+** #if @vm.execute("service tor status").success?
+
+* "I set sudo password" not needed for debianlive nor debian(edu):
+** #@screen.wait("TailsGreeterAdminPassword.png", 20)
+
+* $misc_files_dir needed?
+* def sort_isos_by_creation_date
+  Dir.glob("#{Dir.pwd}/*.iso").sort_by {|f| tails_iso_creation_date(f)}
+  -> useless for us, purpose is to automatically select the latest iso if none is given
+* search case-in-sensitive for tails+tor+amnesia
+
+* put in update_jdn.sh:
+----
+    addgroup tcpdump
+    dpkg-statoverride --update --add root tcpdump 754 /usr/sbin/tcpdump
+    setcap CAP_NET_RAW+eip /usr/sbin/tcpdump
+    adduser $USER tcpdump
+    adduser $USER libvirt
+    adduser $USER libvirt-qemu
+----
 
 === rebuild sid completly on demand
 

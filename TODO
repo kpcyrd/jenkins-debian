@@ -154,7 +154,7 @@ properties:
 ** repo-comparison: check for binaries without source
 ** link source-data-epoch spec from rb.d.n
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
-** pkg sets are still amd64 only atm…
+** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
 
 * lesser prio
 ** dashboard:

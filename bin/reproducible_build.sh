@@ -391,7 +391,7 @@ choose_package() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")
 	if [ -z "$RESULT" ] ; then
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID' AND date_build_started='' AND builder=''"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID' AND date_build_started='' AND (builder='' OR builder='TBD')"
 		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
 		if [ -z "$RESULT" ] ; then
 			handle_race_condition

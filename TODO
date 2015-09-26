@@ -128,6 +128,7 @@ properties:
 *** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
 *** deal properly with out of diskspace problems, https://jenkins.debian.net/job/reproducible_builder_amd64_8/2575/ is an archived build which hit it
 **** '~jenkins/spacetest' has a list of affected logs in testing/amd64, though at least the syslinux one is a false positive
+*** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
 *** sometimes disorderfs leaves mountpoints behind

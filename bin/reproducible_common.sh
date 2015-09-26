@@ -340,7 +340,11 @@ write_explaination_table() {
 		fi
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
-		write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
+		if [ "$1" = "debian" ] ; then
+			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td></td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL2 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td></tr>"
+		else
+			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
+		fi
 		write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	else
 		write_page "<tr><td>FreeBSD kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"

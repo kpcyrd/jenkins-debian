@@ -159,7 +159,6 @@ properties:
 
 * lesser prio
 ** dashboard:
-*** armhf doesnt use Linux 3.16.0-4-amd64 kernels
 *** number of cores used is wrong for amd64
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
 ** check that /srv/workspace/pbuilder/ is cleaned up properly

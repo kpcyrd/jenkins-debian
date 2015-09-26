@@ -389,7 +389,7 @@ choose_package() {
 	rm -f $BAD_BUILDS
 	# mark build attempt, first test if none else marked a build attempt recently
 	echo "ok, let's check if $SRCPACKAGE is building anywhere yet…"
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID'")
+	RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID'")
 	if [ -z "$RESULT" ] ; then
 		echo "ok, $SRCPACKAGE is not building anywhere…"
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort

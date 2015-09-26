@@ -29,8 +29,8 @@ create_results_dirs() {
 
 handle_race_condition() {
 	echo | tee -a $BUILDLOG
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT builder FROM schedule WHERE package_id = '$SRCPKGID'")
-	local msg="Warning, package ${SRCPACKAGE} in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT builder FROM schedule WHERE package_id='$SRCPKGID'")
+	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
 	printf "$msg" | tee -a $BUILDLOG
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
@@ -360,7 +360,7 @@ choose_package() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "
 		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.builder
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
-		WHERE sch.date_build_started = ''
+		WHERE sch.date_build_started=''
 		AND s.architecture='$ARCH'
 		ORDER BY date_scheduled LIMIT 5"|sort -R|head -1)
 	if [ -z "$RESULT" ] ; then
@@ -389,12 +389,12 @@ choose_package() {
 	rm -f $BAD_BUILDS
 	# mark build attempt, first test if none else marked a build attempt recently
 	echo "ok, let's check if $SRCPACKAGE is building anywhere yet…"
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID'")
 	if [ -z "$RESULT" ] ; then
 		echo "ok, $SRCPACKAGE is not building anywhere…"
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID' AND date_build_started='' AND (builder='' OR builder='TBD')"
-		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id='$SRCPKGID' AND date_build_started='' AND (builder='' OR builder='TBD')"
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
 		if [ -z "$RESULT" ] ; then
 			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build."
 			handle_race_condition

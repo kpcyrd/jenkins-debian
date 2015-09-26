@@ -388,20 +388,17 @@ choose_package() {
 	fi
 	rm -f $BAD_BUILDS
 	# mark build attempt, first test if none else marked a build attempt recently
-	set -x
 	echo "ok, let's check if $SRCPACKAGE is building anywhere yet…"
 	RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID'")
 	if [ -z "$RESULT" ] ; then
 		echo "ok, $SRCPACKAGE is not building anywhere…"
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id='$SRCPKGID' AND date_build_started='' AND (builder='' OR builder='TBD')"
-		sleep 2
-		local UPDATERESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
-		if [ -z "$UPDATERESULT" ] ; then
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id='$SRCPKGID' AND date_build_started=''"
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
+		if [ -z "$RESULT" ] ; then
 			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build ($SRCPKGID, $DATE, $BUILDER)."
 			handle_race_condition
 		fi
-		set +x
 	else
 		echo "hm, seems $SRCPACKAGE is building somewhere… schedule table now listed it as building somewhere else."
 		handle_race_condition

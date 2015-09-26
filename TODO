@@ -23,6 +23,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * explain in README how to write jobs, eg which pathes are on tmpfs
 * fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/en/sslcheck?host=jenkins.debian.net#78.137.96.196
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
+* teach bin/chroot-*.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
 
 === TODO for testing stretch
 

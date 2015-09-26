@@ -14,7 +14,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == Fix user submitted bugs
 
-* There are  link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org%40packages.debian.org["bugs filed against the pseudopackage 'qa.debian.org' with usertag 'jenkins'"] in the BTS which would be nice to be fixed soon, as some people actually care.
+* There are  link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org%40packages.debian.org["bugs filed against the pseudopackage 'qa.debian.org' with usertag 'jenkins'"] in the BTS which would be nice to be fixed rather sooner than later, as some people actually care.
 
 == General ToDo
 
@@ -24,8 +24,55 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/en/sslcheck?host=jenkins.debian.net#78.137.96.196
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 
-=== proper backup
+=== TODO for testing stretch
 
+Most jobs have been converted, a few are left to do:
+
+* add g-i tests for stretch
+* add stretch live-builds
+* mention stretch in README where appropriate
+
+=== To be done once jenkins.d.n runs jessie
+
+* replace with bin/setsid.py workaround with setsid from the util-linux package from jessie
+* bin/g-i-installation: use lvcreate without --virtualsize
+* check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
+* install botch from jessie-backports once its available (and remove botch from the reproducible-unstable schroot)
+
+=== move this setup to jenkins.d.o
+
+The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins nodes, in the long term probably/maybe also maintained by DSA, on which we can use sudo as we need it.
+
+==== next steps for jenkins.d.o migration
+
+* add more pressure to DSA to get jenkins.d.o set up
+** "having this mid september is doable, just grab some from DSA on irc"
+** the machine jerea.debian.org is already setup, it just needs the the alias added. (DSA)
+** install jenkins.deb from jenkins-ci.org (DSA)
+*** also create jenkins users in jenkins (we)
+** create jenkins-job-builder backport from sid to jessie and install that (we + DSA)
+** install all the plugins (we)
+** add all the nodes as nodes to jenkins.d.o (we)
+** disable job execution on jenkins.d.net(!) (we) 
+** deploy this configuration on jenkins.d.o…(!) (we)
+*** as we dont want irc nor mail notifications for this during the migration, we should disable those with an easily revertable commit before actual deployment
+*** then rename jenkins.debian.net to profitbricks-build0-amd64 - and switch all the jobs which used to run on the master node on that node, which already has the right sudoers, usercontent/reproducible/ and reproducible.db
+*** some authorized_keys will also need to be adopted for the change of IP address from jenkins.d.n to jenkins.d.o
+*** redirect jenkins.debian.net to jenkins.debian.org - reproducible.debian.net will stay where it is.
+* party!
+
+===== leftover notes for jenkins.d.o migration
+
+* livescreenshot plugin (we use a patched version) is ok:
+** jenkins maintenance probably is best done by jenkins users (as opposed to DSA) so it's up to us what plugins we install
+* chroot jobs should use real schroot sessions, and not just use schroot as poor chroot(8) replacement. some links:
+** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
+** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
+** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
+
+==== proper backup
+
+* postponed til we run on .debian.org
 * gpg encrypted to some keys
 * run on alioth or paradis
 * '/var/lib/jenkins/jobs' (the results - the configs are in .git)
@@ -37,52 +84,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * '/var/lib/jenkins/plugins/*.jpi' (can be derived from jdn-scm-sync.git)
 * '/srv/jenkins.debian.net-scm-sync.git'
 * '/etc/.git' and '/etc'
-* postpone til we run on .debian.org?
-
-=== TODO for testing stretch
-
-Most jobs have been converted, a few are left to do:
-
-* add g-i tests for stretch
-* add stretch live-builds
-* do lvc for stretch too
-* mention stretch in README where appropriate
-
-=== move this setup to jenkins.d.o
-
-The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins slaves, probably/maybe also maintained by DSA (so we get them into their munin), but on which we can use sudo as we need it. (or maybe not dsa-maintained slaves, so that we can use sudo as we need, for the price of not being in DSAs munin.)
- - install munin on jenkins, monitor nodes as slaves
-
-==== next steps for jenkins.d.o migration
-
-* add more pressure to DSA to get jenkins.d.o set up
-** "having this mid september is doable, just grab some from DSA on irc"
-** the machine jerea.debian.org is already setup, it just needs the the alias added.
-** weasel/h01ger: install jenkins.deb from jenkins-ci.org
-*** also create jenkins users in jenkins (KISS)
-** install slaves - how (to automate)?
-** install jenkins-job-builder "somehow", currently "only" a package from fil exists (but needs build-depends not yet even in sid atm)
-** update DNS to point jenkins.d.o to jerea.d.o
-*** the existing jenkins.d.o host needs to be renamed to something else (thats "just work" to do but not a major obstacle)
-** j-j-b (and it's build-depends, python-jenkins) are now maintained as part of openstack. we need these packages in jessie-backports, also the j-j-b in sid/NEW currently still lacks fil/h01ger's patches from git master.
-
-==== unsorted notes for jenkins.d.o migration
-
-* sudoers.d/jenkins:
-** not suitable for jenkins.d.o, thus we will run all tests on slaves, where DSA doesnt care what we do
-* livescreenshot plugin (we use a patched version) is ok:
-** jenkins maintenance probably is best done by jenkins users (as opposed to DSA) so it's up to us what plugins we install
-* chroot jobs should use real schroot sessions, and not just use schroot as poor chroot(8) replacement. some links:
-** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
-** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
-** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
-
-=== To be done once jenkins.d.n runs jessie
-
-* replace with bin/setsid.py workaround with setsid from the util-linux package from jessie
-* bin/g-i-installation: use lvcreate without --virtualsize
-* check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
-* install botch from jessie-backports once its available (and remove botch from the reproducible-unstable schroot)
 
 === To be done once bugs are fixed
 
@@ -94,11 +95,9 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === jenkins-job-builder related
 
-* use fil's package: http://ftp.hands.com/hands-deb/pool/main/j/jenkins-job-builder/jenkins-job-builder_1.2.0~git-0~1.gbp1ae299.dsc
-** needs at least some of the stuff on fil's j.d.n.git/needs-jjb-1.2.0 branch to work with that
 * investigate whether its possible nowadays to let it delete jobs which were removed.. nope. though it is possible to compare the list of all jobs which should be generated with those which are there and delete those which should not.
 
-==== old jenkins-job-builder TODO, mostly (all?) obsolete thanks to fil's work:
+==== old jenkins-job-builder TODO, mostly (all?) obsolete/done thanks to fil's work:
 
 * use jessie version plus h01ger's patches from kali
 * change of syntax:
@@ -115,11 +114,9 @@ properties:
 ** wrappers:live-screenshot upstreamed at https://review.openstack.org/#/c/191708/
 ** image-gallery: https://review.openstack.org/#/c/175747/ superseeds h01gers patch: https://review.openstack.org/#/c/191950/
 ** sidebar: upstreamed at https://review.openstack.org/#/c/191585/
-
-=== livescreenshot plugin
-
-* publish forked livescreenshot plugin and send pull request for h01ger's bugfix
-** see ssh://git.debian.org/git/users/holger/livescreenshot-plugin.git and 0b407b70025 there
+** livescreenshot plugin:
+*** publish forked livescreenshot plugin and send pull request for h01ger's bugfix
+*** see ssh://git.debian.org/git/users/holger/livescreenshot-plugin.git and 0b407b70025 there
 
 == Improve existing tests
 
@@ -353,6 +350,8 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 == Further ideas...
 
 === lvc, work in progress, just started
+
+* upgrade lvc configuration to test stretch
 
 * put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
 

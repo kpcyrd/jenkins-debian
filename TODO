@@ -180,7 +180,7 @@ properties:
 ** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
 ** database issues
 *** stats_build table should have package ids, not just src+suite+arch as primary key
-*** builder column of schedule table should not be used for state-handling of _remote_scheduler.py (by setting it to 'TBD'), thus e3e241e should be reverted (also check for 'TBD' elsewhere) and this be implemented differently
+*** builder column of schedule table should not be used for state-handling of _remote_scheduler.py (by setting it to 'TBD')
 
 * missing tests:
 ** variation in kernel

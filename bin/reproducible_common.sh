@@ -46,7 +46,7 @@ ARCHS="armhf amd64"
 
 # define build nodes in use
 BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh
-BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME" # these also needs to be defined in bin/reproducible_info.sh
+BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also needs to be defined in bin/reproducible_info.sh
 
 # existing usertags
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"

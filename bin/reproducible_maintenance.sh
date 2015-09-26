@@ -336,14 +336,16 @@ if [ ! -z "$BADPERMS" ] ; then
     echo
 fi
 
-# once a day, send mail about stale builds
+# once a day, send mail about builder problems
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
-	if [ -s /var/lib/jenkins/stale_builds.txt ] ; then
-		TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
-		mv /var/lib/jenkins/stale_builds.txt $TMPFILE
-		cat $TMPFILE | mail -s "stale builds found" qa-jenkins-scm@lists.alioth.debian.org
-		rm -f $TMPFILE
-	fi
+	for PROBLEM in /var/lib/jenkins/stale_builds.txt /var/log/jenkins/reproducible-race-conditions.log ; do
+		if [ -s $PROBLEM ] ; then
+			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
+			mv $PROBLEM $TMPFILE
+			cat $TMPFILE | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
+			rm -f $TMPFILE
+		fi
+	done
 fi
 
 if ! $DIRTY ; then

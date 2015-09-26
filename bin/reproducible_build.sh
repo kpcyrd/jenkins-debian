@@ -661,7 +661,6 @@ DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
-ARCH="$(dpkg --print-architecture)"
 
 #
 # determine mode
@@ -673,6 +672,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	SRCPACKAGE="$2"
 	SUITE="$3"
+	ARCH="$(dpkg --print-architecture)"
 	SAVE_ARTIFACTS="0"
 	TMPDIR="$4"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR

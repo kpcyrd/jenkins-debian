@@ -356,49 +356,26 @@ call_diffoscope_on_changes_files() {
 	print_out_duration
 }
 
-choose_package () {
+choose_package() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "
 		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.builder
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE sch.date_build_started = ''
 		AND s.architecture='$ARCH'
 		ORDER BY date_scheduled LIMIT 5"|sort -R|head -1)
-	SUITE=$(echo $RESULT|cut -d "|" -f1)
-	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
-	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
-	# force debug mode for certain packages
-	case $SRCPACKAGE in
-			xxxxxxx)
-			export DEBUG=true
-			set -x
-			irc_message "$BUILD_URL/console available to debug $SRCPACKAGE build in $SUITE/$ARCH"
-			;;
-		*)	;;
-	esac
-	SCHEDULED_DATE=$(echo $RESULT|cut -d "|" -f4)
-	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
-	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
-	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
-	local DEBUG_URL=$(echo $RESULT|cut -d "|" -f8)
-	if [ "$DEBUG_URL" = "TBD" ] ; then
-		irc_message "The build of $SRCPACKAGE/$SUITE/$ARCH is starting at ${BUILD_URL}consoleFull"
-	fi
 	if [ -z "$RESULT" ] ; then
 		echo "No packages scheduled, sleeping 30m."
 		sleep 30m
 		exit 0
 	fi
-}
-
-init_package_build() {
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
-		local ANNOUNCE="Artifacts will be preserved."
-	fi
-	create_results_dirs
-	echo "============================================================================="
-	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
-	echo "============================================================================="
-	# remove previous build attempts which didnt finish correctly
+	SUITE=$(echo $RESULT|cut -d "|" -f1)
+	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
+	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
+	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
+	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
+	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
+	local DEBUG_URL=$(echo $RESULT|cut -d "|" -f8)	# this is abuse (state-handling...) of the boulder column in the schedule table…
+	# remove previous build attempts which didnt finish correctly:
 	BUILDER_PREFIX="${JOB_NAME#reproducible_builder_}/"
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)
 	sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, builder FROM schedule WHERE builder LIKE '${BUILDER_PREFIX}%'" > $BAD_BUILDS
@@ -410,10 +387,10 @@ init_package_build() {
 		echo >> /var/lib/jenkins/stale_builds.txt
 	fi
 	rm -f $BAD_BUILDS
-	# mark build attempt…
+	# mark build attempt, first test if none else marked a build attempt recently
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID'")
 	if [ -z "$RESULT" ] ; then
-		# check this worked…
+		# try to update the schedule with our build attempt, then check no else did it, if so, abort
 		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id = '$SRCPKGID' AND date_build_started='' AND builder=''"
 		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id = '$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
 		if [ -z "$RESULT" ] ; then
@@ -421,6 +398,26 @@ init_package_build() {
 		fi
 	else
 		handle_race_condition
+	fi
+	local ANNOUNCE=""
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
+		ANNOUNCE="Artifacts will be preserved."
+	fi
+	create_results_dirs
+	echo "============================================================================="
+	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
+	echo "============================================================================="
+	# force debug mode for certain packages
+	case $SRCPACKAGE in
+		xxxxxxx)
+			export DEBUG=true
+			set -x
+			irc_message "The build of $SRCPACKAGE/$SUITE/$ARCH is starting at ${BUILD_URL}consoleFull"
+			;;
+		*)      ;;
+	esac
+	if [ "$DEBUG_URL" = "TBD" ] ; then
+		irc_message "The build of $SRCPACKAGE/$SUITE/$ARCH is starting at ${BUILD_URL}consoleFull"
 	fi
 	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
@@ -711,8 +708,7 @@ fi
 # main - only used in master-mode
 #
 delay_start
-choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY
-init_package_build
+choose_package  # defines SUITE, PKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
 get_source_package
 
 cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}

@@ -101,7 +101,7 @@ cleanup_all() {
 		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi
 	gzip -9fvn $RBUILDLOG
-	if [ "$MODE" = "legacy" ] || [ "$MODE" = "master" ] ; then
+	if [ "$MODE" = "master" ] ; then
 		# XXX quite ugly: this is just needed to update the sizes of the
 		# compressed files in the html. It's cheap and quite safe so, *shrugs*...
 		gen_package_html $SRCPACKAGE
@@ -457,7 +457,7 @@ get_source_package() {
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 		RESULT=$?
 	else
-		# remote build, no need to download the full source package...
+		# the build master only needs to the the .dsc file
 		# timeout wget after 3min
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs timeout -k 3m 3m wget || true
 		RESULT=$?
@@ -474,14 +474,14 @@ get_source_package() {
 			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 			RESULT=$?
 		else
-			# remote build, no need to download the full source package...
+			# the build master only needs to the the .dsc file
 			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs timeout -k 3m 3m wget || true
 			RESULT=$?
 		fi
 	        PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG} || true)
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
-		if [ "$MODE" = "legacy" ] || [ "$MODE" = "master" ] ; then
+		if [ "$MODE" = "master" ] ; then
 			handle_404
 		else
 			exit 404
@@ -634,14 +634,10 @@ check_buildinfo() {
 		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-hit-mirror-update.log
 		echo
 		echo "============================================================================="
-		echo "$(date -u) - The build environment varies according to the two .buildinfo files, probably due to mirror update. Doing the first build again."
+		echo "$(date -u) - The build environment varies according to the two .buildinfo files, probably due to mirror update. Doing the first build on $NODE1 again."
 		echo "============================================================================="
 		echo
-		if [ "$MODE" = "legacy" ] ; then
-			first_build
-		else
-			remote_build 1 $NODE1 $PORT1
-		fi
+		remote_build 1 $NODE1 $PORT1
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
 		diff $TMPFILE1 $TMPFILE2
@@ -657,11 +653,7 @@ check_buildinfo() {
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
-	if [ "$MODE" = "legacy" ] ; then
-		first_build
-	else
-		remote_build 1 $NODE1 $PORT1
-	fi
+	remote_build 1 $NODE1 $PORT1
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
@@ -671,11 +663,7 @@ build_rebuild() {
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
 		check_for_race_conditions
-		if [ "$MODE" = "legacy" ] ; then
-			second_build
-		else
-			remote_build 2 $NODE2 $PORT2
-		fi
+		remote_build 2 $NODE2 $PORT2
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
@@ -705,7 +693,8 @@ ARCH="$(dpkg --print-architecture)"
 # determine mode
 #
 if [ "$1" = "" ] ; then
-	MODE="legacy"
+	echo "Error, needs at least one parameter."
+	exit 1
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	SRCPACKAGE="$2"
@@ -748,7 +737,7 @@ elif [ "$2" != "" ] ; then
 fi
 
 #
-# main - for both legacy and master-mode
+# main - only used in master-mode
 #
 delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY

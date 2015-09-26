@@ -254,7 +254,7 @@ if not dry_run:
     cursor.executemany(query2, save_schedule)
     conn_db.commit()
 else:
-    log.info('Ran with --dry-run, I did scheduled nothing')
+    log.info('Ran with --dry-run, scheduled nothing')
 
 log.info(bcolors.GOOD + message + bcolors.ENDC)
 if not (local and requester == "jenkins maintenance job") and len(ids) != 0:

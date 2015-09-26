@@ -101,7 +101,7 @@ cleanup_all() {
 		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi
 	gzip -9fvn $RBUILDLOG
-	if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then
+	if [ "$MODE" = "legacy" ] || [ "$MODE" = "master" ] ; then
 		# XXX quite ugly: this is just needed to update the sizes of the
 		# compressed files in the html. It's cheap and quite safe so, *shrugs*...
 		gen_package_html $SRCPACKAGE
@@ -453,7 +453,7 @@ init_package_build() {
 
 get_source_package() {
 	local RESULT
-	if [ "$MODE" != "ng" ] ; then
+	if [ "$MODE" != "master" ] ; then
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 		RESULT=$?
 	else
@@ -470,7 +470,7 @@ get_source_package() {
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "$(date -u ) - sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		if [ "$MODE" != "ng" ] ; then
+		if [ "$MODE" != "master" ] ; then
 			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee -a ${RBUILDLOG}
 			RESULT=$?
 		else
@@ -481,7 +481,7 @@ get_source_package() {
 	        PARSED_RESULT=$(egrep 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' ${RBUILDLOG} || true)
 	fi
 	if [ $RESULT != 0 ] || [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
-		if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then
+		if [ "$MODE" = "legacy" ] || [ "$MODE" = "master" ] ; then
 			handle_404
 		else
 			exit 404
@@ -726,7 +726,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE/$SUITE/$ARCH on $HOSTNAME done"
 	exit 0
 elif [ "$2" != "" ] ; then
-	MODE="ng"
+	MODE="master"
 	NODE1="$(echo $1 | cut -d ':' -f1).debian.net"
 	NODE2="$(echo $2 | cut -d ':' -f1).debian.net"
 	PORT1="$(echo $1 | cut -d ':' -f2)"
@@ -748,7 +748,7 @@ elif [ "$2" != "" ] ; then
 fi
 
 #
-# main - for both legacy and ng-mode
+# main - for both legacy and master-mode
 #
 delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SCHEDULED_DATE, SAVE_ARTIFACTS, NOTIFY

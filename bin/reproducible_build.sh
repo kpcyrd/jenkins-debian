@@ -102,7 +102,7 @@ cleanup_all() {
 	fi
 	gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "legacy" ] || [ "$MODE" = "ng" ] ; then
-		# XXX quite ugly: this is just needed to get the correct value of the
+		# XXX quite ugly: this is just needed to update the sizes of the
 		# compressed files in the html. It's cheap and quite safe so, *shrugs*...
 		gen_package_html $SRCPACKAGE
 		cd

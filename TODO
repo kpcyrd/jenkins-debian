@@ -124,6 +124,8 @@ properties:
 === reproducible builds
 
 * higher prio:
+** give mattia ssh access to all the profitbricks build nodes and if vagrant agrees, to the armhf ones too
+** give helmut ssh access to at least pb-node4, if he agrees to all the others too
 ** reproducible_build.sh changes needed:
 *** fix disorderfs setup to *always* unmount+cleanup, this causes the full disks atm
 *** deal properly with out of diskspace problems, https://jenkins.debian.net/job/reproducible_builder_amd64_8/2575/ is an archived build which hit it

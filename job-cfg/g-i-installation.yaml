@@ -448,7 +448,7 @@
          my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - '{name}_debian_jessie_kfreebsd_xfce':
          my_title: 'Debian (jessie) kfreebsd XFCE desktop install'
-         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
+         my_shell: '/srv/jenkins/bin/g-i-installation.sh 10 http://ftp.de.debian.org/debian/dists/jessie-kfreebsd/main/installer-kfreebsd-amd64/current/images/netboot-10/gtk/netboot.tar.gz'
          my_description: 'Do a fully automated installation of Debian kfreebsd-amd64 with XFCE desktop - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_jessie_kfreebsd_preseed.cfg">this preseed.cfg</a>) using PXE netboot gtk.'
          my_time: '42 16 */7 * *'
          #my_time: '42 16 2,9,16,23 * *'

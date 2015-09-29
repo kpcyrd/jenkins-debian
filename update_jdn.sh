@@ -50,7 +50,7 @@ sudo mkdir -p /srv/workspace
 case $HOSTNAME in
 	jenkins)			 	TMPFSSIZE=100 ;;
 	profitbricks-build4-amd64) 		TMPFSSIZE=32 ;;
-	profitbricks-build?-amd64) 		TMPFSSIZE=60 ;;
+	profitbricks-build?-amd64) 		TMPFSSIZE=70 ;;
 	*) ;;
 esac
 case $HOSTNAME in

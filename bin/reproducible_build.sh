@@ -110,11 +110,12 @@ update_db_and_html() {
 			fi
 		fi
 	fi
-	if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
+	if [ "$SUITE" != "testing" ] && \
+			[ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
 			[ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \
 			[ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
 		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
-			mail -s "$SRCPACKAGE changed in $SUITE: $OLD_STATUS -> $STATUS" \
+			mail -s "$SRCPACKAGE changed in $SUITE/$ARCH: $OLD_STATUS -> $STATUS" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				"$SRCPACKAGE@packages.debian.org"
 	fi

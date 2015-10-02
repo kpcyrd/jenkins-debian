@@ -241,7 +241,7 @@ write_usertag_table() {
 # write build performace stats
 #
 write_build_performace_stats() {
-	if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "armhf" } ; then
+	if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "armhf" ] ; then
 		TIMESPAN_VERBOSE="4 weeks"
 		TIMESPAN_RAW="28"
 	else

@@ -241,12 +241,12 @@ write_usertag_table() {
 # write build performace stats
 #
 write_build_performace_stats() {
-	if [ "$ARCH" != "armhf" ] ; then
+	if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "armhf" } ; then
 		TIMESPAN_VERBOSE="4 weeks"
 		TIMESPAN_RAW="28"
 	else
-		TIMESPAN_VERBOSE="3 weeks"
-		TIMESPAN_RAW="21"
+		TIMESPAN_VERBOSE="1 week"
+		TIMESPAN_RAW="7"
 	fi
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics for $ARCH</th></tr>"
 	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")

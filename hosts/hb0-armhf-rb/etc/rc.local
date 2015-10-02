@@ -11,12 +11,16 @@
 #
 # By default this script does nothing.
 
+echo "$(date) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
+
+# disable running in the future for now
+exit 0
+
 systemctl disable systemd-timesyncd
 systemctl disable systemd-timedated
 systemctl stop systemd-timesyncd
 systemctl stop systemd-timedated
 ntpdate -b de.pool.ntp.org
-echo "$(date) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
 date --set="+400 days"
 echo "$(date) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
 

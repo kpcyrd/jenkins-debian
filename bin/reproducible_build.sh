@@ -116,7 +116,7 @@ update_db_and_html() {
 			[ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
 		# spool notifications and mail them once a day
 		mkdir -p /srv/reproducible-results/notification-emails
-		echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAG
+		echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
 	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us

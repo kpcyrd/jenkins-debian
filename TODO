@@ -137,7 +137,9 @@ properties:
 *** diffoscope needs to be run on the target arch...
 **** should probably be doable with qemu-static on the host
 *** sometimes disorderfs leaves mountpoints behind
-** investigate why https://jenkins.debian.net/view/reproducible/job/reproducible_maintenance_armhf_cbxi4pro0/345/console didn't timeout on his own
+*** open questions:
+**** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
+**** maintenance is general, cleanup of started but interrupted builds...
 ** more graphs:
 *** graph average build duration by day
 *** graph packages in testing+unstable which need to be fixed
@@ -148,7 +150,6 @@ properties:
 *** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** new page with packages which are reproducible on one arch and unreproducible on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
-*** send notifications to maintainers when a note to their packages changes?
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** setup builder3, to distribute more ressources away from jenkins itself
 ** use static IPs (h01ger)
@@ -169,7 +170,7 @@ properties:
 ** right align all numbers in table in the dashboard
 ** use build3 (or 5) as (sudo) test system to develop a dsa approvable sudoers.d
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
-** run pb2-amd64 builder 400 days in the past… (that way we will notice problems soon)
+** run pb2-amd64 builder 400 days in the future… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
 ** document (in README) the multihost setup
 ** pkg sets related:
@@ -184,6 +185,7 @@ properties:
 ** database issues
 *** stats_build table should have package ids, not just src+suite+arch as primary key
 *** builder column of schedule table should not be used for state-handling of _remote_scheduler.py (by setting it to 'TBD')
+** send notifications to maintainers when a note to their packages changes?
 
 * missing tests:
 ** variation in kernel
@@ -195,7 +197,7 @@ properties:
 ** variation of filesystem being built on (work in progres, see 'higher prio' list above)
 ** variation of users shell (bash + zsh?)
 
-* support for arbitrary (soon to be implemented) Debian-PPAs and external repos, by just giving a source URL
+* support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL
 * enable people to upload test packages, to be built in jenkins:
 ----
   <mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything jenkins tests.
@@ -203,12 +205,6 @@ properties:
   <mapreri> h01ger: I'm instead thinking about a repo defining a reproducible-specific suite or something on that line, that integrates well with the current setup. but this is really something wild.
 ----
 
-==== todo for reproducible remote building
-
-* open questions:
-** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
-** maintenance is general, cleanup of started but interrupted builds...
-* grep for "locales-all" in build logs… (to confirm that its really used on the new build nodes)
 
 ==== reproducible Debian armhf
 

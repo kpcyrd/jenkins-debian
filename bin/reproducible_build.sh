@@ -114,10 +114,9 @@ update_db_and_html() {
 			[ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
 			[ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \
 			[ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
-		echo "More information on $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE, feel free to reply to this email to get more help." | \
-			mail -s "$SRCPACKAGE changed in $SUITE/$ARCH: $OLD_STATUS -> $STATUS" \
-				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
-				"$SRCPACKAGE@packages.debian.org"
+		# spool notifications and mail them once a day
+		mkdir -p /srv/reproducible-results/notification-emails
+		echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAG
 	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us

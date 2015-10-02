@@ -336,8 +336,9 @@ if [ ! -z "$BADPERMS" ] ; then
     echo
 fi
 
-# once a day, send mail about builder problems
+# daily mails
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
+	# once a day, send mail about builder problems
 	for PROBLEM in /var/lib/jenkins/stale_builds.txt /var/log/jenkins/reproducible-race-conditions.log ; do
 		if [ -s $PROBLEM ] ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
@@ -345,6 +346,16 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			cat $TMPFILE | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
 			rm -f $TMPFILE
 		fi
+	done
+	# once a day, send notifications to package maintainers
+	cd /srv/reproducible-results/notification-emails
+	for NOTE in $(find . -type f) ; do
+			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
+			mv $NOTE $TMPFILE
+			cat $TMPFILE | mail -s "reproducible.debian.net status changes for $NOTE" \
+				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
+				 $NOTE@packages.debian.org
+			rm -f $TMPFILE
 	done
 fi
 

@@ -17,7 +17,7 @@ systemctl stop systemd-timesyncd
 systemctl stop systemd-timedated
 ntpdate -b de.pool.ntp.org
 echo "$(date) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
-date --set="-400 days"
-echo "$(date) - system is running in the past now" | mail -s "$(hostname -f) in the past" root
+date --set="+400 days"
+echo "$(date) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
 
 exit 0

@@ -123,22 +123,21 @@ properties:
 
 === reproducible builds
 
+* make reproducible_build.sh rock solid again:
+** deal properly with out of diskspace problems, https://jenkins.debian.net/job/reproducible_builder_amd64_8/2575/ is an archived build which hit it
+*** '~jenkins/spacetest' has a list of affected logs in testing/amd64, though at least the syslinux one is a false positive
+*** this is important cause it causes packages to falsely ftbfs
+** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
+** fix disorderfs setup to *always* unmount+cleanup, this causes the full disks atm
+** diffoscope needs to be run on the target arch..., this should probably be doable with qemu-static on the host
+** open questions:
+*** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
+*** maintenance is general, cleanup of started but interrupted builds...
+** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
+
 * higher prio:
 ** give mattia ssh access to all the profitbricks build nodes and if vagrant agrees, to the armhf ones too
 ** give helmut ssh access to at least pb-node4, if he agrees to all the others too
-** reproducible_build.sh changes needed:
-*** fix disorderfs setup to *always* unmount+cleanup, this causes the full disks atm
-*** deal properly with out of diskspace problems, https://jenkins.debian.net/job/reproducible_builder_amd64_8/2575/ is an archived build which hit it
-**** '~jenkins/spacetest' has a list of affected logs in testing/amd64, though at least the syslinux one is a false positive
-**** this is important cause it causes packages to falsely ftbfs
-*** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
-*** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
-*** diffoscope needs to be run on the target arch...
-**** should probably be doable with qemu-static on the host
-*** sometimes disorderfs leaves mountpoints behind
-*** open questions:
-**** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
-**** maintenance is general, cleanup of started but interrupted builds...
 ** more graphs:
 *** graph average build duration by day
 *** graph packages in testing+unstable which need to be fixed

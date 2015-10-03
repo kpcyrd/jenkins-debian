@@ -2,6 +2,10 @@
 
 set -e
 
+echo "debug output: disk usage on $HOSTNAME at $(date -u)"
+df -h
+echo
+
 # exit if we are in the same UTS namespace as init ( != 2nd build )
 [ "$(readlink /proc/1/ns/uts)" = "$(readlink /proc/self/ns/uts)" ] && exit 0
 

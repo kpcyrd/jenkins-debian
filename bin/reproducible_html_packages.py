@@ -14,18 +14,14 @@ from reproducible_common import *
 html_package_page = Template((tab*2).join(("""
 <header class="head">
     <h2 class="package-name">$package</h2>
-    <p style="margin-top: 4px;">
-        $version
-        <a href="/index_notify.html" target="_parent">
-            <span class="notification" title="Notifications for this package are enabled. Every reproducibility related status change will be emailed to the maintainers">$notify_maintainer</span>
-        </a><br />
-        $suite/$arch <br />
-        $status <br />
-        <span class="build-time">$build_time</span>
-    </p>
     <ul class="menu">
         <li><ul class="children">
-            $links
+          <li>$version <a href="/index_notify.html" target="_parent">
+            <span class="notification" title="Notifications for this package are enabled. Every reproducibility related status change will be emailed to the maintainers">$notify_maintainer</span></a></li>
+          <li>$suite/$arch </li>
+          <li>$status </li>
+          <li><span class="build-time">$build_time</span></li>
+          $links
         </ul></li>
         <li>
             <a href="https://tracker.debian.org/$package">PTS</a>

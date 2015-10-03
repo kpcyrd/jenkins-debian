@@ -436,15 +436,16 @@ def get_status_icon(status):
              'not_for_us': 'weather-few-clouds-night.png',
              'untested': 'weather-clear-night.png',
              'blacklisted': 'error.png'}
+    spokenstatus = status
     if status == 'unreproducible':
             status = 'FTBR'
     elif status == 'not for us':
             status = 'not_for_us'
     try:
-        return (status, table[status])
+        return (status, table[status], spokenstatus)
     except KeyError:
         log.error('Status ' + status + ' not recognized')
-        return (status, '')
+        return (status, '', spokenstatus)
 
 def strip_epoch(version):
     """

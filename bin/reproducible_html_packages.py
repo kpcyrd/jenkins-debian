@@ -69,13 +69,7 @@ def sizeof_fmt(num):
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
 
-def gen_status_link_icon(status, icon, suite, arch):
-    if status == 'not_for_us':
-        spokenstatus = 'not for us'
-    elif status == 'FTBR':
-        spokenstatus = 'unreproducible'
-    else:
-        spokenstatus = status
+def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
     html = """
         <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{spokenstatus}">
             <img src="/static/{icon}" alt="{spokenstatus}"></a>
@@ -86,7 +80,7 @@ def gen_status_link_icon(status, icon, suite, arch):
 
     # There are no indices for untested packages
     if status == 'untested':
-        html = '<img src="/static/{icon}" alt="{status}"> {status}'
+        html = '<img src="/static/{icon}" alt="{spokenstatus}"> {spokenstatus}'
 
     return html.format(status=status, spokenstatus=spokenstatus, icon=icon, suite=suite, arch=arch)
 
@@ -184,6 +178,7 @@ def gen_suites_links(package, current_suite, current_arch):
                 continue
             version = package.get_tested_version(s, a)
             build_date = package.get_build_date(s, a)
+            status, icon, spokenstatus = get_status_icon(status)
             if build_date and status != 'blacklisted':
                 build_date = ' on ' + build_date
             else:
@@ -192,17 +187,17 @@ def gen_suites_links(package, current_suite, current_arch):
             if s == current_suite and a == current_arch:
                 li_classes.append('active')
             html += '<li class="' + ' '.join(li_classes) + '">\n' + tab
-            if s != current_suite or a != current_arch or status != 'untested':
-                prefix = '<a href="/{}/{}/index_{}.html">'.format(s, a, status)
-                suffix = '</a>\n'
-            else:
+            if ( s == current_suite and a == current_arch ) or status == 'untested':
                 prefix = ''
                 suffix = '\n'
-            icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
-            html += icon.format(icon=get_status_icon(status)[1], status=status)
+            else:
+                prefix = '<a href="/{}/{}/index_{}.html">'.format(s, a, status)
+                suffix = '</a>\n'
+            icon_html = prefix + '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>' + suffix
+            html += icon_html.format(icon=icon, status=status, spokenstatus=spokenstatus)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
                      ' title="{}: {}{}">{}</a> in <a href="/{}/{}/" target="_parent">{}</a>\n').format(RB_PKG_URI,
-                     s, a, package.name, status, version, build_date, version, s, a, s)
+                     s, a, package.name, spokenstatus, version, build_date, version, s, a, s)
             html += '</li>\n'
         html += tab + '</ul></li>'
     html += '</ul>\n'
@@ -238,8 +233,8 @@ def gen_packages_html(packages, no_clean=False):
                 links, default_view = gen_extra_links(
                     pkg, version, suite, arch, status)
                 suites_links = gen_suites_links(package, suite, arch)
-                status, icon = get_status_icon(status)
-                status = gen_status_link_icon(status, icon, suite, arch)
+                status, icon, spokenstatus = get_status_icon(status)
+                status = gen_status_link_icon(status, spokenstatus, icon, suite, arch)
 
                 html = html_package_page.substitute(
                     package=pkg,

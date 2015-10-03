@@ -195,9 +195,13 @@ def gen_suites_links(package, current_suite, current_arch):
                 suffix = '</a>\n'
             icon_html = prefix + '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>' + suffix
             html += icon_html.format(icon=icon, status=status, spokenstatus=spokenstatus)
-            html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
-                     ' title="{}: {}{}">{}</a> in <a href="/{}/{}/" target="_parent">{}</a>\n').format(RB_PKG_URI,
-                     s, a, package.name, spokenstatus, version, build_date, version, s, a, s)
+            if ( s == current_suite and a == current_arch ):
+                html += (tab*2 + ' {}').format(version)
+            else:
+                html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
+                     ' title="{}: {}{}">{}</a>').format(RB_PKG_URI,
+                     s, a, package.name, spokenstatus, version, build_date, version)
+            html += ' in <a href="/{}/{}/" target="_parent">{}</a>\n'.format(s, a, s)
             html += '</li>\n'
         html += tab + '</ul></li>'
     html += '</ul>\n'

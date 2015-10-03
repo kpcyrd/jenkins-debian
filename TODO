@@ -145,6 +145,7 @@ properties:
 *** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** new page with packages which are reproducible on one arch and unreproducible on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
+*** new page with packages which ftbfs in testing but build fine on sid
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** setup builder3, to distribute more ressources away from jenkins itself
 ** use static IPs (h01ger)

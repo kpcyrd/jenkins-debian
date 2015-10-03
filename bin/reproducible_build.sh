@@ -65,7 +65,7 @@ save_artifacts() {
 		echo | tee -a ${RBUILDLOG}
 		# irc message
 		if [ ! -z "$NOTIFY" ] ; then
-			local MESSAGE="Artifacts for ${SRCPACKAGE} (${SUITE}/${ARCH}) published: $URL"
+			local MESSAGE="Artifacts for ${SRCPACKAGE} ($STATUS in ${SUITE}/${ARCH}) published: $URL"
 			if [ "$NOTIFY" = "diffoscope" ] ; then
 				MESSAGE="$MESSAGE (error when running $DIFFOSCOPE)"
 			fi
@@ -74,10 +74,8 @@ save_artifacts() {
 }
 
 cleanup_all() {
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then save_artifacts ; fi
-	if [ "$NOTIFY" = "failure" ] ; then
-		echo "No artifacts were saved for this build." | tee -a ${RBUILDLOG}
-		irc_message "Check $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and $BUILD_URL to find out why no artifacts were saved (final status $STATUS)"
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
+		save_artifacts
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
 		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi

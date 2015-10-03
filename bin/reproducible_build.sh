@@ -264,7 +264,7 @@ handle_unhandled() {
 	unregister_build
 	MESSAGE="$BUILD_URL met an unhandled $1, please investigate."
 	echo "$MESSAGE"
-	irc_msg "$MESSAGE"
+	irc_message "$MESSAGE"
 	sleep 5m
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
@@ -272,11 +272,11 @@ handle_unhandled() {
 
 handle_enospace() {
 	unregister_build
-	MESSAGE="$BUILD_URL ran into diskspace problems, please investigate. Will send this builder to sleep for 3h now."
+	MESSAGE="$BUILD_URL ran into diskspace problems, please investigate. Will send this builder to sleep for 30m now."
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$BUILD_URL ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
-	irc_msg "$MESSAGE"
-	sleep 3h
+	irc_message "$MESSAGE"
+	sleep 30m
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }

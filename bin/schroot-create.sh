@@ -6,7 +6,7 @@
 # Copyright      2015 MAttia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

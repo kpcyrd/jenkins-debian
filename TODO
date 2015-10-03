@@ -38,8 +38,11 @@ Most jobs have been converted, a few are left to do:
 * replace with bin/setsid.py workaround with setsid from the util-linux package from jessie
 * bin/g-i-installation: use lvcreate without --virtualsize
 * check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
-* install botch from jessie-backports once its available (and remove botch from the reproducible-unstable schroot)
-** needs dose3 backport first
+
+=== To be done once jenkins.d.n runs stretch
+
+* install botch from stretch and remove botch from the reproducible-unstable schroot
+** botch now depends on a newer dose3, which depends on the ocaml from stretch. ocaml cannot be sensibly backported, so thats why this will have to wait for stretch
 
 === move this setup to jenkins.d.o
 

@@ -276,7 +276,7 @@ def gen_html_issue(issue, suite):
             if not pkgs:
                 continue
             affected += tab*4 + '<p>\n'
-            affected += tab*5 + '<img src="/static/' + join_status_icon(status)[1] + '"'
+            affected += tab*5 + '<img src="/static/' + get_status_icon(status)[1] + '"'
             affected += ' alt="' + status + ' icon" />\n'
             affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
             affected += tab*5 + '<code>\n'

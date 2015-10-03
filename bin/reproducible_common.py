@@ -426,7 +426,7 @@ def link_packages(packages, suite, arch):
     return html
 
 
-def join_status_icon(status, package=None, version=None):
+def get_status_icon(status):
     table = {'reproducible' : 'weather-clear.png',
              'FTBFS': 'weather-storm.png',
              'FTBR' : 'weather-showers-scattered.png',
@@ -440,13 +440,10 @@ def join_status_icon(status, package=None, version=None):
             status = 'FTBR'
     elif status == 'not for us':
             status = 'not_for_us'
-    log.debug('Linking status ⇔ icon. package: ' + str(package) + ' @ ' +
-              str(version) + ' status: ' + status)
     try:
         return (status, table[status])
     except KeyError:
-        log.error('Status of package ' + package + ' (' + status +
-                  ') not recognized')
+        log.error('Status ' + status + ' not recognized')
         return (status, '')
 
 def strip_epoch(version):

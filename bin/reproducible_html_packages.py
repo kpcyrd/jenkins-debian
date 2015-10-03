@@ -199,7 +199,7 @@ def gen_suites_links(package, current_suite, current_arch):
                 prefix = ''
                 suffix = '\n'
             icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
-            html += icon.format(icon=join_status_icon(status)[1], status=status)
+            html += icon.format(icon=get_status_icon(status)[1], status=status)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
                      ' title="{}: {}{}">{}</a> in <a href="/{}/{}/" target="_parent">{}</a>\n').format(RB_PKG_URI,
                      s, a, package.name, status, version, build_date, version, s, a, s)
@@ -238,7 +238,7 @@ def gen_packages_html(packages, no_clean=False):
                 links, default_view = gen_extra_links(
                     pkg, version, suite, arch, status)
                 suites_links = gen_suites_links(package, suite, arch)
-                status, icon = join_status_icon(status, pkg, version)
+                status, icon = get_status_icon(status)
                 status = gen_status_link_icon(status, icon, suite, arch)
 
                 html = html_package_page.substitute(

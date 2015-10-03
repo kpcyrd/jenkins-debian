@@ -24,7 +24,7 @@ Reference doc for the folowing lists:
     the string above
   + `body`: a list of dicts containing every section that made up the page.
     Every section has:
-    - `icon_status`: the name of a icon (see join_status_icon())
+    - `icon_status`: the name of a icon (see get_status_icon())
     - `icon_link`: a link to hide below the icon
     - `query`: query to perform against the reproducible db to get the list of
       packages to show
@@ -423,7 +423,7 @@ def build_leading_text_section(section, rows, suite, arch):
         no_icon_link = True  # to avoid closing the </a> tag below
     if section.get('icon_status'):
         html += '<img src="/static/'
-        html += join_status_icon(section['icon_status'])[1]
+        html += get_status_icon(section['icon_status'])[1]
         html += '" alt="reproducible icon" />'
     if not no_icon_link:
         html += '</a>'

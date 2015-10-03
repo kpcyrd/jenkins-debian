@@ -199,7 +199,7 @@ def gen_suites_links(package, current_suite, current_arch):
                 prefix = ''
                 suffix = '\n'
             icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
-            status, icon = join_status_icon(status, pkg, version)
+            status, icon = join_status_icon(status, package, version)
             html += icon.format(icon=icon, status=status)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
                      ' title="{}: {}{}">{}</a> in <a href="/{}/{}/" target="_parent">{}</a>\n').format(RB_PKG_URI,

@@ -203,6 +203,12 @@ handle_ftbfs() {
 			handle_depwait
 			return
 		fi
+		for NEEDLE in '^tar:.*Cannot write: No space left on device' 'fatal error: error writing to .* No space left on device' './configure: line .* printf: write error: No space left on device' 'cat: write error: No space left on device' ; do
+			if zgrep -e "$NEEDLE" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+				handle_enospace
+				return
+			fi
+		done
 	done
 	calculate_build_duration
 	update_db_and_html "FTBFS"
@@ -262,6 +268,17 @@ handle_unhandled() {
 	echo "$MESSAGE"
 	irc_msg "$MESSAGE"
 	sleep 5m
+	exec /srv/jenkins/bin/abort.sh
+	exit 0
+}
+
+handle_enospace() {
+	unregister_build
+	MESSAGE="$BUILD_URL ran into diskspace problems, please investigate. Will send this builder to sleep for 3h now."
+	echo "$MESSAGE"
+	echo "$MESSAGE" | mail -s "$BUILD_URL ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
+	irc_msg "$MESSAGE"
+	sleep 3h
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }

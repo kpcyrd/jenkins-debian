@@ -240,6 +240,10 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get install -t jessie-backports \
 				pbuilder
 		#		botch
+		# to vary kernels
+		if [ "$HOSTNAME" = "profitbricks-build2-amd64" ] ; then
+			sudo apt-get install -t jessie-backports linux-image-amd64
+		fi
 		explain "packages installed."
 	else
 		explain "no new packages to be installed."

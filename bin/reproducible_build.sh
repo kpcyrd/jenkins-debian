@@ -207,6 +207,12 @@ handle_ftbfs() {
 				return
 			fi
 		done
+		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
+		if zgrep -e "No space left on device" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+			MESSAGE="$BUILD_URL for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) very probably ran into an diskspace issue. Please investigate, tune handle_ftbfs() and reschedule the package."
+			echo $MESSAGE
+			irc_message "$MESSAGE"
+		fi
 	done
 	calculate_build_duration
 	update_db_and_html "FTBFS"

@@ -15,6 +15,7 @@ jenkins ALL=  \
 	/bin/mv /chroots/* /schroots/*, \
 	/bin/mv /schroots/* /schroots/*, \
 	/bin/umount -l /chroots/*, \
+	/bin/umount -l /schroots/*, \
 	/bin/umount -l /media/*, \
 	/bin/rmdir /media/*, \
 	/bin/mount -o loop*, \

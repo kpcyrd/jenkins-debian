@@ -70,19 +70,25 @@ def sizeof_fmt(num):
 
 
 def gen_status_link_icon(status, icon, suite, arch):
+    if status == 'not_for_us':
+        spokenstatus = 'not for us'
+    elif status == 'FTBR':
+        spokenstatus = 'unreproducible'
+    else:
+        spokenstatus = status
     html = """
-        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{status}">
-            <img src="/static/{icon}" alt="{status}"></a>
+        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{spokenstatus}">
+            <img src="/static/{icon}" alt="{spokenstatus}"></a>
 
-        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{status}">
-            {status}</a>
+        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{spokenstatus}">
+            {spokenstatus}</a>
     """
 
     # There are no indices for untested packages
     if status == 'untested':
         html = '<img src="/static/{icon}" alt="{status}"> {status}'
 
-    return html.format(status=status, icon=icon, suite=suite, arch=arch)
+    return html.format(status=status, spokenstatus=spokenstatus, icon=icon, suite=suite, arch=arch)
 
 
 def link_buildlogs(package, eversion, suite, arch):
@@ -193,7 +199,8 @@ def gen_suites_links(package, current_suite, current_arch):
                 prefix = ''
                 suffix = '\n'
             icon = prefix + '<img src="/static/{icon}" alt="{status}" title="{status}"/>' + suffix
-            html += icon.format(icon=join_status_icon(status)[1], status=status)
+            status, icon = join_status_icon(status, pkg, version)
+            html += icon.format(icon=icon, status=status)
             html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
                      ' title="{}: {}{}">{}</a> in <a href="/{}/{}/" target="_parent">{}</a>\n').format(RB_PKG_URI,
                      s, a, package.name, status, version, build_date, version, s, a, s)
@@ -232,7 +239,7 @@ def gen_packages_html(packages, no_clean=False):
                 links, default_view = gen_extra_links(
                     pkg, version, suite, arch, status)
                 suites_links = gen_suites_links(package, suite, arch)
-                status, icon = join_status_icon(status, pkg, version)
+                status, icon = join_status_icon(status, package, version)
                 status = gen_status_link_icon(status, icon, suite, arch)
 
                 html = html_package_page.substitute(

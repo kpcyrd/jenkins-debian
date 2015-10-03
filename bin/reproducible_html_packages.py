@@ -17,7 +17,7 @@ html_package_page = Template((tab*2).join(("""
     <p style="margin-top: 4px;">
         $version
         <a href="/index_notify.html" target="_parent">
-            <span class="notification" title="Notifications for this packages are enabled. Every status change reproducibly-wise will be emailed to the maintainer">$notify_maintainer</span>
+            <span class="notification" title="Notifications for this package are enabled. Every reproducibility related status change will be emailed to the maintainers">$notify_maintainer</span>
         </a><br />
         $suite/$arch <br />
         $status <br />

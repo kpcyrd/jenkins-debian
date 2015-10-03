@@ -374,7 +374,7 @@ pages = {
         'notes': True,
         'nosuite': True,
         'title': 'Packages with notification enabled',
-        'header': '<p>The following {tot} packages have notifications enabled. (This page only shows packages in {suite}/{arch} though notifications are send for these packages in unstable and experimental in any tested arch.) On status changes (e.g. reproducible → unreproducible) the system notifies the maintainer and relevant parties via an email to $srcpackage@packages.debian.org. Notifications are collected and send once a day to avoid flooding mailinglists..<br />Please ask us to enable notifications for your package(s) in our IRC channel #debian-reproducible or via <a href="mailto:reproducible-builds@lists.alioth.debian.org">mail</a> but ask your fellow team members first if they want to receive such notifications.</p>',
+        'header': '<p>The following {tot} packages have notifications enabled. (This page only shows packages in {suite}/{arch} though notifications are send for these packages in unstable and experimental in all tested architectures.) On status changes (e.g. reproducible → unreproducible) the system notifies the maintainer and relevant parties via an email to $srcpackage@packages.debian.org. Notifications are collected and send once a day to avoid flooding.<br />Please ask us to enable notifications for your package(s) in our IRC channel #debian-reproducible or via <a href="mailto:reproducible-builds@lists.alioth.debian.org">mail</a> - but ask your fellow team members first if they want to receive such notifications.</p>',
         'header_query': 'SELECT COUNT(*) FROM sources WHERE suite="{suite}" AND architecture="{arch}" AND notify_maintainer = 1',
         'body': [
             {

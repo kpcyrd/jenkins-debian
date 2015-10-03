@@ -427,7 +427,7 @@ choose_package() {
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
 }
 
-get_source_package() {
+download_source() {
 	set +e
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	if [ "$MODE" != "master" ] ; then
@@ -438,24 +438,28 @@ get_source_package() {
 	fi
 	PARSED_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG})
 	cat ${TMPLOG} >> ${RBUILDLOG}
+	rm ${TMPLOG}
+	set -e
+}
+
+download_again_if_needed() {
 	if [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		echo "$(date -u ) - download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
+		echo "$(date -u ) - download of ${SRCPACKAGE} sources (for ${SUITE}) failed." | tee -a ${RBUILDLOG}
 		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
 		echo "$(date -u ) - sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 5m
-		if [ "$MODE" != "master" ] ; then
-			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee ${TMPLOG}
-		else
-			# the build master only needs to the the .dsc file
-			schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
-		fi
-		PARSED_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG})
+		download_source
 	fi
-	set -e
-	cat ${TMPLOG} >> ${RBUILDLOG}
-	rm ${TMPLOG}
+}
+
+get_source_package() {
+	PARSED_RESULT=""
+	download_source
+	download_again_if_needed
+	download_again_if_needed
+	download_again_if_needed # yes, this is called three times. this should really not happen
 	if [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		if [ "$MODE" = "master" ] ; then
 			handle_404

@@ -69,7 +69,7 @@ for i in $SUITES ; do
 	mkdir -p "$BASE/$i"
 done
 
-# tables for stats
+# table names and image names
 TABLE[0]=stats_pkg_state
 TABLE[1]=stats_builds_per_day
 TABLE[2]=stats_builds_age
@@ -78,6 +78,7 @@ TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
 TABLE[7]=stats_bugs_state
+TABLE[8]=stats_pkgs_to_fix
 
 # known package sets
 META_PKGSET[1]="essential"
@@ -527,6 +528,12 @@ create_png_from_table() {
 	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
 	# prepare query
 	WHERE_EXTRA="WHERE suite = '$SUITE'"
+	if [ "$ARCH" = "armhf" ] ; then
+		# armhf was only build since 2015-08-30
+		WHERE2_EXTRA="WHERE s.datum >= '2015-08-30'"
+	else
+		WHERE2_EXTRA=""
+	fi
 	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] ; then
 		# TABLE[3+4+5] don't have a suite column:
 		WHERE_EXTRA=""
@@ -546,14 +553,10 @@ create_png_from_table() {
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
 		WHERE_EXTRA="AND architecture='$ARCH'"
-		if [ "$ARCH" = "armhf" ] ; then
-			# armhf was only build since 2015-08-30
-			WHERE2_EXTRA="WHERE s.datum >= '2015-08-30'"
-		fi
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA),0) AS 'reproducible_testing',
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS 'reproducible_unstable', 
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS 'reproducible_experimental',
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA),0) AS reproducible_testing,
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS reproducible_unstable,
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS reproducible_experimental,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA) AS unreproducible_testing,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS unreproducible_unstable,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS unreproducible_experimental,
@@ -569,6 +572,11 @@ create_png_from_table() {
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 8 ] ; then
+		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
+			(SELECT (e.unreproducible+e.ftbfs) FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='unstable' AND e.architecture='$ARCH') AS unfixed_unstable,
+			COALESCE((SELECT (e.unreproducible+e.ftbfs) FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='testing' AND e.architecture='$ARCH'),0) AS unfixed_testing
+			FROM ${TABLE[0]} AS s $WHERE2_EXTRA GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	else
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi

@@ -141,7 +141,6 @@ properties:
 ** give helmut ssh access to at least pb-node4, if he agrees to all the others too
 ** more graphs:
 *** graph average build duration by day
-*** graph packages in testing+unstable which need to be fixed
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)

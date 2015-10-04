@@ -43,6 +43,7 @@ for TAG in $USERTAGS ; do
 done
 SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
+FIELDS[8]="datum, unfixed_unstable, unfixed_testing"
 COLOR[0]=5
 COLOR[1]=12
 COLOR[2]=1
@@ -50,11 +51,13 @@ COLOR[3]=32
 COLOR[4]=1
 COLOR[5]=1
 COLOR[7]=2
+COLOR[8]=2
 MAINLABEL[1]="Amount of packages built each day"
 MAINLABEL[3]="Usertags on bugs for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
 MAINLABEL[7]="Open and closed bugs"
+MAINLABEL[8]="Packages which need to be fixed"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
@@ -62,6 +65,7 @@ YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 YLABEL[7]="Amount of bugs open / closed"
+YLABEL[8]="Amount (unreproducible+ftbfs)"
 
 #
 # update package + build stats
@@ -98,7 +102,7 @@ update_suite_arch_stats() {
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
 		# we do 3 later and 6 is special anyway...
-		for i in 0 1 2 4 5 ; do
+		for i in 0 1 2 4 5 8 ; do
 			PREFIX=""
 			if [ $i -eq 0 ] ; then
 				PREFIX=$SUITE
@@ -428,13 +432,17 @@ create_main_stats_page() {
 	# write build per day graph
 	write_page "<p style=\"clear:both;\">"
 	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
-	# redo png once a day
+	# redo arch specific pngs once a day
 	for ARCH in ${ARCHS} ; do
 		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}_$ARCH.png) ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
 	ARCH="amd64"
+	if [ ! -f $BASE/${TABLE[8]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[8]}_$ARCH.png) ] ; then
+				# FIXME: this graph needs to be linked from somewhere…
+				create_png_from_table 8 ${TABLE[8]}_$ARCH.png
+	fi
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do

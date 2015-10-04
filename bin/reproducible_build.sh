@@ -194,6 +194,7 @@ handle_not_for_us() {
 }
 
 handle_ftbfs() {
+	if ! "$DEBUG" ; then set +x ; fi
 	local BUILD
 	echo "${SRCPACKAGE} failed to build from source."
 	for BUILD in "1" "2"; do

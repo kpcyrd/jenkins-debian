@@ -268,7 +268,7 @@ unregister_build() {
 
 handle_unhandled() {
 	unregister_build
-	MESSAGE="$BUILD_URL met an unhandled $1, please investigate."
+	MESSAGE="$BUILD_URL met an unhandled $1, please check."
 	echo "$MESSAGE"
 	irc_message "$MESSAGE"
 	sleep 5m
@@ -359,7 +359,7 @@ call_diffoscope_on_changes_files() {
 			handle_reproducible
 			;;
 		1)
-			handle_ftbr "$DIFFOSCOPE found issues, please investigate $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
+			handle_ftbr "$DIFFOSCOPE found issues, please check $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
 		2)
 			SAVE_ARTIFACTS=1

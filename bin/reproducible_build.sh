@@ -198,6 +198,9 @@ handle_ftbfs() {
 	local BUILD
 	echo "${SRCPACKAGE} failed to build from source."
 	for BUILD in "1" "2"; do
+		if [ ! -f "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
+			continue
+		fi
 		if zgrep -F "E: pbuilder-satisfydepends failed." "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 			handle_depwait
 			return

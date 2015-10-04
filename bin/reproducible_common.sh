@@ -574,8 +574,8 @@ create_png_from_table() {
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 8 ] ; then
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
-			(SELECT (e.unreproducible+e.ftbfs) FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='unstable' AND e.architecture='$ARCH') AS unfixed_unstable,
-			COALESCE((SELECT (e.unreproducible+e.ftbfs) FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='testing' AND e.architecture='$ARCH'),0) AS unfixed_testing
+			(SELECT e.ftbfs FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='$SUITE' AND e.architecture='$ARCH') AS unfixed_ftbfs,
+			COALESCE((SELECT e.unreproducible FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='$SUITE' AND e.architecture='$ARCH'),0) AS unfixed_ftbr
 			FROM ${TABLE[0]} AS s $WHERE2_EXTRA GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	else
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv

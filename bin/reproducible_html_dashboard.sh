@@ -43,7 +43,7 @@ for TAG in $USERTAGS ; do
 done
 SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
-FIELDS[8]="datum, unfixed_unstable, unfixed_testing"
+FIELDS[8]="datum, unfixed_ftbfs, unfixed_ftbr"
 COLOR[0]=5
 COLOR[1]=12
 COLOR[2]=1
@@ -65,7 +65,7 @@ YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 YLABEL[7]="Amount of bugs open / closed"
-YLABEL[8]="Amount (unreproducible+ftbfs)"
+YLABEL[8]="Amount (ftbfs+unreproducible)"
 
 #
 # update package + build stats
@@ -104,8 +104,8 @@ update_suite_arch_stats() {
 		# we do 3 later and 6 is special anyway...
 		for i in 0 1 2 4 5 8 ; do
 			PREFIX=""
-			if [ $i -eq 0 ] ; then
-				PREFIX=$SUITE
+			if [ $i -eq 0 ] || [ $i -eq 2 ] || [ $i -eq 8 ] ; then
+				PREFIX=$SUITE/$ARCH
 			fi
 			# force regeneration of the image if it exists
 			if [ -f $BASE/$PREFIX/${TABLE[$i]}.png ] ; then
@@ -346,7 +346,7 @@ create_suite_arch_stats_page() {
 	write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 	write_page "<p>"
 	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
-	for i in 0 2 ; do
+	for i in 0 2 8 ; do
 		# recreate png once a day
 		if [ ! -f $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i $SUITE/$ARCH/${TABLE[$i]}.png
@@ -439,10 +439,6 @@ create_main_stats_page() {
 		fi
 	done
 	ARCH="amd64"
-	if [ ! -f $BASE/${TABLE[8]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[8]}_$ARCH.png) ] ; then
-				# FIXME: this graph needs to be linked from somewhere…
-				create_png_from_table 8 ${TABLE[8]}_$ARCH.png
-	fi
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in $SUITES ; do

@@ -201,7 +201,7 @@ handle_ftbfs() {
 			handle_depwait
 			return
 		fi
-		for NEEDLE in '^tar:.*Cannot write: No space left on device' 'fatal error: error writing to .* No space left on device' './configure: line .* printf: write error: No space left on device' 'cat: write error: No space left on device' ; do
+		for NEEDLE in '^tar:.*Cannot write: No space left on device' 'fatal error: error writing to .* No space left on device' './configure: line .* printf: write error: No space left on device' 'cat: write error: No space left on device' '^dpkg-deb.*No space left on device' ; do
 			if zgrep -e "$NEEDLE" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 				handle_enospace
 				return

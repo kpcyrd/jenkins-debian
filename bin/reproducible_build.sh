@@ -278,7 +278,7 @@ handle_unhandled() {
 
 handle_enospace() {
 	unregister_build
-	MESSAGE="$BUILD_URL ran into diskspace problems building $SRCPACKAGE on $SUITE/$ARCH, please investigate. Sending this builder to sleep for 30m."
+	MESSAGE="$BUILD_URL hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH, sleeping 30m."
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$BUILDER ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	irc_message "$MESSAGE"

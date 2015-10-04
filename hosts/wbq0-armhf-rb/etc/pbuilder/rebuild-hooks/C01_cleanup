@@ -2,7 +2,7 @@
 
 set -e
 
-echo "debug output: disk usage on $HOSTNAME at $(date -u)"
+echo "debug output: disk usage on $(hostname) at $(date -u)"
 df -h
 echo
 

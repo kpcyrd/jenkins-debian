@@ -53,8 +53,8 @@ save_artifacts() {
 		mkdir -p $BASE/$ARTIFACTS
 		cp -r $TMPDIR/* $BASE/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
-		local msg="Artifacts from this build are preserved. They will be available for 72h only, so download them now if you want them.\n"
-		msg="${msg}WARNING: You shouldn't trust packages you downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
+		local msg="Artifacts from this build have been preserved. They will be available for 72h only, so download them now.\n"
+		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
 		printf "$msg" | tee -a $BUILDLOG
 		echo "<p>" > $HEADER
@@ -256,10 +256,10 @@ handle_reproducible() {
 		calculate_build_duration
 		update_db_and_html "reproducible"
 	elif [ -f ./$DBDREPORT ] ; then
-		echo "Debbindiff says the build is reproducible, but there is a diffoscope file. Please investigate" | tee -a $RBUILDLOG
+		echo "Debbindiff says the build is reproducible, but there is a diffoscope file. Please investigate." | tee -a $RBUILDLOG
 		handle_ftbr
 	elif [ ! -f b1/$BUILDINFO ] ; then
-		echo "Debbindiff says the build is reproducible, but there is no .buildinfo file. Please investigate" | tee -a $RBUILDLOG
+		echo "Debbindiff says the build is reproducible, but there is no .buildinfo file. Please investigate." | tee -a $RBUILDLOG
 		handle_ftbr
 	fi
 }
@@ -375,7 +375,7 @@ call_diffoscope_on_changes_files() {
 			;;
 		*)
 			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
-			irc_message "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE and investigate manually"
+			irc_message "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
 	print_out_duration
@@ -649,7 +649,7 @@ check_buildinfo() {
 		RESULT=$?
 		set -e
 		if [ $RESULT -eq 1 ] ; then
-			irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE had different packages installed in the 1st+2nd build, and then also in the 2nd+3rd builds. Please investigate, this should not happen."
+			irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE had different packages installed in the 1st+2nd builds and also in the 2nd+3rd builds. Please check."
 		fi
 	fi
 	rm $TMPFILE1 $TMPFILE2

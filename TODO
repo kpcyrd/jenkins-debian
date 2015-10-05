@@ -139,8 +139,6 @@ properties:
 * higher prio:
 ** give mattia ssh access to all the profitbricks build nodes and if vagrant agrees, to the armhf ones too
 ** give helmut ssh access to at least pb-node4, if he agrees to all the others too
-** more graphs:
-*** graph average build duration by day
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)
@@ -162,6 +160,7 @@ properties:
 
 * lesser prio
 ** dashboard:
+*** link https://reproducible.debian.net/unstable/amd64/stats_pkgs_to_fix.png and friends somewhere
 *** number of cores used is wrong for amd64
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
 ** check that /srv/workspace/pbuilder/ is cleaned up properly

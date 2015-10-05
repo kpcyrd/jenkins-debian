@@ -50,9 +50,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== next steps for jenkins.d.o migration
 
-* add more pressure to DSA to get jenkins.d.o set up
-** "having this mid september is doable, just grab some from DSA on irc"
-** the machine jerea.debian.org is already setup, it just needs the the alias added. (DSA)
+** the machine jerea.debian.org is setup, please go to http://jenkins.debian.org
 ** install jenkins.deb from jenkins-ci.org (DSA)
 *** also create jenkins users in jenkins (we)
 ** create jenkins-job-builder backport from sid to jessie and install that (we + DSA)

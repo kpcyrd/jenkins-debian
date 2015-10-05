@@ -40,4 +40,4 @@ if [ "$1" = "config" ]; then
 	exit 0
 fi
 
-echo "jenkins_builds_running.value $(ps fax|grep /tmp/hudson|grep -v grep|wc -l)"
+echo "jenkins_builds_running.value $(pgrep -fc /tmp/hudson)"

@@ -195,7 +195,8 @@ write_page_header() {
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
 		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too."
-		write_page "   As we think that reproducible builds should become the norm, we have started to write <a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct yet.</p>"
+		write_page "   <br />As we think that reproducible builds should become the norm, we have started to write <a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct, yet."
+		write_page "   <br />Also aimed at the free software world at large, but released as version 1.0, is the first specication we have written: the <a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a>.</p>"
 	fi
 	write_page "<nav><ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do

@@ -79,7 +79,7 @@ cleanup_all() {
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
 		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi
-	gzip -9fvn $RBUILDLOG
+	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "master" ] ; then
 		# XXX quite ugly: this is just needed to update the sizes of the
 		# compressed files in the html. It's cheap and quite safe so, *shrugs*...

@@ -137,6 +137,8 @@ properties:
 ** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 
 * higher prio:
+** rewrite bin/schroot-create.sh from scratch, with little sudo
+*** analyse+summarize needs, git commit that, then writing the script will be trivial
 ** give mattia ssh access to all the profitbricks build nodes and if vagrant agrees, to the armhf ones too
 ** give helmut ssh access to at least pb-node4, if he agrees to all the others too
 ** notes related:

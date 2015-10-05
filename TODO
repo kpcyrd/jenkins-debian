@@ -157,6 +157,7 @@ properties:
 ** repo-comparison: check for binaries without source
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
+** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 
 * lesser prio
 ** dashboard:

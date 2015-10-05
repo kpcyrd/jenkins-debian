@@ -535,7 +535,7 @@ def build_page(page, suite=None, arch=None):
     log.info('"' + title + '" now available at ' + desturl)
 
 
-bugs = get_bugs() # FIXME: this variable should not be global, else merely importing _html_indexes always queries UDD
+bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 
 if __name__ == '__main__':
     for arch in ARCHS:

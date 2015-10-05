@@ -48,9 +48,9 @@ fi
 
 for PREFIX in $JOB_PREFIXES ; do
 	if [ "$PREFIX" = "first" ] ; then
-		NR=$(ps fax | grep -v grep | grep -c "bin/bash /srv/jenkins/bin/reproducible_build.sh 1")
+		NR=$(pgrep -fc "bin/bash /srv/jenkins/bin/reproducible_build.sh 1")
 	else
-		NR=$(ps fax | grep -v grep | grep -c "bin/bash /srv/jenkins/bin/reproducible_build.sh 2")
+		NR=$(pgrep -fc "bin/bash /srv/jenkins/bin/reproducible_build.sh 2")
 	fi
 	echo "jenkins_reproducible_${PREFIX}_build.value $NR"
 	done

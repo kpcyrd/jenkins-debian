@@ -127,3 +127,24 @@ publish_changes_to_userContent(){
 	fi
 }
 
+cleanup_schroot_sessions() {
+	echo
+	local RESULT=""
+	for loop in $(seq 0 40) ; do
+		# first, check if no process using "schroot" is running, if thats the case, loop through all schroot sessions:
+		pgrep -f "schroot --directory" || for i in $(schroot --all-sessions -l ) ; do
+			# then, check that schroot is still not run, and then delete the session
+			pgrep -f "schroot --directory" || schroot -e -c $i
+		done
+		RESULT=$(schroot --all-sessions -l)
+		if [ -z "$RESULT" ] ; then
+			echo "No schroot sessions in use atm..."
+			echo
+			break
+		fi
+		echo "$(date -u) - schroot session cleanup loop $loop"
+		sleep 15
+	done
+	echo
+}
+

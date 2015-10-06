@@ -182,24 +182,6 @@ bootstrap() {
 	fi
 }
 
-cleanup_schroot_sessions() {
-	echo
-	# FIXME: if this works well, move to _common.sh and use the same function from _maintenance.sh
-	local RESULT=""
-	for loop in $(seq 0 40) ; do
-		pgrep -f "schroot --directory" || for i in $(schroot --all-sessions -l ) ; do pgrep -f "schroot --directory" || schroot -e -c $i ; done
-		RESULT=$(schroot --all-sessions -l)
-		if [ -z "$RESULT" ] ; then
-			echo "No schroot sessions in use atm..."
-			echo
-			break
-		fi
-		echo "$(date -u) - schroot session cleanup loop $loop"
-		sleep 15
-	done
-	echo
-}
-
 cleanup() {
 	if [ -d $SCHROOT_TARGET ]; then
 		sudo rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )

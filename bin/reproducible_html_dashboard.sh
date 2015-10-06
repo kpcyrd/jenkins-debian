@@ -16,7 +16,7 @@ common_init "$@"
 #
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
-FORCE_DATE=$(date -d "2 day ago" '+%Y-%m-%d')
+FORCE_DATE=$(date -d "3 days ago" '+%Y-%m-%d')
 NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 
 # variables related to the stats we update

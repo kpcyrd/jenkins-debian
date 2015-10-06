@@ -114,7 +114,8 @@ sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything
 ionice -c 3 nice \
-	bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
+	bash util/abuild/abuild || true # don't fail the full job just because some targets fail
+	#bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
 
 # save results in b1
 save_coreboot_results b1
@@ -133,7 +134,8 @@ NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
 ionice -c 3 nice \
 	linux64 --uname-2.6 \
-	bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
+	bash util/abuild/abuild || true # don't fail the full job just because some targets fail
+	#bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
 
 # reset environment to default values again
 export LANG="en_GB.UTF-8"

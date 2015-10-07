@@ -256,16 +256,6 @@ properties:
 ** MKREPRO is set to "yes"
 * use disorderfs for 2nd build?
 
-==== reproducible Fedora
-
-* use mock to create a fedora chroot to build in
-** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/
-** http://blog.packagecloud.io/eng/2015/04/20/working-with-source-rpms/
-* start with building a single package (which is reproducible on Debian), only build that one, until its reproducible
-** then eventually build the full base system (100-500 packages), once that package is reprodcuible (aka the rpm toolchain has been fixed...)
-* maybe call the script reproducible_rpms.sh and also let it build OpenSuSE packages?
-* document in the initial webpage, that we don't have a clear idea yet, how to record+reproduce the build environment. +that this is essential for reproducible builds too.
-
 ==== reproducible FreeBSD
 
 * useful improvements:
@@ -295,11 +285,27 @@ properties:
 ** mkdir -p /srv/reproducible-results
 ** chown -R jenkins:jenkins /srv/
 
+==== reproducible Fedora
+
+* use mock to create a fedora chroot to build in
+** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/
+** http://blog.packagecloud.io/eng/2015/04/20/working-with-source-rpms/
+* start with building a single package (which is reproducible on Debian), only build that one, until its reproducible
+** then eventually build the full base system (100-500 packages), once that package is reprodcuible (aka the rpm toolchain has been fixed...)
+* maybe call the script reproducible_rpms.sh and also let it build OpenSuSE packages?
+* document in the initial webpage, that we don't have a clear idea yet, how to record+reproduce the build environment. +that this is essential for reproducible builds too.
+
+==== reproducible Arch
+
+* create a job, to bootstrap an arch schroot:
+** https://wiki.archlinux.org/index.php/Install_from_existing_Linux#Method_A:_Using_the_bootstrap_image_.28recommended.29
+* create another job, to build a single package and a webpage for it…
+* create a simple scheduler and build a few more packages…
+
 ==== reproducible...
 
 * openembedded.org!
-* Arch? Gentoo?
-** https://wiki.archlinux.org/index.php/Install_from_existing_Linux#Method_A:_Using_the_bootstrap_image_.28recommended.29
+* Gentoo?
 
 === qa.debian.org*
 

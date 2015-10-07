@@ -183,7 +183,7 @@ write_page_header() {
 	if [ "$1" != "$MAINVIEW" ] ; then
 		write_page "<body><header><h2>$2</h2><nav>"
 	else
-		write_page "<body onload=\"selectSearch()\"><header><h2>$2</h2>"
+		write_page "<body onload=\"selectSearch()\"><header><h2>$2</h2><nav>"
 		write_page "<ul>These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
 		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."

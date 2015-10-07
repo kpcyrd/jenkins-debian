@@ -370,6 +370,11 @@ create_dashboard_page() {
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
+	write_page "</p><p style=\"clear:both;\">"
+	# packages to be fixed in unstable+testing/amd64
+	for SUITE in testing unstable ; do
+		write_page " <a href=\"/$SUITE/amd64/${TABLE[8]}.png\"><img src=\"/$SUITE/amd64/${TABLE[8]}.png\" class="overview" alt=\"${MAINLABEL[8]}\"></a>"
+	done
 	write_page "</p><p><center>"
 	# write meta pkg graphs per suite
 	for SUITE in $SUITES ; do
@@ -425,10 +430,6 @@ create_dashboard_page() {
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
-	done
-	# packages to be fixed in unstable+testing/amd64
-	for SUITE in testing unstable ; do
-		write_page " <a href=\"/$SUITE/amd64/${TABLE[8]}.png\"><img src=\"/$SUITE/amd64/${TABLE[8]}.png\" class="overview" alt=\"${MAINLABEL[8]}\"></a>"
 	done
 	write_page "</p>"
 	# explain setup

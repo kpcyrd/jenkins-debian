@@ -574,10 +574,10 @@ create_png_from_table() {
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 8 ] ; then
-		if [ "$ARCH" = "amd64" ] && [ "SUITE" = "testing" ]
+		if [ "$ARCH" = "amd64" ] && [ "SUITE" = "testing" ] ; then
 			# testing/amd64 was only build since...
 			WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
-		elif [ "$ARCH" = "amd64" ] && [ "SUITE" = "experimental" ]
+		elif [ "$ARCH" = "amd64" ] && [ "SUITE" = "experimental" ] ; then
 			# experimental/amd64 was only build since...
 			WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
 		fi

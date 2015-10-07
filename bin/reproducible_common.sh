@@ -574,6 +574,13 @@ create_png_from_table() {
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 8 ] ; then
+		if [ "$ARCH" = "amd64" ] && [ "SUITE" = "testing" ]
+			# testing/amd64 was only build since...
+			WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
+		elif [ "$ARCH" = "amd64" ] && [ "SUITE" = "experimental" ]
+			# experimental/amd64 was only build since...
+			WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
+		fi
 		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
 			(SELECT e.ftbfs FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='$SUITE' AND e.architecture='$ARCH') AS unfixed_ftbfs,
 			COALESCE((SELECT e.unreproducible FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='$SUITE' AND e.architecture='$ARCH'),0) AS unfixed_ftbr

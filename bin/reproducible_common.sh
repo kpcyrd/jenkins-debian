@@ -601,7 +601,7 @@ create_png_from_table() {
 	local WIDTH=1920
 	local HEIGHT=960
 	if [ $1 -eq 8 ] ; then
-		HEIGHT=440
+		HEIGHT=480
 	fi
 	# only generate graph if the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then

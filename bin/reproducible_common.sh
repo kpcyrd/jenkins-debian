@@ -181,24 +181,24 @@ write_page_header() {
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>$2</title></head>"
 	if [ "$1" != "$MAINVIEW" ] ; then
-		write_page "<body><header><h2>$2</h2>"
+		write_page "<body><header><h2>$2</h2><nav>"
 	else
 		write_page "<body onload=\"selectSearch()\"><header><h2>$2</h2>"
-		write_page "<p>These pages are showing the <em>prospects</em> of <a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a>."
+		write_page "<ul>These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
 		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
-		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
+		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</ul>"
 	fi
 	if [ "$1" = "dd-list" ] || [ "$1" = "dashboard" ] ; then
-		write_page "<p>Join <code>#debian-reproducible</code> on OFTC,"
+		write_page "<ul>Join <code>#debian-reproducible</code> on OFTC,"
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>,"
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <a href=\"/coreboot/\">coreboot</a>, <a href=\"/openwrt/\">OpenWrt</a>, <a href=\"netbsd\">NetBSD</a> and <a href=\"/freebsd/\">FreeBSD</a> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too."
-		write_page "   <br />As we think that reproducible builds should become the norm, we have started to write <a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct, yet."
-		write_page "   <br />Also aimed at the free software world at large, but released as version 1.0, is the first specication we have written: the <a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a>.</p>"
+		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li> and <li><a href=\"/freebsd/\">FreeBSD</a></li> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too.</ul>"
+		write_page "   <ul>As we think that reproducible builds should become the norm, we have started to write <li><a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a></li>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct, yet."
+		write_page "      Also aimed at the free software world at large, but released as version 1.0, is the first specication we have written: the <li><a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a></li>.</ul>"
 	fi
-	write_page "<nav><ul><li>Have a look at:</li>"
+	write_page "<ul><li>Have a look at:</li>"
 	for MY_STATE in $ALLSTATES ; do
 		set_icon $MY_STATE
 		write_page "<li>"

@@ -358,10 +358,10 @@ create_suite_arch_stats_page() {
 }
 
 #
-# create main stats page
+# create dashboard page
 #
-create_main_stats_page() {
-	VIEW=stats
+create_dashboard_page() {
+	VIEW=dashboard
 	PAGE=index_${VIEW}.html
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
@@ -484,5 +484,5 @@ for ARCH in ${ARCHS} ; do
 done
 ARCH="amd64"
 SUITE="unstable"
-create_main_stats_page
+create_dashboard_page
 

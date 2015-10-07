@@ -137,16 +137,18 @@ Installation tests inside chroot environments.
 
 * The (current) purpose of https://reproducible.debian.net is to show the prospects of reproducible builds for Debian. IOW: this is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project!
 
-* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through eight concurrent builder jobs which are each constantly testing packages and saving the results of these tests.
+* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through concurrent builder jobs, 16 for 'amd64' and 8 for 'armhf', which are each constantly testing packages and saving the results of these tests.
 
+** These builds on remote nodes run on very different hardware: for 'amd64' we are now using two hosts, profitbricks-build1-amd64 profitbricks-build2-amd64, which have 14+15 cores and 42gb ram each and are sponsored by Profitbricks.
+** To test 'armhf' we are using four small boards donated by vagrant@d.o: two quad cores (wbq0 and cbxi4pro0) with 2gb ram and two dual cores (bpi0 and hb0) with 1gb ram, each. We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!
 
-* Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and which schedules "new packages" to be tested if the queue is below a certain threshold. "New packages" in this context means:
-** truly new packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
-** new versions of existing packages.
+* Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and if the queue is below a certain threshold schedules four types of packages:
+** new untested packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
+** new versions of existing packages, which were already tested - these are always scheduled, no matter how full the queue is
+** old versions, already tested (at least two weeks ago)
+** and also some old versions which failed to build (at least ten days ago), if no bug has been filed.
 
-* If the scheduling queue is low, already tested package will be scheduled for re-testing.
-
-* Several other jobs exist to build the html pages and to create a JSON file which can be downloaded from https://reproducible.debian.net/reproducible.json.
+* Several other jobs exist to build the html pages and to create two JSON files which can be downloaded from https://reproducible.debian.net/reproducible.json and https://reproducible.debian.net/reproducible-tracker.json.
 
 * Information from https://anonscm.debian.org/cgit/reproducible/notes.git is incorporated on pushes to that git repo.
 
@@ -154,7 +156,7 @@ Installation tests inside chroot environments.
 
 * Then there are two more jobs to create sid and testing schroots to run diffoscope on the the two results. This is necessary since to investigate haskell binaries, diffoscope needs access to the same haskell compiler version as the investigated packages have been built with.
 
-* For making sure things are considerably under control at any time, there is a maintenance job running every 4h, mostly doing cleanups.
+* For making sure things are considerably under control at any time, there is a maintenance job running every 3h, mostly doing cleanups.
 
 * The jenkins job overview at https://jenkins.debian.net/view/reproducible/ probably makes it clearer how the job scheduling works in practice.
 
@@ -184,12 +186,10 @@ usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
                         email address of a maintainer
 ----
 
-* Job configuration is at the usual location for 'jenkins.debian.net' - there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.
+* Job configuration is at the usual location for 'jenkins.debian.net': there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.
 
-* Finally, there are also three jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt] and link:http://www.netbsd.org/[NetBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/ and https://reproducible.debian.net/netbsd/.
+* Finally, there are also jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt], link:http://www.netbsd.org/[NetBSD] and https://www.freebsd.org/[FreeBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/, https://reproducible.debian.net/netbsd/ and https://reproducible.debian.net/freebsd/.
 
-* Just as of now, we have started with building on two different systems, so for 'amd64' we are now using two hosts, profitbricks-build1-amd64 profitbricks-build2-amd64, which both have 8 cores and 32gb ram and are sponsored by Profitbricks.
-* Then we also started to test 'armhf' on four small boards donated by vagrant@d.o: two quad cores (wbq0 and cbxi4pro0) with 2gb ram and two dual cores (bpi0 and hb0) with 1gb ram, each. We hope to have powerful ARM hardware in the near future, if you can help, please talk to us!
 
 === jenkins.d.n jobs
 

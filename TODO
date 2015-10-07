@@ -170,7 +170,6 @@ properties:
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** run pb2-amd64 builder 400 days in the future… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
-** document (in README) the multihost setup
 ** pkg sets related:
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 *** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control

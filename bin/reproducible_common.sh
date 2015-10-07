@@ -158,10 +158,10 @@ write_icon() {
 
 write_page_header() {
 	rm -f $PAGE
-	MAINVIEW="stats"
+	MAINVIEW="dashboard"
 	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats arch repositories stats"
-	GLOBALVIEWS="issues scheduled notify repositories stats"
+	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats arch repositories dashboard"
+	GLOBALVIEWS="issues scheduled notify repositories dashboard"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
@@ -175,7 +175,7 @@ write_page_header() {
 	SPOKENTARGET["pkg_sets"]="package sets"
 	SPOKENTARGET["suite_stats"]="suite: $SUITE"
 	SPOKENTARGET["repositories"]="repositories overview"
-	SPOKENTARGET["stats"]="reproducible stats"
+	SPOKENTARGET["dashboard"]="dashboard"
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
@@ -189,7 +189,7 @@ write_page_header() {
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
 		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
 	fi
-	if [ "$1" = "dd-list" ] || [ "$1" = "stats" ] ; then
+	if [ "$1" = "dd-list" ] || [ "$1" = "dashboard" ] ; then
 		write_page "<p>Join <code>#debian-reproducible</code> on OFTC,"
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>,"
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"

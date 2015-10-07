@@ -188,7 +188,7 @@ html_head_page = Template((tab*2).join("""
     <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
 $links
     <li><a href="/index_repositories.html">repositories overview</a></li>
-    <li><a href="/reproducible.html">reproducible stats</a></li>
+    <li><a href="/reproducible.html">dashboard</a></li>
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
   </ul></nav>
 </header>""".splitlines(True)))

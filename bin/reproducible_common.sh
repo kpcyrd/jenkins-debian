@@ -598,13 +598,18 @@ create_png_from_table() {
 			experimental)	COLORS=42 ;;
 		esac
 	fi
+	local WIDTH=1920
+	local HEIGHT=960
+	if [ $1 -eq 8 ] ; then
+		HEIGHT=480
+	fi
 	# only generate graph if the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
 		echo "Updating $2..."
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		echo "Generating $2."
-		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}"
+		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}" $WIDTH $HEIGHT
 		mv $2 $BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	# create empty dummy png if there havent been any results ever

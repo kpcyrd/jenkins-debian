@@ -11,8 +11,8 @@ from rpy2 import robjects
 from rpy2.robjects.packages import importr
 
 def main():
-    if len(sys.argv) != 6:
-        print "we need exactly five params: csvfilein, pngoutfile, color, mainlabel, ylabl"
+    if len(sys.argv) != 8:
+        print "we need exactly seven params: csv-file-in, png-out-file, color, mainlabel, ylabl, width, height"
         return
     filein = sys.argv[1]
     fileout = sys.argv[2]
@@ -20,10 +20,12 @@ def main():
     columns = str(int(colors)+1)
     mainlabel = sys.argv[4]
     ylabel = sys.argv[5]
+    width = int(sys.argv[6])
+    height = int(sys.argv[7])
     countsfile = os.path.join(filein)
     pngfile = os.path.join(fileout)
     grdevices = importr('grDevices')
-    grdevices.png(file=pngfile, width=1920, height=960, pointsize=10, res=100, antialias="none")
+    grdevices.png(file=pngfile, width=width, height=height, pointsize=10, res=100, antialias="none")
     r = robjects.r
     r('t <- (read.table("'+countsfile+'",sep=",",header=1,row.names=1))')
     r('cname <- c("date",rep(colnames(t)))')

@@ -426,6 +426,10 @@ create_dashboard_page() {
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
 	done
+	# packages to be fixed in unstable+testing/amd64
+	for SUITE in testing unstable ; do
+		write_page " <a href=\"/$SUITE/amd64/${TABLE[8]}.png\"><img src=\"/$SUITE/amd64/${TABLE[8]}.png\" class="overview" alt=\"${MAINLABEL[8]}\"></a>"
+	done
 	write_page "</p>"
 	# explain setup
 	write_explaination_table debian

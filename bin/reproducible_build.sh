@@ -275,6 +275,7 @@ handle_unhandled() {
 	MESSAGE="$BUILD_URL met an unhandled $1, please check."
 	echo "$MESSAGE"
 	irc_message "$MESSAGE"
+	echo "Sleeping 5m before aborting the job."
 	sleep 5m
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
@@ -286,6 +287,7 @@ handle_enospace() {
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$BUILDER ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	irc_message "$MESSAGE"
+	echo "Sleeping 30m before aborting the job."
 	sleep 30m
 	exec /srv/jenkins/bin/abort.sh
 	exit 0

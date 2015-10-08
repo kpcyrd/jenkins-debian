@@ -647,12 +647,13 @@ check_buildinfo() {
 		set +e
 		diff $TMPFILE1 $TMPFILE2
 		RESULT=$?
+		rm $TMPFILE1 $TMPFILE2
 		set -e
 		if [ $RESULT -eq 1 ] ; then
-			irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE had different packages installed in the 1st+2nd builds and also in the 2nd+3rd builds. Please check."
+			handle_unhandled "problem: different packages were installed in the 1st+2nd builds and also in the 2nd+3rd builds. Please check."
 		fi
 	fi
-	rm $TMPFILE1 $TMPFILE2
+	rm -f $TMPFILE1 $TMPFILE2
 }
 
 build_rebuild() {

@@ -137,8 +137,6 @@ properties:
 * higher prio:
 ** rewrite bin/schroot-create.sh from scratch, with little sudo
 *** analyse+summarize needs, git commit that, then writing the script will be trivial
-** give mattia ssh access to all the profitbricks build nodes and if vagrant agrees, to the armhf ones too
-** give helmut ssh access to at least pb-node4, if he agrees to all the others too
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)

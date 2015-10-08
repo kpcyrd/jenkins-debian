@@ -334,7 +334,7 @@ fi
 # daily mails
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	# once a day, send mail about builder problems
-	for PROBLEM in /var/lib/jenkins/stale_builds.txt /var/log/jenkins/reproducible-race-conditions.log ; do
+	for PROBLEM in /var/lib/jenkins/stale_builds.txt /var/log/jenkins/reproducible-race-conditions.log /var/log/jenkins/reproducible-diskspace-issues.log ; do
 		if [ -s $PROBLEM ] ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			mv $PROBLEM $TMPFILE

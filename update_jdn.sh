@@ -124,6 +124,7 @@ if [ -f /etc/debian_version ] ; then
 			munin-plugins-extra 
 			pigz 
 			postfix
+			procmail
 			python3-psycopg2 
 			schroot 
 			screen 

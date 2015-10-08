@@ -194,11 +194,27 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_maintenance_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_maintenance_amd64_profitbricks6'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_pbuilder_unstable_amd64_profitbricks1'
 
 - job-template:
     defaults: reproducible
     name: '{name}_setup_pbuilder_unstable_amd64_profitbricks2'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_unstable_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_unstable_amd64_profitbricks6'
 
 - job-template:
     defaults: reproducible
@@ -226,11 +242,27 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_pbuilder_testing_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_testing_amd64_profitbricks6'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_pbuilder_experimental_amd64_profitbricks1'
 
 - job-template:
     defaults: reproducible
     name: '{name}_setup_pbuilder_experimental_amd64_profitbricks2'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_experimental_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_experimental_amd64_profitbricks6'
 
 - job-template:
     defaults: reproducible
@@ -251,6 +283,14 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_unstable_amd64_profitbricks2'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_amd64_profitbricks6'
 
 - job-template:
     defaults: reproducible
@@ -282,6 +322,14 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_schroot_testing_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_testing_amd64_profitbricks6'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_schroot_experimental_amd64_jenkins'
 
 - job-template:
@@ -291,6 +339,14 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_experimental_amd64_profitbricks2'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_experimental_amd64_profitbricks5'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_experimental_amd64_profitbricks6'
 
 - job-template:
     defaults: reproducible
@@ -509,6 +565,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_maintenance_amd64_profitbricks5':
+            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_maintenance_amd64_profitbricks6':
+            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_setup_pbuilder_unstable_armhf_bpi0':
             my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '42 7 * * *'
@@ -545,6 +613,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_pbuilder_testing_amd64_profitbricks5':
+            my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '23 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_setup_pbuilder_testing_amd64_profitbricks6':
+            my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '23 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_setup_pbuilder_unstable_amd64_profitbricks1':
             my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '42 7 * * *'
@@ -557,6 +637,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_pbuilder_unstable_amd64_profitbricks5':
+            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '42 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_setup_pbuilder_unstable_amd64_profitbricks6':
+            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '42 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_setup_pbuilder_experimental_amd64_profitbricks1':
             my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '33 7 * * *'
@@ -569,6 +661,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_pbuilder_experimental_amd64_profitbricks5':
+            my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '33 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_setup_pbuilder_experimental_amd64_profitbricks6':
+            my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '33 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins':
             my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '42 0 * * *'
@@ -599,6 +703,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_schroot_unstable_amd64_profitbricks5':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_setup_schroot_unstable_amd64_profitbricks6':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_setup_schroot_unstable_armhf_bpi0':
             my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
             my_timed: '42 1 * * *'
@@ -641,6 +757,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_schroot_testing_amd64_profitbricks5':
+            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_setup_schroot_testing_amd64_profitbricks6':
+            my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+            my_timed: '23 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_setup_schroot_experimental_amd64_jenkins':
             my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
             my_timed: '33 1 * * *'
@@ -659,6 +787,18 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_setup_schroot_experimental_amd64_profitbricks5':
+            my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
+            my_timed: '33 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks5'
+        - '{name}_setup_schroot_experimental_amd64_profitbricks6':
+            my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
+            my_timed: '33 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks6'
         - '{name}_scheduler':
             my_description: 'Schedule packages to be tested for reproducibility.'
             my_timed: '10 * * * *'

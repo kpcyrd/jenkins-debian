@@ -50,7 +50,7 @@ sudo mkdir -p /srv/workspace
 case $HOSTNAME in
 	jenkins)			 	TMPFSSIZE=100 ;;
 	profitbricks-build4-amd64) 		TMPFSSIZE=32 ;;
-	profitbricks-build?-amd64) 		TMPFSSIZE=70 ;;
+	profitbricks-build?-amd64) 		TMPFSSIZE=200 ;;
 	*) ;;
 esac
 case $HOSTNAME in
@@ -139,7 +139,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
-			bpi0|hb0|profitbricks-build2-amd64) DEBS="$DEBS ntpdate" ;;
+			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		if [ "$HOSTNAME" = "jenkins" ] ; then
@@ -241,7 +241,7 @@ if [ -f /etc/debian_version ] ; then
 				pbuilder
 		#		botch
 		# to vary kernels
-		if [ "$HOSTNAME" = "profitbricks-build2-amd64" ] ; then
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-amd64" ]; then
 			sudo apt-get install -t jessie-backports linux-image-amd64
 		fi
 		explain "packages installed."

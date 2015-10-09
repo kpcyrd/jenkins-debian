@@ -256,10 +256,10 @@ handle_reproducible() {
 		calculate_build_duration
 		update_db_and_html "reproducible"
 	elif [ -f ./$DBDREPORT ] ; then
-		echo "Debbindiff says the build is reproducible, but there is a diffoscope file. Please investigate." | tee -a $RBUILDLOG
+		echo "Diffoscope claims the build is reproducible, but there is a diffoscope file. Please investigate." | tee -a $RBUILDLOG
 		handle_ftbr
 	elif [ ! -f b1/$BUILDINFO ] ; then
-		echo "Debbindiff says the build is reproducible, but there is no .buildinfo file. Please investigate." | tee -a $RBUILDLOG
+		echo "Diffoscope claims the build is reproducible, but there is no .buildinfo file. Please investigate." | tee -a $RBUILDLOG
 		handle_ftbr
 	fi
 }

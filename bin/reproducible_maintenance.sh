@@ -223,7 +223,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 				WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
 			sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
 			cd $BASE
-			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$Arch -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
+			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
 		done
 		cd - > /dev/null
 	fi

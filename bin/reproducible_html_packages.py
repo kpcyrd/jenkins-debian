@@ -215,7 +215,6 @@ def gen_history_page(package):
         head = package.history[0]
     except IndexError:
         html = '<p>No historical data available for this package.</p>'
-        return
     else:
         html = '<table>\n{tab}<tr>\n{tab}{tab}'.format(tab=tab)
         for i in keys:

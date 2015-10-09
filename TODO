@@ -157,7 +157,6 @@ properties:
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
-** add a mean to automatically delete the history pages
 
 * lesser prio
 ** dashboard:
@@ -184,6 +183,7 @@ properties:
 *** builder column of schedule table should not be used for state-handling of _remote_scheduler.py (by setting it to 'TBD')
 ** send notifications to maintainers when a note to their packages changes?
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
+** _maintenance.sh: delete the history pages once a page has been removed from all suites+archs
 
 * missing tests:
 ** variation in kernel

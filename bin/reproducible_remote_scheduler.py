@@ -114,11 +114,12 @@ if arch not in ARCHS:
     sys.exit(1)
 
 if issue or status or built_after or built_before:
-    formatter = dict(suite=suite, notes_table='')
+    formatter = dict(suite=suite, arch=arch, notes_table='')
     log.info('Querying packages with given issues/status...')
     query = 'SELECT s.name ' + \
             'FROM sources AS s, {notes_table} results AS r ' + \
             'WHERE r.package_id=s.id ' + \
+            'AND s.architecture= "{arch}" ' + \
             'AND s.suite = "{suite}" AND r.status != "blacklisted" '
     if issue:
         query += 'AND n.package_id=s.id AND n.issues LIKE "%{issue}%" '

@@ -418,7 +418,7 @@ def schedule_new_versions(arch, total):
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
-        msg += ' with new versions'
+        msg += ' new versions'
     else:
         msg = ''
     return packages, msg

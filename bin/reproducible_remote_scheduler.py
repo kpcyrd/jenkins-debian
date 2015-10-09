@@ -64,8 +64,7 @@ except KeyError:
                  'schedule packages. Ask in #debian-reproducible if you have '
                  'trouble with that.' + bcolors.ENDC)
     sys.exit(1)
-# this variable is setted by reproducible scripts, and it's clearly available
-# only on calls made by the local host
+# this variable is set by reproducible scripts and so it only available in calls made on the local host (=main node)
 try:
     local = True if os.environ['LOCAL_CALL'] == 'true' else False
 except KeyError:

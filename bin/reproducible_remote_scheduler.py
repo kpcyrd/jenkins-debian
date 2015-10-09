@@ -185,7 +185,7 @@ for pkg in packages:
         pkgs.append(pkg)
 
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
-packages_txt = str(len(ids)) ' packages ' if len(pkgs) > 1 else ''
+packages_txt = str(len(ids)) + ' packages ' if len(pkgs) > 1 else ''
 trailing = ' - artifacts will be preserved' if artifacts else ''
 trailing += ' - with irc notification' if notify else ''
 trailing += ' - notify on start too' if debug_url else ''

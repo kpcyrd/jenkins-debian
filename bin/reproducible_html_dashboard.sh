@@ -43,7 +43,6 @@ for TAG in $USERTAGS ; do
 done
 SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
-FIELDS[8]="datum, unfixed_ftbfs, unfixed_ftbr"
 COLOR[0]=5
 COLOR[1]=12
 COLOR[2]=1
@@ -51,13 +50,11 @@ COLOR[3]=32
 COLOR[4]=1
 COLOR[5]=1
 COLOR[7]=2
-COLOR[8]=2
 MAINLABEL[1]="Amount of packages built each day"
 MAINLABEL[3]="Usertags on bugs for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
 MAINLABEL[7]="Open and closed bugs"
-MAINLABEL[8]="Packages which need to be fixed"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
@@ -65,7 +62,6 @@ YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 YLABEL[7]="Amount of bugs open / closed"
-YLABEL[8]="Amount (ftbfs+unreproducible)"
 
 #
 # update package + build stats
@@ -102,9 +98,9 @@ update_suite_arch_stats() {
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
 		sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
 		# we do 3 later and 6 is special anyway...
-		for i in 0 1 2 4 5 8 ; do
+		for i in 0 1 2 4 5 ; do
 			PREFIX=""
-			if [ $i -eq 0 ] || [ $i -eq 2 ] || [ $i -eq 8 ] ; then
+			if [ $i -eq 0 ] || [ $i -eq 2 ] ; then
 				PREFIX=$SUITE/$ARCH
 			fi
 			# force regeneration of the image if it exists
@@ -346,7 +342,7 @@ create_suite_arch_stats_page() {
 	write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
 	write_page "<p>"
 	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
-	for i in 0 2 8 ; do
+	for i in 0 2 ; do
 		# recreate png once a day
 		if [ ! -f $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
 			create_png_from_table $i $SUITE/$ARCH/${TABLE[$i]}.png
@@ -371,11 +367,7 @@ create_dashboard_page() {
 		write_page " <a href=\"/$SUITE\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
 	write_page "</p><p style=\"clear:both;\">"
-	# packages to be fixed in unstable+testing/amd64
-	for SUITE in testing unstable ; do
-		write_page " <a href=\"/$SUITE/amd64/${TABLE[8]}.png\"><img src=\"/$SUITE/amd64/${TABLE[8]}.png\" class="overview" alt=\"${MAINLABEL[8]}\"></a>"
-	done
-	write_page "</p><p><center>"
+	write_page "<center>"
 	# write meta pkg graphs per suite
 	for SUITE in $SUITES ; do
 		if [ "$SUITE" != "unstable" ] ; then

@@ -78,7 +78,6 @@ TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
 TABLE[7]=stats_bugs_state
-TABLE[8]=stats_pkgs_to_fix
 
 # known package sets
 META_PKGSET[1]="essential"
@@ -549,6 +548,10 @@ create_png_from_table() {
 			# armhf was only build since 2015-08-30
 			WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
 		fi
+		# testing/amd64 was only build since...
+		# WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
+		# experimental/amd64 was only build since...
+		# WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
 	fi
 	# run query
 	if [ $1 -eq 1 ] ; then
@@ -573,18 +576,6 @@ create_png_from_table() {
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
-	elif [ $1 -eq 8 ] ; then
-		if [ "$ARCH" = "amd64" ] && [ "$SUITE" = "testing" ] ; then
-			# testing/amd64 was only build since...
-			WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
-		elif [ "$ARCH" = "amd64" ] && [ "$SUITE" = "experimental" ] ; then
-			# experimental/amd64 was only build since...
-			WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
-		fi
-		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
-			(SELECT e.ftbfs FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='$SUITE' AND e.architecture='$ARCH') AS unfixed_ftbfs,
-			COALESCE((SELECT e.unreproducible FROM ${TABLE[0]} AS e WHERE s.datum=e.datum AND e.suite='$SUITE' AND e.architecture='$ARCH'),0) AS unfixed_ftbr
-			FROM ${TABLE[0]} AS s $WHERE2_EXTRA GROUP BY s.datum" >> ${TABLE[$1]}.csv
 	else
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi
@@ -600,9 +591,6 @@ create_png_from_table() {
 	fi
 	local WIDTH=1920
 	local HEIGHT=960
-	if [ $1 -eq 8 ] ; then
-		HEIGHT=480
-	fi
 	# only generate graph if the query returned data
 	if [ $(cat ${TABLE[$1]}.csv | wc -l) -gt 1 ] ; then
 		echo "Updating $2..."

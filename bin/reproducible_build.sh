@@ -652,7 +652,7 @@ check_buildinfo() {
 		rm $TMPFILE1 $TMPFILE2
 		set -e
 		if [ $RESULT -eq 1 ] ; then
-			handle_unhandled "problem: different packages were installed in the 1st+2nd builds and also in the 2nd+3rd builds. Please check."
+			handle_unhandled "problem: different packages were installed in the 1st+2nd builds and also in the 2nd+3rd builds"
 		fi
 	fi
 	rm -f $TMPFILE1 $TMPFILE2

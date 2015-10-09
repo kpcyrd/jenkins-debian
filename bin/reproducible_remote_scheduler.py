@@ -185,13 +185,13 @@ for pkg in packages:
         pkgs.append(pkg)
 
 blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
-packages_txt = ' packages ' if len(pkgs) > 1 else ' package '
+packages_txt = str(len(ids)) ' packages ' if len(pkgs) > 1 else ''
 trailing = ' - artifacts will be preserved' if artifacts else ''
 trailing += ' - with irc notification' if notify else ''
 trailing += ' - notify on start too' if debug_url else ''
 
-message = str(len(ids)) + packages_txt + 'scheduled in ' + suite + '/' + \
-    arch + ' by ' + requester
+message = requester + ' scheduled ' + packages_txt + \
+    'in ' + suite + '/' + arch
 if reason:
     message += ', reason: \'' + reason + '\''
 message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing

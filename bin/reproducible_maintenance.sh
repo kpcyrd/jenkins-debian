@@ -288,6 +288,7 @@ for i in $PBUIDS ; do
 		# let's be generous and consider 14 hours here...
 		if [ $AGE -gt $(( 14*60*60 )) ] ; then
 			PSCALL=${PSCALL:+"$PSCALL,"}"$p"
+			echo "Warning: Could 'kill -9 $p' now, but not doing so now _yet_... "
 		fi
 	done
 done

@@ -115,7 +115,6 @@ def link_diffs(package, eversion, suite, arch, status):
             html += '<a href="' + dbdtxt_url + '" target="main">(txt)</a>\n'
         html += '</li>\n'
     else:
-        log.debug('debbindiff not detetected at ' + dbd)
         if status == 'unreproducible' and not args.ignore_missing_files:
             log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')

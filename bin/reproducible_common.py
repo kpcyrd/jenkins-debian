@@ -256,6 +256,24 @@ class bcolors:
     ENDC = '\033[0m'
 
 
+def convert_into_hms_string(duration):
+    if not duration:
+        duration = ''
+    else:
+        duration = int(duration)
+        hours = int(duration/3600)
+        minutes = int((duration-(hours*3600))/60)
+        seconds = int(duration-(hours*3600)-(minutes*60))
+        duration = ''
+        if hours > 0:
+            duration = str(hours)+'h ' + str(minutes)+'m ' + str(seconds) + 's'
+        elif minutes > 0:
+            duration = str(minutes)+'m ' + str(seconds) + 's'
+        else:
+            duration = str(seconds)+'s'
+    return duration
+
+
 def _gen_links(suite, arch):
     links = [
         ('last_24h', '<li><a href="/{suite}/{arch}/index_last_24h.html">packages tested in the last 24h</a></li>'),

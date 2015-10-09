@@ -11,22 +11,6 @@
 from reproducible_common import *
 from reproducible_html_indexes import build_leading_text_section
 
-def convert_into_hms_string(duration):
-    if not duration:
-        duration = ''
-    else:
-        duration = int(duration)
-        hours = int(duration/3600)
-        minutes = int((duration-(hours*3600))/60)
-        seconds = int(duration-(hours*3600)-(minutes*60))
-        duration = ''
-        if hours > 0:
-            duration = str(hours)+'h ' + str(minutes)+'m ' + str(seconds) + 's'
-        elif minutes > 0:
-            duration = str(minutes)+'m ' + str(seconds) + 's'
-        else:
-            duration = str(seconds)+'s'
-    return duration
 
 def generate_schedule(arch):
     """ the schedule pages are very different than others index pages """

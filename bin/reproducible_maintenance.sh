@@ -287,13 +287,17 @@ for i in $PBUIDS ; do
 		AGE=$(ps -p $p -o etimes= || echo 0)
 		# let's be generous and consider 14 hours here...
 		if [ $AGE -gt $(( 14*60*60 )) ] ; then
-			PSCALL=${PSCALL:+"$PSCALL,"}"$p"
-			echo "Warning: Could 'kill -9 $p' now, but not doing so now _yet_... "
+			sudo kill -9 $p 2>&1 || (echo "Could not kill:" ; ps -F -p "$p")
+			# check it's gone
+			AGE=$(ps -p $p -o etimes= || echo 0)
+			if [ $AGE -gt $(( 14*60*60 )) ] ; then
+				PSCALL=${PSCALL:+"$PSCALL,"}"$p"
+			fi
 		fi
 	done
 done
 if [ ! -z "$PSCALL" ] ; then
-	echo -e "Warning: processes found which should not be there, please fix up manually:"
+	echo -e "Warning: processes found which should not be there and which could not be killed. Please fix up manually:"
 	ps -F -p "$PSCALL"
 	echo
 fi

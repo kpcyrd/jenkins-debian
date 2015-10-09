@@ -288,6 +288,7 @@ for i in $PBUIDS ; do
 		# let's be generous and consider 14 hours here...
 		if [ $AGE -gt $(( 14*60*60 )) ] ; then
 			sudo kill -9 $p 2>&1 || (echo "Could not kill:" ; ps -F -p "$p")
+			sleep 2
 			# check it's gone
 			AGE=$(ps -p $p -o etimes= || echo 0)
 			if [ $AGE -gt $(( 14*60*60 )) ] ; then

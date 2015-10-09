@@ -133,6 +133,7 @@ if [ -f /etc/debian_version ] ; then
 			sudo 
 			unzip 
 			vim 
+			zsh
 			"
 		case $HOSTNAME in
 			jenkins|profitbricks-build?-amd64) DEBS="$DEBS squid3" ;;

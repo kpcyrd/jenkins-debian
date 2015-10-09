@@ -139,7 +139,6 @@ properties:
 ** rewrite bin/schroot-create.sh from scratch, with little sudo
 *** analyse+summarize needs, git commit that, then writing the script will be trivial
 ** notes related:
-*** https://reproducible.debian.net/unstable/amd64/index_notes.html lies: "There are 0 packages with notes in unstable/amd64."
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)
 *** new page with packages that have notes with comments (which are often useful / contain solutions / low-hanging fruits for newcomers)

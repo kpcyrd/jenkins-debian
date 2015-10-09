@@ -37,7 +37,7 @@ html_package_page = Template((tab*2).join(("""
             </ul>
         </li>
         <li>
-          <a href=$history" target="main">Build history</a>
+          <a href="$history" target="main">Build history</a>
         </li>
     </ul>
 

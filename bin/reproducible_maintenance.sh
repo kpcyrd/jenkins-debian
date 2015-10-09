@@ -347,10 +347,11 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	cd /srv/reproducible-results/notification-emails
 	for NOTE in $(find . -type f) ; do
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
+			PKG=$(basename $NOTE)
 			mv $NOTE $TMPFILE
-			cat $TMPFILE | mail -s "reproducible.debian.net status changes for $NOTE" \
+			cat $TMPFILE | mail -s "reproducible.debian.net status changes for $PKG" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
-				 $(basename $NOTE)@packages.debian.org
+				 $PKG@packages.debian.org
 			rm -f $TMPFILE
 	done
 fi

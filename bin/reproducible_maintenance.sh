@@ -350,7 +350,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			mv $NOTE $TMPFILE
 			cat $TMPFILE | mail -s "reproducible.debian.net status changes for $NOTE" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
-				 $NOTE@packages.debian.org
+				 $(basename $NOTE)@packages.debian.org
 			rm -f $TMPFILE
 	done
 fi

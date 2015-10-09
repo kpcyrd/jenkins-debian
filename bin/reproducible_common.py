@@ -51,6 +51,7 @@ NOTES_URI = '/notes'
 ISSUES_URI = '/issues'
 RB_PKG_URI = '/rb-pkg'
 RBUILD_URI = '/rbuild'
+HISTORY_URI = '/history'
 BUILDINFO_URI = '/buildinfo'
 DBD_PATH = BASE + DBD_URI
 DBDTXT_PATH = BASE + DBDTXT_URI
@@ -60,6 +61,7 @@ NOTES_PATH = BASE + NOTES_URI
 ISSUES_PATH = BASE + ISSUES_URI
 RB_PKG_PATH = BASE + RB_PKG_URI
 RBUILD_PATH = BASE + RBUILD_URI
+HISTORY_PATH = BASE + HISTORY_URI
 BUILDINFO_PATH = BASE + BUILDINFO_URI
 
 REPRODUCIBLE_URL = 'https://reproducible.debian.net'
@@ -105,6 +107,8 @@ log.debug("RB_PKG_URI:\t" + RB_PKG_URI)
 log.debug("RB_PKG_PATH:\t" + RB_PKG_PATH)
 log.debug("RBUILD_URI:\t" + RBUILD_URI)
 log.debug("RBUILD_PATH:\t" + RBUILD_PATH)
+log.debug("HISTORY_URI:\t" + HISTORY_URI)
+log.debug("HISTORY_PATH:\t" + HISTORY_PATH)
 log.debug("BUILDINFO_URI:\t" + BUILDINFO_URI)
 log.debug("BUILDINFO_PATH:\t" + BUILDINFO_PATH)
 log.debug("REPRODUCIBLE_DB:\t" + REPRODUCIBLE_DB)
@@ -720,6 +724,20 @@ class Package:
         except IndexError:
             result = 0
         self.notify_maint = '⚑' if result == 1 else ''
+        self.history = []
+        self._load_history
+
+    def _load_history(self):
+        keys = ['build ID', 'version', 'suite', 'architecture', 'result',
+            'build date', 'build duration', 'builder']
+        query = """
+                SELECT id, version, suite, architecture, status, build_date,
+                    build_duration, builder
+                FROM stats_build WHERE name='{}' ORDER BY build_date DESC
+            """.format(self.name)
+        results = query_db(query)
+        for record in results:
+            self.history.append(dict(zip(keys, record)))
 
     def get_status(self, suite, arch):
         """ This returns False if the package does not exists in this suite """

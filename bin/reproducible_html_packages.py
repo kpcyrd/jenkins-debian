@@ -36,6 +36,9 @@ html_package_page = Template((tab*2).join(("""
                 <li><a href="https://sources.debian.net/src/$package/$version/debian/rules">rules</a></li>
             </ul>
         </li>
+        <li>
+          <a href=$history" target="main">Build history</a>
+        </li>
     </ul>
 
 ${suites_links}
@@ -205,6 +208,34 @@ def gen_suites_links(package, current_suite, current_arch):
     return tab*5 + (tab*7).join(html.splitlines(True))
 
 
+def gen_history_page(package):
+    keys = ('build date', 'version', 'suite', 'architecture', 'result',
+        'build duration', 'builder')
+    try:
+        head = package.history[0]
+    except IndexError:
+        html = '<p>No historical data available for this package.</p>'
+        return
+    else:
+        html = '<table>\n{tab}<tr>\n{tab}{tab}'.format(tab=tab)
+        for i in keys:
+            html += '<th>{}</th>'.format(i)
+        html += '\n{tab}</tr>'.format(tab=tab)
+        for record in package.history:
+            # huma formatting of build duration
+            record['build duration'] = convert_into_hms_string(
+                int(record['build duration']))
+            html += '\n{tab}<tr>\n{tab}{tab}'.format(tab=tab)
+            for i in keys:
+                html += '<td>{}</td>'.format(record[i])
+            html += '\n{tab}</tr>'.format(tab=tab)
+        html += '</table>'
+    destfile = os.path.join(HISTORY_PATH, package.name+'.html')
+    title = 'build history of {}'.format(package.name)
+    write_html_page(title=title, body=html, destfile=destfile,
+                    noheader=True, noendpage=True)
+
+
 def gen_packages_html(packages, no_clean=False):
     """
     generate the /rb-pkg/package.html pages.
@@ -214,6 +245,7 @@ def gen_packages_html(packages, no_clean=False):
     log.debug('Generating the pages of ' + str(total) + ' package(s)')
     for package in sorted(packages, key=lambda x: x.name):
         assert isinstance(package, Package)
+        gen_history_page(package)
         pkg = package.name
         for suite in SUITES:
             for arch in ARCHS:
@@ -236,6 +268,7 @@ def gen_packages_html(packages, no_clean=False):
                 suites_links = gen_suites_links(package, suite, arch)
                 status, icon, spokenstatus = get_status_icon(status)
                 status = gen_status_link_icon(status, spokenstatus, icon, suite, arch)
+                history = '{}/{}.html'.format(HISTORY_URI, pkg)
 
                 html = html_package_page.substitute(
                     package=pkg,
@@ -244,6 +277,7 @@ def gen_packages_html(packages, no_clean=False):
                     status=status,
                     version=version,
                     build_time=build_date,
+                    history=history,
                     links=links,
                     notify_maintainer=package.notify_maint,
                     suites_links=suites_links,

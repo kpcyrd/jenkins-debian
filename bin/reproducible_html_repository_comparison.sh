@@ -3,7 +3,7 @@
 # Copyright 2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -213,7 +213,7 @@ for PKG in $SOURCEPKGS ; do
 	URL="https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=$PKG&users=reproducible-builds@lists.alioth.debian.org&archive=both"
 	for TAG in $USERTAGS ; do
 		URL="$URL&tag=$TAG"
-	 done
+	done
 	write_row " <td><a href=\"$URL\">bugs</a></td>"
 	write_row " <td>$CRUFT</td>"
 	write_row " <td>$BET $CBINARIES</td>"

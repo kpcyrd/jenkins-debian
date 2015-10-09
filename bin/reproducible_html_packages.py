@@ -133,8 +133,6 @@ def gen_extra_links(package, version, suite, arch, status):
         url = NOTES_URI + '/' + package + '_note.html'
         links += '<li><a href="' + url + '" target="main">notes</a></li>\n'
         default_view = url
-    else:
-        log.debug('notes not detected at ' + notes)
     dbd = link_diffs(package, eversion, suite, arch, status)
     links += dbd[0] if dbd[0] else ''
     if dbd[0] and not default_view:

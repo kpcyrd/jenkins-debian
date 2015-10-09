@@ -725,7 +725,7 @@ class Package:
             result = 0
         self.notify_maint = '⚑' if result == 1 else ''
         self.history = []
-        self._load_history
+        self._load_history()
 
     def _load_history(self):
         keys = ['build ID', 'version', 'suite', 'architecture', 'result',

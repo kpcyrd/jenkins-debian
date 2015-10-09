@@ -96,6 +96,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	SSLCertificateFile /etc/apache2/ssl/jenkins.debian.net.pem
 
 	DocumentRoot /var/www
+	AddDefaultCharset utf-8
 
 	# allow certain params only from alioth (token is used to trigger builds)
 	RewriteCond %{REMOTE_ADDR} !5\.153\.231\.21
@@ -158,6 +159,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	SSLCertificateFile /etc/apache2/ssl/reproducible.debian.net.pem
 
 	DocumentRoot /var/lib/jenkins/userContent/reproducible
+	AddDefaultCharset utf-8
 
 	<Directory /var/lib/jenkins/userContent/reproducible/artifacts>
 		HeaderName .HEADER.html
@@ -307,6 +309,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	SSLCertificateFile /etc/apache2/ssl/reproducible-builds.org.pem
 
 	DocumentRoot /var/lib/jenkins/userContent/reproducible
+	AddDefaultCharset utf-8
 
 	# redirects reproducible-builds.org to https://reproducible.debian.net except for /specs/ and /howto/
 	RewriteCond %{HTTP_HOST} reproducible-builds\.org

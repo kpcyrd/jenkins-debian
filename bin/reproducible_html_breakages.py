@@ -244,6 +244,17 @@ def alien_rbpkg():
     return bad_files
 
 
+def alien_history():
+    log.info('running alien_history check...')
+    result = query_db('SELECT DISTINCT name FROM sources')
+    actual_packages = [x[0] for x in result]
+    bad_files = []
+    for f in sorted(os.listdir(HISTORY_PATH)):
+        if f.rsplit('.', 1)[0] not in actual_packages:
+            log.warning('%s should not be there', os.path.join(HISTORY_PATH, f))
+    return bad_files
+
+
 def _gen_section(header, pkgs, entries=None):
     if not pkgs and not entries:
         return ''
@@ -275,6 +286,8 @@ def gen_html():
                          entries=alien_rbpkg())
     html += _gen_section('buildinfo files that should not be there:', None,
                          entries=alien_buildinfo())
+    html += _gen_section('history tables that should not be there:', None,
+                         entries=alien_history())
     # diffoscope report where it shouldn't be
     html += _gen_section('are not marked as unreproducible, but they ' +
                          'have a diffoscope file:', not_unrep_with_dbd_file())

@@ -271,7 +271,7 @@ def gen_html_issue(issue, suite):
     affected = ''
     try:
         arch = 'amd64'
-        for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible']:
+        for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible', 'depwait']:
             pkgs = [x[0] for x in all_pkgs if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
             if not pkgs:
                 continue

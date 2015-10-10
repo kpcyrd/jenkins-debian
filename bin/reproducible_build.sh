@@ -417,11 +417,12 @@ choose_package() {
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)
 	sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, builder FROM schedule WHERE builder LIKE '${BUILDER_PREFIX}%'" > $BAD_BUILDS
 	if [ -s "$BAD_BUILDS" ] ; then
-		# stale_builds.log is mailed once a day by reproducible_maintenance.sh
-		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a /var/log/jenkins/stale_builds.log
-		cat $BAD_BUILDS | tee -a /var/log/jenkins/stale_builds.log
+		local STALELOG=/var/log/jenkins/reproducible-stale-builds.log
+		# reproducible-stale-builds.log is mailed once a day by reproducible_maintenance.sh
+		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a $STALELOG
+		cat $BAD_BUILDS | tee -a $STALELOG
 		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='' WHERE builder LIKE '${BUILDER_PREFIX}%'"
-		echo >> /var/log/jenkins/stale_builds.log
+		echo >> $STALELOG
 	fi
 	rm -f $BAD_BUILDS
 	# mark build attempt, first test if none else marked a build attempt recently

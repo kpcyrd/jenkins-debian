@@ -275,11 +275,21 @@ handle_unhandled() {
 	MESSAGE="$BUILD_URL met an unhandled $1, please check."
 	echo "$MESSAGE"
 	irc_message "$MESSAGE"
+	# no need to slow down
+	exec /srv/jenkins/bin/abort.sh
+	exit 0
+}
+
+handle_remote_error() {
+	unregister_build
+	MESSAGE="$BUILD_URL got remote $1"
+	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
 	echo "Sleeping 5m before aborting the job."
 	sleep 5m
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
+
 
 handle_enospace() {
 	unregister_build
@@ -607,7 +617,7 @@ remote_build() {
 	if [ $RESULT -eq 148 ] ; then
 		handle_404
 	elif [ $RESULT -ne 0 ] ; then
-		handle_unhandled "exit code from remote build job"
+		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
 	fi
 	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
@@ -617,7 +627,7 @@ remote_build() {
 		rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
-			handle_unhandled "error when rsyncing remote build results"
+			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
 		fi
 	fi
 	ls -R $TMPDIR

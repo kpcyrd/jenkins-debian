@@ -473,7 +473,9 @@ download_source() {
 		# the build master only needs to the the .dsc file
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
 	fi
-	PARSED_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG})
+	local ENGLISH_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG})
+	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG}) # FIXME: please help replace the English strings with the French ones
+	PARSED_RESULT="${ENGLISH_RESULT}${FRENCH_RESULT}"
 	cat ${TMPLOG} >> ${RBUILDLOG}
 	rm ${TMPLOG}
 	set -e

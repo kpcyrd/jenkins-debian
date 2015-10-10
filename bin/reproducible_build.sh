@@ -270,11 +270,10 @@ unregister_build() {
 	NOTIFY=""
 }
 
-handle_unhandled() {
+handle_env_changes() {
 	unregister_build
-	MESSAGE="$BUILD_URL met an unhandled $1, please check."
-	echo "$MESSAGE"
-	irc_message "$MESSAGE"
+	MESSAGE="$(date -u ) - $BUILD_URL encountered a problem: $1"
+	echo -e "$MESSAGE" | tee -a /var/log/jenkins/reproducible-env-changes.log
 	# no need to slow down
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
@@ -663,7 +662,7 @@ check_buildinfo() {
 		rm $TMPFILE1 $TMPFILE2
 		set -e
 		if [ $RESULT -eq 1 ] ; then
-			handle_unhandled "problem: different packages were installed in the 1st+2nd builds and also in the 2nd+3rd builds"
+			handle_env_changes "different packages were installed in the 1st+2nd builds and also in the 2nd+3rd build.\n$(ls -l ./b1/$BUILDINFO) on $NODE1\n$(ls -l ./b2/$BUILDINFO) on $NODE2\n"
 		fi
 	fi
 	rm -f $TMPFILE1 $TMPFILE2

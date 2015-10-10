@@ -65,9 +65,9 @@ save_artifacts() {
 		echo | tee -a ${RBUILDLOG}
 		# irc message
 		if [ ! -z "$NOTIFY" ] ; then
-			local MESSAGE="Artifacts for ${SRCPACKAGE} ($STATUS in ${SUITE}/${ARCH}) published: $URL"
+			local MESSAGE="Artifacts for ${SRCPACKAGE}, $STATUS in ${SUITE}/${ARCH}: $URL"
 			if [ "$NOTIFY" = "diffoscope" ] ; then
-				MESSAGE="$MESSAGE (error when running $DIFFOSCOPE)"
+				MESSAGE="$MESSAGE (error running $DIFFOSCOPE)"
 			fi
 			irc_message "$MESSAGE"
 		fi

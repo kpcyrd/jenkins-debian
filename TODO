@@ -128,10 +128,10 @@ properties:
 * make reproducible_build.sh rock solid again:
 ** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
 ** fix disorderfs setup to *always* unmount+cleanup, this causes the full disks atm
-** diffoscope needs to be run on the target arch..., this should probably be doable with qemu-static on the host
+** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
 ** open questions:
 *** save build-host in build_duration table too? (and change to saving the time of a single build, not both combined)
-*** maintenance is general, cleanup of started but interrupted builds...
+*** maintenance: cleanup of started but interrupted builds (on the build nodes)
 ** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 
 * higher prio:

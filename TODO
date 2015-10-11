@@ -146,7 +146,6 @@ properties:
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs in testing but build fine on sid
 ** new page: packages which are orphaned but have a reproducible usertagged patch
-** setup builder3, to distribute more ressources away from jenkins itself
 ** use static IPs (h01ger)
 ** test coreboot/openwrt/netbsd/freebsd on a node
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
@@ -158,13 +157,13 @@ properties:
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 
 * lesser prio
+** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
 ** dashboard:
 *** link https://reproducible.debian.net/unstable/amd64/stats_pkgs_to_fix.png and friends somewhere
 *** number of cores used is wrong for amd64
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** right align all numbers in table in the dashboard
-** use build3 (or 5) as (sudo) test system to develop a dsa approvable sudoers.d
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** run pb2-amd64 builder 400 days in the future… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
@@ -206,15 +205,10 @@ properties:
 ==== reproducible Debian armhf
 
 * make systems send mail, use port 465
-* bpi0 and hb0 should run in the future…
 
 ==== status of new remote build nodes for amd64
 
-* profitbricks-build2-amd64
-** should run in the future…
-** needs to be moved to a different Profitbricks datacenter, to run with a different cpu type
-* profitbricks-build2-amd64
-** should have one more cpu then build2, so we dont need to run with NUM_CPU-1
+* new ones dont send mail
 
 ==== reproducible Debian installation
 

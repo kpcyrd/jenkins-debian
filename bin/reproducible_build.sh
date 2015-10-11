@@ -281,7 +281,7 @@ handle_env_changes() {
 
 handle_remote_error() {
 	unregister_build
-	MESSAGE="$BUILD_URL got remote $1"
+	MESSAGE="$BUILD_URL got remote error $1"
 	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
 	echo "Sleeping 5m before aborting the job."
 	sleep 5m

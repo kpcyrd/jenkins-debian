@@ -194,6 +194,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_maintenance_amd64_profitbricks3'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_maintenance_amd64_profitbricks5'
 
 - job-template:
@@ -637,6 +641,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks2'
+        - '{name}_maintenance_amd64_profitbricks3':
+            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks3'
         - '{name}_maintenance_amd64_profitbricks5':
             my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
             my_timed: '5 0,3,6,9,12,15,18,21 * * *'

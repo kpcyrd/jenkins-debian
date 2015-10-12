@@ -274,6 +274,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_setup_schroot_unstable_diffoscope_amd64_profitbricks3'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_setup_schroot_testing_diffoscope_amd64_jenkins'
 
 - job-template:
@@ -761,6 +765,12 @@
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
+        - '{name}_setup_schroot_unstable_diffoscope_amd64_profitbricks3':
+            my_description: 'Setup schroot for running diffoscope in a unstable environment'
+            my_timed: '42 0 * * *'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'profitbricks3'
         - '{name}_setup_schroot_testing_diffoscope_amd64_jenkins':
             my_description: 'Setup schroot for running diffoscope in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '23 0 * * *'

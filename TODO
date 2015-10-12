@@ -162,6 +162,7 @@ properties:
 *** link https://reproducible.debian.net/unstable/amd64/stats_pkgs_to_fix.png and friends somewhere
 *** number of cores used is wrong for amd64
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
+** check that diffoscope schroot have /usr/bin/ar installed, else fail the job
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** right align all numbers in table in the dashboard
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...

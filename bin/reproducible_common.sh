@@ -38,6 +38,7 @@ REPRODUCIBLE_URL=https://reproducible.debian.net
 REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
+DBDSUITE="unstable"
 
 # suites being tested
 SUITES="testing unstable experimental"

@@ -320,7 +320,7 @@ call_diffoscope_on_changes_files() {
 	local TIMEOUT="30m"
 	DBDSUITE=$SUITE
 	if [ "$SUITE" = "experimental" ] ; then
-		# there is no extra diffoscope-schroot for experimental because we specical case ghc enough already ;)
+		# there is no extra diffoscope-schroot for experimental ( because we specical case ghc enough already )
 		DBDSUITE="unstable"
 	fi
 	set -x # FIXME: to debug diffopscpe/schroot problems

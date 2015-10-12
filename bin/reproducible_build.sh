@@ -96,9 +96,10 @@ update_db_and_html() {
 		VERSION="None"
 	fi
 	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
-	# notification for changing status
-	if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] ; then
-		if [ "$STATUS" = "unreproducible" ] || ( [ "$STATUS" = "FTBFS" ] && [ "$SUITE" = "testing" ] ) ; then
+	# irc+mail notifications for changing status in unstable and experimental
+	if [ "$SUITE" != "testing" ] ; then
+		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
+		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message "$MESSAGE"
@@ -107,14 +108,13 @@ update_db_and_html() {
 				NOTIFY=""
 			fi
 		fi
-	fi
-	if [ "$SUITE" != "testing" ] && \
-			[ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
-			[ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \
-			[ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
-		# spool notifications and mail them once a day
-		mkdir -p /srv/reproducible-results/notification-emails
-		echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
+		if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
+		  [ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \
+		  [ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
+			# spool notifications and mail them once a day
+			mkdir -p /srv/reproducible-results/notification-emails
+			echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
+		fi
 	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us

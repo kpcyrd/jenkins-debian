@@ -762,13 +762,13 @@
         - '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins':
             my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '42 0 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_setup_schroot_unstable_diffoscope_amd64_profitbricks3':
             my_description: 'Setup schroot for running diffoscope in a unstable environment'
             my_timed: '42 0 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_setup_schroot_testing_diffoscope_amd64_jenkins':
@@ -1227,25 +1227,25 @@
         - '{name}_coreboot':
             my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 1'
-            my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_openwrt':
             my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 2'
-            my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_netbsd':
             my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 3'
-            my_shell: '/srv/jenkins/bin/reproducible_netbsd.sh'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_freebsd':
             my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 4'
-            my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
 

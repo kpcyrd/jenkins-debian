@@ -91,6 +91,14 @@ elif [[ "$*" =~ reproducible_setup_schroot_testing_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_schroot_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
+elif [[ "$*" =~ reproducible_coreboot ]] ; then
+	exec /srv/jenkins/bin/reproducible_coreboot.sh ; croak "Exec failed";
+elif [[ "$*" =~ reproducible_openwrt ]] ; then
+	exec /srv/jenkins/bin/reproducible_openwrt.sh ; croak "Exec failed";
+elif [[ "$*" =~ reproducible_netbsd ]] ; then
+	exec /srv/jenkins/bin/reproducible_netbsd.sh ; croak "Exec failed";
+elif [[ "$*" =~ reproducible_freebsd ]] ; then
+	exec /srv/jenkins/bin/reproducible_freebsd.sh ; croak "Exec failed";
 elif [ "$*" = "some_jenkins_job_name" ] ; then
 	exec echo run any commands here ; croak "Exec failed";
 fi

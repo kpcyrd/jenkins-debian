@@ -82,7 +82,7 @@ for s in $SUITES ; do
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
 	for i in 1 2 3 4 ; do
-		sudo pbuilder --update $pbuilder_http_proxy --basetgz /var/cache/pbuilder/$s-reproducible-base.tgz
+		[ ! -f /var/cache/pbuilder/$s-reproducible-base.tgz ] || sudo pbuilder --update $pbuilder_http_proxy --basetgz /var/cache/pbuilder/$s-reproducible-base.tgz
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
 			# sleep 61-120 secs

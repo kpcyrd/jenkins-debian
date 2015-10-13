@@ -149,6 +149,11 @@ if [ -f /etc/debian_version ] ; then
 			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
+		# needed to run coreboot/openwrt/netbsd jobs
+		case $HOSTNAME in
+			profitbricks-build3-amd64) DEBS="$DEBS m4" ;;
+			*) ;;
+		esac
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			MASTERDEBS=" 
 				apache2 

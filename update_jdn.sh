@@ -151,7 +151,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run coreboot/openwrt/netbsd jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64) DEBS="$DEBS m4" ;;
+			profitbricks-build3-amd64) DEBS="$DEBS m4 bison flex" ;;
 			*) ;;
 		esac
 		if [ "$HOSTNAME" = "jenkins" ] ; then

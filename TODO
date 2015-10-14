@@ -321,6 +321,10 @@ properties:
 			schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm
 		-j X
 		tar-1.28.tar.xz (source) -> tar-1.28-1-x86_64.pkg.tar.xz (binary)
+			$PKG/PKGBUILD has:
+				pkgname=tar
+				pkgver=1.28
+				pkgrel=1
 		echo 'keyserver-options auto-key-retrieve' >> ~/.gnupg/gpg.conf
 		patch pacman to create .buildinfo files - or better: wait
 ----

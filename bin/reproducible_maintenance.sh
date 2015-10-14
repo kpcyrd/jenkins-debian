@@ -53,7 +53,7 @@ for s in $SUITES ; do
 	#
 	echo "$(date -u) - updating the $s/$ARCH schroot now."
 	for i in 1 2 3 4 ; do
-		schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
+		[ ! -d $SCHROOT_BASE/reproducible-$s ] || schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
 			# sleep 61-120 secs

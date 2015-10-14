@@ -43,7 +43,12 @@ fi
 
 echo "$(date -u) - updating the schroots and pbuilder now..."
 set +e
+# use host architecture (only)
 ARCH=$(dpkg --print-architecture)
+# use host apt proxy configuration for pbuilder
+if [ ! -z "$http_proxy" ] ; then
+	pbuilder_http_proxy="--http-proxy $http_proxy"
+fi
 for s in $SUITES ; do
 	if [ "$ARCH" = "armhf" ] && [ "$s" != "unstable" ] ; then
 		continue
@@ -76,10 +81,6 @@ for s in $SUITES ; do
 		continue
 	else
 		echo "$(date -u) - updating pbuilder for $s/$ARCH now."
-	fi
-	# use host apt proxy configuration for pbuilder
-	if [ ! -z "$http_proxy" ] ; then
-		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
 	for i in 1 2 3 4 ; do
 		[ ! -f /var/cache/pbuilder/$s-reproducible-base.tgz ] || sudo pbuilder --update $pbuilder_http_proxy --basetgz /var/cache/pbuilder/$s-reproducible-base.tgz

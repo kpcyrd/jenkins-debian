@@ -213,7 +213,7 @@ handle_ftbfs() {
 		done
 		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
 		if zgrep -e "No space left on device" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
-			MESSAGE="$BUILD_URL for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue. Please check, tune handle_ftbfs() and reschedule the package."
+			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue. Please check, tune handle_ftbfs() and reschedule the package."
 			echo $MESSAGE | tee -a /var/log/jenkins/reproducible-diskspace-issues.log
 			irc_message "$MESSAGE"
 		fi
@@ -272,7 +272,7 @@ unregister_build() {
 
 handle_env_changes() {
 	unregister_build
-	MESSAGE="$(date -u ) - $BUILD_URL/console encountered a problem: $1"
+	MESSAGE="$(date -u ) - ${BUILD_URL}console encountered a problem: $1"
 	echo -e "$MESSAGE" | tee -a /var/log/jenkins/reproducible-env-changes.log
 	# no need to slow down
 	exec /srv/jenkins/bin/abort.sh
@@ -281,7 +281,7 @@ handle_env_changes() {
 
 handle_remote_error() {
 	unregister_build
-	MESSAGE="$BUILD_URL/console got remote error $1"
+	MESSAGE="${BUILD_URL}console got remote error $1"
 	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
 	echo "Sleeping 5m before aborting the job."
 	sleep 5m
@@ -292,7 +292,7 @@ handle_remote_error() {
 
 handle_enospace() {
 	unregister_build
-	MESSAGE="$BUILD_URL/console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH, sleeping 30m."
+	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH, sleeping 30m."
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$BUILDER ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	irc_message "$MESSAGE"

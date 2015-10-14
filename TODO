@@ -289,12 +289,46 @@ properties:
 * maybe call the script reproducible_rpms.sh and also let it build OpenSuSE packages?
 * document in the initial webpage, that we don't have a clear idea yet, how to record+reproduce the build environment. +that this is essential for reproducible builds too.
 
-==== reproducible Arch
+==== reproducible Arch Linux
 
 * create a job, to bootstrap an arch schroot:
-** https://wiki.archlinux.org/index.php/Install_from_existing_Linux#Method_A:_Using_the_bootstrap_image_.28recommended.29
+----
+	curl -O https://mirrors.kernel.org/archlinux/iso/2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+	tar xzf archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+	mv /srv/workspace/arch/root.x86_64/ /schroots/reproducible-arch
+	sudo vi /etc/schroot/chroot.d/jenkins-reproducible-arch
+	as jenkins:
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -u root bash
+			pacman-key --init
+			pacman-key --populate archlinux
+			echo 'Server = http://mirror.one.com/archlinux/$repo/os/$arch' >> /etc/pacman.d/mirrorlist
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -S --noconfirm devtools abs base-devel
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- abs
+		schroot --directory /tmp -c source:jenkins-reproducible-arch mkdir /var/lib/jenkins
+		schroot --directory /tmp -c source:jenkins-reproducible-arch chown jenkins:jenkins /var/lib/jenkins
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys 0x091AB856069AAA1C
+
+		PKG=sudo 
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -- cp -r /var/abs/core/$PKG /tmp
+		schroot --directory /tmp -c source:jenkins-reproducible-arch -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys
+		schroot --directory /tmp/$PKG -c source:jenkins-reproducible-arch -- makepkg --skippgpcheck # YOLO
+
+	# todo:
+		use -source schroot
+		download bootstrap.tar.gz sig and verify
+		maintenance job does updates:
+			schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm
+		-j X
+		tar-1.28.tar.xz (source) -> tar-1.28-1-x86_64.pkg.tar.xz (binary)
+		echo 'keyserver-options auto-key-retrieve' >> ~/.gnupg/gpg.conf
+		patch pacman to create .buildinfo files - or better: wait
+----
+* use regular maintenace job to update the arch schroot
 * create another job, to build a single package and a webpage for it…
 * create a simple scheduler and build a few more packages…
+** schroot, find packages in /var/abs/core/, schedule those
+*** idea: reschedule reverse build depends too
 
 ==== reproducible...
 

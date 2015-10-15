@@ -118,11 +118,11 @@ update_db_and_html() {
 			echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
 		fi
 	fi
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')" || \
-	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$JOB')" || \
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$JOB')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$BUILDER')" || \
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$JOB')" || \
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$JOB')"
 	fi
 	# unmark build since it's properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';" || \
@@ -302,7 +302,7 @@ handle_enospace() {
 	unregister_build
 	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 30m."
 	echo "$MESSAGE"
-	echo "$MESSAGE" | mail -s "$BUILDER on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
+	echo "$MESSAGE" | mail -s "$JOB on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	echo "Sleeping 2h before aborting the job."
 	sleep 2h
 	exec /srv/jenkins/bin/abort.sh
@@ -437,10 +437,10 @@ choose_package() {
 	if [ -z "$RESULT" ] ; then
 		echo "ok, $SRCPACKAGE is not building anywhere…"
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$BUILDER' WHERE package_id='$SRCPKGID' AND date_build_started=''"
-		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND builder='$BUILDER'")
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$JOB' WHERE package_id='$SRCPKGID' AND date_build_started=''"
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND builder='$JOB'")
 		if [ -z "$RESULT" ] ; then
-			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build ($SRCPKGID, $DATE, $BUILDER)."
+			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build ($SRCPKGID, $DATE, $JOB)."
 			handle_race_condition
 		fi
 	else
@@ -720,7 +720,7 @@ cd $TMPDIR
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
-BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
+JOB="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 
 #
 # determine mode

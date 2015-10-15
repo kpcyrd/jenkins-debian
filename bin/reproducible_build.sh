@@ -198,6 +198,9 @@ handle_ftbfs() {
 	local BUILD
 	echo "${SRCPACKAGE} failed to build from source."
 	for BUILD in "1" "2"; do
+		local nodevar="NODE$BUILD"
+		local node=""
+		eval node=\$$nodevar
 		if [ ! -f "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
 			continue
 		fi
@@ -207,13 +210,13 @@ handle_ftbfs() {
 		fi
 		for NEEDLE in '^tar:.*Cannot write: No space left on device' 'fatal error: error writing to .* No space left on device' './configure: line .* printf: write error: No space left on device' 'cat: write error: No space left on device' '^dpkg-deb.*No space left on device' '^cp: (erreur|impossible).*No space left on device' '^tee: .* No space left on device' '^zip I/O error: No space left on device' '^mkdir .*: No space left on device' ; do
 			if zgrep -e "$NEEDLE" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
-				handle_enospace
+				handle_enospace $node
 				return
 			fi
 		done
 		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
 		if zgrep -e "No space left on device" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
-			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue. Please check, tune handle_ftbfs() and reschedule the package."
+			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue on $node. Please check, tune handle_ftbfs() and reschedule the package."
 			echo $MESSAGE | tee -a /var/log/jenkins/reproducible-diskspace-issues.log
 			irc_message "$MESSAGE"
 		fi
@@ -292,9 +295,9 @@ handle_remote_error() {
 
 handle_enospace() {
 	unregister_build
-	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH, sleeping 30m."
+	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 30m."
 	echo "$MESSAGE"
-	echo "$MESSAGE" | mail -s "$BUILDER ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
+	echo "$MESSAGE" | mail -s "$BUILDER on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	irc_message "$MESSAGE"
 	echo "Sleeping 30m before aborting the job."
 	sleep 30m

@@ -483,6 +483,28 @@ schema_updates = {
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
         'INSERT INTO rb_schema VALUES ("22", "' + now + '")'],
+    23: [ # save which builders built a package and change the name of the
+          # field keeping the job name
+        '''CREATE TABLE stats_build_tmp
+            (id INTEGER PRIMARY KEY,
+             name TEXT NOT NULL,
+             version TEXT NOT NULL,
+             suite TEXT NOT NULL,
+             architecture TEXT NOT NULL,
+             status TEXT NOT NULL,
+             build_date TEXT NOT NULL,
+             build_duration TEXT NOT NULL,
+             node1 TEXT NOT NULL DEFAULT "",
+             node2 TEXT NOT NULL DEFAULT "",
+             job TEXT NOT NULL,
+             UNIQUE (name, version, suite, architecture, build_date))''',
+        '''INSERT INTO stats_build_tmp (id, name, version, suite, architecture,
+                    status, build_date, build_duration, job)
+           SELECT id, name, version, suite, architecture, status, build_date,
+                    build_duration, builder FROM stats_build''',
+        'DROP TABLE stats_build',
+        'ALTER TABLE stats_build_tmp RENAME TO stats_build',
+        'INSERT INTO rb_schema VALUES ("23", "' + now + '")'],
 }
 
 

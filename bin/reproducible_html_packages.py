@@ -211,7 +211,7 @@ def gen_suites_links(package, current_suite, current_arch):
 
 def gen_history_page(package):
     keys = ('build date', 'version', 'suite', 'architecture', 'result',
-        'build duration', 'builder')
+        'build duration', 'node1', 'node2', 'job')
     try:
         head = package.history[0]
     except IndexError:
@@ -222,7 +222,7 @@ def gen_history_page(package):
             html += '<th>{}</th>'.format(i)
         html += '\n{tab}</tr>'.format(tab=tab)
         for record in package.history:
-            # huma formatting of build duration
+            # human formatting of build duration
             record['build duration'] = convert_into_hms_string(
                 int(record['build duration']))
             html += '\n{tab}<tr>\n{tab}{tab}'.format(tab=tab)

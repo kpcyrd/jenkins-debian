@@ -734,10 +734,10 @@ class Package:
 
     def _load_history(self):
         keys = ['build ID', 'version', 'suite', 'architecture', 'result',
-            'build date', 'build duration', 'builder']
+            'build date', 'build duration', 'node1', 'node2', 'job']
         query = """
                 SELECT id, version, suite, architecture, status, build_date,
-                    build_duration, builder
+                    build_duration, node1, node2, job
                 FROM stats_build WHERE name='{}' ORDER BY build_date DESC
             """.format(self.name)
         results = query_db(query)

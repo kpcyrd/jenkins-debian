@@ -183,6 +183,7 @@ properties:
 ** send notifications to maintainers when a note to their packages changes?
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
 ** _maintenance.sh: delete the history pages once a page has been removed from all suites+archs
+** new page showing arch all packages which are cross-reproducible, and those which are not
 
 * missing tests:
 ** variation in kernel

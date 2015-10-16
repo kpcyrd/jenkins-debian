@@ -16,7 +16,9 @@ bootstrap() {
 	echo "$(date -u) - downloading Archlinux bootstrap.tar.gz."
 	curl -O https://mirrors.kernel.org/archlinux/iso/2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
 	tar xzf archlinux-bootstrap-2015.08.01-x86_64.tar.gz
-	mv root.x86_64/ $SCHROOT_TARGET
+	mv root.x86_64/* $SCHROOT_TARGET
+	rmdir root.x86_64
+	rm archlinux-bootstrap-2015.08.01-x86_64.tar.gz
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
 	sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__

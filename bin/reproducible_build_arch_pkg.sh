@@ -113,9 +113,6 @@ remote_build() {
 	set -e
 }
 
-build_rebuild() {
-}
-
 #
 # below is what controls the world
 #

@@ -25,9 +25,10 @@ cat > $PAGE <<- EOF
     <title>Repoducible Archlinux ?</title>
   </head>
   <body>
+  <p>This is work in progress and brand new…</p>
 EOF
 write_page "<table><tr><th>source package</th><th>test date</th><th>1st build log</th><th>2nd build log</th><th>diffoscope output for binary packages</th></tr>"
-for PKG in $(cd $ARCHBASE/$PKG/ ; ls * -d1) ; do
+for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 	write_page " <tr>"
 	write_page "  <td>$PKG</td>"
 	write_page "  <td>$(ls $ARCHBASE/$PKG -dl|cut -d " " -f6-8)</td>"

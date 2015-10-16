@@ -362,7 +362,7 @@ write_explaination_table() {
 		elif [ "$1" != "Archlinux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 		else
-			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td></tr>"
+			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		fi
 		if [ "$1" != "Archlinux" ]  ; then
 			write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"

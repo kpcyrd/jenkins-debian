@@ -305,6 +305,7 @@ properties:
 * more random notes:
 ** patch pacman to create .buildinfo files - or better: wait
 ** rename arch scripts and jobs to archlinux
+** use archlinux.css not the one from freebsd :)
 
 ----
 notes on source and binary versions:

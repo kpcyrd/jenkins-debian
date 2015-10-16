@@ -15,6 +15,7 @@ common_init "$@"
 #  finally create the webpage
 #
 PAGE=archlinux/archlinux.html
+cd $BASE
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">

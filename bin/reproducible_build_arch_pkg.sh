@@ -138,15 +138,15 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	TMPDIR="$3"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
-	mkdir -p b$MODE/archlinux/
+	mkdir -p b$MODE/archlinux/$SRCPACKAGE
 	if [ "$MODE" = "1" ] ; then
 		first_build
 	else
 		second_build
 	fi
-	# delete source package before providing build results for rsyncing
-	rm /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE -r
-	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR) $TMPDIR/b$MODE/archlinux/$SRCPACKAGE
+	# preserve results and delete build directory
+	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*-x86_64.pkg.tar.?? $TMPDIR/b$MODE/archlinux/$SRCPACKAGE
+	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
 fi

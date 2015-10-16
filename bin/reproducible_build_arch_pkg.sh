@@ -14,10 +14,16 @@ set -e
 
 cleanup_all() {
 	cd
+	# delete main work dir
 	rm $TMPDIR -r
 	echo "$(date -u) - $TMPDIR deleted."
+	# delete makekpg work dir
+	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
+		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
+	fi
+	# delete session if it still exists
 	if [ "$MODE" != "master" ] ; then
-		schroot --end-session -c arch-$SRCPACKAGE-$(basename $TMDPIR) > /dev/null 2>&1 || true
+		schroot --end-session -c arch-$SRCPACKAGE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	fi
 }
 
@@ -37,10 +43,12 @@ first_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	local SESSION="arch-$SRCPACKAGE-$(basename $TMDPIR)"
+	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
+	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
-	schroot --run-session -c $SESSION --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE/* $BUILDDIR/
+	schroot --run-session -c $SESSION --directory $BUILDDIR -- makepkg --skippgpcheck
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -52,10 +60,12 @@ second_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	local SESSION="arch-$SRCPACKAGE-$(basename $TMDPIR)"
+	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
+	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
-	schroot --run-session -c $SESSION --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE/* $BUILDDIR/
+	schroot --run-session -c $SESSION --directory $BUILDDIR -- makepkg --skippgpcheck
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -131,7 +141,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
-	mv -v /tmp/$SRCPACKAGE $TMPDIR/b$MODE/archlinux/
+	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR) $TMPDIR/b$MODE/archlinux/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
 fi

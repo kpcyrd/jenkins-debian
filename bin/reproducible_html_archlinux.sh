@@ -27,6 +27,7 @@ cat > $PAGE <<- EOF
   <body>
 EOF
 write_page_intro Archlinux
+write_explaination_table Archlinux
 write_page "<table><tr><th>source package</th><th>test date</th><th>1st build log</th><th>2nd build log</th><th>diffoscope output for binary packages</th></tr>"
 for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 	write_page " <tr>"

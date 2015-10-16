@@ -323,16 +323,22 @@ write_explaination_table() {
 		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>domainname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 	fi
-	if [ "$1" != "FreeBSD" ] ; then
+	if [ "$1" != "FreeBSD" ] && [ "$1" != "Archlinux" ]  ; then
 		write_page "<tr><td>env CAPTURE_ENVIRONMENT</td><td><em>not set</em></td><td>CAPTURE_ENVIRONMENT=\"I capture the environment\"</td></tr>"
 	fi
-	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
-	write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
-	write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
-	if [ "$1" != "FreeBSD" ] ; then
+	if [ "$1" != "Archlinux" ]  ; then
+		write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
+		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
+	else
+		write_page "<tr><td>env TZ</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td></tr>"
+		write_page "<tr><td>env LANG</td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td></tr>"
+		write_page "<tr><td>env LC_ALL</td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td></tr>"
+	fi
+	if [ "$1" != "FreeBSD" ] && [ "$1" != "Archlinux" ]  ; then
 		write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
 	else
-		write_page "<tr><td>env PATH</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td><td>is not yet varied between rebuilds of $1.\"</td></tr>"
+		write_page "<tr><td>env PATH</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td></tr>"
 	fi
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=\"1111\"</td><td>BUILDUSERID=\"2222\"</td></tr>"
@@ -353,10 +359,16 @@ write_explaination_table() {
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td></td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL2 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td></tr>"
-		else
+		if [ "$1" != "Archlinux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
+		else
+			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.\"</td></tr>"
 		fi
-		write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
+		if [ "$1" != "Archlinux" ]  ; then
+			write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
+		else
+			write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+		fi
 	else
 		write_page "<tr><td>FreeBSD kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td><tr>"

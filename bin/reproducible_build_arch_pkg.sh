@@ -144,6 +144,8 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
+	# delete source package before providing build results for rsyncing
+	rm /tmp/$SRCPACKAGE-$(basename/$SRCPACKAGE -r
 	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR) $TMPDIR/b$MODE/archlinux/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0

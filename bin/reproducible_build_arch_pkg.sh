@@ -14,9 +14,11 @@ set -e
 
 cleanup_all() {
 	cd
-	# delete main work dir
-	rm $TMPDIR -r
-	echo "$(date -u) - $TMPDIR deleted."
+	# delete main work dir (only on master)
+	if [ "$MODE" = "master" ] ; then
+		rm $TMPDIR -r
+		echo "$(date -u) - $TMPDIR deleted."
+	fi
 	# delete makekpg build dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
 		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
@@ -87,6 +89,7 @@ remote_build() {
 	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build_arch_pkg.sh $BUILDNR ${SRCPACKAGE} ${TMPDIR}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
+		ssh -p $PORT $NODE "rm -r $TMPDIR" || true
 		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE}"
 	fi
 	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/

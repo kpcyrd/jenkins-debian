@@ -559,6 +559,10 @@ EOF
 		--logfile b1/build.log \
 		${SRCPACKAGE}_${EVERSION}.dsc
 	) 2>&1 | tee -a $RBUILDLOG
+	PRESULT=${PIPESTATUS[0]}
+	if [ $PRESULT -eq 124 ] ; then
+		echo "$(date -u) - pbuilder was killed by timeout after 12h." | tee -a b1/build.log $RBUILDLOG
+	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
 }
@@ -585,6 +589,7 @@ export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
 umask 0002
 EOF
+	set +e
 	# remember to change the sudoers setting if you change the following command
 	sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
 		/usr/bin/linux64 --uname-2.6 \
@@ -596,7 +601,12 @@ EOF
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
-			${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
+			${SRCPACKAGE}_${EVERSION}.dsc
+	PRESULT=$?
+	set -e
+	if [ $PRESULT -eq 124 ] ; then
+		echo "$(date -u) - pbuilder was killed by timeout after 12h." | tee -a b2/build.log
+	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
 }

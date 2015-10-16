@@ -49,11 +49,6 @@ if [ "$SUITE" = "experimental" ] ; then
 	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
 fi
 
-if [ ! -d "$SCHROOT_BASE" ]; then
-	echo "Directory $SCHROOT_BASE does not exist, aborting."
-	exit 1
-fi
-
 export SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
 if [ -z "$SCHROOT_TARGET" ]; then
 	echo "Could not create a directory to create the chroot in, aborting."

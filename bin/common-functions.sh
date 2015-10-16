@@ -74,6 +74,10 @@ else
 	if [ -z "$SCHROOT_BASE" ]; then
 		export SCHROOT_BASE=/schroots
 	fi
+	if [ ! -d "$SCHROOT_BASE" ]; then
+		echo "Directory $SCHROOT_BASE does not exist, aborting."
+		exit 1
+	fi
 	# use these settings in the scripts in the (s)chroots too
 	export SCRIPT_HEADER="#!/bin/bash
 	if $DEBUG ; then

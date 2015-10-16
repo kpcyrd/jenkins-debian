@@ -16,6 +16,7 @@ common_init "$@"
 #
 cd $BASE/archlinux
 PAGE=archlinux.html
+echo "$(date -u) - starting to build $PAGE"
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">
@@ -49,5 +50,4 @@ done
 
 write_page "</table>"
 write_page_footer Archlinux
-publish_page archlinux
-
+echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"

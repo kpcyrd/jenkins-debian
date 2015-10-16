@@ -559,10 +559,6 @@ EOF
 		--logfile b1/build.log \
 		${SRCPACKAGE}_${EVERSION}.dsc
 	) 2>&1 | tee -a $RBUILDLOG
-	PRESULT=${PIPESTATUS[0]}
-	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 12h." | tee -a b1/build.log $RBUILDLOG
-	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
 }
@@ -600,11 +596,7 @@ EOF
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
-			${SRCPACKAGE}_${EVERSION}.dsc | true  # pbuilder exits with 1 on ftbfs, we use | instead of || so we can get the pipestatus
-	PRESULT=${PIPESTATUS[0]}
-	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 12h." | tee -a b2/build.log
-	fi
+			${SRCPACKAGE}_${EVERSION}.dsc || true  # exit with 1 when ftbfs
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
 }

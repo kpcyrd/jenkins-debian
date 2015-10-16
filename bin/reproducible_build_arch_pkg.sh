@@ -188,6 +188,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz)" ] ; then
 		call_diffoscope $SRCPACKAGE $ARTIFACT
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
+			mkdir -p $BASE/archlinux/$SRCPACKAGE/
 			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$SRCPACKAGE/
 		fi
 	done

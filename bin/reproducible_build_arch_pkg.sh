@@ -17,7 +17,7 @@ cleanup_all() {
 	# delete main work dir
 	rm $TMPDIR -r
 	echo "$(date -u) - $TMPDIR deleted."
-	# delete makekpg work dir
+	# delete makekpg build dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
 		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
 	fi
@@ -47,8 +47,8 @@ first_build() {
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE/* $BUILDDIR/
-	schroot --run-session -c $SESSION --directory $BUILDDIR -- makepkg --skippgpcheck
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -64,8 +64,8 @@ second_build() {
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE/* $BUILDDIR/
-	schroot --run-session -c $SESSION --directory $BUILDDIR -- makepkg --skippgpcheck
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }

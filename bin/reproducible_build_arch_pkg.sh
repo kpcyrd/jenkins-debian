@@ -17,7 +17,7 @@ cleanup_all() {
 	rm $TMPDIR -r
 	echo "$(date -u) - $TMPDIR deleted."
 	if [ "$MODE" != "master" ] ; then
-		schroot --end-session -c arch-$SRCPACKAGE > /dev/null 2>&1 || true
+		schroot --end-session -c arch-$SRCPACKAGE-$(basename $TMDPIR) > /dev/null 2>&1 || true
 	fi
 }
 
@@ -37,10 +37,11 @@ first_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	schroot --begin-session --session-name=arch-$SRCPACKAGE -c jenkins-reproducible-arch
-	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
-	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
-	schroot --end-session -c arch-$SRCPACKAGE
+	local SESSION="arch-$SRCPACKAGE-$(basename $TMDPIR)"
+	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
+	schroot --run-session -c $SESSION --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
 
@@ -51,10 +52,11 @@ second_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	schroot --begin-session --session-name=arch-$SRCPACKAGE -c jenkins-reproducible-arch
-	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
-	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
-	schroot --end-session -c arch-$SRCPACKAGE
+	local SESSION="arch-$SRCPACKAGE-$(basename $TMDPIR)"
+	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
+	schroot --run-session -c $SESSION --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
 

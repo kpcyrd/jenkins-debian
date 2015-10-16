@@ -190,7 +190,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz)" ] ; then
 	echo "$(date -u) - Running $DIFFOSCOPE now..."
 	cd $TMPDIR/b1/$SRCPACKAGE
 	for ARTIFACT in *.pkg.tar.xz ; do
-		[ ! -f $ARTIFACT ] || continue
+		[ -f $ARTIFACT ] || continue
 		call_diffoscope $SRCPACKAGE $ARTIFACT
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then

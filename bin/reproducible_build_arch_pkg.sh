@@ -109,8 +109,7 @@ BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 # determine mode
 #
 if [ "$1" = "" ] ; then
-	echo "Error, needs at least one parameter."
-	exit 1
+	MODE="master"
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	SRCPACKAGE="$2"
@@ -126,8 +125,6 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	mv -v /tmp/$PKG $TMPDIR/b$mode
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
-elif [ "$2" != "" ] ; then
-	MODE="master"
 fi
 
 #

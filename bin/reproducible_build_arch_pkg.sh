@@ -7,6 +7,9 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# common code
+. /srv/jenkins/bin/reproducible_common.sh
+
 set -e
 
 cleanup_all() {
@@ -120,13 +123,13 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	TMPDIR="$3"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
-	mkdir b$MODE
+	mkdir -p b$MODE/archlinux/
 	if [ "$MODE" = "1" ] ; then
 		first_build
 	else
 		second_build
 	fi
-	mv -v /tmp/$SRCPACKAGE $TMPDIR/b$mode
+	mv -v /tmp/$SRCPACKAGE $TMPDIR/b$MODE/archlinux/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
 fi
@@ -136,7 +139,11 @@ fi
 #
 SRCPACKAGE=sudo
 build_rebuild
-#call_diffoscope
+call_diffoscope archlinux $SRCPACKAGE
+if [ -f $TMPDIR/archlinux/$SRCPACKAGE.html ] ; then
+	cp $TMPDIR/archlinux/$SRCPACKAGE.html $BASE/archlinux
+	echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE.html updated."
+fi
 
 cd
 cleanup_all

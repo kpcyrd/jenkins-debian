@@ -1245,7 +1245,7 @@
         - '{name}_freebsd':
             my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 4'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks3'
+            my_node: ''
 

@@ -602,7 +602,7 @@
 
 - job-template:
     defaults: reproducible_other_projects
-    name: '{name}_arch_schroot_setup'
+    name: '{name}_setup_schroot_arch'
 
 - project:
     name: reproducible
@@ -1252,7 +1252,7 @@
             my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_arch_schroot_setup':
+        - '{name}_setup_schroot_arch':
             my_description: 'Setup an Archlinux schroot to test Archlinux packages for reproducibility.' # FIXME: this aint idempotent, so it's only run once a year for now
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'

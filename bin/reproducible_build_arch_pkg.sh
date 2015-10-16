@@ -155,25 +155,25 @@ fi
 # main - only used in master-mode
 #
 # first, we need to choose a package…
-SESSION="arch-scheduler-$RANDOM"
-schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
-PACKAGES="$(schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo)"
-schroot --end-session -c $SESSION
-SRCPACKAGE=""
-for PKG in $PACKAGES ; do
-	if [ ! -f $BASE/archlinux/$PKG.html ] ; then
-		SRCPACKAGE=$PKG
-		echo "Would build $PKG now but let's continue testing with sudo…"
+#SESSION="arch-scheduler-$RANDOM"
+#schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+#PACKAGES="$(schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo)"
+#schroot --end-session -c $SESSION
+#SRCPACKAGE=""
+#for PKG in $PACKAGES ; do
+#	if [ ! -f $BASE/archlinux/$PKG.html ] ; then
+#		SRCPACKAGE=$PKG
+#		echo "Would build $PKG now but let's continue testing with sudo…"
 		SRCPACKAGE="sudo"
-		break
-	fi
-done
-if [ -z $SRCPACKAGE ] ; then
-	echo "No package found to be build, sleeping 30m."
-	sleep 30m
-	exec /srv/jenkins/bin/abort.sh
-	exit 0
-fi
+#		break
+#	fi
+#done
+#if [ -z $SRCPACKAGE ] ; then
+#	echo "No package found to be build, sleeping 30m."
+#	sleep 30m
+#	exec /srv/jenkins/bin/abort.sh
+#	exit 0
+#fi
 # build package twice
 build_rebuild
 # run diffoscope on the results

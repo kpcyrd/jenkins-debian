@@ -176,7 +176,7 @@ fi
 mkdir b1 b2
 remote_build 1
 # only do the 2nd build if the 1st produced some results
-if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz || true)" ] ; then
+if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; then
 	remote_build 2
 	# run diffoscope on the results
 	TIMEOUT="30m"
@@ -197,8 +197,7 @@ fi
 mkdir -p $BASE/archlinux/$SRCPACKAGE/
 cd $TMPDIR/b1/$SRCPACKAGE
 cp build1.log $BASE/archlinux/$SRCPACKAGE/
-cd $TMPDIR/b2/$SRCPACKAGE
-[ ! -f build2.log ] || cp build2.log $BASE/archlinux/$SRCPACKAGE/
+[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$SRCPACKAGE/
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE/ updated."
 
 cd

@@ -61,7 +61,7 @@ $ROOTCMD pacman-key --populate archlinux
 echo 'Server = http://mirror.one.com/archlinux/$repo/os/$arch' | sudo tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 $ROOTCMD pacman -Syu --noconfirm
 $ROOTCMD pacman -S --noconfirm base-devel devtools abs
-$ROOTCMD abs
+$ROOTCMD abs core extra
 
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins

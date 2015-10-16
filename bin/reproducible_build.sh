@@ -292,7 +292,6 @@ handle_remote_error() {
 	exit 0
 }
 
-
 handle_enospace() {
 	unregister_build
 	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 30m."
@@ -741,7 +740,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
-	echo "$(date -u) - build #$MODE for $SRCPACKAGE/$SUITE/$ARCH on $HOSTNAME done"
+	echo "$(date -u) - build #$MODE for $SRCPACKAGE/$SUITE/$ARCH on $HOSTNAME done."
 	exit 0
 elif [ "$2" != "" ] ; then
 	MODE="master"

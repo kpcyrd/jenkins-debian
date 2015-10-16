@@ -175,15 +175,9 @@ fi
 # build package twice
 mkdir b1 b2
 remote_build 1
-# publish log
-mkdir -p $BASE/archlinux/$SRCPACKAGE/
-cd $TMPDIR/b1/$SRCPACKAGE
-cp build1.log $BASE/archlinux/$SRCPACKAGE/
 # only do the 2nd build if the 1st produced some results
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz)" ] ; then
 	remote_build 2
-	cd $TMPDIR/b2/$SRCPACKAGE
-	cp build2.log $BASE/archlinux/$SRCPACKAGE/
 	# run diffoscope on the results
 	TIMEOUT="30m"
 	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
@@ -195,10 +189,16 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz)" ] ; then
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
 			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$SRCPACKAGE/
-			echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE/$ARTIFACT.html updated."
 		fi
 	done
 fi
+# publish logs
+mkdir -p $BASE/archlinux/$SRCPACKAGE/
+cd $TMPDIR/b1/$SRCPACKAGE
+cp build1.log $BASE/archlinux/$SRCPACKAGE/
+cd $TMPDIR/b2/$SRCPACKAGE
+[ ! -f build2.log ] || cp build2.log $BASE/archlinux/$SRCPACKAGE/
+echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE/ updated."
 
 cd
 cleanup_all

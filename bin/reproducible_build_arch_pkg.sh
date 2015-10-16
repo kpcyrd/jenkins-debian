@@ -148,7 +148,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 		second_build
 	fi
 	# preserve results and delete build directory
-	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*-x86_64.pkg.tar.?? $TMPDIR/b$MODE/$SRCPACKAGE/
+	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*-x86_64.pkg.tar.?? $TMPDIR/b$MODE/$SRCPACKAGE/ || ls /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/
 	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0

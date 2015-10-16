@@ -32,8 +32,8 @@ first_build() {
 	echo "============================================================================="
 	set -x
 	schroot --begin-session --session-name=$SRCPACKAGE -c jenkins-reproducible-arch
-	schroot --run-session -c $SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$PKG /tmp
-	schroot --run-session -c $SRCPACKAGE --directory /tmp/$PKG -- makepkg --skippgpcheck
+	schroot --run-session -c $SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
+	schroot --run-session -c $SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
 	schroot --end-session -c $SRCPACKAGE
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -46,8 +46,8 @@ second_build() {
 	echo "============================================================================="
 	set -x
 	schroot --begin-session --session-name=$SRCPACKAGE -c jenkins-reproducible-arch
-	schroot --run-session -c $SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$PKG /tmp
-	schroot --run-session -c $SRCPACKAGE --directory /tmp/$PKG -- makepkg --skippgpcheck
+	schroot --run-session -c $SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
+	schroot --run-session -c $SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
 	schroot --end-session -c $SRCPACKAGE
 	if ! "$DEBUG" ; then set +x ; fi
 }

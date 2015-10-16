@@ -292,8 +292,8 @@ properties:
 
 ==== reproducible Arch Linux
 
-* create a job, to bootstrap an arch schroot:
-* use regular maintenace job to update the arch schroot
+* create a job, to bootstrap an arch schroot: done. needs to be made idempotent.
+* use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
 * create another job, to build a single package and a webpage for it…
 ----
 
@@ -306,20 +306,19 @@ properties:
 ** schroot, find packages in /var/abs/core/, schedule those
 *** idea: reschedule reverse build depends too
 * more random notes:
+** use -source schroot
+** download bootstrap.tar.gz sig and verify
+** build with -j X
+** 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
+** patch pacman to create .buildinfo files - or better: wait
+
 ----
-	# todo:
-		use -source schroot
-		download bootstrap.tar.gz sig and verify
-		maintenance job does updates:
-			schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm
-		-j X
+notes on source and binary versions:
 		tar-1.28.tar.xz (source) -> tar-1.28-1-x86_64.pkg.tar.xz (binary)
 			$PKG/PKGBUILD has:
 				pkgname=tar
 				pkgver=1.28	# sometimes this is calculated and not greppable, so PKGBUILD has to be sourced (in a safe environment…)
 				pkgrel=1
-		echo 'keyserver-options auto-key-retrieve' >> ~/.gnupg/gpg.conf
-		patch pacman to create .buildinfo files - or better: wait
 ----
 
 ==== reproducible...

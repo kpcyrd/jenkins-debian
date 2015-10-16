@@ -1268,4 +1268,10 @@
             my_shell: '/srv/jenkins/bin/reproducible_build_arch_pkg.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
+        - '{name}_html_archlinux':
+            my_description: 'Build a simple webpage for Archlinux reproducibility tests'
+            my_timed: '42 H/2 * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_html_archlinux.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
 

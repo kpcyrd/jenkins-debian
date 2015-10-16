@@ -176,7 +176,7 @@ fi
 mkdir b1 b2
 remote_build 1
 # only do the 2nd build if the 1st produced some results
-if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz)" ] ; then
+if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz || true)" ] ; then
 	remote_build 2
 	# run diffoscope on the results
 	TIMEOUT="30m"

@@ -10,6 +10,7 @@ common_init "$@"
 set -e
 
 cleanup_all() {
+	cd
 	rm $TMPDIR -r
 	echo "$(date -u) - $TMPDIR deleted."
 }
@@ -134,7 +135,7 @@ SRCPACKAGE=sudo
 build_rebuild
 #call_diffoscope
 
-cd ..
+cd
 cleanup_all
 trap - INT TERM EXIT
 

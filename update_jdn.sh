@@ -124,7 +124,8 @@ if [ -f /etc/debian_version ] ; then
 			haveged
 			htop
 			less
-			molly-guard 
+			molly-guard
+			moreutils
 			munin-node
 			munin-plugins-extra 
 			pigz 

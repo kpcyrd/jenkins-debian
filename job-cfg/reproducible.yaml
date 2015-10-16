@@ -604,6 +604,10 @@
     defaults: reproducible_other_projects
     name: '{name}_setup_schroot_arch'
 
+- job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_arch_1'
+
 - project:
     name: reproducible
     jobs:
@@ -1258,4 +1262,10 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
+        - '{name}_builder_arch_1':
+            my_description: 'Try to reproducibly build an Archlinux package.'
+            my_timed: '42 23 1 1 *'
+            my_shell: '/srv/jenkins/bin/reproducible_build_arch_pkg.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
 

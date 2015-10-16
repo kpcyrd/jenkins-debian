@@ -283,8 +283,15 @@ write_page_intro() {
 		local PROJECTURL="https://github.com/freebsd/freebsd.git"
 		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.1 system"
 		local BRANCH="release/10.2.0"
+	elif [ "$1" = "Archlinux" ] ; then
+		write_page "        <em>Reproducible $1</em> is an effort to apply this to $1. Thus $1 packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		local PROJECTNAME="Archlinux"
 	fi
-	write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute.</p>"
+	if [ "$1" != "Archlinux" ] ; then
+		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute.</p>"
+	else
+		write_page "       <p>This is brand new and the test setup needs to be explained here.</p>"
+	fi
 }
 
 write_page_footer() {
@@ -295,6 +302,8 @@ write_page_footer() {
 		write_page "NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
 	elif [ "$1" = "FreeBSD" ] ; then
 		write_page "FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
+	elif [ "$1" = "Archlinux" ] ; then
+		write_page "The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis."
 	fi
 	write_page "</p></body></html>"
 }

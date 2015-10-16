@@ -293,16 +293,16 @@ properties:
 ==== reproducible Arch Linux
 
 * create a job, to bootstrap an arch schroot: done. needs to be made idempotent.
+** BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz needs to be replaced with a future proof filename
+** download bootstrap.tar.gz sig and verify
 * use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
-* created another job (WIP), to build a single package
+* arch build.sh:
 ** introduce variations: USER, TZ, LANG, LC_ALL, umask
+** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
+*** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys'
 * create a working scheduler job
 ** idea: reschedule reverse build depends too
 * more random notes:
-** BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz needs to be replaced with a future proof filename
-** download bootstrap.tar.gz sig and verify
-** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
-*** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys'
 ** patch pacman to create .buildinfo files - or better: wait
 ** rename arch scripts and jobs to archlinux
 

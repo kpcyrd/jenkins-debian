@@ -14,8 +14,8 @@ common_init "$@"
 #
 #  finally create the webpage
 #
-PAGE=archlinux/archlinux.html
-cd $BASE
+cd $BASE/archlinux
+PAGE=archlinux.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">
@@ -25,7 +25,6 @@ cat > $PAGE <<- EOF
   </head>
   <body>
 EOF
-cd $BASE/archlinux
 write_page "<table><tr><th>source package</th><th>test date</th><th>1st build log</th><th>2nd build log</th><th>diffoscope output for binary packages</th></tr>"
 for PKG in $(ls * -d1) ; do
 	write_page " <td>$PKG</td>"
@@ -50,5 +49,5 @@ done
 
 write_page "</table>"
 write_page_footer Archlinux
-publish_page
+publish_page archlinux
 

@@ -305,13 +305,13 @@ if [ ! -z "$PSCALL" ] ; then
 fi
 
 
-# remove artifacts older than 3 days
-echo "$(date -u) - Checking for artifacts older than 3 days."
-ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec ls -lad {} \; 2>/dev/null|| true)
+# remove artifacts older than 2 days
+echo "$(date -u) - Checking for artifacts older than 2 days."
+ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"
-	find $BASE/artifacts/* -maxdepth 1 -type d -mtime +3 -exec rm -rv {} \;
+	find $BASE/artifacts/* -maxdepth 1 -type d -mtime +2 -exec rm -rv {} \;
 	echo
 fi
 

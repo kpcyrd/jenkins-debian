@@ -53,7 +53,7 @@ save_artifacts() {
 		mkdir -p $BASE/$ARTIFACTS
 		cp -r $TMPDIR/* $BASE/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
-		local msg="Artifacts from this build have been preserved. They will be available for 72h only, so download them now.\n"
+		local msg="Artifacts from this build have been preserved. They will be available for 48h only, so download them now.\n"
 		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
 		printf "$msg" | tee -a $BUILDLOG

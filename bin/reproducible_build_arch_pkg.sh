@@ -13,7 +13,7 @@ cleanup_all() {
 	cd
 	rm $TMPDIR -r
 	echo "$(date -u) - $TMPDIR deleted."
-	if [ "$MODE" != "master" ] ;
+	if [ "$MODE" != "master" ] ; then
 		schroot --end-session -c arch-$SRCPACKAGE
 	fi
 }

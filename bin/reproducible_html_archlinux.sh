@@ -25,6 +25,7 @@ cat > $PAGE <<- EOF
     <title>Repoducible Archlinux ?</title>
   </head>
   <body>
+  <h1>Reproducible Archlinux?</h1>
 EOF
 write_page_intro Archlinux
 write_explaination_table Archlinux

@@ -48,6 +48,7 @@ first_build() {
 	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
 	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck
@@ -64,6 +65,8 @@ second_build() {
 	set -x
 	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
+	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/

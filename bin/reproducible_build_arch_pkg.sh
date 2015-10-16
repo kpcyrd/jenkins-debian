@@ -138,14 +138,14 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	TMPDIR="$3"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
-	mkdir -p b$MODE/archlinux/$SRCPACKAGE
+	mkdir -p b$MODE/$SRCPACKAGE
 	if [ "$MODE" = "1" ] ; then
 		first_build
 	else
 		second_build
 	fi
 	# preserve results and delete build directory
-	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*-x86_64.pkg.tar.?? $TMPDIR/b$MODE/archlinux/$SRCPACKAGE
+	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*-x86_64.pkg.tar.?? $TMPDIR/b$MODE/$SRCPACKAGE/
 	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
@@ -180,12 +180,16 @@ build_rebuild
 TIMEOUT="30m"
 DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 echo "$(date -u) - Running $DIFFOSCOPE now..."
-call_diffoscope archlinux $SRCPACKAGE
-# publish page
-if [ -f $TMPDIR/archlinux/$SRCPACKAGE.html ] ; then
-	cp $TMPDIR/archlinux/$SRCPACKAGE.html $BASE/archlinux
-	echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE.html updated."
-fi
+cd $TMPDIR/b1/$SRCPACKAGE
+for ARTIFACT in *-x86_64.pkg.tar.?? ; do
+	call_diffoscope $SRCPACKAGE $ARTIFACT
+	# publish page
+	if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
+		mkdir -p $BASE/archlinux/$SRCPACKAGE/
+		cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$SRCPACKAGE/
+		echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE/$ARTIFACT.html updated."
+	fi
+done
 
 cd
 cleanup_all

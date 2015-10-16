@@ -101,6 +101,8 @@ elif [[ "$*" =~ reproducible_freebsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_freebsd.sh ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_schroot_arch ]] ; then
 	exec /srv/jenkins/bin/reproducible_arch_schroot_setup.sh ; croak "Exec failed";
+elif [ "$1" = "/srv/jenkins/bin/reproducible_build_arch_pkg.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
+	exec /srv/jenkins/bin/reproducible_build_arch_pkg.sh "$2" "$3" "$4" ; croak "Exec failed";
 elif [ "$*" = "some_jenkins_job_name" ] ; then
 	exec echo run any commands here ; croak "Exec failed";
 fi

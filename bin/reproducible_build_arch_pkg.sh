@@ -13,6 +13,9 @@ cleanup_all() {
 	cd
 	rm $TMPDIR -r
 	echo "$(date -u) - $TMPDIR deleted."
+	if [ "$MODE" != "master" ] ;
+		schroot --end-session -c arch-$SRCPACKAGE
+	fi
 }
 
 handle_remote_error() {
@@ -31,10 +34,10 @@ first_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	schroot --begin-session --session-name=$SRCPACKAGE -c jenkins-reproducible-arch
-	schroot --run-session -c $SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
-	schroot --run-session -c $SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
-	schroot --end-session -c $SRCPACKAGE
+	schroot --begin-session --session-name=arch-$SRCPACKAGE -c jenkins-reproducible-arch
+	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
+	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --end-session -c arch-$SRCPACKAGE
 	if ! "$DEBUG" ; then set +x ; fi
 }
 
@@ -45,10 +48,10 @@ second_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	schroot --begin-session --session-name=$SRCPACKAGE -c jenkins-reproducible-arch
-	schroot --run-session -c $SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
-	schroot --run-session -c $SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
-	schroot --end-session -c $SRCPACKAGE
+	schroot --begin-session --session-name=arch-$SRCPACKAGE -c jenkins-reproducible-arch
+	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE /tmp
+	schroot --run-session -c arch-$SRCPACKAGE --directory /tmp/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --end-session -c arch-$SRCPACKAGE
 	if ! "$DEBUG" ; then set +x ; fi
 }
 

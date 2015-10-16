@@ -41,7 +41,7 @@ bootstrap() {
 
 cleanup() {
 	if [ -d $SCHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )
+		rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )
 	fi
 	rm -f $TMPLOG
 }

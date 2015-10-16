@@ -608,6 +608,10 @@
     defaults: reproducible_builder
     name: '{name}_builder_arch_1'
 
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_archlinux'
+
 - project:
     name: reproducible
     jobs:

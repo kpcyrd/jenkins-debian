@@ -16,9 +16,8 @@ bootstrap() {
 	echo "$(date -u) - downloading Archlinux bootstrap.tar.gz."
 	curl -O https://mirrors.kernel.org/archlinux/iso/2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
 	tar xzf archlinux-bootstrap-2015.08.01-x86_64.tar.gz
-	mv root.x86_64/* $SCHROOT_TARGET
-	rmdir root.x86_64
-	rm archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+	mv root.x86_64/* $SCHROOT_TARGET || true # proc and sys have 0555 perms, thus mv will fail... also see below
+	rm archlinux-bootstrap-2015.08.01-x86_64.tar.gz root.x86_64 -rf
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
 	sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
@@ -32,6 +31,8 @@ bootstrap() {
 	__END__
 	# finally, put it in place
 	mv $SCHROOT_TARGET $SCHROOT_BASE/$TARGET
+	mkdir $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
+	chmod 555 $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
 }
 
 cleanup() {

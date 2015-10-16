@@ -62,6 +62,7 @@ $ROOTCMD abs
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown jenkins:jenkins /var/lib/jenkins
+$USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 $USERCMD gpg --recv-keys 0x091AB856069AAA1C
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

@@ -126,7 +126,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
-	mv -v /tmp/$PKG $TMPDIR/b$mode
+	mv -v /tmp/$SRCPACKAGE $TMPDIR/b$mode
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
 fi

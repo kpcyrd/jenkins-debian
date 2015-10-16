@@ -12,9 +12,13 @@ DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# define URL for bootstrap.tgz
+BOOTSTRAP_BASE=https://mirrors.kernel.org/archlinux/iso/
+BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+
 bootstrap() {
 	echo "$(date -u) - downloading Archlinux bootstrap.tar.gz."
-	curl -O https://mirrors.kernel.org/archlinux/iso/2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+	curl -O $BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ
 	tar xzf archlinux-bootstrap-2015.08.01-x86_64.tar.gz
 	mv root.x86_64/* $SCHROOT_TARGET || true # proc and sys have 0555 perms, thus mv will fail... also see below
 	rm archlinux-bootstrap-2015.08.01-x86_64.tar.gz root.x86_64 -rf

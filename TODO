@@ -307,6 +307,7 @@ properties:
 *** idea: reschedule reverse build depends too
 * more random notes:
 ** use -source schroot
+** BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz needs to be replaced with a future proof filename
 ** download bootstrap.tar.gz sig and verify
 ** build with -j X
 ** 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'

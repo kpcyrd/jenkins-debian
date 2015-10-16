@@ -154,7 +154,12 @@ fi
 #
 SRCPACKAGE=sudo
 build_rebuild
+# run diffoscope on the results
+TIMEOUT="30m"
+DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+echo "$(date -u) - Running $DIFFOSCOPE now..."
 call_diffoscope archlinux $SRCPACKAGE
+# publish page
 if [ -f $TMPDIR/archlinux/$SRCPACKAGE.html ] ; then
 	cp $TMPDIR/archlinux/$SRCPACKAGE.html $BASE/archlinux
 	echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE.html updated."

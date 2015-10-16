@@ -456,12 +456,12 @@ choose_package() {
 		xxxxxxx)
 			export DEBUG=true
 			set -x
-			irc_message "The build of $SRCPACKAGE/$SUITE/$ARCH is starting at ${BUILD_URL}consoleFull"
+			irc_message "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
 			;;
 		*)      ;;
 	esac
 	if [ "$DEBUG_URL" = "TBD" ] ; then
-		irc_message "The build of $SRCPACKAGE/$SUITE/$ARCH is starting at ${BUILD_URL}consoleFull"
+		irc_message "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
 	fi
 	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}

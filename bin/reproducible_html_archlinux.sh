@@ -40,7 +40,11 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 		fi
 	done
 	if [ -z "$(cd $ARCHBASE/$PKG/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-		write_page "  <td>failed to build from source</td>"
+		if [ ! -z "$(grep 'ERROR: Could not resolve all dependencies' $ARCHBASE/$PKG/build1.log)" ] ; then
+			write_page "  <td>could not resolve dependencies</td>"
+		else
+			write_page "  <td>failed to build from source</td>"
+		fi
 	else
 		write_page "  <td>"
 		for ARTIFACT in $(cd $ARCHBASE/$PKG/ ; ls *.pkg.tar.xz.html) ; do

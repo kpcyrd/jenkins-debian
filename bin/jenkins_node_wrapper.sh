@@ -99,6 +99,8 @@ elif [[ "$*" =~ reproducible_netbsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_netbsd.sh ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_freebsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_freebsd.sh ; croak "Exec failed";
+elif [[ "$*" =~ reproducible_arch_schroot_setup ]] ; then
+	exec /srv/jenkins/bin/reproducible_arch_schroot_setup.sh ; croak "Exec failed";
 elif [ "$*" = "some_jenkins_job_name" ] ; then
 	exec echo run any commands here ; croak "Exec failed";
 fi

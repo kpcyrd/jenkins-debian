@@ -47,11 +47,12 @@ first_build() {
 	set -x
 	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
+	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck 2>&1 | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -65,12 +66,13 @@ second_build() {
 	set -x
 	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
+	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck 2>&1 | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -114,7 +116,10 @@ remote_build() {
 build_rebuild() {
 	mkdir b1 b2
 	remote_build 1
-	remote_build 2
+	# only do the 2nd build if the 1st produced some results
+	if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz)" ] ; then
+		remote_build 2
+	fi
 }
 
 #
@@ -127,7 +132,6 @@ cd $TMPDIR
 
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
-RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 
 #
@@ -183,12 +187,16 @@ build_rebuild
 TIMEOUT="30m"
 DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 echo "$(date -u) - Running $DIFFOSCOPE now..."
+mkdir -p $BASE/archlinux/$SRCPACKAGE/
+cd $TMPDIR/b1/$SRCPACKAGE
+cp build1.log $BASE/archlinux/$SRCPACKAGE/
+cd $TMPDIR/b1/$SRCPACKAGE
+[ ! -f build2.log ] || cp build2.log $BASE/archlinux/$SRCPACKAGE/
 cd $TMPDIR/b1/$SRCPACKAGE
 for ARTIFACT in *.pkg.tar.xz ; do
 	call_diffoscope $SRCPACKAGE $ARTIFACT
 	# publish page
 	if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
-		mkdir -p $BASE/archlinux/$SRCPACKAGE/
 		cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$SRCPACKAGE/
 		echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE/$ARTIFACT.html updated."
 	fi

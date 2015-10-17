@@ -39,6 +39,8 @@ bootstrap() {
 	mv $SCHROOT_TARGET $SCHROOT_BASE/$TARGET
 	mkdir $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
 	chmod 555 $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
+	# mktemp creates directories with 700 perms
+	chmod 755 $SCHROOT_BASE/$TARGET
 }
 
 cleanup() {

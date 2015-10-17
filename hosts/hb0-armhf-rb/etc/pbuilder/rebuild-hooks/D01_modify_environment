@@ -2,6 +2,8 @@
 
 set -e
 
+BUILDDIR="${BUILDDIR:-/tmp/buildd}"
+
 # exit if we are in the same UTS namespace as init ( != 2nd build )
 [ "$(readlink /proc/1/ns/uts)" = "$(readlink /proc/self/ns/uts)" ] && exit 0
 
@@ -17,11 +19,11 @@ exit 0
 
 # use disorderfs
 if [ -x /usr/bin/disorderfs ] ; then
-	echo -n "Moving /tmp/buildd to /tmp/disorderfs and mounting this as /tmp/buildd via the fuse disorderfs…"
+	echo -n "Moving $BUILDDIR to /tmp/disorderfs and mounting this as $BUILDDIR via the fuse disorderfs…"
 	mknod -m 666 /dev/fuse c 10 229
-	mv /tmp/buildd /tmp/disorderfs
-	mkdir /tmp/buildd
-	disorderfs --multi-user=yes /tmp/disorderfs /tmp/buildd
+	mv "$BUILDDIR" /tmp/disorderfs
+	mkdir "$BUILDDIR"
+	disorderfs --multi-user=yes /tmp/disorderfs "$BUILDDIR"
 	echo " done."
 else
 	echo "Warning: disorderfs not available."

@@ -12,8 +12,8 @@ echo
 # cease using disorderfs
 if [ -d /tmp/disorderfs ] ; then
 	echo -n "Unmounting /tmp/disorderfs…"
-	fusermount -u /tmp/buildd
-	rmdir /tmp/buildd
-	mv /tmp/disorderfs /tmp/buildd
+	fusermount -u "$BUILDDIR"
+	rmdir "$BUILDDIR"
+	mv /tmp/disorderfs "$BUILDDIR"
 	echo " done."
 fi

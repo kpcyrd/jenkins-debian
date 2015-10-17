@@ -52,7 +52,7 @@ first_build() {
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --syncdeps --skippgpcheck 2>&1 | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -72,7 +72,7 @@ second_build() {
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --skippgpcheck 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- makepkg --syncdeps --skippgpcheck 2>&1 | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }

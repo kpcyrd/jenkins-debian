@@ -90,12 +90,19 @@ cleanup_all() {
 }
 
 update_db_and_html() {
-	# everything passed at this function is saved as a status of this package in the db
+	#
+	# as we still experience problems with locked database, in this function
+	# each sqlite command is run as: command || command, thus doubling the chance
+	# each will succeed... (no further comment… it was probably not designed to
+	# accessed by 40 jobs…)
+	#
+	# save everything as status of this package in the db
 	STATUS="$@"
 	if [ -z "$VERSION" ] ; then
 		VERSION="None"
 	fi
-	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
+	local OLD_STATUS=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'" || \
+			   sqlite3 -init $INIT ${PACKAGES_DB} "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# irc+mail notifications for changing status in unstable and experimental
 	if [ "$SUITE" != "testing" ] ; then
 		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
@@ -116,11 +123,14 @@ update_db_and_html() {
 			echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
 		fi
 	fi
+	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')" || \
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, builder) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$BUILDER')" || \
 		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, builder) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$BUILDER')"
 	fi
 	# unmark build since it's properly finished
+	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';" || \
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	gen_package_html $SRCPACKAGE
 	echo

@@ -102,7 +102,7 @@ done
 set -e
 
 # delete old temp directories
-echo "$(date -u) - Deleting old temp directories."
+echo "$(date -u) - Deleting temp directories, older than 2 days."
 OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
@@ -114,13 +114,12 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # delete old pbuilder build directories
-echo "$(date -u) - Deleting old pbuilder build directories."
+echo "$(date -u) - Deleting pbuilder build directories, older than 3 days."
 OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
-	echo find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec rm -rv {} \; || true
-	echo "Warning: These old directories have not been deleted."
+	find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec rm -rv {} \; || true
 	echo
 	DIRTY=true
 fi

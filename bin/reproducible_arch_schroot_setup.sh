@@ -12,11 +12,12 @@ DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-
+# define archlinux mirror to be used
+ARCH_MIRROR=http://mirror.one.com/archlinux/
 
 bootstrap() {
 	# define URL for bootstrap.tgz
-	BOOTSTRAP_BASE=http://mirror.one.com/archlinux/iso/
+	BOOTSTRAP_BASE=$ARCH_MIRROR/iso/
 	echo "$(date -u) - downloading Archlinux latest/sha1sums.txt"
 	BOOTSTRAP_DATE=$(curl $BOOTSTRAP_BASE/latest/sha1sums.txt 2>/dev/null| grep x86_64.tar.gz| cut -d " " -f3|cut -d "-" -f3|egrep '[0-9.]{9}')
 	if [ -z $BOOTSTRAP_DATE ] ; then
@@ -85,7 +86,7 @@ echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
 # configure pacman
 $ROOTCMD pacman-key --init
 $ROOTCMD pacman-key --populate archlinux
-echo 'Server = http://mirror.one.com/archlinux/$repo/os/$arch' | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
+echo "Server = $ARCH_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 $ROOTCMD pacman -Syu --noconfirm
 $ROOTCMD pacman -S --noconfirm base-devel devtools abs
 # configure abs

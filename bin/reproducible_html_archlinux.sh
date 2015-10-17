@@ -50,6 +50,9 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 	if [ -z "$(cd $ARCHBASE/$PKG/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
 		if [ ! -z "$(grep 'ERROR: Could not resolve all dependencies' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>could not resolve dependencies</td>"
+		elif [ ! -z "$(egrep 'ERROR: .pacman. failed to install missing dependencies.' $ARCHBASE/$PKG/build1.log)" ] ; then
+			write_page "      <td>failed to install dependencies</td>"
+
 		else
 			write_page "      <td>failed to build from source</td>"
 		fi

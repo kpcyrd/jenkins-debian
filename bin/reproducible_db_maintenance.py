@@ -525,6 +525,27 @@ schema_updates = {
         'DROP TABLE results',
         'ALTER TABLE results_tmp RENAME TO results',
         'INSERT INTO rb_schema VALUES ("24", "' + now + '")'],
+    25: [ # rename the builder column also on the schedule table.
+        '''CREATE TABLE schedule_tmp
+           (id INTEGER PRIMARY KEY,
+            package_id INTEGER NOT NULL,
+            date_scheduled TEXT NOT NULL,
+            scheduler TEXT,
+            date_build_started TEXT,
+            job TEXT,
+            notify TEXT NOT NULL DEFAULT '',
+            save_artifacts INTEGER DEFAULT 0,
+            UNIQUE (package_id),
+            FOREIGN KEY(package_id) REFERENCES sources(id))''',
+        'UPDATE schedule SET notify = "" WHERE notify IS NULL',
+        '''INSERT INTO schedule_tmp (id, package_id, date_scheduled, scheduler,
+                    date_build_started, job, notify, save_artifacts)
+           SELECT id, package_id, date_scheduled, scheduler,
+                    date_build_started, builder, notify, save_artifacts
+           FROM schedule''',
+        'DROP TABLE schedule',
+        'ALTER TABLE schedule_tmp RENAME TO schedule',
+        'INSERT INTO rb_schema VALUES ("25", "' + now + '")'],
 }
 
 

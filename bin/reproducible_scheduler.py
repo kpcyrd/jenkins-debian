@@ -301,8 +301,8 @@ def schedule_packages(packages):
     pkgs = ((x, packages[x]) for x in packages)
     log.debug('IDs about to be scheduled: ' + str(packages.keys()))
     query = 'INSERT INTO schedule ' + \
-            '(package_id, date_scheduled, date_build_started) ' + \
-            'VALUES (?, ?, "")'
+            '(package_id, date_scheduled) ' + \
+            'VALUES (?, ?)'
     cursor = conn_db.cursor()
     cursor.executemany(query, pkgs)
     conn_db.commit()

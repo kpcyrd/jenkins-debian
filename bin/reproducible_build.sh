@@ -24,8 +24,8 @@ create_results_dirs() {
 
 handle_race_condition() {
 	echo | tee -a $BUILDLOG
-	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT builder FROM schedule WHERE package_id='$SRCPKGID'")
-	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} is building at $RESULT, this is $BUILD_URL.\n"
+	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
+	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
 	printf "$msg" | tee -a $BUILDLOG
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
@@ -275,7 +275,7 @@ handle_reproducible() {
 
 unregister_build() {
 	# unregister this build so it will immeditiatly tried again
-	sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='' WHERE package_id='$SRCPKGID'"
+	sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='' WHERE package_id='$SRCPKGID'"
 	NOTIFY=""
 }
 
@@ -401,7 +401,7 @@ call_diffoscope_on_changes_files() {
 
 choose_package() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "
-		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.builder
+		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE sch.date_build_started=''
 		AND s.architecture='$ARCH'
@@ -421,13 +421,13 @@ choose_package() {
 	# remove previous build attempts which didnt finish correctly:
 	BUILDER_PREFIX="${JOB_NAME#reproducible_builder_}/"
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)
-	sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, builder FROM schedule WHERE builder LIKE '${BUILDER_PREFIX}%'" > $BAD_BUILDS
+	sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, job FROM schedule WHERE job LIKE '${BUILDER_PREFIX}%'" > $BAD_BUILDS
 	if [ -s "$BAD_BUILDS" ] ; then
 		local STALELOG=/var/log/jenkins/reproducible-stale-builds.log
 		# reproducible-stale-builds.log is mailed once a day by reproducible_maintenance.sh
 		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a $STALELOG
 		cat $BAD_BUILDS | tee -a $STALELOG
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='' WHERE builder LIKE '${BUILDER_PREFIX}%'"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='' WHERE job LIKE '${BUILDER_PREFIX}%'"
 		echo >> $STALELOG
 	fi
 	rm -f $BAD_BUILDS
@@ -437,8 +437,8 @@ choose_package() {
 	if [ -z "$RESULT" ] ; then
 		echo "ok, $SRCPACKAGE is not building anywhere…"
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', builder='$JOB' WHERE package_id='$SRCPKGID' AND date_build_started=''"
-		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND builder='$JOB'")
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='$DATE', job='$JOB' WHERE package_id='$SRCPKGID' AND date_build_started=''"
+		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND job='$JOB'")
 		if [ -z "$RESULT" ] ; then
 			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build ($SRCPKGID, $DATE, $JOB)."
 			handle_race_condition
@@ -693,7 +693,7 @@ build_rebuild() {
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
-			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', builder='', date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
+			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='', date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
 			NOTIFY=""
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then

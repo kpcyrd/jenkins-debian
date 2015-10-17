@@ -13,7 +13,7 @@ DEBUG=true
 common_init "$@"
 
 # define URL for bootstrap.tgz
-BOOTSTRAP_BASE=https://mirrors.kernel.org/archlinux/iso/
+BOOTSTRAP_BASE=http://mirror.one.com/archlinux/iso/
 BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
 
 bootstrap() {

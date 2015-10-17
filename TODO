@@ -292,9 +292,8 @@ properties:
 
 ==== reproducible Arch Linux
 
-* create a job, to bootstrap an arch schroot: done. needs to be made idempotent.
-** BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz needs to be replaced with a future proof filename
-** download bootstrap.tar.gz sig and verify
+* job, to bootstrap an arch schroot needs to be made idempotent
+** needs to download bootstrap.tar.gz sig and verify
 * use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
 * arch build.sh:
 ** introduce variations: USER, TZ, LANG, LC_ALL, umask

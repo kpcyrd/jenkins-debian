@@ -114,13 +114,13 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # delete old pbuilder build directories
-echo "$(date -u) - Deleting pbuilder build directories, older than 3 days."
-OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec ls -lad {} \; || true)
+echo "$(date -u) - Deleting pbuilder build directories, older than 2 days."
+OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
 	echo -n "$OLDSTUFF"
-	find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec sudo rm -rf --one-file-system {} \; || true
+	find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
 	echo
 	DIRTY=true
 fi
@@ -130,11 +130,11 @@ echo "$(date -u) - Removing unused schroot sessions."
 cleanup_schroot_sessions
 
 # find old schroots
-echo "$(date -u) - Removing old schroots."
+echo "$(date -u) - Removing schroots older than 2 days."
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "Old schroots found in /schroots, which will be deleted:"
+	echo "schroots older than 2 days found in /schroots, which will be deleted:"
 	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
 	echo "$OLDSTUFF"
 	OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \; || true)

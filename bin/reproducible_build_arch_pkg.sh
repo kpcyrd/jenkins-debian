@@ -54,7 +54,7 @@ first_build() {
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c makepkg --syncdeps --noconfirm --skippgpcheck 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -79,7 +79,7 @@ second_build() {
 	echo 'export LANG="fr_CH.UTF-8"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	echo 'export LC_ALL="fr_CH.UTF-8' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	echo 'umask 0002' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c makepkg --syncdeps --noconfirm --skippgpcheck 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }

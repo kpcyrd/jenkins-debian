@@ -505,6 +505,26 @@ schema_updates = {
         'DROP TABLE stats_build',
         'ALTER TABLE stats_build_tmp RENAME TO stats_build',
         'INSERT INTO rb_schema VALUES ("23", "' + now + '")'],
+    24: [ # the same as #23 but for the results table
+        '''CREATE TABLE results_tmp
+           (id INTEGER PRIMARY KEY,
+            package_id INTEGER NOT NULL,
+            version TEXT NOT NULL,
+            status TEXT NOT NULL,
+            build_date TEXT NOT NULL,
+            build_duration INTEGER DEFAULT 0,
+            node1 TEXT,
+            node2 TEXT,
+            job TEXT NOT NULL,
+            UNIQUE (package_id)
+            FOREIGN KEY(package_id) REFERENCES sources(id))''',
+        '''INSERT INTO results_tmp (id, package_id, version, status,
+                    build_date, build_duration, job)
+           SELECT id, package_id, version, status, build_date, build_duration,
+                    builder FROM results''',
+        'DROP TABLE results',
+        'ALTER TABLE results_tmp RENAME TO results',
+        'INSERT INTO rb_schema VALUES ("24", "' + now + '")'],
 }
 
 

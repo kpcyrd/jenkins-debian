@@ -70,8 +70,8 @@ echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
 
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins
-echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
+echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 $USERCMD gpg --recv-keys 0x091AB856069AAA1C
 

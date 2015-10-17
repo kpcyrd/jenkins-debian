@@ -1289,9 +1289,11 @@
         - '{name}_coreboot':
             my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 1'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            #my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_shell: '/srv/jenkins/bin/reproducible_coreboot.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks3'
+            #my_node: 'profitbricks3'
+            my_node: ''
         - '{name}_openwrt':
             my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 2'

@@ -119,7 +119,7 @@ OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d 
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
-	find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec rm -rv {} \; || true
+	find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +3 -exec sudo rm -rvf --one-file-system {} \; || true
 	echo
 	DIRTY=true
 fi

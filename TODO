@@ -302,7 +302,9 @@ properties:
 * more random notes:
 ** patch pacman to create .buildinfo files - or better: wait
 ** rename arch scripts and jobs to archlinux
+*** remember to adop cleanup_schroot_sessions() in common_functions.sh when renaming the schroots
 ** use archlinux.css not the one from freebsd :)
+*** use arch logo
 
 ----
 notes on source and binary versions:

@@ -48,13 +48,20 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 		fi
 	done
 	if [ -z "$(cd $ARCHBASE/$PKG/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-		if [ ! -z "$(grep 'ERROR: Could not resolve all dependencies' $ARCHBASE/$PKG/build1.log)" ] ; then
+		if [ ! -z "$(grep '==> ERROR: Could not resolve all dependencies' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>could not resolve dependencies</td>"
-		elif [ ! -z "$(egrep 'ERROR: .pacman. failed to install missing dependencies.' $ARCHBASE/$PKG/build1.log)" ] ; then
+		elif [ ! -z "$(egrep '==> ERROR: .pacman. failed to install missing dependencies.' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>failed to install dependencies</td>"
-
-		else
+		elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>failed to build from source</td>"
+		elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$PKG/build1.log)" ] ; then
+			write_page "      <td>failed to build from source, when running tests</td>"
+		elif [ ! -z "$(egrep '==> ERROR: Failure while downloading' $ARCHBASE/$PKG/build1.log)" ] ; then
+			write_page "      <td>failed to download source</td>"
+		elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$PKG/build1.log)" ] ; then
+			write_page "      <td>failed to verify source</td>"
+		else
+			write_page "      <td>probably failed to build from source, please investigate</td>"
 		fi
 	else
 		write_page "      <td>"

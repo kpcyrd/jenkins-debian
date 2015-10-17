@@ -14,14 +14,16 @@ common_init "$@"
 
 # define URL for bootstrap.tgz
 BOOTSTRAP_BASE=http://mirror.one.com/archlinux/iso/
-BOOTSTRAP_TAR_GZ=2015.08.01/archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+BOOTSTRAP_DATE=2015.10.01
+BOOTSTRAP_TAR_GZ=$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
+
 
 bootstrap() {
 	echo "$(date -u) - downloading Archlinux bootstrap.tar.gz."
 	curl -O $BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ
-	tar xzf archlinux-bootstrap-2015.08.01-x86_64.tar.gz
+	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
 	mv root.x86_64/* $SCHROOT_TARGET || true # proc and sys have 0555 perms, thus mv will fail... also see below
-	rm archlinux-bootstrap-2015.08.01-x86_64.tar.gz root.x86_64 -rf
+	rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz root.x86_64 -rf
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
 	sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__

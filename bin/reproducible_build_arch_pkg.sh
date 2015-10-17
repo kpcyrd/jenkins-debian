@@ -52,6 +52,8 @@ first_build() {
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
+	# just set timezone in the 1st build
+	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c makepkg --syncdeps --noconfirm --skippgpcheck 2>&1 | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
@@ -72,6 +74,11 @@ second_build() {
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
+	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask
+	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT-14"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	echo 'export LANG="fr_CH.UTF-8"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	echo 'export LC_ALL="fr_CH.UTF-8' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	echo 'umask 0002' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c makepkg --syncdeps --noconfirm --skippgpcheck 2>&1 | tee -a $LOG
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi

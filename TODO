@@ -293,7 +293,7 @@ properties:
 ** needs to download bootstrap.tar.gz sig and verify
 * use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
 * arch build.sh:
-** introduce variations: USER, TZ, LANG, LC_ALL, umask
+** introduce variations: USER
 ** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
 *** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys'
 * create a working scheduler job

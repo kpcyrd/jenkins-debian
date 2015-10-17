@@ -326,14 +326,13 @@ write_explaination_table() {
 	if [ "$1" != "FreeBSD" ] && [ "$1" != "Archlinux" ]  ; then
 		write_page "<tr><td>env CAPTURE_ENVIRONMENT</td><td><em>not set</em></td><td>CAPTURE_ENVIRONMENT=\"I capture the environment\"</td></tr>"
 	fi
-	if [ "$1" != "Archlinux" ]  ; then
-		write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
-		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
-		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
+	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
+	if [ "$1" = "Archlinux" ]  ; then
+		write_page "<tr><td>env LANG</td><td>LANG<em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	else
-		write_page "<tr><td>env TZ</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
-		write_page "<tr><td>env LANG</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
-		write_page "<tr><td>env LC_ALL</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+	fi
+	write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
 	fi
 	if [ "$1" != "FreeBSD" ] && [ "$1" != "Archlinux" ]  ; then
 		write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
@@ -364,11 +363,7 @@ write_explaination_table() {
 		else
 			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		fi
-		if [ "$1" != "Archlinux" ]  ; then
-			write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
-		else
-			write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
-		fi
+		write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	else
 		write_page "<tr><td>FreeBSD kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td><tr>"

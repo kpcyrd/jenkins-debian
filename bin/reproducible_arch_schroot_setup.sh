@@ -71,7 +71,7 @@ $ROOTCMD pacman -S --noconfirm base-devel devtools abs
 # configure abs
 $ROOTCMD abs core extra
 # configure sudo
-echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a $SCHROOT_BASE/$TARGET/etc/sudoers
+echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins

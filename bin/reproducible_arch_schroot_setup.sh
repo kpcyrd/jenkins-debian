@@ -60,14 +60,18 @@ USERCMD="schroot --directory /tmp -c source:jenkins-reproducible-arch -u jenkins
 # configure pacman + abs
 $ROOTCMD pacman-key --init
 $ROOTCMD pacman-key --populate archlinux
-echo 'Server = http://mirror.one.com/archlinux/$repo/os/$arch' | sudo tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
+echo 'Server = http://mirror.one.com/archlinux/$repo/os/$arch' | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 $ROOTCMD pacman -Syu --noconfirm
 $ROOTCMD pacman -S --noconfirm base-devel devtools abs
 $ROOTCMD abs core extra
 
+# configure root user
+echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
+
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins
-$ROOTCMD chown jenkins:jenkins /var/lib/jenkins
+echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
+$ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 $USERCMD gpg --recv-keys 0x091AB856069AAA1C
 

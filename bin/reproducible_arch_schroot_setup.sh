@@ -59,8 +59,19 @@ trap - INT TERM EXIT
 ROOTCMD="schroot --directory /tmp -c source:jenkins-reproducible-arch -u root --"
 USERCMD="schroot --directory /tmp -c source:jenkins-reproducible-arch -u jenkins --"
 
-# configure root user
-echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
+# configure proxy everywhere
+tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
+	export http_proxy=$http_proxy
+	export https_proxy=$http_proxy
+	export ftp_proxy=$http_proxy
+	export rsync_proxy=$http_proxy
+	export HTTP_PROXY=$http_proxy
+	export HTTPS_PROXY=$http_proxy
+	export FTP_PROXY=$http_proxy
+	export RSYNC_PROXY=$http_proxy
+	export no_proxy="localhost,127.0.0.1"
+	__END__
+chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
 
 # configure pacman
 $ROOTCMD pacman-key --init
@@ -76,7 +87,6 @@ echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
-echo "export http_proxy=$http_proxy" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 $USERCMD gpg --recv-keys 0x091AB856069AAA1C
 

@@ -31,6 +31,8 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
+      - trigger:
+          project: '{my_trigger}'
     node: '{my_node}'
 
 - defaults:
@@ -1274,7 +1276,8 @@
             my_node: ''
         - '{name}_html_archlinux':
             my_description: 'Build a simple webpage for Archlinux reproducibility tests'
-            my_timed: '42 H/2 * * *'
+            my_timed: ''
+            my_trigger: 'reproducible_builder_arch_1'
             my_shell: '/srv/jenkins/bin/reproducible_html_archlinux.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''

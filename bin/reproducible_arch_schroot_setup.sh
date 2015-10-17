@@ -41,6 +41,8 @@ bootstrap() {
 	chmod 555 $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
 	# mktemp creates directories with 700 perms
 	chmod 755 $SCHROOT_BASE/$TARGET
+	# configure sudo
+	echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | tee -a $SCHROOT_BASE/$TARGET/etc/sudoers
 }
 
 cleanup() {

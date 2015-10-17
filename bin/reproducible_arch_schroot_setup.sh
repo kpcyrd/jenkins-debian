@@ -66,7 +66,7 @@ echo 'Server = http://mirror.one.com/archlinux/$repo/os/$arch' | tee -a $SCHROOT
 $ROOTCMD pacman -Syu --noconfirm
 $ROOTCMD pacman -S --noconfirm base-devel devtools abs
 # configure sudo
-echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | tee -a $SCHROOT_BASE/$TARGET/etc/sudoers
+echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a $SCHROOT_BASE/$TARGET/etc/sudoers
 $ROOTCMD abs core extra
 
 # configure root user

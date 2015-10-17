@@ -79,6 +79,9 @@ tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	__END__
 chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
 
+# configure root user to use this for shells and login shells…
+echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
+
 # configure pacman
 $ROOTCMD pacman-key --init
 $ROOTCMD pacman-key --populate archlinux
@@ -93,6 +96,7 @@ echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
+echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 $USERCMD gpg --recv-keys 0x091AB856069AAA1C
 

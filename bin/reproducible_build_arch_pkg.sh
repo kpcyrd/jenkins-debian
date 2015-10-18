@@ -19,7 +19,7 @@ cleanup_all() {
 		rm $TMPDIR -r
 		echo "$(date -u) - $TMPDIR deleted."
 	fi
-	# delete makekpg build dir
+	# delete makepkg build dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
 		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
 	fi
@@ -54,7 +54,13 @@ first_build() {
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
+	# nicely run makepkg with a timeout of 4h
+	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
+		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
+	PRESULT=${PIPESTATUS[0]}
+	if [ $PRESULT -eq 124 ] ; then
+		echo "$(date -u) - makepkg was killed by timeout after 4h." | tee -a $LOG
+	fi
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -79,7 +85,13 @@ second_build() {
 	echo 'export LANG="fr_CH.UTF-8"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	echo 'export LC_ALL="fr_CH.UTF-8' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	echo 'umask 0002' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
+	# nicely run makepkg with a timeout of 4h
+	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
+		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
+	PRESULT=${PIPESTATUS[0]}
+	if [ $PRESULT -eq 124 ] ; then
+		echo "$(date -u) - makepkg was killed by timeout after 4h." | tee -a $LOG
+	fi
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }

@@ -185,6 +185,9 @@ for PKG in $PACKAGES ; do
 	if [ ! -d $BASE/archlinux/$PKG ] || [ ! -z $(find $BASE/archlinux/ -name $PKG -mtime +6) ] ; then
 		SRCPACKAGE=$PKG
 		echo "Building $PKG now..."
+		# very simple locking…
+		mkdir -p $BASE/archlinux/$PKG
+		touch $BASE/archlinux/$PKG
 		break
 	fi
 done
@@ -214,13 +217,11 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 		call_diffoscope $SRCPACKAGE $ARTIFACT
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
-			mkdir -p $BASE/archlinux/$SRCPACKAGE/
 			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$SRCPACKAGE/
 		fi
 	done
 fi
 # publish logs
-mkdir -p $BASE/archlinux/$SRCPACKAGE/
 cd $TMPDIR/b1/$SRCPACKAGE
 cp build1.log $BASE/archlinux/$SRCPACKAGE/
 [ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$SRCPACKAGE/

@@ -320,6 +320,10 @@ skip_if_unavailable=False
 * more notes:
 ** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/
 ** http://blog.packagecloud.io/eng/2015/04/20/working-with-source-rpms/
+** https://fedoraproject.org/wiki/Using_Mock_to_test_package_builds
+** http://miroslav.suchy.cz/blog/archives/2015/05/28/increase_mock_performance_-_build_packages_in_memory/index.html
+** https://iuscommunity.org/pages/ConfiguringADedicatedRPMDevelopmentBox.html
+** http://geek.co.il/2010/03/14/how-to-build-a-chroot-jail-environment-for-centos
 
 ==== reproducible Arch Linux
 

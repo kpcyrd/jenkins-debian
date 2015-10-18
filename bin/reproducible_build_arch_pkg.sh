@@ -189,8 +189,12 @@ for PKG in $PACKAGES ; do
 	fi
 done
 if [ -z $SRCPACKAGE ] ; then
-	echo "No package found to be build, sleeping 30m."
-	sleep 30m
+	echo "$(date -u ) - no package found to be build, sleeping 2h."
+	for i in 1 2 3 4 ; do
+		sleep 30m
+		echo "$(date -u ) - still sleeping..."
+	done
+	echo "$(date -u ) - abort now."
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 fi

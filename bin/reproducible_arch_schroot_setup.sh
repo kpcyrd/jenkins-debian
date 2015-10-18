@@ -84,13 +84,13 @@ chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
 echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
 
 # configure pacman
-$ROOTCMD bash -c 'pacman-key --init'
-$ROOTCMD bash -c 'pacman-key --populate archlinux'
+$ROOTCMD bash -l -c 'pacman-key --init'
+$ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 echo "Server = $ARCH_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
-$ROOTCMD bash -c 'pacman -Syu --noconfirm'
-$ROOTCMD bash -c 'pacman -S --noconfirm base-devel devtools abs'
+$ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
+$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools abs'
 # configure abs
-$ROOTCMD bash -c 'abs core extra'
+$ROOTCMD bash -l -c 'abs core extra'
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 
@@ -98,7 +98,7 @@ echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
 echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
-$USERCMD bash -c 'gpg --check-trustdb' # first run will create ~/.gnupg/gpg.conf
-$USERCMD bash -c 'gpg --recv-keys 0x091AB856069AAA1C'
+$USERCMD bash -l -c 'gpg --check-trustdb' # first run will create ~/.gnupg/gpg.conf
+$USERCMD bash -l -c 'gpg --recv-keys 0x091AB856069AAA1C'
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

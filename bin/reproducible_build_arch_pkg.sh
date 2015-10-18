@@ -56,7 +56,7 @@ first_build() {
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	# nicely run makepkg with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -l -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after 4h." | tee -a $LOG
@@ -87,7 +87,7 @@ second_build() {
 	echo 'umask 0002' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	# nicely run makepkg with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -l -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after 4h." | tee -a $LOG

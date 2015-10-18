@@ -14,18 +14,18 @@ set -e
 
 cleanup_all() {
 	cd
-	# delete main work dir (only on master)
-	if [ "$MODE" = "master" ] ; then
-		rm $TMPDIR -r
-		echo "$(date -u) - $TMPDIR deleted."
+	# delete session if it still exists
+	if [ "$MODE" != "master" ] ; then
+		schroot --end-session -c arch-$SRCPACKAGE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	fi
 	# delete makepkg build dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
 		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
 	fi
-	# delete session if it still exists
-	if [ "$MODE" != "master" ] ; then
-		schroot --end-session -c arch-$SRCPACKAGE-$(basename $TMPDIR) > /dev/null 2>&1 || true
+	# delete main work dir (only on master)
+	if [ "$MODE" = "master" ] ; then
+		rm $TMPDIR -r
+		echo "$(date -u) - $TMPDIR deleted."
 	fi
 }
 

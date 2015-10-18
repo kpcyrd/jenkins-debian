@@ -338,6 +338,8 @@ skip_if_unavailable=False
 *** remember to adopt cleanup_schroot_sessions() in common_functions.sh when renaming the schroots
 ** use archlinux.css not the one from freebsd :)
 *** use arch logo
+* put results in a db
+** graph results
 
 ----
 notes on source and binary versions:

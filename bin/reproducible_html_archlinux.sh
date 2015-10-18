@@ -55,7 +55,7 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 		elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>failed to build from source</td>"
 		elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$PKG/build1.log)" ] ; then
-			write_page "      <td>failed to build from source, when running tests</td>"
+			write_page "      <td>failed to build from source, while running tests</td>"
 		elif [ ! -z "$(egrep '==> ERROR: Failure while downloading' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>failed to download source</td>"
 		elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$PKG/build1.log)" ] ; then

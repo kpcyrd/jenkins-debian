@@ -81,10 +81,12 @@ second_build() {
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
 	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask
-	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT-14"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	echo 'export LANG="fr_CH.UTF-8"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	echo 'export LC_ALL="fr_CH.UTF-8' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	echo 'umask 0002' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
+	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
+	export LANG="fr_CH.UTF-8"
+	export LC_ALL="fr_CH.UTF-8"
+	umask 0002
+	__END__
 	# nicely run makepkg with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -l -c 'makepkg --syncdeps --noconfirm --skippgpcheck 2>&1' | tee -a $LOG

@@ -112,6 +112,11 @@ META_PKGSET[28]="maint_debian-ocaml"
 META_PKGSET[29]="maint_debian-x"
 META_PKGSET[30]="maint_lua"
 
+# sleep 1-23 secs to randomize start times
+delay_start() {
+	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
+}
+
 schedule_packages() {
 	LC_USER="$REQUESTER" \
 	LOCAL_CALL="true" \

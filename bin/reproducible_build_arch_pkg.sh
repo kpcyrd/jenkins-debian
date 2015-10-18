@@ -173,6 +173,7 @@ fi
 #
 # main - only used in master-mode
 #
+delay_start # randomize start times
 # first, we need to choose a package…
 #SESSION="arch-scheduler-$RANDOM"
 #schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch

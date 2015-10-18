@@ -13,11 +13,6 @@ common_init "$@"
 
 set -e
 
-# sleep 1-23 secs to randomize start times
-delay_start() {
-	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
-}
-
 create_results_dirs() {
 	mkdir -vp $BASE/dbd/${SUITE}/${ARCH}
 	mkdir -vp $BASE/dbdtxt/${SUITE}/${ARCH}

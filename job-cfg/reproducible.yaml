@@ -659,6 +659,10 @@
     name: '{name}_builder_arch_1'
 
 - job-template:
+    defaults: reproducible_builder_trigger
+    name: '{name}_builder_arch_2'
+
+- job-template:
     defaults: reproducible
     name: '{name}_html_archlinux'
 
@@ -1317,6 +1321,13 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_builder_arch_1':
+            my_description: 'Try to reproducibly build an Archlinux package.'
+            my_timed: '* * * * *'
+            my_trigger: 'reproducible_html_archlinux'
+            my_shell: '/srv/jenkins/bin/reproducible_build_arch_pkg.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_arch_2':
             my_description: 'Try to reproducibly build an Archlinux package.'
             my_timed: '* * * * *'
             my_trigger: 'reproducible_html_archlinux'

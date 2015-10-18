@@ -71,11 +71,9 @@ tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export http_proxy=$http_proxy
 	export https_proxy=$http_proxy
 	export ftp_proxy=$http_proxy
-	export rsync_proxy=$http_proxy
 	export HTTP_PROXY=$http_proxy
 	export HTTPS_PROXY=$http_proxy
 	export FTP_PROXY=$http_proxy
-	export RSYNC_PROXY=$http_proxy
 	export no_proxy="localhost,127.0.0.1"
 	__END__
 chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh

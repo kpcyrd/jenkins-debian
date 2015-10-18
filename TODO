@@ -129,6 +129,7 @@ properties:
 ** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
 ** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 ** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
+** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
 
 * higher prio:
 ** document in the non-debian pages, that we don't have a clear idea yet, how to record+reproduce the build environment and that this is essential for reproducible builds too.
@@ -330,6 +331,7 @@ skip_if_unavailable=False
 ** confirm the others are really working
 ** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
 *** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys'
+** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
 * create a working scheduler job
 ** test 'extra' too
 ** idea: reschedule reverse build depends too

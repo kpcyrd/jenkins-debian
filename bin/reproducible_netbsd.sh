@@ -44,7 +44,7 @@ trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 echo "============================================================================="
-echo "$(date -u) - Cloning the netbsd git repository (which is autosynced with their CVS repository)"
+echo "$(date -u) - Cloning the NetBSD git repository (which is synced with the NetBSD CVS repository)"
 echo "============================================================================="
 git clone --depth 1 https://github.com/jsonn/src
 mv src netbsd
@@ -62,7 +62,7 @@ git log -1
 export MKREPRO="yes"
 
 echo "============================================================================="
-echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - first build run."
+echo "$(date -u) - Building NetBSD ${NETBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
@@ -78,14 +78,14 @@ for MACHINE in $MACHINES ; do
 done
 
 echo "============================================================================="
-echo "$(date -u) - Building netbsd ${NETBSD_VERSION} - cleaning up between builds."
+echo "$(date -u) - Building NetBSD ${NETBSD_VERSION} - cleaning up between builds."
 echo "============================================================================="
 rm obj/releasedir -r
 rm obj/destdir.* -r
 # we keep the toolchain(s)
 
 echo "============================================================================="
-echo "$(date -u) - Building netbsd - second build run."
+echo "$(date -u) - Building NetBSD - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
@@ -124,7 +124,7 @@ rm -r $TMPBUILDDIR/netbsd
 TIMEOUT="30m"
 DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DIFFOSCOPE on netbsd..."
+echo "$(date -u) - Running $DIFFOSCOPE on NetBSD build results..."
 echo "============================================================================="
 FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
 GOOD_FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
@@ -199,7 +199,7 @@ cat > $PAGE <<- EOF
       <div class="page-content">
 EOF
 write_page_intro NetBSD
-write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES built netbsd files were reproducible in our test setup"
+write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES built NetBSD files were reproducible in our test setup"
 if [ "$GOOD_PERCENT" = "100.0" ] ; then
 	write_page "!"
 else

@@ -147,7 +147,7 @@ trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 echo "============================================================================="
-echo "$(date -u) - Cloning the OpenWrt git repository."
+echo "$(date -u) - Cloning OpenWrt git repository."
 echo "============================================================================="
 git clone --depth 1 git://git.openwrt.org/openwrt.git
 cd openwrt

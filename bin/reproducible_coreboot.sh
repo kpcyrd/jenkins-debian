@@ -49,7 +49,7 @@ trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 echo "============================================================================="
-echo "$(date -u) - Cloning the coreboot git repository with submodules."
+echo "$(date -u) - Cloning coreboot git repository with submodules."
 echo "============================================================================="
 git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot

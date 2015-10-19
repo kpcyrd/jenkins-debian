@@ -27,7 +27,7 @@ create_results_dirs() {
 save_freebsd_results(){
 	local RUN=$1
 	echo "============================================================================="
-	echo "$(date -u) - Saving freebsd ${FREEBSD_VERSION} artifacts for $RUN."
+	echo "$(date -u) - Saving FreeBSD ${FREEBSD_VERSION} build results for $RUN run."
 	echo "============================================================================="
 	mkdir -p $TMPDIR/$RUN/
 	# copy results over
@@ -45,7 +45,7 @@ FREEBSD_TARGET="release/10.2.0"
 RSSH="ssh freebsd-jenkins.debian.net"
 RSCP="scp -r freebsd-jenkins.debian.net"
 TMPBUILDDIR=/usr/src
-$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on freebsd too
+$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on FreeBSD too
 TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
@@ -56,23 +56,23 @@ echo "==========================================================================
 $RSSH freebsd-version
 
 echo "============================================================================="
-echo "$(date -u) - Cloning the freebsd git repository (which is autosynced with their CVS repository)"
+echo "$(date -u) - Cloning FreeBSD git repository."
 echo "============================================================================="
 $RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
 FREEBSD=$($RSSH "cd $TMPBUILDDIR ; git log -1")
 FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
-echo "This is freebsd $FREEBSD_VERSION."
+echo "This is FreeBSD $FREEBSD_VERSION."
 echo
 $RSSH "cd $TMPBUILDDIR ; git log -1"
 TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
 
 echo "============================================================================="
-echo "$(date -u) - Building freebsd ${FREEBSD_VERSION} - first build run."
+echo "$(date -u) - Building FreeBSD ${FREEBSD_VERSION} - first build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 export LANG="en_GB.UTF-8"
 # actually build everything
-NUM_CPU=4 # if someone could tell me how to determine this on freebsd, this would be neat
+NUM_CPU=4 # if someone could tell me how to determine this on FreeBSD, this would be neat
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel"
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
@@ -83,7 +83,7 @@ save_freebsd_results b1
 
 
 echo "============================================================================="
-echo "$(date -u) - Building freebsd - second build run."
+echo "$(date -u) - Building FreeBSD - second build run."
 echo "============================================================================="
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
@@ -112,7 +112,7 @@ umask 0022
 TIMEOUT="30m"
 DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 echo "============================================================================="
-echo "$(date -u) - Running $DIFFOSCOPE on freebsd..."
+echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD build results."
 echo "============================================================================="
 FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "       <ul>" > $FILES_HTML
@@ -175,13 +175,13 @@ cat > $PAGE <<- EOF
       <div class="page-content">
 EOF
 write_page_intro FreeBSD
-write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES built freebsd files were reproducible in our test setup"
+write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES FreeBSD files were reproducible in our test setup"
 if [ "$GOOD_PERCENT" = "100.0" ] ; then
 	write_page "!"
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is very much work in progress, especially the build targets should be choosen better...</em></p>"
+write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is very much work in progress...</em></p>"
 write_explaination_table FreeBSD
 cat $FILES_HTML >> $PAGE
 write_page "     <p><pre>"

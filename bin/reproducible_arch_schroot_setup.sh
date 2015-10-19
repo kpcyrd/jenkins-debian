@@ -18,7 +18,7 @@ ARCH_MIRROR=http://mirror.one.com/archlinux/
 bootstrap() {
 	# define URL for bootstrap.tgz
 	BOOTSTRAP_BASE=$ARCH_MIRROR/iso/
-	echo "$(date -u) - downloading Archlinux latest/sha1sums.txt"
+	echo "$(date -u) - downloading Arch Linux latest/sha1sums.txt"
 	BOOTSTRAP_DATE=$(curl $BOOTSTRAP_BASE/latest/sha1sums.txt 2>/dev/null| grep x86_64.tar.gz| cut -d " " -f3|cut -d "-" -f3|egrep '[0-9.]{9}')
 	if [ -z $BOOTSTRAP_DATE ] ; then
 		echo "Cannot determine version of boostrap file, aborting."
@@ -26,7 +26,7 @@ bootstrap() {
 		exit 1
 	fi
 	BOOTSTRAP_TAR_GZ=$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
-	echo "$(date -u) - downloading Archlinux bootstrap.tar.gz."
+	echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
 	curl -O $BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ
 	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
 	mv root.x86_64/* $SCHROOT_TARGET || true # proc and sys have 0555 perms, thus mv will fail... also see below

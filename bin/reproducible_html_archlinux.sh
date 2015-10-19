@@ -22,19 +22,19 @@ cat > $PAGE <<- EOF
 <html lang="en-US">
   <head>
     <meta charset="UTF-8">
-    <title>Repoducible Archlinux ?</title>
+    <title>Repoducible Arch Linux ?</title>
     <link rel='stylesheet' href='/freebsd/global.css' type='text/css' media='all' />
   </head>
   <body>
     <div id="logo">
-      <h1>Reproducible Archlinux?</h1>
+      <h1>Reproducible Arch Linux?</h1>
     </div>
     <div class="content">
       <div class="page-content">
 
 EOF
-write_page_intro Archlinux
-write_explaination_table Archlinux
+write_page_intro 'Arch Linux'
+write_explaination_table 'Arch Linux'
 write_page "    <table><tr><th>source package</th><th>test date</th><th>1st build log</th><th>2nd build log</th><th>diffoscope output for binary packages</th></tr>"
 for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 	write_page "     <tr>"
@@ -74,5 +74,5 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 done
 write_page "    </table>"
 write_page "</div></div>"
-write_page_footer Archlinux
+write_page_footer 'Arch Linux'
 echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"

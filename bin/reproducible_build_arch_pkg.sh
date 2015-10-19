@@ -40,7 +40,7 @@ handle_remote_error() {
 
 first_build() {
 	echo "============================================================================="
-	echo "Building ${SRCPACKAGE} for Archlinux on $(hostname -f) now."
+	echo "Building ${SRCPACKAGE} for Arch Linux on $(hostname -f) now."
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
@@ -67,7 +67,7 @@ first_build() {
 
 second_build() {
 	echo "============================================================================="
-	echo "Re-Building ${SRCPACKAGE} for Archlinux on $(hostname -f) now."
+	echo "Re-Building ${SRCPACKAGE} for Arch Linux on $(hostname -f) now."
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="

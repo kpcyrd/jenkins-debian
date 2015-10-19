@@ -199,7 +199,7 @@ write_page_header() {
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>,"
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Archlinux</a></li> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too.</ul>"
+		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too.</ul>"
 		write_page "   <ul>As we think that reproducible builds should become the norm, we have started to write <li><a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a></li>. As always we appreciate feedback on this document, just please don't consider it to be finished, comprehensive or correct, yet."
 		write_page "      Also aimed at the free software world at large, but released as version 1.0, is the first specication we have written: the <li><a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a></li>.</ul>"
 	fi
@@ -288,11 +288,11 @@ write_page_intro() {
 		local PROJECTURL="https://github.com/freebsd/freebsd.git"
 		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.1 system"
 		local BRANCH="release/10.2.0"
-	elif [ "$1" = "Archlinux" ] ; then
+	elif [ "$1" = "Arch Linux" ] ; then
 		write_page "        <em>Reproducible $1</em> is an effort to apply this to $1. Thus $1 packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
-		local PROJECTNAME="Archlinux"
+		local PROJECTNAME="Arch Linux"
 	fi
-	if [ "$1" != "Archlinux" ] ; then
+	if [ "$1" != "Arch Linux" ] ; then
 		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. Currently this job is triggered more often though, because this is still under development and brand new. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute.</p>"
 	else
 		write_page "       <p>This is brand new and the test setup needs to be explained here.</p>"
@@ -307,7 +307,7 @@ write_page_footer() {
 		write_page "NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
 	elif [ "$1" = "FreeBSD" ] ; then
 		write_page "FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
-	elif [ "$1" = "Archlinux" ] ; then
+	elif [ "$1" = "Arch Linux" ] ; then
 		write_page "The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis."
 	fi
 	write_page "</p></body></html>"
@@ -328,17 +328,17 @@ write_explaination_table() {
 		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>domainname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 	fi
-	if [ "$1" != "FreeBSD" ] && [ "$1" != "Archlinux" ]  ; then
+	if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ]  ; then
 		write_page "<tr><td>env CAPTURE_ENVIRONMENT</td><td><em>not set</em></td><td>CAPTURE_ENVIRONMENT=\"I capture the environment\"</td></tr>"
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
-	if [ "$1" = "Archlinux" ]  ; then
+	if [ "$1" = "Arch Linux" ]  ; then
 		write_page "<tr><td>env LANG</td><td>LANG<em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	else
 		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	fi
 	write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
-	if [ "$1" != "FreeBSD" ] && [ "$1" != "Archlinux" ]  ; then
+	if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ]  ; then
 		write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
 	else
 		write_page "<tr><td>env PATH</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
@@ -362,7 +362,7 @@ write_explaination_table() {
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td></td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL2 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td></tr>"
-		elif [ "$1" != "Archlinux" ]  ; then
+		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 		else
 			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"

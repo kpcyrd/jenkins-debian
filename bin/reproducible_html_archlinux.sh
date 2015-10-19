@@ -61,7 +61,7 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 		elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>failed to verify source</td>"
 		elif [ ! -z "$(egrep 'makepkg was killed by timeout after 4h' $ARCHBASE/$PKG/build1.log)" ] ; then
-			write_page "      <td>failed to build, as it was killed by timeout after 4h</td>"
+			write_page "      <td>failed to build, killed by timeout after 4h</td>"
 		else
 			write_page "      <td>probably failed to build from source, please investigate</td>"
 		fi

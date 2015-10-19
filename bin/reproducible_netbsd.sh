@@ -107,6 +107,9 @@ for MACHINE in $MACHINES ; do
 	echo "${MACHINE} done, second time."
 done
 
+# temp debug
+set -x
+
 # reset environment to default values again
 export LANG="en_GB.UTF-8"
 unset LC_ALL

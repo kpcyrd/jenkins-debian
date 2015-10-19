@@ -235,14 +235,16 @@ save_schedule = []
 notify = 1 if notify else 0
 notify = 2 if notify_on_start else 0
 artifacts_value = 1 if artifacts else 0
+reason = reason if reason else None
 for id in ids:
-    to_schedule.append((id, date, artifacts_value, str(notify), requester))
+    to_schedule.append((id, date, artifacts_value, str(notify), requester,
+                        reason))
     save_schedule.append((id, requester, epoch))
 log.debug('Packages about to be scheduled: ' + str(to_schedule))
 
 query1 = '''REPLACE INTO schedule
-    (package_id, date_scheduled, save_artifacts, notify, scheduler)
-    VALUES (?, ?, ?, ?, ?)'''
+    (package_id, date_scheduled, save_artifacts, notify, scheduler, message)
+    VALUES (?, ?, ?, ?, ?, ?)'''
 query2 = '''INSERT INTO manual_scheduler
     (package_id, requester, date_request) VALUES (?, ?, ?)'''
 

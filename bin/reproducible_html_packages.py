@@ -211,7 +211,7 @@ def gen_suites_links(package, current_suite, current_arch):
 
 def gen_history_page(package):
     keys = ('build date', 'version', 'suite', 'architecture', 'result',
-        'build duration', 'node1', 'node2', 'job')
+        'build duration', 'node1', 'node2', 'job', 'schedule message')
     try:
         head = package.history[0]
     except IndexError:

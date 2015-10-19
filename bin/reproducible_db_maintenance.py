@@ -546,6 +546,10 @@ schema_updates = {
         'DROP TABLE schedule',
         'ALTER TABLE schedule_tmp RENAME TO schedule',
         'INSERT INTO rb_schema VALUES ("25", "' + now + '")'],
+    26: [ # add a column to the schedule table to save the schedule message
+        'ALTER TABLE schedule ADD COLUMN message TEXT',
+        'ALTER TABLE stats_build ADD COLUMN schedule_message TEXT NOT NULL DEFAULT ""',
+        'INSERT INTO rb_schema VALUES ("26", "' + now + '")'],
 }
 
 

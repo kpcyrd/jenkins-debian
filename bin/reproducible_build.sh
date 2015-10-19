@@ -121,8 +121,8 @@ update_db_and_html() {
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
-		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job, schedule_message) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB', '$SCHEDULE_MESSAGE')" || \
+		sqlite3 -init $INIT ${PACKAGES_DB} "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job, schedule_message) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB', '$SCHEDULE_MESSAGE')"
 	fi
 	# unmark build since it's properly finished
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';" || \
@@ -401,7 +401,7 @@ call_diffoscope_on_changes_files() {
 
 choose_package() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "
-		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer
+		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.message
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE sch.date_build_started=''
 		AND s.architecture='$ARCH'
@@ -417,6 +417,7 @@ choose_package() {
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
+	SCHEDULE_MESSAGE=$(echo $RESULT|cut -d "|" -f8)
 	# remove previous build attempts which didnt finish correctly:
 	BUILDER_PREFIX="${JOB_NAME#reproducible_builder_}/"
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)

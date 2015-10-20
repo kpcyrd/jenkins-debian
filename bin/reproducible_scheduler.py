@@ -359,7 +359,7 @@ def query_old_ftbfs_and_depwait_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status IN ('FTBFS', 'depwait')
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
-                AND r.build_date < datetime('now', '-5 days')
+                AND r.build_date < datetime('now', '-3 days')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)

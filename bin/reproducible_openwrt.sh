@@ -231,7 +231,7 @@ for i in * ; do
 	for j in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
 		let ALL_IMAGES+=1
 		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
-			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}K) failed to build once.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build once.</td></tr>" >> $DBD_HTML
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
@@ -240,7 +240,7 @@ for i in * ; do
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/openwrt/dbd/$i
 			mv $TMPDIR/$i/$j.html $BASE/openwrt/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}K) is unreproducible.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
 			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
@@ -269,7 +269,7 @@ for i in * ; do
 	for j in $(printf "$PKGS1\n$PKGS2" | sort -u ) ; do
 		let ALL_PACKAGES+=1
 		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
-			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}K) failed to build once.</td></tr>" >> $DBD_BAD_PKGS_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build once.</td></tr>" >> $DBD_BAD_PKGS_HTML
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi

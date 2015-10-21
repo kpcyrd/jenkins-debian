@@ -238,9 +238,7 @@ properties:
 
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
-* build all packages? (set CONFIG_ALL=y and run 'make defconfig')
-** just build some first...
-* file dbd bug about unable to inspect these .bin files
+* incorporate popular third-party ("external feeds") packages?
 * file dbd bug about crashing on certain squashfs files
 * explain status in plain english
 * use disorderfs for 2nd build?

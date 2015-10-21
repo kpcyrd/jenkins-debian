@@ -14,8 +14,8 @@ set -e
 
 cleanup_tmpdirs() {
 	cd
-	rm -r $TMPDIR
-	rm -r $TMPBUILDDIR
+	rm -rf $TMPDIR
+	rm -rf $TMPBUILDDIR
 }
 
 create_results_dirs() {
@@ -88,9 +88,9 @@ openwrt_build() {
 }
 
 openwrt_cleanup() {
-	rm build_dir/target-* -r
-	rm staging_dir/target-* -r
-	rm bin/* -r
+	rm build_dir/target-* -rf
+	rm staging_dir/target-* -rf
+	rm bin/* -rf
 }
 
 build_two_times() {
@@ -199,7 +199,7 @@ BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
 cat $(find build_dir/ -name banner | grep etc/banner|head -1) >> $BANNER_HTML
 
 # clean up builddir to save space on tmpfs
-rm -r $TMPBUILDDIR/openwrt
+rm -rf $TMPBUILDDIR/openwrt
 
 # run diffoscope on the results
 # (this needs refactoring rather badly)

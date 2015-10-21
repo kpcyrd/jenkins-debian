@@ -4,6 +4,7 @@
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 # released under the GPLv=2
 
+OPENWRT_GIT_REPO=git://git.openwrt.org/openwrt.git
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
@@ -149,7 +150,7 @@ cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning OpenWrt git repository."
 echo "============================================================================="
-git clone --depth 1 git://git.openwrt.org/openwrt.git
+git clone --depth 1 $OPENWRT_GIT_REPO openwrt
 cd openwrt
 OPENWRT="$(git log -1)"
 OPENWRT_VERSION=$(git describe --always)
@@ -171,6 +172,9 @@ build_two_times ramips_rt288x_RTN15 "CONFIG_TARGET_ramips=y\nCONFIG_TARGET_ramip
 #
 # create html about toolchain used
 #
+echo "============================================================================="
+echo "$(date -u) - Creating Documentation HTML"
+echo "============================================================================="
 TOOLCHAIN_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "<table><tr><th>Target toolchains built</th></tr>" > $TOOLCHAIN_HTML
 for i in $(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo) ; do

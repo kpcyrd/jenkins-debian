@@ -154,6 +154,7 @@ properties:
 ** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
+** new graph: looking at https://reproducible.debian.net/stats_bugs.png i wonder if it would be worthwhile to have https://reproducible.debian.net/stats_bugs_state.png but without the ftbfs tagged bugs… i'd hope that this graph is a.) new+interesting and b.) showing progress
 
 * lesser prio
 ** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1

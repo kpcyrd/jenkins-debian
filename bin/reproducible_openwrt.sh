@@ -15,6 +15,12 @@ set -e
 
 cleanup_tmpdirs() {
 	cd
+	# (very simple) check we are deleting the right stuff
+	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] || \
+	   [ "${TMPBUILDDIR:0:23}" != "/srv/workspace/chroots/" ] || [ ${#TMPBUILDDIR} -le 23 ] ; then
+		echo "Something very strange with \$TMPDIR=$TMPDIR or \$TMPBUILDDIR=$TMPBUILDDIR, exiting instead of doing cleanup."
+		exit 1
+	fi
 	rm -rf $TMPDIR
 	rm -rf $TMPBUILDDIR
 }

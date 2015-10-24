@@ -23,6 +23,7 @@ cleanup_tmpdirs() {
 	fi
 	rm -rf $TMPDIR
 	rm -rf $TMPBUILDDIR
+	rm -f $BANNER_HTML
 }
 
 create_results_dirs() {
@@ -113,6 +114,9 @@ build_two_times() {
 	MAKE=make
 	openwrt_build "first" "$TARGET"
 
+	# get banner
+	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
+
 	# save results in b1
 	save_openwrt_results b1
 
@@ -150,6 +154,7 @@ build_two_times() {
 #
 TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t openwrt-XXXXXXXX)  # used to build on tmpfs
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # accessable in schroots, used to compare results
+BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
 trap cleanup_tmpdirs INT TERM EXIT
@@ -206,9 +211,6 @@ for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip
 	echo " </td></tr>" >> $TOOLCHAIN_HTML
 done
 echo "</table>" >> $TOOLCHAIN_HTML
-# get banner
-BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
-cat $(find build_dir/ -name banner | grep etc/banner|head -1) >> $BANNER_HTML
 
 # clean up builddir to save space on tmpfs
 rm -rf $TMPBUILDDIR/openwrt

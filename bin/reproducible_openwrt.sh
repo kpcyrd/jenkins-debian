@@ -188,6 +188,7 @@ build_two_times ramips_rt288x_RTN15 "CONFIG_TARGET_ramips=y\nCONFIG_TARGET_ramip
 echo "============================================================================="
 echo "$(date -u) - Creating Documentation HTML"
 echo "============================================================================="
+set -x # FIXME: temporary debug
 TOOLCHAIN_HTML=$(mktemp --tmpdir=$TMPDIR)
 echo "<table><tr><th>Target toolchains built</th></tr>" > $TOOLCHAIN_HTML
 for i in $(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo) ; do

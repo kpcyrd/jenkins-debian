@@ -414,13 +414,6 @@ if [ "$(sudo su - jenkins -c 'git config --get user.email')" != "jenkins@jenkins
 	sudo su - jenkins -c "git config --global user.name Jenkins"
 fi
 
-if [ -f /etc/debian_version ] ; then
-	#
-	# configure pbuilder for jenkins user
-	#
-	sudo chown jenkins /var/cache/pbuilder/result
-fi
-
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	#
 	# creating LVM volume group for jobs

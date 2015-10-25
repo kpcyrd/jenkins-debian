@@ -12,6 +12,7 @@ esac
 EXTRAPACKAGES=""	# better list them in bin/reproducible_setup_pbuilder.sh
 APTCACHE=""
 COMPRESSPROG="pigz"
+BUILDPLACE=/srv/workspace/pbuilder  # build in /srv/workspace, which is in tmpfs
 # unset proxy, see #780587
 unset http_proxy
 export -n http_proxy

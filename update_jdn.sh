@@ -50,7 +50,6 @@ for user in helmut holger mattia lunar ; do
 done
 
 sudo mkdir -p /srv/workspace
-[ -d /srv/workspace/pbuilder ] || sudo mkdir -p /srv/workspace/pbuilder
 [ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
@@ -103,15 +102,6 @@ fi
 
 # only on Debian systems
 if [ -f /etc/debian_version ] ; then
-	if [ ! -h /var/cache/pbuilder/build ] ; then
-		sudo rmdir /var/cache/pbuilder/build || sudo rm -f /var/cache/pbuilder/build
-		if [ -e /var/cache/pbuilder/build ] ; then
-			explain "/var/cache/pbuilder/build could not be cleared."
-		else
-			sudo ln -s /srv/workspace/pbuilder /var/cache/pbuilder/build
-		fi
-	fi
-
 	#
 	# install packages we need
 	#

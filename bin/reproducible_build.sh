@@ -302,7 +302,7 @@ handle_enospace() {
 	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 30m."
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$BUILDER on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
-	irc_message "$MESSAGE"
+	#irc_message "$MESSAGE"
 	echo "Sleeping 30m before aborting the job."
 	sleep 30m
 	exec /srv/jenkins/bin/abort.sh

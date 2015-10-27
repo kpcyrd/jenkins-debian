@@ -174,6 +174,7 @@ if [ -f /etc/debian_version ] ; then
 				make
 				python3-yaml
 				subversion
+				tree
 				unzip
 				util-linux
 				zlib1g-dev"

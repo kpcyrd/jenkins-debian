@@ -120,6 +120,7 @@ if [ -f /etc/debian_version ] ; then
 			debootstrap 
 			devscripts 
 			etckeeper
+			figlet
 			git
 			haveged
 			htop

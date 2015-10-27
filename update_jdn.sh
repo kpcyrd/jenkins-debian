@@ -152,7 +152,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run coreboot/openwrt/netbsd jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64) DEBS="$DEBS bison cmake diffutils findutils flex g++ gawk gcc git grep iasl libc6-dev m4 make subversion unzip util-linux zlib1g-dev libncurses5-dev libssl-dev locales-all" ;;
+			profitbricks-build3-amd64) DEBS="$DEBS bison cmake diffutils findutils flex g++ gawk gcc git grep iasl libc6-dev m4 make subversion unzip util-linux zlib1g-dev libncurses5-dev libssl-dev locales-all kgb-client" ;;
 			*) ;;
 		esac
 		if [ "$HOSTNAME" = "jenkins" ] ; then
@@ -180,6 +180,7 @@ if [ -f /etc/debian_version ] ; then
 				iasl 
 				imagemagick 
 				ip2host 
+				kgb-client
 				libapache2-mod-macro 
 				libav-tools 
 				libcap2-bin 
@@ -405,10 +406,12 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	        sudo vgcreate $VGNAME $PVNAME
 	    fi
 	fi
-	
-	#
-	# generate the kgb-client configurations
-	#
+fi
+
+#
+# generate the kgb-client configurations
+#
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then

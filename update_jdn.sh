@@ -153,7 +153,31 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run coreboot/openwrt/netbsd jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64) DEBS="$DEBS bison cmake diffutils findutils flex g++ gawk gcc git grep iasl libc6-dev m4 make subversion unzip util-linux zlib1g-dev libncurses5-dev libssl-dev locales-all kgb-client python3-yaml" ;;
+			profitbricks-build3-amd64) DEBS="$DEBS
+				bison
+				cmake
+				diffutils
+				findutils
+				flex
+				g++
+				gawk
+				gcc
+				git
+				grep
+				iasl
+				libc6-dev
+				libncurses5-dev
+				libssl-dev
+				locales-all
+				kgb-client
+				m4
+				make
+				python3-yaml
+				subversion
+				unzip
+				util-linux
+				zlib1g-dev"
+			   ;;
 			*) ;;
 		esac
 		if [ "$HOSTNAME" = "jenkins" ] ; then

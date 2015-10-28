@@ -43,7 +43,7 @@ for user in helmut holger mattia lunar ; do
 		sudo adduser --gecos "" --shell "$shell" --disabled-password $user
 		if [ "$user" = "holger" ] ; then
 			sudo usermod -G jenkins,jenkins-adm,sudo,adm $user
-		else
+		elif [ "$user" != "lunar" ] ; then
 			sudo usermod -G jenkins,jenkins-adm $user
 		fi
 	fi

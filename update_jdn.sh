@@ -29,7 +29,11 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo adduser --system --shell /bin/bash --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
-for user in helmut holger mattia ; do
+for user in helmut holger mattia lunar ; do
+	if [ "$user" = "lunar" ] && [ "$HOSTNAME" != "jenkins" ] ; then
+		# lunar only wants to configure jekyll
+		continue
+	fi
 	if ! getent passwd $user > /dev/null ; then
 		if [ "$user" = "mattia" ] ; then
 			local shell=/bin/zsh
@@ -205,7 +209,8 @@ if [ -f /etc/debian_version ] ; then
 				graphviz 
 				iasl 
 				imagemagick 
-				ip2host 
+				ip2host
+				jekyll
 				kgb-client
 				libapache2-mod-macro 
 				libav-tools 

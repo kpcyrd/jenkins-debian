@@ -314,17 +314,11 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	Use common-directives reproducible-builds.org startcom.crt
 	SSLCertificateFile /etc/apache2/ssl/reproducible-builds.org.pem
 
-	DocumentRoot /var/lib/jenkins/userContent/reproducible
+	DocumentRoot /srv/reproducible-builds.org/www
 	AddDefaultCharset utf-8
 
-	# redirects reproducible-builds.org to https://reproducible.debian.net except for /specs/ and /howto/
-	RewriteCond %{HTTP_HOST} reproducible-builds\.org
-	RewriteCond %{REQUEST_URI} !^/specs($|/)
-	RewriteCond %{REQUEST_URI} !^/howto($|/)
-	RewriteRule ^/?(.*) https://reproducible.debian.net/$1 [R=301,L]
-
-	<Proxy *>
-		Require all granted
-	</Proxy>
+	Alias /website.git /srv/reproducible-builds.org/git/website.git
+	Alias /specs /var/lib/jenkins/userContent/reproducible/specs
+	Alias /howto /var/lib/jenkins/userContent/reproducible/howto
 </VirtualHost>
 

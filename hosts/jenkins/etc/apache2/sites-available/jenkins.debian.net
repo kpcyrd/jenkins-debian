@@ -320,7 +320,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	Alias /website.git /srv/reproducible-builds.org/git/website.git
 	Alias /specs /var/lib/jenkins/userContent/reproducible/specs
 
-	RewriteRule on
+	RewriteEngine on
 	RewriteRule /howto($|/.*) /docs/ [R=permanent]
 
 	<Directory /srv/reproducible-builds.org/www>

@@ -25,6 +25,7 @@
           url: 'git://anonscm.debian.org/lintian/lintian.git'
           branches:
             - master
+            - 'origin/smoke-me/**'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 

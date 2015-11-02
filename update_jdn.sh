@@ -194,7 +194,8 @@ if [ -f /etc/debian_version ] ; then
 				figlet 
 				flex 
 				gawk 
-				ghc 
+				ghc
+				git-notifier 
 				gocr 
 				graphviz 
 				iasl 

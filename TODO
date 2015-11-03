@@ -253,12 +253,12 @@ properties:
 ==== reproducible FreeBSD
 
 * useful improvements:
+** build master branch in addition to release/10.2.0
 ** investigate how to use tmpfs on freebsd and build there
-** upgrade the VM to FreeBSD 10.2
 ** find a way to be informed about updates and keep it updated
-** build master branch instead of release/10.2.0
-** modify PATH, uid, gid and USER too, maybe host+domainname as well. (The VM is only used for this, so we could change the host+domainname before building... probably even the date)
+** modify PATH, uid, gid and USER too and host+domainname as well. The VM is only used for this, so we could change the host+domainname temporaily between builds too.
 ** add freebsd vm as node to jenkins and run the script directly there, saves lot of ssh hassle
+** run diffoscope nativly
 
 * random notes, to be moved to README
 ** we build freebsd 10.1 (=released) atm
@@ -278,6 +278,10 @@ properties:
 ** adduser jenkins (with bash as default shell)
 ** mkdir -p /srv/reproducible-results
 ** chown -R jenkins:jenkins /srv/
+
+* system maintenance
+** upgraded the VM to FreeBSD 10.2
+*** done with: freebsd-update upgrade -r 10.2
 
 ==== reproducible Fedora
 

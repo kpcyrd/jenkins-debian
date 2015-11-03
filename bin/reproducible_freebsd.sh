@@ -41,8 +41,8 @@ save_freebsd_results(){
 #
 # main
 #
-FREEBSD_TARGETS="master release/10.2.0"
-# arrarys to save results
+FREEBSD_TARGETS="master stable/10 release/10.2.0"
+# arrays to save results
 declare -A ALL_FILES
 declare -A GOOD_FILES
 declare -A GOOD_PERCENT

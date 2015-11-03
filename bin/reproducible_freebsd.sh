@@ -81,6 +81,9 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU
 # save results in b1
 save_freebsd_results b1
 
+# set time forward 400 days
+$RSSH "service ntpd stop ; date --set='+400 days' ; date"
+echo "$(date) - system is running in the future now."
 
 echo "============================================================================="
 echo "$(date -u) - Building FreeBSD - second build run."
@@ -100,6 +103,10 @@ $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo m
 $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
 # save results in b2
 save_freebsd_results b2
+
+# set time back to today
+$RSSH "ntpdate pool.ntp.org ; service ntpd start ; service ntpd status ; date"
+echo "$(date) - system is running at the current date now."
 
 # reset environment to default values again
 export LANG="en_GB.UTF-8"

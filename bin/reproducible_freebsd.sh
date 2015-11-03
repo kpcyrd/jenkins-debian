@@ -41,123 +41,125 @@ save_freebsd_results(){
 #
 # main
 #
-FREEBSD_TARGET="release/10.2.0"
-RSSH="ssh freebsd-jenkins.debian.net"
-RSCP="scp -r freebsd-jenkins.debian.net"
-TMPBUILDDIR=/usr/src
-$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on FreeBSD too
-TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
-DATE=$(date -u +'%Y-%m-%d')
-START=$(date +'%s')
-trap cleanup_tmpdirs INT TERM EXIT
-echo "============================================================================="
-echo "$(date -u) - FreeBSD host info"
-echo "============================================================================="
-$RSSH freebsd-version
+FREEBSD_TARGETS="master release/10.2.0"
+# arrarys to save results
+declare -A ALL_FILES
+declare -A GOOD_FILES
+declare -A GOOD_PERCENT
+declare -A FREEBSD
+declare -A FILES_HTML
+for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
+	RSSH="ssh freebsd-jenkins.debian.net"
+	RSCP="scp -r freebsd-jenkins.debian.net"
+	TMPBUILDDIR=/usr/src
+	$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on FreeBSD too
+	TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
+	DATE=$(date -u +'%Y-%m-%d')
+	START=$(date +'%s')
+	trap cleanup_tmpdirs INT TERM EXIT
+	echo "============================================================================="
+	echo "$(date -u) - FreeBSD host info"
+	echo "============================================================================="
+	$RSSH freebsd-version
 
-echo "============================================================================="
-echo "$(date -u) - Cloning FreeBSD git repository."
-echo "============================================================================="
-$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
-FREEBSD=$($RSSH "cd $TMPBUILDDIR ; git log -1")
-FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
-echo "This is FreeBSD $FREEBSD_VERSION."
-echo
-$RSSH "cd $TMPBUILDDIR ; git log -1"
-TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
+	echo "============================================================================="
+	echo "$(date -u) - Cloning FreeBSD git repository."
+	echo "============================================================================="
+	$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
+	FREEBSD[$FREEBSD_TARGET]=$($RSSH "cd $TMPBUILDDIR ; git log -1")
+	FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
+	echo "This is FreeBSD $FREEBSD_VERSION."
+	echo
+	$RSSH "cd $TMPBUILDDIR ; git log -1"
+	TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
 
-echo "============================================================================="
-echo "$(date -u) - Building FreeBSD ${FREEBSD_VERSION} - first build run."
-echo "============================================================================="
-export TZ="/usr/share/zoneinfo/Etc/GMT+12"
-export LANG="en_GB.UTF-8"
-# actually build everything
-NUM_CPU=4 # if someone could tell me how to determine this on FreeBSD, this would be neat
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
-# save results in b1
-save_freebsd_results b1
+	echo "============================================================================="
+	echo "$(date -u) - Building FreeBSD ${FREEBSD_VERSION} - first build run."
+	echo "============================================================================="
+	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
+	export LANG="en_GB.UTF-8"
+	# actually build everything
+	NUM_CPU=4 # if someone could tell me how to determine this on FreeBSD, this would be neat
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
+	# save results in b1
+	save_freebsd_results b1
 
-# set time forward 400 days
-$RSSH "service ntpd stop ; date --set='+400 days' ; date"
-echo "$(date) - system is running in the future now."
+	# set time forward 400 days
+	$RSSH "service ntpd stop ; date --set='+400 days' ; date"
+	echo "$(date) - system is running in the future now."
 
-echo "============================================================================="
-echo "$(date -u) - Building FreeBSD - second build run."
-echo "============================================================================="
-export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-export LANG="fr_CH.UTF-8"
-export LC_ALL="fr_CH.UTF-8"
-###export PATH="$PATH:/i/capture/the/path"
-###umask 0002
-# use allmost all cores for second build
-NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-# actually build everything
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
-$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
-# save results in b2
-save_freebsd_results b2
+	echo "============================================================================="
+	echo "$(date -u) - Building FreeBSD - second build run."
+	echo "============================================================================="
+	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
+	export LANG="fr_CH.UTF-8"
+	export LC_ALL="fr_CH.UTF-8"
+	###export PATH="$PATH:/i/capture/the/path"
+	###umask 0002
+	# use allmost all cores for second build
+	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+	# actually build everything
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
+	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
+	# save results in b2
+	save_freebsd_results b2
 
-# set time back to today
-$RSSH "ntpdate pool.ntp.org ; service ntpd start ; service ntpd status ; date"
-echo "$(date) - system is running at the current date now."
+	# set time back to today
+	$RSSH "ntpdate pool.ntp.org ; service ntpd start ; service ntpd status ; date"
+	echo "$(date) - system is running at the current date now."
 
-# reset environment to default values again
-export LANG="en_GB.UTF-8"
-unset LC_ALL
-export TZ="/usr/share/zoneinfo/UTC"
-export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
-umask 0022
+	# reset environment to default values again
+	export LANG="en_GB.UTF-8"
+	unset LC_ALL
+	export TZ="/usr/share/zoneinfo/UTC"
+	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
+	umask 0022
 
-# run diffoscope on the results
-TIMEOUT="30m"
-DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
-echo "============================================================================="
-echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD build results."
-echo "============================================================================="
-FILES_HTML=$(mktemp --tmpdir=$TMPDIR)
-echo "       <ul>" > $FILES_HTML
-GOOD_FILES=0
-ALL_FILES=0
-SIZE=""
-create_results_dirs
-cd $TMPDIR/b1
-tree .
-#for i in * ; do
-	#cd $i
-i="."
-	echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> $FILES_HTML
-	for j in $(find * -type f |sort -u ) ; do
-		let ALL_FILES+=1
-		call_diffoscope $i $j
-		get_filesize $j
-		if [ -f $TMPDIR/$i/$j.html ] ; then
-			mkdir -p $BASE/freebsd/dbd/$i/$(dirname $j)
-			mv $TMPDIR/$i/$j.html $BASE/freebsd/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $FILES_HTML
-		else
-			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $FILES_HTML
-			let GOOD_FILES+=1
-			rm -f $BASE/freebsd/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
-		fi
-	done
-	#cd ..
-	echo "       </table>" >> $FILES_HTML
-#done
-GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_FILES*100/$ALL_FILES)" | bc)
-# are we there yet?
-if [ "$GOOD_PERCENT" = "100.0" ] ; then
-	MAGIC_SIGN="!"
-else
-	MAGIC_SIGN="?"
-fi
+	# run diffoscope on the results
+	TIMEOUT="30m"
+	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+	echo "============================================================================="
+	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD build results."
+	echo "============================================================================="
+	FILES_HTML[$FREEBSD_TARGET]=$(mktemp --tmpdir=$TMPDIR)
+	echo "       <ul>" > ${FILES_HTML[$FREEBSD_TARGET]}
+	GOOD_FILES[$FREEBSD_TARGET]=0
+	ALL_FILES[$FREEBSD_TARGET]=0
+	SIZE=""
+	create_results_dirs
+	cd $TMPDIR/b1
+	tree .
+	#for i in * ; do
+		#cd $i
+	i="."
+		echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+		for j in $(find * -type f |sort -u ) ; do
+			ALL_FILES[$FREEBSD_TARGET]=$(( ${ALL_FILES[$FREEBSD_TARGET]}+1 ))
+			call_diffoscope $i $j
+			get_filesize $j
+			if [ -f $TMPDIR/$i/$j.html ] ; then
+				mkdir -p $BASE/freebsd/dbd/$i/$(dirname $j)
+				mv $TMPDIR/$i/$j.html $BASE/freebsd/dbd/$i/$j.html
+				echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+			else
+				SHASUM=$(sha256sum $j|cut -d " " -f1)
+				echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+				GOOD_FILES[$FREEBSD_TARGET]=$(( ${GOOD_FILES[$FREEBSD_TARGET]}+1 ))
+				rm -f $BASE/freebsd/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
+			fi
+		done
+		#cd ..
+		echo "       </table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+	#done
+	GOOD_PERCENT[$FREEBSD_TARGET]=$(echo "scale=1 ; (${GOOD_FILES[$FREEBSD_TARGET]}*100/${ALL_FILES[$FREEBSD_TARGET]})" | bc)
+done
 
 #
 #  finally create the webpage
@@ -170,39 +172,44 @@ cat > $PAGE <<- EOF
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>Reproducible FreeBSD $MAGIC_SIGN</title>
+    <title>Reproducible FreeBSD ?</title>
     <link rel='stylesheet' href='global.css' type='text/css' media='all' />
   </head>
   <body>
     <div id="logo">
       <img src="320px-Freebsd_logo.svg.png" />
-      <h1>Reproducible FreeBSD $MAGIC_SIGN</h1>
+      <h1>Reproducible FreeBSD ?</h1>
     </div>
     <div class="content">
       <div class="page-content">
 EOF
 write_page_intro FreeBSD
-write_page "       <p>$GOOD_FILES ($GOOD_PERCENT%) out of $ALL_FILES FreeBSD files were reproducible in our test setup"
-if [ "$GOOD_PERCENT" = "100.0" ] ; then
-	write_page "!"
-else
-	write_page "."
-fi
-write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is very much work in progress...</em></p>"
+for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
+	write_page "       <p>${GOOD_FILES[$FREEBSD_TARGET]} (${GOOD_PERCENT[$FREEBSD_TARGET]}%) out of ${ALL_FILES[$FREEBSD_TARGET]} FreeBSD files were reproducible in our test setup"
+	if [ "${GOOD_PERCENT[$FREEBSD_TARGET]}" = "100.0" ] ; then
+		write_page "!"
+	else
+		write_page "."
+	fi
+done
+write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is work in progress...</em></p>"
 write_explaination_table FreeBSD
-cat $FILES_HTML >> $PAGE
-write_page "     <p><pre>"
-echo -n "$FREEBSD" >> $PAGE
-write_page "     </pre></p>"
-write_page "    </div></div>"
+for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
+	cat ${FILES_HTML[$FREEBSD_TARGET]} >> $PAGE
+	write_page "     <p><pre>"
+	echo -n "${FREEBSD[$FREEBSD_TARGET]}" >> $PAGE
+	write_page "     </pre></p>"
+	write_page "    </div></div>"
+	rm -f ${FILES_HTML[$FREEBSD_TARGET]}
+done
 write_page_footer FreeBSD
 publish_page
-rm -f $FILES_HTML 
 
 # the end
 calculate_build_duration
 print_out_duration
-irc_message "$REPRODUCIBLE_URL/freebsd/ has been updated. ($GOOD_PERCENT% reproducible)"
+FREEBSD_TARGET="master"
+irc_message "$REPRODUCIBLE_URL/freebsd/ has been updated. (${GOOD_PERCENT[$FREEBSD_TARGET]}% reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

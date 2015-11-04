@@ -27,7 +27,7 @@ create_results_dirs() {
 save_freebsd_results(){
 	local RUN=$1
 	echo "============================================================================="
-	echo "$(date -u) - Saving FreeBSD ${FREEBSD_VERSION} build results for $RUN run."
+	echo "$(date -u) - Saving FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results for $RUN run."
 	echo "============================================================================="
 	mkdir -p $TMPDIR/$RUN/
 	# copy results over
@@ -68,13 +68,13 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
 	FREEBSD[$FREEBSD_TARGET]=$($RSSH "cd $TMPBUILDDIR ; git log -1")
 	FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
-	echo "This is FreeBSD $FREEBSD_VERSION."
+	echo "This is FreeBSD branch $FREEBSD_TARGET at ${FREEBSD_VERSION}."
 	echo
 	$RSSH "cd $TMPBUILDDIR ; git log -1"
 	TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
 
 	echo "============================================================================="
-	echo "$(date -u) - Building FreeBSD ${FREEBSD_VERSION} - first build run."
+	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) - first build run."
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	export LANG="en_GB.UTF-8"
@@ -93,7 +93,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "$(date) - system is running in the future now."
 
 	echo "============================================================================="
-	echo "$(date -u) - Building FreeBSD - second build run."
+	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) - second build run."
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 	export LANG="fr_CH.UTF-8"
@@ -126,7 +126,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	TIMEOUT="30m"
 	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 	echo "============================================================================="
-	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD build results."
+	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results."
 	echo "============================================================================="
 	FILES_HTML[$FREEBSD_TARGET]=$(mktemp --tmpdir=$TMPDIR)
 	echo "       <ul>" > ${FILES_HTML[$FREEBSD_TARGET]}

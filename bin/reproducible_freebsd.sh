@@ -136,28 +136,23 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	create_results_dirs
 	cd $TMPDIR/b1
 	tree .
-	#for i in * ; do
-		#cd $i
-	i="."
-		echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-		for j in $(find * -type f |sort -u ) ; do
-			ALL_FILES[$FREEBSD_TARGET]=$(( ${ALL_FILES[$FREEBSD_TARGET]}+1 ))
-			call_diffoscope $i $j
-			get_filesize $j
-			if [ -f $TMPDIR/$i/$j.html ] ; then
-				mkdir -p $BASE/freebsd/dbd/$i/$(dirname $j)
-				mv $TMPDIR/$i/$j.html $BASE/freebsd/dbd/$i/$j.html
-				echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-			else
-				SHASUM=$(sha256sum $j|cut -d " " -f1)
-				echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-				GOOD_FILES[$FREEBSD_TARGET]=$(( ${GOOD_FILES[$FREEBSD_TARGET]}+1 ))
-				rm -f $BASE/freebsd/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
-			fi
-		done
-		#cd ..
-		echo "       </table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-	#done
+	echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+	for j in $(find * -type f |sort -u ) ; do
+		ALL_FILES[$FREEBSD_TARGET]=$(( ${ALL_FILES[$FREEBSD_TARGET]}+1 ))
+		call_diffoscope . $j
+		get_filesize $j
+		if [ -f $TMPDIR/$j.html ] ; then
+			mkdir -p $BASE/freebsd/dbd/$(dirname $j)
+			mv $TMPDIR/$j.html $BASE/freebsd/dbd/$j.html
+			echo "         <tr><td><a href=\"dbd/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+		else
+			SHASUM=$(sha256sum $j|cut -d " " -f1)
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+			GOOD_FILES[$FREEBSD_TARGET]=$(( ${GOOD_FILES[$FREEBSD_TARGET]}+1 ))
+			rm -f $BASE/freebsd/dbd/$j.html # cleanup from previous (unreproducible) tests - if needed
+		fi
+	done
+	echo "       </table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
 	GOOD_PERCENT[$FREEBSD_TARGET]=$(echo "scale=1 ; (${GOOD_FILES[$FREEBSD_TARGET]}*100/${ALL_FILES[$FREEBSD_TARGET]})" | bc)
 done
 

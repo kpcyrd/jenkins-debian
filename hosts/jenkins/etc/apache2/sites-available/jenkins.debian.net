@@ -328,6 +328,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 		Require all granted
 	</Directory>
 	<Directory /srv/reproducible-builds.org/git>
+		Options Indexes
 		AllowOverride None
 		Require all granted
 	</Directory>

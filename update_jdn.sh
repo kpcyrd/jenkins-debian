@@ -328,6 +328,7 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 	esac
 	if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
 		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
+		sudo ln -s /usr/share/munin/plugins/loggrep jenkins_oom
 	fi
 	sudo service munin-node force-reload
 fi

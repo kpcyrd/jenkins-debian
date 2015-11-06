@@ -1,0 +1,5 @@
+[jenkins_oom]
+env.logfile /var/log/jenkins/jenkins.log
+env.title Jenkins OutOfMemoryErrors
+env.regex OutOfMemoryError
+env.label OutOfMemoryError

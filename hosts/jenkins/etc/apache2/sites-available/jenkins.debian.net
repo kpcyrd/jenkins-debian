@@ -17,6 +17,7 @@ NameVirtualHost *:443
 		# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
 		ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 		ProxyPass /userContent !
+		ProxyPass /cli !
 		ProxyPass / http://localhost:8080/ nocanon
 		ProxyPassReverse  / http://localhost:8080/
 	</VirtualHost>
@@ -149,6 +150,7 @@ Use common-debian-service-https-redirect reproducible-builds.org
 	# map /d-i-preseed-cfgs to /UserContent/d-i-preseed-cfgs
 	ProxyPass /d-i-preseed-cfgs/ http://localhost:8080/userContent/d-i-preseed-cfgs/
 	ProxyPass /userContent !
+	ProxyPass /cli !
 	ProxyPass / http://localhost:8080/ nocanon
 	ProxyPassReverse  / http://localhost:8080/
 </VirtualHost>

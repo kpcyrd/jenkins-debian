@@ -36,11 +36,11 @@ for user in helmut holger mattia lunar ; do
 	fi
 	if ! getent passwd $user > /dev/null ; then
 		if [ "$user" = "mattia" ] ; then
-			local shell=/bin/zsh
+			usershell=/bin/zsh
 		else
-			local shell=/bin/bash
+			usershell=/bin/bash
 		fi
-		sudo adduser --gecos "" --shell "$shell" --disabled-password $user
+		sudo adduser --gecos "" --shell "$usershell" --disabled-password $user
 		if [ "$user" = "holger" ] ; then
 			sudo usermod -G jenkins,jenkins-adm,sudo,adm $user
 		elif [ "$user" != "lunar" ] ; then

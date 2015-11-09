@@ -12,5 +12,5 @@ common_init "$@"
 
 # that's all
 for PROJECT in coreboot openwrt netbsd ; do
-	rsync -r -v -e ssh profitbricks-build4.amd64:$BASE/$PROJECT/ $BASE/$PROJECT/
+	rsync -r -v -e ssh profitbricks-build4-amd64.debian.net:$BASE/$PROJECT/ $BASE/$PROJECT/
 done

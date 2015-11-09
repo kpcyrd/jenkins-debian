@@ -14,7 +14,7 @@ common_init "$@"
 rsync_remote_results() {
 	for PROJECT in coreboot openwrt netbsd ; do
 		echo "$(date -u) - Starting to rsync results for '$PROJECT'."
-		local RESULTS=$(mktemp --tmpdir=$TEMPDIR reproducible-rsync-XXXXXXXXX)
+		local RESULTS=$(mktemp --tmpdir=$TEMPDIR -d reproducible-rsync-XXXXXXXXX)
 		rsync -r -v -e ssh profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
 		mv $RESULTS $BASE/$PROJECT
 	done

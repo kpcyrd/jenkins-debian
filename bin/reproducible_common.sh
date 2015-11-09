@@ -190,8 +190,8 @@ write_page_header() {
 	else
 		write_page "<body onload=\"selectSearch()\"><header><h2>$2</h2><nav>"
 		write_page "<ul> A general website <li><a href=\"https://reproducible-builds.org\">Reproducible-builds.org</a></li> is available now."
-		write_page "  These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
-		write_page " <br />The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
+		write_page " These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
+		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
 		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</ul>"
 	fi

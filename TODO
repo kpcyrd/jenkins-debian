@@ -135,9 +135,9 @@ properties:
 ** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
 
 * higher prio:
-** document in the non-debian pages, that we don't have a clear idea yet, how to record+reproduce the build environment and that this is essential for reproducible builds too.
 ** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
 *** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such
+*** document in the non-debian pages, that we don't have a clear idea yet, how to record+reproduce the build environment and that this is essential for reproducible builds too.
 ** rewrite bin/schroot-create.sh from scratch, with little sudo.
 *** analyse+summarize needs, git commit that, then writing the script will be trivial
 *** use schroot tarballs (gzipped), moves are atomic then
@@ -150,6 +150,7 @@ properties:
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs in testing but build fine on sid
 ** new page: packages which are orphaned but have a reproducible usertagged patch
+** improve ftbfs page: list packages without bugs and notes first
 ** use static IPs (h01ger)
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** save build-hosts in build_duration table (and change to saving the time of a single build, not both combined?)

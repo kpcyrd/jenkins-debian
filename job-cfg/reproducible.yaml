@@ -214,6 +214,51 @@
           recipients: '{my_recipients}'
     node: '{my_node}'
 
+- defaults:
+    name: reproducible_other_projects_trigger
+    project-type: freestyle
+    triggers:
+      - timed: '{my_timed}'
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/reproducible
+          text: reproducible builds jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+      - throttle:
+          max-total: 9
+          max-per-node: 9
+          enabled: true
+          option: category
+          categories:
+            - reproducible      # no special category yet
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
+      - trigger:
+          project: '{my_trigger}'
+    node: '{my_node}'
+
+
 - job-template:
     defaults: reproducible
     name: '{name}_maintenance_amd64_jenkins'
@@ -464,6 +509,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_html_rsync_remote_results'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_create_meta_pkg_sets'
 
 - job-template:
@@ -653,15 +702,15 @@
     name: '{name}_builder_armhf_10'
 
 - job-template:
-    defaults: reproducible_other_projects
+    defaults: reproducible_other_projects_trigger
     name: '{name}_coreboot'
 
 - job-template:
-    defaults: reproducible_other_projects
+    defaults: reproducible_other_projects_trigger
     name: '{name}_openwrt'
 
 - job-template:
-    defaults: reproducible_other_projects
+    defaults: reproducible_other_projects_trigger
     name: '{name}_netbsd'
 
 - job-template:
@@ -1055,6 +1104,12 @@
             my_shell: '/srv/jenkins/bin/reproducible_html_breakages.py'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
+        - '{name}_html_rsync_remote_results':
+            my_description: 'rsync the results from some remote jobs to the main node.'
+            my_timed: ''
+            my_shell: '/srv/jenkins/bin/reproducible_html_rsync_remote_results.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
         - '{name}_html_live_status':
             my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
             my_timed: 'H/2 * * * *'
@@ -1334,18 +1389,21 @@
         - '{name}_coreboot':
             my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 1'
+            my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_openwrt':
             my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 2'
+            my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'
         - '{name}_netbsd':
             my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 3'
+            my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'profitbricks3'

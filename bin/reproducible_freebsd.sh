@@ -13,6 +13,7 @@ common_init "$@"
 set -e
 
 cleanup_tmpdirs() {
+	set +e
 	cd
 	$RSSH "sudo chflags -R noschg $TMPDIR"
 	$RSSH "rm -r $TMPDIR"

@@ -193,6 +193,8 @@ write_page_header() {
 		write_page "   A general website <li><a href=\"https://reproducible-builds.org\">Reproducible-builds.org</a></li> is available now."
 		write_page "   We think that reproducible builds should become the norm, so we wrote <li><a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a></li>."
 		write_page "   Also aimed at the free software world at large, is the first specification we have written: the <li><a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a></li>."
+		write_page "</ul>"
+		write_page "<ul>"
 		write_page "   These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
 		write_page "   The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page "   <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
@@ -201,10 +203,10 @@ write_page_header() {
 	fi
 	if [ "$1" = "dd-list" ] || [ "$1" = "dashboard" ] ; then
 		write_page "<ul>"
-		write_page "   Join <code>#debian-reproducible</code> on OFTC,"
-		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">send us an email</a>,"
-		write_page "   to get support for making sure your packages build reproducibly too. We care about free software in general,"
-		write_page "   and if you are an upstream developer or working on another distribution, or have any other feedback - we'd love to hear from you!"
+		write_page "   We are reachable via IRC (<code>#debian-reproducible</code> on OFTC),"
+		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">email</a>,"
+		write_page "   and we care about free software in general,"
+		write_page "   so whether you are an upstream developer or working on another distribution, or have any other feedback - we'd love to hear from you!"
 		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too."
 		write_page "</ul>"
 	fi

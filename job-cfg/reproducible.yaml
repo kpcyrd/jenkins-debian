@@ -236,6 +236,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_maintenance_armhf_odxu4'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_maintenance_amd64_profitbricks1'
 
 - job-template:
@@ -285,6 +289,10 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_pbuilder_unstable_armhf_wbq0'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_unstable_armhf_odxu4'
 
 - job-template:
     defaults: reproducible
@@ -365,6 +373,10 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_unstable_armhf_wbq0'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_armhf_odxu4'
 
 - job-template:
     defaults: reproducible
@@ -699,6 +711,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbq0'
+        - '{name}_maintenance_armhf_odxu4':
+            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'odxu4'
         - '{name}_maintenance_amd64_profitbricks1':
             my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
             my_timed: '5 0,3,6,9,12,15,18,21 * * *'
@@ -753,6 +771,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbq0'
+        - '{name}_setup_pbuilder_unstable_armhf_odxu4':
+            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '42 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'odxu4'
         - '{name}_setup_pbuilder_testing_amd64_profitbricks1':
             my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 7 * * *'
@@ -897,6 +921,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbq0'
+        - '{name}_setup_schroot_unstable_armhf_odxu4':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'odxu4'
         - '{name}_setup_schroot_testing_amd64_jenkins':
             my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
             my_timed: '42 1 * * *'

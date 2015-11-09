@@ -46,7 +46,7 @@ SUITES="testing unstable experimental"
 ARCHS="armhf amd64"
 
 # define build nodes in use
-BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-amd64.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh
+BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-amd64.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net odxu4-armhf-rb.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh
 BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also needs to be defined in bin/reproducible_info.sh
 
 # existing usertags
@@ -333,7 +333,9 @@ write_explaination_table() {
 		write_page "<tr><td>env CAPTURE_ENVIRONMENT</td><td><em>not set</em></td><td>CAPTURE_ENVIRONMENT=\"I capture the environment\"</td></tr>"
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
-	if [ "$1" = "Arch Linux" ]  ; then
+	if [ "$1" = "Debian" ]  ; then
+		write_page "<tr><td>env LANG</td><td>LANG<em>C</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+	elif [ "$1" = "Arch Linux" ]  ; then
 		write_page "<tr><td>env LANG</td><td>LANG<em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	else
 		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"

@@ -190,7 +190,8 @@ write_page_header() {
 	else
 		write_page "<body onload=\"selectSearch()\"><header><h2>$2</h2><nav>"
 		write_page "<ul>These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
-		write_page " The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
+		write_page "  <br />The main website about <li><a href=\"https://reproducible-builds.org\">https://reproducible-builds.org</a></li> is quite new, do have a look if you haven't done so yet."
+		write_page " <br />The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page " <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
 		write_page " Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</ul>"
 	fi
@@ -200,7 +201,6 @@ write_page_header() {
 		write_page "   to get support for making sure your packages build reproducibly too. Also, we care about free software in general,"
 		write_page "   so if you are an upstream developer or working on another distribution, we'd love to hear from you!"
 		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> too.</ul>"
-		write_page "   Brand new: <code><a href=\"https://reproducible-builds.org\">https://reproducible-builds.org</a>!"
 		write_page "   <ul>As we think that reproducible builds should become the norm, we wrote <li><a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a></li>. As always we very much appreciate feedback."
 		write_page "      Also aimed at the free software world at large, is the first specification we have written: the <li><a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a></li>.</ul>"
 	fi

@@ -66,7 +66,7 @@ def generate_live_status_table(arch):
     counter = 0
     for row in rows:
         counter += 1
-        # the numbers 33 and 9 should really be derived from /var/lib/jenkins/jobs/reproducible_builder_${arch}_* instead of being hard-coded here...
+        # the numbers 33 and 11 should really be derived from /var/lib/jenkins/jobs/reproducible_builder_${arch}_* instead of being hard-coded here...
         if ( arch == 'amd64' and counter == 33 ) or ( arch == 'armhf' and counter == 9 ):
              html += '<tr><td colspan="10">There are more builds marked as currently building in the database than there are ' + arch + ' build jobs. This does not compute, please investigate and fix the cause.</td></tr>'
         suite = row[1]

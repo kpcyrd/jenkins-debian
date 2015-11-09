@@ -3,7 +3,7 @@
 # Copyright 2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -17,6 +17,7 @@ rsync_remote_results() {
 		local RESULTS=$(mktemp --tmpdir=$TEMPDIR -d reproducible-rsync-XXXXXXXXX)
 		rsync -r -v -e ssh profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
 		mv $RESULTS $BASE/$PROJECT
+		echo "$(date -u) - $REPRODUCIBLE_URL/$PROJECT has been updated."
 	done
 }
 

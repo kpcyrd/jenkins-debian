@@ -262,6 +262,7 @@ write_page_header() {
 		fi
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
+	write_page "<li><a href=\"https://Reproducible-builds.org\" target=\"_blank\">Reproducible-builds.org</a></li>"
 	write_page "</ul></nav>"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		LATEST=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status IN ('unreproducible') AND s.suite = 'unstable' AND s.architecture = 'amd64' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)

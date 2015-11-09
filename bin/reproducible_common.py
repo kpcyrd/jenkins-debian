@@ -194,6 +194,7 @@ $links
     <li><a href="/index_repositories.html">repositories overview</a></li>
     <li><a href="/reproducible.html">dashboard</a></li>
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
+    <li><a href="https://Reproducible-builds.org" target="_blank">Reproducible-builds.org</a></li>
   </ul></nav>
 </header>""".splitlines(True)))
 

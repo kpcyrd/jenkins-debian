@@ -149,6 +149,7 @@ properties:
 *** new page with packages which are reproducible on one arch and unreproducible on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs in testing but build fine on sid
+** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** improve ftbfs page: list packages without bugs and notes first
 ** use static IPs (h01ger)

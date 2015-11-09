@@ -11,6 +11,17 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 # that's all
-for PROJECT in coreboot openwrt netbsd ; do
-	rsync -r -v -e ssh profitbricks-build4-amd64.debian.net:$BASE/$PROJECT/ $BASE/$PROJECT/
-done
+rsync_remote_results() {
+	for PROJECT in coreboot openwrt netbsd ; do
+		echo "$(date -u) - Starting to rsync results for '$PROJECT'."
+		local RESULTS=$(mktemp --tmpdir=$TEMPDIR reproducible-rsync-XXXXXXXXX)
+		rsync -r -v -e ssh profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
+		mv $RESULTS $BASE/$PROJECT
+	done
+}
+
+# main
+echo "$(date -u) - Starting to rsync results."
+rsync_remote_results
+echo "$(date -u) - the end."
+

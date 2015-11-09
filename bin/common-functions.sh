@@ -48,8 +48,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	exit $?
 	# cleanup is done automatically via trap
 else
-	# these two directories reside on tmpfs, so they might be gone after reboots...
-	mkdir -p /srv/workspace/chroots /srv/workspace/pbuilder
+	# this directory resides on tmpfs, so it might be gone after reboots...
+	mkdir -p /srv/workspace/chroots
 	# default settings used for the jenkins.debian.net environment
 	if [ -z "$LC_ALL" ]; then
 		export LC_ALL=C.UTF-8

@@ -17,6 +17,7 @@ rsync_remote_results() {
 		local RESULTS=$(mktemp --tmpdir=$TEMPDIR -d reproducible-rsync-XXXXXXXXX)
 		rsync -r -v -e ssh profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
 		mv $BASE/$PROJECT ${RESULTS}.tmp
+		chmod 775 $RESULTS
 		mv $RESULTS $BASE/$PROJECT
 		rm ${RESULTS}.tmp -r
 		echo "$(date -u) - $REPRODUCIBLE_URL/$PROJECT has been updated."

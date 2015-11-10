@@ -79,13 +79,15 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	export LANG="en_GB.UTF-8"
-	# actually build everything
 	NUM_CPU=4 # if someone could tell me how to determine this on FreeBSD, this would be neat
+	# actually build everything
+	set +e
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution"
+	set -e
 	# save results in b1
 	save_freebsd_results b1
 
@@ -104,11 +106,13 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	# use allmost all cores for second build
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	# actually build everything
+	set +e
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
+	set -e
 	# save results in b2
 	save_freebsd_results b2
 

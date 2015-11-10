@@ -46,9 +46,9 @@ ${suites_links}
     <ul class="reproducible-links">
         Reproducible Builds projects links
         <li>
-            <a href="%s">Dashboard</a><br />
-            <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
-            <a href="https://reproducible.debian.net/howto">HowTo</a><br />
+            reproducible.debian.net - <a href="%s">Dashboard</a><br />
+            Reproducible Debian - <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
+            Reproducible-builds.org - <a href="https://Reproducible-builds.org/docs/">HowTo</a><br />
             <a href="https://Reproducible-builds.org">Reproducible-builds.org</a>
         </li>
     </ul>

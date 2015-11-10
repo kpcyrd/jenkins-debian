@@ -27,11 +27,11 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.
 
-myhostname = wbq0-armhf-rb.debian.net
+myhostname = wbd0-armhf-rb.debian.net
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
-mydestination = wbq0-armhf-rb.debian.net, localhost
+mydestination = wbd0-armhf-rb.debian.net, localhost
 relayhost = 
 #mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mynetworks = 127.0.0.0/8

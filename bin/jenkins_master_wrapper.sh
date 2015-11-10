@@ -21,6 +21,9 @@ case "$NODE_NAME" in
   odxu4-armhf-rb.debian.net)
     PORT=2229
     ;;
+  wbd0-armhf-rb.debian.net)
+    PORT=2223
+    ;;
   profitbricks-build?-amd64.debian.net)
     PORT=22
     if [[ "$JOB_NAME" =~ rebootstrap_.* ]] ; then

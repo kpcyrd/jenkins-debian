@@ -336,6 +336,7 @@ skip_if_unavailable=False
 
 * job, to bootstrap an arch schroot needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
+** once this has been done, run it more often than once a year
 * use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
 * arch build.sh:
 ** introduce more variations: USER

@@ -126,6 +126,7 @@ if [ -f /etc/debian_version ] ; then
 			pigz 
 			postfix
 			procmail
+			psmisc
 			python3-psycopg2 
 			schroot 
 			screen 

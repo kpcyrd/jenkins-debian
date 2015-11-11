@@ -155,7 +155,7 @@ diff_copy_buildlogs() {
 		elif [ $FTBFS -eq 0 ] ; then
 			echo "Warning: No second build log, what happened?" | tee -a $RBUILDLOG
 		fi
-		set -x # FIXME: to debug the ".buildinfo not found" problem in eg https://jenkins.debian.net/job/reproducible_builder_armhf_5/447/console - /var/lib/jenkins/userContent/reproducible/buildinfo/unstable/armhf/ssh-import-id_3.21-1_armhf.buildinfo really didnt exist, though both builds created it...
+		set -x # # to debug diffopscpe/schroot problems
 		echo "Compressing the 1st log..."
 		gzip -9cvn b1/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 		chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
@@ -329,7 +329,7 @@ call_diffoscope_on_changes_files() {
 		# there is no extra diffoscope-schroot for experimental ( because we specical case ghc enough already )
 		DBDSUITE="unstable"
 	fi
-	set -x # FIXME: to debug diffopscpe/schroot problems
+	set -x # to debug diffopscpe/schroot problems
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
@@ -480,7 +480,7 @@ download_source() {
 		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
 	fi
 	local ENGLISH_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG})
-	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG}) # FIXME: please help replace the English strings with the French ones
+	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway))' ${TMPLOG}) 
 	PARSED_RESULT="${ENGLISH_RESULT}${FRENCH_RESULT}"
 	cat ${TMPLOG} >> ${RBUILDLOG}
 	rm ${TMPLOG}

@@ -30,10 +30,10 @@ write_row() {
 }
 
 custom_curl() {
-	echo "$(date -u) - downloading $1 to $2"
+	echo -n "$(date -u) - downloading $1 to $2 - "
 	curl -s $1 > $2
 	local SIZE=$(ls -la $2 |cut -d " " -f5)
-	echo "$(date -u) - downloaded $SIZE bytes."
+	echo "$SIZE bytes."
 }
 
 ARCH="amd64"
@@ -228,8 +228,8 @@ for PKG in $SOURCEPKGS ; do
 	write_row " <td>$CSID</td>"
 	write_row " <td>$CEXP</td>"
 	write_row "</tr>"
-	echo "$(date -u ) - TABLE_TODO: $(ls -la $TABLE_TODO)"
-	echo "$(date -u ) - TABLE_DONE: $(ls -la $TABLE_DONE)"
+	echo "TABLE_TODO: $(ls -la $TABLE_TODO|cut -d " " -f5) bytes"
+	echo "TABLE_DONE: $(ls -la $TABLE_DONE|cut -d " " -f5) bytes"
 done
 cat $TABLE_TODO >> $PAGE
 write_page "</table></p>"

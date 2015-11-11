@@ -3,7 +3,7 @@
 # Copyright 2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -221,6 +221,8 @@ for PKG in $SOURCEPKGS ; do
 	write_row " <td>$CSID</td>"
 	write_row " <td>$CEXP</td>"
 	write_row "</tr>"
+	echo "TABLE_TODO: $(ls -la $TABLE_TODO)"
+	echo "TABLE_DONE: $(ls -la $TABLE_DONE)"
 done
 cat $TABLE_TODO >> $PAGE
 write_page "</table></p>"

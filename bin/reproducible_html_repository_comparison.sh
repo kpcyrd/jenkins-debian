@@ -50,7 +50,7 @@ custom_curl http://reproducible.alioth.debian.org/debian/Sources $SOURCES
 custom_curl http://reproducible.alioth.debian.org/debian/Packages $PACKAGES
 SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $SOURCES | sort -u)
 for PKG in $SOURCEPKGS ; do
-	echo "Processing $PKG..."
+	echo "$(date -u) - Processing $PKG..."
 	if [ "${PKG:0:3}" = "lib" ] ; then
 		PREFIX=${PKG:0:4}
 	else
@@ -228,8 +228,7 @@ for PKG in $SOURCEPKGS ; do
 	write_row " <td>$CSID</td>"
 	write_row " <td>$CEXP</td>"
 	write_row "</tr>"
-	echo "TABLE_TODO: $(ls -la $TABLE_TODO|cut -d " " -f5) bytes"
-	echo "TABLE_DONE: $(ls -la $TABLE_DONE|cut -d " " -f5) bytes"
+	echo "$(date -u) - Package done. (TABLE_TODO: $(ls -la $TABLE_TODO|cut -d " " -f5) bytes - TABLE_DONE: $(ls -la $TABLE_DONE|cut -d " " -f5) bytes)"
 done
 cat $TABLE_TODO >> $PAGE
 write_page "</table></p>"

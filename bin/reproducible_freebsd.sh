@@ -16,7 +16,7 @@ cleanup_tmpdirs() {
 	set +e
 	cd
 	$RSSH "sudo chflags -R noschg $TMPDIR"
-	$RSSH "rm -r $TMPDIR"
+	$RSSH "rm -r $TMPDIR" || true
 	rm $TMPDIR -r
 	$RSSH 'sudo rm -rf /usr/src'
 }

@@ -38,7 +38,7 @@ custom_curl() {
 
 ARCH="amd64"
 SUITE="unstable"
-echo "$(date) - starting to write $PAGE page."
+echo "$(date) - starting to write $PAGE page. Downloading Sources and Packages files from our repository."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
 write_page "<p>These source packages are different from unstable in our apt repository on alioth. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
@@ -49,6 +49,8 @@ write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>
 custom_curl http://reproducible.alioth.debian.org/debian/Sources $SOURCES
 custom_curl http://reproducible.alioth.debian.org/debian/Packages $PACKAGES
 SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $SOURCES | sort -u)
+echo
+
 for PKG in $SOURCEPKGS ; do
 	echo "$(date -u) - Processing $PKG..."
 	if [ "${PKG:0:3}" = "lib" ] ; then
@@ -130,7 +132,7 @@ for PKG in $SOURCEPKGS ; do
 			if [ "$ARCH" != "all" ] && [ ! -z "$i" ] ; then
 				ONLYALL=false
 			fi
-			echo "$ARCH: $i"
+			echo " $ARCH: $i"
 		done
 		for ARCH in all ${ARCHS} ; do
 			i="$(grep-dctrl -n -s Package \( -X -FPackage $PKG --or -X -FSource $PKG \) --and -FVersion $BET --and -FArchitecture $ARCH $PACKAGES|sort -u|xargs -r echo)"
@@ -229,6 +231,7 @@ for PKG in $SOURCEPKGS ; do
 	write_row " <td>$CEXP</td>"
 	write_row "</tr>"
 	echo "$(date -u) - Package done. (TABLE_TODO: $(ls -la $TABLE_TODO|cut -d " " -f5) bytes - TABLE_DONE: $(ls -la $TABLE_DONE|cut -d " " -f5) bytes)"
+	echo
 done
 cat $TABLE_TODO >> $PAGE
 write_page "</table></p>"

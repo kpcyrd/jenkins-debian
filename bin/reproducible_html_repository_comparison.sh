@@ -29,6 +29,11 @@ write_row() {
         echo "$1" >> $ROW
 }
 
+custom_curl() {
+	echo "$(date -u) - downloading $1 to $2"
+	curl -s $1 > $2
+}
+
 ARCH="amd64"
 SUITE="unstable"
 echo "$(date) - starting to write $PAGE page."
@@ -39,8 +44,8 @@ write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
 write_page "<p><table><tr><th>package</th><th>git repo</th><th>PTS link</th><th>usertagged bug</th><th>old versions in our repo<br />(needed for reproducing old builds)</th><th>version in our repo<br />(available binary packages per architecture)</th><th>version in 'testing'</th><th>version in 'unstable'</th><th>version in 'experimental'</th></tr>"
 
-curl http://reproducible.alioth.debian.org/debian/Sources > $SOURCES
-curl http://reproducible.alioth.debian.org/debian/Packages > $PACKAGES
+custom_curl http://reproducible.alioth.debian.org/debian/Sources $SOURCES
+custom_curl http://reproducible.alioth.debian.org/debian/Packages $PACKAGES
 SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $SOURCES | sort -u)
 for PKG in $SOURCEPKGS ; do
 	echo "Processing $PKG..."
@@ -159,12 +164,12 @@ for PKG in $SOURCEPKGS ; do
 		*)
 			URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=pu/reproducible_builds" ;;
 	esac
-	curl $URL > $TMPFILE
+	custom_curl $URL $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
 		write_row "$URL<br /><span class=\"red\">(no git repository found)</span>"
 	elif [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 		URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=merged/reproducible_builds"
-		curl $URL > $TMPFILE
+		custom_curl $URL $TMPFILE
 		if [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 			if ! $OBSOLETE_IN_SID ; then
 				write_row "<a href=\"$URL\">$GIT</a><br /><span class=\"purple\">non-standard branch</span>"

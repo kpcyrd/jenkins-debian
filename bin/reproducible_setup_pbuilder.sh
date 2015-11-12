@@ -68,7 +68,7 @@ echo
 for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org || true  ; done
 echo
 echo "Configuring APT to ignore the Release file expiration"
-echo 'Acquire::Check-Valid-Until "false"' > /etc/apt/apt.conf.d/398future
+echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
 echo
 EOF
 }

@@ -355,7 +355,7 @@ sudo chmod 700 /var/lib/jenkins/.ssh
 sudo chmod 600 /var/lib/jenkins/.ssh/authorized_keys
 explain "scripts and configurations for jenkins updated."
 
-if [ "$HOSTNAME" = "jenkins" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	sudo cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
 	git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
 	echo "----" >> $TMPFILE

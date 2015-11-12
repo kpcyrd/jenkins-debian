@@ -21,7 +21,7 @@ systemctl disable systemd-timedated
 systemctl stop systemd-timesyncd
 systemctl stop systemd-timedated
 ntpdate -b de.pool.ntp.org
-date --set="+400 days"
+date --set="+398 days"
 echo "$(date) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
 
 exit 0

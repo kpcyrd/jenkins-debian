@@ -132,7 +132,7 @@ This is about Debian, below are more todo entries for other projects…
 *** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 *** make maintenance job detect and reschedule logs with: '^Bus Error$'
 
-* mention +400 days variation in variation table once this is declared stable
+* mention +398 days variation in variation table once this is declared stable
 * reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 * diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
 * on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
@@ -174,7 +174,7 @@ This is about Debian, below are more todo entries for other projects…
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** right align all numbers in table in the dashboard
 ** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
-** run pb2-amd64 builder 400 days in the future… (that way we will notice problems soon)
+** run pb2-amd64 builder 398 days in the future… (that way we will notice problems soon)
 *** Acquire::Check-Valid-Until "false" should help, when setting the time to the future
 ** pkg sets related:
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)

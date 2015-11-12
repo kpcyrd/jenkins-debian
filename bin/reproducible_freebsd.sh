@@ -91,8 +91,8 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	( cleanup_tmpdirs ; echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping" ; continue )
 	set -e
 
-	# set time forward 400 days
-	$RSSH "service ntpd stop ; date --set='+400 days' ; date"
+	# set time forward 398 days
+	$RSSH "service ntpd stop ; date --set='+398 days' ; date"
 	echo "$(date) - system is running in the future now."
 
 	echo "============================================================================="

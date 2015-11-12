@@ -31,6 +31,6 @@ fi
 
 case "$PBCURRENTCOMMANDLINEOPERATION" in
 	--create|create)
-		APTGETOPT=('-o' 'Acquire::Check-Valid-Until="false"')
+		APTGETOPT=(-o Acquire::Check-Valid-Until="false")
 		;;
 esac

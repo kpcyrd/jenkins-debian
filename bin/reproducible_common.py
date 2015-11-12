@@ -28,6 +28,10 @@ from datetime import datetime, timedelta
 DEBUG = False
 QUIET = False
 
+# don't try to run on test system
+if os.uname()[1] == 'jenkins-test-vm':
+    sys.exit()
+
 # tested suites
 SUITES = ['testing', 'unstable', 'experimental']
 # tested architectures

@@ -29,9 +29,13 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo adduser --system --shell /bin/bash --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
-for user in helmut holger mattia lunar ; do
+for user in helmut holger mattia lunar philh ; do
 	if [ "$user" = "lunar" ] && [ "$HOSTNAME" != "jenkins" ] ; then
 		# lunar only wants to configure jekyll
+		continue
+	fi
+	if [ "$user" = "philh" ] && [ "$HOSTNAME" != "jenkins-test-vm" ] ; then
+		# philh only wants to test stuff
 		continue
 	fi
 	if ! getent passwd $user > /dev/null ; then

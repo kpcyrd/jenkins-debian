@@ -57,8 +57,10 @@ fi
 
 #
 # create script to add key for reproducible repo
+# and configuring APT to ignore Release file expiration (since the host may
+# have the date set far in the future)
 #
-add_repokey() {
+reproducible_setup() {
 	cat > $1 <<- EOF
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -89,6 +91,10 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 4LhIp6XlXJFF1btgfCexNmcPuqeOMMDQ+du6Hqj2Yl5GYo2McWvjpSgkt5VmQfIz
 =X8YA
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
+echo
+echo "Configuring APT to ignore the Release file expiration"
+echo 'Acquire::Check-Valid-Until "false"' > /etc/apt/apt.conf.d/400future
+echo
 EOF
 }
 
@@ -134,7 +140,7 @@ bootstrap() {
 
 	if $REPRODUCIBLE ; then
 		TMPFILE=$(mktemp -u)
-		add_repokey $SCHROOT_TARGET/$TMPFILE
+		reproducible_setup $SCHROOT_TARGET/$TMPFILE
 		sudo chroot $SCHROOT_TARGET bash $TMPFILE
 		rm $SCHROOT_TARGET/$TMPFILE
 	fi

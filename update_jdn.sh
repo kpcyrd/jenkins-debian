@@ -359,7 +359,7 @@ sudo chmod 700 /var/lib/jenkins/.ssh
 sudo chmod 600 /var/lib/jenkins/.ssh/authorized_keys
 explain "scripts and configurations for jenkins updated."
 
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] ; then
 	sudo cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
 	git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
 	echo "----" >> $TMPFILE
@@ -379,7 +379,9 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rm TODO README INSTALL CONTRIBUTING
 	sudo chown -R jenkins.jenkins /var/lib/jenkins/userContent
 	explain "user content for jenkins updated."
+fi
 
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	#
 	# run jenkins-job-builder to update jobs if needed
 	#     (using sudo because /etc/jenkins_jobs is root:root 700)

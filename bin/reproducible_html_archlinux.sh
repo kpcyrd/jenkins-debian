@@ -13,6 +13,7 @@ common_init "$@"
 #
 #  create the webpage
 #
+DATE=$(date -u +'%Y-%m-%d')
 ARCHBASE=$BASE/archlinux
 cd $ARCHBASE
 PAGE=archlinux.html

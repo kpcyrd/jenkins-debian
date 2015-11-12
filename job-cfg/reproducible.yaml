@@ -601,10 +601,6 @@
 
 - job-template:
     defaults: reproducible_builder
-    name: '{name}_builder_amd64_16'
-
-- job-template:
-    defaults: reproducible_builder
     name: '{name}_builder_amd64_17'
 
 - job-template:
@@ -638,10 +634,6 @@
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_amd64_25'
-
-- job-template:
-    defaults: reproducible_builder
-    name: '{name}_builder_amd64_26'
 
 - job-template:
     defaults: reproducible_builder

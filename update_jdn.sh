@@ -453,7 +453,7 @@ fi
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
-rgrep FIXME $BASEDIR/* | grep -v "rgrep FIXME" | grep -v echo > $TMPFILE
+rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE
 if [ -s $TMPFILE ] ; then
 	echo
 	cat $TMPFILE

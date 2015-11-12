@@ -388,8 +388,8 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	for metaconfig in *.yaml.py ; do
 	# there are both python2 and python3 scripts here
 		./$metaconfig > $TMPFILE
-		if ! $(diff ${metaconfig%.py} $TMPFILE > /dev/null) ; then
-			cp $TMPFILE ${metaconfig%.py}
+		if ! sudo -u jenkins-adm cmp -s ${metaconfig%.py} - < $TMPFILE ; then
+			sudo -u jenkins-adm tee ${metaconfig%.py} > /dev/null < $TMPFILE
 		fi
 	done
 	rm -f $TMPFILE

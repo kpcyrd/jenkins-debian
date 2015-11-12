@@ -57,6 +57,10 @@ Mb0BawlXZui0MNUSnZtxHMxrjejdvZdqtskHl9srB1QThH0jasmUqbQPxCnxMbf1
 =X8YA
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
+echo
+echo "Configuring APT to ignore the Release file expiration"
+echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
+echo
 apt-get update
 apt-get -y upgrade
 apt-get install -y $@
@@ -66,9 +70,6 @@ echo
 dpkg -l
 echo
 for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org || true  ; done
-echo
-echo "Configuring APT to ignore the Release file expiration"
-echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
 echo
 EOF
 }

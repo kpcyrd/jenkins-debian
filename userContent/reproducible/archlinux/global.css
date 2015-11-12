@@ -1,0 +1,78 @@
+body {
+  background: #f6f9fc none repeat scroll 0 0;
+  color: #222;
+  font: 100% sans-serif;
+  line-height: 1.3em;
+  min-width: 650px;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  margin: 0 auto;
+  text-align: left;
+  width: 95%;
+  font-size: 0.90em;
+}
+
+#archnavbar {
+  background: #333 none repeat scroll 0 0 !important;
+  border-bottom: 5px solid #08c !important;
+  height: 40px !important;
+  padding: 10px 15px !important;
+}
+
+#logo {
+  background: rgba(0, 0, 0, 0) url("archlogo.4fefb38dc270.png") no-repeat scroll 0 0 !important;
+  float: left !important;
+  height: 40px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 190px !important;
+}
+
+#page_footer {
+  font-size: 0.7em;
+  margin: 0 auto;
+  text-align: center;
+  width: 95%;
+}
+
+#footer_separator {
+  border-top: 1px dotted #bbb;
+  margin: 10px 1%;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link, a:visited {
+  color: #07b;
+}
+
+a:hover, a:visited:hover {
+  text-decoration: underline;
+}
+
+table {
+  background: #ecf2f5 none repeat scroll 0 0;
+  border: 1px solid #bcd;
+  margin-bottom: 1.5em;
+  padding: 0.65em;
+  width: 100%;
+  font-size: 0.80em;
+  border-collapse: collapse;
+}
+
+table tr td {
+  border-top: 1px dotted #bcd;
+}
+
+table tr td, table th {
+  padding: 0.15em 0.75em;
+}
+
+#variation th:first-child {
+  width: 23%;
+}

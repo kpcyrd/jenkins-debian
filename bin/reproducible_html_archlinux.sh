@@ -22,14 +22,15 @@ cat > $PAGE <<- EOF
 <html lang="en-US">
   <head>
     <meta charset="UTF-8">
-    <title>Repoducible Arch Linux ?</title>
-    <link rel='stylesheet' href='/freebsd/global.css' type='text/css' media='all' />
+    <title>Repoducible Arch Linux ?!</title>
+    <link rel='stylesheet' href='global.css' type='text/css' media='all' />
   </head>
   <body>
-    <div id="logo">
-      <h1>Reproducible Arch Linux?</h1>
+    <div id="archnavbar">
+	    <div id="logo"></div>
     </div>
     <div class="content">
+      <h1>Reproducible Arch Linux?!</h1>
       <div class="page-content">
 
 EOF

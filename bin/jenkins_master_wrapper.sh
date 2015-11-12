@@ -2,6 +2,14 @@
 
 set -u
 set -e
+
+# don't try to run on test system
+if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+	echo "$(date -u) - running on $HOSTNAME, exiting successfully and cleanly immediatly."
+	exit 0
+fi
+
+# real start
 PARAMS="$JOB_NAME"
 
 # these nodes also need to be listed in bin/reproducible_common.sh where they define $BUILD_NODES

@@ -18,6 +18,10 @@ common_cleanup(){
 common_init() {
 # check whether this script has been started from /tmp already
 if [ "${0:0:5}" != "/tmp/" ] ; then
+	if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+		echo "$(date -u) - running on $HOSTNAME, exiting successfully and cleanly immediatly."
+		exit 0
+	fi
 	# check that we are not root
 	if [ $(id -u) -eq 0 ] ; then
 		echo "Do not run this as root."

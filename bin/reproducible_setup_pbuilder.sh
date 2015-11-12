@@ -98,7 +98,7 @@ setup_pbuilder() {
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
 	# setup base.tgz
-	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
+	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES" --allow-untrusted
 	# apply further customisations, eg. install $PACKAGES from our repo
 	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
 	if [ "$DEBUG" = "true" ] ; then

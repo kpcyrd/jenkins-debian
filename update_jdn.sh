@@ -363,9 +363,9 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	sudo cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
 	git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
 	echo "----" >> $TMPFILE
-	sudo cat THANKS.head > /var/lib/jenkins/userContent/THANKS
+	sudo tee /var/lib/jenkins/userContent/THANKS > /dev/null < THANKS.head
 	# samuel, lunar and josch committed with several commiters, only display one
-	grep -v "samuel.thibault@ens-lyon.org" $TMPFILE | grep -v Lunar | sudo grep -v "j.schauer@email.de" >> /var/lib/jenkins/userContent/THANKS
+	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
 	rm $TMPFILE
 	sudo cp -pr userContent /var/lib/jenkins/
 	cd /var/lib/jenkins/userContent/

@@ -185,6 +185,7 @@ if [ -f /etc/debian_version ] ; then
 				apache2 
 				apt-file 
 				apt-listchanges 
+				asciidoc
 				binfmt-support 
 				bison 
 				build-essential 

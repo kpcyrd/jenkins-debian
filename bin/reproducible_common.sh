@@ -340,7 +340,7 @@ write_explaination_table() {
 		write_page "<tr><td>env CAPTURE_ENVIRONMENT</td><td><em>not set</em></td><td>CAPTURE_ENVIRONMENT=\"I capture the environment\"</td></tr>"
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
-	if [ "$1" = "Debian" ]  ; then
+	if [ "$1" = "debian" ]  ; then
 		write_page "<tr><td>env LANG</td><td>LANG=C</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	elif [ "$1" = "Arch Linux" ]  ; then
 		write_page "<tr><td>env LANG</td><td><em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"

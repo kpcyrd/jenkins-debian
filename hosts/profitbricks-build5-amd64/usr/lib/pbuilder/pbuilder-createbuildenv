@@ -1,0 +1,147 @@
+#! /bin/bash
+# Creating the build environment with debootstrap.
+#   pbuilder -- personal Debian package builder
+#   Copyright (C) 2001-2003,2005-2007 Junichi Uekawa
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+
+set -e 
+
+. /usr/lib/pbuilder/pbuilder-checkparams
+. /usr/lib/pbuilder/pbuilder-runhooks
+
+if [ -z "$DISTRIBUTION" ]; then
+    DISTRIBUTION=sid
+fi
+log "I: Distribution is $DISTRIBUTION."
+
+if [ "${PBUILDER_DEBUGMODE}" = "yes" ]; then
+    TRAP="echo ignoring trap "
+else
+    TRAP=trap
+fi
+
+# show the current time before doing anything.
+echobacktime
+
+# first clean it.
+cleanbuildplace
+
+log "I: Building the build environment"
+mkdir -p "$BUILDPLACE"
+if [ ! -d "$BUILDPLACE" ]; then
+    log "E: Could not make directory [$BUILDPLACE]"
+    exit 1
+fi
+
+$TRAP cleanbuildplace exit
+
+log "I: running $DEBOOTSTRAP"
+unset DEBOOTSTRAPSCRIPT
+if [ -n "$HOOKDIR" ]; then
+    if [ -f "$HOOKDIR/$DISTRIBUTION" ]; then
+	DEBOOTSTRAPSCRIPT=$(readlink -f "$HOOKDIR")"/$DISTRIBUTION"
+	log "I: Applying user distribution dist build script $DEBOOTSTRAPSCRIPT"
+    fi
+fi
+
+if which "${DEBOOTSTRAP}"; then
+    : # debootstrap exists
+else
+    log "E: ${DEBOOTSTRAP} does not exist, install or change DEBOOTSTRAP option"
+    exit 1
+fi
+
+# FIXME if the end-user passes another --include= to debootstrap in
+# DEBOOTSTRAPOPTS, it will override the --include=apt one and apt might not be
+# installed
+if ! ( "${DEBOOTSTRAP}" \
+    ${ARCHITECTURE:+--arch=$ARCHITECTURE} \
+    --include=apt \
+    "${DEBOOTSTRAPOPTS[@]}" \
+    "$DISTRIBUTION" \
+    "$BUILDPLACE" \
+    "$MIRRORSITE" \
+    $DEBOOTSTRAPSCRIPT ) ; then
+    log "E: $DEBOOTSTRAP failed"
+    exit 1
+fi
+
+log "I: debootstrap finished"
+loadhooks
+
+
+mkdir -p "${BUILDPLACE}$BUILDDIR"
+
+copy_local_configuration
+installaptlines
+add_additional_aptkeyrings
+executehooks "G"
+
+log "I: Refreshing the base.tgz "
+log "I: upgrading packages"
+mountproc
+$TRAP umountproc_cleanbuildplace_trap exit sighup
+$CHROOTEXEC /usr/bin/apt-get -q "${APTGETOPT[@]}" update
+
+case "$(readlink -e "$PBUILDERSATISFYDEPENDSCMD")" in
+  *-aptitude)
+    EXTRAPACKAGES="$EXTRAPACKAGES aptitude"
+  ;;
+  *)
+    EXTRAPACKAGES="$EXTRAPACKAGES aptitude-"
+  ;;
+esac
+
+if [ -n "$CCACHEDIR" ]; then
+    EXTRAPACKAGES="$EXTRAPACKAGES ccache"
+else
+    EXTRAPACKAGES="$EXTRAPACKAGES ccache-"
+fi
+
+if [ -n "$REMOVEPACKAGES" ]; then
+    # FIXME this wont work if the packages have some reverse dependencies;
+    # apt-get can also remove package, either with apt-get remove or purge, or
+    # with apt-get install name-of-pkg- (i.e. a minus sign after the package
+    # name)
+    $CHROOTEXEC /usr/bin/dpkg --purge $REMOVEPACKAGES
+fi
+recover_aptcache
+$CHROOTEXEC /usr/bin/apt-get -q -y "${APTGETOPT[@]}" "${FORCE_CONFNEW[@]}" dist-upgrade
+$CHROOTEXEC /usr/bin/apt-get -q -y "${APTGETOPT[@]}" install \
+    build-essential \
+    dpkg-dev \
+    $EXTRAPACKAGES
+save_aptcache
+
+executehooks "E"
+unloadhooks
+umountproc
+$CHROOTEXEC /usr/bin/apt-get clean || true
+$TRAP cleanbuildplace_trap exit sighup
+
+# Internal_build_uml is set when --no-targz is set, this code is actually never called from pbuilder-user-mode-linux
+if [ ! "${INTERNAL_BUILD_UML}" = "yes" ]; then
+    create_basetgz
+fi
+if [ "${PRESERVE_BUILDPLACE}" = "yes" ]; then
+    :
+else
+    :
+    cleanbuildplace
+fi
+trap - exit sighup
+exit 0

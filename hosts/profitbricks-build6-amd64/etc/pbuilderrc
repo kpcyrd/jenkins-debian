@@ -29,3 +29,8 @@ if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then
 	PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
 fi
 
+case "$PBCURRENTCOMMANDLINEOPERATION" in
+	--create|create)
+		APTGETOPT=(-o Acquire::Check-Valid-Until="false")
+		;;
+esac

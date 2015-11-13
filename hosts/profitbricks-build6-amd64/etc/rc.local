@@ -13,9 +13,6 @@
 
 echo "$(date) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
 
-# disable running in the future for now
-exit 0
-
 systemctl disable systemd-timesyncd
 systemctl disable systemd-timedated
 systemctl stop systemd-timesyncd

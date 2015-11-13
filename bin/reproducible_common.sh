@@ -384,11 +384,12 @@ write_explaination_table() {
 	fi
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on armhf: sometimes varied (depending on the build job)<br />on amd64: same for both builds (currently, work in progress)</td></tr>"
+		write_page "<tr><td>year, month, date</td><td>today ($DATE) or on amd64 also: $(date --date='${DATE}+398 days' +'%Y-%m-%d')</td><td><br />&nbsp;&nbsp;on amd64: varied (398 days difference)<br />&nbsp;&nbsp;on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
+		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
-		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
 		if [ "$1" = "debian" ] ; then
 		        write_page "<tr><td>filesystem</td><td>tmpfs</td><td><em>temporarily not</em> varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\"https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"

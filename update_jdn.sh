@@ -263,7 +263,8 @@ if [ -f /etc/debian_version ] ; then
 				shorewall6 
 				sqlite3 
 				syslinux 
-				tcpdump 
+				tcpdump
+				tor
 				unclutter 
 				virt-viewer 
 				vncsnapshot 

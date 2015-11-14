@@ -18,6 +18,7 @@ cleanup_all() {
 	# kill xvfb
 	kill $XPID
 	# end
+	mv screenshot.png screenshot-thumb.png $WORKSPACE/ || true
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }
 
@@ -32,15 +33,13 @@ first_test() {
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	sleep 5m
-	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > session.pnm
-	sleep 5m
+	sleep 2m
+	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm
+	sleep 2m
 	kill $XPID
-	schroot --end-session -c $SESSION
-	gocr session.pnm
-	pnmtopng session.pnm > screenshot.png
+	schroot --end-screenshot -c $SESSION
+	pnmtopng screenshot.pnm > screenshot.png
 	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
-	echo "session.jpg should be made availble for download"
 	if ! "$DEBUG" ; then set +x ; fi
 }
 
@@ -56,7 +55,7 @@ cd $TMPDIR
 SUITE=$1
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 #
-# this is WIP in an early stage (and it won't work as X ain't configured yet)
+# this is WIP in an early stage
 # - test package build from git (todo)
 # - test package from the archive (in progress)
 # - test updates (todo)

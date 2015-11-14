@@ -28,7 +28,7 @@ first_test() {
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
 	SCREEN=77
-	Xvfb -ac -br -screen 1024x768x16 :$SCREEN.0 &
+	Xvfb -ac -br -screen 0 1024x768x16 :$SCREEN &
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &

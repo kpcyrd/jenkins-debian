@@ -10,8 +10,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-set -e
-
 cleanup_tmpdirs() {
 	set +e
 	cd
@@ -50,6 +48,7 @@ declare -A GOOD_PERCENT
 declare -A FREEBSD
 declare -A FILES_HTML
 for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
+	set -e
 	RSSH="ssh freebsd-jenkins.debian.net"
 	RSCP="scp -r freebsd-jenkins.debian.net"
 	TMPBUILDDIR=/usr/src

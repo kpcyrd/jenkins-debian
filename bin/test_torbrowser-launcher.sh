@@ -22,6 +22,13 @@ cleanup_all() {
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }
 
+update_screenshot() {
+	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm
+	pnmtopng screenshot.pnm > screenshot.png
+	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
+	mv screenshot.png screenshot-thumb.png $WORKSPACE/ || true
+}
+
 first_test() {
 	set -x
 	local SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
@@ -33,13 +40,12 @@ first_test() {
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	sleep 2m
-	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm
-	sleep 2m
+	for i in $(seq 1 6) ; do
+		sleep 1m
+		update_screenshot
+	done
 	kill $XPID
-	schroot --end-screenshot -c $SESSION
-	pnmtopng screenshot.pnm > screenshot.png
-	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
+	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi
 }
 

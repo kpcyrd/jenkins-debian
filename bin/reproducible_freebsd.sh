@@ -80,15 +80,18 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	export LANG="en_GB.UTF-8"
 	NUM_CPU=4 # if someone could tell me how to determine this on FreeBSD, this would be neat
 	# actually build everything
-	set +e
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld" && \
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel" && \
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld" && \
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel" && \
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution" && \
-	save_freebsd_results b1 || \
-	( cleanup_tmpdirs ; echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping" ; break )
-	set -e
+	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution" ) ; then
+		# save results in b1
+		save_freebsd_results b1
+	else
+		cleanup_tmpdirs
+		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping."
+		break
+	fi
 
 	# set time forward 398 days
 	$RSSH "sudo service ntpd stop ; sudo date --set='+398 days' ; date"
@@ -105,15 +108,17 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	# use allmost all cores for second build
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	# actually build everything
-	set +e
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld"
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel"
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld"
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel"
-	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution"
-	set -e
-	# save results in b2
-	save_freebsd_results b2
+	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution" ) ; then
+		# save results in b2
+		save_freebsd_results b2
+	else
+		cleanup_tmpdirs
+		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the second run."
+	fi
 
 	# set time back to today
 	$RSSH "sudo ntpdate -b pool.ntp.org ; sudo service ntpd start ; sudo service ntpd status ; date"

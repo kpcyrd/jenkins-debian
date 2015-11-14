@@ -72,8 +72,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== proper backup
 
 * postponed til we run on .debian.org
-* gpg encrypted to some keys
-* run on alioth or paradis
+* this needs to be backed up:
 * '/var/lib/jenkins/jobs' (the results - the configs are in .git)
 * '/var/lib/munin'
 * '/var/log'

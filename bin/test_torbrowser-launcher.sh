@@ -11,17 +11,18 @@ set -e
 
 cleanup_all() {
 	set +e
+	# kill xvfb and ffmpeg
+	kill $XPID $FFMPEGPID 2>/dev/null|| true
 	# preserve screenshots
-	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/ || true
-	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $WORKSPACE/ || true
-	# actual cleanup starts here
-	cd
+	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/
+	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $WORKSPACE/
+	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/
+	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $WORKSPACE/
 	# delete session if it still exists
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	# delete main work dir
+	cd
 	rm $TMPDIR -r
-	# kill xvfb
-	kill $XPID 2>/dev/null|| true
 	# end
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }
@@ -44,12 +45,14 @@ first_test() {
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
+	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg &
+	FFMPEGPID=$!
 	for i in $(seq 1 6) ; do
 		sleep 1m
 		update_screenshot
 	done
 	schroot --end-session -c $SESSION
-	kill $XPID || true
+	kill $XPID $FFMPEGPID || true
 	if ! "$DEBUG" ; then set +x ; fi
 }
 

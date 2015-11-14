@@ -382,13 +382,17 @@ write_explaination_table() {
 		write_page "<tr><td>FreeBSD kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td><tr>"
 	fi
+	FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on armhf: sometimes varied (depending on the build job)<br />on amd64: same for both builds (currently, work in progress)</td></tr>"
-		FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
 		write_page "<tr><td>year, month, date</td><td>today ($DATE) or on amd64 also: $FUTURE</td><td>on amd64: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
-		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
+		if [ "$1" != "FreeBSD" ] ; then
+			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
+		else
+			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>398 days in the future ($FUTURE)</td></tr>"
+		fi
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
 		write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"

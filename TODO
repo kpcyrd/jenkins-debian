@@ -30,8 +30,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 Most jobs have been converted, a few are left to do:
 
 * add g-i tests for stretch
-* add stretch live-builds
-* mention stretch in README where appropriate
 
 === To be done once jenkins.d.n runs jessie
 

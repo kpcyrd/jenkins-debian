@@ -39,9 +39,9 @@ cd $TMPDIR
 SUITE=$1
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 #
-# this is WIP in an early stage (and it will not work as X aint configured yet)
+# this is WIP in an early stage (and it won't work as X ain't configured yet)
 # - test package build from git (todo)
-# - test package from the archive (done)
+# - test package from the archive (in progress)
 # - test updates (todo)
 #
 first_test

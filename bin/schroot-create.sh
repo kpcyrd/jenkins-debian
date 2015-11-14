@@ -21,6 +21,7 @@ if [ $# -lt 2 ]; then
 	exit 1
 fi
 
+declare -a EXTRA_SOURCES
 if [ "$1" = "backports" ] ; then
 	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main"
 	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main"
@@ -34,6 +35,13 @@ if [ "$1" = "reproducible" ] ; then
 	shift
 fi
 
+if [ "$1" = "torbrowser-launcher" ] ; then
+	EXTRA_SOURCES[4]="deb $MIRROR ${SUITE} contrib"
+	EXTRA_SOURCES[5]="deb-src $MIRROR ${SUITE} contrib"
+	shift
+fi
+
+
 TARGET="$1"
 shift
 SUITE="$1"
@@ -41,7 +49,6 @@ shift
 
 TMPLOG=$(mktemp --tmpdir=$TMPDIR schroot-create-XXXXXXXX)
 
-declare -a EXTRA_SOURCES
 if [ "$SUITE" = "experimental" ] ; then
 	# experimental cannot be bootstrapped
 	SUITE=sid

@@ -245,19 +245,18 @@ This is about Debian, below are more todo entries for other projects…
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
 * incorporate popular third-party ("external feeds") packages?
-* file dbd bug about crashing on certain squashfs files
 * explain status in plain english
 * use disorderfs for 2nd build?
 
 ==== reproducible NetBSD
 
-* announce on their list
 * explain status in plain english
 ** MKREPRO is set to "yes"
 * use disorderfs for 2nd build?
 
 ==== reproducible FreeBSD
 
+* run 2nd build 398 days in future
 * useful improvements:
 ** investigate how to use tmpfs on freebsd and build there
 ** find a way to be informed about updates and keep it updated

@@ -198,7 +198,8 @@ if [ -f /etc/debian_version ] ; then
 				dose-extra 
 				dstat 
 				figlet 
-				flex 
+				flex
+				ffmpeg
 				gawk 
 				ghc
 				git-notifier 

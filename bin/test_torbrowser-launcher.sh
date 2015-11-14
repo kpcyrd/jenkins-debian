@@ -22,7 +22,8 @@ first_test() {
 	set -x
 	local SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-torbrowser-launcher-$SUITE
-	schroot --run-session -c $SESSION --directory /tmp -- mkdir $HOME
+	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
+	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
 	xvfb-run schroot --run-session -c $SESSION -- torbrowser-launcher https://www.debian.org
 	schroot --end-session -c $SESSION
 	if ! "$DEBUG" ; then set +x ; fi

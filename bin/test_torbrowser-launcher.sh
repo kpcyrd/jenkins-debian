@@ -45,7 +45,7 @@ first_test() {
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg &
+	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg >/dev/null &
 	FFMPEGPID=$!
 	for i in $(seq 1 6) ; do
 		sleep 1m

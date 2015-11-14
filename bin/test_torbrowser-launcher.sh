@@ -27,16 +27,19 @@ first_test() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-torbrowser-launcher-$SUITE
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
-	Xvfb :77 -screen 0 1024x768x16 &
-	XPID=$?
-	export DISPLAY=":77"
-	timeout -k 5m 4m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	sleep 2m
-	xwd -root -silent -display :77.0 | xwdtopnm > session.pnm
+	SCREEN=77
+	Xvfb -ac -br -screen 1024x768x16 :$SCREEN.0 &
+	XPID=$!
+	export DISPLAY=":$SCREEN.0"
+	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
+	sleep 5m
+	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > session.pnm
+	sleep 5m
 	kill $XPID
 	schroot --end-session -c $SESSION
 	gocr session.pnm
 	pnmtojpeg session.pnm > session.jpg
+	mv -v session.jpg $HOME/jobs/$JOB_NAME/
 	rm session.pnm
 	echo "session.jpg should be made availble for download"
 	if ! "$DEBUG" ; then set +x ; fi

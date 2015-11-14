@@ -88,7 +88,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel" && \
 	$RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution" && \
 	save_freebsd_results b1 || \
-	( cleanup_tmpdirs ; echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping" ; continue )
+	( cleanup_tmpdirs ; echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping" ; break )
 	set -e
 
 	# set time forward 398 days

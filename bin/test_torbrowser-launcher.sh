@@ -38,9 +38,8 @@ first_test() {
 	kill $XPID
 	schroot --end-session -c $SESSION
 	gocr session.pnm
-	pnmtojpeg session.pnm > session.jpg
-	mv -v session.jpg $HOME/jobs/$JOB_NAME/
-	rm session.pnm
+	pnmtopng session.pnm > screenshot.png
+	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
 	echo "session.jpg should be made availble for download"
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -51,6 +50,7 @@ first_test() {
 
 TMPDIR=$(mktemp -d)  # where everything actually happens
 trap cleanup_all INT TERM EXIT
+WORKSPACE=$(pwd)
 cd $TMPDIR
 
 SUITE=$1
@@ -62,6 +62,9 @@ echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 # - test updates (todo)
 #
 first_test
+
+# publish results
+mv screenshot.png screenshot-thumb.png $WORKSPACE/
 
 cd
 cleanup_all

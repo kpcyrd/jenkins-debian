@@ -21,10 +21,21 @@ if [ $# -lt 2 ]; then
 	exit 1
 fi
 
+# initialize vars
 declare -a EXTRA_SOURCES
+for i in $(seq 0 5) ; do
+	EXTRA_SOURCES[$i]=""
+done
+
 if [ "$1" = "backports" ] ; then
 	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main"
 	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main"
+	shift
+fi
+
+if [ "$1" = "torbrowser-launcher" ] ; then
+	EXTRA_SOURCES[4]="deb $MIRROR ${SUITE} contrib"
+	EXTRA_SOURCES[5]="deb-src $MIRROR ${SUITE} contrib"
 	shift
 fi
 
@@ -32,12 +43,6 @@ if [ "$1" = "reproducible" ] ; then
 	EXTRA_SOURCES[4]="deb http://reproducible.alioth.debian.org/debian/ ./"
 	EXTRA_SOURCES[5]="deb-src http://reproducible.alioth.debian.org/debian/ ./"
 	REPRODUCIBLE=true
-	shift
-fi
-
-if [ "$1" = "torbrowser-launcher" ] ; then
-	EXTRA_SOURCES[4]="deb $MIRROR ${SUITE} contrib"
-	EXTRA_SOURCES[5]="deb-src $MIRROR ${SUITE} contrib"
 	shift
 fi
 

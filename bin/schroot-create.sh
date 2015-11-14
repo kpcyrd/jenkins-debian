@@ -26,16 +26,16 @@ declare -a EXTRA_SOURCES
 for i in $(seq 0 5) ; do
 	EXTRA_SOURCES[$i]=""
 done
+CONTRIB=""
 
-if [ "$1" = "backports" ] ; then
-	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main"
-	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main"
+if [ "$1" = "torbrowser-launcher" ] ; then
+	CONTRIB="contrib"
 	shift
 fi
 
-if [ "$1" = "torbrowser-launcher" ] ; then
-	EXTRA_SOURCES[4]="deb $MIRROR ${SUITE} contrib"
-	EXTRA_SOURCES[5]="deb-src $MIRROR ${SUITE} contrib"
+if [ "$1" = "backports" ] ; then
+	EXTRA_SOURCES[2]="deb $MIRROR ${SUITE}-backports main $CONTRIB"
+	EXTRA_SOURCES[3]="deb-src $MIRROR ${SUITE}-backports main $CONTRIB"
 	shift
 fi
 
@@ -57,8 +57,8 @@ TMPLOG=$(mktemp --tmpdir=$TMPDIR schroot-create-XXXXXXXX)
 if [ "$SUITE" = "experimental" ] ; then
 	# experimental cannot be bootstrapped
 	SUITE=sid
-	EXTRA_SOURCES[0]="deb $MIRROR experimental main"
-	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
+	EXTRA_SOURCES[0]="deb $MIRROR experimental main $CONTRIB"
+	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main $CONTRIB"
 fi
 
 export SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
@@ -145,7 +145,7 @@ bootstrap() {
 	if [ ! -z "$http_proxy" ] ; then
 		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $SCHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	fi
-	echo "deb-src $MIRROR $SUITE main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
+	echo "deb-src $MIRROR $SUITE main $CONTRIB"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
 	for i in $(seq 0 5) ; do
 		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list >/dev/null
 	done

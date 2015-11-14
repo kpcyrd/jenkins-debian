@@ -10,7 +10,9 @@ common_init "$@"
 set -e
 
 cleanup_all() {
+	set +e
 	cd
+	mv screenshot.png screenshot-thumb.png $WORKSPACE/ || true
 	# delete session if it still exists
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	# delete main work dir
@@ -18,7 +20,6 @@ cleanup_all() {
 	# kill xvfb
 	kill $XPID
 	# end
-	mv screenshot.png screenshot-thumb.png $WORKSPACE/ || true
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }
 
@@ -44,8 +45,8 @@ first_test() {
 		sleep 1m
 		update_screenshot
 	done
-	kill $XPID
 	schroot --end-session -c $SESSION
+	kill $XPID || true
 	if ! "$DEBUG" ; then set +x ; fi
 }
 

@@ -15,6 +15,9 @@ cleanup_all() {
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	# delete main work dir
 	rm $TMPDIR -r
+	# kill xvfb
+	kill $XPID
+	# end
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }
 
@@ -24,8 +27,18 @@ first_test() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-torbrowser-launcher-$SUITE
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
-	xvfb-run schroot --run-session -c $SESSION -- torbrowser-launcher https://www.debian.org
+	Xvfb :77 -screen 0 1024x768x16 &
+	XPID=$?
+	export DISPLAY=":77"
+	timeout -k 5m 4m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
+	sleep 2m
+	xwd -root -silent -display :77.0 | xwdtopnm > session.pnm
+	kill $XPID
 	schroot --end-session -c $SESSION
+	gocr session.pnm
+	pnmtojpeg session.pnm > session.jpg
+	rm session.pnm
+	echo "session.jpg should be made availble for download"
 	if ! "$DEBUG" ; then set +x ; fi
 }
 

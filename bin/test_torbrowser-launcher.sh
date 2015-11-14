@@ -64,13 +64,9 @@ cd $TMPDIR
 
 SUITE=$1
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
-#
-# this is WIP in an early stage
-# - test package build from git (todo)
-# - test package from the archive (in progress)
-# - test updates (todo)
-#
-first_test
+first_test # test package from the archive
+# then build package and test it (probably via triggering another job)
+# not sure how to test updates. maybe just run old install?
 
 # publish results
 mv screenshot.png screenshot-thumb.png $WORKSPACE/

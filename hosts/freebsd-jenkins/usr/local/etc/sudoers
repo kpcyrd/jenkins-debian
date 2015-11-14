@@ -104,7 +104,11 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/sbin/chown jenkins /usr/src, \
 	/usr/bin/find /srv/reproducible-results/* -newer /srv/reproducible-results/* -exec touch *, \
 	/usr/bin/find /srv/reproducible-results/* -print0, \
-	/usr/bin/tar --null -T - --no-recursion -cJf *.tar.xz
+	/usr/bin/tar --null -T - --no-recursion -cJf *.tar.xz, \
+	/usr/sbin/service ntpd start, \
+	/usr/sbin/service ntpd stop, \
+	/usr/sbin/service ntpd status, \
+	/usr/sbin/ntpdate -b pool.ntp.org
 
 
 ## Uncomment to allow any user to run sudo if they know the password

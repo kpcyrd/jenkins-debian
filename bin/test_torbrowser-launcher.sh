@@ -11,14 +11,17 @@ set -e
 
 cleanup_all() {
 	set +e
+	# preserve screenshots
+	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/ || true
+	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $WORKSPACE/ || true
+	# actual cleanup starts here
 	cd
-	mv screenshot.png screenshot-thumb.png $WORKSPACE/ || true
 	# delete session if it still exists
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	# delete main work dir
 	rm $TMPDIR -r
 	# kill xvfb
-	kill $XPID
+	kill $XPID 2>/dev/null|| true
 	# end
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }

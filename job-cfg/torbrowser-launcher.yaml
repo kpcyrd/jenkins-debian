@@ -31,8 +31,6 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
-    wrappers:
-      - live-screenshot
     node: '{my_node}'
 
 - defaults:
@@ -69,6 +67,8 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
+    wrappers:
+      - live-screenshot
     scm:
       - git:
           url: '{my_gitrepo}'

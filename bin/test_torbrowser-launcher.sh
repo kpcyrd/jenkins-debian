@@ -17,7 +17,8 @@ cleanup_all() {
 	[ ! -f screenshot.png ] || mv screenshot.png $RESULTS/
 	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $RESULTS/
 	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $RESULTS/
-	# delete session if it still exists
+	# shutdown and end session if it still exists
+	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop || true
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	# delete main work dir
 	cd
@@ -38,10 +39,12 @@ update_screenshot() {
 }
 
 first_test() {
+	echo
 	local SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-torbrowser-launcher-$SUITE
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
+	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start
 	SCREEN=77
 	Xvfb -ac -br -screen 0 1024x768x16 :$SCREEN &
 	XPID=$!
@@ -61,8 +64,10 @@ first_test() {
 		sleep 15
 		update_screenshot
 	done
+	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop
 	schroot --end-session -c $SESSION
 	kill $XPID $FFMPEGPID || true
+	echo
 }
 
 #

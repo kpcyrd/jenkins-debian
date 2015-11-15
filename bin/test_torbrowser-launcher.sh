@@ -50,13 +50,13 @@ first_test() {
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
 	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg > /dev/null 2>&1 &
 	FFMPEGPID=$!
-	for i in $(seq 1 4) ; do
-		sleep 1m
+	for i in $(seq 1 16) ; do
+		sleep 15
 		update_screenshot
 	done
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	for i in $(seq 1 4) ; do
-		sleep 1m
+	for i in $(seq 1 16) ; do
+		sleep 15
 		update_screenshot
 	done
 	schroot --end-session -c $SESSION

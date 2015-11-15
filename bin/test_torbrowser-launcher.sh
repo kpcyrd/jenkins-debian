@@ -34,7 +34,7 @@ update_screenshot() {
 	pnmtopng screenshot.pnm > screenshot.png
 	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
 	# for publishing
-	cp screenshot.png $RESULTS/screenshot_$TIMESTAMP.png
+	cp -v screenshot.png $RESULTS/screenshot_$TIMESTAMP.png
 	# for the live screenshot plugin
 	mv screenshot.png screenshot-thumb.png $WORKSPACE/
 }
@@ -46,13 +46,17 @@ first_test() {
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start
+	sleep 2
 	SCREEN=77
 	Xvfb -ac -br -screen 0 1024x768x16 :$SCREEN &
 	XPID=$!
+	sleep 1
 	export DISPLAY=":$SCREEN.0"
 	unset http_proxy
 	unset https_proxy
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- awesome &
+	sleep 1
+	update_screenshot
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
 	ffmpeg -f x11grab -i :$SCREEN.0 -s 1024x768 test-torbrowser-${SUITE}_$(date +%Y%m%d%H%M).mpg > /dev/null 2>&1 &
 	FFMPEGPID=$!

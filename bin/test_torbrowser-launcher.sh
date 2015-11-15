@@ -16,7 +16,6 @@ cleanup_all() {
 	# preserve screenshots
 	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/
 	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $WORKSPACE/
-	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/
 	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $WORKSPACE/
 	# delete session if it still exists
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
@@ -45,9 +44,14 @@ first_test() {
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg >/dev/null &
+	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg > /dev/null 2>&1 &
 	FFMPEGPID=$!
-	for i in $(seq 1 6) ; do
+	for i in $(seq 1 4) ; do
+		sleep 1m
+		update_screenshot
+	done
+	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
+	for i in $(seq 1 4) ; do
 		sleep 1m
 		update_screenshot
 	done
@@ -70,9 +74,6 @@ echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 first_test # test package from the archive
 # then build package and test it (probably via triggering another job)
 # not sure how to test updates. maybe just run old install?
-
-# publish results
-mv screenshot.png screenshot-thumb.png $WORKSPACE/
 
 cd
 cleanup_all

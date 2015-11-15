@@ -78,6 +78,7 @@ cd $TMPDIR
 
 SUITE=$1
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
+[ ! -f screenshot.png ] || rm screenshot.png
 first_test # test package from the archive
 # then build package and test it (probably via triggering another job)
 # not sure how to test updates. maybe just run old install?

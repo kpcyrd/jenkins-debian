@@ -66,7 +66,7 @@
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - imagegallery:
-          title: '{my_title}'
+          title: '{my_description}'
           includes: 'results/*.png'
           image-width: 300
       - email:
@@ -126,21 +126,21 @@
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_unstable_amd64':
-            my_description: 'Test torbrowser-launcher on unstable/amd64 daily and on every commit to GIT.'
+            my_description: 'Test torbrowser-launcher from and on unstable/amd64.'
             my_timed: '23 5 * * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_stretch_amd64':
-            my_description: 'Test torbrowser-launcher on stretch/amd64 daily and on every commit to GIT.'
+            my_description: 'Test torbrowser-launcher from and on stretch/amd64.'
             my_timed: '23 6 * * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_jessie_amd64':
-            my_description: 'Test torbrowser-launcher on jessie/amd64 daily and on every commit to GIT.'
+            my_description: 'Test torbrowser-launcher from and on jessie/amd64.'
             my_timed: '23 7 * * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie'

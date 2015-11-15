@@ -34,7 +34,6 @@ update_screenshot() {
 }
 
 first_test() {
-	set -x
 	local SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
 	schroot --begin-session --session-name=$SESSION -c jenkins-torbrowser-launcher-$SUITE
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
@@ -43,6 +42,7 @@ first_test() {
 	Xvfb -ac -br -screen 0 1024x768x16 :$SCREEN &
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
+	export
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
 	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg > /dev/null 2>&1 &
 	FFMPEGPID=$!
@@ -57,7 +57,6 @@ first_test() {
 	done
 	schroot --end-session -c $SESSION
 	kill $XPID $FFMPEGPID || true
-	if ! "$DEBUG" ; then set +x ; fi
 }
 
 #

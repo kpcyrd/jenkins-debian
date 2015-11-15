@@ -25,7 +25,7 @@ create_results_dirs() {
 handle_race_condition() {
 	echo | tee -a $BUILDLOG
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT builder FROM schedule WHERE package_id='$SRCPKGID'")
-	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
+	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} is building at $RESULT, this is $BUILD_URL.\n"
 	printf "$msg" | tee -a $BUILDLOG
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG

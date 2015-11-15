@@ -28,7 +28,7 @@ cleanup_all() {
 
 update_screenshot() {
 	TIMESTAMP=$(date +%Y%m%d%H%M)
-	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm
+	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm 2>/dev/null
 	pnmtopng screenshot.pnm > screenshot.png
 	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
 	cp screenshot.png $RESULTS/screenshot_$TIMESTAMP.png

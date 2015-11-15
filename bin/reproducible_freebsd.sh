@@ -93,8 +93,8 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 		break
 	fi
 
-	# set time forward 398 days
-	$RSSH "sudo service ntpd stop ; sudo date --set='+398 days' ; date"
+	# set time forward 398 days and some
+	$RSSH "sudo service ntpd stop ; sudo date --set='+398 days +6 hours +23 minutes' ; date"
 	echo "$(date) - system is running in the future now."
 
 	echo "============================================================================="

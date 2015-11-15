@@ -65,6 +65,10 @@
           parse-rules: '/srv/jenkins/logparse/torbrowser-launcher.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - imagegallery:
+          title: '{my_title}'
+          includes: 'results/*.png'
+          image-width: 300
       - email:
           recipients: '{my_recipients}'
     wrappers:

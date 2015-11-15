@@ -14,9 +14,9 @@ cleanup_all() {
 	# kill xvfb and ffmpeg
 	kill $XPID $FFMPEGPID 2>/dev/null|| true
 	# preserve screenshots
-	[ ! -f screenshot.png ] || mv screenshot.png $WORKSPACE/
-	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $WORKSPACE/
-	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $WORKSPACE/
+	[ ! -f screenshot.png ] || mv screenshot.png $RESULTS/
+	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $RESULTS/
+	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $RESULTS/
 	# delete session if it still exists
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	# delete main work dir
@@ -27,10 +27,12 @@ cleanup_all() {
 }
 
 update_screenshot() {
+	TIMESTAMP=$(date +%Y%m%d%H%M)
 	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm
 	pnmtopng screenshot.pnm > screenshot.png
 	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
-	mv screenshot.png screenshot-thumb.png $WORKSPACE/ || true
+	cp screenshot.png $RESULTS/screenshot_$TIMESTAMP.png
+	mv screenshot.png screenshot-thumb.png $RESULTS/
 }
 
 first_test() {
@@ -68,6 +70,8 @@ first_test() {
 TMPDIR=$(mktemp -d)  # where everything actually happens
 trap cleanup_all INT TERM EXIT
 WORKSPACE=$(pwd)
+mkdir -p results
+RESULTS=$WORKSPACE/results
 cd $TMPDIR
 
 SUITE=$1

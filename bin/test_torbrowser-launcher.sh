@@ -31,8 +31,10 @@ update_screenshot() {
 	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm 2>/dev/null
 	pnmtopng screenshot.pnm > screenshot.png
 	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
+	# for publishing
 	cp screenshot.png $RESULTS/screenshot_$TIMESTAMP.png
-	mv screenshot.png screenshot-thumb.png $RESULTS/
+	# for the live screenshot plugin
+	mv screenshot.png screenshot-thumb.png $WORKSPACE/
 }
 
 first_test() {

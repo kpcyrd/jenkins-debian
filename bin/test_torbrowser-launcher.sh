@@ -17,6 +17,7 @@ cleanup_all() {
 	[ ! -f screenshot.png ] || mv screenshot.png $RESULTS/
 	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $RESULTS/
 	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $RESULTS/
+	[ ! -f screenshot_from_git.png ] || mv screenshot_from_git.png screenshot.png
 	# shutdown and end session if it still exists
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop || true
 	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
@@ -53,7 +54,7 @@ first_test() {
 	unset https_proxy
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- awesome &
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg > /dev/null 2>&1 &
+	ffmpeg -f x11grab -i :$SCREEN.0 -s 1024x768 test-torbrowser-${SUITE}_$(date +%Y%m%d%H%M).mpg > /dev/null 2>&1 &
 	FFMPEGPID=$!
 	for i in $(seq 1 16) ; do
 		sleep 15
@@ -77,13 +78,13 @@ first_test() {
 TMPDIR=$(mktemp -d)  # where everything actually happens
 trap cleanup_all INT TERM EXIT
 WORKSPACE=$(pwd)
-mkdir -p results
 RESULTS=$WORKSPACE/results
+[ ! -f screenshot.png ] || mv screenshot.png screenshot_from_git.png
+mkdir -p $RESULTS
 cd $TMPDIR
 
 SUITE=$1
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
-[ ! -f screenshot.png ] || rm screenshot.png
 first_test # test package from the archive
 # then build package and test it (probably via triggering another job)
 # not sure how to test updates. maybe just run old install?

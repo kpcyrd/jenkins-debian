@@ -65,6 +65,9 @@
           parse-rules: '/srv/jenkins/logparse/torbrowser-launcher.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - archive:
+          artifacts: 'results/*.*'
+          latest_only: false
       - imagegallery:
           title: '{my_description}'
           includes: 'results/*.png'

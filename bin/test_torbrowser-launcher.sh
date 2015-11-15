@@ -42,7 +42,9 @@ first_test() {
 	Xvfb -ac -br -screen 0 1024x768x16 :$SCREEN &
 	XPID=$!
 	export DISPLAY=":$SCREEN.0"
-	export
+	unset http_proxy
+	unset https_proxy
+	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- awesome &
 	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
 	ffmpeg -f x11grab -i :$SCREEN.0 test-torbrowser-$SUITE.mpg > /dev/null 2>&1 &
 	FFMPEGPID=$!

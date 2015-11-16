@@ -1,5 +1,5 @@
 - defaults:
-    name: torbrowser-launcher
+    name: torbrowser-launcher_setup
     project-type: freestyle
     triggers:
       - timed: '{my_timed}'
@@ -37,8 +37,56 @@
     name: torbrowser-launcher_git
     project-type: freestyle
     triggers:
-      - timed: '{my_timed}'
       - pollscm: '*/6 * * * *'
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/torbrowser-launcher
+          text: torbrowser-launcher jobs
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell} {my_gitbranch}'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/torbrowser-launcher.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - archive:
+          artifacts: 'results/*.*'
+          latest_only: false
+      - imagegallery:
+          title: '{my_description}'
+          includes: 'results/*.png'
+          image-width: 300
+      - email:
+          recipients: '{my_recipients}'
+    wrappers:
+      - live-screenshot
+    scm:
+      - git:
+          url: '{my_gitrepo}'
+          branches:
+            - '{my_gitbranch}'
+    node: '{my_node}'
+
+- defaults:
+    name: torbrowser-launcher_packages
+    project-type: freestyle
+    triggers:
+      - timed: '{my_timed}'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
@@ -76,40 +124,40 @@
           recipients: '{my_recipients}'
     wrappers:
       - live-screenshot
-    scm:
-      - git:
-          url: '{my_gitrepo}'
-          branches:
-            - master
     node: '{my_node}'
 
+
 - job-template:
-    defaults: torbrowser-launcher
+    defaults: torbrowser-launcher_setup
     name: '{name}_setup_schroot_unstable_amd64'
 
 - job-template:
-    defaults: torbrowser-launcher
+    defaults: torbrowser-launcher_setup
     name: '{name}_setup_schroot_stretch_amd64'
 
 - job-template:
-    defaults: torbrowser-launcher
+    defaults: torbrowser-launcher_setup
     name: '{name}_setup_schroot_jessie_amd64'
 
 - job-template:
-    defaults: torbrowser-launcher_git
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_experimental_amd64'
 
 - job-template:
-    defaults: torbrowser-launcher_git
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_unstable_amd64'
 
 - job-template:
-    defaults: torbrowser-launcher_git
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_stretch_amd64'
 
 - job-template:
-    defaults: torbrowser-launcher_git
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_jessie_amd64'
+
+- job-template:
+    defaults: torbrowser-launcher_packages
+    name: '{name}_test_jessie_amd64_experimental'
 
 - project:
     name: torbrowser-launcher
@@ -117,47 +165,56 @@
         - '{name}_setup_schroot_unstable_amd64':
             my_description: 'Setup unstable/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-unstable unstable torbrowser-launcher ca-certificates awesome dbus xterm'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-unstable unstable torbrowser-launcher ca-certificates awesome dbus xterm x11-utils build-essential devscripts python-all debhelper dh-apparmor'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_stretch_amd64':
             my_description: 'Setup stretch/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 2 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-stretch stretch torbrowser-launcher ca-certificates awesome dbus xterm'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-stretch stretch torbrowser-launcher ca-certificates awesome dbus xterm x11-utils build-essential devscripts python-all debhelper dh-apparmor'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_jessie_amd64':
             my_description: 'Setup jessie/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 3 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm x11-utils build-essential devscripts python-all debhelper dh-apparmor'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_experimental_amd64':
             my_description: 'Test torbrowser-launcher from and on experimental/amd64.'
             my_timed: '23 5 * * *'
-            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh experimental'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_unstable_amd64':
             my_description: 'Test torbrowser-launcher from and on unstable/amd64.'
             my_timed: '23 5 * * *'
-            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_stretch_amd64':
             my_description: 'Test torbrowser-launcher from and on stretch/amd64.'
             my_timed: '23 6 * * *'
-            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_jessie_amd64':
             my_description: 'Test torbrowser-launcher from and on jessie/amd64.'
             my_timed: '23 7 * * *'
-            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_jessie_amd64_experimental':
+            my_description: 'Test torbrowser-launcher from experimental on jessie/amd64.'
+            my_timed: '23 8 * * *'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie experimental'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_jessie_amd64_git_debian_experimental':
+            my_description: 'Test torbrowser-launcher on jessie/amd64 using the branch debian/experimental.'
+            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
+            my_gitbranch: 'debian/experimental'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie git'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
 

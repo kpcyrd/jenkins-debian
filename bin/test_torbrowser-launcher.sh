@@ -62,14 +62,21 @@ end_session() {
 }
 
 upgrade_to_experimental_version() {
-	if [ "$SUITE" != "experimental" ] ; then
-		return
-	fi
 	echo
-	echo "Upgrading to torbrowser-launcher from experimental…"
+	echo "$(date -u ) - upgrading to torbrowser-launcher from experimental…"
 	echo "deb $MIRROR experimental main contrib" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/apt/sources.list
 	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get update
 	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get -y install -t experimental torbrowser-launcher
+}
+
+build_and_upgrade_to_git_version() {
+	echo
+	echo "$(date -u ) - building torbrowser-launcher from git, branch $BRANCH…"
+	schroot --run-session -c $SESSION --directory $TMPDIR/git -- debuild -b
+	DEB=$(cd $TMPDIR/git ; ls torbrowser-launcher_*deb)
+	echo "$(date -u ) - installing $DEB…"
+	schroot --run-session -c $SESSION --directory $TMPDIR/git -u root -- dpkg -i $DEB
+	rm $TMPDIR/git -r
 }
 
 download_and_launch() {
@@ -176,7 +183,7 @@ download_and_launch() {
 }
 
 #
-# main
+# prepare
 #
 if [ -z "$1" ] ; then
 	echo "call $0 with a suite as param."
@@ -185,20 +192,40 @@ fi
 SUITE=$1
 TMPDIR=$(mktemp -d)  # where everything actually happens
 SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
+STARTTIME=$(date +%Y%m%d%H%M)
+VIDEO=test-torbrowser-${SUITE}_$STARTTIME.mpg
+SIZE=1024x768
 SCREEN=$EXECUTOR_NUMBER
+if [ "$2" = "git" ] ; then
+	if [ -z "$3"  ] ; then
+		BRANCH=master
+	else
+		BRANCH=$3
+	fi
+	echo "$(date -u) - preserving git workspace."
+	git branch -av
+	mkdir $TMPDIR/git
+	cp -r * $TMPDIR/git
+elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
+	EXPERIMENTAL=yes
+fi
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
 [ ! -f screenshot.png ] || mv screenshot.png screenshot_from_git.png
 mkdir -p $RESULTS
 cd $TMPDIR
-STARTTIME=$(date +%Y%m%d%H%M)
-VIDEO=test-torbrowser-${SUITE}_$STARTTIME.mpg
-SIZE=1024x768
 trap cleanup_all INT TERM EXIT
 
+#
+# main
+#
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 begin_session
-upgrade_to_experimental_version
+if [ "$2" = "git" ] ; then
+	build_and_upgrade_to_git_version
+elif [ "$EXPERIMENTAL" = "yes" ] ; then
+	upgrade_to_experimental_version
+fi
 download_and_launch
 end_session
 

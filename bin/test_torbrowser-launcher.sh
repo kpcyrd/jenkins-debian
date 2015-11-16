@@ -94,11 +94,11 @@ upgrade_to_newer_packaged_version_in() {
 
 build_and_upgrade_to_git_version() {
 	echo
-	echo "$(date -u ) - building torbrowser-launcher from git, branch $BRANCH…"
+	echo "$(date -u ) - building branch $BRANCH torbrowser-launcher from git."
 	schroot --run-session -c $SESSION --directory $TMPDIR/git -- debuild -b -uc -us
 	DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
 	CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)
-	echo "$(date -u ) - installing $DEB…"
+	echo "$(date -u ) - $DEB will be installed."
 	schroot --run-session -c $SESSION --directory $TMPDIR -u root -- dpkg -i $DEB
 	rm $TMPDIR/git -r
 	cat $TMPDIR/$CHANGES
@@ -111,7 +111,7 @@ download_and_launch() {
 	echo "$(date -u ) - starting dbus service."
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start
 	sleep 2
-	echo "$(date -u) - starting Xfvb on :$SCREEN.0…"
+	echo "$(date -u) - starting Xfvb on :$SCREEN.0 now."
 	Xvfb -ac -br -screen 0 ${SIZE}x24 :$SCREEN &
 	XPID=$!
 	sleep 1
@@ -119,7 +119,7 @@ download_and_launch() {
 	echo export DISPLAY=":$SCREEN.0"
 	unset http_proxy
 	unset https_proxy
-	echo "$(date -u) - starting awesome…"
+	echo "$(date -u) - starting awesome."
 	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- awesome &
 	sleep 2
 	DBUS_SESSION_FILE=$(mktemp)
@@ -132,7 +132,7 @@ download_and_launch() {
 	FFMPEGPID=$!
 	echo "'$(date -u) - starting torbrowser tests'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
-	echo "$(date -u) - starting torbrowser-launcher the first time, opening settings…"
+	echo "$(date -u) - starting torbrowser-launcher the first time, opening settings dialog."
 	export PYTHONUNBUFFERED=true
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- /usr/bin/torbrowser-launcher --settings 2>&1 |& tee $TBL_LOGFILE || true ) &
 	sleep 10
@@ -142,11 +142,11 @@ download_and_launch() {
 	sleep 1
 	TBL_VERSION=$(schroot --run-session -c $SESSION -- dpkg --status torbrowser-launcher |grep ^Version|cut -d " " -f2)
 	if dpkg --compare-versions $TBL_VERSION lt 0.2.0-1~ ; then
-		echo "$(date -u) - torbrowser-launcher version <0.2.0-1~ detected ($TBL_VERSION), pressing <tab> three times more>"
+		echo "$(date -u) - torbrowser-launcher version <0.2.0-1~ detected ($TBL_VERSION), pressing <tab> three times more."
 		xvkbd -text "\t\t\t" > /dev/null 2>&1
 		sleep 1
 	elif dpkg --compare-versions $TBL_VERSION lt 0.2.2-1~ ; then
-		echo "$(date -u) - torbrowser-launcher version <0.2.2-1~ detected ($TBL_VERSION), pressing <tab> twice more>"
+		echo "$(date -u) - torbrowser-launcher version <0.2.2-1~ detected ($TBL_VERSION), pressing <tab> twice more."
 		xvkbd -text "\t\t" > /dev/null 2>&1
 		sleep 1
 	fi
@@ -188,7 +188,7 @@ download_and_launch() {
 		cleanup_duplicate_screenshots
 		exit 1
 	fi
-	echo "$(date -u) - waiting for torbrowser to start…"
+	echo "$(date -u) - waiting for torbrowser to start."
 	for i in $(seq 1 6) ; do
 		sleep 10
 		# this directory only exist once torbrower has successfully started
@@ -206,15 +206,19 @@ download_and_launch() {
 		cleanup_duplicate_screenshots
 		exit 1
 	fi
-	echo "$(date -u) - pressing <return>, to connect directly via tor…"
+	echo "$(date -u) - pressing <return>, to connect directly via tor."
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 3
 	update_screenshot
-	for i in $(seq 1 4) ; do
+	for i in $(seq 1 6) ; do
 		sleep 10
 		update_screenshot
+		TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)
+		if [ -n "$TOR_RUNNING" ] ; then
+			echo "$(date -u) - torbrowser is working is it should, good."
+			break
+		fi
 	done
-	TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)
 	if [ -z "$TOR_RUNNING" ] ; then
 		echo "'$(date -u) - could not connect successfuly via tor or could not run torbrowser at all. Aborting.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
 		update_screenshot
@@ -222,13 +226,11 @@ download_and_launch() {
 		cleanup_all
 		exec /srv/jenkins/bin/abort.sh
 		exit 0
-	else
-		echo "$(date -u) - torbrowser is working is it should, good."
 	fi
-	echo "$(date -u) - pressing <ctrl>-l - about to enter an URL…"
+	URL="https://www.debian.org"
+	echo "$(date -u) - pressing <ctrl>-l - about to enter $URL as URL."
 	xvkbd -text "\Cl" > /dev/null 2>&1
 	sleep 3
-	URL="https://www.debian.org"
 	xvkbd -text "$URL" > /dev/null 2>&1
 	update_screenshot
 	sleep 0.5

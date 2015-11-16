@@ -50,7 +50,7 @@ cleanup_duplicate_screenshots() {
 			fi
 			PIXELS=$(compare -metric AE $i $j /dev/null 2>&1 || true)
 			if [[ "$PIXELS" =~ ^[0-9]+$ ]] && [ $PIXELS -le $MAXDIFF ] ; then
-				echo "$(date -u ) - removing $j, just $PIXELS difference."
+				echo "$(date -u ) - removing $j, just $PIXELS pixels difference."
 				rm $j
 			fi
 		done
@@ -131,7 +131,8 @@ download_and_launch() {
 	echo "'$(date -u) - starting torbrowser tests'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date -u) - starting torbrowser-launcher the first time, opening settings…"
-	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher --settings | tee $TBL_LOGFILE &
+	export PYTHONUNBUFFERED=true
+	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- /usr/bin/torbrowser-launcher --settings 2>&1 |& tee $TBL_LOGFILE || true ) &
 	sleep 10
 	update_screenshot
 	echo "$(date -u) - pressing <tab>"
@@ -207,8 +208,8 @@ download_and_launch() {
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 3
 	update_screenshot
-	for i in $(seq 1 2) ; do
-		sleep 15
+	for i in $(seq 1 4) ; do
+		sleep 10
 		update_screenshot
 	done
 	TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)

@@ -261,6 +261,7 @@ if [ -z "$1" ] ; then
 	exit 1
 fi
 SUITE=$1
+UPGRADE_SUITE=""
 TMPDIR=$(mktemp -d)  # where everything actually happens
 TBL_LOGFILE=$(mktemp)
 SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
@@ -280,9 +281,11 @@ if [ "$2" = "git" ] ; then
 	cp -r * $TMPDIR/git
 elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
 	SUITE=unstable
-	EXPERIMENTAL=yes
+	UPGRADE_SUITE=experimental
 elif [ "$2" = "backports" ] ; then
-	BACKPORTS=yes
+	UPGRADE_SUITE=$SUITE-backports
+elif [ "$2" = "unstable" ] ; then
+	UPGRADE_SUITE=unstable
 fi
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
@@ -299,10 +302,8 @@ echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 begin_session
 if [ "$2" = "git" ] ; then
 	build_and_upgrade_to_git_version
-elif [ "$EXPERIMENTAL" = "yes" ] ; then
-	upgrade_to_newer_packaged_version_in experimental
-elif [ "$BACKPORTS" = "yes" ] ; then
-	upgrade_to_newer_packaged_version_in $SUITE-backports
+elif [ -n "$UPGRADE_SUITE" ] ; then
+	upgrade_to_newer_packaged_version_in $UPGRADE_SUITE
 fi
 download_and_launch
 end_session

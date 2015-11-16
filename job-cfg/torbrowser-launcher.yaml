@@ -183,6 +183,10 @@
 
 - job-template:
     defaults: torbrowser-launcher_packages
+    name: '{name}_test_on_jessie_amd64_from_unstable'
+
+- job-template:
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_on_jessie_amd64_from_experimental'
 
 - job-template:
@@ -261,9 +265,15 @@
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie backports'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
+        - '{name}_test_on_jessie_amd64_from_unstable':
+            my_description: 'Test torbrowser-launcher from unstable on jessie/amd64.'
+            my_timed: '23 5 * * 2'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie unstable'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
         - '{name}_test_on_jessie_amd64_from_experimental':
             my_description: 'Test torbrowser-launcher from experimental on jessie/amd64.'
-            my_timed: '23 5 * * 2'
+            my_timed: '42 5 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie experimental'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''

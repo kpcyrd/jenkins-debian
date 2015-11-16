@@ -16,10 +16,12 @@ cleanup_all() {
 	fi
 	# kill xvfb and ffmpeg
 	kill $XPID $FFMPEGPID 2>/dev/null|| true
-	# preserve screenshots
-	[ ! -f screenshot.png ] || mv screenshot.png $RESULTS/
-	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $RESULTS/
+	# preserve screenshots and video
+	cd $TMPDIR
 	[ ! -f $VIDEO ] || mv $VIDEO $RESULTS/
+	cd $WORKSPACE
+	[ ! -f screenshot.png ] || rm screenshot.png
+	[ ! -f screenshot-thumb.png ] || rm screenshot-thumb.png
 	[ ! -f screenshot_from_git.png ] || mv screenshot_from_git.png screenshot.png
 	# shutdown and end session if it still exists
 	STATUS=$(schroot -l --all-sessions | grep $SESSION || true)
@@ -35,6 +37,24 @@ cleanup_all() {
 	rm $TMPDIR -r
 	# end
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
+}
+
+cleanup_duplicate_screenshots() {
+	echo "$(date -u) - removing duplicate screenshots."
+	MAXDIFF=250 # pixels
+	cd $RESULTS
+	for i in *.png ; do
+		for j in *.png ; do
+			if [ "$j" = "$i" ] ; then
+				break
+			fi
+			PIXELS=$(compare -metric AE $i $j /dev/null 2>&1 || true)
+			if [[ "$PIXELS" =~ ^[0-9]+$ ]] && [ $PIXELS -le $MAXDIFF ] ; then
+				echo "$(date -u ) - removing $j, just $PIXELS difference."
+				rm $j
+			fi
+		done
+	done
 }
 
 update_screenshot() {
@@ -107,59 +127,93 @@ download_and_launch() {
 	rm $DBUS_SESSION_FILE
 	ffmpeg -f x11grab -s $SIZE -i :$SCREEN.0 $VIDEO > /dev/null 2>&1 &
 	FFMPEGPID=$!
-	echo "'$(date -u) - starting torbrowser tests'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
+	echo "'$(date -u) - starting torbrowser tests'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
-	echo "$(date -u) - starting torbrowser-launcher the first time…"
+	echo "$(date -u) - starting torbrowser-launcher the first time, opening settings…"
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher --settings || true ) &
 	sleep 10
 	update_screenshot
-	echo "$(date -u) - pressing, <tab>, <return>…"
+	echo "$(date -u) - pressing <tab>"
 	xvkbd -text "\t" > /dev/null 2>&1
 	sleep 1
+	TBL_VERSION=$(schroot --run-session -c $SESSION -- dpkg -l torbrowser-launcher | grep torbrowser-launcher | cut -b 25-34 | cut -d " " -f1)
+	if dpkg --compare-versions $TBL_VERSION lt 0.2.0-1~ ; then
+		echo "$(date -u) - torbrowser-launcher version <0.2.0-1~ detected ($TBL_VERSION), pressing <tab> three times more>"
+		xvkbd -text "\t\t\t" > /dev/null 2>&1
+		sleep 1
+	elif dpkg --compare-versions $TBL_VERSION lt 0.2.2-1~ ; then
+		echo "$(date -u) - torbrowser-launcher version <0.2.2-1~ detected ($TBL_VERSION), pressing <tab> twice more>"
+		xvkbd -text "\t\t" > /dev/null 2>&1
+		sleep 1
+	fi
 	update_screenshot
+	echo "$(date -u) - pressing <return>"
 	xvkbd -text "\r" > /dev/null 2>&1
+	sleep 5
+	update_screenshot
+	SETTINGS_DONE=$(pgrep -f "$SESSION --preserve-environment -- torbrowser-launcher --settings" || true)
+	if [ -n "$SETTINGS_DONE" ] ; then
+		echo "'$(date -u) - settings dialog still there, aborting.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
+		update_screenshot
+		cleanup_duplicate_screenshots
+		exit 1
+	fi
 	for i in $(seq 1 20) ; do
 		sleep 30
 		update_screenshot
 		# this directory only exist once torbrower has been successfully installed
 
-		STATUS="$(schroot --run-session -c $SESSION -- test -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser || echo $(date -u ) - torbrowser downloaded and installed. )"
+		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
-			echo "'$STATUS'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
+			echo "'$STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 			update_screenshot
 			break
 		fi
 	done
 	if [ ! -n "$STATUS" ] ; then
-		echo "'$(date -u) - could not download torbrowser, please investigate.'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical )
+		echo "'$(date -u) - could not download torbrowser, please investigate.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
 		update_screenshot
+		cleanup_duplicate_screenshots
 		exit 1
 	fi
 	echo "$(date -u) - waiting for torbrowser to start…"
 	for i in $(seq 1 6) ; do
 		sleep 10
 		# this directory only exist once torbrower has successfully started
-		STATUS="$(schroot --run-session -c $SESSION -- test -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default || echo $(date -u ) - torbrowser running. )"
+		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default || echo $(date -u ) - torbrowser running. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
-			echo "'$STATUS'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
+			echo "'$STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 			update_screenshot
 			break
 		fi
 	done
 	if [ ! -n "$STATUS" ] ; then
-		echo "'$(date -u) - could not start torbrowser, please investigate.'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical )
+		echo "'$(date -u) - could not start torbrowser, please investigate.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
 		update_screenshot
+		cleanup_duplicate_screenshots
 		exit 1
 	fi
 	echo "$(date -u) - pressing <return>, to connect directly via tor…"
 	xvkbd -text "\r" > /dev/null 2>&1
-	sleep 5
+	sleep 3
+	update_screenshot
 	for i in $(seq 1 2) ; do
 		sleep 15
 		update_screenshot
 	done
+	TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)
+	if [ -z "$TOR_RUNNING" ] ; then
+		echo "'$(date -u) - could not connect successfuly via tor or could not run torbrowser at all. Aborting.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
+		update_screenshot
+		cleanup_duplicate_screenshots
+		cleanup_all
+		exec /srv/jenkins/bin/abort.sh
+		exit 0
+	else
+		echo "$(date -u) - torbrowser is working is it should, good."
+	fi
 	echo "$(date -u) - pressing <ctrl>-l - about to enter an URL…"
 	xvkbd -text "\Cl" > /dev/null 2>&1
 	sleep 3
@@ -168,13 +222,11 @@ download_and_launch() {
 	update_screenshot
 	sleep 0.5
 	xvkbd -text "\r" > /dev/null 2>&1
-	update_screenshot
 	for i in $(seq 1 2) ; do
 		sleep 15
 		update_screenshot
 	done
-	sleep 1
-	echo "'$(date -u) - torbrowser tests end.'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
+	echo "'$(date -u) - torbrowser tests end.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date) - telling awesome to quit."
 	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
@@ -218,6 +270,7 @@ elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
 fi
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
+rm -f $RESULTS/*.png $RESULTS/*.mpg
 [ ! -f screenshot.png ] || mv screenshot.png screenshot_from_git.png
 mkdir -p $RESULTS
 cd $TMPDIR
@@ -235,6 +288,7 @@ elif [ "$EXPERIMENTAL" = "yes" ] ; then
 fi
 download_and_launch
 end_session
+cleanup_duplicate_screenshots
 
 # the end
 trap - INT TERM EXIT

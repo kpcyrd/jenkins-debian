@@ -41,11 +41,13 @@ cleanup_all() {
 
 cleanup_duplicate_screenshots() {
 	echo "$(date -u) - removing duplicate screenshots."
-	MAXDIFF=250 # pixels
+	MAXDIFF=2500 # pixels
 	cd $RESULTS
-	for i in *.png ; do
-		for j in *.png ; do
+	for i in $(ls -r1 *.png | xargs echo) ; do
+		for j in $(ls -r1 *.png | xargs echo) ; do
 			if [ "$j" = "$i" ] ; then
+				break
+			elif [ ! -f $j ] || [ ! -f $i ] ; then
 				break
 			fi
 			PIXELS=$(compare -metric AE $i $j /dev/null 2>&1 || true)
@@ -160,8 +162,8 @@ download_and_launch() {
 		cleanup_duplicate_screenshots
 		exit 1
 	fi
-	for i in $(seq 1 20) ; do
-		sleep 30
+	for i in $(seq 1 40) ; do
+		sleep 15
 		STATUS="$(grep '^Download error:' $TBL_LOGFILE || true)"
 		if [ -n "$STATUS" ] ; then
 			echo "'$(date -u) - $STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical

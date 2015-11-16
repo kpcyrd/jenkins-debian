@@ -51,6 +51,13 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - throttle:
+          max-total: 3
+          max-per-node: 1
+          enabled: true
+          option: category
+          categories:
+            - torbrowser-launcher
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
     logrotate:
       daysToKeep: 90
@@ -100,6 +107,13 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
+      - throttle:
+          max-total: 3
+          max-per-node: 1
+          enabled: true
+          option: category
+          categories:
+            - torbrowser-launcher
     description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
     logrotate:
       daysToKeep: 90

@@ -34,7 +34,7 @@ cleanup_all() {
 	fi
 	# delete main work dir
 	cd
-	rm $TMPDIR -r
+	rm $TMPDIR $TBL_LOGFILE -rf
 	# end
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
 }
@@ -131,13 +131,13 @@ download_and_launch() {
 	echo "'$(date -u) - starting torbrowser tests'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date -u) - starting torbrowser-launcher the first time, opening settings…"
-	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher --settings || true ) &
+	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher --settings | tee $TBL_LOGFILE &
 	sleep 10
 	update_screenshot
 	echo "$(date -u) - pressing <tab>"
 	xvkbd -text "\t" > /dev/null 2>&1
 	sleep 1
-	TBL_VERSION=$(schroot --run-session -c $SESSION -- dpkg -l torbrowser-launcher | grep torbrowser-launcher | cut -b 25-34 | cut -d " " -f1)
+	TBL_VERSION=$(schroot --run-session -c $SESSION -- dpkg --status torbrowser-launcher |grep ^Version|cut -d " " -f2)
 	if dpkg --compare-versions $TBL_VERSION lt 0.2.0-1~ ; then
 		echo "$(date -u) - torbrowser-launcher version <0.2.0-1~ detected ($TBL_VERSION), pressing <tab> three times more>"
 		xvkbd -text "\t\t\t" > /dev/null 2>&1
@@ -161,7 +161,13 @@ download_and_launch() {
 	fi
 	for i in $(seq 1 20) ; do
 		sleep 30
-		update_screenshot
+		STATUS="$(grep '^Download error:' $TBL_LOGFILE || true)"
+		if [ -n "$STATUS" ] ; then
+			echo "'$(date -u) - $STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
+			update_screenshot
+			cleanup_duplicate_screenshots
+			exit 1
+		fi
 		# this directory only exist once torbrower has been successfully installed
 
 		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
@@ -171,6 +177,7 @@ download_and_launch() {
 			update_screenshot
 			break
 		fi
+		update_screenshot
 	done
 	if [ ! -n "$STATUS" ] ; then
 		echo "'$(date -u) - could not download torbrowser, please investigate.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
@@ -250,6 +257,7 @@ if [ -z "$1" ] ; then
 fi
 SUITE=$1
 TMPDIR=$(mktemp -d)  # where everything actually happens
+TBL_LOGFILE=$(mktemp)
 SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
 STARTTIME=$(date +%Y%m%d%H%M)
 VIDEO=test-torbrowser-${SUITE}_$STARTTIME.mpg

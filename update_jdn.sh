@@ -272,8 +272,9 @@ if [ -f /etc/debian_version ] ; then
 				vnstat 
 				x11-apps 
 				x11vnc 
-				xtightvncviewer 
-				xvfb 
+				xtightvncviewer
+				xvkbd
+				xvfb
 				zutils 
 				sysvinit-core"
 		else

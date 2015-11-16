@@ -11,16 +11,25 @@ set -e
 
 cleanup_all() {
 	set +e
+	if [ "$1" = "quiet" ] ; then
+		echo "$(date -u) - everything ran nicely, congrats."
+	fi
 	# kill xvfb and ffmpeg
 	kill $XPID $FFMPEGPID 2>/dev/null|| true
 	# preserve screenshots
 	[ ! -f screenshot.png ] || mv screenshot.png $RESULTS/
 	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $RESULTS/
-	[ ! -f test-torbrowser-$SUITE.mpg ] || mv test-torbrowser-$SUITE.mpg $RESULTS/
+	[ ! -f $VIDEO ] || mv $VIDEO $RESULTS/
 	[ ! -f screenshot_from_git.png ] || mv screenshot_from_git.png screenshot.png
 	# shutdown and end session if it still exists
-	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop || true
-	schroot --end-session -c tbb-launcher-$SUITE-$(basename $TMPDIR) > /dev/null 2>&1 || true
+	STATUS=$(schroot -l --all-sessions | grep $SESSION || true)
+	if [ -n "$STATUS" ] ; then
+		echo "$(date -u ) - stopping dbus service."
+		schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop || true
+		sleep 1
+		schroot --end-session -c $SESSION || true
+		echo "$(date -u ) - schroot session $SESSION end."
+	fi
 	# delete main work dir
 	cd
 	rm $TMPDIR -r
@@ -29,72 +38,172 @@ cleanup_all() {
 }
 
 update_screenshot() {
-	TIMESTAMP=$(date +%Y%m%d%H%M)
-	xwd -root -silent -display :$SCREEN.0 | xwdtopnm > screenshot.pnm 2>/dev/null
-	pnmtopng screenshot.pnm > screenshot.png
+	TIMESTAMP=$(date +%Y%m%d%H%M%S)
+	ffmpeg -y -f x11grab -s $SIZE -i :$SCREEN.0 -frames 1 screenshot.png > /dev/null 2>&1
 	convert screenshot.png -adaptive-resize 128x96 screenshot-thumb.png
 	# for publishing
-	cp -v screenshot.png $RESULTS/screenshot_$TIMESTAMP.png
+	cp screenshot.png $RESULTS/screenshot_$TIMESTAMP.png
+	echo "screenshot_$TIMESTAMP.png preserved."
 	# for the live screenshot plugin
 	mv screenshot.png screenshot-thumb.png $WORKSPACE/
 }
 
-first_test() {
-	echo
-	local SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
+begin_session() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-torbrowser-launcher-$SUITE
+	echo "Starting schroot session, schroot --run-session -c $SESSION -- now availble."
 	schroot --run-session -c $SESSION --directory /tmp -u root -- mkdir $HOME
 	schroot --run-session -c $SESSION --directory /tmp -u root -- chown jenkins:jenkins $HOME
+}
+
+end_session() {
+	schroot --end-session -c $SESSION
+	echo "$(date -u ) - schroot session $SESSION end."
+	sleep 1
+}
+
+upgrade_to_experimental_version() {
+	if [ "$SUITE" != "experimental" ] ; then
+		return
+	fi
+	echo
+	echo "Upgrading to torbrowser-launcher from experimental…"
+	echo "deb $MIRROR experimental main contrib" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/apt/sources.list
+	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get update
+	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get -y install -t experimental torbrowser-launcher
+}
+
+download_and_launch() {
+	echo
+	echo "$(date -u) - Test download_and_launch begins."
+	echo "$(date -u ) - starting dbus service."
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start
 	sleep 2
-	SCREEN=77
-	Xvfb -ac -br -screen 0 1024x768x16 :$SCREEN &
+	echo "$(date -u) - starting Xfvb on :$SCREEN.0…"
+	Xvfb -ac -br -screen 0 ${SIZE}x24 :$SCREEN &
 	XPID=$!
 	sleep 1
 	export DISPLAY=":$SCREEN.0"
+	echo export DISPLAY=":$SCREEN.0"
 	unset http_proxy
 	unset https_proxy
-	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- awesome &
+	echo "$(date -u) - starting awesome…"
+	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- awesome &
+	sleep 2
+	DBUS_SESSION_FILE=$(mktemp)
+	DBUS_SESSION_POINTER=$(schroot --run-session -c $SESSION --preserve-environment -- ls $HOME/.dbus/session-bus/ -t1 | head -1)
+	schroot --run-session -c $SESSION --preserve-environment -- cat $HOME/.dbus/session-bus/$DBUS_SESSION_POINTER > $DBUS_SESSION_FILE
+	. $DBUS_SESSION_FILE && export DBUS_SESSION_BUS_ADDRESS
+	echo export DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS
+	rm $DBUS_SESSION_FILE
+	ffmpeg -f x11grab -s $SIZE -i :$SCREEN.0 $VIDEO > /dev/null 2>&1 &
+	FFMPEGPID=$!
+	echo "$(date -u) - starting torbrowser tests"
+	#echo "naughty.notify({ text = '$(date -u) - starting torbrowser tests' })" | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
+	echo "$(date -u) - starting torbrowser-launcher the first time…"
+	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher --settings || true ) &
+	sleep 10
+	update_screenshot
+	echo "$(date -u) - pressing, <tab>, <return>…"
+	xvkbd -text "\t" > /dev/null 2>&1
 	sleep 1
 	update_screenshot
-	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	ffmpeg -f x11grab -i :$SCREEN.0 -s 1024x768 test-torbrowser-${SUITE}_$(date +%Y%m%d%H%M).mpg > /dev/null 2>&1 &
-	FFMPEGPID=$!
-	for i in $(seq 1 16) ; do
+	xvkbd -text "\r" > /dev/null 2>&1
+	for i in $(seq 1 60) ; do
+		sleep 10
+		update_screenshot
+		# this directory only exist once torbrower has been successfully installed
+		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser ] || echo 'Torbrowser downloaded and installed.')"
+		if [ -n "$STATUS" ] ; then
+			sleep 10
+			update_screenshot
+			echo "Status: $STATUS"
+			break
+		fi
+	done
+	if [ ! -n "$STATUS" ] ; then
+		echo "$(date -u) - could not download torbrowser, please investigate."
+		exit 1
+	fi
+	echo "$(date -u) - waiting for torbrowser to start…"
+	for i in $(seq 1 6) ; do
+		sleep 10
+		# this directory only exist once torbrower has successfully started
+		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default ] || echo 'Torbrowser running.')"
+		if [ -n "$STATUS" ] ; then
+			sleep 10
+			update_screenshot
+			echo "Status: $STATUS"
+			break
+		fi
+	done
+	if [ ! -n "$STATUS" ] ; then
+		echo "$(date -u) - could not start torbrowser, please investigate."
+		exit 1
+	fi
+	echo "$(date -u) - pressing <return>, to connect directly via tor…"
+	xvkbd -text "\r" > /dev/null 2>&1
+	sleep 5
+	for i in $(seq 1 2) ; do
 		sleep 15
 		update_screenshot
 	done
-	timeout -k 12m 11m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher https://www.debian.org &
-	for i in $(seq 1 16) ; do
+	echo "$(date -u) - pressing <ctrl>-l - about to enter an URL…"
+	xvkbd -text "\Cl" > /dev/null 2>&1
+	sleep 3
+	URL="https://www.debian.org"
+	xvkbd -text "$URL" > /dev/null 2>&1
+	update_screenshot
+	sleep 0.5
+	xvkbd -text "\r" > /dev/null 2>&1
+	update_screenshot
+	for i in $(seq 1 2) ; do
 		sleep 15
 		update_screenshot
 	done
+	sleep 1
+	#echo "naughty.notify({ text = '$(date -u) - torbrowser tests end' })" | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
+	update_screenshot
+	echo "$(date) - telling awesome to quit."
+	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
+	sleep 1
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop
-	schroot --end-session -c $SESSION
+	sleep 1
+	echo "$(date -u ) - killing Xfvb and ffmpeg."
 	kill $XPID $FFMPEGPID || true
+	sleep 1
+	echo "$(date -u ) - Test ends."
 	echo
 }
 
 #
 # main
 #
-
+if [ -z "$1" ] ; then
+	echo "call $0 with a suite as param."
+	exit 1
+fi
+SUITE=$1
 TMPDIR=$(mktemp -d)  # where everything actually happens
-trap cleanup_all INT TERM EXIT
+SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
+SCREEN=$EXECUTOR_NUMBER
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
 [ ! -f screenshot.png ] || mv screenshot.png screenshot_from_git.png
 mkdir -p $RESULTS
 cd $TMPDIR
+STARTTIME=$(date +%Y%m%d%H%M)
+VIDEO=test-torbrowser-${SUITE}_$STARTTIME.mpg
+SIZE=1024x768
+trap cleanup_all INT TERM EXIT
 
-SUITE=$1
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
-first_test # test package from the archive
-# then build package and test it (probably via triggering another job)
-# not sure how to test updates. maybe just run old install?
+begin_session
+upgrade_to_experimental_version
+download_and_launch
+end_session
 
-cd
-cleanup_all
+# the end
 trap - INT TERM EXIT
+cleanup_all quiet
 echo "$(date -u) - the end."
 

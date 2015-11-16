@@ -409,6 +409,14 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 * for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
 ** same usecase:  -monitor none -nographic -serial stdio  
 
+=== torbrowser-launcher_*
+
+* also build package from git and test that
+** provide branch as $2
+* not sure how to test updates. maybe just run in yesterdays schroot before upgrading
+* test with python-pygame installed too?
+* run this in qemu and enable apparmor too?
+
 == Further ideas...
 
 === lvc, work in progress, just started
@@ -416,8 +424,6 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 * upgrade lvc configuration to test stretch
 
 * put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
-
-* add another (smaller) test: download+run torbrowser daily
 
 * re-read the docs! 
 ** http://live.debian.net/manual/stable/html/live-manual.en.html#321

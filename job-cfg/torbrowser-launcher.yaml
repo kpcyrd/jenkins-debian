@@ -140,6 +140,10 @@
     name: '{name}_setup_schroot_jessie_amd64'
 
 - job-template:
+    defaults: torbrowser-launcher_setup
+    name: '{name}_setup_schroot_wheezy_amd64'
+
+- job-template:
     defaults: torbrowser-launcher_packages
     name: '{name}_test_on_experimental_amd64'
 

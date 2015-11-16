@@ -177,19 +177,19 @@
         - '{name}_setup_schroot_unstable_amd64':
             my_description: 'Setup unstable/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-unstable unstable torbrowser-launcher ca-certificates awesome dbus xterm x11-utils libnotify-bin build-essential devscripts python-all debhelper dh-apparmor'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-unstable unstable torbrowser-launcher ca-certificates awesome dbus xterm x11-utils libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_stretch_amd64':
             my_description: 'Setup stretch/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 2 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-stretch stretch torbrowser-launcher ca-certificates awesome dbus xterm x11-utils libnotify-bin build-essential devscripts python-all debhelper dh-apparmor'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-stretch stretch torbrowser-launcher ca-certificates awesome dbus xterm x11-utils libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_jessie_amd64':
             my_description: 'Setup jessie/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 3 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm x11-utils libnotify-bin build-essential devscripts python-all debhelper dh-apparmor'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm x11-utils libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_experimental_amd64':

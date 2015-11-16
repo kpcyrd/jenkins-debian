@@ -72,11 +72,14 @@ upgrade_to_experimental_version() {
 build_and_upgrade_to_git_version() {
 	echo
 	echo "$(date -u ) - building torbrowser-launcher from git, branch $BRANCH…"
-	schroot --run-session -c $SESSION --directory $TMPDIR/git -- debuild -b
-	DEB=$(cd $TMPDIR/git ; ls torbrowser-launcher_*deb)
+	schroot --run-session -c $SESSION --directory $TMPDIR/git -- debuild -b -uc -us
+	DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
+	CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)
 	echo "$(date -u ) - installing $DEB…"
-	schroot --run-session -c $SESSION --directory $TMPDIR/git -u root -- dpkg -i $DEB
+	schroot --run-session -c $SESSION --directory $TMPDIR -u root -- dpkg -i $DEB
 	rm $TMPDIR/git -r
+	cat $TMPDIR/$CHANGES
+	schroot --run-session -c $SESSION --directory $TMPDIR -- dcmd rm $CHANGES
 }
 
 download_and_launch() {
@@ -115,8 +118,8 @@ download_and_launch() {
 	sleep 1
 	update_screenshot
 	xvkbd -text "\r" > /dev/null 2>&1
-	for i in $(seq 1 60) ; do
-		sleep 10
+	for i in $(seq 1 20) ; do
+		sleep 30
 		update_screenshot
 		# this directory only exist once torbrower has been successfully installed
 		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser ] || echo '$(date -u ) - torbrowser downloaded and installed.')"

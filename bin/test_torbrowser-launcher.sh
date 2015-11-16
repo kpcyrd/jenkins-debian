@@ -81,12 +81,13 @@ end_session() {
 	sleep 1
 }
 
-upgrade_to_experimental_version() {
+upgrade_to_newer_packaged_version_in() {
+	local SUITE=$1
 	echo
-	echo "$(date -u ) - upgrading to torbrowser-launcher from experimental…"
-	echo "deb $MIRROR experimental main contrib" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/apt/sources.list
+	echo "$(date -u ) - upgrading to torbrowser-launcher from $SUITE"
+	echo "deb $MIRROR $SUITE main contrib" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/apt/sources.list
 	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get update
-	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get -y install -t experimental torbrowser-launcher
+	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get -y install -t $SUITE torbrowser-launcher
 }
 
 build_and_upgrade_to_git_version() {
@@ -267,6 +268,9 @@ if [ "$2" = "git" ] ; then
 elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
 	SUITE=unstable
 	EXPERIMENTAL=yes
+elif [ "$2" = "backports" ] ; then
+	SUITE=unstable
+	BACKPORTS=yes
 fi
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results
@@ -284,7 +288,9 @@ begin_session
 if [ "$2" = "git" ] ; then
 	build_and_upgrade_to_git_version
 elif [ "$EXPERIMENTAL" = "yes" ] ; then
-	upgrade_to_experimental_version
+	upgrade_to_newer_packaged_version_in experimental
+elif [ "$BACKPORTS" = "yes" ] ; then
+	upgrade_to_newer_packaged_version_in $SUITE-backports
 fi
 download_and_launch
 end_session

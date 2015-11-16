@@ -161,6 +161,10 @@
 
 - job-template:
     defaults: torbrowser-launcher_packages
+    name: '{name}_test_on_jessie_amd64_from_backports'
+
+- job-template:
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_on_jessie_amd64_from_experimental'
 
 - job-template:
@@ -170,6 +174,10 @@
 - job-template:
     defaults: torbrowser-launcher_git
     name: '{name}_test_on_jessie_amd64_from_git_branch_debian_sid'
+
+- job-template:
+    defaults: torbrowser-launcher_packages
+    name: '{name}_test_on_wheezy_amd64_from_backports'
 
 - project:
     name: torbrowser-launcher
@@ -192,15 +200,21 @@
             my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
+        - '{name}_setup_schroot_wheezy_amd64':
+            my_description: 'Setup wheezy/amd64 schroot for testing torbrowser-launcher.'
+            my_timed: '42 4 * * 2'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-wheezy wheezy ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel python python-gtk2 python-psutil python-twisted python-lzma gnupg wmctrl python-txsocksx python-parsley tor'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
         - '{name}_test_on_experimental_amd64':
             my_description: 'Test torbrowser-launcher from and on experimental/amd64.'
-            my_timed: '23 5 * * *'
+            my_timed: '42 3 * * *'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh experimental'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_unstable_amd64':
             my_description: 'Test torbrowser-launcher from and on unstable/amd64.'
-            my_timed: '23 5 * * *'
+            my_timed: '23 2 * * *'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
@@ -213,19 +227,25 @@
             my_node: ''
         - '{name}_test_on_stretch_amd64':
             my_description: 'Test torbrowser-launcher from and on stretch/amd64.'
-            my_timed: '23 6 * * *'
+            my_timed: '23 3 * * *'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64':
             my_description: 'Test torbrowser-launcher from and on jessie/amd64.'
-            my_timed: '23 7 * * *'
+            my_timed: '23 4 * * *'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_on_jessie_amd64_from_backports':
+            my_description: 'Test torbrowser-launcher from backports on jessie/amd64.'
+            my_timed: '42 4 * * 2'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie backports'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_experimental':
             my_description: 'Test torbrowser-launcher from experimental on jessie/amd64.'
-            my_timed: '23 8 * * *'
+            my_timed: '23 5 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie experimental'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
@@ -241,6 +261,12 @@
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/experimental'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie git'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_on_wheezy_amd64_from_backports':
+            my_description: 'Test torbrowser-launcher from backports on wheezy/amd64.'
+            my_timed: '23 5 * * 4'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh wheezy backports'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
 

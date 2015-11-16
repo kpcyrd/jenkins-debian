@@ -269,7 +269,6 @@ elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
 	SUITE=unstable
 	EXPERIMENTAL=yes
 elif [ "$2" = "backports" ] ; then
-	SUITE=unstable
 	BACKPORTS=yes
 fi
 WORKSPACE=$(pwd)

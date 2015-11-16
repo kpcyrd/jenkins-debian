@@ -207,7 +207,7 @@
         - '{name}_setup_schroot_wheezy_amd64':
             my_description: 'Setup wheezy/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 4 * * 2'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-wheezy wheezy ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel python python-gtk2 python-psutil python-twisted python-lzma gnupg wmctrl python-txsocksx python-parsley tor'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-wheezy wheezy ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel python python-gtk2 python-psutil python-twisted python-lzma gnupg wmctrl tor'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_experimental_amd64':

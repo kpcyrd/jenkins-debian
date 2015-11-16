@@ -104,8 +104,8 @@ download_and_launch() {
 	rm $DBUS_SESSION_FILE
 	ffmpeg -f x11grab -s $SIZE -i :$SCREEN.0 $VIDEO > /dev/null 2>&1 &
 	FFMPEGPID=$!
-	echo "$(date -u) - starting torbrowser tests"
-	#echo "naughty.notify({ text = '$(date -u) - starting torbrowser tests' })" | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
+	echo "'$(date -u) - starting torbrowser tests'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
+	update_screenshot
 	echo "$(date -u) - starting torbrowser-launcher the first time…"
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- torbrowser-launcher --settings || true ) &
 	sleep 10
@@ -119,32 +119,34 @@ download_and_launch() {
 		sleep 10
 		update_screenshot
 		# this directory only exist once torbrower has been successfully installed
-		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser ] || echo 'Torbrowser downloaded and installed.')"
+		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser ] || echo '$(date -u ) - torbrowser downloaded and installed.')"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
+			echo "'$STATUS'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
 			update_screenshot
-			echo "Status: $STATUS"
 			break
 		fi
 	done
 	if [ ! -n "$STATUS" ] ; then
-		echo "$(date -u) - could not download torbrowser, please investigate."
+		echo "'$(date -u) - could not download torbrowser, please investigate.'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical )
+		update_screenshot
 		exit 1
 	fi
 	echo "$(date -u) - waiting for torbrowser to start…"
 	for i in $(seq 1 6) ; do
 		sleep 10
 		# this directory only exist once torbrower has successfully started
-		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default ] || echo 'Torbrowser running.')"
+		STATUS="$(schroot --run-session -c $SESSION -- [ ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default ] || echo '$(date -u ) - torbrowser running.')"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
+			echo "'$STATUS'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
 			update_screenshot
-			echo "Status: $STATUS"
 			break
 		fi
 	done
 	if [ ! -n "$STATUS" ] ; then
-		echo "$(date -u) - could not start torbrowser, please investigate."
+		echo "'$(date -u) - could not start torbrowser, please investigate.'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical )
+		update_screenshot
 		exit 1
 	fi
 	echo "$(date -u) - pressing <return>, to connect directly via tor…"
@@ -168,7 +170,7 @@ download_and_launch() {
 		update_screenshot
 	done
 	sleep 1
-	#echo "naughty.notify({ text = '$(date -u) - torbrowser tests end' })" | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
+	echo "'$(date -u) - torbrowser tests end.'" | tee >( xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send )
 	update_screenshot
 	echo "$(date) - telling awesome to quit."
 	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
@@ -207,6 +209,7 @@ if [ "$2" = "git" ] ; then
 	mkdir $TMPDIR/git
 	cp -r * $TMPDIR/git
 elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
+	SUITE=unstable
 	EXPERIMENTAL=yes
 fi
 WORKSPACE=$(pwd)

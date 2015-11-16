@@ -210,6 +210,7 @@
             my_gitbranch: 'debian/sid'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable git'
             my_recipients: 'holger@layer-acht.org'
+            my_node: ''
         - '{name}_test_stretch_amd64':
             my_description: 'Test torbrowser-launcher from and on stretch/amd64.'
             my_timed: '23 6 * * *'

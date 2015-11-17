@@ -103,7 +103,7 @@ update_db_and_html() {
 		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
-			echo "\n$MESSAGE" | tee -a ${RBUILDLOG}
+			echo -e "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to diffoscope problems
 			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then

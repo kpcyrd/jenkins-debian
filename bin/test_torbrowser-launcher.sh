@@ -239,11 +239,18 @@ download_and_launch() {
 	update_screenshot
 	sleep 0.5
 	xvkbd -text "\r" > /dev/null 2>&1
-	for i in $(seq 1 2) ; do
-		sleep 15
+	BONUS_LEVEL=""
+	for i in $(seq 1 6) ; do
+		sleep 5
+		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c "Debian" || true)
 		update_screenshot
+		if [ $URL_LOADED -ge 6 ] ; then
+			echo "$(date -u) - $URL loaded fine, very much Debian in there, great."
+			BONUS_LEVEL=" Well done."
+			break
+		fi
 	done
-	echo "'$(date -u) - torbrowser tests end.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
+	echo "'$(date -u) - torbrowser tests end.$BONUS_LEVEL'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date) - telling awesome to quit."
 	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client

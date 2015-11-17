@@ -119,6 +119,9 @@ download_and_launch() {
 	echo export DISPLAY=":$SCREEN.0"
 	unset http_proxy
 	unset https_proxy
+	#export LANGUAGE="de"
+	#export LANG="de_DE.UTF-8"
+	#export LC_ALL="de_DE.UTF-8"
 	echo "$(date -u) - starting awesome."
 	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- awesome &
 	sleep 2
@@ -171,9 +174,10 @@ download_and_launch() {
 			cleanup_duplicate_screenshots
 			exit 1
 		fi
-		# this directory only exist once torbrower has been successfully installed
+		# this directory only exists once torbrower has been successfully installed
+		# (and pattern matching doesnt work because of schroot…)
 
-		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
+		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser -a ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_de/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
 			echo "'$STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send

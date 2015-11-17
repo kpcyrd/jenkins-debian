@@ -140,6 +140,7 @@ set_icon() {
 		reproducible)		ICON=weather-clear.png
 					;;
 		unreproducible|FTBR)	ICON=weather-showers-scattered.png
+					STATE_TARGET_NAME="FTBR"
 					;;
 		FTBFS)			ICON=weather-storm.png
 					;;

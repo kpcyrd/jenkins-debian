@@ -413,6 +413,7 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 === torbrowser-launcher_*
 
 * not sure how to test updates. maybe just run in yesterdays schroot before upgrading
+* test alpha releases
 * notifications should go somewhere public, after a while of testing.
 * debug why iceweasel is needed to be installed… and ca-certificates too.
 * run this in qemu and enable apparmor too?

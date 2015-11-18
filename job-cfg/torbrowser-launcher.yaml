@@ -76,7 +76,7 @@
           latest_only: false
       - imagegallery:
           title: '{my_description}'
-          includes: 'results/*.png'
+          includes: 'results/screenshot_*.png'
           image-width: 300
       - email:
           recipients: '{my_recipients}'
@@ -132,7 +132,7 @@
           latest_only: false
       - imagegallery:
           title: '{my_description}'
-          includes: 'results/*.png'
+          includes: 'results/screenshot_*.png'
           image-width: 300
       - email:
           recipients: '{my_recipients}'

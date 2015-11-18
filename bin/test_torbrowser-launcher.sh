@@ -21,7 +21,7 @@ cleanup_all() {
 	[ ! -f $VIDEO ] || mv $VIDEO $RESULTS/
 	cd $WORKSPACE
 	[ ! -f screenshot.png ] || rm screenshot.png
-	[ ! -f screenshot-thumb.png ] || rm screenshot-thumb.png
+	[ ! -f screenshot-thumb.png ] || mv screenshot-thumb.png $RESULTS/
 	[ ! -f screenshot_from_git.png ] || mv screenshot_from_git.png screenshot.png
 	# shutdown and end session if it still exists
 	STATUS=$(schroot -l --all-sessions | grep $SESSION || true)

@@ -94,7 +94,7 @@ upgrade_to_newer_packaged_version_in() {
 
 build_and_upgrade_to_git_version() {
 	echo
-	echo "$(date -u ) - building branch $BRANCH torbrowser-launcher from git."
+	echo "$(date -u ) - building Debian package based on branch $BRANCH from $GIT_URL."
 	schroot --run-session -c $SESSION --directory $TMPDIR/git -- debuild -b -uc -us
 	DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
 	CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)
@@ -265,10 +265,11 @@ download_and_launch() {
 }
 
 prepare_git_workspace_copy() {
-	echo "$(date -u) - preparing git workspace copy."
+	echo "$(date -u) - preparing git workspace copy in $TMPDIR/git"
 	git branch -av
 	mkdir $TMPDIR/git
 	cp -r * $TMPDIR/git
+	echo
 }
 
 #
@@ -289,21 +290,27 @@ SIZE=1024x768
 SCREEN=$EXECUTOR_NUMBER
 if [ "$2" = "git" ] ; then
 	if [ "$3" = "merge"  ] ; then
-		ORIG_BRANCH=$(git branch|cut -d " " -f2)
 		BRANCH=upstream-master-plus-debian-packaging
+		DEBIAN_GIT_URL="git://git.debian.org/git/collab-maint/torbrowser-launcher.git"
+		DEBIAN_BRANCH="debian/$4"
 		COMMIT_HASH=$(git log -1 --oneline|cut -d " " -f1)
-		COMMIT_MSG="Automatically build by jenkins using $4 merged into $COMMIT_HASH."
-		git checkout $BRANCH
-		git remote add debian git://git.debian.org/git/collab-maint/torbrowser-launcher.git
-		git fetch debian
-		git merge --no-edit debian/$4
+		echo "$(date -u) - Merging branch $DEBIAN_BRANCH into $COMMIT_HASH now."
+		echo
+		git log -1
+		git checkout -b $BRANCH
+		git remote add debian $DEBIAN_GIT_URL
+		git fetch --no-tags debian
+		git merge --no-stat --no-edit $DEBIAN_BRANCH
 		BUILD_VERSION="$(dpkg-parsechangelog |grep ^Version:|cut -d " " -f2).0~jenkins-test-$COMMIT_HASH"
-		dch -R $COMMIT_MSG
-		dch -v $BUILD_VERSION "Automate all the tests."
+		COMMIT_MSG1="Automatically build by jenkins using the branch $DEBIAN_BRANCH (from $DEBIAN_GIT_URL) merged into $COMMIT_HASH."
+		# GIT_URL AND GIT_BRANCH are set by jenkins
+		COMMIT_MSG2="$COMMIT_HASH is from branch $(echo $GIT_BRANCH|cut -d '/' -f2) from $GIT_URL."
+		dch -R $COMMIT_MSG1
+		dch -v $BUILD_VERSION $COMMIT_MSG2
 		prepare_git_workspace_copy
 		# revert to original branch
 		git reset --hard
-		git checkout $ORIG_BRANCH
+		git checkout -f -q $COMMIT_HASH
 		git branch -D $BRANCH
 	else
 		BRANCH=$3

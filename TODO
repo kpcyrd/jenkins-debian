@@ -21,6 +21,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * replace amd64 in scripts with $HOSTARCH
 * extend /etc/rc.local to do cleanup of lockfiles
 * explain in README how to write jobs, eg which pathes are on tmpfs
+** EXECUTOR_NUMBER for X
 * fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/en/sslcheck?host=jenkins.debian.net#78.137.96.196
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 * teach bin/chroot-*.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
@@ -411,7 +412,6 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 
 === torbrowser-launcher_*
 
-* new job: merge debian branch in upstream master branch, build a package and install it
 * not sure how to test updates. maybe just run in yesterdays schroot before upgrading
 * notifications should go somewhere public, after a while of testing.
 * debug why iceweasel is needed to be installed… and ca-certificates too.

@@ -264,6 +264,13 @@ download_and_launch() {
 	echo
 }
 
+prepare_git_workspace_copy() {
+	echo "$(date -u) - preparing git workspace copy."
+	git branch -av
+	mkdir $TMPDIR/git
+	cp -r * $TMPDIR/git
+}
+
 #
 # prepare
 #
@@ -281,15 +288,27 @@ VIDEO=test-torbrowser-${SUITE}_$STARTTIME.mpg
 SIZE=1024x768
 SCREEN=$EXECUTOR_NUMBER
 if [ "$2" = "git" ] ; then
-	if [ -z "$3"  ] ; then
-		BRANCH=master
+	if [ "$3" = "merge"  ] ; then
+		ORIG_BRANCH=$(git branch|cut -d " " -f2)
+		BRANCH=upstream-master-plus-debian-packaging
+		COMMIT_HASH=$(git log -1 --oneline|cut -d " " -f1)
+		COMMIT_MSG="Automatically build by jenkins using $4 merged into $COMMIT_HASH."
+		git checkout $BRANCH
+		git remote add debian git://git.debian.org/git/collab-maint/torbrowser-launcher.git
+		git fetch debian
+		git merge --no-edit debian/$4
+		BUILD_VERSION="$(dpkg-parsechangelog |grep ^Version:|cut -d " " -f2).0~jenkins-test-$COMMIT_HASH"
+		dch -R $COMMIT_MSG
+		dch -v $BUILD_VERSION "Automate all the tests."
+		prepare_git_workspace_copy
+		# revert to original branch
+		git reset --hard
+		git checkout $ORIG_BRANCH
+		git branch -D $BRANCH
 	else
 		BRANCH=$3
+		prepare_git_workspace_copy
 	fi
-	echo "$(date -u) - preserving git workspace."
-	git branch -av
-	mkdir $TMPDIR/git
-	cp -r * $TMPDIR/git
 elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
 	SUITE=unstable
 	UPGRADE_SUITE=experimental

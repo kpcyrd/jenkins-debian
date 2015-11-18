@@ -125,7 +125,7 @@ download_and_launch() {
 	echo "$(date -u) - starting awesome."
 	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- awesome &
 	sleep 2
-	DBUS_SESSION_FILE=$(mktemp)
+	DBUS_SESSION_FILE=$(mktemp -t torbrowser-launcher-XXXXXX)
 	DBUS_SESSION_POINTER=$(schroot --run-session -c $SESSION --preserve-environment -- ls $HOME/.dbus/session-bus/ -t1 | head -1)
 	schroot --run-session -c $SESSION --preserve-environment -- cat $HOME/.dbus/session-bus/$DBUS_SESSION_POINTER > $DBUS_SESSION_FILE
 	. $DBUS_SESSION_FILE && export DBUS_SESSION_BUS_ADDRESS
@@ -281,8 +281,8 @@ if [ -z "$1" ] ; then
 fi
 SUITE=$1
 UPGRADE_SUITE=""
-TMPDIR=$(mktemp -d)  # where everything actually happens
-TBL_LOGFILE=$(mktemp)
+TMPDIR=$(mktemp -d -t torbrowser-launcher-XXXXXX)  # where everything actually happens
+TBL_LOGFILE=$(mktemp -t torbrowser-launcher-XXXXXX)
 SESSION="tbb-launcher-$SUITE-$(basename $TMPDIR)"
 STARTTIME=$(date +%Y%m%d%H%M)
 VIDEO=test-torbrowser-${SUITE}_$STARTTIME.mpg

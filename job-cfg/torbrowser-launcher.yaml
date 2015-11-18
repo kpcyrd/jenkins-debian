@@ -171,6 +171,10 @@
 
 - job-template:
     defaults: torbrowser-launcher_git
+    name: '{name}_test_on_unstable_amd64_from_git_branch_debian_experimental'
+
+- job-template:
+    defaults: torbrowser-launcher_git
     name: '{name}_test_on_unstable_amd64_from_git_branch_upstream_master'
 
 - job-template:
@@ -248,6 +252,13 @@
             my_description: 'Test torbrowser-launcher on unstable/amd64 using the branch debian/sid.'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/sid'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable git'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_on_unstable_amd64_from_git_branch_debian_experimental':
+            my_description: 'Test torbrowser-launcher on unstable/amd64 using the branch debian/experimental.'
+            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
+            my_gitbranch: 'debian/experimental'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable git'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''

@@ -245,7 +245,7 @@ download_and_launch() {
 		sleep 5
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c -i "README" || true)
 		update_screenshot
-		if [ $URL_LOADED -ge 1 ] ; then
+		if [ $URL_LOADED -ge 4 ] ; then
 			echo "$(date -u) - $URL loaded fine, very much an archive in there, great."
 			BONUS_LEVEL_1="yes"
 			break

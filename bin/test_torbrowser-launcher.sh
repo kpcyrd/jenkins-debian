@@ -231,25 +231,52 @@ download_and_launch() {
 		exec /srv/jenkins/bin/abort.sh
 		exit 0
 	fi
+	BONUS_LEVEL_1=""
+	URL="http://vwakviie2ienjx6t.onion/debian/"
+	# see http://richardhartmann.de/blog/posts/2015/08/24-Tor-enabled_Debian_mirror/
+	echo "$(date -u) - pressing <ctrl>-l - about to enter $URL as URL."
+	xvkbd -text "\Cl" > /dev/null 2>&1
+	sleep 3
+	xvkbd -text "$URL" > /dev/null 2>&1
+	sleep 1
+	xvkbd -text "\r" > /dev/null 2>&1
+	sleep 2
+	for i in $(seq 1 6) ; do
+		sleep 5
+		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c -i "README" || true)
+		update_screenshot
+		if [ $URL_LOADED -ge 1 ] ; then
+			echo "$(date -u) - $URL loaded fine, very much an archive in there, great."
+			BONUS_LEVEL_1="yes"
+			break
+		fi
+	done
+	BONUS_LEVEL_2=""
 	URL="https://www.debian.org"
 	echo "$(date -u) - pressing <ctrl>-l - about to enter $URL as URL."
 	xvkbd -text "\Cl" > /dev/null 2>&1
 	sleep 3
 	xvkbd -text "$URL" > /dev/null 2>&1
-	update_screenshot
-	sleep 0.5
+	sleep 1
 	xvkbd -text "\r" > /dev/null 2>&1
-	BONUS_LEVEL=""
+	sleep 2
 	for i in $(seq 1 6) ; do
 		sleep 5
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c "Debian" || true)
 		update_screenshot
 		if [ $URL_LOADED -ge 6 ] ; then
 			echo "$(date -u) - $URL loaded fine, very much Debian in there, great."
-			BONUS_LEVEL=" Well done."
+			BONUS_LEVEL_2="yes"
 			break
 		fi
 	done
+	if [ -n "$BONUS_LEVEL_1" ] && [ -n "$BONUS_LEVEL_2" ] ; then
+		BONUS_LEVEL=" Very well done."
+	elif [ -n "$BONUS_LEVEL_1" ] || [ -n "$BONUS_LEVEL_2" ] ; then
+		BONUS_LEVEL=" Well done."
+	else
+		BONUS_LEVEL=""
+	fi
 	echo "'$(date -u) - torbrowser tests end.$BONUS_LEVEL'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date) - telling awesome to quit."

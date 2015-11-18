@@ -180,7 +180,6 @@ download_and_launch() {
 		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser -a ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_de/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
-			echo "'$STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 			update_screenshot
 			break
 		fi
@@ -195,11 +194,10 @@ download_and_launch() {
 	echo "$(date -u) - waiting for torbrowser to start."
 	for i in $(seq 1 6) ; do
 		sleep 10
-		# this directory only exist once torbrower has successfully started
+		# this directory only exists once torbrower has successfully started
 		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default || echo $(date -u ) - torbrowser running. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
-			echo "'$STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 			update_screenshot
 			break
 		fi

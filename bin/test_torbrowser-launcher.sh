@@ -200,10 +200,12 @@ download_and_launch() {
 			cleanup_duplicate_screenshots
 			exit 1
 		fi
-		# this directory only exists once torbrower has been successfully installed
+		# download is finished once BROWSER_DIR_EN or BROWSER_DIR_DE exist
+		# as these directories only exist once torbrower has been successfully installed
 		# (and pattern matching doesnt work because of schroot…)
-
-		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser -a ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_de/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
+		local BROWSER_DIR_EN=$HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser
+		local BROWSER_DIR_DE=$HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_de/Browser
+		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $BROWSER_DIR_EN -a ! -d $BROWSER_DIR_DE || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
 		if [ -n "$STATUS" ] ; then
 			update_screenshot
 			break
@@ -217,11 +219,13 @@ download_and_launch() {
 		exit 1
 	fi
 	echo "$(date -u) - waiting for torbrowser to start."
+	# allow up to 60 seconds for torbrowser to start
 	for i in $(seq 1 6) ; do
 		sleep 10
 		# this directory only exists once torbrower has successfully started
 		# (and pattern matching doesnt work because of schroot…)
-		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default -a ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_de/Browser/TorBrowser/Data/Browser/profile.default || echo $(date -u ) - torbrowser running. )"
+		local BROWSER_PROFILE=TorBrowser/Data/Browser/profile.default
+		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $BROWSER_DIR_EN/$BROWSER_PROFILE -a ! -d $BROWSER_DIR_DE/$BROWSER_PROFILE || echo $(date -u ) - torbrowser running. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
 			update_screenshot

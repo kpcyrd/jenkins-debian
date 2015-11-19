@@ -124,6 +124,7 @@ properties:
 This is about Debian, below are more todo entries for other projects…
 
 * make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffopscpe/schroot problems"
+** add check if package to be build has been blacklisted since scheduling and abort
 ** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
 *** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 *** make maintenance job detect and reschedule logs with: '^Bus Error$'

@@ -251,7 +251,7 @@
             my_node: ''
         - '{name}_test_on_experimental_amd64':
             my_description: 'Test torbrowser-launcher from and on experimental/amd64.'
-            my_timed: '42 3 * * *'
+            my_timed: '23 2 * * *'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh experimental'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
@@ -263,7 +263,7 @@
             my_node: ''
         - '{name}_test_on_unstable_amd64_from_git_branch_debian_sid':
             my_description: 'Test torbrowser-launcher on unstable/amd64 using the branch debian/sid.'
-            my_timed: '42 3 1 * *'
+            my_timed: '23 2 1 * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/sid'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable git'
@@ -271,7 +271,7 @@
             my_node: ''
         - '{name}_test_on_unstable_amd64_from_git_branch_debian_experimental':
             my_description: 'Test torbrowser-launcher on unstable/amd64 using the branch debian/experimental.'
-            my_timed: '23 3 1 * *'
+            my_timed: '23 2 1 * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/experimental'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable git'
@@ -279,7 +279,7 @@
             my_node: ''
         - '{name}_test_on_unstable_amd64_from_git_branch_upstream_master':
             my_description: 'Test torbrowser-launcher on unstable/amd64 using the upstream master branch, in which the debian/experimental branch is merged into.'
-            my_timed: '42 2 * * *'
+            my_timed: '23 2 * * *'
             my_gitrepo: 'git://github.com/micahflee/torbrowser-launcher'
             my_gitbranch: 'master'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh unstable git merge debian/experimental'
@@ -293,13 +293,13 @@
             my_node: ''
         - '{name}_test_on_stretch_amd64_from_unstable':
             my_description: 'Test torbrowser-launcher from unstable on stretch/amd64.'
-            my_timed: '42 3 * * 2'
+            my_timed: '23 3 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch unstable'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_stretch_amd64_from_git_branch_debian_sid':
             my_description: 'Test torbrowser-launcher on stretch/amd64 using the branch debian/sid.'
-            my_timed: '23 4 1 * *'
+            my_timed: '23 3 1 * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/sid'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch git'
@@ -313,31 +313,31 @@
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_backports':
             my_description: 'Test torbrowser-launcher from backports on jessie/amd64.'
-            my_timed: '42 4 * * 2'
+            my_timed: '23 4 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie backports'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_stretch':
             my_description: 'Test torbrowser-launcher from stretch on jessie/amd64.'
-            my_timed: '23 5 * * 2'
+            my_timed: '23 4 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie stretch'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_unstable':
             my_description: 'Test torbrowser-launcher from unstable on jessie/amd64.'
-            my_timed: '42 5 * * 2'
+            my_timed: '23 4 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie unstable'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_experimental':
             my_description: 'Test torbrowser-launcher from experimental on jessie/amd64.'
-            my_timed: '23 6 * * 2'
+            my_timed: '23 4 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie experimental'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_git_branch_debian_sid':
             my_description: 'Test torbrowser-launcher on jessie/amd64 using the branch debian/sid.'
-            my_timed: '42 6 1 * *'
+            my_timed: '23 4 1 * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/sid'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie git'
@@ -345,7 +345,7 @@
             my_node: ''
         - '{name}_test_on_jessie_amd64_from_git_branch_debian_experimental':
             my_description: 'Test torbrowser-launcher on jessie/amd64 using the branch debian/experimental.'
-            my_timed: '23 7 1 * *'
+            my_timed: '23 4 1 * *'
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/experimental'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie git'

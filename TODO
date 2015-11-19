@@ -412,9 +412,7 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 
 === torbrowser-launcher_*
 
-* test updates - add _and_upgrade to job names)
-** touch -d "$(date -u -d '25 hours ago' '+%Y-%m-%d %H:%M')" $FILE
-** repeat test…
+* fix "schroot session cleanup loop" in _common.sh to ignore other schroots
 * build daily from upstream master against sid no matter if there where commits
 * test alpha releases
 ** '~/.config/torbrowser/settings' file and edit the latest_version setting
@@ -422,13 +420,16 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 ** (warning: on update checks these files are written again…)
 * notifications should go somewhere public, after a while of testing.
 * debug why iceweasel is needed to be installed… and ca-certificates too.
-* run this in qemu and enable apparmor too?
-** extend setup_schroot.sh to also setup virtual harddrives
+* run this in qemu and enable apparmor too? -> create new tests for apparmor first :)
+** extend setup_schroot.sh to also setup virtual harddrives, see http://diogogomes.com/2012/07/13/debootstrap-kvm-image/
 ** install linux, grub and copy the testscript and ssh keys on the the fs
 ** configure apparmor
 ** boot qemu
 ** ssh into the vm and run the script as usal
 * probably not: test with python-pygame installed.
+* probably not: test updates - add _and_upgrade to job names) - or maybe not, as tbl doesnt do this anymore…
+** touch -d "$(date -u -d '25 hours ago' '+%Y-%m-%d %H:%M')" $FILE
+** repeat test…
 
 == Further ideas...
 

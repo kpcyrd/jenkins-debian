@@ -14,10 +14,6 @@ set -e
 
 cleanup_all() {
 	set +e
-	# $1 is empty when called via trap
-	if [ "$1" = "quiet" ] ; then
-		echo "$(date -u) - everything ran nicely, congrats."
-	fi
 	# kill xvfb and ffmpeg
 	kill $XPID $FFMPEGPID 2>/dev/null|| true
 	# preserve screenshots and video
@@ -41,6 +37,10 @@ cleanup_all() {
 	rm $TMPDIR $TBL_LOGFILE -rf
 	# end
 	echo "$(date -u) - $TMPDIR deleted. Cleanup done."
+	# $1 is empty when called via trap
+	if [ "$1" = "quiet" ] ; then
+		echo "$(date -u) - everything ran nicely, congrats."
+	fi
 }
 
 cleanup_duplicate_screenshots() {
@@ -99,10 +99,11 @@ end_session() {
 upgrade_to_newer_packaged_version_in() {
 	local SUITE=$1
 	echo
-	echo "$(date -u ) - upgrading to torbrowser-launcher from $SUITE"
+	echo "$(date -u ) - upgrading to torbrowser-launcher from $SUITE."
 	echo "deb $MIRROR $SUITE main contrib" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/apt/sources.list
 	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get update
 	schroot --run-session -c $SESSION --directory /tmp -u root -- apt-get -y install -t $SUITE torbrowser-launcher
+	echo "$(date -u ) - upgraded to torbrowser-launcher from $SUITE."
 }
 
 upgrade_to_package_build_from_git() {
@@ -121,6 +122,25 @@ upgrade_to_package_build_from_git() {
 	rm $TMPDIR/git -r
 	cat $TMPDIR/$CHANGES
 	schroot --run-session -c $SESSION --directory $TMPDIR -- dcmd rm $CHANGES
+	echo "$(date -u ) - $DEB installed."
+}
+
+announce_failure_and_exit() {
+	echo "$1"
+	echo "'$1'" | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
+	update_screenshot
+	cleanup_duplicate_screenshots
+	exit 1
+}
+
+announce_problem_and_abort_silently() {
+	echo "$1"
+	echo "'$1'" | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
+	update_screenshot
+	cleanup_duplicate_screenshots
+	cleanup_all
+	exec /srv/jenkins/bin/abort.sh
+	exit 0
 }
 
 download_and_launch() {
@@ -184,10 +204,7 @@ download_and_launch() {
 	update_screenshot
 	SETTINGS_DONE=$(pgrep -f "$SESSION --preserve-environment -- torbrowser-launcher --settings" || true)
 	if [ -n "$SETTINGS_DONE" ] ; then
-		echo "'$(date -u) - settings dialog still there, aborting.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
-		update_screenshot
-		cleanup_duplicate_screenshots
-		exit 1
+		announce_failure_and_exit "$(date -u) - settings dialog still there, please investigate."
 	fi
 	# allow the download to take up to ~15 minutes (891 seconds)
 	# ( echo -n "0" ; for i in $(seq 1 33) ; do echo -n "+$i+10" ; done ; echo ) | bc
@@ -196,10 +213,7 @@ download_and_launch() {
 		sleep 10 ; sleep $i
 		STATUS="$(grep '^Download error:' $TBL_LOGFILE || true)"
 		if [ -n "$STATUS" ] ; then
-			echo "'$(date -u) - $STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
-			update_screenshot
-			cleanup_duplicate_screenshots
-			exit 1
+			announce_failure_and_exit "$(date -u) - $STATUS"
 		fi
 		# download is finished once BROWSER_DIR_EN or BROWSER_DIR_DE exist
 		# as these directories only exist once torbrower has been successfully installed
@@ -214,10 +228,7 @@ download_and_launch() {
 		update_screenshot
 	done
 	if [ ! -n "$STATUS" ] ; then
-		echo "'$(date -u) - could not download torbrowser, please investigate.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
-		update_screenshot
-		cleanup_duplicate_screenshots
-		exit 1
+		announce_failure_and_exit "$(date -u) - could not download torbrowser, please investigate."
 	fi
 	echo "$(date -u) - waiting for torbrowser to start the tor network settings dialogue."
 	# allow up to 63 seconds for torbrowser to start the tor network settings dialogue
@@ -233,10 +244,7 @@ download_and_launch() {
 		fi
 	done
 	if [ ! -n "$STATUS" ] ; then
-		echo "'$(date -u) - could not start torbrowser, please investigate.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
-		update_screenshot
-		cleanup_duplicate_screenshots
-		exit 1
+		announce_failure_and_exit "$(date -u) - could not start torbrowser, please investigate."
 	fi
 	echo "$(date -u) - pressing <return>, to connect directly via tor."
 	xvkbd -text "\r" > /dev/null 2>&1
@@ -253,12 +261,7 @@ download_and_launch() {
 		fi
 	done
 	if [ -z "$TOR_RUNNING" ] ; then
-		echo "'$(date -u) - could not connect successfuly via tor or could not run torbrowser at all. Aborting.'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
-		update_screenshot
-		cleanup_duplicate_screenshots
-		cleanup_all
-		exec /srv/jenkins/bin/abort.sh
-		exit 0
+		announce_problem_and_abort_silently "$(date -u) - could not connect successfuly via tor or could not run torbrowser at all. Aborting."
 	fi
 	BONUS_LEVEL_1=""
 	URL="http://vwakviie2ienjx6t.onion/debian/" 	# see http://richardhartmann.de/blog/posts/2015/08/24-Tor-enabled_Debian_mirror/
@@ -310,7 +313,9 @@ download_and_launch() {
 		BONUS_MSG=""
 		BONUS_COLORS=""
 	fi
+	# sleep is added here, so the xterms come up in stable order
 	schroot --run-session -c $SESSION --preserve-environment -- xterm $BONUS_COLORS -fs 64 -hold -T '$(date +'%a %d %b')' -e "figlet -c -f banner '$(date +'%a %d %b')'" 2>/dev/null || true &
+	sleep 1
 	if [ -n "$BONUS_MSG" ] ; then
 		schroot --run-session -c $SESSION --preserve-environment -- xterm $BONUS_COLORS -fs 48 -hold -T "$BONUS_MSG" -e "figlet -c -f banner '$BONUS_MSG'" 2>/dev/null || true &
 	fi
@@ -423,8 +428,8 @@ download_and_launch
 end_session
 cleanup_duplicate_screenshots
 
-# the end
+# the very end
 trap - INT TERM EXIT
 cleanup_all quiet
-echo "$(date -u) - the end."
+echo "$(date -u) - the very end."
 

@@ -189,10 +189,11 @@ download_and_launch() {
 		cleanup_duplicate_screenshots
 		exit 1
 	fi
-	# allow the download to take up to 15 minutes
+	# allow the download to take up to ~15 minutes (891 seconds)
+	# ( echo -n "0" ; for i in $(seq 1 33) ; do echo -n "+$i+10" ; done ; echo ) | bc
 	# we watch the download directory and parse torbrowser-launchers stdout, so usually this loop won't run this long
-	for i in $(seq 1 60) ; do
-		sleep 15
+	for i in $(seq 1 33) ; do
+		sleep 10 ; sleep $i
 		STATUS="$(grep '^Download error:' $TBL_LOGFILE || true)"
 		if [ -n "$STATUS" ] ; then
 			echo "'$(date -u) - $STATUS'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send -u critical
@@ -219,9 +220,9 @@ download_and_launch() {
 		exit 1
 	fi
 	echo "$(date -u) - waiting for torbrowser to start."
-	# allow up to 60 seconds for torbrowser to start
-	for i in $(seq 1 6) ; do
-		sleep 10
+	# allow up to 63 seconds for torbrowser to start
+	for i in $(seq 1 7) ; do
+		sleep 5 ; sleep $i
 		# this directory only exists once torbrower has successfully started
 		# (and pattern matching doesnt work because of schroot…)
 		local BROWSER_PROFILE=TorBrowser/Data/Browser/profile.default
@@ -242,8 +243,9 @@ download_and_launch() {
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 3
 	update_screenshot
-	for i in $(seq 1 6) ; do
-		sleep 10
+	# allow up to 63 seconds for torbrowser to make the first connection through tor
+	for i in $(seq 1 7) ; do
+		sleep 5 ; sleep $i
 		update_screenshot
 		TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)
 		if [ -n "$TOR_RUNNING" ] ; then
@@ -268,8 +270,9 @@ download_and_launch() {
 	sleep 1
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 2
-	for i in $(seq 1 6) ; do
-		sleep 5
+	# allow up up to 30 seconds to load the url
+	for i in $(seq 1 4) ; do
+		sleep 5 ; sleep $i
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c -i "README" || true)
 		update_screenshot
 		if [ $URL_LOADED -ge 4 ] ; then
@@ -287,8 +290,9 @@ download_and_launch() {
 	sleep 1
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 2
-	for i in $(seq 1 6) ; do
-		sleep 5
+	# allow up up to 30 seconds to load the url
+	for i in $(seq 1 4) ; do
+		sleep 5 ; sleep $i
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c "Debian" || true)
 		update_screenshot
 		if [ $URL_LOADED -ge 6 ] ; then

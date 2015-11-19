@@ -414,10 +414,14 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 
 * fix "schroot session cleanup loop" in _common.sh to ignore other schroots
 * build daily from upstream master against sid no matter if there where commits
+* test tbl in German
+* test tbl on i386
 * test alpha releases
 ** '~/.config/torbrowser/settings' file and edit the latest_version setting
 ** get version from '~/.cache/torbrowser/download/RecommendedTBBVersions'
 ** (warning: on update checks these files are written again…)
+* fix broken screenshot while job is running via apache redirect
+* once tbl is removed from experimental, make sure the job does nothing but detect that and exits quickly+successfully.
 * notifications should go somewhere public, after a while of testing.
 * debug why iceweasel is needed to be installed… and ca-certificates too.
 * run this in qemu and enable apparmor too? -> create new tests for apparmor first :)

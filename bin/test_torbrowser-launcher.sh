@@ -304,27 +304,24 @@ download_and_launch() {
 		fi
 	done
 	if [ -n "$BONUS_LEVEL_1" ] && [ -n "$BONUS_LEVEL_2" ] ; then
-		BONUS_MSG="Very well done."
-		BONUS_COLORS="-bg green -fg black"
+		STATUS_MSG="Very well done."
+		STATUS_COLORS="-bg green -fg black"
 	elif [ -n "$BONUS_LEVEL_1" ] || [ -n "$BONUS_LEVEL_2" ] ; then
-		BONUS_MSG="Well done."
-		BONUS_COLORS="-bg lightgreen -fg black"
+		STATUS_MSG="Well done."
+		STATUS_COLORS="-bg lightgreen -fg black"
 	else
-		BONUS_MSG=""
-		BONUS_COLORS=""
+		STATUS_MSG=""
+		STATUS_COLORS=""
 	fi
-	# sleep is added here, so the xterms come up in stable order
-	schroot --run-session -c $SESSION --preserve-environment -- xterm $BONUS_COLORS -fs 64 -hold -T '$(date +'%a %d %b')' -e "figlet -c -f banner '$(date +'%a %d %b')'" 2>/dev/null || true &
+	# sleep is added here, so xterm + notification come up nicely
+	schroot --run-session -c $SESSION --preserve-environment -- xterm -geometry 1024x230+0+520 $STATUS_COLORS -fa 'DejaVuSansMono' -fs 18 -hold -T '$(date +'%a %d %b')' -e "echo ; figlet -c -f banner -w 68 '$(date +'%a %d %b')'" 2>/dev/null || true &
 	sleep 1
-	if [ -n "$BONUS_MSG" ] ; then
-		schroot --run-session -c $SESSION --preserve-environment -- xterm $BONUS_COLORS -fs 48 -hold -T "$BONUS_MSG" -e "figlet -c -f banner '$BONUS_MSG'" 2>/dev/null || true &
-	fi
-	sleep 1
-	echo "'$(date -u) - torbrowser tests end. $BONUS_MSG'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
+	echo "'$(date -u) - torbrowser tests end. $STATUS_MSG'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
+	sleep 0.5
 	update_screenshot
 	echo "$(date) - telling awesome to quit."
 	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
-	sleep 1
+	sleep 0.5
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop
 	sleep 1
 	echo "$(date -u ) - killing Xfvb and ffmpeg."

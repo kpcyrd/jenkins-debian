@@ -215,25 +215,25 @@
         - '{name}_setup_schroot_unstable_amd64':
             my_description: 'Setup unstable/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 1 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-unstable unstable torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-unstable unstable torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin figlet build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_stretch_amd64':
             my_description: 'Setup stretch/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 2 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-stretch stretch torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-stretch stretch torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin figlet build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_jessie_amd64':
             my_description: 'Setup jessie/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 3 * * *'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-jessie jessie torbrowser-launcher ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin figlet build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_setup_schroot_wheezy_amd64':
             my_description: 'Setup wheezy/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 4 * * 2'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-wheezy wheezy ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel python python-gtk2 python-psutil python-twisted python-lzma gnupg wmctrl tor'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-wheezy wheezy ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin figlet build-essential fakeroot devscripts python-all debhelper dh-apparmor lsb-release iceweasel python python-gtk2 python-psutil python-twisted python-lzma gnupg wmctrl tor'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_experimental_amd64':

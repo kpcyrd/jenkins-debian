@@ -293,13 +293,21 @@ download_and_launch() {
 		fi
 	done
 	if [ -n "$BONUS_LEVEL_1" ] && [ -n "$BONUS_LEVEL_2" ] ; then
-		BONUS_LEVEL=" Very well done."
+		BONUS_MSG="Very well done."
+		BONUS_COLORS="-bg green -fg black"
 	elif [ -n "$BONUS_LEVEL_1" ] || [ -n "$BONUS_LEVEL_2" ] ; then
-		BONUS_LEVEL=" Well done."
+		BONUS_MSG="Well done."
+		BONUS_COLORS="-bg lightgreen -fg black"
 	else
-		BONUS_LEVEL=""
+		BONUS_MSG=""
+		BONUS_COLORS=""
 	fi
-	echo "'$(date -u) - torbrowser tests end.$BONUS_LEVEL'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
+	schroot --run-session -c $SESSION --preserve-environment -- xterm $BONUS_COLORS -fs 64 -hold -T '$(date +'%a %d %b')' -e "figlet -c -f banner '$(date +'%a %d %b')'" 2>/dev/null || true &
+	if [ -n "$BONUS_MSG" ] ; then
+		schroot --run-session -c $SESSION --preserve-environment -- xterm $BONUS_COLORS -fs 48 -hold -T "$BONUS_MSG" -e "figlet -c -f banner '$BONUS_MSG'" 2>/dev/null || true &
+	fi
+	sleep 1
+	echo "'$(date -u) - torbrowser tests end. $BONUS_MSG'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date) - telling awesome to quit."
 	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client

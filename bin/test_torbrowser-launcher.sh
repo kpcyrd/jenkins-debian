@@ -108,12 +108,16 @@ upgrade_to_newer_packaged_version_in() {
 upgrade_to_package_build_from_git() {
 	echo
 	local BRANCH=$1
+	# GIT_URL is set by jenkins
 	echo "$(date -u ) - building Debian package based on branch $BRANCH from $GIT_URL."
+	# build package
 	schroot --run-session -c $SESSION --directory $TMPDIR/git -- debuild -b -uc -us
-	DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
-	CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)
+	# install it
+	local DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
+	local CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)
 	echo "$(date -u ) - $DEB will be installed."
 	schroot --run-session -c $SESSION --directory $TMPDIR -u root -- dpkg -i $DEB
+	# cleanup
 	rm $TMPDIR/git -r
 	cat $TMPDIR/$CHANGES
 	schroot --run-session -c $SESSION --directory $TMPDIR -- dcmd rm $CHANGES
@@ -309,12 +313,36 @@ download_and_launch() {
 	echo
 }
 
+merge_debian_branch() {
+	local DEBIAN_GIT_URL="git://git.debian.org/git/collab-maint/torbrowser-launcher.git"
+	local DEBIAN_BRANCH="debian/$1"
+	echo "$(date -u) - Merging branch $DEBIAN_BRANCH into $COMMIT_HASH now."
+	echo
+	git log -1
+	git checkout -b $BRANCH
+	git remote add debian $DEBIAN_GIT_URL
+	git fetch --no-tags debian
+	git merge --no-stat --no-edit $DEBIAN_BRANCH
+	local BUILD_VERSION="$(dpkg-parsechangelog |grep ^Version:|cut -d " " -f2).0~jenkins-test-$COMMIT_HASH"
+	local COMMIT_MSG1="Automatically build by jenkins using the branch $DEBIAN_BRANCH (from $DEBIAN_GIT_URL) merged into $COMMIT_HASH."
+	# GIT_URL AND GIT_BRANCH are set by jenkins
+	local COMMIT_MSG2="$COMMIT_HASH is from branch $(echo $GIT_BRANCH|cut -d '/' -f2) from $GIT_URL."
+	dch -R $COMMIT_MSG1
+	dch -v $BUILD_VERSION $COMMIT_MSG2
+}
+
 prepare_git_workspace_copy() {
 	echo "$(date -u) - preparing git workspace copy in $TMPDIR/git"
 	git branch -av
 	mkdir $TMPDIR/git
 	cp -r * $TMPDIR/git
 	echo
+}
+
+revert_git_merge() {
+	git reset --hard
+	git checkout -f -q $COMMIT_HASH
+	git branch -D $BRANCH
 }
 
 #
@@ -337,27 +365,10 @@ if [ "$2" = "git" ] ; then
 	if [ "$3" = "merge"  ] ; then
 		# merge debian branch into upstream master branch
 		BRANCH=upstream-master-plus-debian-packaging
-		DEBIAN_GIT_URL="git://git.debian.org/git/collab-maint/torbrowser-launcher.git"
-		DEBIAN_BRANCH="debian/$4"
 		COMMIT_HASH=$(git log -1 --oneline|cut -d " " -f1)
-		echo "$(date -u) - Merging branch $DEBIAN_BRANCH into $COMMIT_HASH now."
-		echo
-		git log -1
-		git checkout -b $BRANCH
-		git remote add debian $DEBIAN_GIT_URL
-		git fetch --no-tags debian
-		git merge --no-stat --no-edit $DEBIAN_BRANCH
-		BUILD_VERSION="$(dpkg-parsechangelog |grep ^Version:|cut -d " " -f2).0~jenkins-test-$COMMIT_HASH"
-		COMMIT_MSG1="Automatically build by jenkins using the branch $DEBIAN_BRANCH (from $DEBIAN_GIT_URL) merged into $COMMIT_HASH."
-		# GIT_URL AND GIT_BRANCH are set by jenkins
-		COMMIT_MSG2="$COMMIT_HASH is from branch $(echo $GIT_BRANCH|cut -d '/' -f2) from $GIT_URL."
-		dch -R $COMMIT_MSG1
-		dch -v $BUILD_VERSION $COMMIT_MSG2
+		merge_debian_branch $4
 		prepare_git_workspace_copy
-		# revert to original workspace status
-		git reset --hard
-		git checkout -f -q $COMMIT_HASH
-		git branch -D $BRANCH
+		revert_git_merge
 	else
 		# just use this branch
 		BRANCH=$3

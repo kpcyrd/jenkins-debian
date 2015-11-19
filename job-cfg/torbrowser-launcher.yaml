@@ -321,7 +321,7 @@
             my_node: ''
         - '{name}_test_on_wheezy_amd64_from_backports':
             my_description: 'Test torbrowser-launcher from backports on wheezy/amd64.'
-            my_timed: '23 5 * * 4'
+            my_timed: '23 5 * * 2'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh wheezy backports'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''

@@ -45,7 +45,7 @@ cleanup_all() {
 
 cleanup_duplicate_screenshots() {
 	cd $RESULTS
-	echo "$(date -u) - removing duplicate screenshots."
+	echo "$(date -u) - removing duplicate and similar creenshots."
 	# loop backwards through the screenshots and remove similar ones
 	# this results in keeping the interesting ones :)
 	MAXDIFF=2500 # pixels
@@ -60,7 +60,7 @@ cleanup_duplicate_screenshots() {
 			PIXELS=$(compare -metric AE $i $j /dev/null 2>&1 || true)
 			# if it's an integer…
 			if [[ "$PIXELS" =~ ^[0-9]+$ ]] && [ $PIXELS -le $MAXDIFF ] ; then
-				echo "$(date -u ) - removing $j, just $PIXELS pixels difference."
+				echo "$(date -u ) - removing $j, $PIXELS pixels difference."
 				rm $j
 			fi
 		done
@@ -219,8 +219,8 @@ download_and_launch() {
 		cleanup_duplicate_screenshots
 		exit 1
 	fi
-	echo "$(date -u) - waiting for torbrowser to start."
-	# allow up to 63 seconds for torbrowser to start
+	echo "$(date -u) - waiting for torbrowser to start the tor network settings dialogue."
+	# allow up to 63 seconds for torbrowser to start the tor network settings dialogue
 	for i in $(seq 1 7) ; do
 		sleep 5 ; sleep $i
 		# this directory only exists once torbrower has successfully started
@@ -229,7 +229,6 @@ download_and_launch() {
 		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $BROWSER_DIR_EN/$BROWSER_PROFILE -a ! -d $BROWSER_DIR_DE/$BROWSER_PROFILE || echo $(date -u ) - torbrowser running. )"
 		if [ -n "$STATUS" ] ; then
 			sleep 10
-			update_screenshot
 			break
 		fi
 	done
@@ -249,7 +248,7 @@ download_and_launch() {
 		update_screenshot
 		TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)
 		if [ -n "$TOR_RUNNING" ] ; then
-			echo "$(date -u) - torbrowser is working is it should, good."
+			echo "$(date -u) - torbrowser is working as it should, good."
 			break
 		fi
 	done

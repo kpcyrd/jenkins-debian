@@ -184,6 +184,10 @@
 
 - job-template:
     defaults: torbrowser-launcher_packages
+    name: '{name}_test_on_stretch_amd64_from_unstable'
+
+- job-template:
+    defaults: torbrowser-launcher_packages
     name: '{name}_test_on_jessie_amd64'
 
 - job-template:
@@ -281,6 +285,12 @@
             my_description: 'Test torbrowser-launcher from and on stretch/amd64.'
             my_timed: '23 3 * * *'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_on_stretch_amd64_from_unstable':
+            my_description: 'Test torbrowser-launcher from unstable on stretch/amd64.'
+            my_timed: '42 3 * * 2'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh stretch unstable'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_jessie_amd64':

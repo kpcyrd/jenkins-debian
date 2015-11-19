@@ -18,6 +18,7 @@ blacklist_packages() {
 		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 		cleanup_pkg_files
 		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE');"
+		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule where package_id='$PKGID'"
 	done
 }
 

@@ -189,7 +189,9 @@ download_and_launch() {
 		cleanup_duplicate_screenshots
 		exit 1
 	fi
-	for i in $(seq 1 40) ; do
+	# allow the download to take up to 15 minutes
+	# we watch the download directory and parse torbrowser-launchers stdout, so usually this loop won't run this long
+	for i in $(seq 1 60) ; do
 		sleep 15
 		STATUS="$(grep '^Download error:' $TBL_LOGFILE || true)"
 		if [ -n "$STATUS" ] ; then
@@ -203,7 +205,6 @@ download_and_launch() {
 
 		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_en-US/Browser -a ! -d $HOME/.local/share/torbrowser/tbb/x86_64/tor-browser_de/Browser || echo $(date -u ) - torbrowser downloaded and installed, configuring tor now. )"
 		if [ -n "$STATUS" ] ; then
-			sleep 10
 			update_screenshot
 			break
 		fi

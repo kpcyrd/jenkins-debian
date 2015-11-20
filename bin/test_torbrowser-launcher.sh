@@ -395,10 +395,12 @@ if [ "$2" = "git" ] ; then
 elif [ "$SUITE" = "experimental" ] || [ "$2" = "experimental" ] ; then
 	SUITE=unstable
 	UPGRADE_SUITE=experimental
-elif [ "$2" = "backports" ] ; then
-	UPGRADE_SUITE=$SUITE-backports
 elif [ "$2" = "unstable" ] ; then
 	UPGRADE_SUITE=unstable
+elif [ "$2" = "stretch" ] ; then
+	UPGRADE_SUITE=stretch
+elif [ "$2" = "backports" ] ; then
+	UPGRADE_SUITE=$SUITE-backports
 fi
 WORKSPACE=$(pwd)
 RESULTS=$WORKSPACE/results

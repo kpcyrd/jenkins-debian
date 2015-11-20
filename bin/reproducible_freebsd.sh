@@ -90,7 +90,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	else
 		cleanup_tmpdirs
 		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping."
-		break
+		continue
 	fi
 
 	# set time forward 398 days and some

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
@@ -493,7 +495,7 @@ fi
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
-rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE
+rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
 if [ -s $TMPFILE ] ; then
 	echo
 	cat $TMPFILE

@@ -37,6 +37,47 @@ save_freebsd_results(){
 	$RSSH "sudo chflags -R noschg $TMPDIR ; sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
 }
 
+run_diffoscope_on_results() {
+	TIMEOUT="30m"
+	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+	echo "============================================================================="
+	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results."
+	echo "============================================================================="
+	FILES_HTML[$FREEBSD_TARGET]=$(mktemp --tmpdir=$TMPDIR)
+	#echo "       <ul>" > ${FILES_HTML[$FREEBSD_TARGET]}
+	GOOD_FILES[$FREEBSD_TARGET]=0
+	ALL_FILES[$FREEBSD_TARGET]=0
+	SIZE=""
+	create_results_dirs
+	echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+	if [ ! -d $TMPDIR/b1 ] || [ ! -d $TMPDIR/b1 ] ; then
+		echo "Warning, one of the two builds failed, not running diffoscope…"
+		echo "<tr><td>$TARGET_NAME failed to build from source.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+		echo "</table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+		GOOD_PERCENT[$FREEBSD_TARGET]="0"
+		return # FIXME: further refatcoring
+	fi
+	cd $TMPDIR/b1
+	tree .
+	for j in $(find * -type f |sort -u ) ; do
+		ALL_FILES[$FREEBSD_TARGET]=$(( ${ALL_FILES[$FREEBSD_TARGET]}+1 ))
+		call_diffoscope . $j
+		get_filesize $j
+		if [ -f $TMPDIR/$j.html ] ; then
+			mkdir -p $BASE/freebsd/dbd/$(dirname $j)
+			mv $TMPDIR/$j.html $BASE/freebsd/dbd/$j.html
+			echo "         <tr><td><a href=\"dbd/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+		else
+			SHASUM=$(sha256sum $j|cut -d " " -f1)
+			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+			GOOD_FILES[$FREEBSD_TARGET]=$(( ${GOOD_FILES[$FREEBSD_TARGET]}+1 ))
+			rm -f $BASE/freebsd/dbd/$j.html # cleanup from previous (unreproducible) tests - if needed
+		fi
+	done
+	echo "       </table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
+	GOOD_PERCENT[$FREEBSD_TARGET]=$(echo "scale=1 ; (${GOOD_FILES[$FREEBSD_TARGET]}*100/${ALL_FILES[$FREEBSD_TARGET]})" | bc)
+}
+
 #
 # main
 #
@@ -90,6 +131,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	else
 		cleanup_tmpdirs
 		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping."
+		run_diffoscope_on_results
 		continue
 	fi
 
@@ -130,39 +172,8 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	export TZ="/usr/share/zoneinfo/UTC"
 	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
 	umask 0022
+	run_diffoscope_on_results
 
-	# run diffoscope on the results
-	TIMEOUT="30m"
-	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
-	echo "============================================================================="
-	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results."
-	echo "============================================================================="
-	FILES_HTML[$FREEBSD_TARGET]=$(mktemp --tmpdir=$TMPDIR)
-	echo "       <ul>" > ${FILES_HTML[$FREEBSD_TARGET]}
-	GOOD_FILES[$FREEBSD_TARGET]=0
-	ALL_FILES[$FREEBSD_TARGET]=0
-	SIZE=""
-	create_results_dirs
-	cd $TMPDIR/b1
-	tree .
-	echo "       <table><tr><th>Artifacts for <code>$TARGET_NAME</code></th></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-	for j in $(find * -type f |sort -u ) ; do
-		ALL_FILES[$FREEBSD_TARGET]=$(( ${ALL_FILES[$FREEBSD_TARGET]}+1 ))
-		call_diffoscope . $j
-		get_filesize $j
-		if [ -f $TMPDIR/$j.html ] ; then
-			mkdir -p $BASE/freebsd/dbd/$(dirname $j)
-			mv $TMPDIR/$j.html $BASE/freebsd/dbd/$j.html
-			echo "         <tr><td><a href=\"dbd/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-		else
-			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-			GOOD_FILES[$FREEBSD_TARGET]=$(( ${GOOD_FILES[$FREEBSD_TARGET]}+1 ))
-			rm -f $BASE/freebsd/dbd/$j.html # cleanup from previous (unreproducible) tests - if needed
-		fi
-	done
-	echo "       </table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
-	GOOD_PERCENT[$FREEBSD_TARGET]=$(echo "scale=1 ; (${GOOD_FILES[$FREEBSD_TARGET]}*100/${ALL_FILES[$FREEBSD_TARGET]})" | bc)
 done
 
 #

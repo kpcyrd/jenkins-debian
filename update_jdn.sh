@@ -60,15 +60,27 @@ sudo mkdir -p /srv/workspace
 
 # prepare tmpfs on some hosts
 case $HOSTNAME in
-	jenkins)			 	TMPFSSIZE=100 ;;
-	profitbricks-build4-amd64) 		TMPFSSIZE=32 ;;
-	profitbricks-build?-amd64) 		TMPFSSIZE=200 ;;
+	jenkins)
+		TMPFSSIZE=100
+		TMPSIZE=15
+		;;
+	profitbricks-build4-amd64)
+		TMPFSSIZE=32
+		TMPSIZE=8
+		;;
+	profitbricks-build?-amd64)
+		TMPFSSIZE=200
+		TMPSIZE=15
+		;;
 	*) ;;
 esac
 case $HOSTNAME in
 	jenkins|profitbricks-build?-amd64)
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
+		fi
+		if ! grep -q '^tmpfs\s\+/tmp\s' /etc/fstab; then
+			echo "tmpfs		/tmp	tmpfs	defaults,size=${TMPSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null
 		fi
 		if ! mountpoint -q /srv/workspace; then
 			if test -z "$(ls -A /srv/workspace)"; then

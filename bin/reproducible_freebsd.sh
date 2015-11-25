@@ -43,6 +43,7 @@ run_diffoscope_on_results() {
 	echo "============================================================================="
 	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results."
 	echo "============================================================================="
+	mkdir -p $TMPDIR
 	FILES_HTML[$FREEBSD_TARGET]=$(mktemp --tmpdir=$TMPDIR)
 	#echo "       <ul>" > ${FILES_HTML[$FREEBSD_TARGET]}
 	GOOD_FILES[$FREEBSD_TARGET]=0

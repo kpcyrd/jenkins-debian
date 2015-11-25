@@ -404,7 +404,7 @@ write_explaination_table() {
 			write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>same for both builds (currently, this could be varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a>)</td></tr>"
 		fi
 	else
-		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>the 2nd build done with the build node set 1 year, 1 month and 1 day in the future</td></tr>"
+		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>the 2nd build is done with the build node set 1 year, 1 month and 1 day in the future</td></tr>"
 		write_page "<tr><td>hour, minute</td><td>hour and minute will vary between two builds...</td><td>additionally the \"future build\" also runs 6h and 23min ahead.</td></tr>"
 		write_page "<tr><td>filesystem of the build directory</td><td>ufs</td><td>same for both builds</td></tr>"
 	fi

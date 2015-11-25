@@ -31,6 +31,8 @@ case "$NODE_NAME" in
     ;;
   wbd0-armhf-rb.debian.net)
     PORT=2223
+  rpi2b-armhf-rb.debian.net)
+    PORT=2230
     ;;
   profitbricks-build?-amd64.debian.net)
     PORT=22

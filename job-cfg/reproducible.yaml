@@ -289,6 +289,10 @@
 
 - job-template:
     defaults: reproducible
+    name: '{name}_maintenance_armhf_rpi2b'
+
+- job-template:
+    defaults: reproducible
     name: '{name}_maintenance_amd64_profitbricks1'
 
 - job-template:
@@ -346,6 +350,10 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_pbuilder_unstable_armhf_wbd0'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_pbuilder_unstable_armhf_rpi2b'
 
 - job-template:
     defaults: reproducible
@@ -434,6 +442,10 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_unstable_armhf_wbd0'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_armhf_rpi2b'
 
 - job-template:
     defaults: reproducible
@@ -664,7 +676,7 @@
     name: '{name}_builder_amd64_32'
 
 # use this to get an overview how builds are distributed on the nodes
-# grep armhf job-cfg/reproducible.yaml  |grep build.sh ; echo ; echo ; echo ; for i in bpi0 wbq0 cbxi4pro0 hb0 odxu4 wbd0 ; do echo "$i:" ; grep armhf job-cfg/reproducible.yaml  |grep build.sh|grep $i ; echo ; done
+# grep armhf job-cfg/reproducible.yaml  |grep build.sh ; echo ; echo ; echo ; for i in bpi0 wbq0 cbxi4pro0 hb0 odxu4 wbd0 rpi2b ; do echo "$i:" ; grep armhf job-cfg/reproducible.yaml  |grep build.sh|grep $i ; echo ; done
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_1'
@@ -794,6 +806,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbd0'
+        - '{name}_maintenance_armhf_rpi2b':
+            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'rpi2b'
         - '{name}_maintenance_amd64_profitbricks1':
             my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
             my_timed: '5 0,3,6,9,12,15,18,21 * * *'
@@ -860,6 +878,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbd0'
+        - '{name}_setup_pbuilder_unstable_armhf_rpi2b':
+            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+            my_timed: '42 7 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'rpi2b'
         - '{name}_setup_pbuilder_testing_amd64_profitbricks1':
             my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
             my_timed: '23 7 * * *'
@@ -1016,6 +1040,12 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: 'wbd0'
+        - '{name}_setup_schroot_unstable_armhf_rpi2b':
+            my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
+            my_timed: '42 1 * * *'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: 'rpi2b'
         - '{name}_setup_schroot_testing_amd64_jenkins':
             my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
             my_timed: '42 1 * * *'

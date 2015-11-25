@@ -676,7 +676,7 @@
     name: '{name}_builder_amd64_32'
 
 # use this to get an overview how builds are distributed on the nodes
-# grep armhf job-cfg/reproducible.yaml  |grep build.sh ; echo ; echo ; echo ; for i in bpi0 wbq0 cbxi4pro0 hb0 odxu4 wbd0 rpi2b ; do echo "$i:" ; grep armhf job-cfg/reproducible.yaml  |grep build.sh|grep $i ; echo ; done
+# grep armhf job-cfg/reproducible.yaml  |grep build.sh ; echo ; echo ; echo ; for i in bpi0 wbq0 cbxi4pro0 hb0 odxu4 wbd0 rpi2b ; do echo -n "$i: " ; grep armhf job-cfg/reproducible.yaml | grep -v grep | grep build.sh | grep -c $i ; grep armhf job-cfg/reproducible.yaml | grep -v grep | grep build.sh | grep $i ; echo ; done
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_1'

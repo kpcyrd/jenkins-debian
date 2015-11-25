@@ -730,6 +730,10 @@
     name: '{name}_builder_armhf_13'
 
 - job-template:
+    defaults: reproducible_builder
+    name: '{name}_builder_armhf_14'
+
+- job-template:
     defaults: reproducible_other_projects_trigger
     name: '{name}_coreboot'
 
@@ -1466,6 +1470,12 @@
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: '* * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_build.sh cbxi4pro0-armhf-rb:2226 wbd0-armhf-rb:2223'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_builder_armhf_14':
+            my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
+            my_timed: '* * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh rpi2b-armhf-rb:2230 wbq0-armhf-rb:2225'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_coreboot':

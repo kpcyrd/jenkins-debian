@@ -167,13 +167,14 @@ diff_copy_buildlogs() {
 handle_404() {
 	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
 	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate." | tee -a ${RBUILDLOG}
+	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate. Sleeping 30m as this should not happen." | tee -a ${RBUILDLOG}
 	DURATION=''
 	EVERSION="None"
 	update_rbuildlog
 	update_db_and_html "404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
+	sleep 30m
 	exit 0 # RBUILDLOG and SAVE_ARTIFACTS and NOTIFY are used in cleanup_all called at exit
 }
 

@@ -1409,7 +1409,7 @@
         - '{name}_builder_armhf_3':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: '* * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh hb0-armhf-rb:2224 cbxi4pro0-armhf-rb:2226'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh hb0-armhf-rb:2224 odxu4-armhf-rb:2229'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_builder_armhf_4':
@@ -1463,7 +1463,7 @@
         - '{name}_builder_armhf_12':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_timed: '* * * * *'
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh wbd0-armhf-rb:2223 odxu4-armhf-rb:2229'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh wbd0-armhf-rb:2223 cbxi4pro0-armhf-rb:2226'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
         - '{name}_builder_armhf_13':

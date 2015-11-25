@@ -55,6 +55,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** add all the nodes as nodes to jenkins.d.o (we)
 ** disable job execution on jenkins.d.net(!) (we) 
 ** deploy this configuration on jenkins.d.o…(!) (we)
+*** make update_jdn.sh warn if things are missing on .debian.org systems
 *** as we dont want irc nor mail notifications for this during the migration, we should disable those with an easily revertable commit before actual deployment
 *** then rename jenkins.debian.net to profitbricks-build0-amd64 - and switch all the jobs which used to run on the master node on that node, which already has the right sudoers, usercontent/reproducible/ and reproducible.db
 *** some authorized_keys will also need to be adopted for the change of IP address from jenkins.d.n to jenkins.d.o

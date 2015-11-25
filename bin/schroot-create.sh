@@ -113,7 +113,7 @@ EOF
 robust_chroot_apt() {
 	set +e
 	sudo chroot $SCHROOT_TARGET apt-get $@ | tee $TMPLOG
-	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG)
+	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG || true)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - 'apt-get $@' failed, sleeping 5min before retrying..."
@@ -130,7 +130,7 @@ bootstrap() {
 	echo "Bootstraping $SUITE into $SCHROOT_TARGET now."
 	set +e
 	sudo debootstrap $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
-	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG)
+	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."

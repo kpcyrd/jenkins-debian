@@ -30,8 +30,15 @@ done
 FIELDS[2]="datum, oldest"
 FIELDS[3]="datum "
 for TAG in $USERTAGS ; do
+	# for this table (#3) bugs with ftbfs tags are ignored _now_…
+	if [ "$TAG" = "ftbfs" ] ; then
+		continue
+	fi
 	FIELDS[3]="${FIELDS[3]}, open_$TAG, done_$TAG"
 done
+# …and added at the end (so they are not ignored but rather sorted this way)
+# Also note how FIELDS is only used for reading data, not writing.
+FIELDS[3]="${FIELDS[3]}, open_ftbfs, done_ftbfs"
 FIELDS[4]="datum, packages_with_notes"
 FIELDS[5]="datum, known_issues"
 FIELDS[7]="datum, done_bugs, open_bugs"
@@ -45,6 +52,7 @@ SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
 FIELDS[8]="datum "
 for TAG in $USERTAGS ; do
+	# for this table (#8) bugs with ftbfs tags are ignored.
 	if [ "$TAG" = "ftbfs" ] ; then
 		continue
 	fi
@@ -54,6 +62,7 @@ FIELDS[9]="datum, done_bugs, open_bugs"
 REPRODUCIBLE_DONE="(0"
 REPRODUCIBLE_OPEN="(0"
 for TAG in $USERTAGS ; do
+	# for this table (#9) bugs with ftbfs tags are ignored.
 	if [ "$TAG" = "ftbfs" ] ; then
 		continue
 	fi

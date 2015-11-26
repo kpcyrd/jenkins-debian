@@ -399,15 +399,15 @@ write_explaination_table() {
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
-			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
+			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>on amd64 only: additionally the \"future builds\" also run 6h and 23min ahead</td></tr>"
 		        write_page "<tr><td>filesystem</td><td>tmpfs</td><td><em>temporarily not</em> varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\"https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"
 		else
-			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>additionally the \"future builds\" also run 6h and 23min ahead.</td></tr>"
+			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
 			write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>same for both builds (currently, this could be varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a>)</td></tr>"
 		fi
 	else
 		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>the 2nd build is done with the build node set 1 year, 1 month and 1 day in the future</td></tr>"
-		write_page "<tr><td>hour, minute</td><td>hour and minute will vary between two builds...</td><td>additionally the \"future build\" also runs 6h and 23min ahead.</td></tr>"
+		write_page "<tr><td>hour, minute</td><td>hour and minute will vary between two builds</td><td>additionally the \"future build\" also runs 6h and 23min ahead</td></tr>"
 		write_page "<tr><td>filesystem of the build directory</td><td>ufs</td><td>same for both builds</td></tr>"
 	fi
 	if [ "$1" = "debian" ] ; then

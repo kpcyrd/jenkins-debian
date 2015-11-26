@@ -442,7 +442,7 @@ create_dashboard_page() {
 	write_usertag_table
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
-	for i in 3 7 8 9 4 5 ; do
+	for i in 8 9 3 7 4 5 ; do
 		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then

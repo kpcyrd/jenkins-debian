@@ -267,7 +267,14 @@ write_usertag_table() {
 				let "TTOTAL=TTOTAL+TOTAL"
 			fi
 		done
-		write_page "<tr><td>Total number of <a href=\"https://wiki.debian.org/ReproducibleBuilds/Contribute#How_to_report_bugs\">usertags related to reproducible builds</a> on $DATE<br />(this is not the number of bugs as bugs can have several tags)</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
+		# now subtract the ftbfs bugs again (=the last value)
+		# as those others are the ones we really care about
+		let "REPRODUCIBLE_TOPEN=TOPEN-VALUE"
+		let "REPRODUCIBLE_TDONE=TDONE-VALUE"
+		let "REPRODUCIBLE_TTOTAL=REPRODUCIBLE_TOPEN+REPRODUCIBLE_TDONE"
+		write_page "<tr><td>Sum of <a href=\"https://wiki.debian.org/ReproducibleBuilds/Contribute#How_to_report_bugs\">bugs with usertags related to reproducible builds</a>, excluding those tagged 'ftbfs'</td><td>$REPRODUCIBLE_TOPEN</td><td>$REPRODUCIBLE_TDONE</td><td>$REPRODUCIBLE_TTOTAL</td></tr>"
+		write_page "<tr><td>Sum of all bugs with usertags related to reproducible builds</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
+		write_page "<tr><td colspan=\"4\">Stats are from $DATE.<br />The sums of usertags shown are not equivalent to the sum of bugs as a single bug can have several tags.</td></tr>"
 		write_page "</table>"
 	fi
 }

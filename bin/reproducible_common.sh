@@ -79,6 +79,8 @@ TABLE[4]=stats_notes
 TABLE[5]=stats_issues
 TABLE[6]=stats_meta_pkg_state
 TABLE[7]=stats_bugs_state
+TABLE[8]=stats_bugs_sin_ftbfs
+TABLE[9]=stats_bugs_sin_ftbfs_state
 
 # known package sets
 META_PKGSET[1]="essential"
@@ -574,8 +576,8 @@ create_png_from_table() {
 	else
 		WHERE2_EXTRA=""
 	fi
-	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] ; then
-		# TABLE[3+4+5] don't have a suite column:
+	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] || [ $1 -eq 8 ] ; then
+		# TABLE[3+4+5] don't have a suite column: (and TABLE[8] (and 9) is faked, based on 3)
 		WHERE_EXTRA=""
 	elif [ $1 -eq 6 ] ; then
 		# 6 is special too:
@@ -616,6 +618,10 @@ create_png_from_table() {
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 8 ] ; then
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[3]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+	elif [ $1 -eq 9 ] ; then
+		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $REPRODUCIBLE_DONE, $REPRODUCIBLE_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else
 		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi

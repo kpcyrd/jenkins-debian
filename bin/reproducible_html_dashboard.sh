@@ -43,6 +43,25 @@ for TAG in $USERTAGS ; do
 done
 SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
+FIELDS[8]="datum "
+for TAG in $USERTAGS ; do
+	if [ "$TAG" = "ftbfs" ] ; then
+		continue
+	fi
+	FIELDS[8]="${FIELDS[8]}, open_$TAG, done_$TAG"
+done
+FIELDS[9]="datum, done_bugs, open_bugs"
+REPRODUCIBLE_DONE="(0"
+REPRODUCIBLE_OPEN="(0"
+for TAG in $USERTAGS ; do
+	if [ "$TAG" = "ftbfs" ] ; then
+		continue
+	fi
+	REPRODUCIBLE_DONE="$REPRODUCIBLE_DONE+done_$TAG"
+	REPRODUCIBLE_OPEN="$REPRODUCIBLE_OPEN+open_$TAG"
+done
+REPRODUCIBLE_DONE="$REPRODUCIBLE_DONE)"
+REPRODUCIBLE_OPEN="$REPRODUCIBLE_OPEN)"
 COLOR[0]=5
 COLOR[1]=12
 COLOR[2]=1
@@ -50,11 +69,15 @@ COLOR[3]=32
 COLOR[4]=1
 COLOR[5]=1
 COLOR[7]=2
+COLOR[8]=30
+COLOR[9]=2
 MAINLABEL[1]="Amount of packages built each day"
-MAINLABEL[3]="Usertags on bugs for user reproducible-builds@lists.alioth.debian.org"
+MAINLABEL[3]="Bugs (with all usertags) for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
-MAINLABEL[7]="Open and closed bugs"
+MAINLABEL[7]="Open and closed bugs (with all usertags)"
+MAINLABEL[8]="Bugs (with all usertags except 'ftbfs') for user reproducible-builds@lists.alioth.debian.org"
+MAINLABEL[9]="Open and closed bugs (with all usertags except tagged 'ftbfs')"
 YLABEL[0]="Amount (total)"
 YLABEL[1]="Amount (per day)"
 YLABEL[2]="Age in days"
@@ -62,6 +85,8 @@ YLABEL[3]="Amount of bugs"
 YLABEL[4]="Amount of packages"
 YLABEL[5]="Amount of issues"
 YLABEL[7]="Amount of bugs open / closed"
+YLABEL[8]="Amount of bugs"
+YLABEL[9]="Amount of bugs open / closed"
 
 #
 # update package + build stats
@@ -199,10 +224,11 @@ update_bug_stats() {
 			echo "Updating ${PACKAGES_DB} with bug stats for $DATE."
 			sqlite3 -init ${INIT} ${PACKAGES_DB} "$SQL"
 			# force regeneration of the image
-			echo "Touching ${TABLE[3]}.png..."
-			touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[3]}.png
-			echo "Touching ${TABLE[7]}.png..."
-			touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[7]}.png
+			local i=0
+			for i in 3 7 8 9 ; do
+				echo "Touching ${TABLE[$i]}.png..."
+				touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[$i]}.png
+			done
 		fi
 	fi
 }
@@ -416,7 +442,7 @@ create_dashboard_page() {
 	write_usertag_table
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
-	for i in 3 7 4 5 ; do
+	for i in 3 7 8 9 4 5 ; do
 		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then

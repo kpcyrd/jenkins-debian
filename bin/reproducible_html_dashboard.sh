@@ -246,7 +246,7 @@ update_bug_stats() {
 # gather bugs stats and generate html table
 #
 write_usertag_table() {
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
+	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT ${FIELDS[3]} from ${TABLE[3]} WHERE datum = \"$DATE\"")
 	if [ ! -z "$RESULT" ] ; then
 		COUNT=0
 		TOPEN=0 ; TDONE=0 ; TTOTAL=0

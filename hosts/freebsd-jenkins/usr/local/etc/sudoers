@@ -108,7 +108,8 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/sbin/service ntpd start, \
 	/usr/sbin/service ntpd stop, \
 	/usr/sbin/service ntpd status, \
-	/usr/sbin/ntpdate -b pool.ntp.org
+	/usr/sbin/ntpdate -b pool.ntp.org, \
+	/bin/date --set=*
 
 
 ## Uncomment to allow any user to run sudo if they know the password

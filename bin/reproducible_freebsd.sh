@@ -210,7 +210,9 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 done
 write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is work in progress...</em></p>"
 write_explaination_table FreeBSD
+set -x
 for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
+	ls ${FILES_HTML[$FREEBSD_TARGET]}
 	cat ${FILES_HTML[$FREEBSD_TARGET]} >> $PAGE
 	write_page "     <p><pre>"
 	echo -n "${FREEBSD[$FREEBSD_TARGET]}" >> $PAGE
@@ -218,6 +220,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	write_page "    </div></div>"
 	rm -f ${FILES_HTML[$FREEBSD_TARGET]}
 done
+set +x
 write_page_footer FreeBSD
 publish_page
 

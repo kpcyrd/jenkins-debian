@@ -20,5 +20,8 @@ systemctl stop systemd-timedated
 ntpdate -b de.pool.ntp.org
 date --set="+398 days +6 hours + 23 minutes"
 echo "$(date) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
+# disable check for outdated packages as in the future (like this)
+# packages from security.d.o will appear outdated always…
+ln -sf /bin/true /usr/local/bin/dsa-check-packages
 
 exit 0

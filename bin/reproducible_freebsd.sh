@@ -26,7 +26,7 @@ create_results_dirs() {
 save_freebsd_results(){
 	local RUN=$1
 	echo "============================================================================="
-	echo "$(date -u) - Saving FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results for $RUN run."
+	echo "$(date -u) - Saving FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) build results for $RUN run."
 	echo "============================================================================="
 	mkdir -p $TMPDIR/$RUN/
 	# copy results over
@@ -88,6 +88,7 @@ declare -A ALL_FILES
 declare -A GOOD_FILES
 declare -A GOOD_PERCENT
 declare -A FREEBSD
+declare -A FREEBSD_VERSION
 declare -A FILES_HTML
 for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	set -e
@@ -109,14 +110,14 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "============================================================================="
 	$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
 	FREEBSD[$FREEBSD_TARGET]=$($RSSH "cd $TMPBUILDDIR ; git log -1")
-	FREEBSD_VERSION=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
-	echo "This is FreeBSD branch $FREEBSD_TARGET at ${FREEBSD_VERSION}."
+	FREEBSD_VERSION[$FREEBSD_TARGET]=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
+	echo "This is FreeBSD branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}."
 	echo
 	$RSSH "cd $TMPBUILDDIR ; git log -1"
-	TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION}" | sed "s#/#-#g")
+	TARGET_NAME=$(echo "freebsd_${FREEBSD_TARGET}_git${FREEBSD_VERSION[$FREEBSD_TARGET]}" | sed "s#/#-#g")
 
 	echo "============================================================================="
-	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) - first build run."
+	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) - first build run."
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	export LANG="en_GB.UTF-8"
@@ -131,7 +132,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 		save_freebsd_results b1
 	else
 		cleanup_tmpdirs
-		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the first run, stopping."
+		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) in the first run, stopping."
 		run_diffoscope_on_results
 		continue
 	fi
@@ -141,7 +142,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "$(date) - system is running in the future now."
 
 	echo "============================================================================="
-	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) - second build run."
+	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) - second build run."
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 	export LANG="fr_CH.UTF-8"
@@ -160,7 +161,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 		save_freebsd_results b2
 	else
 		cleanup_tmpdirs
-		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) in the second run."
+		echo "$(date -u ) - failed to build FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) in the second run."
 	fi
 
 	# set time back to today
@@ -207,8 +208,8 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	else
 		write_page "."
 	fi
+	write_page "        These tests were last run on $DATE for the branch $FREEBSD_TARGET at commit ${FREEBSD_VERSION[$FREEBSD_TARGET]} using ${DIFFOSCOPE}.</p>"
 done
-write_page "        These tests were last run on $DATE for version ${FREEBSD_VERSION} using ${DIFFOSCOPE}. <em>This is work in progress...</em></p>"
 write_explaination_table FreeBSD
 set -x
 for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do

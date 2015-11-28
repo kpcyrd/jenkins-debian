@@ -185,6 +185,7 @@ if [ -f /etc/debian_version ] ; then
 				make
 				python3-yaml
 				subversion
+				sysvinit-core
 				tree
 				unzip
 				util-linux
@@ -287,8 +288,7 @@ if [ -f /etc/debian_version ] ; then
 				xtightvncviewer
 				xvkbd
 				xvfb
-				zutils 
-				sysvinit-core"
+				zutils"
 		else
 			MASTERDEBS=""
 		fi

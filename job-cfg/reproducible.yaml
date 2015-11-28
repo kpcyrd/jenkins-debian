@@ -106,8 +106,8 @@
       - timeout:
           timeout: 1560
     logrotate:
-      daysToKeep: 4
-      numToKeep: 400
+      daysToKeep: 3
+      numToKeep: 300
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -154,8 +154,8 @@
       - timeout:
           timeout: 1560
     logrotate:
-      daysToKeep: 4
-      numToKeep: 400
+      daysToKeep: 3
+      numToKeep: 300
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:

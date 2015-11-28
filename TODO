@@ -26,6 +26,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 * teach bin/chroot-*.sh and bin/d-i_build.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
 
+=== ToDo for improving disk space
+
+* make live-build jobs work again or remove them
+* make sure the live-build jobs clean up /srv/live-build/results/*iso once they are done. thats 8gb wasted.
+
 === TODO for testing stretch
 
 Most jobs have been converted, a few are left to do:

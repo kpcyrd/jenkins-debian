@@ -193,8 +193,8 @@ for PKG in $PACKAGES ; do
 	fi
 done
 if [ -z $SRCPACKAGE ] ; then
-	echo "$(date -u ) - no package found to be build, sleeping 2h."
-	for i in 1 2 3 4 ; do
+	echo "$(date -u ) - no package found to be build, sleeping 6h."
+	for i in $(seq 1 12) ; do
 		sleep 30m
 		echo "$(date -u ) - still sleeping..."
 	done

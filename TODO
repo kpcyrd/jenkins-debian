@@ -30,6 +30,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * make live-build jobs work again or remove them
 * make sure the live-build jobs clean up /srv/live-build/results/*iso once they are done. thats 8gb wasted.
+* if thats still not enough put /srv/reproducible-results on an extra partition too, maybe just /srv
 
 === TODO for testing stretch
 

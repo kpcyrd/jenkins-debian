@@ -198,8 +198,7 @@ if [ -z $SRCPACKAGE ] ; then
 		sleep 30m
 		echo "$(date -u ) - still sleeping..."
 	done
-	echo "$(date -u ) - abort now."
-	exec /srv/jenkins/bin/abort.sh
+	echo "$(date -u ) - exiting cleanly now."
 	exit 0
 fi
 # build package twice

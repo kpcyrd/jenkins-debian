@@ -526,7 +526,7 @@ def scheduler(arch):
         message += ', ' if ( msg_new and msg_old_ftbfs_and_depwait ) or ( msg_new and msg_old ) else ''
     if msg_new:
         message += msg_new
-        message += ' and ' if msg_old_ftbfs_and_depwait and not msg_old else ''
+        message += ' and ' if msg_old_ftbfs_and_depwait or msg_old else ''
         message += ', ' if msg_old_ftbfs_and_depwait and msg_old else ''
     if msg_old_ftbfs_and_depwait:
         message += msg_old_ftbfs_and_depwait

@@ -103,7 +103,7 @@ remote_build() {
 	local NODE=profitbricks-build3-amd64.debian.net
 	local PORT=22
 	set +e
-	ssh -p $PORT $NODE true
+	ssh -p $PORT $NODE /bin/true
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then

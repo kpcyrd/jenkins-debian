@@ -50,7 +50,7 @@ esac
 # main
 #
 set +e
-ssh -o "BatchMode = yes" -p $PORT $NODE_NAME true
+ssh -o "BatchMode = yes" -p $PORT $NODE_NAME /bin/true
 RESULT=$?
 # abort job if host is down
 if [ $RESULT -ne 0 ] ; then

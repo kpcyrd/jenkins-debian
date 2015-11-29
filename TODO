@@ -201,7 +201,6 @@ This is about Debian, below are more todo entries for other projects…
 ** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
 ** database issues
 *** stats_build table should have package ids, not just src+suite+arch as primary key
-*** builder column of schedule table should not be used for state-handling of _remote_scheduler.py (by setting it to 'TBD')
 ** send notifications to maintainers when a note to their packages changes?
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
 ** _maintenance.sh: delete the history pages once a page has been removed from all suites+archs

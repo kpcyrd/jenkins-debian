@@ -417,7 +417,6 @@ choose_package() {
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
-	local DEBUG_URL=$(echo $RESULT|cut -d "|" -f8)	# this is abuse (state-handling...) of the boulder column in the schedule table…
 	# remove previous build attempts which didnt finish correctly:
 	BUILDER_PREFIX="${JOB_NAME#reproducible_builder_}/"
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)
@@ -464,7 +463,7 @@ choose_package() {
 			;;
 		*)      ;;
 	esac
-	if [ "$DEBUG_URL" = "TBD" ] ; then
+	if [ "$NOTIFY" = "2" ] ; then
 		irc_message "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
 	fi
 	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}

@@ -80,7 +80,7 @@ built_before = scheduling_args.before
 packages = [x for x in scheduling_args.packages if x]
 artifacts = scheduling_args.keep_artifacts
 notify = scheduling_args.notify or scheduling_args.noisy
-debug_url = scheduling_args.noisy
+notify_on_start = scheduling_args.noisy
 dry_run = scheduling_args.dry_run
 
 log.debug('Requester: ' + requester)
@@ -89,7 +89,7 @@ log.debug('Local call: ' + str(local))
 log.debug('Reason: ' + reason)
 log.debug('Artifacts: ' + str(artifacts))
 log.debug('Notify: ' + str(notify))
-log.debug('Debug url: ' + str(debug_url))
+log.debug('Debug url: ' + str(notify_on_start))
 log.debug('Issue: ' + issue if issue else str(None))
 log.debug('Status: ' + status if status else str(None))
 log.debug('Date: after ' + built_after if built_after else str(None) +
@@ -151,7 +151,7 @@ if artifacts:
     log.info('The artifacts of the build(s) will be saved to the location '
              'mentioned at the end of the build log(s).')
 
-if debug_url:
+if notify_on_start:
     log.info('The channel will be notified when the build starts')
 
 ids = []
@@ -188,7 +188,7 @@ blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
 packages_txt = str(len(ids)) + ' packages ' if len(pkgs) > 1 else ''
 trailing = ' - artifacts will be preserved' if artifacts else ''
 trailing += ' - with irc notification' if notify else ''
-trailing += ' - notify on start too' if debug_url else ''
+trailing += ' - notify on start too' if notify_on_start else ''
 
 message = requester + ' scheduled ' + packages_txt + \
     'in ' + suite + '/' + arch
@@ -232,19 +232,17 @@ if amount + len(ids) > 200 and not local:
 # do the actual scheduling
 to_schedule = []
 save_schedule = []
-notify = '' if not notify else notify
-debug_url = '' if not debug_url else 'TBD'
+notify = 1 if notify else 0
+notify = 2 if notify_on_start else 0
+artifacts_value = 1 if artifacts else 0
 for id in ids:
-    artifacts_value = 1 if artifacts else 0
-    to_schedule.append((id, date, artifacts_value, str(notify).lower(),
-                        requester, debug_url))
+    to_schedule.append((id, date, artifacts_value, str(notify), requester))
     save_schedule.append((id, requester, epoch))
 log.debug('Packages about to be scheduled: ' + str(to_schedule))
 
 query1 = '''REPLACE INTO schedule
-    (package_id, date_scheduled, date_build_started, save_artifacts, notify,
-    scheduler, builder)
-    VALUES (?, ?, "", ?, ?, ?, ?)'''
+    (package_id, date_scheduled, save_artifacts, notify, scheduler)
+    VALUES (?, ?, ?, ?, ?)'''
 query2 = '''INSERT INTO manual_scheduler
     (package_id, requester, date_request) VALUES (?, ?, ?)'''
 

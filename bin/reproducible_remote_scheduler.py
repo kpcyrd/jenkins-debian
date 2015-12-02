@@ -232,12 +232,16 @@ if amount + len(ids) > 200 and not local:
 # do the actual scheduling
 to_schedule = []
 save_schedule = []
-notify = 1 if notify else 0
-notify = 2 if notify_on_start else 0
 artifacts_value = 1 if artifacts else 0
 reason = reason if reason else None
+if notify_on_start:
+    do_notify = 2
+elif notify:
+    do_notify = 1
+else:
+    do_notify = 0
 for id in ids:
-    to_schedule.append((id, date, artifacts_value, str(notify), requester,
+    to_schedule.append((id, date, artifacts_value, str(do_notify), requester,
                         reason))
     save_schedule.append((id, requester, epoch))
 log.debug('Packages about to be scheduled: ' + str(to_schedule))

@@ -196,14 +196,12 @@ This is about Debian, below are more todo entries for other projects…
 ** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 
 * missing tests:
-** variation in kernel
-** different cpu type (coming RSN)
-** variation in date (coming RSN)
+** different cpu type (WIP)
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
-** variation of filesystem being built on (work in progres, see 'higher prio' list above)
-** variation of users shell (bash + zsh?)
+** variation of filesystem being built on (work in progress, see 'higher prio' list above)
+** variation of users shell (bash + zsh|dash?)
 
 * support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL
 * enable people to upload test packages, to be built in jenkins:

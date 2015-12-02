@@ -150,7 +150,7 @@ download_and_launch() {
 	# yes, torbrowser needs dbus
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start
 	sleep 2
-	echo "$(date -u) - starting Xfvb on :$SCREEN.0 now."
+	echo "$(date -u) - starting Xvfb on :$SCREEN.0 now."
 	# start X on virtual framebuffer device
 	Xvfb -ac -br -screen 0 ${SIZE}x24 :$SCREEN &
 	XPID=$!
@@ -324,7 +324,7 @@ download_and_launch() {
 	sleep 0.5
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop
 	sleep 1
-	echo "$(date -u ) - killing Xfvb and ffmpeg."
+	echo "$(date -u ) - killing Xvfb and ffmpeg."
 	kill $XPID $FFMPEGPID || true
 	sleep 1
 	echo "$(date -u ) - Test ends."

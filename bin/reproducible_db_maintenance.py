@@ -525,7 +525,7 @@ schema_updates = {
         'DROP TABLE results',
         'ALTER TABLE results_tmp RENAME TO results',
         'INSERT INTO rb_schema VALUES ("24", "' + now + '")'],
-    25: [ # rename the builder column also on the schedule table.
+    25: [ # rename the builder column also in the schedule table.
         '''CREATE TABLE schedule_tmp
            (id INTEGER PRIMARY KEY,
             package_id INTEGER NOT NULL,

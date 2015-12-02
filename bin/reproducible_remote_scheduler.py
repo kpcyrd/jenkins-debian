@@ -236,7 +236,7 @@ artifacts_value = 1 if artifacts else 0
 reason = reason if reason else None
 if notify_on_start:
     do_notify = 2
-elif notify:
+elif notify or artifacts:
     do_notify = 1
 else:
     do_notify = 0

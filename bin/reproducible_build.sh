@@ -419,15 +419,15 @@ choose_package() {
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
 	SCHEDULE_MESSAGE=$(echo $RESULT|cut -d "|" -f8)
 	# remove previous build attempts which didnt finish correctly:
-	BUILDER_PREFIX="${JOB_NAME#reproducible_builder_}/"
+	JOB_PREFIX="${JOB_NAME#reproducible_builder_}/"
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)
-	sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, job FROM schedule WHERE job LIKE '${BUILDER_PREFIX}%'" > $BAD_BUILDS
+	sqlite3 -init $INIT ${PACKAGES_DB} "SELECT package_id, date_build_started, job FROM schedule WHERE job LIKE '${JOB_PREFIX}%'" > $BAD_BUILDS
 	if [ -s "$BAD_BUILDS" ] ; then
 		local STALELOG=/var/log/jenkins/reproducible-stale-builds.log
 		# reproducible-stale-builds.log is mailed once a day by reproducible_maintenance.sh
 		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a $STALELOG
 		cat $BAD_BUILDS | tee -a $STALELOG
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='' WHERE job LIKE '${BUILDER_PREFIX}%'"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='' WHERE job LIKE '${JOB_PREFIX}%'"
 		echo >> $STALELOG
 	fi
 	rm -f $BAD_BUILDS

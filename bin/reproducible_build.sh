@@ -596,7 +596,6 @@ EOF
 	set +e
 	# remember to change the sudoers setting if you change the following command
 	sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
-		/usr/bin/linux64 --uname-2.6 \
 		/usr/bin/unshare --uts -- \
 		/usr/sbin/pbuilder --build \
 			--configfile $TMPCFG \

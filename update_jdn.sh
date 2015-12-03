@@ -162,7 +162,7 @@ if [ -f /etc/debian_version ] ; then
 			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
-		# needed to run coreboot/openwrt/netbsd jobs
+		# needed to run coreboot/openwrt/netbsd/fedora jobs
 		case $HOSTNAME in
 			profitbricks-build3-amd64) DEBS="$DEBS
 				bison
@@ -183,6 +183,7 @@ if [ -f /etc/debian_version ] ; then
 				kgb-client
 				m4
 				make
+				mock
 				python3-yaml
 				subversion
 				sysvinit-core
@@ -237,7 +238,6 @@ if [ -f /etc/debian_version ] ; then
 				libvpx1 
 				libxslt1-dev 
 				linux-image-amd64 
-				mock 
 				moreutils 
 				mr 
 				mtr-tiny 
@@ -304,6 +304,16 @@ if [ -f /etc/debian_version ] ; then
 		explain "packages installed."
 	else
 		explain "no new packages to be installed."
+	fi
+fi
+
+#
+# prepare mock to build rpms
+#
+if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
+	if ! grep mock /etc/group ; then
+		groupadd --system mock
+		usermod -a -G mock jenkins
 	fi
 fi
 

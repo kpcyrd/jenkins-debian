@@ -290,39 +290,12 @@ This is about Debian, below are more todo entries for other projects…
 ==== reproducible Fedora
 
 * call the script reproducible_rpms.sh as it can also build OpenSuSE packages
-* create jessie schroot with mock and yum installed
-** 'groupadd --system mock'
-** 'usermod -a -G mock jenkins'
 ** see below for '/etc/yum/repos.d/'
 * then use yumdownloader to download rpms: 'yumdownloader --source sudo'
 ** https://mirrors.fedoraproject.org/metalink?repo=fedora-23&arch=X86_64 has a list of repos
 * then configure+use mock to build:
 ** 'sudo mock -r fedora-20-x86_64 --init'
 ** 'sudo mock -r fedora-20-x86_64 sudo-1.8.14p3-1.fc23.src.rpm'
-
-----
-$ cat /etc/yum/repos.d/fedora23.repo
-[fedora23-src]
-name=fedora 23 sources
-baseurl=http://fedora.mirrors.telekom.ro/pub/fedora/linux/development/23/source/SRPMS
-enabled=1
-gpgcheck=0
-#gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
-----
-
-----
-# releasever=22 or 23 or… basearch=x86_64
-[fedora]
-name=Fedora $releasever - $basearch
-failovermethod=priority
-#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/$releasever/Everything/$basearch/os/
-metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-$releasever&arch=$basearch
-enabled=1
-#metadata_expire=7d
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=False
-----
 
 * more notes:
 ** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/

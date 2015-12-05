@@ -155,7 +155,7 @@ diff_copy_buildlogs() {
 		elif [ $FTBFS -eq 0 ] ; then
 			echo "Warning: No second build log, what happened?" | tee -a $RBUILDLOG
 		fi
-		set -x # # to debug diffopscpe/schroot problems
+		set -x # # to debug diffoscope/schroot problems
 		echo "Compressing the 1st log..."
 		gzip -9cvn b1/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 		chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
@@ -330,7 +330,7 @@ call_diffoscope_on_changes_files() {
 		# there is no extra diffoscope-schroot for experimental ( because we specical case ghc enough already )
 		DBDSUITE="unstable"
 	fi
-	set -x # to debug diffopscpe/schroot problems
+	set -x # to debug diffoscope/schroot problems
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"

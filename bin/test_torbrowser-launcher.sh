@@ -188,7 +188,7 @@ download_and_launch() {
 	xvkbd -text "\t" > /dev/null 2>&1
 	sleep 1
 	TBL_VERSION=$(schroot --run-session -c $SESSION -- dpkg --status torbrowser-launcher |grep ^Version|cut -d " " -f2)
-	if dpkg --compare-versions $TBL_VERSION lt 0.2.0-1~ ; then
+	if dpkg --compare-versions $TBL_VERSION lt 0.2.0-1~ && ! dpkg --compare-versions $TBL_VERSION gt 0.1.9-1+deb8u2~ ; then
 		echo "$(date -u) - torbrowser-launcher version <0.2.0-1~ detected ($TBL_VERSION), pressing <tab> three times more."
 		xvkbd -text "\t\t\t" > /dev/null 2>&1
 		sleep 1

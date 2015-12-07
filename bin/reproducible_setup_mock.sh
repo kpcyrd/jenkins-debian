@@ -18,6 +18,12 @@ fi
 DISTRO=$1
 ARCHITECTURE=$2
 
-echo "$(date -u) - starting to configure mock for ${DISTRO} on ${ARCHITECTURE} now."
-mock -r ${DISTRO}-${ARCHITECTURE} --init
-echo "$(date -u) - mock configured for ${DISTRO} on ${ARCHITECTURE} now."
+echo "$(date -u) - showing setup."
+dpkg -l mock
+id
+echo "$(date -u) - starting to cleanly configure mock for ${DISTRO} on ${ARCHITECTURE}."
+set -x
+mock -r ${DISTRO}-${ARCHITECTURE} --resultdir=. --clean
+mock -r ${DISTRO}-${ARCHITECTURE} --resultdir=. --init
+set +x
+echo "$(date -u) - mock configured for ${DISTRO} on ${ARCHITECTURE}."

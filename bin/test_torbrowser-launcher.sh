@@ -281,6 +281,8 @@ download_and_launch() {
 			echo "$(date -u) - $URL loaded fine, very much an archive in there, great."
 			BONUS_LEVEL_1="yes"
 			break
+		else
+			echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
 		fi
 	done
 	BONUS_LEVEL_2=""
@@ -301,6 +303,8 @@ download_and_launch() {
 			echo "$(date -u) - $URL loaded fine, very much Debian in there, great."
 			BONUS_LEVEL_2="yes"
 			break
+		else
+			echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
 		fi
 	done
 	if [ -n "$BONUS_LEVEL_1" ] && [ -n "$BONUS_LEVEL_2" ] ; then

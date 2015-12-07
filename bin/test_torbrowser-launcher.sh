@@ -281,10 +281,12 @@ download_and_launch() {
 			echo "$(date -u) - $URL loaded fine, very much an archive in there, great."
 			BONUS_LEVEL_1="yes"
 			break
-		else
-			echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
 		fi
 	done
+	# for debugging
+	if [ $URL_LOADED -lt 4 ] ; then
+		echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
+	fi
 	BONUS_LEVEL_2=""
 	URL="https://www.debian.org"
 	echo "$(date -u) - pressing <ctrl>-l - about to enter $URL as URL."
@@ -303,10 +305,12 @@ download_and_launch() {
 			echo "$(date -u) - $URL loaded fine, very much Debian in there, great."
 			BONUS_LEVEL_2="yes"
 			break
-		else
-			echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
 		fi
 	done
+	# for debugging
+	if [ $URL_LOADED -lt 6 ] ; then
+		echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
+	fi
 	if [ -n "$BONUS_LEVEL_1" ] && [ -n "$BONUS_LEVEL_2" ] ; then
 		STATUS_MSG="Very well done."
 		STATUS_COLORS="-bg green -fg black"

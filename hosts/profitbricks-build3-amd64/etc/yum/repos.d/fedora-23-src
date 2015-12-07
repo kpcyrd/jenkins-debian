@@ -1,4 +1,4 @@
-[fedora23-src]
+[fedora-23-src]
 name=fedora 23 sources
 baseurl=http://fedora.mirrors.telekom.ro/pub/fedora/linux/development/23/source/SRPMS
 enabled=1

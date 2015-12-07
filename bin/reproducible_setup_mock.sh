@@ -19,5 +19,5 @@ DISTRO=$1
 ARCHITECTURE=$2
 
 echo "$(date -u) - starting to configure mock for ${DISTRO} on ${ARCHITECTURE} now."
-sudo mock -r ${DISTRO}-${ARCHITECTURE} --init
+sudo /usr/bin/mock -r ${DISTRO}-${ARCHITECTURE} --init
 echo "$(date -u) - mock configured for ${DISTRO} on ${ARCHITECTURE} now."

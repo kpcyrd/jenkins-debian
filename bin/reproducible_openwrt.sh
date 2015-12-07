@@ -164,9 +164,8 @@ cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning OpenWrt git repository."
 echo "============================================================================="
-git clone --depth 1 $OPENWRT_GIT_REPO openwrt
+git clone --depth 1 -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO openwrt
 cd openwrt
-git checkout $OPENWRT_GIT_BRANCH
 OPENWRT="$(git log -1)"
 OPENWRT_VERSION=$(git describe --always)
 echo "This is openwrt $OPENWRT_VERSION."

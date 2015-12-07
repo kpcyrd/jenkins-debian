@@ -115,7 +115,7 @@ LIMITS = {
 }
 
 # only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 7, 'armhf': 100}
+MINIMUM_AGE = {'amd64': 7, 'armhf': 150}
 
 
 class Limit:

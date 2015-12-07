@@ -304,8 +304,7 @@ This is about Debian, below are more todo entries for other projects…
 * then use yumdownloader to download rpms: 'yumdownloader --source sudo'
 ** https://mirrors.fedoraproject.org/metalink?repo=fedora-23&arch=X86_64 has a list of repos
 * then configure+use mock to build:
-** 'sudo mock -r fedora-20-x86_64 --init'
-** 'sudo mock -r fedora-20-x86_64 sudo-1.8.14p3-1.fc23.src.rpm'
+** 'mock -r fedora-20-x86_64 sudo-1.8.14p3-1.fc23.src.rpm'
 * baseurl=http://fedora.mirrors.telekom.ro/pub/fedora/linux/development/23/source/SRPMS is really not so good…
 
 * more notes:

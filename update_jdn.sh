@@ -312,8 +312,8 @@ fi
 #
 if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
 	if ! grep mock /etc/group ; then
-		groupadd --system mock
-		usermod -a -G mock jenkins
+		sudo groupadd --system mock
+		sudo usermod -a -G mock jenkins
 	fi
 fi
 

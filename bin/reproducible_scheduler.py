@@ -369,8 +369,8 @@ def query_old_ftbfs_and_depwait_versions(suite, arch, limit):
 
 
 def query_old_versions(suite, arch, limit):
-    criteria = 'tested at least two weeks ago, no new version available, ' + \
-               'sorted by last build date'
+    criteria = """tested at least {minimum_age} days ago, no new version available,
+               sorted by last build date""".format(minimum_age=MINIMUM_AGE[arch])
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'

@@ -161,6 +161,7 @@
 - job-template:
     defaults: torbrowser-launcher_packages
     name: '{name}_test_on_experimental_amd64'
+    disabled: true
 
 - job-template:
     defaults: torbrowser-launcher_packages
@@ -173,6 +174,7 @@
 - job-template:
     defaults: torbrowser-launcher_git
     name: '{name}_test_on_unstable_amd64_from_git_branch_debian_experimental'
+    disabled: true
 
 - job-template:
     defaults: torbrowser-launcher_git
@@ -209,10 +211,12 @@
 - job-template:
     defaults: torbrowser-launcher_packages
     name: '{name}_test_on_jessie_amd64_from_experimental'
+    disabled: true
 
 - job-template:
     defaults: torbrowser-launcher_git
     name: '{name}_test_on_jessie_amd64_from_git_branch_debian_experimental'
+    disabled: true
 
 - job-template:
     defaults: torbrowser-launcher_git

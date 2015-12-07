@@ -5,6 +5,7 @@
 # released under the GPLv=2
 
 OPENWRT_GIT_REPO=git://git.openwrt.org/openwrt.git
+OPENWRT_GIT_BRANCH=master
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
@@ -165,6 +166,7 @@ echo "$(date -u) - Cloning OpenWrt git repository."
 echo "============================================================================="
 git clone --depth 1 $OPENWRT_GIT_REPO openwrt
 cd openwrt
+git checkout $OPENWRT_GIT_BRANCH
 OPENWRT="$(git log -1)"
 OPENWRT_VERSION=$(git describe --always)
 echo "This is openwrt $OPENWRT_VERSION."

@@ -186,7 +186,6 @@ This is about Debian, below are more todo entries for other projects…
 ** check that diffoscope schroot have /usr/bin/ar installed, else fail the job
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** right align all numbers in table in the dashboard
-** do final s#debbindiff#diffoscope#g and s#dbd#ds#g and rename .debbindiff.html+txt files as well as the dbd directories...
 ** pkg sets related:
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 *** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
@@ -204,6 +203,7 @@ This is about Debian, below are more todo entries for other projects…
 ** _maintenance.sh: delete the history pages once a page has been removed from all suites+archs
 ** new page showing arch all packages which are cross-reproducible, and those which are not
 ** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
+** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
 
 * missing tests:
 ** different cpu type (WIP)

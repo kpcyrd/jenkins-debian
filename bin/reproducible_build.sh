@@ -515,8 +515,8 @@ get_source_package() {
 	fi
 	VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
 	EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION was too long
-	DBDREPORT="${SRCPACKAGE}_${EVERSION}.debbindiff.html"
-	DBDTXT="${SRCPACKAGE}_${EVERSION}.debbindiff.txt"
+	DBDREPORT="${SRCPACKAGE}_${EVERSION}.diffoscope.html"
+	DBDTXT="${SRCPACKAGE}_${EVERSION}.diffoscope.txt"
 	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 }
 

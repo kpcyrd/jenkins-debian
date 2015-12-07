@@ -24,7 +24,7 @@ def unrep_with_dbd_issues():
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
         dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + pkg + '_' + \
-            eversion + '.debbindiff.html'
+            eversion + '.diffoscope.html'
         if not os.access(dbd, os.R_OK):
             without_dbd.append((pkg, version, suite, arch))
             log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') is '
@@ -51,7 +51,7 @@ def not_unrep_with_dbd_file():
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
         dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + pkg + '_' + \
-            eversion + '.debbindiff.html'
+            eversion + '.diffoscope.html'
         if os.access(dbd, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(dbd + ' exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'

@@ -106,13 +106,13 @@ def link_buildlogs(package, eversion, suite, arch):
 def link_diffs(package, eversion, suite, arch, status):
     html = ''
     dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
-          eversion + '.debbindiff.html'
+          eversion + '.diffoscope.html'
     dbdtxt = DBDTXT_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
-             eversion + '.debbindiff.txt.gz'
+             eversion + '.diffoscope.txt.gz'
     dbd_url = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
-              eversion + '.debbindiff.html'
+              eversion + '.diffoscope.html'
     dbdtxt_url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
-                eversion + '.debbindiff.txt'
+                eversion + '.diffoscope.txt'
     if os.access(dbd, os.R_OK):
         html += '<li><a href="' + dbd_url + '" target="main">differences</a>\n'
         if os.access(dbdtxt, os.R_OK):

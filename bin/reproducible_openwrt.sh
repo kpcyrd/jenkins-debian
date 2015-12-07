@@ -4,8 +4,8 @@
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 # released under the GPLv=2
 
-OPENWRT_GIT_REPO=git://git.openwrt.org/openwrt.git
-OPENWRT_GIT_BRANCH=master
+OPENWRT_GIT_REPO=https://github.com/lynxis/openwrt
+OPENWRT_GIT_BRANCH=reproducible
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"

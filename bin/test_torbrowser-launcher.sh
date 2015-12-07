@@ -250,8 +250,8 @@ download_and_launch() {
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 3
 	update_screenshot
-	# allow up to 63 seconds for torbrowser to make the first connection through tor
-	for i in $(seq 1 7) ; do
+	# allow up to 121 seconds for torbrowser to start and to make the first connection through tor
+	for i in $(seq 1 11) ; do
 		sleep 5 ; sleep $i
 		update_screenshot
 		TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)
@@ -261,7 +261,7 @@ download_and_launch() {
 		fi
 	done
 	if [ -z "$TOR_RUNNING" ] ; then
-		announce_problem_and_abort_silently "$(date -u) - could not connect successfuly via tor or could not run torbrowser at all. Aborting."
+		announce_problem_and_abort_silently "$(date -u) - could not connect via tor or could not run torbrowser at all. Aborting."
 	fi
 	BONUS_LEVEL_1=""
 	URL="http://vwakviie2ienjx6t.onion/debian/" 	# see http://richardhartmann.de/blog/posts/2015/08/24-Tor-enabled_Debian_mirror/

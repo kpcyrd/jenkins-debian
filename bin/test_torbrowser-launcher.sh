@@ -149,12 +149,12 @@ download_and_launch() {
 	echo "$(date -u ) - starting dbus service."
 	# yes, torbrowser needs dbus
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start
-	sleep 2
+	sleep 3
 	echo "$(date -u) - starting Xvfb on :$SCREEN.0 now."
 	# start X on virtual framebuffer device
 	Xvfb -ac -br -screen 0 ${SIZE}x24 :$SCREEN &
 	XPID=$!
-	sleep 1
+	sleep 2
 	# configure environment
 	export DISPLAY=":$SCREEN.0"
 	echo export DISPLAY=":$SCREEN.0"
@@ -165,7 +165,7 @@ download_and_launch() {
 	#export LC_ALL="de_DE.UTF-8"
 	echo "$(date -u) - starting awesome."
 	timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- awesome &
-	sleep 2
+	sleep 3
 	# configure dbus session for this user's session
 	DBUS_SESSION_FILE=$(mktemp -t torbrowser-launcher-XXXXXX)
 	DBUS_SESSION_POINTER=$(schroot --run-session -c $SESSION --preserve-environment -- ls $HOME/.dbus/session-bus/ -t1 | head -1)
@@ -176,6 +176,7 @@ download_and_launch() {
 	# start ffmpeg to capture a video of the interesting bits of the test
 	ffmpeg -f x11grab -s $SIZE -i :$SCREEN.0 $VIDEO > /dev/null 2>&1 &
 	FFMPEGPID=$!
+	sleep 2
 	echo "'$(date -u) - starting torbrowser tests'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	update_screenshot
 	echo "$(date -u) - starting torbrowser-launcher, opening settings dialog."

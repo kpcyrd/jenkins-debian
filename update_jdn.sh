@@ -145,7 +145,8 @@ if [ -f /etc/debian_version ] ; then
 			psmisc
 			python3-psycopg2 
 			schroot 
-			screen 
+			screen
+			slay
 			subversion 
 			subversion-tools 
 			sudo 

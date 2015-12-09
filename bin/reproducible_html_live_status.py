@@ -53,7 +53,7 @@ def generate_live_status_table(arch):
             '(SELECT coalesce(AVG(h.build_duration), 0) FROM stats_build AS h WHERE h.status IN ("reproducible", "unreproducible") AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture) ' + \
             ', p.job ' + \
             'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
-            'WHERE p.date_build_started != "" AND s.architecture="{arch}" ' + \
+            'WHERE p.date_build_started IS NOT NULL AND s.architecture="{arch}" ' + \
             'ORDER BY p.date_build_started DESC'
     html = ''
     rows = query_db(query.format(arch=arch))

@@ -403,7 +403,7 @@ choose_package() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "
 		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.message
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
-		WHERE sch.date_build_started=''
+		WHERE sch.date_build_started is NULL
 		AND s.architecture='$ARCH'
 		ORDER BY date_scheduled LIMIT 5"|sort -R|head -1)
 	if [ -z "$RESULT" ] ; then

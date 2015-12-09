@@ -19,6 +19,8 @@ from reproducible_html_indexes import build_page
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
 
+NOTESGIT_DESCRIPTION = 'Our notes about issues affecting packages are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in Debian in \'unstable/amd64\' (unless they say otherwise).'
+
 note_html = Template((tab*2).join("""
 <table class="body">
   <tr>
@@ -32,7 +34,7 @@ note_html = Template((tab*2).join("""
   <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
       <p>
-        Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in 'unstable/amd64' (unless they say otherwise).
+       $notesgit_description
       </p>
     </td>
   </tr>
@@ -150,7 +152,9 @@ $affected_pkgs
   <tr><td colspan="2">&nbsp;</td></tr>
   <tr>
     <td colspan="2" style="text-align:right; font-size:0.9em;">
-      <p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in 'unstable/amd64' (unless they say otherwise).</p>
+      <p>
+       $notesgit_description
+      </p>
     </td>
   </tr>
 </table>""".splitlines(True)))
@@ -240,11 +244,11 @@ def gen_html_note(package, note):
         comment = comment.replace('\n', '<br />')
         infos += note_comments_html.substitute(comments=comment)
     try:
-        return note_html.substitute(version=str(note['version']), infos=infos)
+        return note_html.substitute(version=str(note['version']), infos=infos, notesgit_description=NOTESGIT_DESCRIPTION)
     except KeyError:
         log.warning('You should really include a version in the ' +
               str(note['package']) + ' note')
-        return note_html.substitute(version='N/A', infos=infos)
+        return note_html.substitute(version='N/A', infos=infos, notesgit_description=NOTESGIT_DESCRIPTION)
 
 
 def gen_html_issue(issue, suite):
@@ -297,7 +301,8 @@ def gen_html_issue(issue, suite):
     desc = desc.replace('\n', '<br />')
     return issue_html.substitute(issue=issue, urls=url, description=desc,
                                    affected_pkgs=affected,
-                                   suite=suite, suite_links=suite_links)
+                                   suite=suite, suite_links=suite_links,
+                                   notesgit_description=NOTESGIT_DESCRIPTION)
 
 
 def purge_old_notes(notes):
@@ -410,7 +415,7 @@ def index_issues(issues):
             str(len([x for x in notes if notes[x].get('issues')])) + \
             '</b> packages categorized in <b>' + str(len(issues)) + \
             '</b> issues.</p>'
-    html += tab*2 + '<p>Notes are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in \'unstable/amd64\' (unless they say otherwise).</p>'
+    html += tab*2 + '<p>' + NOTESGIT_DESCRIPTION + '</p>'
     title = 'Known issues related to reproducible builds'
     destfile = BASE + '/index_issues.html'
     desturl = REPRODUCIBLE_URL + '/index_issues.html'

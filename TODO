@@ -322,7 +322,7 @@ This is about Debian, below are more todo entries for other projects…
 
 ==== reproducible Arch Linux
 
-* job, to bootstrap an arch schroot needs to be made idempotent
+* the job to bootstrap an arch schroot needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
 ** once this has been done, run it more often than once a year
 * use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
@@ -351,6 +351,10 @@ notes on source and binary versions:
 				pkgver=1.28	# sometimes this is calculated and not greppable, so PKGBUILD has to be sourced (in a safe environment…)
 				pkgrel=1
 ----
+
+==== reproducible fdroid
+
+* https://f-droid.org/wiki/page/Build_Server_Setup
 
 ==== reproducible...
 

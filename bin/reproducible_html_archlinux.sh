@@ -62,7 +62,7 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 	else
 		write_page "      <td>"
 		for ARTIFACT in $(cd $ARCHBASE/$PKG/ ; ls *.pkg.tar.xz.html) ; do
-			write_page "   <a href=\"/archlinux/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a><br />"
+			write_page "   <a href=\"/archlinux/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a>is unreproducible<br />"
 		done
 		write_page "      </td>"
 	fi

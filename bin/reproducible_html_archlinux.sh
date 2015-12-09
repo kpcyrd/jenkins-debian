@@ -37,18 +37,10 @@ cat > $PAGE <<- EOF
 EOF
 write_page_intro 'Arch Linux'
 write_explaination_table 'Arch Linux'
-write_page "    <table><tr><th>source package</th><th>test date</th><th>1st build log</th><th>2nd build log</th><th>diffoscope output for binary packages</th></tr>"
+write_page "    <table><tr><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
 for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 	write_page "     <tr>"
 	write_page "      <td>$PKG</td>"
-	write_page "      <td>$(ls -dl $ARCHBASE/$PKG/build1.log|cut -d " " -f6-8)</td>"
-	for LOG in build1.log build2.log ; do
-		if [ -f $ARCHBASE/$PKG/$LOG ] ; then
-			write_page "      <td><a href=\"/archlinux/$PKG/$LOG\">$LOG</a></td>"
-		else
-			write_page "      <td>&nbsp;</td>"
-		fi
-	done
 	if [ -z "$(cd $ARCHBASE/$PKG/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
 		if [ ! -z "$(grep '==> ERROR: Could not resolve all dependencies' $ARCHBASE/$PKG/build1.log)" ] ; then
 			write_page "      <td>could not resolve dependencies</td>"
@@ -74,6 +66,14 @@ for PKG in $(find $ARCHBASE/* -maxdepth 1 -type d -exec basename {} \;) ; do
 		done
 		write_page "      </td>"
 	fi
+	write_page "      <td>$(ls -dl $ARCHBASE/$PKG/build1.log|cut -d " " -f6-8)</td>"
+	for LOG in build1.log build2.log ; do
+		if [ -f $ARCHBASE/$PKG/$LOG ] ; then
+			write_page "      <td><a href=\"/archlinux/$PKG/$LOG\">$LOG</a></td>"
+		else
+			write_page "      <td>&nbsp;</td>"
+		fi
+	done
 	write_page "     </tr>"
 done
 write_page "    </table>"

@@ -62,7 +62,7 @@ EOF
 	--force-depends \
 	--force-conflicts \
 	-i "$BUILD_DEP_DEB_DIR/pbuilder-satisfydepends-dummy.deb" || true
-    $CHROOTEXEC aptitude \
+    $CHROOTEXEC env XDG_CACHE_HOME=/root aptitude \
 	-y \
 	--without-recommends -o APT::Install-Recommends=false \
 	"${APTITUDEOPT[@]}" \

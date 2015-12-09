@@ -15,6 +15,16 @@ explain() {
 
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
+
+# run update at current date
+case $HOSTNAME in
+	profitbricks-build5-amd64|profitbricks-build6-amd64)
+		# set correct date
+		sudo ntpdate -b de.pool.ntp.org
+		;;
+	*)	;;
+esac
+
 #
 # set up users and groups
 #
@@ -496,3 +506,10 @@ rm -f $TMPFILE
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 explain "$(date) - finished deployment."
 
+# set time back to the future
+case $HOSTNAME in
+	profitbricks-build5-amd64|profitbricks-build6-amd64)
+		sudo date --set="+398 days +6 hours + 23 minutes"
+		;;
+	*)	;;
+esac

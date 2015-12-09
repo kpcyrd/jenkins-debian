@@ -490,7 +490,6 @@
 - job-template:
     defaults: reproducible
     name: '{name}_scheduler'
-    disabled: true
 
 - job-template:
     defaults: reproducible

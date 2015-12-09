@@ -46,6 +46,11 @@ case "$NODE_NAME" in
     exit 1
 esac
 
+# pseudo job used to cleanup nodes
+if [ "$JOB_NAME" = "cleanup_nodes" ] ; then
+	   PARAMS="$PARAMS $@"
+fi
+
 #
 # main
 #

@@ -208,6 +208,8 @@ This is about Debian, below are more todo entries for other projects…
 ** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 ** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
 
+* once stabilized notification emails should go through the package tracker.  The 'build' keyword seems to be the better fit for this.  To do so just send the emails to dispatch@tracker.debian.org, setting "X-Distro-Tracker-Package: foo" and "X-Distro-Tracker-Keyword: build".  This way people wanting to subscribe to our notification don't need to ask us and can do that by themselves.
+
 * missing tests:
 ** different cpu type (WIP)
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user

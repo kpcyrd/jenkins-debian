@@ -681,62 +681,77 @@
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_1'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_2'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_3'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_4'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_5'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_6'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_7'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_8'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_9'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_10'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_11'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_12'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_13'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_14'
+    disabled: true
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_armhf_15'
+    disabled: true
 
 - job-template:
     defaults: reproducible_other_projects_trigger

@@ -392,7 +392,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	echo "----" >> $TMPFILE
 	sudo tee /var/lib/jenkins/userContent/THANKS > /dev/null < THANKS.head
 	# samuel, lunar and josch committed with several commiters, only display one
-	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
+	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" -e "mattia@mapreri.org" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
 	rm $TMPFILE
 	sudo cp -pr userContent /var/lib/jenkins/
 	cd /var/lib/jenkins/userContent/

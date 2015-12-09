@@ -20,7 +20,7 @@ def generate_schedule(arch):
             'r.status, r.build_duration, ' + \
             '(SELECT coalesce(AVG(h.build_duration), 0) FROM stats_build AS h WHERE h.status IN ("reproducible", "unreproducible") AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture) ' + \
             'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
-            'WHERE sch.date_build_started = "" AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
+            'WHERE sch.date_build_started IS NULL AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
     # 'AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture' in this query and the query below is needed due to not using package_id in the stats_build table, which should be fixed...
     text = Template('$tot packages are currently scheduled for testing on $arch:')
     html = ''

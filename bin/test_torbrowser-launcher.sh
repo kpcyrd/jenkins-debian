@@ -144,10 +144,10 @@ announce_problem_and_abort_silently() {
 }
 
 prepare_lauchner_settings() {
-	if $BROKEN_SETTINGS ;
+	if $BROKEN_SETTINGS ; then
 		echo "$(date -u ) - providing broken settings for torbrowser-launcher to test if it can deal with it."
-	schroot --run-session -c $SESSION --preserve-environment -- mkdir -p $HOME/.config/torbrowser
-	schroot --run-session -c $SESSION --preserve-environment -- tee $HOME/.config/torbrowser/settings <<-__END__
+		SETTINGS=$(mktemp -t tbl-tests-XXXXXXXX)
+		cat >$SETTINGS <<-__END__
 (dp0
 S'accept_links'
 p1
@@ -180,7 +180,11 @@ I01
 sS'last_update_check_timestamp'
 p13
 I1449534041
-s.__END__
+__END__
+		echo -n "s." >> $SETTINGS
+		schroot --run-session -c $SESSION --preserve-environment -- mkdir -p $HOME/.config/torbrowser
+		cat $SETTINGS | schroot --run-session -c $SESSION --preserve-environment -- tee $HOME/.config/torbrowser/settings
+		rm $SETTINGS >/dev/null
 	else
 		echo "$(date -u ) - not providing any settings for torbrowser-launcher."
 	fi
@@ -422,7 +426,7 @@ revert_git_merge() {
 if [ -z "$1" ] ; then
 	echo "call $0 with a suite as param."
 	exit 1
-elif [ "$1" = "broken_settings" ] ; then
+elif [ "$1" = "broken_config" ] ; then
 	BROKEN_SETTINGS=true
 	shift
 else

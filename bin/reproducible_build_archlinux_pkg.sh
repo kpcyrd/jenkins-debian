@@ -40,9 +40,11 @@ handle_remote_error() {
 }
 
 choose_package() {
+	echo "$(date -u ) - about to choose a package to be build"
 	# every 2 days we check for new archlinux packages
-	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC"
+	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
 	if [ ! -f $ARCHLINUX_PKGS ] || [ $DUMMY -nt $ARCHLINUX_PKGS ] ; then
+		echo "$(date -u ) - updating list of available packages."
 		local SESSION="archlinux-scheduler-$RANDOM"
 		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
 		schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo > $ARCHLINUX_PKGS
@@ -55,7 +57,7 @@ choose_package() {
 		# build package if it has never build or at least a week ago
 		if [ ! -d $BASE/archlinux/$PKG ] || [ ! -z $(find $BASE/archlinux/ -name $PKG -mtime +6) ] ; then
 			SRCPACKAGE=$PKG
-			echo "Building $PKG now..."
+			echo "$(date -u ) - building package $PKG now..."
 			# very simple locking…
 			mkdir -p $BASE/archlinux/$PKG
 			touch $BASE/archlinux/$PKG

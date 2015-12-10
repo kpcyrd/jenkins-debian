@@ -27,6 +27,7 @@ cleanup_all() {
 		rm $TMPDIR -r
 		echo "$(date -u) - $TMPDIR deleted."
 	fi
+	rm -f $DUMMY > /dev/null || true
 }
 
 handle_remote_error() {
@@ -39,13 +40,18 @@ handle_remote_error() {
 }
 
 choose_package() {
-	#SESSION="arch-scheduler-$RANDOM"
-	#schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
-	#PACKAGES="$(schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo)"
-	#schroot --end-session -c $SESSION
-	#SRCPACKAGE=""
-	PACKAGES="acl archlinux-keyring attr autoconf automake b43-fwcutter bash binutils bison bridge-utils btrfs-progs bzip2 ca-certificates ca-certificates-cacert coreutils cracklib crda cronie cryptsetup curl dash db dbus dhcpcd dialog diffutils ding-libs dmraid dnssec-anchors dosfstools e2fsprogs ed efibootmgr efivar elfutils expat fakeroot file filesystem findutils flex gawk gcc gdbm gettext glib2 glibc gmp gnupg gnutls gpgme gpm grep groff grub gssproxy gzip hdparm hwids iana-etc ifenslave inetutils iproute2 iptables iputils ipw2100-fw ipw2200-fw isdn4k-utils iw jfsutils kbd keyutils kmod krb5 ldns less libaio libarchive libassuan libcap libedit libevent libffi libgcrypt libgpg-error libgssglue libidn libksba libmpc libnl libpcap libpipeline librpcsecgss libsasl libseccomp libssh2 libtasn1 libtirpc libtool libunistring libusb licenses links linux linux-api-headers linux-atm linux-firmware linux-lts logrotate lvm2 lz4 lzo m4 make man-db man-pages mdadm mkinitcpio mkinitcpio-busybox mkinitcpio-nfs-utils mlocate mpfr nano ncurses net-tools netctl nettle nfs-utils nfsidmap nilfs-utils npth nspr nss openldap openresolv openssh openssl openvpn p11-kit pacman pacman-mirrorlist pam pambase patch pciutils pcmciautils pcre perl pinentry pkg-config popt ppp pptpclient procinfo-ng procps-ng psmisc pth readline reiserfsprogs rfkill rpcbind run-parts s-nail sdparm sed shadow sqlite sudo sysfsutils syslinux systemd tar texinfo thin-provisioning-tools traceroute tzdata usbutils util-linux vi which wireless-regdb wireless_tools wpa_actiond wpa_supplicant xfsprogs xinetd xz zd1211-firmware zlib" # this is hard coded here, because of running jobs on remote nodes, basically… WIP :)
-	for PKG in $PACKAGES ; do
+	# every 2 days we check for new archlinux packages
+	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC"
+	if [ ! -f $ARCHLINUX_PKGS ] || [ $DUMMY -nt $ARCHLINUX_PKGS ] ; then
+		local SESSION="archlinux-scheduler-$RANDOM"
+		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+		schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo > $ARCHLINUX_PKGS
+		schroot --end-session -c $SESSION
+	fi
+	rm $DUMMY > /dev/null
+	echo "$(date -u ) - these packages are known to us:"
+	cat $ARCHLINUX_PKGS
+	for PKG in $(cat $ARCHLINUX_PKGS) ; do
 		# build package if it has never build or at least a week ago
 		if [ ! -d $BASE/archlinux/$PKG ] || [ ! -z $(find $BASE/archlinux/ -name $PKG -mtime +6) ] ; then
 			SRCPACKAGE=$PKG
@@ -174,6 +180,8 @@ cd $TMPDIR
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
+ARCHLINUX_PKGS=/srv/reproducible-results/.archlinux_pkgs
+DUMMY=$(mktemp -t archlinux-dummy-XXXXXXXX)
 
 #
 # determine mode
@@ -204,6 +212,7 @@ fi
 #
 delay_start # randomize start times
 # first, we need to choose a package…
+SRCPACKAGE=""
 choose_package
 # build package twice
 mkdir b1 b2

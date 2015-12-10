@@ -101,27 +101,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 === jenkins-job-builder related
 
 * investigate whether its possible nowadays to let it delete jobs which were removed.. nope. though it is possible to compare the list of all jobs which should be generated with those which are there and delete those which should not.
-
-==== old jenkins-job-builder TODO, mostly (all?) obsolete/done thanks to fil's work:
-
-* use jessie version plus h01ger's patches from kali
-* change of syntax:
-----
-properties:
-  - priority-sorter:
-      priority: 150
-----
-* this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
-* cleanup h01ger's patches (eg add documentation) and send pull requests on github:
-** publisher:logparse
-** publisher:htmlpublisher
-** svn:scm upstreamed at https://review.openstack.org/#/c/192095/
-** wrappers:live-screenshot upstreamed at https://review.openstack.org/#/c/191708/
-** image-gallery: https://review.openstack.org/#/c/175747/ superseeds h01gers patch: https://review.openstack.org/#/c/191950/
-** sidebar: upstreamed at https://review.openstack.org/#/c/191585/
-** livescreenshot plugin:
-*** publish forked livescreenshot plugin and send pull request for h01ger's bugfix
-*** see ssh://git.debian.org/git/users/holger/livescreenshot-plugin.git and 0b407b70025 there
+* yaml should be refactored, lots of duplication in there. this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 
 === debugging job runs should be made easy
 

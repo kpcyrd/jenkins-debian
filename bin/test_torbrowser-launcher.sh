@@ -317,8 +317,8 @@ download_and_launch() {
 	sleep 1
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 2
-	# allow up up to 30 seconds to load the url
-	for i in $(seq 1 4) ; do
+	# allow up up to 51 seconds to load the url
+	for i in $(seq 1 6) ; do
 		sleep 5 ; sleep $i
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c -i "README" || true)
 		update_screenshot
@@ -341,8 +341,8 @@ download_and_launch() {
 	sleep 1
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 2
-	# allow up up to 30 seconds to load the url
-	for i in $(seq 1 4) ; do
+	# allow up up to 51 seconds to load the url
+	for i in $(seq 1 6) ; do
 		sleep 5 ; sleep $i
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c "Debian" || true)
 		update_screenshot

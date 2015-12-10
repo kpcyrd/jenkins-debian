@@ -56,7 +56,7 @@ run_diffoscope_on_results() {
 		echo "<tr><td>$TARGET_NAME failed to build from source.</td></tr>" >> ${FILES_HTML[$FREEBSD_TARGET]}
 		echo "</table>" >> ${FILES_HTML[$FREEBSD_TARGET]}
 		GOOD_PERCENT[$FREEBSD_TARGET]="0"
-		return # FIXME: further refatcoring
+		return # FIXME: further refactoring needed
 	fi
 	cd $TMPDIR/b1
 	tree .

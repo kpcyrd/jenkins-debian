@@ -147,7 +147,7 @@ zipl-installer
 
 def scm_svn(po, inc_regs=None):
     if inc_regs == None:
-        inc_regs = os.path.join('/trunk/manual/', 'po' if po else '', '{lang}', '.*')
+        inc_regs = [ os.path.join('/trunk/manual/', 'po' if po else '', '{lang}', '.*') ]
 
     return  [{'svn': {'excluded-commit-messages': '',
                       'url': 'svn://anonscm.debian.org/svn/d-i/trunk',
@@ -174,7 +174,7 @@ def pdf_desc():
 
 
 def instguide_desc():
-    return 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>{include}</pre>'
+    return 'Builds the installation-guide package. Triggered by SVN commits to <code>svn://anonscm.debian.org/svn/d-i/</code> matching these patterns: <pre>' + str(manual_includes) + '</pre>'
 
 
 def lr(keep):
@@ -260,10 +260,8 @@ def templs_jobs():
     templates = []
     jobs = [ '{name}_maintenance',
              '{name}_check_jenkins_jobs',
-             {'{name}_manual': {'include': ( '/trunk/manual/debian/.*\n'
-                                             '/trunk/manual/po/.*\n'
-                                             '/trunk/manual/doc/.*\n'
-                                             '/trunk/manual/scripts/.*' )}}]
+             '{name}_manual',
+           ]
     def tj_append(t, j):
         templates.append(t)
         jobs.append(j)
@@ -326,6 +324,8 @@ data.extend(
      in [('d-i-build',    'master branch', 'origin/master', 'H/6 * * * *',  None),     # irc should be 'debian-boot' but disabled due to gcc5 transition
          ('d-i-pu-build', 'pu/ branches',  'origin/pu/**' , 'H/10 * * * *', None)]])   # same
 
+manual_includes = [ '/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*', '/trunk/manual/scripts/.*' ]
+
 data.append(
     jobspec_svn(key='job-template',
                 defaults='d-i',
@@ -334,7 +334,7 @@ data.append(
                 trigger=15,
                 priority=125,
                 publishers=[publ_email()],
-                inc_regs='{include}'))
+                inc_regs=manual_includes))
 
 data.append(
     {'job-template': { 'defaults': 'd-i',

@@ -426,7 +426,7 @@ revert_git_merge() {
 if [ -z "$1" ] ; then
 	echo "call $0 with a suite as param."
 	exit 1
-elif [ "$1" = "broken_config" ] ; then
+elif [ "$1" = "broken_settings" ] ; then
 	BROKEN_SETTINGS=true
 	shift
 else

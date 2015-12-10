@@ -4,7 +4,7 @@
 # released under the GPLv=2
 
 #
-# downloads an arch bootstrap chroot archive, then turns it into an schroot,
+# downloads an archlinux bootstrap chroot archive, then turns it into an schroot,
 # then configures pacman and abs
 #
 
@@ -13,11 +13,11 @@ DEBUG=false
 common_init "$@"
 
 # define archlinux mirror to be used
-ARCH_MIRROR=http://mirror.one.com/archlinux/
+ARCHLINUX_MIRROR=http://mirror.one.com/archlinux/
 
 bootstrap() {
 	# define URL for bootstrap.tgz
-	BOOTSTRAP_BASE=$ARCH_MIRROR/iso/
+	BOOTSTRAP_BASE=$ARCHLINUX_MIRROR/iso/
 	echo "$(date -u) - downloading Arch Linux latest/sha1sums.txt"
 	BOOTSTRAP_DATE=$(curl $BOOTSTRAP_BASE/latest/sha1sums.txt 2>/dev/null| grep x86_64.tar.gz| cut -d " " -f3|cut -d "-" -f3|egrep '[0-9.]{9}')
 	if [ -z $BOOTSTRAP_DATE ] ; then
@@ -59,12 +59,12 @@ cleanup() {
 
 SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
 trap cleanup INT TERM EXIT
-TARGET=reproducible-arch
+TARGET=reproducible-archlinux
 bootstrap
 trap - INT TERM EXIT
 
-ROOTCMD="schroot --directory /tmp -c source:jenkins-reproducible-arch -u root --"
-USERCMD="schroot --directory /tmp -c source:jenkins-reproducible-arch -u jenkins --"
+ROOTCMD="schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root --"
+USERCMD="schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u jenkins --"
 
 # configure proxy everywhere
 tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
@@ -84,7 +84,7 @@ echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
 # configure pacman
 $ROOTCMD bash -l -c 'pacman-key --init'
 $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
-echo "Server = $ARCH_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
+echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
 $ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools abs'
 # configure abs

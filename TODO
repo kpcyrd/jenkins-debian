@@ -325,23 +325,17 @@ This is about Debian, below are more todo entries for other projects…
 * the job to bootstrap an arch schroot needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
 ** once this has been done, run it more often than once a year
-* use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -u root -- pacman -Syu --noconfirm'
+* use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm'
 * arch build.sh:
 ** introduce more variations: USER
 ** confirm the others are really working
 ** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
-*** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-arch -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-arch -- gpg --recv-keys'
+*** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
 ** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
-* create a working scheduler job
-** test 'extra' too
-** idea: reschedule reverse build depends too
-* more random notes:
-** rename arch scripts and jobs to archlinux
-*** remember to adopt cleanup_schroot_sessions() in common_functions.sh when renaming the schroots
-** use archlinux.css not the one from freebsd :)
-*** use arch logo
+* test 'extra' too
 * put results in a db
 ** graph results
+* idea: reschedule reverse build depends too
 
 ----
 notes on source and binary versions:

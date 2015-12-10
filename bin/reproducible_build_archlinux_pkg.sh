@@ -16,7 +16,7 @@ cleanup_all() {
 	cd
 	# delete session if it still exists
 	if [ "$MODE" != "master" ] ; then
-		schroot --end-session -c arch-$SRCPACKAGE-$(basename $TMPDIR) > /dev/null 2>&1 || true
+		schroot --end-session -c archlinux-$SRCPACKAGE-$(basename $TMPDIR) > /dev/null 2>&1 || true
 	fi
 	# delete makepkg build dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
@@ -46,7 +46,7 @@ choose_package() {
 	if [ ! -f $ARCHLINUX_PKGS ] || [ $DUMMY -nt $ARCHLINUX_PKGS ] ; then
 		echo "$(date -u ) - updating list of available packages."
 		local SESSION="archlinux-scheduler-$RANDOM"
-		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 		schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo > $ARCHLINUX_PKGS
 		schroot --end-session -c $SESSION
 	fi
@@ -82,10 +82,10 @@ first_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
+	local SESSION="archlinux-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
-	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
@@ -109,11 +109,11 @@ second_build() {
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
 	set -x
-	local SESSION="arch-$SRCPACKAGE-$(basename $TMPDIR)"
+	local SESSION="archlinux-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-arch
+	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/

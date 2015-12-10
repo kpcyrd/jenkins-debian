@@ -81,7 +81,7 @@ update_meta_pkg_stats() {
 				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
 			fi
 			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
-			touch -d "$FORCE_DATE 00:00" $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
+			touch -d "$FORCE_DATE 00:00 UTC" $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
 		fi
 	done
 }

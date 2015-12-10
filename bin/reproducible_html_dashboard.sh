@@ -17,6 +17,8 @@ common_init "$@"
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "3 days ago" '+%Y-%m-%d')
+OLD_DUMMY_FILE=$(mktemp -t reproducible-dashboard-XXXXXXXX)
+touch -d "$DATE 00:00 UTC" $OLD_DUMMY_FILE
 NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 
 # variables related to the stats we update
@@ -140,7 +142,7 @@ update_suite_arch_stats() {
 			# force regeneration of the image if it exists
 			if [ -f $BASE/$PREFIX/${TABLE[$i]}.png ] ; then
 				echo "Touching $PREFIX/${TABLE[$i]}.png..."
-				touch -d "$FORCE_DATE 00:00" $BASE/$PREFIX/${TABLE[$i]}.png
+				touch -d "$FORCE_DATE 00:00 UTC" $BASE/$PREFIX/${TABLE[$i]}.png
 			fi
 		done
 	fi
@@ -236,7 +238,7 @@ update_bug_stats() {
 			local i=0
 			for i in 3 7 8 9 ; do
 				echo "Touching ${TABLE[$i]}.png..."
-				touch -d "$FORCE_DATE 00:00" $BASE/${TABLE[$i]}.png
+				touch -d "$FORCE_DATE 00:00 UTC" $BASE/${TABLE[$i]}.png
 			done
 		fi
 	fi
@@ -386,7 +388,7 @@ create_suite_arch_stats_page() {
 	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do
 		# recreate png once a day
-		if [ ! -f $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+		if [ ! -f $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ $OLD_DUMMY_FILE -nt $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i $SUITE/$ARCH/${TABLE[$i]}.png
 		fi
 	done
@@ -461,7 +463,7 @@ create_dashboard_page() {
 	for i in 8 9 3 7 4 5 ; do
 		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
-		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[$i]}.png) ] ; then
+		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ $OLD_DUMMY_FILE -nt $BASE/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
 	done
@@ -473,7 +475,7 @@ create_dashboard_page() {
 	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo arch specific pngs once a day
 	for ARCH in ${ARCHS} ; do
-		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ ! -z $(find $BASE -maxdepth 1 -mtime +0 -name ${TABLE[1]}_$ARCH.png) ] ; then
+		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ $OLD_DUMMY_FILE -nt $BASE/${TABLE[1]}_$ARCH.png ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
@@ -524,4 +526,4 @@ done
 ARCH="amd64"
 SUITE="unstable"
 create_dashboard_page
-
+rm -f $OLD_DUMMY_FILE >/dev/null

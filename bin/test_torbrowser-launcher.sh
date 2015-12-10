@@ -143,6 +143,49 @@ announce_problem_and_abort_silently() {
 	exit 0
 }
 
+prepare_lauchner_settings() {
+	if $BROKEN_SETTINGS ;
+		echo "$(date -u ) - providing broken settings for torbrowser-launcher to test if it can deal with it."
+	schroot --run-session -c $SESSION --preserve-environment -- mkdir -p $HOME/.config/torbrowser
+	schroot --run-session -c $SESSION --preserve-environment -- tee $HOME/.config/torbrowser/settings <<-__END__
+(dp0
+S'accept_links'
+p1
+I00
+sS'modem_sound'
+p2
+I00
+sS'latest_version'
+p3
+S'5.5a4-hardened'
+p4
+sS'installed_version'
+p5
+S'5.0.4'
+p6
+sS'check_for_updates'
+p7
+I00
+sS'mirror'
+p8
+S'https://dist.torproject.org/'
+p9
+sS'tbl_version'
+p10
+S'0.1.9-1'
+p11
+sS'update_over_tor'
+p12
+I01
+sS'last_update_check_timestamp'
+p13
+I1449534041
+s.__END__
+	else
+		echo "$(date -u ) - not providing any settings for torbrowser-launcher."
+	fi
+}
+
 download_and_launch() {
 	echo
 	echo "$(date -u) - Test download_and_launch begins."
@@ -182,6 +225,7 @@ download_and_launch() {
 	echo "$(date -u) - starting torbrowser-launcher, opening settings dialog."
 	# set PYTHONUNBUFFERED to get unbuffered output from python, so we can grep in it in real time
 	export PYTHONUNBUFFERED=true
+	prepare_lauchner_settings
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- /usr/bin/torbrowser-launcher --settings 2>&1 |& tee $TBL_LOGFILE || true ) &
 	sleep 10
 	update_screenshot
@@ -378,6 +422,11 @@ revert_git_merge() {
 if [ -z "$1" ] ; then
 	echo "call $0 with a suite as param."
 	exit 1
+elif [ "$1" = "broken_settings" ] ; then
+	BROKEN_SETTINGS=true
+	shift
+else
+	BROKEN_SETTINGS=false
 fi
 SUITE=$1
 UPGRADE_SUITE=""

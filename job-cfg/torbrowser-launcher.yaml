@@ -227,6 +227,14 @@
     name: '{name}_test_on_jessie_amd64_from_git_branch_debian_jessie'
 
 - job-template:
+    defaults: torbrowser-launcher_git
+    name: '{name}_test_on_jessie_amd64_from_git_branch_debian_sid_with_broken_config'
+
+- job-template:
+    defaults: torbrowser-launcher_git
+    name: '{name}_test_on_jessie_amd64_from_git_branch_debian_jessie_with_broken_config'
+
+- job-template:
     defaults: torbrowser-launcher_packages
     name: '{name}_test_on_wheezy_amd64_from_backports'
 
@@ -365,6 +373,22 @@
             my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
             my_gitbranch: 'debian/jessie'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh jessie git'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_on_jessie_amd64_from_git_branch_debian_sid_with_broken_config':
+            my_description: 'Test torbrowser-launcher with a broken user configuration on jessie/amd64 using the branch debian/sid.'
+            my_timed: '23 4 1 * *'
+            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
+            my_gitbranch: 'debian/sid'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh broken_config jessie git'
+            my_recipients: 'holger@layer-acht.org'
+            my_node: ''
+        - '{name}_test_on_jessie_amd64_from_git_branch_debian_jessie_with_broken_config':
+            my_description: 'Test torbrowser-launcher with a broken user configuration on jessie/amd64 using the branch debian/jessie.'
+            my_timed: '23 4 1 * *'
+            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
+            my_gitbranch: 'debian/jessie'
+            my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh broken_config jessie git'
             my_recipients: 'holger@layer-acht.org'
             my_node: ''
         - '{name}_test_on_wheezy_amd64_from_backports':

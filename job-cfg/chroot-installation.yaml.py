@@ -189,7 +189,7 @@ print("""
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
       - priority-sorter:
-          priority: '{my_prio}'
+          priority: {my_prio}
       - throttle:
           max-total: 6
           max-per-node: 6

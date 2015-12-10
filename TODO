@@ -30,7 +30,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * make live-build jobs work again or remove them
 * make sure the live-build jobs clean up /srv/live-build/results/*iso once they are done. thats 8gb wasted.
-* if thats still not enough put /srv/reproducible-results on an extra partition too, maybe just /srv
 
 === TODO for testing stretch
 
@@ -124,7 +123,7 @@ properties:
 *** publish forked livescreenshot plugin and send pull request for h01ger's bugfix
 *** see ssh://git.debian.org/git/users/holger/livescreenshot-plugin.git and 0b407b70025 there
 
-=== debugging job runs made easy
+=== debugging job runs should be made easy
 
 ----
  <      h01ger> | i think the jenkins-debug-job script should be a python script
@@ -230,10 +229,6 @@ This is about Debian, below are more todo entries for other projects…
 ==== reproducible Debian armhf
 
 * make systems send mail, use port 465
-
-==== status of new remote build nodes for amd64
-
-* new ones dont send mail
 
 ==== reproducible Debian installation
 

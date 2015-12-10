@@ -333,7 +333,7 @@ fi
 #
 cd $BASEDIR
 sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/* /etc
-sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/local/* /usr/local/
+sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr/
 
 #
 # more configuration than a simple cp can do

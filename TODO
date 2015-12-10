@@ -56,6 +56,8 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ** the machine jerea.debian.org is setup, please go to https://jenkins.debian.org
 ** create jenkins-job-builder backport from sid to jessie and install that (we + DSA)
+*** work in progress. #799277 is the blocker to upload to bpo, but we can just use it with python2 
+*** on jenkins.d.n we now run j-j-b 1.3.0-5 directly backported from sid, just with the python3 stuff disabled…
 ** install all the plugins (we)
 ** add all the nodes as nodes to jenkins.d.o (we)
 ** disable job execution on jenkins.d.net(!) (we) 

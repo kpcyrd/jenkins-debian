@@ -149,14 +149,14 @@ def scm_svn(po, inc_regs=None):
     if inc_regs == None:
         inc_regs = os.path.join('/trunk/manual/', 'po' if po else '', '{lang}', '.*')
 
-    return  [{'svn': {'excludedCommitMessages': '',
+    return  [{'svn': {'excluded-commit-messages': '',
                       'url': 'svn://anonscm.debian.org/svn/d-i/trunk',
                       'basedir': '.',
                       'workspaceupdater': 'update',
-                      'includedRegions': inc_regs,
-                      'excludedUsers': '',
-                      'excludedRevprop': '',
-                      'excludedRegions': '',
+                      'included-regions': inc_regs,
+                      'excluded-users': '',
+                      'exclusion-revprop-name': '',
+                      'excluded-regions': '',
                       'viewvc-url': 'http://anonscm.debian.org/viewvc/d-i/trunk'}}]
 
 

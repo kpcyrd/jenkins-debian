@@ -755,7 +755,11 @@
 
 - job-template:
     defaults: reproducible_other_projects
-    name: '{name}_setup_schroot_archlinux'
+    name: '{name}_setup_schroot_archlinux_jenkins'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_setup_schroot_archlinux_profitbricks3'
 
 - job-template:
     defaults: reproducible_other_projects
@@ -1519,7 +1523,13 @@
             my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_setup_schroot_archlinux':
+        - '{name}_setup_schroot_archlinux_jenkins':
+            my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
+            my_timed: '42 23 1 1 *'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: ''
+        - '{name}_setup_schroot_archlinux_profitbricks3':
             my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'

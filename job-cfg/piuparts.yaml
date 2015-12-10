@@ -28,15 +28,6 @@
 
 - job-template:
     defaults: piuparts
-    name: '{name}_testsuite_wheezy'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
-
-- job-template:
-    defaults: piuparts
     name: '{name}_testsuite_jessie'
     publishers:
       - email:
@@ -69,18 +60,6 @@
           project: '{my_trigger}'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
-
-- job-template:
-    defaults: piuparts
-    name: '{name}_build_wheezy'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - archive:
-          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest-only: true
-    builders:
-      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
     defaults: piuparts

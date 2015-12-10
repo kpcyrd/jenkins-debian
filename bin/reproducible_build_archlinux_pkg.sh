@@ -112,7 +112,7 @@ remote_build() {
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build_arch_pkg.sh $BUILDNR ${SRCPACKAGE} ${TMPDIR}
+	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR ${SRCPACKAGE} ${TMPDIR}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -p $PORT $NODE "rm -r $TMPDIR" || true

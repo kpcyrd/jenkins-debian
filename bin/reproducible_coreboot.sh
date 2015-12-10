@@ -82,6 +82,9 @@ set -e
 if ! $GOT_XTOOLCHAIN ; then
 	echo "Need at least one cross toolchain, aborting."
 fi
+
+ionice -c 3 nice bash util/crossgcc/buildgcc -j $NUM_CPU -P IASL
+
 #
 # create html about toolchains used
 #

@@ -31,6 +31,12 @@ create_results_dirs() {
 	mkdir -p $BASE/openwrt/dbd
 }
 
+save_openwrt_logs() {
+	local postfix="$1"
+
+	tar cJf "$BASE/openwrt/dbd/logs_${postfix}.tar.xz" logs/
+}
+
 save_openwrt_results() {
 	RUN=$1
 	cd bin
@@ -77,7 +83,7 @@ openwrt_build() {
 	RUN=$1
 	TARGET=$2
 
-	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=y"
+	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=y BUILD_LOG=1"
 
 	echo "============================================================================="
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
@@ -100,6 +106,7 @@ openwrt_cleanup() {
 	rm build_dir/target-* -rf
 	rm staging_dir/target-* -rf
 	rm bin/* -rf
+	rm logs/* -rf
 }
 
 build_two_times() {
@@ -119,6 +126,9 @@ build_two_times() {
 	# save results in b1
 	save_openwrt_results b1
 
+	# copy logs
+	save_openwrt_logs b1
+
 	# clean up between builds
 	openwrt_cleanup
 
@@ -136,6 +146,9 @@ build_two_times() {
 
 	# save results in b2
 	save_openwrt_results b2
+
+	# copy logs
+	save_openwrt_logs b2
 
 	# reset environment to default values again
 	export LANG="en_GB.UTF-8"

@@ -77,7 +77,7 @@ openwrt_build() {
 	RUN=$1
 	TARGET=$2
 
-	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=1"
+	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=y"
 
 	echo "============================================================================="
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."

@@ -69,7 +69,7 @@ def generate_live_status_table(arch):
     for row in rows:
         counter += 1
         if counter > builders:
-             html += '<tr><td colspan="10">There are more builds marked as currently building in the database (' + counter + ') than there are ' + arch + ' build jobs (' + builders + '). This does not compute, please investigate and fix the cause.</td></tr>'
+             html += '<tr><td colspan="10">There are more builds marked as currently building in the database (' + str(counter) + ') than there are ' + arch + ' build jobs (' + str(builders) + '). This does not compute, please investigate and fix the cause.</td></tr>'
         elif builders == 0:
              html += '<tr><td colspan="10">0 build jobs for ' + arch + ' detected. This does not compute, please investigate and fix the cause.</td></tr>'
         suite = row[1]

@@ -275,7 +275,7 @@ handle_reproducible() {
 
 unregister_build() {
 	# unregister this build so it will immeditiatly tried again
-	sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='' WHERE package_id='$SRCPKGID'"
+	sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id='$SRCPKGID'"
 	NOTIFY=""
 }
 
@@ -427,7 +427,7 @@ choose_package() {
 		# reproducible-stale-builds.log is mailed once a day by reproducible_maintenance.sh
 		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a $STALELOG
 		cat $BAD_BUILDS | tee -a $STALELOG
-		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='' WHERE job LIKE '${JOB_PREFIX}%'"
+		sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE job LIKE '${JOB_PREFIX}%'"
 		echo >> $STALELOG
 	fi
 	rm -f $BAD_BUILDS
@@ -693,7 +693,7 @@ build_rebuild() {
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
-			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started='', job='', date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
+			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started = NULL, job = NULL, date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
 			NOTIFY=""
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then

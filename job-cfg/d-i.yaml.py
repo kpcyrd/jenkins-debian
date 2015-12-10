@@ -147,7 +147,7 @@ zipl-installer
 
 def scm_svn(po, inc_regs=None):
     if inc_regs == None:
-        inc_regs = os.path.join('/trunk/manual/', 'po' if po else '', '{lang}', '.*')
+        inc_regs = "'" + os.path.join('/trunk/manual/', 'po' if po else '', '{lang}', '.*') + "'"
 
     return  [{'svn': {'excluded-commit-messages': '',
                       'url': 'svn://anonscm.debian.org/svn/d-i/trunk',

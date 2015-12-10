@@ -23,6 +23,7 @@ if [ -n "$RESULT" ] ; then
 	exit 1
 else
 	echo "jenkins is not running, ok, let's go."
+fi
 
 # simple confirmation needed
 echo

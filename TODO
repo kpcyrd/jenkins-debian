@@ -330,9 +330,10 @@ This is about Debian, below are more todo entries for other projects…
 ** introduce more variations: USER
 ** confirm the others are really working
 ** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
-*** this should make this obselete: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
+*** which should make this obsolete: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
 ** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
-* test 'extra' too
+* test 'extra' too:
+** schroot --run-session -c $SESSION --directory /var/abs/extra -- ls -1|sort -R|xargs echo > $ARCHLINUX_EXTRA_PKGS
 * put results in a db
 ** graph results
 * idea: reschedule reverse build depends too

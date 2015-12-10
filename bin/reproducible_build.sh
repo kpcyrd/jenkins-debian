@@ -466,6 +466,8 @@ choose_package() {
 	esac
 	if [ "$NOTIFY" = "2" ] ; then
 		irc_message "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
+	elif [ "$NOTIFY" = "0" ] ; then  # the build script has a different idea of notify than the scheduler,
+		NOTIFY=''                  # the scheduler uses integers, build.sh uses strings.
 	fi
 	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}
 	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}

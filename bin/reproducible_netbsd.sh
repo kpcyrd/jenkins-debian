@@ -25,7 +25,7 @@ create_results_dirs() {
 	mkdir -p $BASE/netbsd/dbd
 }
 
-save_netbsd_results(){
+save_netbsd_results() {
 	local RUN=$1
 	local MACHINE=$2
 	mkdir -p $TMPDIR/$RUN/${MACHINE}

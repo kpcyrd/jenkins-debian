@@ -3,7 +3,7 @@
 # Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-common_cleanup(){
+common_cleanup() {
 	echo "$(date) - $0 stopped running as $TTT, which will now be removed."
 	rm -f $TTT
 }
@@ -101,7 +101,7 @@ else
 fi
 }
 
-publish_changes_to_userContent(){
+publish_changes_to_userContent() {
 	echo "Extracting contents from .deb files..."
 	CHANGES=$1
 	CHANNEL=$2

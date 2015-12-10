@@ -31,7 +31,7 @@ create_results_dirs() {
 	mkdir -p $BASE/openwrt/dbd
 }
 
-save_openwrt_results(){
+save_openwrt_results() {
 	RUN=$1
 	cd bin
 	for i in * ; do

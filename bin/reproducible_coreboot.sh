@@ -25,7 +25,7 @@ create_results_dirs() {
 	mkdir -p $BASE/coreboot/dbd
 }
 
-save_coreboot_results(){
+save_coreboot_results() {
 	RUN=$1
 	cd coreboot-builds
 	for i in * ; do

@@ -23,7 +23,7 @@ create_results_dirs() {
 	mkdir -p $BASE/freebsd/dbd
 }
 
-save_freebsd_results(){
+save_freebsd_results() {
 	local RUN=$1
 	echo "============================================================================="
 	echo "$(date -u) - Saving FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) build results for $RUN run."

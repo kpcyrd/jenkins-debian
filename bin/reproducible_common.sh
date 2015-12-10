@@ -40,22 +40,22 @@ REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 JENKINS_URL=${JENKINS_URL:0:-1}
 DBDSUITE="unstable"
 
-# suites being tested
+# Debian suites being tested
 SUITES="testing unstable experimental"
-# architectures being tested
+# Debian architectures being tested
 ARCHS="armhf amd64"
 
-# define build nodes in use
+# define Debian build nodes in use
 BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-amd64.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh
 BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also needs to be defined in bin/reproducible_info.sh
 
-# existing usertags
+# existing usertags in the Debian BTS
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
 # number of cores to be used
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 
-# we only need them for html creation but we cannot declare them in a function
+# we only this array for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 
 BASE="/var/lib/jenkins/userContent/reproducible"

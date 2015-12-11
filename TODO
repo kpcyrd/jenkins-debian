@@ -282,12 +282,15 @@ This is about Debian, below are more todo entries for other projects…
 ==== reproducible Fedora
 
 * build script
-** call the script reproducible_rpms.sh as it can also build OpenSuSE packages
-** then use yumdownloader to download rpms: 'yumdownloader --source sudo'
-** use mock to build:  'mock -r fedora-23-x86_64 --resultdir=. sudo-1.8.14p3-1.fc23.src.rpm'
+** how to get a list of packages?
+** no variations introduced yet:
+*** use '-j$NUM_CPU' and 'NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)'
+*** modify TZ, LANG, LC_ALL, umask
+* other bits:
+** use modified rpmbuild package
 * hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
-* how to get a list of packages?
 * build rawhide instead of fedora-23?
+** when adding rawhide make sure this is not needed: 'yumdownloader --enablerepo=fedora-23-src --source sudo'
 
 * more notes:
 ** http://blog.packagecloud.io/eng/2015/05/11/building-rpm-packages-with-mock/

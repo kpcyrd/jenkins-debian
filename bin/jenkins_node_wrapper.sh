@@ -109,6 +109,8 @@ elif [[ "$*" =~ reproducible_setup_mock_fedora23_x86_64 ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64 ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";
+elif [ "$1" = "/srv/jenkins/bin/reproducible_build_rpm.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
+	exec /srv/jenkins/bin/reproducible_build_rpm.sh "$2" "$3" "$4" "$5" "$6" ; croak "Exec failed";
 elif [ "$*" = "some_jenkins_job_name" ] ; then
 	exec echo run any commands here ; croak "Exec failed";
 fi

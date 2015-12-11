@@ -56,6 +56,9 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 ARCHLINUX_BUILD_NODE=profitbricks-build3-amd64
 ARCHLINUX_REPOS="core extra"
 
+# common settings for testing rpm based distros
+RPM_BUILD_NODE=profitbricks-build3-amd64
+
 # number of cores to be used
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 

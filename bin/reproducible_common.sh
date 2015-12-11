@@ -52,6 +52,9 @@ BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also ne
 # existing usertags in the Debian BTS
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
+# archlinux repositories to be tested
+ARCHLINUX_REPOS="extra core"
+
 # number of cores to be used
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 

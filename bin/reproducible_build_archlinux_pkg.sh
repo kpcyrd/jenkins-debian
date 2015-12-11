@@ -46,7 +46,7 @@ choose_package() {
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	local REPO
-	for REPO in core extra ; do
+	for REPO in $ARCHLINUX_REPOS ; do
 		if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
 			echo "$(date -u ) - updating list of available packages in repository '$REPO'."
 			schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPO
@@ -57,11 +57,13 @@ choose_package() {
 	schroot --end-session -c $SESSION
 	rm $DUMMY > /dev/null
 	local PKG
-	for REPO in core extra ; do
+	for REPO in $ARCHLINUX_REPOS ; do
 		case $REPO in
 			core)	MIN_AGE=6
 				;;
 			extra)	MIN_AGE=27
+				;;
+			*)	MIN_AGE=99	# should never happen…
 				;;
 		esac
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO) ; do

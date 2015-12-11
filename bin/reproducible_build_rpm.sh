@@ -35,6 +35,18 @@ handle_remote_error() {
 	exit 0
 }
 
+update_mock() {
+	echo "$(date -u ) - checking whether to update mock for $RELEASE ($ARCH) on $HOSTNAME."
+	local STAMP="${RPM_STAMPS}-$RELEASE-$ARCH"
+	if [ ! -f $STAMP ] || [ $DUMMY -nt $STAMP ] ; then
+		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --update 2>&1
+		echo "$(date -u ) - mock updated."
+		touch $STAMP
+	else
+		echo "$(date -u ) - mock not updated, last update was at $(TZ=UTC ls --full-time $STAMP | cut -d ' ' -f6-7 | cut -d '.' -f1) UTC."
+	fi
+}
 
 download_package() {
 	echo "$(date -u ) - downloading ${SRCPACKAGE} for $RELEASE now."
@@ -78,12 +90,13 @@ first_build() {
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
 	set -x
+	update_mock
 	download_package
 	local RESULTDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	# nicely run mock with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after --rebuild -v $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
@@ -98,13 +111,14 @@ second_build() {
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
 	set -x
+	update_mock
 	download_package
 	local RESULTDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	# NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	# nicely run mock with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after --rebuild -v $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
@@ -161,6 +175,8 @@ DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 DUMMY=$(mktemp -t rpm-dummy-XXXXXXXX)
+touch -d "$(date -u -d "6 hours ago" '+%Y-%m-%d %H:%M') UTC" $DUMMY
+RPM_STAMPS=/srv/reproducible-results/.rpm_stamp
 
 #
 # determine mode
@@ -196,6 +212,7 @@ RELEASE="$1"
 ARCH="$2"
 SRCPACKAGE=""	# package name
 SRC_RPM=""	# src rpm file name
+update_mock
 choose_package
 # build package twice
 mkdir b1 b2

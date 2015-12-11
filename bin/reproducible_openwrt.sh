@@ -316,7 +316,7 @@ for i in * ; do
 	done
 	cd ..
 done
-echo "       <table><tr><th>Unreproducible packages</th></tr>" >> $DBD_HTML
+echo "       <table><tr><th>Unreproducible and otherwise broken packages</th></tr>" >> $DBD_HTML
 cat $DBD_BAD_PKGS_HTML >> $DBD_HTML
 echo "       </table>" >> $DBD_HTML
 echo "       <table><tr><th>Reproducible packages</th></tr>" >> $DBD_HTML

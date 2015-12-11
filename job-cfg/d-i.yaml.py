@@ -327,7 +327,7 @@ data.append(
                 desc=desc_str['instguide'],
                 trigger='{trg}',
                 priority=125,
-                publishers=[publ_email('debian-boot')],
+                publishers=[publ_email(irc='debian-boot')],
                 inc_regs=manual_includes))
 
 data.append(
@@ -356,7 +356,7 @@ data.append(
             {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
                            'unstable-on-warning': 'true',
                            'fail-on-error': 'true'}},
-            publ_email('debian-boot')]}})
+            publ_email(irc='debian-boot')]}})
 
 data.append(
     {'job-group': {

@@ -512,13 +512,15 @@ fi
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
-rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
-if [ -s $TMPFILE ] ; then
-	echo
-	cat $TMPFILE
-	echo
+if [ "$HOSTNAME" = "jenkins" ] ; then
+	rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
+	if [ -s $TMPFILE ] ; then
+		echo
+		cat $TMPFILE
+		echo
+	fi
+	rm -f $TMPFILE
 fi
-rm -f $TMPFILE
 
 #
 # finally

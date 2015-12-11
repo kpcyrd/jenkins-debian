@@ -1,3 +1,4 @@
 # See man 5 aliases for format
 postmaster:    root
-root:		holger@layer-acht.org, helmutg@debian.org, mattia@mapreri.org, phil@hands.com
+root:		phil
+#root:		holger@layer-acht.org, helmutg@debian.org, mattia@mapreri.org, phil@hands.com

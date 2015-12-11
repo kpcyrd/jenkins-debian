@@ -41,6 +41,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	cp -v $PACKAGES_DB $BASE/
 fi
 
+# for Debian
 echo "$(date -u) - updating the schroots and pbuilder now..."
 set +e
 # use host architecture (only)
@@ -100,6 +101,13 @@ for s in $SUITES ; do
 	fi
 done
 set -e
+
+# for Archlinux
+if [ "$HOSTNAME" = "$ARCHLINUX_BUILD_NODE" ] ; then
+	echo "$(date -u) - updating Archlinux schroot now."
+	schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
+	echo "$(date -u) - updating Archlinux schroot done."
+fi
 
 # delete old temp directories
 echo "$(date -u) - Deleting temp directories, older than 2 days."

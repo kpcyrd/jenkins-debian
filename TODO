@@ -304,7 +304,6 @@ This is about Debian, below are more todo entries for other projects…
 ** needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
 ** once this has been done, run it more often than once a year
-* use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm'
 * arch build.sh:
 ** introduce more variations: USER
 ** confirm the others are really working

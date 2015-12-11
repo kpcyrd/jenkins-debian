@@ -169,7 +169,7 @@ second_build() {
 
 remote_build() {
 	local BUILDNR=$1
-	local NODE=profitbricks-build3-amd64.debian.net
+	local NODE=$ARCHLINUX_BUILD_NODE
 	local PORT=22
 	set +e
 	ssh -p $PORT $NODE /bin/true

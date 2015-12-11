@@ -18,6 +18,17 @@ explain() {
 	echo "$HOSTNAME: $1"
 }
 
+conditional_disable() {
+	if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+		case "$1" in
+			piuparts.yaml) return 1;;
+			d-i.yaml) return 1;;
+			*) return 0;;
+		esac
+	fi
+	return 1
+}
+
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
 
@@ -170,7 +181,7 @@ if [ -f /etc/debian_version ] ; then
 			zsh
 			"
 		case $HOSTNAME in
-			jenkins|profitbricks-build?-amd64) DEBS="$DEBS squid3" ;;
+			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS squid3" ;;
 			*) ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
@@ -439,6 +450,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rm -f $TMPFILE
 	for config in *.yaml ; do
 		if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
+			conditional_disable $config && continue
 			$JJB update $config
 		else
 			echo "$config has not changed, nothing to do."

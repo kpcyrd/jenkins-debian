@@ -56,9 +56,15 @@ choose_package() {
 	schroot --end-session -c $SESSION
 	rm $DUMMY > /dev/null
 	for REPOSITORY in core extra ; do
+		case $REPOSITORY in
+			core)	MIN_AGE=6
+				;;
+			extra)	MIN_AGE=27
+				;;
+		esac
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPOSITORY) ; do
-			# build package if it has never build or at least a week ago
-			if [ ! -d $BASE/archlinux/$REPOSITORY/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPOSITORY/ -name $PKG -mtime +6) ] ; then
+			# build package if it has never build or at least $MIN_AGE days ago
+			if [ ! -d $BASE/archlinux/$REPOSITORY/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPOSITORY/ -name $PKG -mtime +$MIN_AGE) ] ; then
 				SRCPACKAGE=$PKG
 				echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
 				# very simple locking…

@@ -45,7 +45,7 @@ download_package() {
 choose_package() {
 	echo "$(date -u ) - choosing package to be build."
 	local MIN_AGE=6
-	for PKG in sudo ; do
+	for PKG in sudo git screen vim joe less rpm file ssh ; do
 		# build package if it has never build or at least $MIN_AGE days ago
 		if [ ! -d $BASE/rpm/$RELEASE/$ARCH/$PKG ] || [ ! -z $(find $BASE/rpm/$RELEASE/$ARCH/ -name $PKG -mtime +$MIN_AGE) ] ; then
 			SRCPACKAGE=$PKG

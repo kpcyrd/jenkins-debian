@@ -240,7 +240,6 @@ if [ -f /etc/debian_version ] ; then
 				dstat 
 				figlet 
 				flex
-				ffmpeg
 				gawk 
 				ghc
 				git-notifier 

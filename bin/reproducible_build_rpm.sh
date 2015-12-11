@@ -81,7 +81,7 @@ first_build() {
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	# nicely run mock with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after --rebuild -v $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
@@ -102,7 +102,7 @@ second_build() {
 	# NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	# nicely run mock with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after --rebuild -v $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
@@ -178,7 +178,7 @@ if [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 		second_build
 	fi
 	# preserve results and delete build directory
-	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*.rpm $TMPDIR/b$MODE/$SRCPACKAGE/ || ls /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/
+	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*.rpm $TMPDIR/b$MODE/$SRCPACKAGE/ || ls /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
 	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0

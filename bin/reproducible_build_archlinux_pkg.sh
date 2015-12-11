@@ -42,19 +42,29 @@ handle_remote_error() {
 update_archlinux_repositories() {
 	# every 2 days we check for new archlinux packages in all tested repositories
 	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
-	local SESSION="archlinux-scheduler-$RANDOM"
-	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
+	local NEED_UPDATE=false
 	local REPO
 	for REPO in $ARCHLINUX_REPOS ; do
 		if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
-			echo "$(date -u ) - updating list of available packages in repository '$REPO'."
-			schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPO
-			echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
-			cat ${ARCHLINUX_PKGS}_$REPO
+			NEED_UPDATE=true
 		fi
 	done
-	schroot --end-session -c $SESSION
 	rm $DUMMY > /dev/null
+	if $NEED_UPDATE ; then
+		local SESSION="archlinux-scheduler-$RANDOM"
+		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
+		for REPO in $ARCHLINUX_REPOS ; do
+			if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
+				echo "$(date -u ) - updating list of available packages in repository '$REPO'."
+				schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPO
+				echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
+				cat ${ARCHLINUX_PKGS}_$REPO
+			fi
+		done
+		schroot --end-session -c $SESSION
+	else
+		echo "$(date -u ) - repositories recent enough, no update needed."
+	fi
 }
 
 choose_package() {

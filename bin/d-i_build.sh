@@ -14,7 +14,7 @@ clean_workspace() {
 	cd $WORKSPACE
 	cd ..
 	rm -fv *.deb *.udeb *.dsc *_*.build *_*.changes *_*.tar.gz *_*.tar.bz2 *_*.tar.xz *_*.buildinfo
-	cd workspace
+	cd $WORKSPACE
 	git clean -dfx
 	git reset --hard
 	#

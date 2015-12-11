@@ -10,7 +10,9 @@ PVNAME=/dev/vdb      # LVM physical volume for jobs
 VGNAME=jenkins01     # LVM volume group
 STAMP=/var/log/jenkins/update-jenkins.stamp
 TMPFILE=$(mktemp)
-JJB=jenkins-job-builder
+# The $@ below means that command line args get passed on to j-j-b
+# which allows one to specify --flush-cache or --ignore-cache
+JJB="jenkins-job-builder $@"
 
 explain() {
 	echo "$HOSTNAME: $1"

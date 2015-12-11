@@ -21,7 +21,9 @@ rsync_remote_results() {
 		# move old results out of the way
 		mv $BASE/$PROJECT ${RESULTS}.tmp
 		# preserve images and css
-		find ${RESULTS}.tmp -name "*css" -o -name "*png" -o -name "*jpg" -exec cp -v {} $RESULTS/ \;
+		for OBJECT in $(find ${RESULTS}.tmp -name "*css" -o -name "*png" -o -name "*jpg") ; do
+			cp -v $OBJECT $RESULTS/
+		done
 		# make the new results visible
 		mv $RESULTS $BASE/$PROJECT
 		# delete the old results

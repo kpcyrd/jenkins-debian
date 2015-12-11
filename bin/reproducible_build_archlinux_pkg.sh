@@ -43,27 +43,32 @@ choose_package() {
 	echo "$(date -u ) - about to choose a package to be build"
 	# every 2 days we check for new archlinux packages
 	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
-	if [ ! -f $ARCHLINUX_PKGS ] || [ $DUMMY -nt $ARCHLINUX_PKGS ] ; then
-		REPOSITORY="core"
-		echo "$(date -u ) - updating list of available packages in repository '$REPOSITORY'."
-		local SESSION="archlinux-scheduler-$RANDOM"
-		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
-		schroot --run-session -c $SESSION --directory /var/abs/$REPOSITORY -- ls -1|sort -R|xargs echo > $ARCHLINUX_PKGS
-		schroot --end-session -c $SESSION
-	fi
-	rm $DUMMY > /dev/null
-	echo "$(date -u ) - these packages in repository '$REPOSITORY' are known to us:"
-	cat $ARCHLINUX_PKGS
-	for PKG in $(cat $ARCHLINUX_PKGS) ; do
-		# build package if it has never build or at least a week ago
-		if [ ! -d $BASE/archlinux/$REPOSITORY/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPOSITORY/ -name $PKG -mtime +6) ] ; then
-			SRCPACKAGE=$PKG
-			echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
-			# very simple locking…
-			mkdir -p $BASE/archlinux/$REPOSITORY/$PKG
-			touch $BASE/archlinux/$REPOSITORY/$PKG
-			break
+	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
+	for REPOSITORY in core extra ; do
+		if [ ! -f ${ARCHLINUX_PKGS}_$REPOSITORY ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPOSITORY ] ; then
+			echo "$(date -u ) - updating list of available packages in repository '$REPOSITORY'."
+			local SESSION="archlinux-scheduler-$RANDOM"
+			schroot --run-session -c $SESSION --directory /var/abs/$REPOSITORY -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPOSITORY
+			echo "$(date -u ) - these packages in repository '$REPOSITORY' are known to us:"
+			cat ${ARCHLINUX_PKGS}_$REPOSITORY
 		fi
+	done
+	schroot --end-session -c $SESSION
+	rm $DUMMY > /dev/null
+	for REPOSITORY in core extra ; do
+		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPOSITORY) ; do
+			# build package if it has never build or at least a week ago
+			if [ ! -d $BASE/archlinux/$REPOSITORY/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPOSITORY/ -name $PKG -mtime +6) ] ; then
+				SRCPACKAGE=$PKG
+				echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
+				# very simple locking…
+				mkdir -p $BASE/archlinux/$REPOSITORY/$PKG
+				touch $BASE/archlinux/$REPOSITORY/$PKG
+				# break out of the loop and then out of this function too,
+				# to build this package…
+				break
+			fi
+		done
 	done
 	if [ -z $SRCPACKAGE ] ; then
 		echo "$(date -u ) - no package found to be build, sleeping 6h."

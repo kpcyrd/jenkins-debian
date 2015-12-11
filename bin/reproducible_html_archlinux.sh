@@ -38,7 +38,7 @@ EOF
 write_page_intro 'Arch Linux'
 write_explaination_table 'Arch Linux'
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for REPOSITORY in "core" ; do
+for REPOSITORY in core extra ; do
 	for PKG in $(find $ARCHBASE/$REPOSITORY/* -maxdepth 1 -type d -exec basename {} \;) ; do
 		write_page "     <tr>"
 		write_page "      <td>$REPOSITORY</td>"

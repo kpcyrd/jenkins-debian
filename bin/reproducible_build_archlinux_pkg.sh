@@ -43,11 +43,11 @@ choose_package() {
 	echo "$(date -u ) - about to choose a package to be build"
 	# every 2 days we check for new archlinux packages
 	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
+	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	for REPOSITORY in core extra ; do
 		if [ ! -f ${ARCHLINUX_PKGS}_$REPOSITORY ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPOSITORY ] ; then
 			echo "$(date -u ) - updating list of available packages in repository '$REPOSITORY'."
-			local SESSION="archlinux-scheduler-$RANDOM"
 			schroot --run-session -c $SESSION --directory /var/abs/$REPOSITORY -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPOSITORY
 			echo "$(date -u ) - these packages in repository '$REPOSITORY' are known to us:"
 			cat ${ARCHLINUX_PKGS}_$REPOSITORY

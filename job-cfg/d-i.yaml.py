@@ -162,6 +162,8 @@ def scm_svn(po, inc_regs=None):
               'viewvc-url': 'http://anonscm.debian.org/viewvc/d-i/trunk'}}]
 
 
+manual_includes = [ '/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*', '/trunk/manual/scripts/.*' ]
+
 desc_str = {
     'html': (
         'Builds the {langname} html version of the installation-guide '
@@ -179,7 +181,7 @@ desc_str = {
     'instguide': (
         'Builds the installation-guide package. Triggered by SVN commits to '
         '<code>svn://anonscm.debian.org/svn/d-i/</code> '
-        'matching these patterns: <pre>{include}</pre>')
+        'matching these patterns: <pre>' + str(manual_includes) + '</pre>')
     }
 
 
@@ -326,7 +328,7 @@ data.append(
                 trigger='{trg}',
                 priority=125,
                 publishers=[publ_email('debian-boot')],
-                inc_regs='{include}'))
+                inc_regs=manual_includes))
 
 data.append(
     {'job-template': {
@@ -428,10 +430,6 @@ data.append(
             '{name}_maintenance',
             '{name}_check_jenkins_jobs',
             {'{name}_manual': {
-                'include': ('/trunk/manual/debian/.*\n'
-                            '/trunk/manual/po/.*\n'
-                            '/trunk/manual/doc/.*\n'
-                            '/trunk/manual/scripts/.*'),
                 'trg': 'H/15 * * * *'}},
             '{name}_manual_html_group',
             '{name}_manual_pdf_group',

@@ -14,7 +14,7 @@ all:  $(OUTPUTS)
 	./$< > $@
 
 %.xml: %.yaml
-	jenkins-jobs test $< > $@
+	jenkins-job-builder test $< > $@
 
 clean:
 	rm $(sort $(OUTPUTS))

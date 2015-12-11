@@ -284,16 +284,15 @@ This is about Debian, below are more todo entries for other projects…
 * build script
 ** maintenance should do maintenance too, to avoid blocking: if stamp file is older than 6h, do mock --update
 ** how to allow more than one mock builder per node? using schroots?
-** how to get a list of packages?
 ** no variations introduced yet:
 *** use '-j$NUM_CPU' and 'NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)'
 *** modify TZ, LANG, LC_ALL, umask
 * other bits:
 ** use modified rpmbuild package from dhiru
 ** verify gpg signatures (via /etc/mock/)
+** one day we will want to schedule all 17k source packages in fedora…
 * hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
 * build rawhide too (once fedora-23 builds nicely)
-** when adding rawhide make sure this is not needed: 'yumdownloader --enablerepo=fedora-23-src --source sudo'
 
 * more notes:
 ** https://fedoraproject.org/wiki/Using_Mock_to_test_package_builds

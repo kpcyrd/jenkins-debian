@@ -45,26 +45,29 @@ choose_package() {
 	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
-	for REPOSITORY in core extra ; do
-		if [ ! -f ${ARCHLINUX_PKGS}_$REPOSITORY ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPOSITORY ] ; then
-			echo "$(date -u ) - updating list of available packages in repository '$REPOSITORY'."
-			schroot --run-session -c $SESSION --directory /var/abs/$REPOSITORY -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPOSITORY
-			echo "$(date -u ) - these packages in repository '$REPOSITORY' are known to us:"
-			cat ${ARCHLINUX_PKGS}_$REPOSITORY
+	local REPO
+	for REPO in core extra ; do
+		if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
+			echo "$(date -u ) - updating list of available packages in repository '$REPO'."
+			schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPO
+			echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
+			cat ${ARCHLINUX_PKGS}_$REPO
 		fi
 	done
 	schroot --end-session -c $SESSION
 	rm $DUMMY > /dev/null
-	for REPOSITORY in core extra ; do
-		case $REPOSITORY in
+	local PKG
+	for REPO in core extra ; do
+		case $REPO in
 			core)	MIN_AGE=6
 				;;
 			extra)	MIN_AGE=27
 				;;
 		esac
-		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPOSITORY) ; do
+		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO) ; do
 			# build package if it has never build or at least $MIN_AGE days ago
-			if [ ! -d $BASE/archlinux/$REPOSITORY/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPOSITORY/ -name $PKG -mtime +$MIN_AGE) ] ; then
+			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPO/ -name $PKG -mtime +$MIN_AGE) ] ; then
+				REPOSITORY=$REPO
 				SRCPACKAGE=$PKG
 				echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
 				# very simple locking…
@@ -161,11 +164,11 @@ remote_build() {
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR ${SRCPACKAGE} ${TMPDIR}
+	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -p $PORT $NODE "rm -r $TMPDIR" || true
-		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE}"
+		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 	fi
 	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
@@ -204,8 +207,9 @@ if [ "$1" = "" ] ; then
 	MODE="master"
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
-	SRCPACKAGE="$2"
-	TMPDIR="$3"
+	REPOSITORY="$2"
+	SRCPACKAGE="$3"
+	TMPDIR="$4"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	mkdir -p b$MODE/$SRCPACKAGE

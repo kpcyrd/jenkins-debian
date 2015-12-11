@@ -44,23 +44,24 @@ choose_package() {
 	# every 2 days we check for new archlinux packages
 	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
 	if [ ! -f $ARCHLINUX_PKGS ] || [ $DUMMY -nt $ARCHLINUX_PKGS ] ; then
-		echo "$(date -u ) - updating list of available packages."
+		REPOSITORY="core"
+		echo "$(date -u ) - updating list of available packages in repository '$REPOSITORY'."
 		local SESSION="archlinux-scheduler-$RANDOM"
 		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
-		schroot --run-session -c $SESSION --directory /var/abs/core -- ls -1|sort -R|xargs echo > $ARCHLINUX_PKGS
+		schroot --run-session -c $SESSION --directory /var/abs/$REPOSITORY -- ls -1|sort -R|xargs echo > $ARCHLINUX_PKGS
 		schroot --end-session -c $SESSION
 	fi
 	rm $DUMMY > /dev/null
-	echo "$(date -u ) - these packages are known to us:"
+	echo "$(date -u ) - these packages in repository '$REPOSITORY' are known to us:"
 	cat $ARCHLINUX_PKGS
 	for PKG in $(cat $ARCHLINUX_PKGS) ; do
 		# build package if it has never build or at least a week ago
-		if [ ! -d $BASE/archlinux/$PKG ] || [ ! -z $(find $BASE/archlinux/ -name $PKG -mtime +6) ] ; then
+		if [ ! -d $BASE/archlinux/$REPOSITORY/$PKG ] || [ ! -z $(find $BASE/archlinux/$REPOSITORY/ -name $PKG -mtime +6) ] ; then
 			SRCPACKAGE=$PKG
-			echo "$(date -u ) - building package $PKG now..."
+			echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
 			# very simple locking…
-			mkdir -p $BASE/archlinux/$PKG
-			touch $BASE/archlinux/$PKG
+			mkdir -p $BASE/archlinux/$REPOSITORY/$PKG
+			touch $BASE/archlinux/$REPOSITORY/$PKG
 			break
 		fi
 	done
@@ -77,7 +78,7 @@ choose_package() {
 
 first_build() {
 	echo "============================================================================="
-	echo "Building ${SRCPACKAGE} for Arch Linux on $(hostname -f) now."
+	echo "Building ${SRCPACKAGE} from repository '$REPOSITORY' for Arch Linux on $(hostname -f) now."
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
@@ -88,7 +89,7 @@ first_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/$REPOSITORY/$SRCPACKAGE $BUILDDIR/
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	# nicely run makepkg with a timeout of 4h
@@ -104,7 +105,7 @@ first_build() {
 
 second_build() {
 	echo "============================================================================="
-	echo "Re-Building ${SRCPACKAGE} for Arch Linux on $(hostname -f) now."
+	echo "Re-Building ${SRCPACKAGE} from repository '$REPOSITORY' for Arch Linux on $(hostname -f) now."
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
@@ -116,7 +117,7 @@ second_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/core/$SRCPACKAGE $BUILDDIR/
+	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/$REPOSITORY/$SRCPACKAGE $BUILDDIR/
 	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
@@ -213,13 +214,14 @@ fi
 # main - only used in master-mode
 #
 delay_start # randomize start times
-# first, we need to choose a package…
+# first, we need to choose a package from a repository…
+REPOSITORY=""
 SRCPACKAGE=""
 choose_package
 # build package twice
 mkdir b1 b2
 remote_build 1
-# only do the 2nd build if the 1st produced some results
+# only do the 2nd build if the 1st produced results
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; then
 	remote_build 2
 	# run diffoscope on the results
@@ -232,15 +234,15 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 		call_diffoscope $SRCPACKAGE $ARTIFACT
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
-			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$SRCPACKAGE/
+			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 		fi
 	done
 fi
 # publish logs
 cd $TMPDIR/b1/$SRCPACKAGE
-cp build1.log $BASE/archlinux/$SRCPACKAGE/
-[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$SRCPACKAGE/
-echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$SRCPACKAGE/ updated."
+cp build1.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 
 cd
 cleanup_all

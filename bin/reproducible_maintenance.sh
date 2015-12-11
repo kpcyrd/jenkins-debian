@@ -122,15 +122,17 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 # delete old pbuilder build directories
-echo "$(date -u) - Deleting pbuilder build directories, older than 2 days."
-OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec ls -lad {} \; || true)
-if [ ! -z "$OLDSTUFF" ] ; then
-	echo
-	echo "Old temp directories found in $REP_RESULTS"
-	echo -n "$OLDSTUFF"
-	find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec sudo rm -rf --one-file-system {} \; || true
-	echo
-	DIRTY=true
+if [ -d /srv/workspace/pbuilder/ ] ; then
+	echo "$(date -u) - Deleting pbuilder build directories, older than 2 days."
+	OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec ls -lad {} \; || true)
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo
+		echo "Old temp directories found in $REP_RESULTS"
+		echo -n "$OLDSTUFF"
+		find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec sudo rm -rf --one-file-system {} \; || true
+		echo
+		DIRTY=true
+	fi
 fi
 
 # remove old and unused schroot sessions

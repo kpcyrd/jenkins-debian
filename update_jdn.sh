@@ -324,9 +324,13 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get install -t jessie-backports \
 				pbuilder
 		#		botch
-		# to vary kernels
+		# for varying kernels
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-amd64" ]; then
 			sudo apt-get install -t jessie-backports linux-image-amd64
+		fi
+		# only needed on the main node
+		if [ "$HOSTNAME" = "jenkins" ] ; then
+			sudo apt-get install -t jessie-backports ffmpeg libav-tools
 		fi
 		explain "packages installed."
 	else

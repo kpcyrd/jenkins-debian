@@ -4,7 +4,7 @@
 # released under the GPLv=2
 
 #
-# configures mock for a given distro and architecture
+# configure mock for a given release and architecture
 #
 
 DEBUG=false
@@ -12,16 +12,16 @@ DEBUG=false
 common_init "$@"
 
 if [ -z "$1" ] || [ -z "$2" ] ; then
-	echo "Need distro and architecture as params"
+	echo "Need release and architecture as params."
 	exit 1
 fi
-DISTRO=$1
-ARCHITECTURE=$2
+RELEASE=$1
+ARCH=$2
 
 echo "$(date -u) - showing setup."
 dpkg -l mock
 id
-echo "$(date -u) - starting to cleanly configure mock for ${DISTRO} on ${ARCHITECTURE}."
-mock -r ${DISTRO}-${ARCHITECTURE} --clean
-mock -r ${DISTRO}-${ARCHITECTURE} --init
-echo "$(date -u) - mock configured for ${DISTRO} on ${ARCHITECTURE}."
+echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
+mock -r $RELEASE-$ARCH --resultdir=. --clean
+mock -r $RELEASE-$ARCH --resultdir=. --init
+echo "$(date -u) - mock configured for $RELEASE on $ARCH."

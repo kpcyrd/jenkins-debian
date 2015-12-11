@@ -109,9 +109,10 @@ choose_package() {
 
 first_build() {
 	echo "============================================================================="
-	echo "Building ${SRCPACKAGE} from repository '$REPOSITORY' for Arch Linux on $(hostname -f) now."
-	echo "Date:     $(date)"
-	echo "Date UTC: $(date -u)"
+	echo "Building for Arch Linux on $(hostname -f) now."
+	echo "Source package: ${SRCPACKAGE}"
+	echo "Repository:     $REPOSITORY"
+	echo "Date:           $(date -u)"
 	echo "============================================================================="
 	set -x
 	local SESSION="archlinux-$SRCPACKAGE-$(basename $TMPDIR)"
@@ -136,9 +137,10 @@ first_build() {
 
 second_build() {
 	echo "============================================================================="
-	echo "Re-Building ${SRCPACKAGE} from repository '$REPOSITORY' for Arch Linux on $(hostname -f) now."
-	echo "Date:     $(date)"
-	echo "Date UTC: $(date -u)"
+	echo "Re-Building for Arch Linux on $(hostname -f) now."
+	echo "Source package: ${SRCPACKAGE}"
+	echo "Repository:     $REPOSITORY"
+	echo "Date:           $(date -u)"
 	echo "============================================================================="
 	set -x
 	local SESSION="archlinux-$SRCPACKAGE-$(basename $TMPDIR)"

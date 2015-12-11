@@ -173,7 +173,7 @@ print("""
           first-failure: true
           fixed: true
           subject: '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'
-          attach-build-log: true
+          attach-build-log: false
           body: 'See $BUILD_URL/console or just $BUILD_URL for more information.'
     properties:
       - sidebar:

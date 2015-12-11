@@ -24,7 +24,7 @@
           first-failure: true
           fixed: true
           subject: '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'
-          attach-build-log: true
+          attach-build-log: false
           body: 'See $BUILD_URL and $BUILD_URL/console and $BUILD_URL/artifact/results/ if there are any.'
       - archive:
           artifacts: 'results/*.*, results/log/*, results/log/installer/*'

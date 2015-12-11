@@ -39,9 +39,8 @@ handle_remote_error() {
 	exit 0
 }
 
-choose_package() {
-	echo "$(date -u ) - about to choose a package to be build"
-	# every 2 days we check for new archlinux packages
+update_archlinux_repositories() {
+	# every 2 days we check for new archlinux packages in all tested repositories
 	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
@@ -56,6 +55,12 @@ choose_package() {
 	done
 	schroot --end-session -c $SESSION
 	rm $DUMMY > /dev/null
+}
+
+choose_package() {
+	echo "$(date -u ) - choosing package to be build."
+	update_archlinux_repositories
+	local REPO
 	local PKG
 	for REPO in $ARCHLINUX_REPOS ; do
 		case $REPO in

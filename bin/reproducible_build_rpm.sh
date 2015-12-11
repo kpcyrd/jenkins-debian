@@ -14,7 +14,7 @@ set -e
 
 cleanup_all() {
 	cd
-	# delete makepkg build dir
+	# delete mock result dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
 		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
 	fi
@@ -50,14 +50,13 @@ choose_package() {
 		if [ ! -d $BASE/rpm/$RELEASE/$ARCH/$PKG ] || [ ! -z $(find $BASE/rpm/$RELEASE/$ARCH/ -name $PKG -mtime +$MIN_AGE) ] ; then
 			SRCPACKAGE=$PKG
 			echo "$(date -u ) - building package $PKG from '$RELEASE' on '$ARCH' now..."
-				# very simple locking…
-				mkdir -p $BASE/rpm/$RELEASE/$ARCH/$PKG
-				touch $BASE/rpm/$RELEASE/$ARCH/$PKG
-				# break out of the loop and then out of this function too,
-				# to build this package…
-				break
-			fi
-		done
+			# very simple locking…
+			mkdir -p $BASE/rpm/$RELEASE/$ARCH/$PKG
+			touch $BASE/rpm/$RELEASE/$ARCH/$PKG
+			# break out of the loop and then out of this function too,
+			# to build this package…
+			break
+		fi
 	done
 	if [ -z $SRCPACKAGE ] ; then
 		echo "$(date -u ) - no package found to be build, sleeping 6h."
@@ -78,11 +77,11 @@ first_build() {
 	echo "============================================================================="
 	set -x
 	download_package
-	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
+	local RESULTDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	# nicely run mock with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=. $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
@@ -98,12 +97,12 @@ second_build() {
 	echo "============================================================================="
 	set -x
 	download_package
-	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
+	local RESULTDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	# NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	# nicely run mock with a timeout of 4h
 	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=. $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG

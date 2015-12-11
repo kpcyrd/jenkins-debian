@@ -282,7 +282,10 @@ write_page_header() {
 }
 
 write_page_intro() {
-	write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived. There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>. The wiki explains in more depth why this is useful, what common issues exist and which workarounds and solutions are known.<br />"
+	write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived."
+	write_page "         There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible.debian.net\">https://reproducible.debian.net</a>."
+	write_page "         The wiki explains in more depth why this is useful, what common issues exist and which workarounds and solutions are known."
+	write_page "        <br />"
 	local BUILD_ENVIRONMENT=" in a Debian environment"
 	local BRANCH="master"
 	if [ "$1" = "coreboot" ] ; then

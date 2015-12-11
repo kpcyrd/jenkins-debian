@@ -299,7 +299,9 @@ This is about Debian, below are more todo entries for other projects…
 
 ==== reproducible Arch Linux
 
-* the job to bootstrap an arch schroot needs to be made idempotent
+* describe archlinux setup…!
+* setup_archlinux_schroot job:
+** needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
 ** once this has been done, run it more often than once a year
 * use regular maintenace job to update the arch schroot: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm'
@@ -309,11 +311,10 @@ This is about Debian, below are more todo entries for other projects…
 ** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
 *** which should make this obsolete: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
 ** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
-* test 'extra' too:
-** schroot --run-session -c $SESSION --directory /var/abs/extra -- ls -1|sort -R|xargs echo > $ARCHLINUX_EXTRA_PKGS
 * put results in a db
 ** graph results
-* idea: reschedule reverse build depends too
+* idea: when a package has been updated reschedule reverse build depends too
+** (for that we need to detect updated packages first)
 
 ----
 notes on source and binary versions:

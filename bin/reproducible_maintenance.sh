@@ -103,7 +103,7 @@ done
 set -e
 
 # for Archlinux
-if [ "$(hostname -f)" = "${ARCHLINUX_BUILD_NODE}" ] ; then
+if [ "$HOSTNAME" = "${ARCHLINUX_BUILD_NODE}" ] ; then
 	echo "$(date -u) - updating Archlinux schroot now."
 	schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
 	echo "$(date -u) - updating Archlinux schroot done."

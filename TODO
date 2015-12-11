@@ -289,7 +289,8 @@ This is about Debian, below are more todo entries for other projects…
 *** use '-j$NUM_CPU' and 'NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)'
 *** modify TZ, LANG, LC_ALL, umask
 * other bits:
-** use modified rpmbuild package
+** use modified rpmbuild package from dhiru
+** verify gpg signatures (via /etc/mock/)
 * hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
 * build rawhide too (once fedora-23 builds nicely)
 ** when adding rawhide make sure this is not needed: 'yumdownloader --enablerepo=fedora-23-src --source sudo'

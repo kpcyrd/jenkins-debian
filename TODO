@@ -309,8 +309,8 @@ This is about Debian, below are more todo entries for other projects…
 * arch build.sh:
 ** introduce more variations: USER
 ** confirm the others are really working
-** 'makepkg --skippgpcheck' should be replaced by 'makepkg' and 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf'
-*** which should make this obsolete: 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
+** 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf' is now being used and should make this not needed:
+*** 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
 ** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
 * put results in a db
 ** graph results

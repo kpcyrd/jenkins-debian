@@ -263,7 +263,8 @@ if [ -f /etc/debian_version ] ; then
 				libvirt-dev 
 				libvpx1 
 				libxslt1-dev 
-				linux-image-amd64 
+				linux-image-amd64
+				mock
 				moreutils 
 				mr 
 				mtr-tiny 
@@ -340,7 +341,7 @@ fi
 #
 # prepare mock to build rpms
 #
-if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
+if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep mock /etc/group ; then
 		sudo groupadd --system mock
 		sudo usermod -a -G mock jenkins

@@ -537,6 +537,7 @@ case $HOSTNAME in
 esac
 
 echo
-echo $HOSTNAME
 figlet ok
 echo
+echo "__$HOSTNAME=ok__"
+

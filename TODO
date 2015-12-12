@@ -282,7 +282,6 @@ This is about Debian, below are more todo entries for other projects…
 ==== reproducible Fedora
 
 * build script
-** maintenance should do maintenance of yum too… how so?
 ** how to allow more than one mock builder per node? using schroots?
 ** no variations introduced yet:
 *** use '-j$NUM_CPU' and 'NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)'

@@ -36,15 +36,17 @@ handle_remote_error() {
 }
 
 update_mock() {
-	echo "$(date -u ) - checking whether to update mock for $RELEASE ($ARCH) on $HOSTNAME."
+	echo "$(date -u ) - checking whether to update mock and yum for $RELEASE ($ARCH) on $HOSTNAME."
 	local STAMP="${RPM_STAMPS}-$RELEASE-$ARCH"
 	if [ ! -f $STAMP ] || [ $DUMMY -nt $STAMP ] ; then
 		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
 		mock -r $RELEASE-$ARCH --resultdir=. --cleanup-after -v --update 2>&1
 		echo "$(date -u ) - mock updated."
+		yum -v check-update
+		echo "$(date -u ) - yum updated."
 		touch $STAMP
 	else
-		echo "$(date -u ) - mock not updated, last update was at $(TZ=UTC ls --full-time $STAMP | cut -d ' ' -f6-7 | cut -d '.' -f1) UTC."
+		echo "$(date -u ) - mock and yum not updated, last update was at $(TZ=UTC ls --full-time $STAMP | cut -d ' ' -f6-7 | cut -d '.' -f1) UTC."
 	fi
 }
 

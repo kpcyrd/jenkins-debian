@@ -214,6 +214,7 @@ TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actua
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
+TIMEOUT=8	# maximum time in hours for a single build
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"

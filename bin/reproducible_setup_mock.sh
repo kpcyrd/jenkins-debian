@@ -22,6 +22,6 @@ echo "$(date -u) - showing setup."
 dpkg -l mock
 id
 echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
-mock -r $RELEASE-$ARCH --resultdir=. --clean
-mock -r $RELEASE-$ARCH --resultdir=. --init
+mock -r $RELEASE-$ARCH --resultdir=. -v --clean
+mock -r $RELEASE-$ARCH --resultdir=. -v --init
 echo "$(date -u) - mock configured for $RELEASE on $ARCH."

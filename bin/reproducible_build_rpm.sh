@@ -40,7 +40,7 @@ update_mock() {
 	local STAMP="${RPM_STAMPS}-$RELEASE-$ARCH"
 	if [ ! -f $STAMP ] || [ $DUMMY -nt $STAMP ] ; then
 		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --update 2>&1
+		mock -r $RELEASE-$ARCH --resultdir=. --cleanup-after -v --update 2>&1
 		echo "$(date -u ) - mock updated."
 		touch $STAMP
 	else

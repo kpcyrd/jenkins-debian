@@ -11,33 +11,8 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 #
-#  create the webpage
+# analyse results to create the webpage
 #
-DATE=$(date -u +'%Y-%m-%d')
-ARCHBASE=$BASE/archlinux
-cd $ARCHBASE
-PAGE=archlinux.html
-echo "$(date -u) - starting to build $PAGE"
-cat > $PAGE <<- EOF
-<!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="UTF-8">
-    <title>Repoducible Arch Linux ?!</title>
-    <link rel='stylesheet' href='global.css' type='text/css' media='all' />
-  </head>
-  <body>
-    <div id="archnavbar">
-	    <div id="logo"></div>
-    </div>
-    <div class="content">
-      <h1>Reproducible Arch Linux?!</h1>
-      <div class="page-content">
-
-EOF
-write_page_intro 'Arch Linux'
-write_explaination_table 'Arch Linux'
-write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
 HTML_FTBFS=$(mktemp)
 HTML_FTBR=$(mktemp)
 HTML_DEPWAIT=$(mktemp)
@@ -104,6 +79,34 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		rm $HTML_BUFFER > /dev/null
 	done
 done
+#
+# write out the actual webpage
+#
+DATE=$(date -u +'%Y-%m-%d')
+ARCHBASE=$BASE/archlinux
+cd $ARCHBASE
+PAGE=archlinux.html
+echo "$(date -u) - starting to build $PAGE"
+cat > $PAGE <<- EOF
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>Repoducible Arch Linux ?!</title>
+    <link rel='stylesheet' href='global.css' type='text/css' media='all' />
+  </head>
+  <body>
+    <div id="archnavbar">
+	    <div id="logo"></div>
+    </div>
+    <div class="content">
+      <h1>Reproducible Arch Linux?!</h1>
+      <div class="page-content">
+
+EOF
+write_page_intro 'Arch Linux'
+write_explaination_table 'Arch Linux'
+write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
 for i in $HTML_UNKNOWN $HTML_FTBFS $HTML_DEPWAIT $HTML_404 $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null

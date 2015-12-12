@@ -21,6 +21,8 @@ ARCH=$2
 echo "$(date -u) - showing setup."
 dpkg -l mock
 id
+echo "$(date -u) - cleaning yum."
+yum -v clean all
 echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
 mock -r $RELEASE-$ARCH --resultdir=. -v --clean
 mock -r $RELEASE-$ARCH --resultdir=. -v --init

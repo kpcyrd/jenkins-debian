@@ -135,7 +135,7 @@ cat $HTML_RPM_STATS >> $PAGE
 rm $HTML_RPM_STATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $HTML_FTBFS $HTML_DEPWAIT $HTML_404 $HTML_FTBR $HTML_GOOD ; do
+for i in $HTML_UNKNOWN $HTML_404 $HTML_DEPWAIT $HTML_FTBFS $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done

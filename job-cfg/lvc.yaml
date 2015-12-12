@@ -1,0 +1,88 @@
+- defaults:
+    name: lvc
+    project-type: freestyle
+    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml.py">lvc.yaml.py</a>.'
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/lvc
+          text: Jobs for libvirt and cucumber based tests
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+      - throttle:
+          max-total: 1
+          max-per-node: 1
+          enabled: true
+          option: category
+          categories:
+            - lvc
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    publishers:
+      - email:
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+      - archive:
+          artifacts: '*.webm, {my_pngs}'
+          latest-only: false
+      - image-gallery:
+          - title: '{my_title}'
+            includes: '{my_pngs}'
+            image-width: 300
+    wrappers:
+      - live-screenshot
+    builders:
+      - shell: 'rm $WORKSPACE/*.png -f >/dev/null; /srv/jenkins/bin/lvc/run_test_suite {my_params}'
+    triggers:
+      - timed: '{my_time}'
+
+- job-template:
+    defaults: lvc
+    name: '{name}_debian-live_{distro}_{flavour}_apt'
+
+- project:
+    name: lvc
+    my_title: '{dist_name} {flav_name}'
+    my_time: '23 45 31 12 *'
+    my_pngs: 'apt-*.png'
+    my_description: 'Work in progress...'
+    my_params: '--debug --capture lvc_debian-live_{distro}_{flavour}_apt.webm --temp-dir $WORKSPACE --iso /srv/live-build/results/{distro}_{flavour}_live_amd64.iso DebianLive/apt.feature'
+    jobs:
+        - '{name}_debian-live_{distro}_{flavour}_apt':
+            distro:
+                - 'debian-edu_jessie': {dist_name: 'Debian Edu Live 8'}
+            flavour:
+                - 'standalone':  {flav_name: 'Standalone'}
+                - 'workstation': {flav_name: 'Workstation'}
+            my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
+
+        - '{name}_debian-live_{distro}_{flavour}_apt':
+            distro:
+                - 'debian_jessie': {dist_name: 'Debian Live 8'}
+            flavour:
+                - 'gnome': {flav_name: 'GNOME Desktop'}
+                - 'xfce': {flav_name: 'Xfce Desktop'}
+            my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
+
+        - '{name}_debian-live_{distro}_{flavour}_apt':
+            distro:
+                - 'debian_sid': {dist_name: 'Debian Live Sid'}
+            flavour:
+                - 'xfce': {flav_name: 'Xfce Desktop'}
+            my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
+
+        - '{name}_debian-live_{distro}_{flavour}_apt':
+            distro:
+                - 'wheezy': {dist_name: 'Debian Live 7'}
+            flavour:
+                - 'gnome-desktop': {flav_name: 'GNOME desktop'}
+                - 'standard':      {flav_name: 'standard'}
+            my_params: '--debug --capture lvc_debian-live_{distro}_{flavour}_apt.webm --temp-dir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.7.0-amd64-{flavour}.iso DebianLive/apt.feature'

@@ -434,6 +434,8 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	mv THANKS .THANKS
 	rm TODO README INSTALL CONTRIBUTING
 	sudo chown jenkins.jenkins /var/lib/jenkins/userContent/*html
+	sudo chown jenkins.jenkins /var/lib/jenkins/userContent/
+	sudo chown jenkins.jenkins /var/lib/jenkins/userContent/reproducible
 	explain "user content for jenkins updated."
 fi
 

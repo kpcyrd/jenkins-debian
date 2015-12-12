@@ -207,7 +207,7 @@ MODE="master"
 # main - only used in master-mode
 #
 delay_start # randomize start times
-# first, we need to choose a packagey…
+# first, we need to choose a package…
 RELEASE="$1"
 ARCH="$2"
 SRCPACKAGE=""	# package name

@@ -69,14 +69,14 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 		HTML_TARGET=$HTML_FTBR
 		let NR_FTBR+=1
 		for ARTIFACT in $(cd $RPMBASE/$RELEASE/$ARCH/$PKG/ ; ls *.rpm.html) ; do
-			echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/rpms/$RELEASE/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
+			echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/rpms/$RELEASE/$ARCH/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
 		done
 	fi
 	echo "      </td>" >> $HTML_BUFFER
 	echo "      <td>$(LANG=C TZ=UTC ls --full-time $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
 	for LOG in build1.log build2.log ; do
 		if [ -f $RPMBASE/$RELEASE/$ARCH/$PKG/$LOG ] ; then
-			echo "      <td><a href=\"/rpms/$RELEASE/$PKG/$LOG\">$LOG</a></td>" >> $HTML_BUFFER
+			echo "      <td><a href=\"/rpms/$RELEASE/$ARCH/$PKG/$LOG\">$LOG</a></td>" >> $HTML_BUFFER
 		else
 			echo "      <td>&nbsp;</td>" >> $HTML_BUFFER
 		fi

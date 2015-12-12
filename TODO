@@ -282,6 +282,7 @@ This is about Debian, below are more todo entries for other projects…
 ==== reproducible Fedora
 
 * build script
+** cleanup mock cache between two builds. --scrub=all might be too much, but whats sensible (or is it --scrub=all?)?
 ** how to allow more than one mock builder per node? using schroots?
 ** no variations introduced yet:
 *** use '-j$NUM_CPU' and 'NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)'

@@ -25,5 +25,7 @@ echo "$(date -u) - cleaning yum."
 yum -v clean all
 echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
 mock -r $RELEASE-$ARCH --resultdir=. -v --clean
+mock -r $RELEASE-$ARCH --resultdir=. -v --scrub=all
+tree /var/cache/mock/
 mock -r $RELEASE-$ARCH --resultdir=. -v --init
 echo "$(date -u) - mock configured for $RELEASE on $ARCH."

@@ -230,15 +230,15 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.rpm 2>/dev/null|| true)" ] ; then
 		call_diffoscope $SRCPACKAGE $ARTIFACT
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
-			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/rpm/$RELEASE/$ARCH/$SRCPACKAGE/
+			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/rpms/$RELEASE/$ARCH/$SRCPACKAGE/
 		fi
 	done
 fi
 # publish logs
 cd $TMPDIR/b1/$SRCPACKAGE
-cp build1.log $BASE/rpm/$RELEASE/$ARCH/$SRCPACKAGE/
-[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/rpm/$RELEASE/$ARCH/$SRCPACKAGE/
-echo "$(date -u) - $REPRODUCIBLE_URL/rpm/$RELEASE/$ARCH/$SRCPACKAGE/ updated."
+cp build1.log $BASE/rpms/$RELEASE/$ARCH/$SRCPACKAGE/
+[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/rpms/$RELEASE/$ARCH/$SRCPACKAGE/
+echo "$(date -u) - $REPRODUCIBLE_URL/rpms/$RELEASE/$ARCH/$SRCPACKAGE/ updated."
 
 cd
 cleanup_all

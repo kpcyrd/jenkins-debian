@@ -373,7 +373,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		fi
 		sudo a2ensite -q jenkins.debian.net
 		sudo a2enconf -q munin
-		sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.conf
+		sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.debian.net.conf
 		# for reproducible.d.n url rewriting:
 		[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 		sudo service apache2 reload

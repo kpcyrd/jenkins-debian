@@ -58,6 +58,14 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=$HTML_404
 				let NR_404+=1
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> failed to download source" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=$HTML_404
+				let NR_404+=1
+				EXTRA_REASON=""
+				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+					EXTRA_REASON="(unknown public key)"
+				fi
+				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> failed to verify source with PGP signatures $EXTRA_REASON" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_FTBFS
 				let NR_FTBFS+=1

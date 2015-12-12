@@ -116,7 +116,7 @@ cat > $PAGE <<- EOF
 <html lang="en-US">
   <head>
     <meta charset="UTF-8">
-    <title>Repoducible $RELEASE ($ARCH) ?!</title>
+    <title>Reproducible $RELEASE ($ARCH) ?!</title>
     <link rel='stylesheet' href='global.css' type='text/css' media='all' />
   </head>
   <body>

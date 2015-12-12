@@ -139,7 +139,7 @@ cat > $PAGE <<- EOF
 <html lang="en-US">
   <head>
     <meta charset="UTF-8">
-    <title>Repoducible Arch Linux ?!</title>
+    <title>Reproducible Arch Linux ?!</title>
     <link rel='stylesheet' href='global.css' type='text/css' media='all' />
   </head>
   <body>

@@ -1,22 +1,22 @@
 - defaults:
     name: reproducible
     project-type: freestyle
-    triggers:
-      - timed: '{my_timed}'
     properties:
-      - sidebar:
+      - sidebar: &sb1
           url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
+      - sidebar: &sb2
           url: https://jenkins.debian.net/view/reproducible
           text: reproducible builds jobs
           icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
+      - sidebar: &sb3
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    description: &desc '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    triggers:
+      - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -25,7 +25,7 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - logparser:
+      - logparser: &logparse
           parse-rules: '/srv/jenkins/logparse/reproducible.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
@@ -36,23 +36,14 @@
 - defaults:
     name: reproducible_git
     project-type: freestyle
+    properties:
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
+    description: *desc
     triggers:
       - timed: '{my_timed}'
       - pollscm: '*/6 * * * *'
-    properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 20
@@ -61,10 +52,7 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - logparser:
-          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
-          unstable-on-warning: 'true'
-          fail-on-error: 'true'
+      - logparser: *logparse
       - email:
           recipients: '{my_recipients}'
     scm:
@@ -77,21 +65,11 @@
 - defaults:
     name: reproducible_builder
     project-type: freestyle
-    triggers:
-      - timed: '{my_timed}'
+    description: *desc
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
       - priority-sorter:
           priority: '150'
       - throttle:
@@ -101,7 +79,8 @@
           option: category
           categories:
             - reproducible
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    triggers:
+      - timed: '{my_timed}'
     wrappers:
       - timeout:
           timeout: 1560
@@ -113,10 +92,7 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - logparser:
-          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
-          unstable-on-warning: 'true'
-          fail-on-error: 'true'
+      - logparser: *logparse
       - email:
           recipients: '{my_recipients}'
           notify-every-unstable-build: false
@@ -125,21 +101,11 @@
 - defaults:
     name: reproducible_builder_trigger
     project-type: freestyle
-    triggers:
-      - timed: '{my_timed}'
+    description: *desc
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
       - priority-sorter:
           priority: '150'
       - throttle:
@@ -149,7 +115,8 @@
           option: category
           categories:
             - reproducible
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    triggers:
+      - timed: '{my_timed}'
     wrappers:
       - timeout:
           timeout: 1560
@@ -161,10 +128,7 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - logparser:
-          parse-rules: '/srv/jenkins/logparse/reproducible.rules'
-          unstable-on-warning: 'true'
-          fail-on-error: 'true'
+      - logparser: *logparse
       - email:
           recipients: '{my_recipients}'
           notify-every-unstable-build: false
@@ -175,21 +139,11 @@
 - defaults:
     name: reproducible_other_projects
     project-type: freestyle
-    triggers:
-      - timed: '{my_timed}'
+    description: *desc
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
       - throttle:
           max-total: 9
           max-per-node: 9
@@ -197,7 +151,8 @@
           option: category
           categories:
             - reproducible      # no special category yet
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    triggers:
+      - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -217,21 +172,11 @@
 - defaults:
     name: reproducible_other_projects_trigger
     project-type: freestyle
-    triggers:
-      - timed: '{my_timed}'
+    description: *desc
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/reproducible
-          text: reproducible builds jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
       - throttle:
           max-total: 9
           max-per-node: 9
@@ -239,7 +184,8 @@
           option: category
           categories:
             - reproducible      # no special category yet
-    description: '{my_description}<br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://reproducible.debian.net/">https://reproducible.debian.net</a>.'
+    triggers:
+      - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
       numToKeep: 30

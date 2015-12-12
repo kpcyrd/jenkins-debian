@@ -433,7 +433,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	diff THANKS .THANKS >/dev/null || asciidoc $ASCIIDOC_PARAMS -o thanks.html THANKS
 	mv THANKS .THANKS
 	rm TODO README INSTALL CONTRIBUTING
-	sudo chown -R jenkins.jenkins /var/lib/jenkins/userContent
+	sudo chown jenkins.jenkins /var/lib/jenkins/userContent/*html
 	explain "user content for jenkins updated."
 fi
 

@@ -1,17 +1,3 @@
-#!/usr/bin/python
-
-packages = """
-   debian-edu
-   debian-edu-config
-   debian-edu-install
-   debian-edu-doc
-   debian-edu-artwork
-   debian-edu-archive-keyring
-   """.split()
-
-distro="sid"
-
-print("""
 - defaults:
     name: edu-packages
     project-type: freestyle
@@ -47,22 +33,20 @@ print("""
       - email:
           recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
 
-""")
 
-for package in sorted(packages):
-    print("""- job-template:
+- job-template:
     defaults: edu-packages
-    name: '{name}_%(distro)s_%(package)s'""" %
-        dict(package=package,
-             distro=distro))
+    name: '{name}_{my_distro}_{my_package}'
 
-print("""
+
 - project:
     name: edu-packages
-    jobs:""")
-for package in sorted(packages):
-    print("""        - '{name}_%(distro)s_%(package)s':
-            my_distro: '%(distro)s'
-            my_package: '%(package)s'""" %
-              dict(package=package,
-                  distro=distro))
+    my_distro: 'sid'
+    my_package:
+        - 'debian-edu'
+        - 'debian-edu-archive-keyring'
+        - 'debian-edu-artwork'
+        - 'debian-edu-config'
+        - 'debian-edu-doc'
+        - 'debian-edu-install'
+    jobs: ['{name}_{my_distro}_{my_package}']

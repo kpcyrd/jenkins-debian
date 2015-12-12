@@ -10,6 +10,7 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
+ARCHBASE=$BASE/archlinux
 #
 # analyse results to create the webpage
 #
@@ -83,7 +84,6 @@ done
 # write out the actual webpage
 #
 DATE=$(date -u +'%Y-%m-%d')
-ARCHBASE=$BASE/archlinux
 cd $ARCHBASE
 PAGE=archlinux.html
 echo "$(date -u) - starting to build $PAGE"

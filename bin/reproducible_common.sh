@@ -311,14 +311,17 @@ write_page_intro() {
 		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.2 system"
 		local BRANCH="release/10.2.0"
 	elif [ "$1" = "Arch Linux" ] ; then
-		write_page "        <em>Reproducible $1</em> is an effort to apply this to $1. Thus $1 packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="Arch Linux"
+		write_page "        <em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+	elif [ "$1" = "fedora-23" ] ; then
+		local PROJECTNAME="Fedora 23"
+		write_page "        <em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 	fi
-	if [ "$1" != "Arch Linux" ] ; then
+	if [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then
 		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute."
 		write_page "       <br />Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
 	else
-		write_page "       <p>FIXME: explain Arch Linux test setup here.</p>"
+		write_page "       <p>FIXME: explain $PROJECTNAME test setup here.</p>"
 	fi
 }
 
@@ -332,6 +335,8 @@ write_page_footer() {
 		write_page "FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
 	elif [ "$1" = "Arch Linux" ] ; then
 		write_page "The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis."
+	elif [ "$1" = "fedora-23" ] ; then
+		write_page "FIXME: add fedora copyright+trademark disclaimers here."
 	fi
 	write_page "</div></p></body></html>"
 }
@@ -343,6 +348,10 @@ write_page_meta_sign() {
 
 write_explaination_table() {
 	write_page "<p style=\"clear:both;\">"
+	if [ "$1" = "fedora-23" ] ; then
+		write_page "There are no variations introduced in the $1 builds yet. Stay tuned.</p>"
+		return
+	fi
 	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>hostname</td><td>one of: $(for i in $BUILD_NODES ; do echo '<br />&nbsp;&nbsp;' ; echo $i | cut -d '.' -f1 ; done)</td><td>i-capture-the-hostname</td></tr>"
@@ -351,7 +360,7 @@ write_explaination_table() {
 		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>domainname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 	fi
-	if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ]  ; then
+	if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then
 		write_page "<tr><td>env CAPTURE_ENVIRONMENT</td><td><em>not set</em></td><td>CAPTURE_ENVIRONMENT=\"I capture the environment\"</td></tr>"
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"

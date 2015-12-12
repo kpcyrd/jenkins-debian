@@ -44,7 +44,6 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 	fi
 	let TESTED+=1
 	echo "     <tr>" >> $HTML_BUFFER
-	echo "      <td>$RELEASE ($ARCH)</td>" >> $HTML_BUFFER
 	echo "      <td>$PKG</td>" >> $HTML_BUFFER
 	echo "      <td>" >> $HTML_BUFFER
 	if [ -z "$(cd $RPMBASE/$RELEASE/$ARCH/$PKG/ ; ls *.rpm.html 2>/dev/null)" ] ; then
@@ -110,7 +109,7 @@ echo "     </tr>" >> $HTML_RPM_STATS
 #
 DATE=$(date -u +'%Y-%m-%d')
 cd $RPMBASE
-PAGE=rpms/$RELEASE.html
+PAGE=$RELEASE.html
 echo "$(date -u) - starting to build $PAGE"
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
@@ -129,18 +128,18 @@ cat > $PAGE <<- EOF
       <div class="page-content">
 
 EOF
-write_page_intro '$RELEASE'
-write_explaination_table '$RELEASE'
+write_page_intro "$RELEASE"
+write_explaination_table "$RELEASE"
 write_page "    <table><tr><th>release (architecture)</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages 404</th><th>unknown state</th></tr>"
 cat $HTML_RPM_STATS >> $PAGE
 rm $HTML_RPM_STATS > /dev/null
 write_page "    </table>"
-write_page "    <table><tr><th>release (architecture)</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
+write_page "    <table><tr><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
 for i in $HTML_UNKNOWN $HTML_FTBFS $HTML_DEPWAIT $HTML_404 $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done
 write_page "    </table>"
 write_page "</div></div>"
-write_page_footer '$RELEASE'
+write_page_footer "$RELEASE"
 echo "$(date -u) - enjoy $REPRODUCIBLE_URL/rpms/$PAGE"

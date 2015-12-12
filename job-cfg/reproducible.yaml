@@ -211,127 +211,7 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_maintenance_armhf_bpi0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_armhf_cbxi4pro0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_armhf_hb0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_armhf_wbq0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_armhf_odxu4'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_armhf_wbd0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_armhf_rpi2b'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_amd64_profitbricks1'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_amd64_profitbricks2'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_amd64_profitbricks3'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_amd64_profitbricks5'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_maintenance_amd64_profitbricks6'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_amd64_profitbricks1'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_amd64_profitbricks2'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_amd64_profitbricks5'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_amd64_profitbricks6'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_bpi0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_cbxi4pro0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_hb0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_wbq0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_odxu4'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_wbd0'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_unstable_armhf_rpi2b'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_amd64_profitbricks1'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_amd64_profitbricks2'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_amd64_profitbricks5'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_testing_amd64_profitbricks6'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_experimental_amd64_profitbricks1'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_experimental_amd64_profitbricks2'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_experimental_amd64_profitbricks5'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_pbuilder_experimental_amd64_profitbricks6'
+    name: '{name}_{my_task}_{my_arch}_{my_node}'
 
 - job-template:
     defaults: reproducible
@@ -740,192 +620,90 @@
             my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
-        - '{name}_maintenance_armhf_bpi0':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+        - '{name}_{my_task}_{my_arch}_{my_node}':
+            my_task:
+                - 'maintenance':
+                    my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+                    my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+            my_node: 
+                - 'bpi0':
+                    my_arch: 'armhf'
+                - 'cbxi4pro0':
+                    my_arch: 'armhf'
+                - 'hb0':
+                    my_arch: 'armhf'
+                - 'wbq0':
+                    my_arch: 'armhf'
+                - 'odxu4':
+                    my_arch: 'armhf'
+                - 'wbd0':
+                    my_arch: 'armhf'
+                - 'rpi2b':
+                    my_arch: 'armhf'
+                - 'profitbricks1':
+                    my_arch: 'amd64'
+                - 'profitbricks2':
+                    my_arch: 'amd64'
+                - 'profitbricks3':
+                    my_arch: 'amd64'
+                - 'profitbricks5':
+                    my_arch: 'amd64'
+                - 'profitbricks6':
+                    my_arch: 'amd64'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'bpi0'
-        - '{name}_maintenance_armhf_cbxi4pro0':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+
+        - '{name}_{my_task}_{my_arch}_{my_node}':
+            my_task:
+                - 'setup_pbuilder_unstable':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '42 7 * * *'
+                - 'setup_pbuilder_experimental':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '33 7 * * *'
+            my_node: 
+                - 'profitbricks1':
+                    my_arch: 'amd64'
+                - 'profitbricks2':
+                    my_arch: 'amd64'
+                - 'profitbricks5':
+                    my_arch: 'amd64'
+                - 'profitbricks6':
+                    my_arch: 'amd64'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'cbxi4pro0'
-        - '{name}_maintenance_armhf_hb0':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
+
+        - '{name}_{my_task}_{my_arch}_{my_node}':
+            my_task:
+                - 'setup_pbuilder_testing':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '23 7 * * *'
+            my_node: 
+                - 'bpi0':
+                    my_arch: 'armhf'
+                - 'cbxi4pro0':
+                    my_arch: 'armhf'
+                - 'hb0':
+                    my_arch: 'armhf'
+                - 'wbq0':
+                    my_arch: 'armhf'
+                - 'odxu4':
+                    my_arch: 'armhf'
+                - 'wbd0':
+                    my_arch: 'armhf'
+                - 'rpi2b':
+                    my_arch: 'armhf'
+                - 'profitbricks1':
+                    my_arch: 'amd64'
+                - 'profitbricks2':
+                    my_arch: 'amd64'
+                - 'profitbricks5':
+                    my_arch: 'amd64'
+                - 'profitbricks6':
+                    my_arch: 'amd64'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'hb0'
-        - '{name}_maintenance_armhf_wbq0':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'wbq0'
-        - '{name}_maintenance_armhf_odxu4':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'odxu4'
-        - '{name}_maintenance_armhf_wbd0':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'wbd0'
-        - '{name}_maintenance_armhf_rpi2b':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'rpi2b'
-        - '{name}_maintenance_amd64_profitbricks1':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks1'
-        - '{name}_maintenance_amd64_profitbricks2':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks2'
-        - '{name}_maintenance_amd64_profitbricks3':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks3'
-        - '{name}_maintenance_amd64_profitbricks5':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks5'
-        - '{name}_maintenance_amd64_profitbricks6':
-            my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
-            my_timed: '5 0,3,6,9,12,15,18,21 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks6'
-        - '{name}_setup_pbuilder_unstable_armhf_bpi0':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'bpi0'
-        - '{name}_setup_pbuilder_unstable_armhf_cbxi4pro0':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'cbxi4pro0'
-        - '{name}_setup_pbuilder_unstable_armhf_hb0':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'hb0'
-        - '{name}_setup_pbuilder_unstable_armhf_wbq0':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'wbq0'
-        - '{name}_setup_pbuilder_unstable_armhf_odxu4':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'odxu4'
-        - '{name}_setup_pbuilder_unstable_armhf_wbd0':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'wbd0'
-        - '{name}_setup_pbuilder_unstable_armhf_rpi2b':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'rpi2b'
-        - '{name}_setup_pbuilder_testing_amd64_profitbricks1':
-            my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '23 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks1'
-        - '{name}_setup_pbuilder_testing_amd64_profitbricks2':
-            my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '23 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks2'
-        - '{name}_setup_pbuilder_testing_amd64_profitbricks5':
-            my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '23 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks5'
-        - '{name}_setup_pbuilder_testing_amd64_profitbricks6':
-            my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '23 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks6'
-        - '{name}_setup_pbuilder_unstable_amd64_profitbricks1':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks1'
-        - '{name}_setup_pbuilder_unstable_amd64_profitbricks2':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks2'
-        - '{name}_setup_pbuilder_unstable_amd64_profitbricks5':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks5'
-        - '{name}_setup_pbuilder_unstable_amd64_profitbricks6':
-            my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '42 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks6'
-        - '{name}_setup_pbuilder_experimental_amd64_profitbricks1':
-            my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '33 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks1'
-        - '{name}_setup_pbuilder_experimental_amd64_profitbricks2':
-            my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '33 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks2'
-        - '{name}_setup_pbuilder_experimental_amd64_profitbricks5':
-            my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '33 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks5'
-        - '{name}_setup_pbuilder_experimental_amd64_profitbricks6':
-            my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-            my_timed: '33 7 * * *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: 'profitbricks6'
+
         - '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins':
             my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
             my_timed: '42 0 * * *'

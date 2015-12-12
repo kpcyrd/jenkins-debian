@@ -169,7 +169,7 @@ create_results_dirs
 cd $TMPDIR/b1
 for i in $(ls -1d *| sort -u) ; do
 	let ALL_ROMS+=1
-	if [ -f $i/coreboot.rom ] ; then
+	if [ -f $i/coreboot.rom ] && [ -f $TMPDIR/b2/$i/coreboot.rom ] ; then
 		call_diffoscope $i coreboot.rom
 		get_filesize $i/coreboot.rom
 		if [ -f $TMPDIR/$i/coreboot.rom.html ] ; then
@@ -182,7 +182,11 @@ for i in $(ls -1d *| sort -u) ; do
 			rm -f $BASE/coreboot/dbd/$i.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	else
-		echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source.</li>" >> $ROMS_HTML
+		if [ ! -f $i/coreboot.rom ] ; then
+			echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source.</li>" >> $ROMS_HTML
+		else
+			echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source on the 2nd build.</li>" >> $ROMS_HTML
+		fi
 		let BAD_ROMS+=1
 	fi
 done

@@ -76,9 +76,9 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_FTBFS
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep 'makepkg was killed by timeout after 4h' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_FTBFS
-				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout after 4h" >> $HTML_BUFFER
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
 			else
 				echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
 				HTML_TARGET=$HTML_UNKNOWN

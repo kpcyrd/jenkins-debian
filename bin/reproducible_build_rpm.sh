@@ -212,7 +212,7 @@ RELEASE="$1"
 ARCH="$2"
 SRCPACKAGE=""	# package name
 SRC_RPM=""	# src rpm file name
-update_mock
+#update_mock # FIXME: we dont have to run mock on the main node yet, but we will need at least have to update yum there…
 choose_package
 # build package twice
 mkdir b1 b2

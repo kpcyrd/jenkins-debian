@@ -54,14 +54,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=$HTML_DEPWAIT
 				let NR_DEPWAIT+=1
 				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> failed to install dependencies" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
-				let NR_FTBFS+=1
-				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
-				let NR_FTBFS+=1
-				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source, while running tests" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: Failure while downloading' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_404
 				let NR_404+=1
@@ -70,6 +62,14 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=$HTML_FTBFS
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=$HTML_FTBFS
+				let NR_FTBFS+=1
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=$HTML_FTBFS
+				let NR_FTBFS+=1
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source, while running tests" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_FTBFS
 				let NR_FTBFS+=1

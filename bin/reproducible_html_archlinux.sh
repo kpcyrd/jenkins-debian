@@ -34,7 +34,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	NR_404=0
 	NR_GOOD=0
 	NR_UNKNOWN=0
-	for PKG in $(find $ARCHBASE/$REPOSITORY/* -maxdepth 1 -type d -exec basename {} \;) ; do
+	for PKG in $(find $ARCHBASE/$REPOSITORY/* -maxdepth 1 -type d -exec basename {} \;|sort -u) ; do
 		if [ -z "$(cd $ARCHBASE/$REPOSITORY/$PKG/ ; ls)" ] ; then
 			# directory exists but is empty: package is building…
 			echo "$(date -u ) - ignoring $PKG from '$REPOSITORY' which is building right now…"

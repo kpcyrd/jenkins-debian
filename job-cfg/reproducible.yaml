@@ -225,7 +225,7 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_hname:
                 - 'jenkins':
-                    my_arch: 'armhf'
+                    my_arch: 'amd64'
             my_node: ''
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -351,7 +351,7 @@
 
             my_hname:
                 - 'jenkins':
-                    my_arch: 'armhf'
+                    my_arch: 'amd64'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
 

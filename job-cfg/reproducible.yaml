@@ -214,6 +214,10 @@
     name: '{name}_{my_task}_{my_arch}_{my_hname}'
 
 - job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_{my_distro}_{my_arch}_{my_hname}'
+
+- job-template:
     defaults: reproducible_builder
     name: '{name}_builder_{my_arch}_{my_num}'
 
@@ -312,29 +316,25 @@
                 - 'profitbricks6':  { my_arch: 'amd64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
-        - '{name}_{my_task}_{my_arch}_{my_hname}':
-            # FIXME: should define my_dstro an paramaterise the rest, but that will probably change job names, so let's leave it for now -- fil
-            my_task:
-                - 'setup_schroot_unstable_diffoscope':
+        - '{name}_setup_schroot_{my_distro}_{my_arch}_{my_hname}':
+            my_distro:
+                - 'unstable_diffoscope':
                     my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '42 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
-                - 'setup_schroot_testing_diffoscope':
+                - 'testing_diffoscope':
                     my_description: 'Setup schroot for running diffoscope in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '23 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-diffoscope testing diffoscope locales-all'
-                - 'setup_schroot_unstable':
-                    my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
+                - 'unstable':
                     my_timed: '42 1 * * *'
-                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable botch'
-                - 'setup_schroot_testing':
-                    my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro} botch'
+                - 'testing':
                     my_timed: '42 1 * * *'
-                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing'
-                - 'setup_schroot_experimental':
-                    my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
+                - 'experimental':
                     my_timed: '33 1 * * *'
-                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental'
+            my_description: 'Setup {my_distro} schroot for fetching source packages for the builder jobs.'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro}'
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''

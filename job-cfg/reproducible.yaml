@@ -609,10 +609,6 @@
 
 # =-=-=-= old style stuff =-=-=-=
 - job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_unstable_diffoscope_amd64_profitbricks3'
-
-- job-template:
     defaults: reproducible_git
     name: '{name}_html_notes'
 

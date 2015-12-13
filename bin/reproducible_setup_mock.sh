@@ -23,9 +23,19 @@ dpkg -l mock
 id
 echo "$(date -u) - cleaning yum."
 yum -v clean all
+yum -v check
+yum -v repolist all
 echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
+echo "$(date -u) - mock --clean"
 mock -r $RELEASE-$ARCH --resultdir=. -v --clean
+echo "$(date -u) - mock --scrub=all"
 mock -r $RELEASE-$ARCH --resultdir=. -v --scrub=all
 tree /var/cache/mock/
+echo "$(date -u) - mock --init"
 mock -r $RELEASE-$ARCH --resultdir=. -v --init
 echo "$(date -u) - mock configured for $RELEASE on $ARCH."
+echo "$(date -u) - mock --install rpm-build"
+mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build
+echo "$(date -u) - mock --update"
+mock -r $RELEASE-$ARCH --resultdir=. -v --update
+

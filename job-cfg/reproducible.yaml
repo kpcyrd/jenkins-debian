@@ -207,147 +207,11 @@
 
 - job-template:
     defaults: reproducible
-    name: '{name}_maintenance_amd64_jenkins'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_{my_task}_{my_arch}_{my_node}'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_unstable_diffoscope_amd64_profitbricks3'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_testing_diffoscope_amd64_jenkins'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_unstable_amd64_jenkins'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_testing_amd64_jenkins'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_setup_schroot_experimental_amd64_jenkins'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_scheduler'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_dashboard'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_pkg_sets'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_indexes'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_dd_list'
-
-- job-template:
-    defaults: reproducible_git
-    name: '{name}_html_notes'
-
-- job-template:
-    defaults: reproducible_git
-    name: '{name}_html_spec_source_date_epoch'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_all_packages'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_repository_comparison'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_breakages'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_live_status'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_rsync_remote_results'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_create_meta_pkg_sets'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_nodes_info'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_json'
+    name: '{name}_{my_task}_{my_arch}_{my_hname}'
 
 - job-template:
     defaults: reproducible_builder
     name: '{name}_builder_{my_arch}_{my_num}'
-
-- job-template:
-    defaults: reproducible_other_projects_trigger
-    name: '{name}_coreboot'
-
-- job-template:
-    defaults: reproducible_other_projects_trigger
-    name: '{name}_openwrt'
-
-- job-template:
-    defaults: reproducible_other_projects_trigger
-    name: '{name}_netbsd'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_freebsd'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_schroot_archlinux_jenkins'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_schroot_archlinux_profitbricks3'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_mock_fedora-23_x86_64'
-
-- job-template:
-    defaults: reproducible_builder_trigger
-    name: '{name}_builder_archlinux_1'
-
-- job-template:
-    defaults: reproducible_builder_trigger
-    name: '{name}_builder_archlinux_2'
-
-- job-template:
-    defaults: reproducible_builder_trigger
-    name: '{name}_builder_fedora-23_x86_64_1'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_archlinux'
-
-- job-template:
-    defaults: reproducible
-    name: '{name}_html_fedora-23_x86_64'
 
 - project:
     name: reproducible
@@ -725,4 +589,140 @@
             my_shell: '/srv/jenkins/bin/reproducible_html_rpms.sh fedora-23 x86_64'
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
+# =-=-=-= old style stuff =-=-=-=
+- job-template:
+    defaults: reproducible
+    name: '{name}_maintenance_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_diffoscope_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_diffoscope_amd64_profitbricks3'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_testing_diffoscope_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_unstable_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_testing_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_setup_schroot_experimental_amd64_jenkins'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_scheduler'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_dashboard'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_pkg_sets'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_indexes'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_dd_list'
+
+- job-template:
+    defaults: reproducible_git
+    name: '{name}_html_notes'
+
+- job-template:
+    defaults: reproducible_git
+    name: '{name}_html_spec_source_date_epoch'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_all_packages'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_repository_comparison'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_breakages'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_live_status'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_rsync_remote_results'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_create_meta_pkg_sets'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_nodes_info'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_json'
+
+- job-template:
+    defaults: reproducible_other_projects_trigger
+    name: '{name}_coreboot'
+
+- job-template:
+    defaults: reproducible_other_projects_trigger
+    name: '{name}_openwrt'
+
+- job-template:
+    defaults: reproducible_other_projects_trigger
+    name: '{name}_netbsd'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_freebsd'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_setup_schroot_archlinux_jenkins'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_setup_schroot_archlinux_profitbricks3'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_setup_mock_fedora-23_x86_64'
+
+- job-template:
+    defaults: reproducible_builder_trigger
+    name: '{name}_builder_archlinux_1'
+
+- job-template:
+    defaults: reproducible_builder_trigger
+    name: '{name}_builder_archlinux_2'
+
+- job-template:
+    defaults: reproducible_builder_trigger
+    name: '{name}_builder_fedora-23_x86_64_1'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_archlinux'
+
+- job-template:
+    defaults: reproducible
+    name: '{name}_html_fedora-23_x86_64'
 

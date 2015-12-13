@@ -245,8 +245,7 @@
                     my_timed: '5 0,3,6,9,12,15,18,21 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'
             my_hname:
-                - 'jenkins':
-                    my_arch: 'amd64'
+                - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -255,30 +254,18 @@
                     my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
                     my_timed: '5 0,3,6,9,12,15,18,21 * * *'
             my_hname:
-                - 'bpi0':
-                    my_arch: 'armhf'
-                - 'cbxi4pro0':
-                    my_arch: 'armhf'
-                - 'hb0':
-                    my_arch: 'armhf'
-                - 'wbq0':
-                    my_arch: 'armhf'
-                - 'odxu4':
-                    my_arch: 'armhf'
-                - 'wbd0':
-                    my_arch: 'armhf'
-                - 'rpi2b':
-                    my_arch: 'armhf'
-                - 'profitbricks1':
-                    my_arch: 'amd64'
-                - 'profitbricks2':
-                    my_arch: 'amd64'
-                - 'profitbricks3':
-                    my_arch: 'amd64'
-                - 'profitbricks5':
-                    my_arch: 'amd64'
-                - 'profitbricks6':
-                    my_arch: 'amd64'
+                - 'bpi0':           { my_arch: 'armhf' }
+                - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'hb0':            { my_arch: 'armhf' }
+                - 'wbq0':           { my_arch: 'armhf' }
+                - 'odxu4':          { my_arch: 'armhf' }
+                - 'wbd0':           { my_arch: 'armhf' }
+                - 'rpi2b':          { my_arch: 'armhf' }
+                - 'profitbricks1':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'amd64' }
+                - 'profitbricks3':  { my_arch: 'amd64' }
+                - 'profitbricks5':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'amd64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -297,14 +284,10 @@
                     my_timed: '33 1 * * *'
 
             my_hname:
-                - 'profitbricks1':
-                    my_arch: 'amd64'
-                - 'profitbricks2':
-                    my_arch: 'amd64'
-                - 'profitbricks5':
-                    my_arch: 'amd64'
-                - 'profitbricks6':
-                    my_arch: 'amd64'
+                - 'profitbricks1':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'amd64' }
+                - 'profitbricks5':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'amd64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -316,28 +299,17 @@
                     my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
                     my_timed: '42 1 * * *'
             my_hname:
-                - 'bpi0':
-                    my_arch: 'armhf'
-                - 'cbxi4pro0':
-                    my_arch: 'armhf'
-                - 'hb0':
-                    my_arch: 'armhf'
-                - 'wbq0':
-                    my_arch: 'armhf'
-                - 'odxu4':
-                    my_arch: 'armhf'
-                - 'wbd0':
-                    my_arch: 'armhf'
-                - 'rpi2b':
-                    my_arch: 'armhf'
-                - 'profitbricks1':
-                    my_arch: 'amd64'
-                - 'profitbricks2':
-                    my_arch: 'amd64'
-                - 'profitbricks5':
-                    my_arch: 'amd64'
-                - 'profitbricks6':
-                    my_arch: 'amd64'
+                - 'bpi0':           { my_arch: 'armhf' }
+                - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'hb0':            { my_arch: 'armhf' }
+                - 'wbq0':           { my_arch: 'armhf' }
+                - 'odxu4':          { my_arch: 'armhf' }
+                - 'wbd0':           { my_arch: 'armhf' }
+                - 'rpi2b':          { my_arch: 'armhf' }
+                - 'profitbricks1':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'amd64' }
+                - 'profitbricks5':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'amd64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -364,8 +336,7 @@
                     my_timed: '33 1 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental'
             my_hname:
-                - 'jenkins':
-                    my_arch: 'amd64'
+                - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -375,8 +346,7 @@
                     my_timed: '42 0 * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname:
-                - 'profitbricks3':
-                    my_arch: 'amd64'
+                - 'profitbricks3':  { my_arch: 'amd64' }
 
         - '{name}_{my_task}':
             my_task:

@@ -217,6 +217,22 @@
     defaults: reproducible_builder
     name: '{name}_builder_{my_arch}_{my_num}'
 
+- job-template:
+    defaults: reproducible_git
+    name: '{name}_html_{my_reponame}'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_{otherproject}'
+
+- job-template:
+    defaults: reproducible_other_projects_trigger
+    name: '{name}_{otherproject}_trigger'
+
+- job-template:
+    defaults: reproducible_builder_trigger
+    name: '{name}_builder_{otherproject}_{my_num}'
+
 - project:
     name: reproducible
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
@@ -422,18 +438,18 @@
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
             my_hname: ''
 
-        - '{name}_html_notes':
-            my_description: 'Generate HTML results (notes) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_blank">notes.git</a> repository.'
-            my_timed: '57 0 * * *'
-            my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
-            my_shell: '/srv/jenkins/bin/reproducible_notes.py && /srv/jenkins/bin/reproducible_html_notes.py'
-            my_hname: ''
-        - '{name}_html_spec_source_date_epoch':
-            my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/source-date-epoch-spec.git" target="_blank">source-date-epoch-spec.git</a> repository.'
-            my_timed: ''
-            my_gitrepo: 'git://git.debian.org/git/reproducible/source-date-epoch-spec.git'
-            my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh source-date-epoch-spec'
-            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+        - '{name}_html_{my_reponame}':
+            my_reponame:
+                - 'notes':
+                    my_description: 'Generate HTML results ({my_reponame}) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
+                    my_timed: '57 0 * * *'
+                    my_shell: '/srv/jenkins/bin/reproducible_{my_reponame}.py && /srv/jenkins/bin/reproducible_html_{my_reponame}.py'
+                - 'source-date-epoch-spec':
+                    my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
+                    my_timed: ''
+                    my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh {my_reponame}'
+                    my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_gitrepo: 'git://git.debian.org/git/reproducible/{my_reponame}.git'
             my_hname: ''
 
         - '{name}_builder_{my_arch}_{my_num}':
@@ -500,118 +516,63 @@
             my_timed: '* * * * *'
             my_hname: ''
 
-        - '{name}_coreboot':
-            my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
-            my_timed: '42 23 * * 1'
+        - '{name}_{otherproject}_trigger':
+            otherproject:
+                - 'coreboot':
+                    my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
+                    my_timed: '42 23 * * 1'
+                - 'openwrt':
+                    my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
+                    my_timed: '42 23 * * 2'
+                - 'netbsd':
+                    my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
+                    my_timed: '42 23 * * 3'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
-        - '{name}_openwrt':
-            my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
-            my_timed: '42 23 * * 2'
-            my_trigger: 'reproducible_html_rsync_remote_results'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_hname: 'profitbricks3'
-        - '{name}_netbsd':
-            my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
-            my_timed: '42 23 * * 3'
-            my_trigger: 'reproducible_html_rsync_remote_results'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_hname: 'profitbricks3'
-        - '{name}_freebsd':
-            my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
-            my_timed: '42 23 * * 4'
-            my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
+
+        - '{name}_{otherproject}':
+            otherproject:
+                - 'freebsd':
+                    # FIXME: should this job be called '{name}_freebsd_jenkins'?  If so, we should add the hname above
+                    my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
+                    my_timed: '42 23 * * 4'
+                - 'setup_schroot_archlinux_jenkins':
+                    # FIXME: it looks like this should be renamed to setup_archlinux_schroot, and the jenkins applied to all or none of the jobs here -- fil
+                    my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
+                - 'setup_schroot_archlinux_profitbricks3':
+                    my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks3'
+                - 'setup_mock_fedora-23_x86_64_jenkins':
+                    my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64'
+                - 'setup_mock_fedora-23_x86_64_profitbricks3':
+                    my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks3'
+            my_shell: '/srv/jenkins/bin/reproducible_{otherproject}.sh'
             my_hname: ''
-        - '{name}_setup_schroot_archlinux_jenkins':
-            my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
-            my_timed: '42 23 1 1 *'
-            my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
-            my_hname: ''
-        - '{name}_setup_schroot_archlinux_profitbricks3':
-            my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
-            my_timed: '42 23 1 1 *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_hname: 'profitbricks3'
-        - '{name}_setup_mock_fedora-23_x86_64_jenkins':
-            my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
-            my_timed: '42 23 1 1 *'
-            my_shell: '/srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64'
-            my_hname: ''
-        - '{name}_setup_mock_fedora-23_x86_64_profitbricks3':
-            my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
-            my_timed: '42 23 1 1 *'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_hname: 'profitbricks3'
-        - '{name}_builder_archlinux_1':
-            my_description: 'Try to reproducibly build an Arch Linux package.'
+
+        - '{name}_builder_{otherproject}_{my_num}':
+            otherproject:
+                - 'archlinux':
+                    my_num: 1
+                    op_descname: 'an Arch Linux'
+                - 'archlinux':
+                    my_num: 2
+                    op_descname: 'an Arch Linux'
+                - 'fedora-23_x86_64':
+                    my_num: 1
+                    op_descname: 'a Fedora 23'
+                    my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
+            my_description: 'Try to reproducibly build {op_descname} package.'
+            my_shell: '/srv/jenkins/bin/reproducible_build_{otherproject}_pkg.sh'
             my_timed: '* * * * *'
-            my_trigger: 'reproducible_html_archlinux'
-            my_shell: '/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh'
+            my_trigger: 'reproducible_html_{otherproject}'
             my_hname: ''
-        - '{name}_builder_archlinux_2':
-            my_description: 'Try to reproducibly build an Arch Linux package.'
-            my_timed: '* * * * *'
-            my_trigger: 'reproducible_html_archlinux'
-            my_shell: '/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh'
-            my_hname: ''
-        - '{name}_builder_fedora-23_x86_64_1':
-            my_description: 'Try to reproducibly build a Fedora 23 package.'
-            my_timed: '* * * * *'
-            my_trigger: 'reproducible_html_fedora-23_x86_64'
-            my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
-            my_hname: ''
-
-
-# =-=-=-= old style stuff =-=-=-=
-- job-template:
-    defaults: reproducible_git
-    name: '{name}_html_notes'
-
-- job-template:
-    defaults: reproducible_git
-    name: '{name}_html_spec_source_date_epoch'
-
-- job-template:
-    defaults: reproducible_other_projects_trigger
-    name: '{name}_coreboot'
-
-- job-template:
-    defaults: reproducible_other_projects_trigger
-    name: '{name}_openwrt'
-
-- job-template:
-    defaults: reproducible_other_projects_trigger
-    name: '{name}_netbsd'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_freebsd'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_schroot_archlinux_jenkins'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_schroot_archlinux_profitbricks3'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_mock_fedora-23_x86_64_jenkins'
-
-- job-template:
-    defaults: reproducible_other_projects
-    name: '{name}_setup_mock_fedora-23_x86_64_profitbricks3'
-
-- job-template:
-    defaults: reproducible_builder_trigger
-    name: '{name}_builder_archlinux_1'
-
-- job-template:
-    defaults: reproducible_builder_trigger
-    name: '{name}_builder_archlinux_2'
-
-- job-template:
-    defaults: reproducible_builder_trigger
-    name: '{name}_builder_fedora-23_x86_64_1'

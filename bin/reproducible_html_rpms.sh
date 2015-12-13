@@ -95,7 +95,7 @@ fi
 echo "     <tr>" >> $HTML_RPM_STATS
 echo "      <td>$RELEASE ($ARCH)</td><td>$NR_TESTED</td>" >> $HTML_RPM_STATS
 for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_UNKNOWN ; do
-	PERCENT_i=$(echo "scale=1 ; ($i*100/$TOTAL)" | bc)
+	PERCENT_i=$(echo "scale=1 ; ($i*100/$TESTED)" | bc)
 	if [ "$PERCENT_i" != "0" ] ; then
 		echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_RPM_STATS
 	else

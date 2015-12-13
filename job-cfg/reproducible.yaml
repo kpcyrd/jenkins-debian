@@ -219,6 +219,8 @@
 
 - project:
     name: reproducible
+    my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+    my_node: '{my_hname}'
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -226,7 +228,6 @@
                     my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
                     my_timed: '5 0,3,6,9,12,15,18,21 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_hname:
                 - 'jenkins':
                     my_arch: 'amd64'
@@ -263,8 +264,6 @@
                 - 'profitbricks6':
                     my_arch: 'amd64'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -291,8 +290,6 @@
                 - 'profitbricks6':
                     my_arch: 'amd64'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -326,8 +323,6 @@
                 - 'profitbricks6':
                     my_arch: 'amd64'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             # FIXME: should define my_dstro an paramaterise the rest, but that will probably change job names, so let's leave it for now -- fil
@@ -355,7 +350,6 @@
             my_hname:
                 - 'jenkins':
                     my_arch: 'amd64'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: ''
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -367,8 +361,6 @@
             my_hname:
                 - 'profitbricks3':
                     my_arch: 'amd64'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
 
         - '{name}_{my_task}':
             my_task:
@@ -428,8 +420,6 @@
 
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
 
         - '{name}_html_notes':
@@ -437,8 +427,6 @@
             my_timed: '57 0 * * *'
             my_gitrepo: 'git://git.debian.org/git/reproducible/notes.git'
             my_shell: '/srv/jenkins/bin/reproducible_notes.py && /srv/jenkins/bin/reproducible_html_notes.py'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
         - '{name}_html_spec_source_date_epoch':
             my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/source-date-epoch-spec.git" target="_blank">source-date-epoch-spec.git</a> repository.'
@@ -446,7 +434,6 @@
             my_gitrepo: 'git://git.debian.org/git/reproducible/source-date-epoch-spec.git'
             my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh source-date-epoch-spec'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
 
         - '{name}_builder_{my_arch}_{my_num}':
@@ -486,9 +473,7 @@
                 - '31': *bd_amd_5_2
                 - '32': *bd_amd_6_1
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_timed: '* * * * *'
-            my_node: '{my_hname}'
             my_hname: ''
 
         # could have all archs in one block, but it seems cleaner this way
@@ -512,9 +497,7 @@
                 - '14': { my_node1: 'rpi2b-armhf-rb:2230',     my_node2: 'wbq0-armhf-rb:2225'      }
                 - '15': { my_node1: 'wbd0-armhf-rb:2223',      my_node2: 'hb0-armhf-rb:2224'       }
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_timed: '* * * * *'
-            my_node: '{my_hname}'
             my_hname: ''
 
         - '{name}_coreboot':
@@ -522,83 +505,61 @@
             my_timed: '42 23 * * 1'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: 'profitbricks3'
         - '{name}_openwrt':
             my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 2'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: 'profitbricks3'
         - '{name}_netbsd':
             my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 3'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: 'profitbricks3'
         - '{name}_freebsd':
             my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
             my_timed: '42 23 * * 4'
             my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
         - '{name}_setup_schroot_archlinux_jenkins':
             my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
         - '{name}_setup_schroot_archlinux_profitbricks3':
             my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: 'profitbricks3'
         - '{name}_setup_mock_fedora-23_x86_64_jenkins':
             my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
         - '{name}_setup_mock_fedora-23_x86_64_profitbricks3':
             my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: 'profitbricks3'
         - '{name}_builder_archlinux_1':
             my_description: 'Try to reproducibly build an Arch Linux package.'
             my_timed: '* * * * *'
             my_trigger: 'reproducible_html_archlinux'
             my_shell: '/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
         - '{name}_builder_archlinux_2':
             my_description: 'Try to reproducibly build an Arch Linux package.'
             my_timed: '* * * * *'
             my_trigger: 'reproducible_html_archlinux'
             my_shell: '/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
         - '{name}_builder_fedora-23_x86_64_1':
             my_description: 'Try to reproducibly build a Fedora 23 package.'
             my_timed: '* * * * *'
             my_trigger: 'reproducible_html_fedora-23_x86_64'
             my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
-            my_node: '{my_hname}'
             my_hname: ''
 
 

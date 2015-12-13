@@ -506,7 +506,7 @@ call_diffoscope() {
 	local msg=""
 	set +e
 	# remember to also modify the retry diffoscope call 15 lines below
-	( timeout $TIMEOUT schroot \
+	( timeout $TIMEOUT nice schroot \
 		--directory $TMPDIR \
 		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
 		diffoscope -- \
@@ -521,7 +521,7 @@ call_diffoscope() {
 		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
 		# remember to also modify the retry diffoscope call 15 lines above
-		( timeout $TIMEOUT schroot \
+		( timeout $TIMEOUT nice schroot \
 			--directory $TMPDIR \
 			-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
 			diffoscope -- \

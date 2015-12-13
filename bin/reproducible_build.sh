@@ -344,7 +344,7 @@ call_diffoscope_on_changes_files() {
 	set +e
 	set -x
 	# remember to also modify the retry diffoscope call 15 lines below
-	( timeout $TIMEOUT schroot \
+	( timeout $TIMEOUT nice schroot \
 		--directory $TMPDIR \
 		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
 		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
@@ -360,7 +360,7 @@ call_diffoscope_on_changes_files() {
 		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
 		# remember to also modify the retry diffoscope call 15 lines above
-		( timeout $TIMEOUT schroot \
+		( timeout $TIMEOUT nice schroot \
 			--directory $TMPDIR \
 			-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
 			-- sh -c "export TMPDIR=$TEMP ; diffoscope \

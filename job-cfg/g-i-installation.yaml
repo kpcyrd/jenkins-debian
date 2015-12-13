@@ -388,30 +388,6 @@
             - debian-edu:
                 my_distname: 'Debian Edu'
                 my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-                my_trigdesc: '<br />This job is only triggered manually.'
-          my_ver:
-            - jessie-beta1-netinst:
-                my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-CD.iso
-            - jessie-beta1-usb:
-                my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8.0+edu0~b1-USB.iso
-          my_profile:
-            - standalone:
-                my_title_extra: ' (Default)'
-                my_disksize: 25
-            - standalone_mate:
-                my_disksize: 25
-            - main-server:
-                my_disksize: 40
-            - main+ltsp-server:
-                my_disksize: 60
-
-      - '{name}_{my_dist}_{my_ver}_group':
-          my_dist:
-            - debian-edu:
-                my_distname: 'Debian Edu'
-                my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
           my_ver:
             - jessie-daily-usb:
                 my_verdesc: Jessie

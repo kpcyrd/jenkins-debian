@@ -22,6 +22,7 @@ echo "$(date -u) - showing setup."
 dpkg -l mock
 id
 echo "$(date -u) - cleaning yum."
+rm ~/.rpmdb -rf
 yum -v clean all
 yum -v check
 yum -v repolist all

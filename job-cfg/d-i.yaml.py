@@ -50,11 +50,28 @@ non_pdf_langs = [
 non_po_langs = [
     'ca',
     'cs',
+    'da',
     'de',
+    'el',
     'en',
+    'es',
+    'fi',
     'fr',
+    'hu',
     'it',
+    'ja',
+    'ko',
+    'nl',
+    'nn',
+    'pt',
     'pt_BR',
+    'ro',
+    'ru',
+    'sv',
+    'tl',
+    'vi',
+    'zh_CN',
+    'zh_TW',
 ]
 
 pkgs = """

@@ -583,7 +583,14 @@
             my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
             my_node: '{my_hname}'
             my_hname: 'profitbricks3'
-        - '{name}_setup_mock_fedora-23_x86_64':
+        - '{name}_setup_mock_fedora-23_x86_64_jenkins':
+            my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
+            my_timed: '42 23 1 1 *'
+            my_shell: '/srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64'
+            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+            my_node: '{my_hname}'
+            my_hname: ''
+        - '{name}_setup_mock_fedora-23_x86_64_profitbricks3':
             my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
             my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
@@ -720,7 +727,11 @@
 
 - job-template:
     defaults: reproducible_other_projects
-    name: '{name}_setup_mock_fedora-23_x86_64'
+    name: '{name}_setup_mock_fedora-23_x86_64_jenkins'
+
+- job-template:
+    defaults: reproducible_other_projects
+    name: '{name}_setup_mock_fedora-23_x86_64_profitbricks3'
 
 - job-template:
     defaults: reproducible_builder_trigger

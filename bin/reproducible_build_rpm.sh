@@ -53,7 +53,7 @@ update_mock() {
 download_package() {
 	echo "$(date -u ) - downloading ${SRCPACKAGE} for $RELEASE now."
 	yumdownloader --source ${SRCPACKAGE}
-	SRC_RPM="$(ls $SRCPACKAGE*.src.rpm)"
+	SRC_RPM="$(ls *.src.rpm)"
 }
 
 choose_package() {

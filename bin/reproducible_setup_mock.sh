@@ -17,6 +17,8 @@ if [ -z "$1" ] || [ -z "$2" ] ; then
 fi
 RELEASE=$1
 ARCH=$2
+# not used yet:
+UNIQEEXT="mock_${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}}"
 
 echo "$(date -u) - showing setup."
 dpkg -l mock

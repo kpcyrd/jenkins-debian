@@ -281,6 +281,8 @@ This is about Debian, below are more todo entries for other projects…
 
 ==== reproducible Fedora
 
+* use mock in parallel with --uniqeext
+** task: needs to be passed via ssh too (and we want ssh to do remote builds like debian from one master node)
 * setup script:
 ** mock --clean just uninstalls the chroot but it'll still be rebuilt next time using cache.  you can delete the caches from /var/cache/mock/ or touch the mock config
 ** is /etc/yum/repos.d/fedora.repo really needed?

@@ -217,7 +217,6 @@ cd $TMPDIR
 TIMEOUT=8	# maximum time in hours for a single build
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
-BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 DUMMY=$(mktemp -t archlinux-dummy-XXXXXXXX)
 
 #

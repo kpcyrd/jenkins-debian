@@ -175,7 +175,6 @@ cd $TMPDIR
 
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
-BUILDER="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
 DUMMY=$(mktemp -t rpm-dummy-XXXXXXXX)
 touch -d "$(date -u -d "6 hours ago" '+%Y-%m-%d %H:%M') UTC" $DUMMY
 RPM_STAMPS=/srv/reproducible-results/.rpm_stamp
@@ -214,6 +213,8 @@ RELEASE="$1"
 ARCH="$2"
 SRCPACKAGE=""	# package name
 SRC_RPM=""	# src rpm file name
+# not used yet:
+UNIQEEXT="mock_${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}}"
 #update_mock # FIXME: we dont have to run mock on the main node yet, but we will need at least have to update yum there…
 choose_package
 # build package twice

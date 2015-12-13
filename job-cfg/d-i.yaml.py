@@ -40,8 +40,22 @@ langs = [
     {'zh_TW': {'langname': 'Chinese (zh_TW)'}}
 ]
 
-non_pdf_langs = ['el', 'vi', 'ja', 'zh_CN', 'zh_TW']
-non_po_langs = ['ca', 'cs', 'de', 'en', 'fr', 'it', 'pt_BR']
+non_pdf_langs = [
+    'el',
+    'vi',
+    'ja',
+    'zh_CN',
+    'zh_TW',
+]
+non_po_langs = [
+    'ca',
+    'cs',
+    'de',
+    'en',
+    'fr',
+    'it',
+    'pt_BR',
+]
 
 pkgs = """
 anna

@@ -18,7 +18,7 @@ The (virtualized) hardware is sponsored since October 2012 by http://www.profitb
 
 Some stats are available using link:https://jenkins.debian.net/munin/jenkins-month.html[munin-plugins for jenkins].
 
-Three persons have shell access to the machine: link:mailto:holger@layer-acht.org[Holger Levsen], link:mailto:helmut@debian.org[Helmut Grohne] (both with root powers) and link:mailto:mattia@mapreri.org[Mattia Rizzolo]. All of them have also access to the web intereface, where tasks like stopping and scheduling job runs can be done, also they enough rights to edit the jenkins scripts (i.e. what jenkins executes), though this is done in case of firefighting (e.g. changes throught the git repository are really preferred). The deploying of changes is still limited to people with root powers.
+Three persons have shell access to the machine: link:mailto:holger@layer-acht.org[Holger Levsen], link:mailto:helmutg@debian.org[Helmut Grohne] (both with root powers) and link:mailto:mattia@mapreri.org[Mattia Rizzolo]. All of them have also access to the web intereface, where tasks like stopping and scheduling job runs can be done, also they enough rights to edit the jenkins scripts (i.e. what jenkins executes), though this is done in case of firefighting (e.g. changes throught the git repository are really preferred). The deploying of changes is still limited to people with root powers.
 
 == Getting involved
 

@@ -17,6 +17,7 @@ mono_architectures = """
     hurd-i386 musl-linux-i386
     m68k
     musl-linux-mips musl-linux-mipsel
+    nios2
     powerpcel powerpcspe ppc64el
     or1k
     sh4

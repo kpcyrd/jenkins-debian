@@ -38,7 +38,9 @@ echo "$(date -u) - mock --init"
 mock -r $RELEASE-$ARCH --resultdir=. -v --init
 echo "$(date -u) - mock configured for $RELEASE on $ARCH."
 echo "$(date -u) - mock --install rpm-build"
-mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build
+mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build yum
 echo "$(date -u) - mock --update"
 mock -r $RELEASE-$ARCH --resultdir=. -v --update
+echo "$(date -u) - yum makecache"
+mock -r $RELEASE-$ARCH --resultdir=. -v --chroot yum makecache
 

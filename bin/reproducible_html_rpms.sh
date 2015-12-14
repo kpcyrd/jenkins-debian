@@ -124,8 +124,8 @@ cat > $PAGE <<- EOF
     <link rel='stylesheet' href='/rpms/$RELEASE.css' type='text/css' media='all' />
   </head>
   <body>
-    <div id="archnavbar">
-	    <div id="logo"></div>
+    <div id="logo">
+    <p><img src="${RELEASE}_logo.png" alt="$RELEASE logo" height="50%" /></p>
     </div>
     <div class="content">
       <h1>Reproducible $RELEASE ($ARCH) ?!</h1>

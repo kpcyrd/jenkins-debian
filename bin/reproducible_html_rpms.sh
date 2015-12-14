@@ -117,7 +117,7 @@ cat > $PAGE <<- EOF
   <head>
     <meta charset="UTF-8">
     <title>Reproducible $RELEASE ($ARCH) ?!</title>
-    <link rel='stylesheet' href='$RELEASE.css' type='text/css' media='all' />
+    <link rel='stylesheet' href='/rpms/$RELEASE.css' type='text/css' media='all' />
   </head>
   <body>
     <div id="archnavbar">

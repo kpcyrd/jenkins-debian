@@ -55,7 +55,7 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 			HTML_TARGET=$HTML_404
 			let NR_404+=1
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> failed to download source" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
+		elif [ ! -z "$(egrep '^ERROR: Command failed. See logs for output.' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
 			HTML_TARGET=$HTML_FTBFS
 			let NR_FTBFS+=1
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER

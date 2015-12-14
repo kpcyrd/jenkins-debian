@@ -96,12 +96,12 @@ first_build() {
 	download_package
 	local RESULTDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
-	# nicely run mock with a timeout of 4h
-	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
+	# nicely run mock with a timeout of $TIMEOUT hours
+	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
+		echo "$(date -u) - mock was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -118,12 +118,12 @@ second_build() {
 	local RESULTDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	# NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-	# nicely run mock with a timeout of 4h
-	timeout -k 4.1h 4h /usr/bin/ionice -c 3 /usr/bin/nice \
+        # nicely run mock with a timeout of $TIMEOUT hours
+        timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - mock was killed by timeout after 4h." | tee -a $LOG
+		echo "$(date -u) - mock was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 }
@@ -173,6 +173,7 @@ TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actua
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 
+TIMEOUT=8	# maximum time in hours for a single build
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 DUMMY=$(mktemp -t rpm-dummy-XXXXXXXX)

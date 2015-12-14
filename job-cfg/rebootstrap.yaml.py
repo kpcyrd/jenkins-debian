@@ -34,7 +34,7 @@ release_architectures = """
 architectures += mono_architectures
 
 gcc_versions = ("5",)
-debbindiff_gcc_versions = ("5",)
+diffoscope_gcc_versions = ("5",)
 
 print("""
 - defaults:
@@ -95,14 +95,14 @@ for arch in sorted(architectures):
             for supported in ["", "_supported"]:
                 if (nobiarch or arch.startswith("musl-linux-") or arch.startswith("hurd-") or arch.startswith("kfreebsd-")) and supported:
                     continue
-                for debbindiff in ["", "_debbindiff"]:
-                    if debbindiff and (arch not in release_architectures or gccver not in debbindiff_gcc_versions):
+                for diffoscope in ["", "_diffoscope"]:
+                    if diffoscope and (arch not in release_architectures or gccver not in diffoscope_gcc_versions):
                         continue
                     print("""
 - job-template:
     defaults: rebootstrap
-    name: '{name}_%(arch)s_gcc%(gccshortver)s%(nobiarch)s%(supported)s%(debbindiff)s'""" %
-    dict(arch=arch, gccshortver=gccver.replace(".", ""), nobiarch=nobiarch, supported=supported, debbindiff=debbindiff))
+    name: '{name}_%(arch)s_gcc%(gccshortver)s%(nobiarch)s%(supported)s%(diffoscope)s'""" %
+    dict(arch=arch, gccshortver=gccver.replace(".", ""), nobiarch=nobiarch, supported=supported, diffoscope=diffoscope))
 
 print("""
 - project:
@@ -117,25 +117,25 @@ for arch in sorted(architectures):
             for supported in (False, True):
                 if (nobiarch or arch.startswith("musl-linux-") or arch.startswith("hurd-") or arch.startswith("kfreebsd-")) and supported:
                     continue
-                for debbindiff in (False, True):
-                    if debbindiff and (arch not in release_architectures or gccver not in debbindiff_gcc_versions):
+                for diffoscope in (False, True):
+                    if diffoscope and (arch not in release_architectures or gccver not in diffoscope_gcc_versions):
                         continue
                     print(
 """        - '{name}_%(suffix)s':
             my_arch: '%(arch)s'
-            my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DEBBINDIFF=%(debbindiff_value)s'
-            my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s%(supported_comment)s%(debbindiff_comment)s'
+            my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DEBBINDIFF=%(diffoscope_value)s'
+            my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s%(supported_comment)s%(diffoscope_comment)s'
             my_branchname: 'jenkins_%(suffix)s'
             my_node: '%(node)s'
             my_wrapper: '/srv/jenkins/bin/jenkins_master_wrapper.sh'""" %
                 dict(arch=arch,
-                     suffix=arch + "_gcc" + gccver.replace(".", "") + ("_nobiarch" if nobiarch else "") + ("_supported" if supported else "") + ("_debbindiff" if debbindiff else ""),
+                     suffix=arch + "_gcc" + gccver.replace(".", "") + ("_nobiarch" if nobiarch else "") + ("_supported" if supported else "") + ("_diffoscope" if diffoscope else ""),
                      gccver=gccver,
                      multilib_value="no" if nobiarch else "yes",
                      nobiarch_comment=" without multilib" if nobiarch else "",
                      multiarch_gcc_value="no" if supported else "yes",
                      supported_comment=" using the supported method" if supported else "",
-                     debbindiff_value="yes" if debbindiff else "no",
-                     debbindiff_comment=" showing debbindiffs" if debbindiff else "",
+                     diffoscope_value="yes" if diffoscope else "no",
+                     diffoscope_comment=" showing diffoscopes" if diffoscope else "",
                      node="profitbricks4"))
 

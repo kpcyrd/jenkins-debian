@@ -214,11 +214,11 @@ write_page_header() {
 	fi
 	if [ "$1" = "dd-list" ] || [ "$1" = "dashboard" ] ; then
 		write_page "<ul>"
-		write_page "   We are reachable via IRC (<code>#debian-reproducible</code> on OFTC),"
+		write_page "   We are reachable via IRC (<code>#debian-reproducible</code> and <code>#reproducible-builds</code> on OFTC),"
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">email</a>,"
 		write_page "   and we care about free software in general,"
 		write_page "   so whether you are an upstream developer or working on another distribution, or have any other feedback - we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and there are plans to test <a href=\"$JENKINS_URL/userContent/todo.html#_reproducible_fedora\">Fedora</a> and others too."
+		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and testing of <a href=\"$JENKINS_URL/rpms/fedora-23.html\">Fedora</a> has just begun."
 		write_page "</ul>"
 	fi
 	write_page "<ul><li>Have a look at:</li>"

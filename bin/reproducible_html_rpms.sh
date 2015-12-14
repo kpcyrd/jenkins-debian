@@ -125,7 +125,7 @@ cat > $PAGE <<- EOF
   </head>
   <body>
     <div id="logo">
-    <p><img src="${RELEASE}_logo.png" alt="$RELEASE logo" height="50%" /></p>
+    <p><img src="${RELEASE}_logo.png" alt="$RELEASE logo" class="logo" /></p>
     </div>
     <div class="content">
       <h1>Reproducible $RELEASE ($ARCH) ?!</h1>

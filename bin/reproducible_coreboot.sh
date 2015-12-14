@@ -159,8 +159,9 @@ DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE
 echo "============================================================================="
 echo "$(date -u) - Running $DIFFOSCOPE on coreboot images."
 echo "============================================================================="
-ROMS_HTML=$(mktemp --tmpdir=$TMPDIR)
-echo "       <ul>" > $ROMS_HTML
+ROW_FRAGMENTS_GOOD_ROMS=$(mktemp --tmpdir=$TMPDIR)
+ROW_FRAGMENTS_BAD_ROMS=$(mktemp --tmpdir=$TMPDIR)
+LIST_OBJECT=$(mktemp --tmpdir=$TMPDIR)
 BAD_ROMS=0
 GOOD_ROMS=0
 ALL_ROMS=0
@@ -174,23 +175,27 @@ for i in $(ls -1d *| sort -u) ; do
 		get_filesize $i/coreboot.rom
 		if [ -f $TMPDIR/$i/coreboot.rom.html ] ; then
 			mv $TMPDIR/$i/coreboot.rom.html $BASE/coreboot/dbd/$i.html
-			echo "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> ($SIZE) is unreproducible.</li>" >> $ROMS_HTML
+			echo "         <li><a href=\"dbd/$i.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $i</a> ($SIZE) is unreproducible.</li>" >> $ROW_FRAGMENTS_BAD_ROMS
 		else
 			SHASUM=$(sha256sum $i/coreboot.rom|cut -d " " -f1)
-			echo "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, $SIZE) is reproducible.</li>" >> $ROMS_HTML
+			echo "         <li><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $i ($SHASUM, $SIZE) is reproducible.</li>" >> $ROW_FRAGMENTS_GOOD_ROMS
 			let GOOD_ROMS+=1
 			rm -f $BASE/coreboot/dbd/$i.html # cleanup from previous (unreproducible) tests - if needed
 		fi
 	else
 		if [ ! -f $i/coreboot.rom ] ; then
-			echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source.</li>" >> $ROMS_HTML
+			echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source.</li>" >> $ROW_FRAGMENTS_BAD_ROMS
 		else
-			echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source on the 2nd build.</li>" >> $ROMS_HTML
+			echo "         <li><img src=\"/userContent/static/weather-storm.png\" alt=\"FTBFS icon\" /> $i <a href=\"${BUILD_URL}console\">failed to build</a> from source on the 2nd build.</li>" >> $ROW_FRAGMENTS_BAD_ROMS
 		fi
 		let BAD_ROMS+=1
 	fi
 done
-echo "       </ul>" >> $ROMS_HTML
+echo "       <ul>" > $LIST_OBJECT
+cat $ROW_FRAGMENTS_BAD_ROMS >> $LIST_OBJECT
+cat $ROW_FRAGMENTS_GOOD_ROMS >> $LIST_OBJECT
+rm $ROW_FRAGMENTS_BAD_ROMS $ROW_FRAGMENTS_GOOD_ROMS > /dev/null
+echo "       </ul>" >> $LIST_OBJECT
 GOOD_PERCENT=$(echo "scale=1 ; ($GOOD_ROMS*100/$ALL_ROMS)" | bc)
 BAD_PERCENT=$(echo "scale=1 ; ($BAD_ROMS*100/$ALL_ROMS)" | bc)
 # are we there yet?
@@ -235,7 +240,7 @@ else
 fi
 write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION} using ${DIFFOSCOPE}.</p>"
 write_explaination_table coreboot
-cat $ROMS_HTML >> $PAGE
+cat $LIST_OBJECT >> $PAGE
 write_page "     <p><pre>"
 echo -n "$COREBOOT" >> $PAGE
 write_page "     </pre></p>"
@@ -243,7 +248,7 @@ cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div></div>"
 write_page_footer coreboot
 publish_page
-rm -f $ROMS_HTML $TOOLCHAIN_HTML
+rm -f $LIST_OBJECT $TOOLCHAIN_HTML
 
 # the end
 calculate_build_duration

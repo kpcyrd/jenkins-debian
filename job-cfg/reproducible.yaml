@@ -231,7 +231,7 @@
 
 - job-template:
     defaults: reproducible_other_projects_trigger
-    name: '{name}_{otherproject}_allinone'
+    name: '{name}_{otherproject_triggering}'
 
 - job-template:
     defaults: reproducible_builder_trigger
@@ -486,8 +486,8 @@
             my_timed: '* * * * *'
             my_hname: ''
 
-        - '{name}_{otherproject}_allinone':
-            otherproject:
+        - '{name}_{otherproject_triggering}':
+            otherproject_triggering:
                 - 'coreboot':
                     my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 1'

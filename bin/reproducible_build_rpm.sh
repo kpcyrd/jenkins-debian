@@ -42,8 +42,9 @@ update_mock() {
 		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
 		mock -r $RELEASE-$ARCH --resultdir=. --cleanup-after -v --update 2>&1
 		echo "$(date -u ) - mock updated."
-		yum -v check-update
-		echo "$(date -u ) - yum updated."
+		# set the end of reproducible_setup_mock to learn why this is commented out 
+		#yum -v check-update
+		#echo "$(date -u ) - yum updated."
 		touch $STAMP
 	else
 		echo "$(date -u ) - mock and yum not updated, last update was at $(TZ=UTC ls --full-time $STAMP | cut -d ' ' -f6-7 | cut -d '.' -f1) UTC."

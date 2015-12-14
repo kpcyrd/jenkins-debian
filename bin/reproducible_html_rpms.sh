@@ -58,7 +58,11 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 		elif [ ! -z "$(egrep '^ERROR: Command failed. See logs for output.' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
 			HTML_TARGET=$HTML_FTBFS
 			let NR_FTBFS+=1
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep 'mock was killed by timeout after' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
+			HTML_TARGET=$HTML_FTBFS
+			let NR_FTBFS+=1
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> killed by timeout" >> $HTML_BUFFER
 		else
 			echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
 			HTML_TARGET=$HTML_UNKNOWN

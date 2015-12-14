@@ -650,7 +650,7 @@ remote_build() {
 			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
 		fi
 	fi
-	ls -R $TMPDIR
+	ls -lR $TMPDIR
 	ssh -p $PORT $NODE "rm -r $TMPDIR"
 	set -e
 	if [ $BUILDNR -eq 1 ] ; then

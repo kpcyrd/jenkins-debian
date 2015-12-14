@@ -73,10 +73,8 @@ openwrt_build_toolchain() {
 	echo "$(date -u) - Building the toolchain."
 	echo "============================================================================="
 
-	ionice -c 3 nice \
-		make -j $NUM_CPU tools/install
-	ionice -c 3 nice \
-		make -j $NUM_CPU toolchain/install
+	ionice -c 3 make -j $NUM_CPU tools/install
+	ionice -c 3 make -j $NUM_CPU toolchain/install
 }
 
 openwrt_build() {
@@ -88,18 +86,12 @@ openwrt_build() {
 	echo "============================================================================="
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
-	ionice -c 3 nice \
-		$MAKE $OPTIONS target/compile
-	ionice -c 3 nice \
-		$MAKE $OPTIONS package/cleanup
-	ionice -c 3 nice \
-		$MAKE $OPTIONS package/compile || true # don't let some packages fail the whole build
-	ionice -c 3 nice \
-		$MAKE $OPTIONS package/install
-	ionice -c 3 nice \
-		$MAKE $OPTIONS target/install V=s || true
-	ionice -c 3 nice \
-		$MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
+	ionice -c 3 $MAKE $OPTIONS target/compile
+	ionice -c 3 $MAKE $OPTIONS package/cleanup
+	ionice -c 3 $MAKE $OPTIONS package/compile || true # don't let some packages fail the whole build
+	ionice -c 3 $MAKE $OPTIONS package/install
+	ionice -c 3 $MAKE $OPTIONS target/install V=s || true
+	ionice -c 3 $MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
 }
 
 openwrt_cleanup() {

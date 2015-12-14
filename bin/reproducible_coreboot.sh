@@ -72,7 +72,7 @@ for ARCH in ${ARCHS} ; do
 	echo "============================================================================="
 	echo "$(date -u) - Building cross compiler for ${ARCH}."
 	# taken from util/crossgcc/Makefile:
-	ionice -c 3 nice bash util/crossgcc/buildgcc -j $NUM_CPU -p $ARCH
+	ionice -c 3 bash util/crossgcc/buildgcc -j $NUM_CPU -p $ARCH
 	RESULT=$?
 	if [ $RESULT -eq 0 ] ; then
 		GOT_XTOOLCHAIN=true
@@ -83,7 +83,7 @@ if ! $GOT_XTOOLCHAIN ; then
 	echo "Need at least one cross toolchain, aborting."
 fi
 
-ionice -c 3 nice bash util/crossgcc/buildgcc -j $NUM_CPU -P IASL
+ionice -c 3 bash util/crossgcc/buildgcc -j $NUM_CPU -P IASL
 
 #
 # create html about toolchains used
@@ -116,7 +116,7 @@ sed -i 's#MAKE=$i#MAKE=make#' util/abuild/abuild
 sed -i "s#cpus=1#cpus=$NUM_CPU#" util/abuild/abuild
 sed -i 's#USE_XARGS=1#USE_XARGS=0#g' util/abuild/abuild
 # actually build everything
-ionice -c 3 nice \
+ionice -c 3 \
 	bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 	#bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail
 
@@ -135,7 +135,7 @@ umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 sed -i "s#cpus=$NUM_CPU#cpus=$NEW_NUM_CPU#" util/abuild/abuild
-ionice -c 3 nice \
+ionice -c 3 \
 	linux64 --uname-2.6 \
 	bash util/abuild/abuild || true # don't fail the full job just because some targets fail
 	#bash util/abuild/abuild --payloads none || true # don't fail the full job just because some targets fail

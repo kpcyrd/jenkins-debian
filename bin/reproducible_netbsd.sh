@@ -67,7 +67,7 @@ echo "==========================================================================
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
 for MACHINE in $MACHINES ; do
-	ionice -c 3 nice \
+	ionice -c 3 \
 		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
 	# save results in b1
 	save_netbsd_results b1 ${MACHINE}
@@ -96,7 +96,7 @@ umask 0002
 # use allmost all cores for second build
 NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 for MACHINE in $MACHINES ; do
-	ionice -c 3 nice \
+	ionice -c 3 \
 		linux64 --uname-2.6 \
 		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
 	# save results in b2

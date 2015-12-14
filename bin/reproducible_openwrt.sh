@@ -251,7 +251,7 @@ for i in * ; do
 	for j in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
 		let ALL_IMAGES+=1
 		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
-			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build once.</td></tr>" >> $DBD_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build.</td></tr>" >> $DBD_HTML
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
@@ -289,7 +289,7 @@ for i in * ; do
 	for j in $(printf "$PKGS1\n$PKGS2" | sort -u ) ; do
 		let ALL_PACKAGES+=1
 		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
-			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build once.</td></tr>" >> $DBD_BAD_PKGS_HTML
+			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build.</td></tr>" >> $DBD_BAD_PKGS_HTML
 			rm -f $BASE/openwrt/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi

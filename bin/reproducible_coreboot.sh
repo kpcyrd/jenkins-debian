@@ -51,7 +51,7 @@ cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning coreboot git repository with submodules."
 echo "============================================================================="
-git clone --depth 1 --recursive http://review.coreboot.org/p/coreboot.git
+git clone --recursive http://review.coreboot.org/p/coreboot.git
 cd coreboot
 # still required because coreboot moved submodules and to take care of old git versions
 git submodule update --init --checkout 3rdparty/blobs

@@ -41,8 +41,6 @@ echo "$(date -u) - mock --install rpm-build"
 mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build yum
 echo "$(date -u) - mock --update"
 mock -r $RELEASE-$ARCH --resultdir=. -v --update
-# AIUI, this should work but fails with "UnboundLocalError: local variable 'chrootstate' referenced before assignment"
-# as can be seen in https://jenkins.debian.net/view/reproducible/job/reproducible_setup_mock_fedora-23_x86_64_profitbricks3/13/console
-#echo "$(date -u) - yum makecache"
-#mock -r $RELEASE-$ARCH --resultdir=. -v --chroot yum makecache
+echo "$(date -u) - yum makecache"
+mock -r $RELEASE-$ARCH --resultdir=. -v --chroot yum makecache
 

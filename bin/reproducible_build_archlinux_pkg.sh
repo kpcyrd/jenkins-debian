@@ -74,12 +74,12 @@ choose_package() {
 	local PKG
 	for REPO in $ARCHLINUX_REPOS ; do
 		case $REPO in
-			core)	MIN_AGE=6
-				;;
-			extra)	MIN_AGE=27
-				;;
-			*)	MIN_AGE=99	# should never happen…
-				;;
+			core)		MIN_AGE=6
+					;;
+			extra|multilib)	MIN_AGE=27
+					;;
+			*)		MIN_AGE=99	# should never happen…
+					;;
 		esac
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO) ; do
 			# build package if it has never build or at least $MIN_AGE days ago

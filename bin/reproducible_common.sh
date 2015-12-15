@@ -54,7 +54,7 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 
 # common settings for testing Archlinux
 ARCHLINUX_BUILD_NODE=profitbricks-build3-amd64
-ARCHLINUX_REPOS="core extra multilib"
+ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/.archlinux_pkgs
 
 # common settings for testing rpm based distros

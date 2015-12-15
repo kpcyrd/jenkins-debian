@@ -305,17 +305,17 @@ write_page_intro() {
 		local PROJECTNAME="netbsd"
 		local PROJECTURL="https://github.com/jsonn/src"
 	elif [ "$1" = "FreeBSD" ] ; then
-		write_page "        <p><em>Reproducible FreeBSD</em> is an effort to apply this to FreeBSD. Thus FreeBSD is build twice, with a few varitations added and then the resulting filesystems from the two builds are put into a compressed tar archive, which is then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <p><em>Reproducible FreeBSD</em> is an effort to apply this to FreeBSD. Thus FreeBSD is build twice, with a few varitations added and then the resulting filesystems from the two builds are put into a compressed tar archive, which is finally compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="freebsd"
 		local PROJECTURL="https://github.com/freebsd/freebsd.git"
 		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.2 system"
 		local BRANCH="release/10.2.0"
 	elif [ "$1" = "Arch Linux" ] ; then
 		local PROJECTNAME="Arch Linux"
-		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 	elif [ "$1" = "fedora-23" ] ; then
 		local PROJECTNAME="Fedora 23"
-		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are then compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		write_page "        <p>Please note that this set up is as new as December 12th, so quite some things are still lacking, eg. https://github.com/kholia/ReproducibleBuilds is not followed at all yet and there are no variations introduced for the 2nd build. Also only 151 source packages from the <em>@buildsys-build</em> package group are currently being tested. OTOH this setup is mature enough that it requires very few trivial changes to build all 17080 source packages in $PROJECTNAME, if it were sensible. Which it isn't right now, but should be soon.</p>"
 	fi
 	if [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then

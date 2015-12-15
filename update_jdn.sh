@@ -343,8 +343,11 @@ fi
 #
 if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep mock /etc/group ; then
+		# these 4 commands are obsolete with mock 1.2.3-1 (=stretch)
 		sudo groupadd --system mock
 		sudo usermod -a -G mock jenkins
+		sudo chgrp mock /var/lib/mock/ /var/cache/mock/
+		sudo chmod 2775 /var/lib/mock/ /var/cache/mock/
 	fi
 fi
 

@@ -312,6 +312,8 @@ This is about Debian, below are more todo entries for other projects…
 ** needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
 ** once this has been done, run it more often than once a year
+* maintenance job:
+** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 * arch build.sh:
 ** introduce more variations: USER
 ** confirm the others are really working

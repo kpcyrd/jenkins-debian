@@ -49,7 +49,6 @@ update_archlinux_repositories() {
 			NEED_UPDATE=true
 		fi
 	done
-	rm $DUMMY > /dev/null
 	if $NEED_UPDATE ; then
 		local SESSION="archlinux-scheduler-$RANDOM"
 		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
@@ -65,6 +64,7 @@ update_archlinux_repositories() {
 	else
 		echo "$(date -u ) - repositories recent enough, no update needed."
 	fi
+	rm $DUMMY > /dev/null
 }
 
 choose_package() {
@@ -90,11 +90,14 @@ choose_package() {
 				# very simple locking…
 				mkdir -p $BASE/archlinux/$REPOSITORY/$PKG
 				touch $BASE/archlinux/$REPOSITORY/$PKG
-				# break out of the loop and then out of this function too,
-				# to build this package…
+				# break out of the loop (and then out of the next loop too...)
 				break
 			fi
 		done
+		# if we broke out of the previous loop we have choosen a package
+		if [ ! -z "$SRCPACKAGE" ] ; then
+			break
+		fi
 	done
 	if [ -z $SRCPACKAGE ] ; then
 		echo "$(date -u ) - no package found to be build, sleeping 6h."

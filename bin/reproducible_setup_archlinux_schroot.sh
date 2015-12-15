@@ -12,9 +12,6 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-# common code
-. /srv/jenkins/bin/reproducible_common.sh
-
 # define archlinux mirror to be used
 ARCHLINUX_MIRROR=http://mirror.one.com/archlinux/
 
@@ -91,7 +88,7 @@ echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGE
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
 $ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools abs'
 # configure abs
-$ROOTCMD bash -l -c "abs $ARCHLINUX_REPOS"
+$ROOTCMD bash -l -c abs core extra multilib
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 

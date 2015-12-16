@@ -96,7 +96,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	RSCP="scp -r freebsd-jenkins.debian.net"
 	TMPBUILDDIR=/usr/src
 	$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on FreeBSD too
-	TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d')  # used to compare results
+	TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d -t rbuild-freebsd-XXXXXXXX')  # used to compare results
 	DATE=$(date -u +'%Y-%m-%d')
 	START=$(date +'%s')
 	trap cleanup_tmpdirs INT TERM EXIT

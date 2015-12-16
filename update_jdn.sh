@@ -427,7 +427,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	# samuel, lunar and josch committed with several commiters, only display one
 	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" -e "mattia@mapreri.org" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
 	rm $TMPFILE
-	TMPDIR=$(mktemp -d)
+	TMPDIR=$(mktemp -d -t update-jdn-XXXXXXXX)
 	sudo cp -pr userContent $TMPDIR/
 	sudo chown -R jenkins.jenkins $TMPDIR
 	sudo cp -pr $TMPDIR/userContent  /var/lib/jenkins/

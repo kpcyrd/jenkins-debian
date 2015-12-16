@@ -170,7 +170,7 @@ curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&p
 	| sort \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
-	tmpdir=`mktemp -d --tmpdir="$scratch"`
+	tmpdir=`mktemp -d --tmpdir="$scratch" -t dpkg-trigger-cycles-curl-XXXXXXXX`
 	# curl is allowed to fail with exit status 23 because we want to stop
 	# downloading immediately after control.tar.gz has been extracted
 	( curl --retry 3 --retry-delay 10 --location --silent "$url" || [ "$?" -eq 23 ] || ( echo "curl failed">&2 && exec /srv/jenkins/bin/abort.sh ) ) \

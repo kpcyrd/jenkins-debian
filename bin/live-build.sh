@@ -11,7 +11,7 @@ cleanup_all() {
 	sudo rm -rf --one-file-system $TMPDIR
 }
 
-TMPDIR=$(mktemp --tmpdir=/srv/live-build -d)
+TMPDIR=$(mktemp --tmpdir=/srv/live-build -d -t live-build-XXXXXXXX)
 cd $TMPDIR
 trap cleanup_all INT TERM EXIT
 

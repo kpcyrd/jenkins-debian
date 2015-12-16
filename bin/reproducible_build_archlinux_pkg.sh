@@ -213,7 +213,7 @@ remote_build() {
 # below is what controls the world
 #
 
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # where everything actually happens
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-archlinux-XXXXXXXX)  # where everything actually happens
 trap cleanup_all INT TERM EXIT
 cd $TMPDIR
 

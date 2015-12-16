@@ -156,8 +156,8 @@ build_two_times() {
 #
 # main
 #
-TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t openwrt-XXXXXXXX)  # used to build on tmpfs
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d)  # accessable in schroots, used to compare results
+TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-openwrt-build-XXXXXXXX)  # used to build on tmpfs
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-openwrt-results-XXXXXXXX)  # accessable in schroots, used to compare results
 BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')

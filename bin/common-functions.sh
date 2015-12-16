@@ -107,7 +107,7 @@ publish_changes_to_userContent() {
 	fi
 	VERSION=$(basename $CHANGES | cut -d "_" -f2)
 	TARGET="/var/lib/jenkins/userContent/$SRCPKG"
-	NEW_CONTENT=$(mktemp -d)
+	NEW_CONTENT=$(mktemp -d -t new-content-XXXXXXXX)
 	for DEB in $(dcmd --deb $CHANGES) ; do
 		dpkg --extract $DEB ${NEW_CONTENT} 2>/dev/null
 	done

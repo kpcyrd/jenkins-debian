@@ -60,6 +60,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** on jenkins.d.n we now run j-j-b 1.3.0-5 directly backported from sid, just with the python3 stuff disabled…
 ** install all the plugins (we)
 ** add all the nodes as nodes to jenkins.d.o (we)
+*** use static IP for the nodes (h01ger)
 ** disable job execution on jenkins.d.net(!) (we) 
 ** deploy this configuration on jenkins.d.o…(!) (we)
 *** make update_jdn.sh warn if things are missing on .debian.org systems
@@ -116,31 +117,36 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 == Improve existing tests
 
-=== reproducible builds
-
-This is about Debian, below are more todo entries for other projects…
+=== tests.reproducible-builds.org
 
 * move /* to /debian/*
 * rename r.d.n to tests.reproducible-builds.org
 ** use redirects to keep old URLs working
+* setup pb9 and move rebootstrap jobs over there
+* configure pb4 running 398 days in future and adapt coreboot|openwrt|netbsd|archlinux|fedora jobs to use it
+* common code base (and sql database layouts - not databases) for creating the webpages for debian|coreboot|openwrt|netbsd|archlinux|fedora
+* common navigation (using left side navi menu like on the debian pkg pages), but different themes for dashboards, indexes and package pages
+* improve the intro texts:
+** explain status in plain english on each dashboard, plus add an "executive summary about reproducible builds in the free software world"
+** document in the non-debian pages, when we don't have a clear idea yet, how to record+reproduce the build environment and that this is essential for reproducible builds too.
+* install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
+** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
+
+=== Debian reproducible builds
 
 * make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffoscoppe/schroot problems"
 ** add check if package to be build has been blacklisted since scheduling and abort
+** on SIGTERM, also cleanup on remote build nodes there! (via ssh &)
 ** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
-*** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
-*** make maintenance job detect and reschedule logs with: '^Bus Error$'
-** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
-
-* reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
-* diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
-* on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
+** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 
 * higher prio:
-** remove the rescheduling reason from the DB, that's really not needed
+** dashboard: number of cores used is wrong for amd64…
+** re-enable linux-2.6 usage
+** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
+** make maintenance job detect and reschedule logs with: '^Bus Error$'
+** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
 ** scheduler should automatically schedule 404 packages
-** explain status in plain english on each coreboot/openwrt/netbsd/freebsd page, also on the Debian dashboard plus add an "executive summary about reproducible builds in the free software world"
-*** get the content for "<h2>status of $1</h2>" from notes.git/friends.yaml or such
-*** document in the non-debian pages, that we don't have a clear idea yet, how to record+reproduce the build environment and that this is essential for reproducible builds too.
 ** rewrite bin/schroot-create.sh from scratch, with little sudo.
 *** analyse+summarize needs, git commit that, then writing the script will be trivial
 *** use schroot tarballs (gzipped), moves are atomic then
@@ -155,19 +161,15 @@ This is about Debian, below are more todo entries for other projects…
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
 ** new page: packages which are orphaned but have a reproducible usertagged patch
 ** improve ftbfs page: list packages without bugs and notes first
-** use static IPs (h01ger)
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** save build-hosts in build_duration table (and change to saving the time of a single build, not both combined?)
 ** repo-comparison: check for binaries without source
-** link howto on each coreboot/openwrt/netbsd/freebsd page
 ** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 
 * lesser prio
+** remove the rescheduling reason from the DB, that's really not needed
 ** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
-** dashboard:
-*** link https://reproducible.debian.net/unstable/amd64/stats_pkgs_to_fix.png and friends somewhere
-*** number of cores used is wrong for amd64
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
 ** check that diffoscope schroot have /usr/bin/ar installed, else fail the job
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
@@ -177,18 +179,17 @@ This is about Debian, below are more todo entries for other projects…
 *** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 *** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
-** move "untested" field in stats table too? (as in csv output...)
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 ** adopt usertag script from pkg-apparmor to notify us about new usertagged bugs automatically
-** use reprepro and snapshot (reprepro gen-snapshot) on alioth to speed up our repo, maybe. maybe we'll just be in sid soon :-)
 ** database issues
 *** stats_build table should have package ids, not just src+suite+arch as primary key
-** send notifications to maintainers when a note to their packages changes?
+*** move "untested" field in stats table too? (as in csv output...)
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
-** _maintenance.sh: delete the history pages once a page has been removed from all suites+archs
+** maintenance.sh: delete the history pages once a page has been removed from all suites+archs
 ** new page showing arch all packages which are cross-reproducible, and those which are not
 ** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 ** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
+** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
 
 * once stabilized notification emails should go through the package tracker.  The 'build' keyword seems to be the better fit for this.  To do so just send the emails to dispatch@tracker.debian.org, setting "X-Distro-Tracker-Package: foo" and "X-Distro-Tracker-Keyword: build".  This way people wanting to subscribe to our notification don't need to ask us and can do that by themselves.
 

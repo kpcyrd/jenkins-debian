@@ -283,6 +283,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible Fedora
 
+* dont hardcode 23 in reproducible_setup_mock.sh
 * use mock in parallel with --uniqeext
 ** task: needs to be passed via ssh too (and we want ssh to do remote builds like debian from one master node)
 * setup script:

@@ -43,7 +43,7 @@ update_mock() {
 		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
 		mock -r $RELEASE-$ARCH --resultdir=. --cleanup-after -v --update 2>&1
 		echo "$(date -u ) - mock updated."
-		yum -v check-update
+		yum -v --releasever=23 check-update # FIXME: dont hard-code releasever here. rawhide?
 		echo "$(date -u ) - yum updated."
 		touch $STAMP
 	else

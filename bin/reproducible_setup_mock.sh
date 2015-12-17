@@ -25,9 +25,9 @@ dpkg -l mock
 id
 echo "$(date -u) - cleaning yum."
 rm ~/.rpmdb -rf
-yum -v clean all
-yum -v check
-yum -v repolist all
+yum -v --releasever=23 clean all
+yum -v --releasever=23 check
+yum -v --releasever=23 repolist all
 echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
 echo "$(date -u) - mock --clean"
 mock -r $RELEASE-$ARCH --resultdir=. -v --clean
@@ -37,10 +37,10 @@ tree /var/cache/mock/
 echo "$(date -u) - mock --init"
 mock -r $RELEASE-$ARCH --resultdir=. -v --init
 echo "$(date -u) - mock configured for $RELEASE on $ARCH."
-echo "$(date -u) - mock --install rpm-build"
+echo "$(date -u) - mock --install rpm-build yum"
 mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build yum
 echo "$(date -u) - mock --update"
 mock -r $RELEASE-$ARCH --resultdir=. -v --update
-echo "$(date -u) - yum makecache"
-mock -r $RELEASE-$ARCH --resultdir=. -v --chroot dnf makecache
+#echo "$(date -u) - dnf makecache"
+#mock -r $RELEASE-$ARCH --resultdir=. -v --chroot -- dnf --releasever=23 makecache
 

@@ -1,6 +1,6 @@
 [fedora]
 name=fedora
-#mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-23&arch=$basearch
 baseurl=http://ftp.informatik.uni-frankfurt.de/fedora/releases/23/Everything/x86_64/os/
 failovermethod=priority
 #gpgkey=file:///etc/pki/mock/RPM-GPG-KEY-fedora-23-primary
@@ -8,7 +8,7 @@ failovermethod=priority
 
 [updates]
 name=updates
-#mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f23&arch=$basearch
 baseurl=http://ftp.informatik.uni-frankfurt.de/fedora/updates/23/x86_64/
 failovermethod=priority
 #gpgkey=file:///etc/pki/mock/RPM-GPG-KEY-fedora-23-primary

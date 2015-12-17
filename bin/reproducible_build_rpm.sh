@@ -223,7 +223,7 @@ delay_start # randomize start times
 # first, we need to choose a package…
 RELEASE="$1"
 ARCH="$2"
-UNIQUEEXT="mock_${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}_}"
+UNIQUEEXT="mock${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}}"
 SRCPACKAGE=""	# package name
 SRC_RPM=""	# src rpm file name
 #update_mock # FIXME: we dont have to run mock on the main node yet, but we will need at least have to update yum there…

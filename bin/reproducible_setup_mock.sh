@@ -42,5 +42,5 @@ mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build yum
 echo "$(date -u) - mock --update"
 mock -r $RELEASE-$ARCH --resultdir=. -v --update
 echo "$(date -u) - yum makecache"
-mock -r $RELEASE-$ARCH --resultdir=. -v --chroot yum makecache
+mock -r $RELEASE-$ARCH --resultdir=. -v --chroot dnf makecache
 

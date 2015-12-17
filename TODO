@@ -283,7 +283,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible Fedora
 
-* dont hardcode 23 in reproducible_setup_mock.sh
+* dont hardcode 23 in reproducible_setup_mock.sh and …build_rpm.sh
 * use mock in parallel with --uniqeext
 ** task: needs to be passed via ssh too (and we want ssh to do remote builds like debian from one master node)
 * setup script:
@@ -300,7 +300,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** verify gpg signatures (via /etc/mock/)
 ** one day we will want to schedule all 17k source packages in fedora…
 * hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
-* build rawhide too (once fedora-23 builds nicely)
+* build rawhide too (once fedora-23 builds nicely), releasever=rawhide
 
 * more notes:
 ** https://fedoraproject.org/wiki/Using_Mock_to_test_package_builds

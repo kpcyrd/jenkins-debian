@@ -23,9 +23,11 @@ UNIQEEXT="mock_${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}}"
 echo "$(date -u) - showing setup."
 dpkg -l mock
 id
-echo "$(date -u) - cleaning yum."
+echo "$(date -u) - cleaning ~/.rpmdb"
 rm ~/.rpmdb -rf
+echo "$(date -u) - cleaning yum"
 yum -v --releasever=23 clean all
+echo "$(date -u) - initialising yum for $RELEASE"
 yum -v --releasever=23 check
 yum -v --releasever=23 repolist all
 echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH."
@@ -41,6 +43,4 @@ echo "$(date -u) - mock --install rpm-build yum"
 mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build yum
 echo "$(date -u) - mock --update"
 mock -r $RELEASE-$ARCH --resultdir=. -v --update
-#echo "$(date -u) - dnf makecache"
-#mock -r $RELEASE-$ARCH --resultdir=. -v --chroot -- dnf --releasever=23 makecache
 

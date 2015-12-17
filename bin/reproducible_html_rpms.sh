@@ -28,7 +28,7 @@ HTML_TARGET=""
 HTML_RPM_STATS=$(mktemp)
 
 echo "$(date -u) - starting to analyse build results for '$RELEASE' ($ARCH)."
-TOTAL=151 # FIXME: calculate this like $(cat ${ARCHLINUX_PKGS}_$RELEASE | sed -s "s# #\n#g" | wc -l)
+TOTAL=$(cat ${RPM_PKGS}_$RELEASE | sed -s "s# #\n#g" | wc -l)
 TESTED=0
 NR_FTBFS=0
 NR_FTBR=0

@@ -59,12 +59,19 @@ download_package() {
 }
 
 choose_package() {
-	echo "$(date -u ) - choosing package to be build."
 	local MIN_AGE=7
 	touch -d "$(date -u -d "$MIN_AGE days ago" '+%Y-%m-%d %H:%M') UTC" $DUMMY
-	# instead of hardcoding the list of packages we can also use something like this to get a list of all packages:
-	# yumdownloader --urls --source --releasever=23 '*'
-	for PKG in $(echo audit-libs basesystem bash binutils bzip2 bzip2-libs ca-certificates chkconfig coreutils cpio cpp cracklib cracklib-dicts crypto-policies curl cyrus-sasl-lib diffutils dwz elfutils elfutils-default-yama-scope elfutils-libelf elfutils-libs emacs-filesystem expat fedora-release fedora-repos file file-libs filesystem findutils gawk gc gcc gcc-c++ gdb gdbm ghc-srpm-macros glib2 glibc glibc-common glibc-devel glibc-headers gmp gnat-srpm-macros gnupg2 gnutls go-srpm-macros grep groff-base guile gzip info isl kernel-headers keyutils-libs krb5-libs libacl libarchive libassuan libatomic_ops libattr libbabeltrace libblkid libcap libcap-ng libcom_err libcurl libdb libdb-utils libfdisk libffi libgcc libgcrypt libgomp libgpg-error libidn libipt libksba libmetalink libmount libmpc libnghttp2 libpwquality libseccomp libsecret libselinux libsemanage libsepol libsmartcols libssh2 libstdc++ libstdc++-devel libtasn1 libtool-ltdl libunistring libuser libutempter libuuid libverto libxml2 lua lzo make mpfr ncurses ncurses-base ncurses-libs nettle npth nspr nss nss-softokn nss-softokn-freebl nss-sysinit nss-tools nss-util ocaml-srpm-macros openldap openssl-libs p11-kit p11-kit-trust pam patch pcre perl perl-Carp perl-constant perl-Encode perl-Exporter perl-File-Path perl-File-Temp perl-generators perl-Getopt-Long perl-HTTP-Tiny perl-libs perl-macros perl-MIME-Base64 perl-parent perl-PathTools perl-Pod-Escapes perl-podlators perl-Pod-Perldoc perl-Pod-Simple perl-Pod-Usage perl-Scalar-List-Utils perl-Socket perl-srpm-macros perl-Storable perl-Term-ANSIColor perl-Term-Cap perl-Text-ParseWords perl-Text-Tabs+Wrap perl-threads perl-threads-shared perl-Time-HiRes perl-Time-Local perl-Unicode-Normalize pinentry pkgconfig popt python3 python3-libs python3-pip python3-setuptools readline redhat-rpm-config rpm rpm-build rpm-build-libs rpm-libs rpm-plugin-selinux sed setup shadow-utils shared-mime-info sqlite systemd-libs tar tzdata unzip ustr util-linux which xz xz-libs zip zlib | sed -s "s# #\n#g" | sort -R | xargs echo) ; do
+	if [ ! -f ${RPM_PKGS}_$RELEASE ] || [ $DUMMY -nt ${RPM_PKGS}_$RELEASE ] ; then
+		echo "$(date -u ) - updating list of available packages for $RELEASE"
+		SEARCHTERMS="apache2 bash fedora gcc gnome gnu ipa kde linux mock openssl redhat rpm ssh system-config systemd xorg yum"
+		echo "$(date -u ) - instead of building everything only packages matching these searchterms are build: $SEARCHTERMS"
+		local i=""
+		( for i in $SEARCHTERMS ; do repoquery --qf "%{name}" "*$i*" ; done ) | sort -u > ${RPM_PKGS}_$RELEASE
+		cat ${RPM_PKGS}_$RELEASE
+	fi
+	echo "$(date -u ) - choosing package to be build."
+	local PKG=""
+	for PKG in $(cat ${RPM_PKGS}_$RELEASE) ; do
 		# build package if it has never build or at least $MIN_AGE days ago
 		if [ ! -d $BASE/rpms/$RELEASE/$ARCH/$PKG ] || [ $DUMMY -nt $BASE/rpms/$RELEASE/$ARCH/$PKG ] ; then
 			SRCPACKAGE=$PKG

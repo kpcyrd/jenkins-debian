@@ -1,11 +1,16 @@
 [fedora]
-name=Fedora $releasever - $basearch
-failovermethod=priority
-#baseurl=http://ftp.informatik.uni-frankfurt.de/fedora/releases/$releasever/Everything/$basearch/os/
+name=fedora
+#mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch
 baseurl=http://ftp.informatik.uni-frankfurt.de/fedora/releases/23/Everything/x86_64/os/
-enabled=1
-#metadata_expire=7d
-gpgcheck=0
-#gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=False
+failovermethod=priority
+#gpgkey=file:///etc/pki/mock/RPM-GPG-KEY-fedora-23-primary
+#gpgcheck=1
+
+[updates]
+name=updates
+#mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f$releasever&arch=$basearch
+baseurl=http://ftp.informatik.uni-frankfurt.de/fedora/updates/23/x86_64/
+failovermethod=priority
+#gpgkey=file:///etc/pki/mock/RPM-GPG-KEY-fedora-23-primary
+#gpgcheck=1
 

@@ -1,0 +1,6 @@
+[reproducible-builds]
+name=reproducible-builds
+# dhiru's repository, see https://github.com/kholia/ReproducibleBuilds
+# this is the same person: dhiru = kholia = halfie
+baseurl=https://fedorapeople.org/~halfie/repository/
+enabled=1

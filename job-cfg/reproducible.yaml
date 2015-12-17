@@ -541,6 +541,12 @@
                     my_num: 1
                     op_descname: 'a Fedora 23'
                     my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
+                - 'fedora-23_x86_64':
+                    my_num: 2
+                    op_descname: 'a Fedora 23'
+                    my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
+                # when you add another fedora builder here
+                # the loop in bin/reproducible_setup_mock.sh needs to be increased too
             my_description: 'Try to reproducibly build {op_descname} package.'
             my_shell: '/srv/jenkins/bin/reproducible_build_{otherproject}_pkg.sh'
             my_timed: '* * * * *'

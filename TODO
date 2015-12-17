@@ -284,8 +284,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== reproducible Fedora
 
 * dont hardcode 23 in reproducible_setup_mock.sh and …build_rpm.sh
-* use mock in parallel with --uniqeext
-** task: needs to be passed via ssh too (and we want ssh to do remote builds like debian from one master node)
 * setup script:
 ** mock --clean just uninstalls the chroot but it'll still be rebuilt next time using cache.  you can delete the caches from /var/cache/mock/ or touch the mock config
 ** is /etc/yum/repos.d/fedora.repo really needed?

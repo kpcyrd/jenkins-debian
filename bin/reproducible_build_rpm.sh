@@ -41,7 +41,7 @@ update_mock() {
 	touch -d "$(date -u -d "6 hours ago" '+%Y-%m-%d %H:%M') UTC" $DUMMY
 	if [ ! -f $STAMP ] || [ $DUMMY -nt $STAMP ] ; then
 		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
-		mock -r $RELEASE-$ARCH --resultdir=. --cleanup-after -v --update 2>&1
+		mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=. --cleanup-after -v --update 2>&1
 		echo "$(date -u ) - mock updated."
 		yum -v --releasever=23 check-update # FIXME: dont hard-code releasever here.
 		echo "$(date -u ) - yum updated."
@@ -109,7 +109,7 @@ first_build() {
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	# nicely run mock with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -131,7 +131,7 @@ second_build() {
 	# NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
         # nicely run mock with a timeout of $TIMEOUT hours
         timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		mock -r $RELEASE-$ARCH --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
+		mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=$RESULTDIR --cleanup-after -v --rebuild $SRC_RPM 2>&1 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - mock was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -154,7 +154,7 @@ remote_build() {
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_rpm.sh $BUILDNR $RELEASE $ARCH ${SRCPACKAGE} ${TMPDIR}
+	ssh -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_rpm.sh $BUILDNR $RELEASE $ARCH $UNIQEEXT ${SRCPACKAGE} ${TMPDIR}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -p $PORT $FQDN "rm -r $TMPDIR" || true
@@ -197,8 +197,9 @@ if [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	RELEASE="$2"
 	ARCH="$3"
-	SRCPACKAGE="$4"
-	TMPDIR="$5"
+	UNIQEEXT="$4"
+	SRCPACKAGE="$5"
+	TMPDIR="$6"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	mkdir -p b$MODE/$SRCPACKAGE
@@ -222,6 +223,7 @@ delay_start # randomize start times
 # first, we need to choose a package…
 RELEASE="$1"
 ARCH="$2"
+UNIQEEXT="mock_${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}}"
 SRCPACKAGE=""	# package name
 SRC_RPM=""	# src rpm file name
 # not used yet:

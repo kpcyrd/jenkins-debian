@@ -283,6 +283,8 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible Fedora
 
+* make sure the pages meet https://fedoraproject.org/wiki/Design/Requirements
+ and ask the web design team for help via filing a ticket as described there
 * dont hardcode 23 in reproducible_setup_mock.sh and …build_rpm.sh
 * setup script:
 ** mock --clean just uninstalls the chroot but it'll still be rebuilt next time using cache.  you can delete the caches from /var/cache/mock/ or touch the mock config

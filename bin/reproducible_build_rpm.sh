@@ -71,7 +71,7 @@ choose_package() {
 	fi
 	echo "$(date -u ) - choosing package to be build."
 	local PKG=""
-	for PKG in $(cat ${RPM_PKGS}_$RELEASE) ; do
+	for PKG in $(sort -R ${RPM_PKGS}_$RELEASE) ; do
 		# build package if it has never build or at least $MIN_AGE days ago
 		if [ ! -d $BASE/rpms/$RELEASE/$ARCH/$PKG ] || [ $DUMMY -nt $BASE/rpms/$RELEASE/$ARCH/$PKG ] ; then
 			SRCPACKAGE=$PKG

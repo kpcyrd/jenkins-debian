@@ -55,7 +55,7 @@ update_archlinux_repositories() {
 		for REPO in $ARCHLINUX_REPOS ; do
 			if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
 				echo "$(date -u ) - updating list of available packages in repository '$REPO'."
-				schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -R|xargs echo > ${ARCHLINUX_PKGS}_$REPO
+				schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -u|xargs echo > ${ARCHLINUX_PKGS}_$REPO
 				echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
 				cat ${ARCHLINUX_PKGS}_$REPO
 			fi
@@ -84,7 +84,7 @@ choose_package() {
 					;;
 		esac
 		touch -d "$(date -d '$MIN_AGE days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
-		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO) ; do
+		for PKG in $(sort -R ${ARCHLINUX_PKGS}_$REPO) ; do
 			# build package if it has never build or at least $MIN_AGE days ago
 			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ $DUMMY -nt $BASE/archlinux/$REPO/$PKG ] ; then
 				REPOSITORY=$REPO

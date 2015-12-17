@@ -46,7 +46,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		echo "      <td>$PKG</td>" >> $HTML_BUFFER
 		echo "      <td>" >> $HTML_BUFFER
 		if [ -z "$(cd $ARCHBASE/$REPOSITORY/$PKG/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-			if [ ! -z "$(grep '(==> ERROR: Could not resolve all dependencies|==> ERROR: .pacman. failed to install missing dependencies)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+			if [ ! -z "$(egrep '(==> ERROR: Could not resolve all dependencies|==> ERROR: .pacman. failed to install missing dependencies)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_DEPWAIT
 				let NR_DEPWAIT+=1
 				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER

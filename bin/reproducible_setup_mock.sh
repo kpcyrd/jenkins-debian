@@ -42,5 +42,13 @@ mock -r $RELEASE-$ARCH --resultdir=. -v --install rpm-build yum
 echo "$(date -u) - mock --update"
 mock -r $RELEASE-$ARCH --resultdir=. -v --update
 echo "$(date -u) - yum makecache"
-mock -r $RELEASE-$ARCH --resultdir=. -v --chroot yum makecache
+#mock -r $RELEASE-$ARCH --resultdir=. -v --chroot yum makecache
+#
+# resulted in:
+#Yum command has been deprecated, redirecting to '/usr/bin/dnf makecache'.
+#See 'man dnf' and 'man yum2dnf' for more information.
+#To transfer transaction metadata from yum to DNF, run:
+mock -r $RELEASE-$ARCH --resultdir=. -v --chroot dnf install python-dnf-plugins-extras-migrate 
+mock -r $RELEASE-$ARCH --resultdir=. -v --chroot dnf-2 migrate
+mock -r $RELEASE-$ARCH --resultdir=. -v --chroot dnf makecache
 

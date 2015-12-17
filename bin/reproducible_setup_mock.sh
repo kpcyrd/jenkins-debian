@@ -30,18 +30,18 @@ yum -v --releasever=23 check
 yum -v --releasever=23 repolist all
 
 for i in 1 2 ; do
-	UNIQEEXT="mock_$i"
-	echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH using unique extension $UNIQEEXT."
+	UNIQUEEXT="mock_$i"
+	echo "$(date -u) - starting to cleanly configure mock for $RELEASE on $ARCH using unique extension $UNIQUEEXT."
 	echo "$(date -u) - mock --clean"
-	mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=. -v --clean
+	mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. -v --clean
 	echo "$(date -u) - mock --scrub=all"
-	mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=. -v --scrub=all
+	mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. -v --scrub=all
 	echo "$(date -u) - mock --init"
-	mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=. -v --init
+	mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. -v --init
 	echo "$(date -u) - mock --install rpm-build yum"
-	mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=. -v --install rpm-build yum
+	mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. -v --install rpm-build yum
 	echo "$(date -u) - mock --update"
-	mock -r $RELEASE-$ARCH --uniqeext=$UNIQEEXT --resultdir=. -v --update
+	mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. -v --update
 done
 
 # finally

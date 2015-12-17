@@ -63,8 +63,8 @@ choose_package() {
 	touch -d "$(date -u -d "$MIN_AGE days ago" '+%Y-%m-%d %H:%M') UTC" $DUMMY
 	if [ ! -f ${RPM_PKGS}_$RELEASE ] || [ $DUMMY -nt ${RPM_PKGS}_$RELEASE ] ; then
 		echo "$(date -u ) - updating list of available packages for $RELEASE"
-		SEARCHTERMS="apache2 bash fedora gcc gnome gnu ipa kde linux mock openssl redhat rpm ssh system-config systemd xorg yum"
-		echo "$(date -u ) - instead of building everything only packages matching these searchterms are build: $SEARCHTERMS"
+		SEARCHTERMS="apache2 awesome bash fedora firefox gcc gnome gnu gpg ipa kde linux mock openssl pgp redhat rpm ssh system-config systemd xfce xorg yum"
+		echo "$(date -u ) - for now, instead of building everything, only packages matching these searchterms are build: $SEARCHTERMS"
 		local i=""
 		( for i in $SEARCHTERMS ; do repoquery --qf "%{name}" "*$i*" ; done ) | sort -u > ${RPM_PKGS}_$RELEASE
 		cat ${RPM_PKGS}_$RELEASE

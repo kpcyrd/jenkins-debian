@@ -15,22 +15,22 @@ img {
 }
 
 a:link {
-  color: #b84e0d;
+  color: #0088cc;
   text-decoration: none;
 }
 
 a:hover {
-  color: #f26711;
+  color: #0088cc;
   text-decoration: underline;
 }
 
 a:visited {
-  color: #880000;
+  color: green;
   text-decoration: none;
 }
 
 a:visited:hover {
-  color: #f26711;
+  color: green;
   text-decoration: underline;
 }
 

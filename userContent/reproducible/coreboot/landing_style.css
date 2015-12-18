@@ -79,7 +79,7 @@ body {
 }
 
 a {
-	color: #24890d;
+	color: #0088cc;
 	text-decoration: none;
 }
 
@@ -94,8 +94,13 @@ a:active {
 
 a:active,
 a:hover {
-	color: #41a62a;
+	color: #0088cc;
 }
+
+a:visited {
+	color: green;
+}
+
 
 h1,
 h2,

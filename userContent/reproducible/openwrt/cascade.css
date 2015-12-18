@@ -25,13 +25,13 @@ code {
 }
 
 a {
-        color:#0022aa;
+        color:#0088cc;
 }
 a:hover, a:focus, {
-        color:#0022aa;
+        color:#0088cc;
 }
 a:visited {
-        color:#0055dd;
+        color:green;
 }
 
 #header {

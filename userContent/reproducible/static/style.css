@@ -54,12 +54,12 @@ a.noted {
 }
 
 a:hover, a:focus, a.package:hover, a.package:focus {
-	color:#005580;
+	color:#0088cc;
 	text-decoration:underline;
 }
 
 a.noted:hover, a.noted:focus {
-	color:#005580;
+	color:#0088cc;
 	text-decoration:underline;
 	font-weight: bold;
 }

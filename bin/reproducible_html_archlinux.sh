@@ -181,7 +181,7 @@ cat > $PAGE <<- EOF
 EOF
 write_page_intro 'Arch Linux'
 write_explaination_table 'Arch Linux'
-write_page "    <table><tr><th>repository</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages 404</th><th>unknown state</th></tr>"
+write_page "    <table><tr><th>repository</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download failures</th><th>unknown state</th></tr>"
 cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"

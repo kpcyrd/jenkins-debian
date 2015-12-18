@@ -17,15 +17,15 @@ ARCH="$2"
 # analyse results to create the webpage
 #
 echo "$(date -u) - starting to analyse build results."
-HTML_FTBFS=$(mktemp)
-HTML_FTBR=$(mktemp)
-HTML_DEPWAIT=$(mktemp)
-HTML_404=$(mktemp)
-HTML_GOOD=$(mktemp)
-HTML_UNKNOWN=$(mktemp)
-HTML_BUFFER=$(mktemp)
+HTML_FTBFS=$(mktemp -t rhtml-rpms-XXXXXXXX)
+HTML_FTBR=$(mktemp -t rhtml-rpms-XXXXXXXX)
+HTML_DEPWAIT=$(mktemp -t rhtml-rpms-XXXXXXXX)
+HTML_404=$(mktemp -t rhtml-rpms-XXXXXXXX)
+HTML_GOOD=$(mktemp -t rhtml-rpms-XXXXXXXX)
+HTML_UNKNOWN=$(mktemp -t rhtml-rpms-XXXXXXXX)
+HTML_BUFFER=$(mktemp -t rhtml-rpms-XXXXXXXX)
 HTML_TARGET=""
-HTML_RPM_STATS=$(mktemp)
+HTML_RPM_STATS=$(mktemp -t rhtml-rpms-XXXXXXXX)
 
 echo "$(date -u) - starting to analyse build results for '$RELEASE' ($ARCH)."
 TOTAL=$(cat ${RPM_PKGS}_$RELEASE | sed -s "s# #\n#g" | wc -l)

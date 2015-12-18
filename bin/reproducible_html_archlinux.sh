@@ -18,16 +18,16 @@ echo "$(date -u) - starting to analyse build results."
 for i in 0 1 2 3 4 ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
-HTML_FTBR=$(mktemp)
-HTML_DEPWAIT=$(mktemp)
+HTML_FTBR=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+HTML_DEPWAIT=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 for i in 0 1 ; do
-	HTML_404[$i]=$(mktemp)
+	HTML_404[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 done
-HTML_GOOD=$(mktemp)
-HTML_UNKNOWN=$(mktemp)
-HTML_BUFFER=$(mktemp)
+HTML_GOOD=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+HTML_UNKNOWN=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+HTML_BUFFER=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_TARGET=""
-HTML_REPOSTATS=$(mktemp)
+HTML_REPOSTATS=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | sed -s "s# #\n#g" | wc -l)

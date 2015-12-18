@@ -58,9 +58,9 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=${HTML_404[0]}
 				EXTRA_REASON=""
 				let NR_404+=1
-				if [ ! -z "$(grep 'SSL certificate problem: unable to get local issuer certificate' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-					HTML_TARGET=${HTML_404[1]}
-					EXTRA_REASON="with SSL certificate problem"
+				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+					HTML_TARGET=${HTML_404[6]}
+					EXTRA_REASON="to verify source with PGP due to unknown public key"
 				elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 					HTML_TARGET=${HTML_404[3]}
 					EXTRA_REASON="with 404 - file not found"
@@ -73,12 +73,12 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				elif [ ! -z "$(grep 'The requested URL returned error: 503' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 					HTML_TARGET=${HTML_404[5]}
 					EXTRA_REASON="with 503 - service unavailable"
-				elif [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-					HTML_TARGET=${HTML_404[6]}
-					EXTRA_REASON="to verify source with PGP due to unknown public key"
 				elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 					HTML_TARGET=${HTML_404[7]}
 					EXTRA_REASON="to verify source with PGP signatures"
+				elif [ ! -z "$(grep 'SSL certificate problem: unable to get local issuer certificate' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+					HTML_TARGET=${HTML_404[1]}
+					EXTRA_REASON="with SSL certificate problem"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> download failed $EXTRA_REASON" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then

@@ -497,17 +497,17 @@ create_dashboard_page() {
 	for SUITE in unstable experimental ; do
 		write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
+	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[$i]}\"></a>"
+	write_page "</p><p style=\"clear:both;\">"
+	write_build_performance_stats
 	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in unstable experimental ; do
 		write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
 	write_page "</p><p style=\"clear:both;\">"
-	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[$i]}\"></a>"
-	write_build_performance_stats
-	write_page "</p><p style=\"clear:both;\">"
 	write_page " <hr />"
 	# link to index_breakages
-	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this setup</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. More feedback is always welcome!</p>"
+	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is always welcome!</p>"
 	# the end
 	write_page_footer
 	cp $PAGE $BASE/reproducible.html

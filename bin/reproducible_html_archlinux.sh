@@ -15,16 +15,19 @@ ARCHBASE=$BASE/archlinux
 # analyse results to create the webpage
 #
 echo "$(date -u) - starting to analyse build results."
-for i in 0 1 2 3 4 ; do
+MEMBERS_FTBFS="0 1 2 3 4"
+MEMBERS_DEPWAIT="0 1"
+MEMBERS_404="0 1 2 3 4 5 6 7"
+for i in $MEMBERS_FTBFS ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
-HTML_FTBR=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-for i in 0 1 ; do
+for i in $MEMBERS_DEPWAIT ; do
 	HTML_DEPWAIT[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 done
-for i in 0 1 2 3 4 5 6 7; do
+for i in $MEMBERS_404 ; do
 	HTML_404[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 done
+HTML_FTBR=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_GOOD=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_UNKNOWN=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_BUFFER=$(mktemp -t rhtml-archlinux-XXXXXXXX)
@@ -183,7 +186,7 @@ cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $(for j in 0 1 2 3 4 5 6 7 ; do echo ${HTML_404[$j]} ; done) $(for j in 0 1 2 3 4 5 6 7 ; do echo ${HTML_DEPWAIT[$j]} ; done) $(for j in 0 1 2 3 4 ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
+for i in $HTML_UNKNOWN $(for j in $MEMBERS_404 ; do echo ${HTML_404[$j]} ; done) $(for j in $MEMBERS_DEPWAIT ; do echo ${HTML_DEPWAIT[$j]} ; done) $(for j in $MEMBERS_FTBFS ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done

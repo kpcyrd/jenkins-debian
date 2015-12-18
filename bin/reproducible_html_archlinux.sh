@@ -138,7 +138,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	done
 	# prepare stats per repository
 	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
-	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
+	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 100 ] ; then
 		NR_TESTED="$TESTED <span style=\"font-size:0.8em;\">($PERCENT_TOTAL% of $TOTAL tested)</span>"
 	else
 		NR_TESTED=$TESTED

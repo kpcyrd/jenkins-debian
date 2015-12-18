@@ -20,7 +20,7 @@ for i in 0 1 2 3 4 ; do
 done
 HTML_FTBR=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_DEPWAIT=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-for i in 0 1 2 ; do
+for i in 0 1 2 3 4 ; do
 	HTML_404[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 done
 HTML_GOOD=$(mktemp -t rhtml-archlinux-XXXXXXXX)
@@ -58,11 +58,17 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=${HTML_404[0]}
 				EXTRA_REASON=""
 				let NR_404+=1
-				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				if [ ! -z "$(grep 'The requested URL returned error: 404 Not Found' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 					HTML_TARGET=${HTML_404[1]}
+					EXTRA_REASON="with 404 - file not found"
+				elif [ ! -z "$(grep 'The requested URL returned error: 503 Service Unavailable' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+					HTML_TARGET=${HTML_404[2]}
+					EXTRA_REASON="with 503 - service unavailable"
+				elif [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+					HTML_TARGET=${HTML_404[3]}
 					EXTRA_REASON="(failed to verify source with PGP due to unknown public key)"
 				elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-					HTML_TARGET=${HTML_404[2]}
+					HTML_TARGET=${HTML_404[4]}
 					EXTRA_REASON="(failed to verify source with PGP signatures)"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> download failed $EXTRA_REASON" >> $HTML_BUFFER
@@ -162,7 +168,7 @@ cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $(for j in 0 1 2 ; do echo ${HTML_404[$j]} ; done) $HTML_DEPWAIT $(for j in 0 1 2 3 4 ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
+for i in $HTML_UNKNOWN $(for j in 0 1 2 3 4 ; do echo ${HTML_404[$j]} ; done) $HTML_DEPWAIT $(for j in 0 1 2 3 4 ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done

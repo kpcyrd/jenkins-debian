@@ -495,11 +495,13 @@ create_dashboard_page() {
 	write_page " <hr />"
 	write_suite_table
 	for SUITE in unstable experimental ; do
-		write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"halfview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
+	write_page "</p><p style=\"clear:both;\">"
 	for SUITE in unstable experimental ; do
 		write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
+	write_page "</p><p style=\"clear:both;\">"
 	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[$i]}\"></a>"
 	write_build_performance_stats
 	write_page "</p><p style=\"clear:both;\">"

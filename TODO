@@ -285,13 +285,15 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * make sure the pages meet https://fedoraproject.org/wiki/Design/Requirements
  and ask the web design team for help via filing a ticket as described there
+* '/var/cache/mock/fedora-23-x86_64/' has three subdirs we need to handle (put on tmpfs, monitor size, clean sometimes): ccache, root_cache and  yum_cache
+* '/var/lib/mock' should be put on /srv/workspace aka tmpfs
 * dont hardcode 23 in reproducible_setup_mock.sh and …build_rpm.sh
 * setup script:
 ** mock --clean just uninstalls the chroot but it'll still be rebuilt next time using cache.  you can delete the caches from /var/cache/mock/ or touch the mock config
 ** is /etc/yum/repos.d/fedora.repo really needed?
+** hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
 * build script
-** cleanup mock cache between two builds. --scrub=all might be too much, but whats sensible (or is it --scrub=all?)?
-** how to allow more than one mock builder per node? using schroots?
+** cleanup mock cache between two builds: --scrub=all might be too much, but whats sensible (or is it --scrub=all?)?
 ** no variations introduced yet:
 *** use '-j$NUM_CPU' and 'NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)'
 *** modify TZ, LANG, LC_ALL, umask
@@ -299,7 +301,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** use modified rpmbuild package from dhiru
 ** verify gpg signatures (via /etc/mock/)
 ** one day we will want to schedule all 17k source packages in fedora…
-* hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
 * build rawhide too (once fedora-23 builds nicely), releasever=rawhide
 
 * more notes:

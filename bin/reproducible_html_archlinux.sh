@@ -58,14 +58,26 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					EXTRA_REASON="(unknown public key)"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> failed to verify source with PGP signatures $EXTRA_REASON" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '(==> ERROR: One or more files did not pass the validity check|makepkg was killed by timeout after|==> ERROR: install file .* does not exist or is not a regular file|==> ERROR: The download program wget is not installed)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_FTBFS
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package|check)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+			elif [ ! -z "$(egrep '(==> ERROR: install file .* does not exist or is not a regular file|==> ERROR: The download program wget is not installed)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=$HTML_FTBFS
+				let NR_FTBFS+=1
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=$HTML_FTBFS
+				let NR_FTBFS+=1
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source while running tests" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=$HTML_FTBFS
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=$HTML_FTBFS
+				let NR_FTBFS+=1
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
 			else
 				echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
 				HTML_TARGET=$HTML_UNKNOWN

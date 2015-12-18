@@ -231,7 +231,7 @@ download_and_launch() {
 	export PYTHONUNBUFFERED=true
 	prepare_lauchner_settings
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- /usr/bin/torbrowser-launcher --settings 2>&1 |& tee $TBL_LOGFILE || true ) &
-	sleep 10
+	sleep 20
 	update_screenshot
 	echo "$(date -u) - pressing <tab>"
 	xvkbd -text "\t" > /dev/null 2>&1
@@ -280,8 +280,8 @@ download_and_launch() {
 		announce_failure_and_exit "$(date -u) - could not download torbrowser, please investigate."
 	fi
 	echo "$(date -u) - waiting for torbrowser to start the tor network settings dialogue."
-	# allow up to 63 seconds for torbrowser to start the tor network settings dialogue
-	for i in $(seq 1 7) ; do
+	# allow up to 90 seconds for torbrowser to start the tor network settings dialogue
+	for i in $(seq 1 9) ; do
 		sleep 5 ; sleep $i
 		# this directory only exists once torbrower has successfully started
 		# (and pattern matching doesnt work because of schroot…)
@@ -372,7 +372,7 @@ download_and_launch() {
 	fi
 	# sleep is added here, so xterm + notification come up nicely
 	schroot --run-session -c $SESSION --preserve-environment -- xterm -geometry 1024x230+0+520 $STATUS_COLORS -fa 'DejaVuSansMono' -fs 18 -hold -T '$(date +'%a %d %b')' -e "echo ; figlet -c -f banner -w 68 '$(date +'%a %d %b')'" 2>/dev/null || true &
-	sleep 1
+	sleep 4
 	echo "'$(date -u) - torbrowser tests end. $STATUS_MSG'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	sleep 0.5
 	update_screenshot

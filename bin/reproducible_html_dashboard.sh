@@ -329,7 +329,7 @@ write_suite_table() {
 		fi
 		gather_suite_arch_stats
 		write_page "<tr><td>$SUITE/$ARCH</td><td>$AMOUNT"
-		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
+		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 		fi
 		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
@@ -348,7 +348,7 @@ create_suite_arch_stats_page() {
 	MAINLABEL[2]="Age in days of oldest reproducible build result in '$SUITE' for '$ARCH'"
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds for packages in $SUITE for $ARCH"
-	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 98 ] ; then
+	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE/$ARCH.</p>"
 	fi
 	write_page "<p>"

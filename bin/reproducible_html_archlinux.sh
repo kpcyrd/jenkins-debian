@@ -69,10 +69,10 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					EXTRA_REASON="with 503 - service unavailable"
 				elif [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 					HTML_TARGET=${HTML_404[4]}
-					EXTRA_REASON="(failed to verify source with PGP due to unknown public key)"
+					EXTRA_REASON="to verify source with PGP due to unknown public key"
 				elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 					HTML_TARGET=${HTML_404[5]}
-					EXTRA_REASON="(failed to verify source with PGP signatures)"
+					EXTRA_REASON="to verify source with PGP signatures"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> download failed $EXTRA_REASON" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
@@ -86,11 +86,11 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[2]}
 				let NR_FTBFS+=1
-				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source while running tests" >> $HTML_BUFFER
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[3]}
 				let NR_FTBFS+=1
-				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source" >> $HTML_BUFFER
+				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[4]}
 				let NR_FTBFS+=1

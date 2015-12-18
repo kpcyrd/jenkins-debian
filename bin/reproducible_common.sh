@@ -397,7 +397,7 @@ write_explaination_table() {
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
-			write_page "<tr><td>kernel version, <em>currently not</em> modified using /usr/bin/linux64 --uname-2.6</td></td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL2 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td></tr>"
+			write_page "<tr><td>kernel version, <em>currently not</em> additionally modified using <code>/usr/bin/linux64 --uname-2.6</code> (due to <a href="https://bugs.debian.org/806911">#806911</a>)</td></td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL2 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td></tr>"
 		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 		else

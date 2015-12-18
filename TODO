@@ -142,7 +142,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * higher prio:
 ** dashboard: number of cores used is wrong for amd64…
-** re-enable linux-2.6 usage
+** re-enable linux-2.6 usage once 806911 has been fixed
 ** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 ** make maintenance job detect and reschedule logs with: '^Bus Error$'
 ** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.

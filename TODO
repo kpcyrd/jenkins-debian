@@ -142,12 +142,11 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * higher prio:
 ** dashboard: number of cores used is wrong for amd64…
-** re-enable linux-2.6 usage once 806911 has been fixed
+** new table in pkg/test history page: schedule - if that package is currently scheduled
+** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
 ** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 ** make maintenance job detect and reschedule logs with: '^Bus Error$'
-** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
 ** scheduler should automatically schedule 404 packages
-** rewrite bin/schroot-create.sh from scratch, with little sudo.
 *** analyse+summarize needs, git commit that, then writing the script will be trivial
 *** use schroot tarballs (gzipped), moves are atomic then
 ** notes related:
@@ -159,20 +158,21 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs in testing but build fine on sid
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
-** new page: packages which are orphaned but have a reproducible usertagged patch
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
-** save build-hosts in build_duration table (and change to saving the time of a single build, not both combined?)
 ** repo-comparison: check for binaries without source
 ** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
+** re-enable linux-2.6 usage once 806911 has been fixed
 
 * lesser prio
+** new page: packages which are orphaned but have a reproducible usertagged patch
 ** remove the rescheduling reason from the DB, that's really not needed
-** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
+** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
 ** check that diffoscope schroot have /usr/bin/ar installed, else fail the job
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
+** rewrite bin/schroot-create.sh from scratch, with little sudo.
 ** right align all numbers in table in the dashboard
 ** pkg sets related:
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)

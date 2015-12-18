@@ -138,7 +138,17 @@ first_build() {
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
 	fi
-	schroot --end-session -c $SESSION
+	schroot --end-session -c $SESSION | tee -a $LOG
+	PRESULT=${PIPESTATUS[0]}
+	if [ $PRESULT -ne 0 ] ; then
+		echo "$(date -u) - could not end schroot session, maybe some processes are still running? Sleeping 30 seconds and trying again…" | tee -a $LOG
+		sleep 30
+		schroot --end-session -c $SESSION | tee -a $LOG
+		P2RESULT=${PIPESTATUS[0]}
+		if [ $P2RESULT -ne 0 ] ; then
+			exit 23
+		fi
+	fi
 	if ! "$DEBUG" ; then set +x ; fi
 }
 
@@ -172,7 +182,17 @@ second_build() {
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
 	fi
-	schroot --end-session -c $SESSION
+	schroot --end-session -c $SESSION | tee -a $LOG
+	PRESULT=${PIPESTATUS[0]}
+	if [ $PRESULT -ne 0 ] ; then
+		echo "$(date -u) - could not end schroot session, maybe some processes are still running? Sleeping 30 seconds and trying again…" | tee -a $LOG
+		sleep 30
+		schroot --end-session -c $SESSION | tee -a $LOG
+		P2RESULT=${PIPESTATUS[0]}
+		if [ $P2RESULT -ne 0 ] ; then
+			exit 23
+		fi
+	fi
 	if ! "$DEBUG" ; then set +x ; fi
 }
 
@@ -195,7 +215,12 @@ remote_build() {
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -p $PORT $FQDN "rm -r $TMPDIR" || true
-		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
+		if [ $RESULT -eq 23 ] ; then
+			echo "remote job could not end schroot session properly, failing loudly so we get a pointer for investigations."
+			exit 1
+		else
+			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
+		fi
 	fi
 	rsync -e "ssh -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?

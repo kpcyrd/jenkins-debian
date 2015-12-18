@@ -294,12 +294,12 @@ write_build_performance_stats() {
 	fi
 	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics for $ARCH</th></tr>"
 	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
+	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
 	if [ "$ARCH" != "armhf" ] ; then
 		AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
 		write_page "<tr><td>oldest $ARCH build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
 	else
-		write_page "<tr><td>oldest $ARCH build result in unstable </td><td>$AGE_UNSTABLE days</td></tr>"
+		write_page "<tr><td>oldest $ARCH build result in unstable / experimental </td><td>$AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
 	fi
 	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 	MIN=$(echo $RESULT/60|bc)
@@ -324,7 +324,7 @@ write_suite_table() {
 	write_page "<p>"
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
-		if [ "$ARCH" = "armhf" ] && [ "$SUITE" != "unstable" ] ; then
+		if [ "$ARCH" = "armhf" ] && [ "$SUITE" = "testing" ] ; then
 			continue
 		fi
 		gather_suite_arch_stats
@@ -494,10 +494,11 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	write_page " <hr />"
 	write_suite_table
-	SUITE="unstable"
-	write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+	for SUITE in unstable experimental ; do
+		write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"halfview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"halfview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+	done
 	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[$i]}\"></a>"
-	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	write_build_performance_stats
 	write_page "</p><p style=\"clear:both;\">"
 	write_page " <hr />"
@@ -517,8 +518,8 @@ update_bug_stats
 update_notes_stats
 for ARCH in ${ARCHS} ; do
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" != "unstable" ] && [ "$ARCH" = "armhf" ] ; then
-			# we only test unstable on armhf atm
+		if [ "$SUITE" = "testing" ] && [ "$ARCH" = "armhf" ] ; then
+			# we only test unstable and experimental on armhf atm
 			continue
 		fi
 		update_suite_arch_stats

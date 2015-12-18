@@ -73,7 +73,7 @@ LIMITS = {
         'armhf': {
             'testing': {'*': 0},
             'unstable': {'*': 250},
-            'experimental': {'*': 0},
+            'experimental': {'*': 250},
         },
     },
     'new': {
@@ -85,7 +85,7 @@ LIMITS = {
         'armhf': {
             'testing': {1: (100, 0), 2: (200, 0), '*': 0},
             'unstable': {1: (100, 75), 2: (200, 60), '*': 45},
-            'experimental': {1: (100, 0), 2: (200, 0), '*': 0},
+            'experimental': {1: (100, 75), 2: (200, 60), '*': 45},
         },
     },
     'ftbfs+depwait': {
@@ -97,7 +97,7 @@ LIMITS = {
         'armhf': {
             'testing': {1: (250, 0), 2: (350, 0), '*': 0},
             'unstable': {1: (250, 12), 2: (350, 6), '*': 0},
-            'experimental': {1: (250, 0), 2: (350, 0), '*': 0},
+            'experimental': {1: (250, 12), 2: (350, 6), '*': 0},
         }
     },
     'old': {
@@ -109,7 +109,7 @@ LIMITS = {
         'armhf': {
             'testing': {1: (300, 0), 2: (400, 0), '*': 0},
             'unstable': {1: (300, 250), 2: (400, 200), '*': 0},
-            'experimental': {1: (300, 0), 2: (400, 0), '*': 0},
+            'experimental': {1: (300, 20), 2: (400, 10), '*': 0},
         }
     }
 }
@@ -172,7 +172,7 @@ def update_sources(suite):
     sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
     for arch in ARCHS:
-        if arch == 'armhf' and suite != 'unstable':
+        if arch == 'armhf' and suite == 'testing':
             continue
         else:
             log.info('Updating sources db for %s/%s...', suite, arch)
@@ -313,7 +313,7 @@ def add_up_numbers(packages, arch):
     if packages_sum == '0+0+0':
         packages_sum = '0'
     elif arch == 'armhf':
-        packages_sum = str(len(packages['unstable']))
+        packages_sum = str(len(packages['unstable']))+'+'+str(len(packages['experimental']))
     return packages_sum
 
 
@@ -497,7 +497,7 @@ def scheduler(arch):
         if suite not in priotized_suite_order:
             priotized_suite_order.append(suite)
     for suite in priotized_suite_order:
-        if arch == 'armhf' and suite != 'unstable':
+        if arch == 'armhf' and suite == 'testing':
             now_queued_here[suite] = 0
             continue
         query = 'SELECT count(*) ' \
@@ -519,7 +519,7 @@ def scheduler(arch):
     if arch != 'armhf':
         message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
     else:
-        message = 'Scheduled in unstable (' + arch + '): '
+        message = 'Scheduled in unstable+experimental (' + arch + '): '
     if msg_untested:
         message += msg_untested
         message += ' and ' if msg_new and not msg_old_ftbfs_and_depwait and not msg_old else ''

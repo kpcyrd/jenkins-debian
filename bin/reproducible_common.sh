@@ -253,8 +253,8 @@ write_page_header() {
 		done
 		if [ "$TARGET" = "suite_stats" ] ; then
 			for i in $SUITES ; do
-				if [ "$i" != "unstable" ] && [ "$ARCH" = "armhf" ] ; then
-					# only unstable is tested on armhf atm
+				if [ "$i" = "testing" ] && [ "$ARCH" = "armhf" ] ; then
+					# only unstable and experimental are tested on armhf atm
 					continue
 				fi
 				write_page "<li><a href=\"/$i/index_suite_${ARCH}_stats.html\">suite: $i</a></li>"

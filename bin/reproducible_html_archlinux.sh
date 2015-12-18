@@ -15,10 +15,14 @@ ARCHBASE=$BASE/archlinux
 # analyse results to create the webpage
 #
 echo "$(date -u) - starting to analyse build results."
-HTML_FTBFS=$(mktemp)
+for i in 0 1 2 3 4 ; do
+	HTML_FTBFS[$i]=$(mktemp)
+done
 HTML_FTBR=$(mktemp)
 HTML_DEPWAIT=$(mktemp)
-HTML_404=$(mktemp)
+for i in 0 1 ; do
+	HTML_404[$i]=$(mktemp)
+done
 HTML_GOOD=$(mktemp)
 HTML_UNKNOWN=$(mktemp)
 HTML_BUFFER=$(mktemp)
@@ -51,31 +55,33 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				let NR_DEPWAIT+=1
 				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_404
 				let NR_404+=1
-				EXTRA_REASON=""
 				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+					HTML_TARGET=${HTML_404[0]}
 					EXTRA_REASON="(unknown public key)"
+				else
+					HTML_TARGET=${HTML_404[1]}
+					EXTRA_REASON=""
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> failed to verify source with PGP signatures $EXTRA_REASON" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
+				HTML_TARGET=${HTML_FTBFS[0]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '(==> ERROR: install file .* does not exist or is not a regular file|==> ERROR: The download program wget is not installed)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
+				HTML_TARGET=${HTML_FTBFS[1]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
+				HTML_TARGET=${HTML_FTBFS[2]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source while running tests" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
+				HTML_TARGET=${HTML_FTBFS[3]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build from source" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_FTBFS
+				HTML_TARGET=${HTML_FTBFS[4]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
 			else
@@ -154,7 +160,7 @@ cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $HTML_404 $HTML_DEPWAIT $HTML_FTBFS $HTML_FTBR $HTML_GOOD ; do
+for i in $HTML_UNKNOWN $(for j in 0 1 ; do echo ${HTML_404[$j]} ; done) $HTML_DEPWAIT $(for j in 0 1 2 3 4 ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done

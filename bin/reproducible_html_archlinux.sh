@@ -19,7 +19,9 @@ for i in 0 1 2 3 4 ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
 HTML_FTBR=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-HTML_DEPWAIT=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+for i in 0 1 ; do
+	HTML_DEPWAIT[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+done
 for i in 0 1 2 3 4 5 6 7; do
 	HTML_404[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 done
@@ -50,8 +52,12 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		echo "      <td>$PKG</td>" >> $HTML_BUFFER
 		echo "      <td>" >> $HTML_BUFFER
 		if [ -z "$(cd $ARCHBASE/$REPOSITORY/$PKG/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-			if [ ! -z "$(egrep '(==> ERROR: Could not resolve all dependencies|==> ERROR: .pacman. failed to install missing dependencies)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
-				HTML_TARGET=$HTML_DEPWAIT
+			if [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=${HTML_DEPWAIT[0]}
+				let NR_DEPWAIT+=1
+				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
+			elif [ ! -z "$(egrep '(==> ERROR: Could not resolve all dependencies|==> ERROR: .pacman. failed to install missing dependencies)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
+				HTML_TARGET=${HTML_DEPWAIT[1]}
 				let NR_DEPWAIT+=1
 				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified)' $ARCHBASE/$REPOSITORY/$PKG/build1.log)" ] ; then
@@ -177,7 +183,7 @@ cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $(for j in 0 1 2 3 4 5 6 7 ; do echo ${HTML_404[$j]} ; done) $HTML_DEPWAIT $(for j in 0 1 2 3 4 ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
+for i in $HTML_UNKNOWN $(for j in 0 1 2 3 4 5 6 7 ; do echo ${HTML_404[$j]} ; done) $(for j in 0 1 2 3 4 5 6 7 ; do echo ${HTML_DEPWAIT[$j]} ; done) $(for j in 0 1 2 3 4 ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done

@@ -274,6 +274,9 @@
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
+                - 'setup_pbuilder_testing':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '23 7 * * *'
                 - 'setup_pbuilder_unstable':
                     my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '42 7 * * *'
@@ -281,6 +284,9 @@
                     my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '33 7 * * *'
                 - 'setup_schroot_testing':
+                    my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+                    my_timed: 'H/60 1 * * *'
+                - 'setup_schroot_unstable':
                     my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
                     my_timed: 'H/60 1 * * *'
                 - 'setup_schroot_experimental':
@@ -296,12 +302,18 @@
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
-                - 'setup_pbuilder_testing':
+                - 'setup_pbuilder_unstable':
                     my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '23 7 * * *'
+                - 'setup_pbuilder_experimental':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '23 7 * * *'
                 - 'setup_schroot_unstable':
                     my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
-                    my_timed: '42 1 * * *'
+                    my_timed: 'H/60 1 * * *'
+                - 'setup_schroot_experimental':
+                    my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
+                    my_timed: 'H/60 1 * * *'
             my_hname:
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }

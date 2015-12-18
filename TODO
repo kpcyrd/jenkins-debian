@@ -310,6 +310,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== reproducible Arch Linux
 
 * describe archlinux setup…!
+* move /var/lib/schroot to /srv/workspace aka tmpfs
 * setup_archlinux_schroot job:
 ** needs to be made idempotent
 ** needs to download bootstrap.tar.gz sig and verify
@@ -319,8 +320,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * arch build.sh:
 ** introduce more variations: USER
 ** confirm the others are really working
-** 'echo "keyserver-options auto-key-retrieve" >> ~/.gnupg/gpg.conf' is now being used and should make this not needed:
-*** 'schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- grep  ^validpgpkeys= $PKG/PKGBUILD|cut -d "'" -f2|xargs schroot --directory /tmp -c source:jenkins-reproducible-archlinux -- gpg --recv-keys'
 ** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
 * put results in a db
 ** graph results

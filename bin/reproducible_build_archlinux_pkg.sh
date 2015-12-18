@@ -72,7 +72,7 @@ choose_package() {
 	update_archlinux_repositories
 	local REPO
 	local PKG
-	for REPO in $ARCHLINUX_REPOS ; do
+	for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
 		case $REPO in
 			core)		MIN_AGE=7
 					;;

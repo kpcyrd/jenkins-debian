@@ -16,7 +16,7 @@ ARCH="$2"
 #
 # analyse results to create the webpage
 #
-echo "$(date -u) - starting to analyse build results."
+echo "$(date -u) - starting to analyse build results for '$RELEASE' ($ARCH)."
 HTML_FTBFS=$(mktemp -t rhtml-rpms-XXXXXXXX)
 HTML_FTBR=$(mktemp -t rhtml-rpms-XXXXXXXX)
 HTML_DEPWAIT=$(mktemp -t rhtml-rpms-XXXXXXXX)
@@ -26,9 +26,7 @@ HTML_UNKNOWN=$(mktemp -t rhtml-rpms-XXXXXXXX)
 HTML_BUFFER=$(mktemp -t rhtml-rpms-XXXXXXXX)
 HTML_TARGET=""
 HTML_RPM_STATS=$(mktemp -t rhtml-rpms-XXXXXXXX)
-
-echo "$(date -u) - starting to analyse build results for '$RELEASE' ($ARCH)."
-TOTAL=$(cat ${RPM_PKGS}_$RELEASE | sed -s "s# #\n#g" | wc -l)
+SIZE=""
 TESTED=0
 NR_FTBFS=0
 NR_FTBR=0
@@ -36,6 +34,7 @@ NR_DEPWAIT=0
 NR_404=0
 NR_GOOD=0
 NR_UNKNOWN=0
+TOTAL=$(cat ${RPM_PKGS}_$RELEASE | sed -s "s# #\n#g" | wc -l)
 for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {} \;|sort -u -f) ; do
 	if [ -z "$(cd $RPMBASE/$RELEASE/$ARCH/$PKG/ ; ls)" ] ; then
 		# directory exists but is empty: package is building…
@@ -80,7 +79,8 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 	echo "      <td>$(LANG=C TZ=UTC ls --full-time $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
 	for LOG in build1.log build2.log ; do
 		if [ -f $RPMBASE/$RELEASE/$ARCH/$PKG/$LOG ] ; then
-			echo "      <td><a href=\"/rpms/$RELEASE/$ARCH/$PKG/$LOG\">$LOG</a></td>" >> $HTML_BUFFER
+			get_filesize $RPMBASE/$RELEASE/$ARCH/$PKG/$LOG
+			echo "      <td><a href=\"/rpms/$RELEASE/$ARCH/$PKG/$LOG\">$LOG</a> ($SIZE)</td>" >> $HTML_BUFFER
 		else
 			echo "      <td>&nbsp;</td>" >> $HTML_BUFFER
 		fi

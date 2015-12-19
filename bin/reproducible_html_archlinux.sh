@@ -33,6 +33,7 @@ HTML_UNKNOWN=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_BUFFER=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_TARGET=""
 HTML_REPOSTATS=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+SIZE=""
 for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | sed -s "s# #\n#g" | wc -l)
@@ -127,7 +128,8 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHBASE/$REPOSITORY/$PKG/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
 		for LOG in build1.log build2.log ; do
 			if [ -f $ARCHBASE/$REPOSITORY/$PKG/$LOG ] ; then
-				echo "      <td><a href=\"/archlinux/$REPOSITORY/$PKG/$LOG\">$LOG</a></td>" >> $HTML_BUFFER
+				get_filesize $ARCHBASE/$REPOSITORY/$PKG/$LOG
+				echo "      <td><a href=\"/archlinux/$REPOSITORY/$PKG/$LOG\">$LOG</a> ($SIZE)</td>" >> $HTML_BUFFER
 			else
 				echo "      <td>&nbsp;</td>" >> $HTML_BUFFER
 			fi

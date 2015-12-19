@@ -141,12 +141,18 @@ first_build() {
 	schroot --end-session -c $SESSION | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -ne 0 ] ; then
-		echo "$(date -u) - could not end schroot session, maybe some processes are still running? Sleeping 30 seconds and trying again…" | tee -a $LOG
-		sleep 30
-		schroot --end-session -c $SESSION | tee -a $LOG
+		echo "$(date -u) - could not end schroot session, maybe some processes are still running? Sleeping 60 seconds and trying again…" | tee -a $LOG
+		sleep 60
+		schroot --end-session -f -c $SESSION | tee -a $LOG
 		P2RESULT=${PIPESTATUS[0]}
 		if [ $P2RESULT -ne 0 ] ; then
-			exit 23
+			echo "$(date -u) - could not end schroot session even with force. Sleeping 10 seconds and trying once more…" | tee -a $LOG
+			sleep 10
+			schroot --end-session -f -c $SESSION | tee -a $LOG
+			P3RESULT=${PIPESTATUS[0]}
+			if [ $P3RESULT -ne 0 ] ; then
+				exit 23
+			fi
 		fi
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
@@ -185,12 +191,18 @@ second_build() {
 	schroot --end-session -c $SESSION | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -ne 0 ] ; then
-		echo "$(date -u) - could not end schroot session, maybe some processes are still running? Sleeping 30 seconds and trying again…" | tee -a $LOG
-		sleep 30
-		schroot --end-session -c $SESSION | tee -a $LOG
+		echo "$(date -u) - could not end schroot session, maybe some processes are still running? Sleeping 60 seconds and trying again…" | tee -a $LOG
+		sleep 60
+		schroot --end-session -f -c $SESSION | tee -a $LOG
 		P2RESULT=${PIPESTATUS[0]}
 		if [ $P2RESULT -ne 0 ] ; then
-			exit 23
+			echo "$(date -u) - could not end schroot session even with force. Sleeping 10 seconds and trying once more…" | tee -a $LOG
+			sleep 10
+			schroot --end-session -f -c $SESSION | tee -a $LOG
+			P3RESULT=${PIPESTATUS[0]}
+			if [ $P3RESULT -ne 0 ] ; then
+				exit 23
+			fi
 		fi
 	fi
 	if ! "$DEBUG" ; then set +x ; fi

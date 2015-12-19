@@ -512,7 +512,7 @@ create_dashboard_page() {
 			if [ "$ARCH" = "armhf" ] &&  [ "$SUITE" = testing ] ; then
 				continue
 			fi
-			write_page " <a href=\"/$SUITE/\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+			write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 		done
 		write_page "</p><p style=\"clear:both;\">"
 	done

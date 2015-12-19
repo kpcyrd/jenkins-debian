@@ -230,7 +230,7 @@ for PKG in $SOURCEPKGS ; do
 	write_row " <td>$CSID</td>"
 	write_row " <td>$CEXP</td>"
 	write_row "</tr>"
-	echo "$(date -u) - Package done. (TABLE_TODO: $(ls -la $TABLE_TODO|cut -d " " -f5) bytes - TABLE_DONE: $(ls -la $TABLE_DONE|cut -d " " -f5) bytes)"
+	echo "$(date -u) - Package $PKG done."
 	echo
 done
 cat $TABLE_TODO >> $PAGE

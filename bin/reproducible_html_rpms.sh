@@ -36,7 +36,8 @@ NR_GOOD=0
 NR_UNKNOWN=0
 TOTAL=$(cat ${RPM_PKGS}_$RELEASE | sed -s "s# #\n#g" | wc -l)
 for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {} \;|sort -u -f) ; do
-	if [ -z "$(cd $RPMBASE/$RELEASE/$ARCH/$PKG/ ; ls)" ] ; then
+	RPM_PKG_PATH=$RPMBASE/$RELEASE/$ARCH/$PKG
+	if [ -z "$(cd $RPM_PKG_PATH/ ; ls)" ] ; then
 		# directory exists but is empty: package is building…
 		echo "$(date -u ) - ignoring $PKG from '$RELEASE' ($ARCH) which is building right now…"
 		continue
@@ -45,20 +46,20 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 	echo "     <tr>" >> $HTML_BUFFER
 	echo "      <td>$PKG</td>" >> $HTML_BUFFER
 	echo "      <td>" >> $HTML_BUFFER
-	if [ -z "$(cd $RPMBASE/$RELEASE/$ARCH/$PKG/ ; ls *.rpm.html 2>/dev/null)" ] ; then
-		if [ ! -z "$(egrep '^DEBUG: Error: No Package found for' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
+	if [ -z "$(cd $RPM_PKG_PATH/ ; ls *.rpm.html 2>/dev/null)" ] ; then
+		if [ ! -z "$(egrep '^DEBUG: Error: No Package found for' $RPM_PKG_PATH/build1.log)" ] ; then
 			HTML_TARGET=$HTML_DEPWAIT
 			let NR_DEPWAIT+=1
 			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: Failure while downloading' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
+		elif [ ! -z "$(egrep '==> ERROR: Failure while downloading' $RPM_PKG_PATH/build1.log)" ] ; then
 			HTML_TARGET=$HTML_404
 			let NR_404+=1
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> failed to download source" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '^ERROR: Command failed. See logs for output.' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
+		elif [ ! -z "$(egrep '^ERROR: Command failed. See logs for output.' $RPM_PKG_PATH/build1.log)" ] ; then
 			HTML_TARGET=$HTML_FTBFS
 			let NR_FTBFS+=1
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep 'mock was killed by timeout after' $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log)" ] ; then
+		elif [ ! -z "$(egrep 'mock was killed by timeout after' $RPM_PKG_PATH/build1.log)" ] ; then
 			HTML_TARGET=$HTML_FTBFS
 			let NR_FTBFS+=1
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> killed by timeout" >> $HTML_BUFFER
@@ -71,15 +72,15 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 	else
 		HTML_TARGET=$HTML_FTBR
 		let NR_FTBR+=1
-		for ARTIFACT in $(cd $RPMBASE/$RELEASE/$ARCH/$PKG/ ; ls *.rpm.html) ; do
+		for ARTIFACT in $(cd $RPM_PKG_PATH/ ; ls *.rpm.html) ; do
 			echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/rpms/$RELEASE/$ARCH/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
 		done
 	fi
 	echo "      </td>" >> $HTML_BUFFER
-	echo "      <td>$(LANG=C TZ=UTC ls --full-time $RPMBASE/$RELEASE/$ARCH/$PKG/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
+	echo "      <td>$(LANG=C TZ=UTC ls --full-time $RPM_PKG_PATH/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
 	for LOG in build1.log build2.log ; do
-		if [ -f $RPMBASE/$RELEASE/$ARCH/$PKG/$LOG ] ; then
-			get_filesize $RPMBASE/$RELEASE/$ARCH/$PKG/$LOG
+		if [ -f $RPM_PKG_PATH/$LOG ] ; then
+			get_filesize $RPM_PKG_PATH/$LOG
 			echo "      <td><a href=\"/rpms/$RELEASE/$ARCH/$PKG/$LOG\">$LOG</a> ($SIZE)</td>" >> $HTML_BUFFER
 		else
 			echo "      <td>&nbsp;</td>" >> $HTML_BUFFER

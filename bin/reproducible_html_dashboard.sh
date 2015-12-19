@@ -285,36 +285,51 @@ write_usertag_table() {
 # write build performance stats
 #
 write_build_performance_stats() {
-	if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "armhf" ] ; then
-		TIMESPAN_VERBOSE="4 weeks"
-		TIMESPAN_RAW="28"
-	else
-		TIMESPAN_VERBOSE="1 week"
-		TIMESPAN_RAW="7"
-	fi
-	write_page "<table class=\"main\"><tr><th colspan=\"2\">Build statistics for $ARCH</th></tr>"
-	AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
-	AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-	if [ "$ARCH" != "armhf" ] ; then
-		AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
-		write_page "<tr><td>oldest $ARCH build result in testing / unstable / experimental</td><td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
-	else
-		write_page "<tr><td>oldest $ARCH build result in unstable / experimental </td><td>$AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td></tr>"
-	fi
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
-	MIN=$(echo $RESULT/60|bc)
-	SEC=$(echo "$RESULT-($MIN*60)"|bc)
-	write_page "<tr><td>average test duration (on $DATE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
-	MIN=$(echo $RESULT/60|bc)
-	SEC=$(echo "$RESULT-($MIN*60)"|bc)
-	write_page "<tr><td>average test duration (in the last $TIMESPAN_VERBOSE)</td><td>$MIN minutes, $SEC seconds</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
-	write_page "<tr><td>packages tested on $DATE</td><td>$RESULT</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
-	RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-	write_page "<tr><td>packages tested on average per day in the last $TIMESPAN_VERBOSE</td><td>$RESULT</td></tr>"
-	write_page "</table>"
+	local ARCH
+	write_page "<table class=\"main\"><tr><th>Architecture statistics</th>"
+	for ARCH in ${ARCHS} ; do
+		write_page " <th>$ARCH</th>"
+	done
+	write_page "</tr><tr><td>oldest build result in testing / unstable / experimental</td>"
+	for ARCH in ${ARCHS} ; do
+		PERF_STATS[$ARCH]=$(mktemp -t reproducible-dashboard-perf-XXXXXXXX)
+		AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
+		if [ "$ARCH" != "armhf" ] ; then
+			AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
+		else
+			AGE_TESTING="-"
+		fi
+		write_page "<td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
+	done
+	write_page "</tr><tr><td>average test duration (on $DATE)</td>"
+	for ARCH in ${ARCHS} ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
+		MIN=$(echo $RESULT/60|bc)
+		SEC=$(echo "$RESULT-($MIN*60)"|bc)
+		write_page "<td>$MIN minutes, $SEC seconds</td>"
+	done
+	local TIMESPAN_VERBOSE="4 weeks"
+	local TIMESPAN_RAW="28"
+	write_page "</tr><tr><td>average test duration (in the last $TIMESPAN_VERBOSE)</td>"
+	for ARCH in ${ARCHS} ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
+		MIN=$(echo $RESULT/60|bc)
+		SEC=$(echo "$RESULT-($MIN*60)"|bc)
+		write_page "<td>$MIN minutes, $SEC seconds</td>"
+	done
+	write_page "</tr><tr><td>packages tested on $DATE</td>"
+	for ARCH in ${ARCHS} ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
+		write_page "<td>$RESULT</td>"
+	done
+	write_page "</tr><tr><td>packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
+	for ARCH in ${ARCHS} ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
+		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
+		write_page "<td>$RESULT</td>"
+	done
+write_page "</tr></table>"
 }
 
 #
@@ -472,9 +487,6 @@ create_dashboard_page() {
 	write_page "</p>"
 	# explain setup
 	write_explaination_table debian
-	# write build per day graph
-	write_page "<p style=\"clear:both;\">"
-	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo arch specific pngs once a day
 	for ARCH in ${ARCHS} ; do
 		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[1]}_$ARCH.png ] ; then
@@ -482,32 +494,33 @@ create_dashboard_page() {
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
-	ARCH="amd64"
-	# write suite builds age graphs
-	write_page "</p><p style=\"clear:both;\">"
-	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE/\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
-	done
-	write_build_performance_stats
 	# other archs: armhf
 	ARCH="armhf"
 	write_page "</p><p style=\"clear:both;\">"
-	write_page " <hr />"
 	write_suite_table
 	for SUITE in unstable experimental ; do
 		write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
-	write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[$i]}\"></a>"
-	write_page "</p><p style=\"clear:both;\">"
+	# write performance stats and build per day graphs
+	write_page "<p style=\"clear:both;\">"
 	write_build_performance_stats
-	write_page "</p><p style=\"clear:both;\">"
-	for SUITE in unstable experimental ; do
-		write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+	write_page "<p style=\"clear:both;\">"
+	for ARCH in ${ARCHS} ; do
+		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"halfview\" alt=\"${MAINLABEL[$i]}\"></a>"
 	done
+	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
-	write_page " <hr />"
+	for ARCH in ${ARCHS} ; do
+		for SUITE in $SUITES ; do
+			if [ "$ARCH" = "armhf" ] &&  [ "$SUITE" = testing ] ; then
+				continue
+			fi
+			write_page " <a href=\"/$SUITE/\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+		done
+		write_page "</p><p style=\"clear:both;\">"
+	done
 	# link to index_breakages
-	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is always welcome!</p>"
+	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is very much appreciated.</p>"
 	# the end
 	write_page_footer
 	cp $PAGE $BASE/reproducible.html

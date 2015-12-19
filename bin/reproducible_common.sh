@@ -43,7 +43,7 @@ DBDSUITE="unstable"
 # Debian suites being tested
 SUITES="testing unstable experimental"
 # Debian architectures being tested
-ARCHS="armhf amd64"
+ARCHS="amd64 armhf"
 
 # define Debian build nodes in use
 BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-amd64.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh

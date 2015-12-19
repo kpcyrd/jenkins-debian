@@ -496,7 +496,7 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	write_suite_table
 	for SUITE in unstable experimental ; do
-		write_page " <a href=\"/$SUITE/index_suite_${ARCH}_stats.html\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
 	# write performance stats and build per day graphs
 	write_page "<p style=\"clear:both;\">"

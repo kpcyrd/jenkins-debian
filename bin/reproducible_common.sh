@@ -208,7 +208,7 @@ write_page_header() {
 		write_page "</ul>"
 		write_page "<ul>"
 		write_page "   These pages are showing the <em>prospects</em> of <li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">reproducible builds of Debian packages</a></li>."
-		write_page "   The results shown were obtained from <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
+		write_page "   The results shown were obtained by <a href=\"$JENKINS_URL/view/reproducible\">several jobs</a> running on"
 		write_page "   <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
 		write_page "   Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!"
 		write_page "</ul>"

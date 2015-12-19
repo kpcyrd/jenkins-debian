@@ -142,13 +142,12 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * higher prio:
 ** dashboard: number of cores used is wrong for amd64…
-** new table in pkg/test history page: schedule - if that package is currently scheduled
 ** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
+** new table in pkg/test history page: schedule - if that package is currently scheduled
 ** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 ** make maintenance job detect and reschedule logs with: '^Bus Error$'
 ** scheduler should automatically schedule 404 packages
-*** analyse+summarize needs, git commit that, then writing the script will be trivial
-*** use schroot tarballs (gzipped), moves are atomic then
+** use schroot tarballs (gzipped), moves are atomic then
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)
@@ -187,10 +186,9 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
 ** maintenance.sh: delete the history pages once a page has been removed from all suites+archs
 ** new page showing arch all packages which are cross-reproducible, and those which are not
-** (some!) build jobs should call _build.sh with a third host as param, which is tried as 2nd host if the real 2nd host is down
 ** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
 ** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
-
+* support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL
 * once stabilized notification emails should go through the package tracker.  The 'build' keyword seems to be the better fit for this.  To do so just send the emails to dispatch@tracker.debian.org, setting "X-Distro-Tracker-Package: foo" and "X-Distro-Tracker-Keyword: build".  This way people wanting to subscribe to our notification don't need to ask us and can do that by themselves.
 
 * missing tests:
@@ -198,17 +196,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
-** variation of filesystem being built on (work in progress, see 'higher prio' list above)
 ** variation of users shell (bash + zsh|dash?)
-
-* support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL
-* enable people to upload test packages, to be built in jenkins:
-----
-  <mapreri> h01ger: another wild future request by me: allowing us to upload something and let jenkins test it. rationale: I sent (another) patch for debian-keyring, to fix a timestamp issue in debian control files (due to not_using_dh-builddeb), but there is also a umask issue. I don't want to bother me to setup the very same things jenkins tests locally (I already did too much in this regards, imho), but really people can't tests everything jenkins tests.
-  <h01ger> maybe it should just be a jenkins job not integrated into the rp.d.n webui, but... maybe we find a nice way to do it
-  <mapreri> h01ger: I'm instead thinking about a repo defining a reproducible-specific suite or something on that line, that integrates well with the current setup. but this is really something wild.
-----
-
 
 ==== reproducible Debian armhf
 

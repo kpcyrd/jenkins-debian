@@ -143,7 +143,9 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * higher prio:
 ** dashboard: number of cores used is wrong for amd64…
 ** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
-** new table in pkg/test history page: schedule - if that package is currently scheduled
+** pkg pages
+*** new table in pkg/test history page: schedule - if that package is currently scheduled
+*** add link to pkg set(s) if pkg is member of some
 ** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 ** make maintenance job detect and reschedule logs with: '^Bus Error$'
 ** scheduler should automatically schedule 404 packages
@@ -173,6 +175,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** rewrite bin/schroot-create.sh from scratch, with little sudo.
 ** right align all numbers in table in the dashboard
 ** pkg sets related:
+*** link to that pkg set on another arch
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 *** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
 *** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)

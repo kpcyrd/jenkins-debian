@@ -17,7 +17,7 @@ from tempfile import NamedTemporaryFile
 from reproducible_common import *
 
 
-arch = 'amd64'
+arch = 'amd64' # the arch is only relevant for link targets here
 mirror = 'http://ftp.de.debian.org/debian'
 
 bugs = get_bugs()
@@ -49,7 +49,9 @@ for suite in SUITES:
 
         html = '<p>The following maintainers and uploaders are listed '
         html += 'for packages in ' + suite + ' which have built '
-        html += 'unreproducibly:</p>\n<p><pre>'
+        html += 'unreproducibly. Please note that the while the link '
+        html += 'always points to the amd64 version, the unreproducibility '
+        html += 'can be in any arch.</p>\n<p><pre>'
         out = out.decode().splitlines()
         get_mail = re.compile('<(.*)>')
         for line in out:

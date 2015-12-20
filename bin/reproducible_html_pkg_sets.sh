@@ -76,8 +76,8 @@ update_meta_pkg_stats() {
 			META_RESULT=true
 			gather_meta_stats $i
 			if $META_RESULT ; then
-				 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
-				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE on $DATE."
+				 sqlite3 -init ${INIT} ${PACKAGES_DB} "INSERT INTO ${TABLE[6]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", \"${META_PKGSET[$i]}\", $COUNT_META_GOOD, $COUNT_META_BAD, $COUNT_META_UGLY, $COUNT_META_REST)"
+				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE/$ARCH on $DATE."
 			fi
 			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
 			touch -d "$FORCE_DATE 00:00 UTC" $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png

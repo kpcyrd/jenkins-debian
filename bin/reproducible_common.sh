@@ -602,21 +602,27 @@ create_png_from_table() {
 	if [ $1 -eq 3 ] || [ $1 -eq 4 ] || [ $1 -eq 5 ] || [ $1 -eq 8 ] ; then
 		# TABLE[3+4+5] don't have a suite column: (and TABLE[8] (and 9) is faked, based on 3)
 		WHERE_EXTRA=""
-	elif [ $1 -eq 6 ] ; then
-		# 6 is special too:
-		WHERE_EXTRA="WHERE suite = '$SUITE' and meta_pkg = '$3'"
 	fi
-	if [ $1 -eq 0 ] || [ $1 -eq 2 ] ; then
-		# TABLE[0+2] have a architecture column:
+	if [ $1 -eq 0 ] || [ $1 -eq 2 ] || [ $1 -eq 6 ] ; then
+		# TABLE[0+2+6] have a architecture column:
 		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
-		if [ $1 -eq 2 ] && [ "$ARCH" = "armhf" ] ; then
-			# armhf was only build since 2015-08-30
-			WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
+		if [ "$ARCH" = "armhf" ]  ; then
+			if [ $1 -eq 2 ] ; then
+				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19)
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
+			elif [ $1 -eq 6 ] ; then
+				# armhf only has pkg sets since its complete, aka 2015-12-19
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-19'"
+			fi
 		fi
 		# testing/amd64 was only build since...
 		# WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
 		# experimental/amd64 was only build since...
 		# WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
+	fi
+	if [ $1 -eq 6 ] ; then
+		# 6 is very special too...
+		WHERE_EXTRA="$WHERE_EXTRA and meta_pkg = '$3'"
 	fi
 	# run query
 	if [ $1 -eq 1 ] ; then

@@ -412,6 +412,17 @@ create_suite_arch_stats_page() {
 	publish_page $SUITE
 }
 
+write_meta_pkg_graphs_links () {
+	local SUITE=unstable	# ARCH is taken from global namespace
+	write_page "<p style=\"clear:both;\"><center>"
+	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
+		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
+		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+		write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+	done
+	write_page "</center></p>"
+}
+
 #
 # create dashboard page
 #
@@ -425,23 +436,10 @@ create_dashboard_page() {
 	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
-	write_page "</p><p style=\"clear:both;\">"
-	write_page "<center>"
-	# write meta pkg graphs per suite
-	for SUITE in $SUITES ; do
-		if [ "$SUITE" != "unstable" ] ; then
-			# only show pkg sets from unstable
-			continue
-		fi
-		for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-			THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
-			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
-		done
-	done
-	write_page "</center></p><p>"
+	write_page "</p>"
+	write_meta_pkg_graphs_links
 	# write inventory table
-	write_page "<table class=\"main\"><tr><th colspan=\"2\">Various reproducibility statistics</th></tr>"
+	write_page "<p><table class=\"main\"><tr><th colspan=\"2\">Various reproducibility statistics</th></tr>"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td></tr>"
 	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
@@ -495,9 +493,12 @@ create_dashboard_page() {
 	ARCH="armhf"
 	write_page "</p><p style=\"clear:both;\">"
 	write_suite_table
+	# write suite graphs
 	for SUITE in unstable experimental ; do
 		write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
+	write_page "</p>"
+	write_meta_pkg_graphs_links
 	# write performance stats and build per day graphs
 	write_page "<p style=\"clear:both;\">"
 	write_build_performance_stats

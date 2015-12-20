@@ -550,6 +550,27 @@ schema_updates = {
         'ALTER TABLE schedule ADD COLUMN message TEXT',
         'ALTER TABLE stats_build ADD COLUMN schedule_message TEXT NOT NULL DEFAULT ""',
         'INSERT INTO rb_schema VALUES ("26", "' + now + '")'],
+    27: [ # add column architecture to stats_meta_pkg_state and set previous values to amd64
+        'ALTER TABLE stats_meta_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
+        'INSERT INTO rb_schema VALUES ("27", "' + now + '")'],
+    28: [ # use (datum, suite, architecture, meta_pkg) as primary key for stats_meta_pkg_state
+        '''CREATE TABLE stats_meta_pkg_state_tmp
+           (datum TEXT NOT NULL,
+            suite TEXT NOT NULL,
+            architecture TEXT NOT NULL,
+            meta_pkg TEXT NOT NULL,
+            reproducible INTEGER,
+            unreproducible INTEGER,
+            FTBFS INTEGER,
+            other INTEGER,
+            PRIMARY KEY (datum, suite, architecture, meta_pkg))''',
+        '''INSERT INTO stats_meta_pkg_state_tmp (datum, suite, architecture, meta_pkg,
+            reproducible, unreproducible, FTBFS, other)
+            SELECT datum, suite, architecture, meta_pkg, reproducible, unreproducible,
+            FTBFS, other FROM stats_meta_pkg_state;''',
+        '''DROP TABLE stats_meta_pkg_state;''',
+        '''ALTER TABLE stats_meta_pkg_state_tmp RENAME TO stats_meta_pkg_state;''',
+        'INSERT INTO rb_schema VALUES ("28", "' + now + '")'],
 }
 
 

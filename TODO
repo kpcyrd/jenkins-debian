@@ -160,7 +160,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** repo-comparison: check for binaries without source
-** pkg sets are still amd64 only atm… (and there is 404 link to the armhf page)
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 ** re-enable linux-2.6 usage once 806911 has been fixed
 

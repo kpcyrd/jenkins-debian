@@ -10,6 +10,9 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+# we only generate the meta pkg sets on amd64
+# (else this script would need a lot of changes for little gain)
+# but these are source package sets so there is a difference only very rarely anyway
 ARCH=amd64
 
 # everything should be ok…

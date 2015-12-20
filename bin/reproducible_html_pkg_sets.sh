@@ -14,7 +14,6 @@ common_init "$@"
 #
 # init some variables
 #
-ARCH="amd64"  # we only care about amd64 status here (for now)
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
 DATE=$(date -d "1 day ago" '+%Y-%m-%d')
 FORCE_DATE=$(date -d "3 days ago" '+%Y-%m-%d')
@@ -184,12 +183,14 @@ create_pkg_sets_pages() {
 #
 # main
 #
-for SUITE in $SUITES ; do
-	if [ "$SUITE" = "experimental" ] ; then
-		# no pkg sets in experimental
-		continue
-	fi
-	update_meta_pkg_stats
-	create_pkg_sets_pages
+for ARCH in $ARCHS ; do
+	for SUITE in $SUITES ; do
+		if [ "$SUITE" = "experimental" ] || ( [ "$SUITE" = "testing" ] && [ "$ARCH" = "armhf" ] ) ; then
+			# no pkg sets in experimental and not yet for testing on armhf
+			continue
+		fi
+		update_meta_pkg_stats
+		create_pkg_sets_pages
+	done
 done
 

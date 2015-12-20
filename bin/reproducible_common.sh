@@ -234,8 +234,8 @@ write_page_header() {
 			# no pkg_sets are tested in experimental
 			continue
 		fi
-		if [ "$TARGET" = "pkg_sets" ] && [ "$ARCH" = "armhf" ] ; then
-			# no pkg_sets for armhf _yet_
+		if [ "$TARGET" = "pkg_sets" ] && [ "$ARCH" = "armhf" ] && [ "$SUITE" = "testing" ] ; then
+			# testing/armhf is not being tested yet _yet_ (so I think this is never met…)
 			continue
 		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}

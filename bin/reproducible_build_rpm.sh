@@ -182,16 +182,12 @@ remote_build() {
 #
 # below is what controls the world
 #
-
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-rpm-XXXXXXXX)  # where everything actually happens
-trap cleanup_all INT TERM EXIT
-cd $TMPDIR
-
 TIMEOUT=8	# maximum time in hours for a single build
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 DUMMY=$(mktemp -t rpm-dummy-XXXXXXXX)
 RPM_STAMPS=/srv/reproducible-results/.rpm_stamp
+trap cleanup_all INT TERM EXIT
 
 #
 # determine mode
@@ -218,6 +214,8 @@ if [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	exit 0
 fi
 MODE="master"
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-rpm-XXXXXXXX)  # where everything actually happens
+cd $TMPDIR
 
 #
 # main - only used in master-mode

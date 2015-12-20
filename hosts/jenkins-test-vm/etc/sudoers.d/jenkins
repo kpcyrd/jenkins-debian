@@ -34,14 +34,17 @@ jenkins ALL=  \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/sbin/pbuilder *, \
-	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/bin/linux64 --uname-2.6 /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
 	/bin/mv /var/cache/pbuilder/*base*.tgz /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm -v /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm /var/cache/pbuilder/result/*, \
 	/usr/bin/dcmd rm *.changes, \
 	/usr/bin/dcmd rm *.dsc, \
-	/usr/bin/apt-get update
+	/usr/bin/apt-get update, \
+	/usr/sbin/slay -clean 1111, \
+	/usr/sbin/slay -clean 2222, \
+	/usr/sbin/slay -clean jenkins
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

@@ -169,6 +169,9 @@ bootstrap() {
 		robust_chroot_apt update
 		# first, (if), install diffoscope with all recommends...
 		if [ "$1" = "diffoscope" ] ; then
+			# we could also use $SCRIPT_HEADER (set in bin/common-functions.sh) in our generated scripts
+			# instead of using the next line, maybe we should…
+			echo 'debconf debconf/frontend select noninteractive' | sudo chroot $SCHROOT_TARGET debconf-set-selections
 			robust_chroot_apt install -y --install-recommends diffoscope
 		fi
 		robust_chroot_apt install -y --no-install-recommends sudo

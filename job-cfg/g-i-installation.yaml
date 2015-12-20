@@ -401,10 +401,10 @@
                 my_title_extra: ' (Default)'
                 my_disksize: 25
             - standalone_mate:
-                my_time: '42 1 */2 * *' # FIXME: is this really meant to be the same as above?
+                my_time: '23 2 */2 * *'
                 my_disksize: 25
             - main-server:
-                my_time: '42 3 * * *'
+                my_time: '23 3 * * *'
                 my_disksize: 40
             - main+ltsp-server:
                 my_time: '42 0 * * *'

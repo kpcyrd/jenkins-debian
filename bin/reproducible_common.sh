@@ -328,7 +328,13 @@ write_page_intro() {
 }
 
 write_page_footer() {
-	write_page "<hr id=\"footer_separator\" /><p style=\"font-size:0.9em;\"><div id=\"page_footer\">There is more information <a href=\"https://jenkins.debian.net/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere. Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2015 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and <a href=\"https://jenkins.debian.net//userContent/thanks.html\">many others</a>. The code of <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">jenkins.debian.net.git</a> is mostly GPL2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>."
+	write_page "<hr id=\"footer_separator\" /><p style=\"font-size:0.9em;\"><div id=\"page_footer\">"
+	if [ -n "$JOB_URL" ] ; then
+		write_page "This page was built by the jenkins job"
+		write_page "<a href=\"$JOB_URL\">$(basename $JOB_URL)</a> which is configured"
+		write_page "via this <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">git repo</a>."
+	fi
+	write_page "There is more information <a href=\"https://jenkins.debian.net/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere. Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2015 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and <a href=\"https://jenkins.debian.net//userContent/thanks.html\">many others</a>. The code of <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">jenkins.debian.net.git</a> is mostly GPL2 licensed. The weather icons are public domain and have been taken from the <a href="http://tango.freedesktop.org/Tango_Icon_Library" target="_blank">Tango Icon Library</a>."
 	if [ "$1" = "coreboot" ] ; then
 		write_page "The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."
 	elif [ "$1" = "NetBSD" ] ; then
@@ -340,7 +346,8 @@ write_page_footer() {
 	elif [ "$1" = "fedora-23" ] ; then
 		write_page "FIXME: add fedora copyright+trademark disclaimers here."
 	fi
-	write_page "</div></p></body></html>"
+	write_page "</div></p>"
+	write_page "</body></html>"
 }
 
 write_page_meta_sign() {

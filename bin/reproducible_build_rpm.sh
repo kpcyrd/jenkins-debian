@@ -66,7 +66,10 @@ choose_package() {
 		SEARCHTERMS="apache2 awesome bash fedora firefox gcc gnome gnu gpg ipa kde linux mock openssl pgp redhat rpm ssh system-config systemd xfce xorg yum"
 		echo "$(date -u ) - for now, instead of building everything, only packages matching these searchterms are build: $SEARCHTERMS"
 		local i=""
-		( for i in $SEARCHTERMS ; do repoquery --qf "%{name}" "*$i*" ; done ) | sort -u > ${RPM_PKGS}_$RELEASE
+		# http://fedoraproject.org/wiki/Packaging:NamingGuidelines describes the rpm naming scheme
+		# the awk command removes the last two "columns" seperated by "-"
+		# so system-config-printer-1.5.7-5.fc23.src.rpm becomes system-config-printer
+		( for i in $SEARCHTERMS ; do repoquery --qf "%{sourcerpm}" "*$i*" | awk 'NF{NF-=2}1' FS='-' OFS='-' ; done ) | sort -u > ${RPM_PKGS}_$RELEASE
 		cat ${RPM_PKGS}_$RELEASE
 	fi
 	echo "$(date -u ) - choosing package to be build."

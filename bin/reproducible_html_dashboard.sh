@@ -363,7 +363,7 @@ create_suite_arch_stats_page() {
 	MAINLABEL[2]="Age in days of oldest reproducible build result in '$SUITE' for '$ARCH'"
 	echo "$(date) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds for packages in $SUITE for $ARCH"
-	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
+	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 100 ] ; then
 		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE/$ARCH.</p>"
 	fi
 	write_page "<p>"

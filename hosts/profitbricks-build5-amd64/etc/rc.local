@@ -11,7 +11,7 @@
 #
 # By default this script does nothing.
 
-echo "$(date) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
+echo "$(date -u) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
 
 # disable systemd date services (and don't fail if systemd ain't running)
 systemctl disable systemd-timesyncd
@@ -26,6 +26,6 @@ date --set="+398 days +6 hours + 23 minutes"
 # packages from security.d.o will appear outdated always…
 ln -sf /bin/true /usr/local/bin/dsa-check-packages
 # finally report success
-echo "$(date) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
+echo "$(date -u) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
 
 exit 0

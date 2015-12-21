@@ -39,7 +39,7 @@ sudo lb build
 mkdir -p /srv/live-build/results
 sudo cp -v live-image-amd64.hybrid.iso /srv/live-build/results/$1_$2_$3_live_amd64.iso
 echo
-echo "$(date) - live image created:"
+echo "$(date -u) - live image created:"
 ls -lh /srv/live-build/results/$1_$2_$3_live_amd64.iso
 echo
 

@@ -113,7 +113,7 @@ create_pkg_sets_pages() {
 	#
 	VIEW=pkg_sets
 	PAGE=index_${VIEW}.html
-	echo "$(date) - starting to write $PAGE page."
+	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
 	create_pkg_sets_navigation
 	write_page_footer
@@ -124,7 +124,7 @@ create_pkg_sets_pages() {
 	local i
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		PAGE="pkg_set_${META_PKGSET[$i]}.html"
-		echo "$(date) - starting to write $PAGE page."
+		echo "$(date -u) - starting to write $PAGE page."
 		write_page_header $VIEW "Overview about reproducible builds for the ${META_PKGSET[$i]} package set in $SUITE/$ARCH"
 		create_pkg_sets_navigation
 		write_page "<hr />"

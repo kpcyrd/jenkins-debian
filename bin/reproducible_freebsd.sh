@@ -139,7 +139,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 
 	# set time forward 398 days and some
 	$RSSH "sudo service ntpd stop ; sudo date --set='+398 days +6 hours +23 minutes' ; date"
-	echo "$(date) - system is running in the future now."
+	echo "$(date -u) - system is running in the future now."
 
 	echo "============================================================================="
 	echo "$(date -u) - Building FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}) - second build run."
@@ -166,7 +166,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 
 	# set time back to today
 	$RSSH "sudo ntpdate -b pool.ntp.org ; sudo service ntpd start ; sudo service ntpd status ; date"
-	echo "$(date) - system is running at the current date now."
+	echo "$(date -u) - system is running at the current date now."
 
 	# reset environment to default values again
 	export LANG="en_GB.UTF-8"

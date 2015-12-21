@@ -13,7 +13,7 @@ udd_query() {
 	#
 	# Actually query UDD and save result in $UDD file
 	#
-	echo "$(date) - querying UDD using ${SQL_QUERY}"
+	echo "$(date -u) - querying UDD using ${SQL_QUERY}"
 	echo
 	PGPASSWORD=public-udd-mirror \
 		psql -U public-udd-mirror \

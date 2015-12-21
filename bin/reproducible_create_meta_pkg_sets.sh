@@ -82,13 +82,13 @@ update_if_similar() {
 			update_target
 		fi
 	else
-		echo "$(date) - $TARGET not updated, $TMPFILE is empty."
+		echo "$(date -u) - $TARGET not updated, $TMPFILE is empty."
 	fi
 }
 
 get_installable_set() {
 	set +e
-	echo "$(date) - Calculating the installable set for $1"
+	echo "$(date -u) - Calculating the installable set for $1"
 	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then

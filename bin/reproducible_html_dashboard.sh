@@ -361,7 +361,7 @@ create_suite_arch_stats_page() {
 	PAGE=index_${VIEW}.html
 	MAINLABEL[0]="Reproducibility status for packages in '$SUITE' for '$ARCH'"
 	MAINLABEL[2]="Age in days of oldest reproducible build result in '$SUITE' for '$ARCH'"
-	echo "$(date) - starting to write $PAGE page."
+	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of reproducible builds for packages in $SUITE for $ARCH"
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 100 ] ; then
 		write_page "<p>$COUNT_TOTAL packages have been attempted to be build so far, that's $PERCENT_TOTAL% of $AMOUNT source packages in Debian $SUITE/$ARCH.</p>"
@@ -429,7 +429,7 @@ write_meta_pkg_graphs_links () {
 create_dashboard_page() {
 	VIEW=dashboard
 	PAGE=index_${VIEW}.html
-	echo "$(date) - starting to write $PAGE page."
+	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
 	write_suite_table
 	# write suite graphs

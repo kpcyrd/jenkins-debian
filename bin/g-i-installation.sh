@@ -152,7 +152,7 @@ cleanup_all() {
 	#
 	# create video
 	#
-	echo "$(date) - Creating video now. This may take a while.'"
+	echo "$(date -u) - Creating video now. This may take a while.'"
 	TMPFILE=$(mktemp)
 	avconv -r $FRAMERATE -i snapshot_%06d.png g-i-installation-$NAME.webm > $TMPFILE 2>&1 || cat $TMPFILE
 	rm snapshot_??????.png $TMPFILE
@@ -394,7 +394,7 @@ publish_screenshot() {
 }
 
 do_and_report() {
-	echo "$(date) $PRINTF_NR / $TOKEN - sending '$@'"
+	echo "$(date -u) $PRINTF_NR / $TOKEN - sending '$@'"
 	# Workaround #758881: vncdo type command sending "e" chars sometimes not
 	# received, sometimes received as if "e" key was kept pressed.
 	if [ "$1" = "type" ]; then
@@ -1037,7 +1037,7 @@ monitor_system() {
 			convert $CONVERTOPTS snapshot_${PRINTF_NR}.jpg snapshot_${PRINTF_NR}.png
 			rm snapshot_${PRINTF_NR}.jpg
 		else
-			echo "$(date) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
+			echo "$(date -u) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
 			convert -size $VIDEOSIZE xc:#000000 -depth 8 snapshot_${PRINTF_NR}.png
 		fi
 		# every 100 ticks take a screenshot and analyse it
@@ -1088,7 +1088,7 @@ monitor_system() {
 			fi
 		elif [ $(($NR % 30)) -eq 0 ] ; then
 			# give signal we are still running
-			echo "$(date) $PRINTF_NR / $TOKEN"
+			echo "$(date -u) $PRINTF_NR / $TOKEN"
 			publish_screenshot
 		fi
 		# in install mode, every 300 ticks preserve an screenshot as artefact

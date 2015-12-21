@@ -4,7 +4,7 @@
 # released under the GPLv=2
 
 common_cleanup() {
-	echo "$(date) - $0 stopped running as $TTT, which will now be removed."
+	echo "$(date -u) - $0 stopped running as $TTT, which will now be removed."
 	rm -f $TTT
 }
 

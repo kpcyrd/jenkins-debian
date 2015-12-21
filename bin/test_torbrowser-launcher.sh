@@ -376,7 +376,7 @@ download_and_launch() {
 	echo "'$(date -u) - torbrowser tests end. $STATUS_MSG'" | tee | xargs schroot --run-session -c $SESSION --preserve-environment -- notify-send
 	sleep 0.5
 	update_screenshot
-	echo "$(date) - telling awesome to quit."
+	echo "$(date -u) - telling awesome to quit."
 	echo 'awesome.quit()' | schroot --run-session -c $SESSION --preserve-environment -- awesome-client
 	sleep 0.5
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus stop

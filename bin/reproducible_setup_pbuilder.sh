@@ -85,7 +85,7 @@ setup_pbuilder() {
 	shift
 	PACKAGES="$@"						# from our repo
 	EXTRA_PACKAGES="locales-all fakeroot disorderfs"	# from sid
-	echo "$(date) - creating /var/cache/pbuilder/${NAME}.tgz now..."
+	echo "$(date -u) - creating /var/cache/pbuilder/${NAME}.tgz now..."
 	TMPFILE=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXXX)
 	LOG=$(mktemp --tmpdir=$TEMPDIR pbuilder-XXXXXXXX)
 	if [ "$SUITE" = "experimental" ] ; then

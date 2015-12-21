@@ -157,6 +157,8 @@ first_build() {
 				else
 					# fail with notification
 					exit 23
+				else
+					exit $P3RESULT
 				fi
 			fi
 		fi
@@ -237,9 +239,12 @@ remote_build() {
 			echo "$(date -u) - remote job could not end schroot session properly and sent error 23 so we could abort silently."
 			exec /srv/jenkins/bin/abort.sh
 		elif [ $RESULT -eq 42 ] ; then
-			echo "$($date -u) - sigh, we know this problem and need to debug it and end the session cleanly. Failing loudly now so we can see this used to indeed silence things… (but we'll get noise from the other failures enabled in this commit…" # FIXME
-			exit 1
+			echo "$($date -u) - sigh, failure after not being able to verify pgp signatures. work to debug why ahead."
+			exec /srv/jenkins/bin/abort.sh
 		else
+			echo "$(date -u) - a new type of failure we dont know about yet. how exciting this might become…"
+			exit 1
+			# FIXME: atm this is never reached…
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 		fi
 	fi

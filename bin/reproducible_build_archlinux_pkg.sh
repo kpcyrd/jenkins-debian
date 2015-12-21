@@ -234,13 +234,11 @@ remote_build() {
 	if [ $RESULT -ne 0 ] ; then
 		ssh -p $PORT $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
-			echo "$(date -u) - remote job could not end schroot session properly, failing loudly so we get a pointer for investigations."
-			exit 1
-		elif [ $RESULT -eq 42 ] ; then
-			echo "$($date -u) - sigh, we know this problem and need to debug it and end the session cleanly. Failing silently for now." # FIXME
-
+			echo "$(date -u) - remote job could not end schroot session properly and sent error 23 so we could abort silently."
 			exec /srv/jenkins/bin/abort.sh
-
+		elif [ $RESULT -eq 42 ] ; then
+			echo "$($date -u) - sigh, we know this problem and need to debug it and end the session cleanly. Failing loudly now so we can see this used to indeed silence things… (but we'll get noise from the other failures enabled in this commit…" # FIXME
+			exit 1
 		else
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 		fi

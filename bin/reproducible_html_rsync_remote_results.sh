@@ -16,7 +16,7 @@ rsync_remote_results() {
 		echo "$(date -u) - Starting to rsync results for '$PROJECT'."
 		local RESULTS=$(mktemp --tmpdir=$TEMPDIR -d reproducible-rsync-XXXXXXXXX)
 		# copy the new results from build node to webserver node
-		rsync -r -v -e ssh profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
+		rsync -r -v -e "ssh -o 'Batchmode = yes'" profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
 		chmod 775 $RESULTS
 		# move old results out of the way
 		mv $BASE/$PROJECT ${RESULTS}.tmp

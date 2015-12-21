@@ -220,7 +220,7 @@ remote_build() {
 	local FQDN=$NODE.debian.net
 	local PORT=22
 	set +e
-	ssh -p $PORT $FQDN /bin/true
+	ssh -o "Batchmode = yes" -p $PORT $FQDN /bin/true
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
@@ -229,10 +229,10 @@ remote_build() {
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
+	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
-		ssh -p $PORT $FQDN "rm -r $TMPDIR" || true
+		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
 			echo "$(date -u) - remote job could not end schroot session properly and sent error 23 so we could abort silently."
 			exec /srv/jenkins/bin/abort.sh
@@ -243,19 +243,19 @@ remote_build() {
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 		fi
 	fi
-	rsync -e "ssh -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
+	rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u ) - rsync from $NODE failed, sleeping 2m before re-trying..."
 		sleep 2m
-		rsync -e "ssh -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
+		rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
 			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
 		fi
 	fi
 	ls -lR $TMPDIR
-	ssh -p $PORT $FQDN "rm -r $TMPDIR"
+	ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR"
 	set -e
 }
 

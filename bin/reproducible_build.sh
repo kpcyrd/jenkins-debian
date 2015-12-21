@@ -623,7 +623,7 @@ remote_build() {
 	local NODE=$2
 	local PORT=$3
 	set +e
-	ssh -p $PORT $NODE /bin/true
+	ssh -o "BatchMode = yes" -p $PORT $NODE /bin/true
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
@@ -633,7 +633,7 @@ remote_build() {
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 	RESULT=$?
 	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
 	if [ $RESULT -eq 148 ] ; then
@@ -641,19 +641,19 @@ remote_build() {
 	elif [ $RESULT -ne 0 ] ; then
 		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
 	fi
-	rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+	rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u ) - rsync from $NODE failed, sleeping 2m before re-trying..." | tee -a ${RBUILDLOG}
 		sleep 2m
-		rsync -e "ssh -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+		rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
 			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
 		fi
 	fi
 	ls -lR $TMPDIR
-	ssh -p $PORT $NODE "rm -r $TMPDIR"
+	ssh -o "BatchMode = yes" -p $PORT $NODE "rm -r $TMPDIR"
 	set -e
 	if [ $BUILDNR -eq 1 ] ; then
 		cat $TMPDIR/b1/build.log >> ${RBUILDLOG}

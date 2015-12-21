@@ -301,7 +301,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== reproducible Arch Linux
 
 * describe archlinux setup…!
-* move /var/lib/schroot to /srv/workspace aka tmpfs
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 ** properly clean schroot sessions, check on pb3…

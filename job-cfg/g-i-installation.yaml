@@ -118,7 +118,7 @@
     my_disksize: 25
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}':
-          my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
+          my_title: '{my_distname} ({my_ver}) {my_profile}'
           my_inst_url: 'http://ftp.skolelinux.org/cd-{my_ver}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
@@ -129,7 +129,7 @@
     my_disksize: 25
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
-          my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
+          my_title: '{my_distname} ({my_ver}) {my_profile} ({my_desktop})'
           my_inst_url: 'http://ftp.skolelinux.org/cd-{my_ver}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
@@ -168,60 +168,24 @@
     my_time: ''
     my_trigger: ''
     my_langname:
-      - spanish:
-          my_locale: es es_ES
-          my_time: '23 7 18 * *'
-      - japanese:
-          my_locale: ja ja_JA
-          my_time: '42 7 18 * *'
-      - chinese:
-          my_locale: zh zh_CN
-          my_time: '23 8 18 * *'
-      - korean:
-          my_locale: ko ko_KR
-          my_time: '42 8 18 * *'
-      - russian:
-          my_locale: ru ru_RU
-          my_time: '42 9 18 * *'
-      - greek:
-          my_locale: el el_GR
-          my_time: '42 9 18 * *'
-      - vietnamese:
-          my_locale: vi vi_VI
-          my_time: '42 9 18 * *'
-      - hebrew:
-          my_locale: he he_IL
-          my_time: '23 10 18 * *'
-      - hindi:
-          my_locale: hi hi_IN
-          my_time: '23 10 18 * *'
-      - tamil:
-          my_locale: ta ta_IN
-          my_time: '42 10 18 * *'
-      - tibetan:
-         my_locale: bo bo_IN
-         my_time: '23 11 18 * *'
-      - gujarati:
-         my_locale: gu gu_IN
-         my_time: '42 11 18 * *'
-      - kannada:
-         my_locale: kn kn_IN
-         my_time: '23 12 18 * *'
-      - malayalam:
-         my_locale: ml ml_IN
-         my_time: '42 12 18 * *'
-      - marathi:
-         my_locale: mr mr_IN
-         my_time: '23 13 18 * *'
-      - punjabi:
-         my_locale: pa pa_IN
-         my_time: '42 13 18 * *'
-      - telugu:
-         my_locale: te te_IN
-         my_time: '23 14 18 * *'
-      - arabic:
-         my_locale: ar ar_EG
-         my_time: '42 14 18 * *'
+      - spanish:    { my_locale: es es_ES, my_time: '23 7 18 * *' }
+      - japanese:   { my_locale: ja ja_JA, my_time: '42 7 18 * *' }
+      - chinese:    { my_locale: zh zh_CN, my_time: '23 8 18 * *' }
+      - korean:     { my_locale: ko ko_KR, my_time: '42 8 18 * *' }
+      - russian:    { my_locale: ru ru_RU, my_time: '42 9 18 * *' }
+      - greek:      { my_locale: el el_GR, my_time: '42 9 18 * *' }
+      - vietnamese: { my_locale: vi vi_VI, my_time: '42 9 18 * *' }
+      - hebrew:     { my_locale: he he_IL, my_time: '23 10 18 * *' }
+      - hindi:      { my_locale: hi hi_IN, my_time: '23 10 18 * *' }
+      - tamil:      { my_locale: ta ta_IN, my_time: '42 10 18 * *' }
+      - tibetan:    { my_locale: bo bo_IN, my_time: '23 11 18 * *' }
+      - gujarati:   { my_locale: gu gu_IN, my_time: '42 11 18 * *' }
+      - kannada:    { my_locale: kn kn_IN, my_time: '23 12 18 * *' }
+      - malayalam:  { my_locale: ml ml_IN, my_time: '42 12 18 * *' }
+      - marathi:    { my_locale: mr mr_IN, my_time: '23 13 18 * *' }
+      - punjabi:    { my_locale: pa pa_IN, my_time: '42 13 18 * *' }
+      - telugu:     { my_locale: te te_IN, my_time: '23 14 18 * *' }
+      - arabic:     { my_locale: ar ar_EG, my_time: '42 14 18 * *' }
     jobs:
       - '{name}_debian_sid_daily_rescue_{my_langname}':
           my_title: 'Debian (sid daily build CD) rescue mode in {my_langname}'
@@ -240,20 +204,12 @@
             - debian-edu:
                 my_distname: 'Debian Edu'
           my_ver: wheezy
-          my_title_extra: ''
           my_profile:
-            - minimal:
-                my_time: '23 20 15 * *'
-            - standalone:
-                my_time: '42 20 15 * *'
-            - workstation:
-                my_time: '42 22 16 * *'
-            - combi-server:
-                my_time: '42 0 16 * *'
-                my_disksize: 30
-            - main-server:
-                my_time: '42 2 16 * *'
-                my_disksize: 30
+            - minimal:      { my_time: '23 20 15 * *' }
+            - standalone:   { my_time: '42 20 15 * *' }
+            - workstation:  { my_time: '42 22 16 * *' }
+            - combi-server: { my_time: '42 0 16 * *', my_disksize: 30 }
+            - main-server:  { my_time: '42 2 16 * *', my_disksize: 30 }
       - '{name}_{my_dist}_desktop_group':
           my_dist:
             - debian-edu:
@@ -261,15 +217,9 @@
           my_ver: wheezy
           my_profile: standalone
           my_desktop:
-            - gnome:
-                my_title_extra: ' (gnome)'
-                my_time: '42 18 17 * *'
-            - lxde:
-                my_title_extra: ' (lxde)'
-                my_time: '42 22 17 * *'
-            - xfce:
-                my_title_extra: ' (xfce)'
-                my_time: '42 2 * * 1'
+            - gnome:    { my_time: '42 18 17 * *' }
+            - lxde:     { my_time: '42 22 17 * *' }
+            - xfce:     { my_time: '42 2 * * 1' }
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: wheezy
@@ -277,14 +227,10 @@
           my_instdesc: ' using netboot gtk'
           my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
           my_desktop:
-            - kde:
-                my_time: '42 15 2,9,16,23 * *'
-            - xfce:
-                my_time: '42 16 4 * *'
-            - lxde:
-                my_time: '42 19 4 * *'
-            - gnome:
-                my_time: '42 19 4 * *'
+            - kde:      { my_time: '42 15 2,9,16,23 * *' }
+            - xfce:     { my_time: '42 16 4 * *' }
+            - lxde:     { my_time: '42 19 4 * *' }
+            - gnome:    { my_time: '42 19 4 * *' }
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: jessie
@@ -379,19 +325,11 @@
                 my_verdesc: Jessie
                 my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
           my_profile:
-            - standalone:
-                my_time: '42 1 */2 * *'
-                my_title_extra: ' (Default)'
-                my_disksize: 25
-            - standalone_mate:
-                my_time: '23 2 */2 * *'
-                my_disksize: 25
-            - main-server:
-                my_time: '23 3 * * *'
-                my_disksize: 40
-            - main+ltsp-server:
-                my_time: '42 0 * * *'
-                my_disksize: 60
+            - standalone:       { my_time: '42 1 */2 * *', my_disksize: 25,
+                                  my_title_extra: ' (Default)' }
+            - standalone_mate:  { my_time: '23 2 */2 * *', my_disksize: 25 }
+            - main-server:      { my_time: '23 3 * * *',   my_disksize: 40 }
+            - main+ltsp-server: { my_time: '42 0 * * *',   my_disksize: 60 }
 
       - '{name}_debian_{my_ver}_presentation':
           my_ver:

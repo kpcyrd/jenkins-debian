@@ -8,9 +8,10 @@ is notified.
 
 The code is available in the link:http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/[jenkins.debian.net.git repository].
 
-Patches can be submitted by mail (git format-patch, see below)
-or as requests to pull from a publicly-visible git repository.
-In either case, please make a topic branch based on the 'master' branch.
+Patches can be submitted as requests to pull from a publicly-visible 
+git repository (this is the prefered way) communicated via IRC or mail,
+or completly via mail (using git format-patch, see below).
+If appropriate, please make a topic branch based on the 'master' branch.
 
 You can send patches or requests to the link:mailto:qa-jenkins-dev@lists.alioth.debian.org[development list],
 or to the tracking bug: <bugnumber>@bugs.debian.org.
@@ -31,6 +32,6 @@ One possible workflow:
 
 Another very useful type of contributions are filing bug reports based
 on jenkins job runs. Another useful kind of contribution would be to
-describe how.
+improve the documentation, eg to better describe how to debug stuff.
 
 // vim: set filetype=asciidoc:

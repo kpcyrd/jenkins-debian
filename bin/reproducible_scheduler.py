@@ -61,7 +61,7 @@ So, the 3rd step happens only when there are more than 350 packages queued up.
 Finally, MINIMUM_AGE is respected when scheduling old versions.
 
 """
-MAXIMA = {'amd64': 750, 'armhf': 250}
+MAXIMA = {'amd64': 750, 'armhf': 375}
 
 LIMITS = {
     'untested': {

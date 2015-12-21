@@ -35,6 +35,8 @@ jenkins ALL=  \
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/sbin/pbuilder *, \
 	SETENV: NOPASSWD: /usr/bin/timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
 	/bin/mv /var/cache/pbuilder/*base*.tgz /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm -v /var/cache/pbuilder/*base*.tgz, \

@@ -597,7 +597,9 @@ umask 0002
 EOF
 	set +e
 	# remember to change the sudoers setting if you change the following command
-	sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
+	# (the 2nd build gets a longer timeout trying to make sure the first build
+	# aint wasted when then 2nd happens on a highly loaded node)
+	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
 		/usr/bin/unshare --uts -- \
 		/usr/sbin/pbuilder --build \
 			--configfile $TMPCFG \
@@ -610,7 +612,7 @@ EOF
 	PRESULT=$?
 	set -e
 	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 12h." | tee -a b2/build.log
+		echo "$(date -u) - pbuilder was killed by timeout after 18h." | tee -a b2/build.log
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG

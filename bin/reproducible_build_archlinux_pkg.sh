@@ -157,8 +157,6 @@ first_build() {
 				else
 					# fail with notification
 					exit 23
-				else
-					exit $P3RESULT
 				fi
 			fi
 		fi
@@ -242,8 +240,6 @@ remote_build() {
 			echo "$($date -u) - sigh, failure after not being able to verify pgp signatures. work to debug why ahead."
 			exec /srv/jenkins/bin/abort.sh
 		else
-			echo "$(date -u) - a new type of failure we dont know about yet. how exciting this might become…"
-			exit 1
 			# FIXME: atm this is never reached…
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 		fi

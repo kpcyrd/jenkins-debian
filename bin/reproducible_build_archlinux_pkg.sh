@@ -151,7 +151,13 @@ first_build() {
 			schroot --end-session -f -c $SESSION | tee -a $LOG
 			P3RESULT=${PIPESTATUS[0]}
 			if [ $P3RESULT -ne 0 ] ; then
-				exit 23
+				if [ -n "$(grep 'ERROR: One or more PGP signatures could not be verified' $LOG)" ] ; then
+					# abort only
+					exit 42
+				else
+					# fail with notification
+					exit 23
+				fi
 			fi
 		fi
 	fi
@@ -228,8 +234,13 @@ remote_build() {
 	if [ $RESULT -ne 0 ] ; then
 		ssh -p $PORT $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
-			echo "remote job could not end schroot session properly, failing loudly so we get a pointer for investigations."
+			echo "$(date -u) - remote job could not end schroot session properly, failing loudly so we get a pointer for investigations."
 			exit 1
+		elif [ $RESULT -eq 42 ] ; then
+			echo "$($date -u) - sigh, we know this problem and need to debug it and end the session cleanly. Failing silently for now." # FIXME
+
+			exec /srv/jenkins/bin/abort.sh
+
 		else
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 		fi

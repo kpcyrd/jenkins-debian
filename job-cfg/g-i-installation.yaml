@@ -158,7 +158,7 @@
     jobs:
       - '{name}_debian_{my_ver}_{my_desktop}':
           my_title: 'Debian ({my_verdesc}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc}{my_optdesc2} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_{my_preseed}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.{my_trigdesc}'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc}{my_optdesc2} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_{my_desktop}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.{my_trigdesc}'
           my_disksize: 10
 
 
@@ -279,16 +279,12 @@
           my_desktop:
             - kde:
                 my_time: '42 15 2,9,16,23 * *'
-                my_preseed: 'kde'
             - xfce:
                 my_time: '42 16 4 * *'
-                my_preseed: 'xfce'
             - lxde:
                 my_time: '42 19 4 * *'
-                my_preseed: 'lxde'
             - gnome:
                 my_time: '42 19 4 * *'
-                my_preseed: 'gnome'
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: jessie
@@ -297,25 +293,19 @@
           my_instdesc: ' using netboot gtk'
           my_desktop:
             - kde:
-                my_preseed: kde
                 my_time: '42 15 */2 * *'
             - xfce:
-                my_preseed: xfce
                 my_time: '42 16 */2 * *'
             - lxde:
-                my_preseed: lxde
                 my_time: '42 19 */2 * *'
             - gnome:
-                my_preseed: gnome
                 my_time: '42 19 */2 * *'
                 my_trigger: 'g-i-installation_debian_{my_ver}_gnome_brltty, g-i-installation_debian_{my_ver}_gnome_speakup'
             - gnome_brltty:
-                my_preseed: gnome_brltty
                 my_optdesc: ' with braille display support'
                 my_time: ''
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
             - gnome_speakup:
-                my_preseed: gnome_speakup
                 my_optdesc: ' with Speakup support'
                 my_time: ''
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
@@ -328,26 +318,20 @@
           my_desktop:
             - gnome:
                 my_time: '42 8 * * *'
-                my_preseed: gnome
                 my_trigger: 'g-i-installation_debian_sid_gnome_brltty, g-i-installation_debian_sid_gnome_speakup'
             - gnome_brltty:
-                my_preseed: 'gnome_brltty'
                 my_optdesc: ' with braille display support'
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
             - gnome_speakup:
-                my_preseed: 'gnome_speakup'
                 my_optdesc: ' with Speakup support'
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
             - xfce:
-                my_preseed: 'xfce'
                 my_time: '42 8 * * *'
             - lxde:
-                my_preseed: 'lxde'
                 my_time: '42 10 * * *'
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_desktop: kfreebsd_xfce
-          my_preseed: kfreebsd # FIXME: if this was 'kfreebsd_xfce' we could do without my_preseed
           my_instdesc: ' using PXE netboot gtk'
           my_ver:
             - wheezy:
@@ -368,7 +352,6 @@
             - hurd_lxde:
                 # putting these at the outer level doesn't work for some reason, so put them in here
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
-                my_preseed: hurd_lxde
                 my_instdesc: ''
           my_ver:
             - jessie:

@@ -27,7 +27,7 @@
     builders:
       - shell: '/srv/jenkins/bin/d-i_overview.sh {arch}'
     triggers:
-      - timed: "0 * * * *"
+      - timed: "0 6 * * *"
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/debian-installer.rules'

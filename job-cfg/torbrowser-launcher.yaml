@@ -3,16 +3,17 @@
     project-type: freestyle
     triggers:
       - timed: '{my_timed}'
+    sb_desc: torbrowser-launcher builds
     properties:
-      - sidebar:
+      - sidebar: &sb01
           url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
+      - sidebar: &sb10
           url: https://jenkins.debian.net/view/torbrowser-launcher
-          text: torbrowser-launcher builds jobs
+          text: '{sb_desc} jobs'
           icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
+      - sidebar: &sb99
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
@@ -39,19 +40,11 @@
     triggers:
       - pollscm: '*/6 * * * *'
       - timed: '{my_timed}'
+    sb_desc: torbrowser-launcher
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/torbrowser-launcher
-          text: torbrowser-launcher jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb01
+      - sidebar: *sb10
+      - sidebar: *sb99
       - throttle:
           max-total: 3
           max-per-node: 1
@@ -95,19 +88,11 @@
     project-type: freestyle
     triggers:
       - timed: '{my_timed}'
+    sb_desc: torbrowser-launcher
     properties:
-      - sidebar:
-          url: https://jenkins.debian.net/userContent/about.html
-          text: About jenkins.debian.net
-          icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
-          url: https://jenkins.debian.net/view/torbrowser-launcher
-          text: torbrowser-launcher jobs
-          icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
-          url: http://www.profitbricks.co.uk
-          text: Sponsored by Profitbricks
-          icon: /userContent/images/profitbricks-24x24.png
+      - sidebar: *sb01
+      - sidebar: *sb10
+      - sidebar: *sb99
       - throttle:
           max-total: 3
           max-per-node: 1

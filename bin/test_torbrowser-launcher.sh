@@ -299,8 +299,8 @@ download_and_launch() {
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 3
 	update_screenshot
-	# allow up to 121 seconds for torbrowser to start and to make the first connection through tor
-	for i in $(seq 1 11) ; do
+	# allow up to 165 seconds for torbrowser to start and to make the first connection through tor
+	for i in $(seq 1 14) ; do
 		sleep 5 ; sleep $i
 		update_screenshot
 		TOR_RUNNING=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep "(Search securely|Tor Is NOT all you need to browse|There are many ways you can help)" || true)

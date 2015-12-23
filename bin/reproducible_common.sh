@@ -621,8 +621,8 @@ create_png_from_table() {
 				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19)
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
 			elif [ $1 -eq 6 ] ; then
-				# armhf only has pkg sets since its complete, aka 2015-12-19
-				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-19'"
+				# armhf only has pkg sets since its complete, aka 2015-12-22
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-22'"
 			fi
 		fi
 		# testing/amd64 was only build since...

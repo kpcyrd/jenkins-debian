@@ -71,7 +71,7 @@ gather_meta_stats() {
 #
 update_meta_pkg_stats() {
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
-		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT datum,meta_pkg,suite from ${TABLE[6]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND architecture = \"$ARCH\" AND meta_pkg = \"${META_PKGSET[$i]}\"")
 		if [ -z $RESULT ] ; then
 			META_RESULT=true
 			gather_meta_stats $i

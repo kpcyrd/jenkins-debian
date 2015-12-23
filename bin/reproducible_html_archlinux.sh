@@ -10,23 +10,11 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
-force_if_old_enough() {
-	# force re-testing of 404 packages after 3 days
-	if [ $COMPARE_DUMMY -nt $1 ] ; then
-		echo "$(date -u) - forcing rebuild of $REPOSITORY/$(basename $1) because '$2'"
-		touch -d "$FORCE_DATE 00:00 UTC" $1
-	fi
-}
-
 ARCHBASE=$BASE/archlinux
 #
 # analyse results to create the webpage
 #
 echo "$(date -u) - starting to analyse build results."
-COMPARE_DUMMY=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-COMPARE_DATE=$(date -d "3 days ago" '+%Y-%m-%d')
-echo touch -d "$COMPARE_DATE 00:00 UTC" $COMPARE_DUMMY
-FORCE_DATE=$(date -d "100 days ago" '+%Y-%m-%d')
 MEMBERS_FTBFS="0 1 2 3 4"
 MEMBERS_DEPWAIT="0 1"
 MEMBERS_404="0 1 2 3 4 5 6 7"
@@ -104,7 +92,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					EXTRA_REASON="with SSL certificate problem"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> download failed $EXTRA_REASON" >> $HTML_BUFFER
-				force_if_old_enough $ARCHLINUX_PKG_PATH "download failed $EXTRA_REASON"
 			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[0]}
 				let NR_FTBFS+=1

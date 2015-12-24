@@ -279,6 +279,7 @@
       - '{name}_debian_{my_ver}_desktops_group':
           my_desktop: kfreebsd_xfce
           my_instdesc: ' using PXE netboot gtk'
+          my_ver:
             - jessie:
                 my_verdesc: jessie
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'

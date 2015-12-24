@@ -214,10 +214,10 @@ case $1 in
 			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			;;
 	stretch)	DISTRO="stretch"
-			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
+			SPECIFIC="libreoffice virt-manager mplayer chromium"
 			;;
 	sid)		DISTRO="sid"
-			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
+			SPECIFIC="libreoffice virt-manager mplayer chromium"
 			;;
 	*)		echo "unsupported distro."
 			exit 1

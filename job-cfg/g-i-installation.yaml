@@ -279,11 +279,6 @@
       - '{name}_debian_{my_ver}_desktops_group':
           my_desktop: kfreebsd_xfce
           my_instdesc: ' using PXE netboot gtk'
-          my_ver:
-            - wheezy:
-                my_verdesc: wheezy
-                my_time: '42 16 21 * *'
-                my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-kfreebsd-amd64/current/images/netboot-9/gtk/netboot.tar.gz'
             - jessie:
                 my_verdesc: jessie
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'

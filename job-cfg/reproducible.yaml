@@ -260,9 +260,12 @@
             my_hname:
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'ff2a':            { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'wbq0':           { my_arch: 'armhf' }
                 - 'odxu4':          { my_arch: 'armhf' }
+                - 'odxu4b':         { my_arch: 'armhf' }
+                - 'odxu4c':         { my_arch: 'armhf' }
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
@@ -304,9 +307,12 @@
             my_hname:
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'ff2a':          { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'wbq0':           { my_arch: 'armhf' }
                 - 'odxu4':          { my_arch: 'armhf' }
+                - 'odxu4b':          { my_arch: 'armhf' }
+                - 'odxu4c':          { my_arch: 'armhf' }
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }

@@ -485,8 +485,14 @@
                 - '11': { my_node1: 'odxu4-armhf-rb:2229',     my_node2: 'wbd0-armhf-rb:2223'      }
                 - '12': { my_node1: 'wbd0-armhf-rb:2223',      my_node2: 'cbxi4pro0-armhf-rb:2226' }
                 - '13': { my_node1: 'cbxi4pro0-armhf-rb:2226', my_node2: 'rpi2b-armhf-rb:2230'     }
-                - '14': { my_node1: 'rpi2b-armhf-rb:2230',     my_node2: 'wbq0-armhf-rb:2225'      }
-                - '15': { my_node1: 'wbd0-armhf-rb:2223',      my_node2: 'hb0-armhf-rb:2224'       }
+                - '14': { my_node1: 'wbq0-armhf-rb:2225'       my_node2: 'odxu4b-armhf-rb:2232'    }
+                - '15': { my_node1: 'rpi2b-armhf-rb:2230',     my_node2: 'odxu4c-armhf-rb:2233'    }
+                - '16': { my_node1: 'odxu4b-armhf-rb:2232',    my_node2: 'wbd0-armhf-rb:2223'      }
+                - '17': { my_node1: 'odxu4c-armhf-rb:2223',    my_node2: 'hb0-armhf-rb:2224'       }
+                - '18': { my_node1: 'odxu4b-armhf-rb:2232',    my_node2: 'ff2a-armhf-rb:2234'      }
+                - '19': { my_node1: 'odxu4c-armhf-rb:2233',    my_node2: 'ff2a-armhf-rb:2234'      }
+                - '20': { my_node1: 'ff2a-armhf-rb:2234',      my_node2: 'odxu4b-armhf-rb:2232'    }
+                - '21': { my_node1: 'ff2a-armhf-rb:2234',      my_node2: 'odxu4c-armhf-rb:2233'    }
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
             my_timed: '* * * * *'
             my_hname: ''

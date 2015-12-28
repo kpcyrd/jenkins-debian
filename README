@@ -137,7 +137,7 @@ Installation tests inside chroot environments.
 
 * The (current) purpose of https://reproducible.debian.net is to show the prospects of reproducible builds for Debian. IOW: this is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project!
 
-* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through concurrent builder jobs, 32 for 'amd64' and 15 for 'armhf', which are each constantly testing packages and saving the results of these tests.
+* Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through concurrent builder jobs, 32 for 'amd64' and 21 for 'armhf', which are each constantly testing packages and saving the results of these tests.
 
 ** These builds on remote nodes run on very different hardware: for 'amd64' we are now using four virtual machines, profitbricks-build(1+2+5+6)-amd64, which have 16 or 17 cores and 48gb ram each and are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
 ** To test 'armhf' we are using ten small boards donated by vagrant@d.o: six quad cores (wbq0, cbxi4pro0, ff2a, odxu4, odxu4b and odxu4c) with 2gb ram, another quad-core (rpi2b) with 1gb ram and three dual cores (bpi0, hb0 and wbd0) with 1gb ram, each. We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!

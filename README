@@ -140,7 +140,7 @@ Installation tests inside chroot environments.
 * Currently, three suites are tested on amd64: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through concurrent builder jobs, 32 for 'amd64' and 15 for 'armhf', which are each constantly testing packages and saving the results of these tests.
 
 ** These builds on remote nodes run on very different hardware: for 'amd64' we are now using four virtual machines, profitbricks-build(1+2+5+6)-amd64, which have 16 or 17 cores and 48gb ram each and are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
-** To test 'armhf' we are using seven small boards donated by vagrant@d.o: three quad cores (wbq0, cbxi4pro0 and odxu4) with 2gb ram, another quad-core (rpi2b) with 1gb ram and three dual cores (bpi0, hb0 and wbd0) with 1gb ram, each. We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!
+** To test 'armhf' we are using ten small boards donated by vagrant@d.o: six quad cores (wbq0, cbxi4pro0, ff2a, odxu4, odxu4b and odxu4c) with 2gb ram, another quad-core (rpi2b) with 1gb ram and three dual cores (bpi0, hb0 and wbd0) with 1gb ram, each. We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!
 
 * Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and if the queue is below a certain threshold schedules four types of packages:
 ** new untested packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),

@@ -35,6 +35,15 @@ case "$NODE_NAME" in
   rpi2b-armhf-rb.debian.net)
     PORT=2230
     ;;
+  odxu4b-armhf-rb.debian.net)
+    PORT=2232
+    ;;
+  odxu4c-armhf-rb.debian.net)
+    PORT=2233
+    ;;
+  ff2a-armhf-rb.debian.net)
+    PORT=2234
+    ;;
   profitbricks-build?-amd64.debian.net)
     PORT=22
     if [[ "$JOB_NAME" =~ rebootstrap_.* ]] ; then

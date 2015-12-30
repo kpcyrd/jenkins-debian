@@ -295,7 +295,7 @@ pages = {
                 'icon_link': '/index_FTBR.html',
                 'query': 'notes',
                 'nosuite': True,
-                'text': Template('$tot unreproducible packages in $suite/$arch:')
+                'text': Template('$tot unreproducible packages in $suite/$arch, ordered by build date:')
             },
             {
                 'icon_status': 'FTBFS',
@@ -303,14 +303,14 @@ pages = {
                 'icon_link': '/index_FTBFS.html',
                 'query': 'notes',
                 'nosuite': True,
-                'text': Template('$tot FTBFS packages in $suite/$arch:')
+                'text': Template('$tot FTBFS packages in $suite/$arch, ordered by build date:')
             },
             {
                 'icon_status': 'depwait',
                 'db_status': 'depwait',
                 'icon_link': '/index_depwait.html',
                 'query': 'depwait_all_abc',
-                'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies:')
+                'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies, ordered by build date:')
             },
             {
                 'icon_status': 'not_for_us',
@@ -350,21 +350,21 @@ pages = {
                 'db_status': 'unreproducible',
                 'icon_link': '/index_FTBR.html',
                 'query': 'no_notes',
-                'text': Template('$tot unreproducible packages in $suite/$arch:')
+                'text': Template('$tot unreproducible packages in $suite/$arch, ordered by build date:')
             },
             {
                 'icon_status': 'FTBFS',
                 'db_status': 'FTBFS',
                 'icon_link': '/index_FTBFS.html',
                 'query': 'no_notes',
-                'text': Template('$tot FTBFS packages in $suite/$arch:')
+                'text': Template('$tot FTBFS packages in $suite/$arch, ordered by build date:')
             },
             {
                 'icon_status': 'blacklisted',
                 'db_status': 'blacklisted',
                 'icon_link': '/index_blacklisted.html',
                 'query': 'no_notes',
-                'text': Template('$tot blacklisted packages in $suite/$arch:')
+                'text': Template('$tot blacklisted packages in $suite/$arch, ordered by name:')
             }
         ]
     },

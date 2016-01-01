@@ -487,7 +487,7 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	write_suite_table
 	# write suite graphs
-	for SUITE in unstable experimental ; do
+	for SUITE in $SUITES ; do
 		write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
 	write_page "</p>"

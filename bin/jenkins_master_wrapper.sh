@@ -35,6 +35,9 @@ case "$NODE_NAME" in
   rpi2b-armhf-rb.debian.net)
     PORT=2230
     ;;
+  rpi2c-armhf-rb.debian.net)
+    PORT=2235
+    ;;
   odxu4b-armhf-rb.debian.net)
     PORT=2232
     ;;

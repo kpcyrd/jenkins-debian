@@ -12,9 +12,9 @@
  ** 18 cores and 48 GB memory for profitbricks-build6-amd64.debian.net
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net (also running on Profitbricks virtual hardware)
  * link:https://globalsign.com[GlobalSign] in January 2015 kindly provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
- * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] is kindly providing and hosting ten 'armhf' systems:
+ * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] is kindly providing and hosting eleven 'armhf' systems:
  ** six quad-cores with 2 GB RAM each,
- ** one quad-core with 1 GB RAM and
+ ** two quad-cores with 1 GB RAM and
  ** three dual-cores with 1 GB RAM.
 
 === Contributors

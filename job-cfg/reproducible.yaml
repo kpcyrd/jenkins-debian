@@ -280,18 +280,6 @@
                 - 'setup_pbuilder_testing':
                     my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '23 7 * * *'
-                - 'setup_schroot_testing':
-                    my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
-                    my_timed: '0 1 * * *'
-            my_hname:
-                - 'profitbricks1':  { my_arch: 'amd64' }
-                - 'profitbricks2':  { my_arch: 'amd64' }
-                - 'profitbricks5':  { my_arch: 'amd64' }
-                - 'profitbricks6':  { my_arch: 'amd64' }
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-
-        - '{name}_{my_task}_{my_arch}_{my_hname}':
-            my_task:
                 - 'setup_pbuilder_unstable':
                     my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '42 7 * * *'
@@ -301,6 +289,9 @@
                 - 'setup_schroot_unstable':
                     my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
                     my_timed: '20 1 * * *'
+                - 'setup_schroot_testing':
+                    my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+                    my_timed: '0 1 * * *'
                 - 'setup_schroot_experimental':
                     my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
                     my_timed: '40 1 * * *'

@@ -69,9 +69,7 @@ case $SUITE in
 	sid) 	echo "WARNING: sid has been renamed to unstable."
 		SUITE=unstable
 		;;
-	unstable|experimental) ;;
-	testing)	if [ "$ARCH" = "armhf" ] ; then echo "Testing is not yet tested on $ARCH, exiting." ; exit 0 ; fi
-				;;
+	testing|unstable|experimental) ;;
 	*)	echo "$SUITE is not a valid suite".
 		explain_syntax
 		exit 1

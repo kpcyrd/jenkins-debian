@@ -235,7 +235,7 @@ write_page_header() {
 			continue
 		fi
 		if [ "$TARGET" = "pkg_sets" ] && [ "$ARCH" = "armhf" ] && [ "$SUITE" = "testing" ] ; then
-			# testing/armhf is not being tested yet _yet_ (so I think this is never met…)
+			# no pkg_sets for testing/amd64 yet…
 			continue
 		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
@@ -253,10 +253,6 @@ write_page_header() {
 		done
 		if [ "$TARGET" = "suite_stats" ] ; then
 			for i in $SUITES ; do
-				if [ "$i" = "testing" ] && [ "$ARCH" = "armhf" ] ; then
-					# only unstable and experimental are tested on armhf atm
-					continue
-				fi
 				write_page "<li><a href=\"/$i/index_suite_${ARCH}_stats.html\">suite: $i</a></li>"
 			done
 		elif [ "$TARGET" = "scheduled" ] ; then
@@ -618,10 +614,10 @@ create_png_from_table() {
 		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
 		if [ "$ARCH" = "armhf" ]  ; then
 			if [ $1 -eq 2 ] ; then
-				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19)
+				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19 and testing/armhf since 2016-01-01)
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
 			elif [ $1 -eq 6 ] ; then
-				# armhf only has pkg sets since its complete, aka 2015-12-22
+				# armhf only has pkg sets since its complete (and only for unstable), aka 2015-12-22
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-22'"
 			fi
 		fi

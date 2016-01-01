@@ -71,7 +71,7 @@ LIMITS = {
             'experimental': {'*': 440},
         },
         'armhf': {
-            'testing': {'*': 0},
+            'testing': {'*': 42},
             'unstable': {'*': 150},
             'experimental': {'*': 150},
         },
@@ -83,7 +83,7 @@ LIMITS = {
             'experimental': {1: (100, 250), 2: (200, 200), '*': 150},
         },
         'armhf': {
-            'testing': {1: (100, 0), 2: (200, 0), '*': 0},
+            'testing': {1: (100, 42), 2: (200, 42), '*': 0},
             'unstable': {1: (100, 75), 2: (200, 60), '*': 45},
             'experimental': {1: (100, 75), 2: (200, 60), '*': 45},
         },
@@ -95,7 +95,7 @@ LIMITS = {
             'experimental': {1: (250, 40), 2: (350, 20), '*': 0},
         },
         'armhf': {
-            'testing': {1: (250, 0), 2: (350, 0), '*': 0},
+            'testing': {1: (250, 12), 2: (350, 6), '*': 0},
             'unstable': {1: (250, 12), 2: (350, 6), '*': 0},
             'experimental': {1: (250, 12), 2: (350, 6), '*': 0},
         }
@@ -172,11 +172,8 @@ def update_sources(suite):
     sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')
     log.debug('\tdownloaded')
     for arch in ARCHS:
-        if arch == 'armhf' and suite == 'testing':
-            continue
-        else:
-            log.info('Updating sources db for %s/%s...', suite, arch)
-            update_sources_db(suite, arch, sources)
+        log.info('Updating sources db for %s/%s...', suite, arch)
+        update_sources_db(suite, arch, sources)
 
 
 def update_sources_db(suite, arch, sources):
@@ -312,8 +309,6 @@ def add_up_numbers(packages, arch):
     packages_sum = '+'.join([str(len(packages[x])) for x in SUITES])
     if packages_sum == '0+0+0':
         packages_sum = '0'
-    elif arch == 'armhf':
-        packages_sum = str(len(packages['unstable']))+'+'+str(len(packages['experimental']))
     return packages_sum
 
 
@@ -497,9 +492,6 @@ def scheduler(arch):
         if suite not in priotized_suite_order:
             priotized_suite_order.append(suite)
     for suite in priotized_suite_order:
-        if arch == 'armhf' and suite == 'testing':
-            now_queued_here[suite] = 0
-            continue
         query = 'SELECT count(*) ' \
                 'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' \
                 'WHERE s.suite="{suite}" AND s.architecture="{arch}"'
@@ -516,10 +508,7 @@ def scheduler(arch):
     # update the scheduled page
     generate_schedule(arch)  # from reproducible_html_indexes
     # build the kgb message text
-    if arch != 'armhf':
-        message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
-    else:
-        message = 'Scheduled in unstable+experimental (' + arch + '): '
+    message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
     if msg_untested:
         message += msg_untested
         message += ' and ' if msg_new and not msg_old_ftbfs_and_depwait and not msg_old else ''
@@ -535,8 +524,7 @@ def scheduler(arch):
         message += msg_old
     total = [now_queued_here[x] for x in SUITES]
     message += ', for ' + str(sum(total))
-    if arch != 'armhf':
-        message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
+    message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
     message += ' packages in total.'
     # only notifiy irc if there were packages scheduled in any suite
     for x in SUITES:

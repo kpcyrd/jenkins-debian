@@ -512,8 +512,6 @@ def build_page(page, suite=None, arch=None):
             else:
                 for suite in SUITES:
                     for arch in ARCHS:
-                        if arch == 'armhf' and suite == 'testing':
-                            continue
                         log.debug('global page §' + section['db_status'] +
                                   ' in ' + page + ' for ' + suite + '/' + arch)
                         html += build_page_section(page, section, suite, arch)[0]
@@ -539,8 +537,6 @@ bugs = get_bugs() # this variable should not be global, else merely importing _h
 if __name__ == '__main__':
     for arch in ARCHS:
         for suite in SUITES:
-            if arch == 'armhf' and suite == 'testing':
-                continue
             for page in pages.keys():
                 if 'global' not in pages[page] or not pages[page]['global']:
                     build_page(page, suite, arch)

@@ -172,8 +172,6 @@ def gen_suites_links(package, current_suite, current_arch):
         html += tab + '<li>{}\n'.format(a)
         html += tab + '<ul class="children">\n'
         for s in SUITES:
-            if a == 'armhf' and s == 'testing':
-                continue
             status = package.get_status(s, a)
             if not status:  # The package is not available in that suite/arch
                 continue
@@ -249,8 +247,6 @@ def gen_packages_html(packages, no_clean=False):
         pkg = package.name
         for suite in SUITES:
             for arch in ARCHS:
-                if arch == 'armhf' and suite == 'testing':
-                    continue
                 status = package.get_status(suite, arch)
                 version = package.get_tested_version(suite, arch)
                 build_date = package.get_build_date(suite, arch)
@@ -306,8 +302,6 @@ def gen_all_rb_pkg_pages(no_clean=False):
 def purge_old_pages():
     for suite in SUITES:
         for arch in ARCHS:
-            if arch == 'armhf' and suite == 'testing':
-                continue
             log.info('Removing old pages from ' + suite + '/' + arch + '.')
             try:
                 presents = sorted(os.listdir(RB_PKG_PATH + '/' + suite + '/' +

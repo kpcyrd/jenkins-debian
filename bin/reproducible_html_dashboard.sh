@@ -295,11 +295,7 @@ write_build_performance_stats() {
 		PERF_STATS[$ARCH]=$(mktemp -t reproducible-dashboard-perf-XXXXXXXX)
 		AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-		if [ "$ARCH" != "armhf" ] ; then
-			AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
-		else
-			AGE_TESTING="-"
-		fi
+		AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
 		write_page "<td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
 	write_page "</tr><tr><td>average test duration (on $DATE)</td>"
@@ -339,9 +335,6 @@ write_suite_table() {
 	write_page "<p>"
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
-		if [ "$ARCH" = "armhf" ] && [ "$SUITE" = "testing" ] ; then
-			continue
-		fi
 		gather_suite_arch_stats
 		write_page "<tr><td>$SUITE/$ARCH</td><td>$AMOUNT"
 		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
@@ -510,9 +503,6 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
-			if [ "$ARCH" = "armhf" ] &&  [ "$SUITE" = testing ] ; then
-				continue
-			fi
 			write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 		done
 		write_page "</p><p style=\"clear:both;\">"
@@ -533,10 +523,6 @@ update_bug_stats
 update_notes_stats
 for ARCH in ${ARCHS} ; do
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" = "testing" ] && [ "$ARCH" = "armhf" ] ; then
-			# we only test unstable and experimental on armhf atm
-			continue
-		fi
 		update_suite_arch_stats
 		gather_suite_arch_stats
 		create_suite_arch_stats_page

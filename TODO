@@ -160,6 +160,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** new page with packages which are reproducible on one arch and unreproducible on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs in testing but build fine on sid
+*** new page with packages which are orphaned but have a reproducible usertagged patch
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
@@ -168,11 +169,9 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** re-enable linux-2.6 usage once 806911 has been fixed
 
 * lesser prio
-** new page: packages which are orphaned but have a reproducible usertagged patch
 ** remove the rescheduling reason from the DB, that's really not needed
 ** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
 ** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
-** check that diffoscope schroot have /usr/bin/ar installed, else fail the job
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** rewrite bin/schroot-create.sh from scratch, with little sudo.
 ** right align all numbers in table in the dashboard

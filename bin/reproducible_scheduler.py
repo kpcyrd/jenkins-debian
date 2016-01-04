@@ -477,7 +477,7 @@ def schedule_404_versions(arch, total):
     for suite in SUITES:
         log.info('Requesting 404 packages in %s/%s...',
                  suite, arch)
-        packages[suite] = query_old_versions(suite, arch, 42)
+        packages[suite] = query_404_versions(suite, arch, 42)
         log.info('Received ' + str(len(packages[suite])) +
                  ' 404 packages in ' + suite + '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')

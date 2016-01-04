@@ -506,6 +506,7 @@ def scheduler(arch):
         new, msg_new = schedule_new_versions(arch, total)
         old_ftbfs_and_depwait, msg_old_ftbfs_and_depwait = empty_pkgs, ''
         old, msg_old = empty_pkgs, ''
+        four04, msg_404 = empty_pkgs, ''
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')

@@ -150,7 +150,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** link pkg sets and issues, that is: at least show packages without issues on pkg set pages, maybe also some issues which need actions (like uninvestigated test failures)
 ** make maintenance job detect and reschedule logs with: 'E: 10mount: error: Directory '.*' does not exist'
 ** make maintenance job detect and reschedule logs with: '^Bus Error$'
-** scheduler should automatically schedule 404 packages
 ** use schroot tarballs (gzipped), moves are atomic then
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug

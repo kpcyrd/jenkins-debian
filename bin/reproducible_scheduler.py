@@ -378,6 +378,20 @@ def query_old_versions(suite, arch, limit):
     print_schedule_result(suite, arch, criteria, packages)
     return packages
 
+def query_404_versions(suite, arch, limit):
+    criteria = """tested at least a day ago, status 404,
+               sorted by last build date"""
+    query = """SELECT DISTINCT s.id, s.name
+                FROM sources AS s JOIN results AS r ON s.id = r.package_id
+                WHERE s.suite='{suite}' AND s.architecture='{arch}'
+                AND r.status = '404'
+                AND r.build_date < datetime('now', '-1 day')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                ORDER BY r.build_date
+                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+    packages = query_db(query)
+    print_schedule_result(suite, arch, criteria, packages)
+    return packages
 
 def schedule_untested_packages(arch, total):
     packages = {}
@@ -458,6 +472,22 @@ def schedule_old_versions(arch, total):
         msg = ''
     return packages, msg
 
+def schedule_404_versions(arch, total):
+    packages = {}
+    for suite in SUITES:
+        log.info('Requesting 404 packages in %s/%s...',
+                 suite, arch)
+        packages[suite] = query_old_versions(suite, arch, 42)
+        log.info('Received ' + str(len(packages[suite])) +
+                 ' 404 packages in ' + suite + '/' + arch + ' to schedule.')
+        log.info('--------------------------------------------------------------')
+    msg = add_up_numbers(packages, arch)
+    if msg != '0':
+        msg += ' versions with status \'404\''
+    else:
+        msg = ''
+    return packages, msg
+
 
 def scheduler(arch):
     query = 'SELECT count(*) ' + \
@@ -483,6 +513,7 @@ def scheduler(arch):
         new, msg_new = schedule_new_versions(arch, total+len(untested))
         old_ftbfs_and_depwait, msg_old_ftbfs_and_depwait = schedule_old_ftbfs_and_depwait_versions(arch, total+len(untested)+len(new))
         old, msg_old = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs_and_depwait))
+        four04, msg_404 = schedule_404_versions(arch, total+len(untested)+len(new)+len(old_ftbfs_and_depwait)+len(old))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first
@@ -504,26 +535,24 @@ def scheduler(arch):
         to_be_scheduled = queue_packages(to_be_scheduled, new[suite], datetime.now()+timedelta(minutes=-720))
         to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs_and_depwait[suite], datetime.now()+timedelta(minutes=360))
         to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
+        to_be_scheduled = queue_packages(to_be_scheduled, four04[suite], datetime.now())
         schedule_packages(to_be_scheduled)
     # update the scheduled page
     generate_schedule(arch)  # from reproducible_html_indexes
     # build the kgb message text
     message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
     if msg_untested:
-        message += msg_untested
-        message += ' and ' if msg_new and not msg_old_ftbfs_and_depwait and not msg_old else ''
-        message += ', ' if ( msg_new and msg_old_ftbfs_and_depwait ) or ( msg_new and msg_old ) else ''
+        message += msg_untested + ', '
     if msg_new:
-        message += msg_new
-        message += ' and ' if msg_old_ftbfs_and_depwait or msg_old else ''
-        message += ', ' if msg_old_ftbfs_and_depwait and msg_old else ''
+        message += msg_new + ', '
+    if msg_404:
+        message += msg_404 + ', '
     if msg_old_ftbfs_and_depwait:
-        message += msg_old_ftbfs_and_depwait
-        message += ' and ' if msg_old_ftbfs_and_depwait else ''
+        message += msg_old_ftbfs_and_depwait + ', '
     if msg_old:
-        message += msg_old
+        message += msg_old + ', '
     total = [now_queued_here[x] for x in SUITES]
-    message += ', for ' + str(sum(total))
+    message += ' for ' + str(sum(total))
     message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
     message += ' packages in total.'
     # only notifiy irc if there were packages scheduled in any suite

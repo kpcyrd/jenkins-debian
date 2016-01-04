@@ -581,10 +581,10 @@ second_build() {
 	echo "============================================================================="
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-	# on armhf we always have different number of cores between 1st+2nd build due to the chosen nodes
+	NEW_NUM_CPU=$NUM_CPU
+	# on armhf we cannot guarantee we have a different number of cores between 1st+2nd build due to the chosen nodes...
 	if [ "$ARCH" = "armhf" ] ; then
-		NEW_NUM_CPU=$NUM_CPU
+		NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	fi
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=2222

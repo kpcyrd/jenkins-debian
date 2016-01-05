@@ -466,7 +466,7 @@
 
         # could have all archs in one block, but it seems cleaner this way
         # to choose new jobs:
-        #       for i in wbq0 cbxi4pro0 ff2a odxu4 odxu4b odxu4c rpi2b rpi2c bpi0 hb0 wbd0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
+        #       for i in wbq0 cbxi4pro0 ff2a ff2b odxu4 odxu4b odxu4c opi2a rpi2b rpi2c bpi0 hb0 wbd0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
         - '{name}_builder_{my_arch}_{my_num}':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'armhf'
@@ -495,7 +495,14 @@
                 - '22': { my_node1: 'ff2a-armhf-rb:2234',      my_node2: 'rpi2c-armhf-rb:2235'     }
                 - '23': { my_node1: 'rpi2c-armhf-rb:2235',     my_node2: 'odxu4b-armhf-rb:2232'    }
                 - '24': { my_node1: 'rpi2c-armhf-rb:2235',     my_node2: 'odxu4c-armhf-rb:2233'    }
-            my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
+                - '25': { my_node1: 'odxu4b-armhf-rb:2232',    my_node2: 'ff2b-armhf-rb:2237'      }
+                - '26': { my_node1: 'opi2a-armhf-rb:2236',     my_node2: 'ff2a-armhf-rb:2234'      }
+                - '27': { my_node1: 'odxu4c-armhf-rb:2233',    my_node2: 'ff2b-armhf-rb:2237'      }
+                - '28': { my_node1: 'opi2a-armhf-rb:2236',     my_node2: 'ff2b-armhf-rb:2237'      }
+                - '29': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'      }
+                - '30': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'      }
+                - '31': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'      }
+           my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
             my_timed: '* * * * *'
             my_hname: ''
 

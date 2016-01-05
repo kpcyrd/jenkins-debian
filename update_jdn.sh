@@ -421,7 +421,7 @@ explain "scripts and configurations for jenkins updated."
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	sudo cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
-	git log | grep ^Author| cut -d " " -f2-|sort -u > $TMPFILE
+	git log | grep ^Author| cut -d " " -f2-|sort -u -f > $TMPFILE
 	echo "----" >> $TMPFILE
 	sudo tee /var/lib/jenkins/userContent/THANKS > /dev/null < THANKS.head
 	# samuel, lunar and josch committed with several commiters, only display one

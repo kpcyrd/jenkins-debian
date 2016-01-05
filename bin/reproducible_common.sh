@@ -496,6 +496,9 @@ calculate_build_duration() {
 }
 
 print_out_duration() {
+	if [ -z "$DURATION" ]; then
+		return
+	fi
 	local HOUR=$(echo "$DURATION/3600"|bc)
 	local MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
 	local SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)

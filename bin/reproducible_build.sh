@@ -396,7 +396,6 @@ call_diffoscope_on_changes_files() {
 			irc_message "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
-	print_out_duration
 }
 
 choose_package() {
@@ -794,6 +793,7 @@ if [ $FTBFS -eq 1 ] ; then
 elif [ $FTBFS -eq 0 ] ; then
 	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 fi
+print_out_duration
 
 cd ..
 cleanup_all

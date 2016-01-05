@@ -499,10 +499,10 @@
                 - '26': { my_node1: 'opi2a-armhf-rb:2236',     my_node2: 'ff2a-armhf-rb:2234'      }
                 - '27': { my_node1: 'odxu4c-armhf-rb:2233',    my_node2: 'ff2b-armhf-rb:2237'      }
                 - '28': { my_node1: 'opi2a-armhf-rb:2236',     my_node2: 'ff2b-armhf-rb:2237'      }
-                - '29': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'      }
-                - '30': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'      }
-                - '31': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'      }
-           my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
+                - '29': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'     }
+                - '30': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'     }
+                - '31': { my_node1: 'ff2b-armhf-rb:2237',      my_node2: 'opi2a-armhf-rb:2236'     }
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
             my_timed: '* * * * *'
             my_hname: ''
 

@@ -57,14 +57,14 @@ else
 	if [ -z "$MIRROR" ]; then
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build?-amd64)		export MIRROR=http://ftp.de.debian.org/debian ;;
-			bpi0|cbxi4pro0|hb0|wbq0|odxu4*|wbd0|rpi2*|ff2a)			export MIRROR=http://ftp.us.debian.org/debian ;;
+			bpi0|cbxi4pro0|hb0|wbq0|odxu4*|wbd0|rpi2*|ff2*|opi2a)		export MIRROR=http://ftp.us.debian.org/debian ;;
 			*)								echo "unsupported host, exiting." ; exit 1 ;;
 		esac
 	fi
 	if [ -z "$http_proxy" ]; then
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build?-amd64)		export http_proxy="http://localhost:3128" ;;
-			bpi0|cbxi4pro0|hb0|wbq0|odxu4*|wbd0|rpi2*|ff2a)			export http_proxy="http://10.0.0.15:8000/" ;;
+			bpi0|cbxi4pro0|hb0|wbq0|odxu4*|wbd0|rpi2*|ff2*|opi2a)		export http_proxy="http://10.0.0.15:8000/" ;;
 			*)								echo "unsupported host, exiting." ; exit 1 ;;
 		esac
 	fi

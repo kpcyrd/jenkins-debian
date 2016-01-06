@@ -404,6 +404,7 @@ merge_debian_branch() {
 	local COMMIT_MSG2="$COMMIT_HASH is from branch $(echo $GIT_BRANCH|cut -d '/' -f2) from $GIT_URL."
 	dch -R $COMMIT_MSG1
 	dch -v $BUILD_VERSION $COMMIT_MSG2
+	git commit -a -m "Automatically merged by jenkins."
 }
 
 prepare_git_workspace_copy() {
@@ -414,7 +415,7 @@ prepare_git_workspace_copy() {
 	echo
 }
 
-revert_git_merge() {
+revert_git_changes() {
 	git reset --hard
 	git checkout -f -q $COMMIT_HASH
 	git branch -D $BRANCH
@@ -448,7 +449,7 @@ if [ "$2" = "git" ] ; then
 		COMMIT_HASH=$(git log -1 --oneline|cut -d " " -f1)
 		merge_debian_branch $4
 		prepare_git_workspace_copy
-		revert_git_merge
+		revert_git_changes
 	else
 		# just use this branch
 		BRANCH=$3

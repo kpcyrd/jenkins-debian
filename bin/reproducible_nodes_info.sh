@@ -45,7 +45,7 @@ for NODE in $BUILD_NODES jenkins.debian.net ; do
 done
 echo
 
-echo "$(date -u) - Showing nodes performances:"
+echo "$(date -u) - Showing node performance:"
 TMPFILE1=$(mktemp)
 TMPFILE2=$(mktemp)
 for i in $BUILD_NODES ; do

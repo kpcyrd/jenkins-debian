@@ -100,11 +100,19 @@ done
 set -e
 
 # for Archlinux
+set +e
 if [ "$HOSTNAME" = "${ARCHLINUX_BUILD_NODE}" ] ; then
 	echo "$(date -u) - updating Archlinux schroot now."
 	schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
-	echo "$(date -u) - updating Archlinux schroot done."
+	RESULT=$?
+	if [ $RESULT -eq 1 ] ; then
+		echo "Warning: failed to update Archlinux schroot."
+		DIRTY=true
+	else
+		echo "$(date -u) - updating Archlinux schroot done."
+	fi
 fi
+set -e
 
 # delete old temp directories
 echo "$(date -u) - Deleting temp directories, older than 2 days."

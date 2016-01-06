@@ -60,7 +60,7 @@ allowed_cmds=()
 
 if [[ "$*" =~ /bin/true ]] ; then
 	exec /bin/true ; croak "Exec failed";
-elif [[ "$*" = "/srv/jenkins/bin/reproducible_slay.sh" ]] ; then
+elif [[ "$*" = "cleanup_nodes /srv/jenkins/bin/reproducible_slay.sh" ]] ; then
 	exec /srv/jenkins/bin/reproducible_slay.sh ; croak "Exec failed";
 elif [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
 	exec /bin/nc localhost 4949 ; croak "Exec failed";

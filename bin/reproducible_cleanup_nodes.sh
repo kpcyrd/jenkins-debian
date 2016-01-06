@@ -10,9 +10,12 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
-# only run this on the main node
+# only run this on the main node as jenkins
 if [ "$HOSTNAME" != "jenkins" ] ; then
 	echo "this script must only be run on the main node, aborting."
+	exit 1
+elif [ "$(whoami)" != "jenkins" ] ; then
+	echo "this script must only be run as jenkins user, aborting."
 	exit 1
 fi
 

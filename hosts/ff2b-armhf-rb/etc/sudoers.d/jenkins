@@ -44,6 +44,7 @@ jenkins ALL=  \
 	/usr/bin/dcmd rm *.changes, \
 	/usr/bin/dcmd rm *.dsc, \
 	/usr/bin/apt-get update, \
+	/usr/bin/killall timeout, \
 	/usr/sbin/slay 1111, \
 	/usr/sbin/slay 2222, \
 	/usr/sbin/slay jenkins

@@ -41,7 +41,7 @@ for NODE in $BUILD_NODES ; do
 	# jenkins_master_wrapper.sh needs NODE_NAME and JOB_NAME
 	export NODE_NAME=$NODE
 	echo "$(date -u) - Killing build processes on $NODE now:"
-	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_slay.sh
+	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_slay.sh || true
 	echo "$(date -u) - done killing processes on $NODE."
 done
 

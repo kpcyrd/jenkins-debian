@@ -2,7 +2,11 @@ jenkins ALL=  \
 	NOPASSWD: /usr/sbin/debootstrap *, \
 	/usr/sbin/chroot /chroots/*, \
 	/bin/rm -rf --one-file-system /chroots/*, \
-	/bin/umount -l /chroots/*
+	/bin/umount -l /chroots/*, \
+	/usr/bin/killall timeout, \
+	/usr/sbin/slay 1111, \
+	/usr/sbin/slay 2222, \
+	/usr/sbin/slay jenkins
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

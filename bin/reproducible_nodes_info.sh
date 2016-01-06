@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright © 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -15,6 +15,7 @@ mkdir -p $TARGET_DIR
 TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
 
+echo "$(date -u) - Collecting information from nodes"
 for NODE in $BUILD_NODES jenkins.debian.net ; do
 	if [ "$NODE" = "jenkins.debian.net" ] ; then
 		echo "$(date -u) - Trying to update $TARGET_DIR/$NODE."
@@ -42,4 +43,21 @@ for NODE in $BUILD_NODES jenkins.debian.net ; do
 	fi
 	rm -f $TMPFILE_SRC $TMPFILE_NODE
 done
+echo
+
+echo "$(date -u) - Showing nodes performances:"
+TMPFILE1=$(mktemp)
+TMPFILE2=$(mktemp)
+for i in $BUILD_NODES ; do
+	sqlite3 -init $INIT ${PACKAGES_DB} \
+		"SELECT build_date FROM stats_build AS r WHERE r.node1=\"$i\" or r.node2=\"$i\"" > $TMPFILE1 2>/dev/null
+		j=$(wc -l $TMPFILE1|cut -d " " -f1)
+		k=$(cat $TMPFILE1|cut -d " " -f1|sort -u|wc -l)
+		l=$(echo "scale=1 ; ($j/$k)" | bc)
+		echo "$l builds/day ($j/$k) on $i" >> $TMPFILE2
+done
+rm $TMPFILE1 >/dev/null
+sort -g -r $TMPFILE2
+rm $TMPFILE2 >/dev/null
+echo
 

@@ -200,6 +200,7 @@ gather_suite_arch_stats() {
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_DEPWAIT=$(echo "scale=1 ; ($COUNT_DEPWAIT*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc || echo 0)
+	PERCENT_BLACKLISTED=$(echo "scale=1 ; ($COUNT_BLACKLISTED*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_OTHER=$(echo "scale=1 ; ($COUNT_OTHER*100/$COUNT_TOTAL)" | bc || echo 0)
 }
 
@@ -391,7 +392,7 @@ create_suite_arch_stats_page() {
 	write_page "and those "
 	set_icon blacklisted
 	write_icon
-	write_page "$COUNT_BLACKLISTED blacklisted packages neither.</p>"
+	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) blacklisted packages neither.</p>"
 	write_page "<p>"
 	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do

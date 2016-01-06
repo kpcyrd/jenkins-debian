@@ -8,7 +8,7 @@
 # then configures pacman and abs
 #
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

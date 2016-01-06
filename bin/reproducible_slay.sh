@@ -7,12 +7,10 @@ set -e
 
 # usually called by /srv/jenkins/bin/reproducible_cleanup_nodes.sh
 # this script just kills everyone…
-sudo slay -clean 1111
-sudo slay -clean 2222
-sleep 2
-ps fax
+sudo slay 1111
+sudo slay 2222
+pgrep -u 1111,2222
 # only slay jenkins on the build nodes…
 if [ "$HOSTNAME" != "jenkins" ] ; then
-	sudo slay -clean jenkins
+	sudo slay jenkins
 fi
-

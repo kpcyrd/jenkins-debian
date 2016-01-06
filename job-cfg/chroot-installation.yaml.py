@@ -96,28 +96,6 @@ def is_target_in_distro(distro, target):
          return True
 
 #
-# return the list of targets, filtered to be those present in 'distro'
-#
-def get_targets_in_distro(distro):
-     return [t for t in all_targets if is_target_in_distro(distro, t)]
-
-#
-# given a target, returns a list of ([dist], key) tuples, so we can handle the
-# edu packages having views that are distro dependant
-#
-# this groups all the distros that have matching views
-#
-def get_dists_per_key(target,get_distro_key):
-    dists_per_key = {}
-    for distro in base_distros:
-        if is_target_in_distro(distro, target):
-            key = get_distro_key(distro)
-            if key not in dists_per_key.keys():
-                dists_per_key[key] = []
-            dists_per_key[key].append(distro)
-    return dists_per_key
-
-#
 # who gets mail for which target
 #
 def get_recipients(target):
@@ -173,6 +151,10 @@ def get_spoken_name(target):
          return target
 
 #
+# nothing to edit below
+#
+
+#
 # This structure contains the differences between the default, upgrade and upgrade_apt+dpkg_first jobs
 #
 jobspecs = [
@@ -199,9 +181,32 @@ jobspecs = [
     },
 ]
 
+# some functions first…
+
 #
-# nothing to edit below
+# return the list of targets, filtered to be those present in 'distro'
 #
+def get_targets_in_distro(distro):
+     return [t for t in all_targets if is_target_in_distro(distro, t)]
+
+#
+# given a target, returns a list of ([dist], key) tuples, so we can handle the
+# edu packages having views that are distro dependant
+#
+# this groups all the distros that have matching views
+#
+def get_dists_per_key(target,get_distro_key):
+    dists_per_key = {}
+    for distro in base_distros:
+        if is_target_in_distro(distro, target):
+            key = get_distro_key(distro)
+            if key not in dists_per_key.keys():
+                dists_per_key[key] = []
+            dists_per_key[key].append(distro)
+    return dists_per_key
+
+
+# main…
 
 data = []
 jobs = []

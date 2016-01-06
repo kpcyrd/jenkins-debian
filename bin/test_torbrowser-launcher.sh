@@ -410,7 +410,7 @@ prepare_git_workspace_copy() {
 	echo "$(date -u) - preparing git workspace copy in $TMPDIR/git"
 	git branch -av
 	mkdir $TMPDIR/git
-	cp -r * $TMPDIR/git
+	cp -r .git* * $TMPDIR/git
 	echo
 }
 

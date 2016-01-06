@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 #              © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 #
@@ -331,7 +332,7 @@ write_page_footer() {
 		write_page "via this <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">git repo</a>."
 	fi
 	write_page "There is more information <a href=\"https://jenkins.debian.net/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere."
-	write_page "<br /> Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2015 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and <a href=\"https://jenkins.debian.net//userContent/thanks.html\">many others</a>."
+	write_page "<br /> Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2016 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and <a href=\"https://jenkins.debian.net//userContent/thanks.html\">many others</a>."
 	write_page "The code of <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">jenkins.debian.net.git</a> is mostly GPL2 licensed. The weather icons are public domain and have been taken from the <a href=\"http://tango.freedesktop.org/Tango_Icon_Library\" target=\"_blank\">Tango Icon Library</a>."
 	write_page "<br />"
 	if [ "$1" = "coreboot" ] ; then

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2009, 2010, 2012, 2015 Peter Palfrader
-#               2015 Holger Levsen
+#               2015-2016 Holger Levsen
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the

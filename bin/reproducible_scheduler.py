@@ -61,7 +61,7 @@ So, the 3rd step happens only when there are more than 350 packages queued up.
 Finally, MINIMUM_AGE is respected when scheduling old versions.
 
 """
-MAXIMA = {'amd64': 750, 'armhf': 375}
+MAXIMA = {'amd64': 750, 'armhf': 500}
 
 LIMITS = {
     'untested': {
@@ -71,9 +71,9 @@ LIMITS = {
             'experimental': {'*': 440},
         },
         'armhf': {
-            'testing': {'*': 150},
-            'unstable': {'*': 150},
-            'experimental': {'*': 150},
+            'testing': {'*': 250},
+            'unstable': {'*': 250},
+            'experimental': {'*': 250},
         },
     },
     'new': {
@@ -83,9 +83,9 @@ LIMITS = {
             'experimental': {1: (100, 250), 2: (200, 200), '*': 150},
         },
         'armhf': {
-            'testing': {1: (100, 100), 2: (200, 100), '*': 0},
-            'unstable': {1: (100, 100), 2: (200, 100), '*': 77},
-            'experimental': {1: (100, 100), 2: (200, 100), '*': 77},
+            'testing': {1: (100, 200), 2: (200, 200), '*': 0},
+            'unstable': {1: (100, 200), 2: (200, 200), '*': 150},
+            'experimental': {1: (100, 200), 2: (200, 200), '*': 150},
         },
     },
     'ftbfs+depwait': {
@@ -95,9 +95,9 @@ LIMITS = {
             'experimental': {1: (250, 40), 2: (350, 20), '*': 0},
         },
         'armhf': {
-            'testing': {1: (250, 12), 2: (350, 6), '*': 0},
-            'unstable': {1: (250, 12), 2: (350, 6), '*': 0},
-            'experimental': {1: (250, 12), 2: (350, 6), '*': 0},
+            'testing': {1: (250, 20), 2: (350, 10), '*': 0},
+            'unstable': {1: (250, 20), 2: (350, 10), '*': 0},
+            'experimental': {1: (250, 20), 2: (350, 10), '*': 0},
         }
     },
     'old': {
@@ -107,9 +107,9 @@ LIMITS = {
             'experimental': {1: (300, 70), 2: (400, 50), '*': 0},
         },
         'armhf': {
-            'testing': {1: (300, 0), 2: (400, 0), '*': 0},
-            'unstable': {1: (300, 150), 2: (400, 100), '*': 0},
-            'experimental': {1: (300, 15), 2: (400, 8), '*': 0},
+            'testing': {1: (300, 200), 2: (400, 125), '*': 0},
+            'unstable': {1: (300, 200), 2: (400, 125), '*': 0},
+            'experimental': {1: (300, 30), 2: (400, 15), '*': 0},
         }
     }
 }

@@ -135,20 +135,33 @@ html_header = Template("""<!DOCTYPE html>
       <title>$page_title</title>
   </head>
   <body $padding>""")
+
+if os.environ['JOB_URL'] == '':
+    JOB_FOOTER=''
+else:
+    JOB_URL = os.environ['JOB_URL']
+    JOB_NAME = os.path.basename(JOB_URL[:-1])
+    JOB_FOOTER = 'This page was built by the jenkins job <a href="'+JOB_URL+'">'
+    JOB_FOOTER += JOB_NAME+'</a> which is configured via this '
+    JOB_FOOTER += '<a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/">git repo</a>.'
+
 html_footer = Template("""
-    <hr />
-    <p style="font-size:0.9em;">
+      <hr id="footer_separator" /><p style="font-size:0.9em;"><div id="page_footer">
+      %s
       There is more information <a href="%s/userContent/about.html">about
       jenkins.debian.net</a> and about
       <a href="https://wiki.debian.org/ReproducibleBuilds"> reproducible builds
-      of Debian</a> available elsewhere. Last update: $date.
-      Copyright 2014-2016 <a href="mailto:holger@layer-acht.org">Holger Levsen</a> and others,
+      of Debian</a> available elsewhere.
+      <br /> Last update: $date.
+      Copyright 2014-2016 <a href="mailto:holger@layer-acht.org">Holger Levsen</a>
+      and <a href="https://jenkins.debian.net//userContent/thanks.html">many others</a>.
+      The code of <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/">jenkins.debian.net.git</a> is mostly
       GPL-2 licensed. The weather icons are public domain and have been taken
       from the <a href=http://tango.freedesktop.org/Tango_Icon_Library target=_blank>
       Tango Icon Library</a>.
      </p>
   </body>
-</html>""" % (JENKINS_URL))
+</html>""" % (JOB_FOOTER, JENKINS_URL))
 
 html_head_page = Template((tab*2).join("""
 <header>

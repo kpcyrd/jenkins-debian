@@ -328,6 +328,14 @@ if [ ! -z "$PSCALL" ] ; then
 	echo
 fi
 
+# find builds which should not be there
+RESULTS=$(pgrep -f reproducible_build.sh --parent 1 || true)
+if [ ! -z "$RESULTS" ] ; then
+	DIRTY=true
+	echo "Warning: found reproducible_build.sh processes which have pid 1 as parent (and not sshd), thus something went wrong… please investigate."
+	echo -e "$RESULTS"
+
+fi
 
 # remove artifacts older than a day
 echo "$(date -u) - Checking for artifacts older than a day."

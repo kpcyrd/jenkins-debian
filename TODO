@@ -142,7 +142,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * higher prio:
 ** FIXME: use same footer for .sh and .py pages…
-** check that build nodes have different amount of cores, so we dont need to run the 2nd build with NUM_CPU-1
 ** pkg pages
 *** new table in pkg/test history page: schedule - if that package is currently scheduled
 *** add link to pkg set(s) if pkg is member of some
@@ -159,12 +158,12 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs in testing but build fine on sid
 *** new page with packages which are orphaned but have a reproducible usertagged patch
+*** new page showing arch all packages which are cross-reproducible, and those which are not
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** repo-comparison: check for binaries without source
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
-** re-enable linux-2.6 usage once 806911 has been fixed
 
 * lesser prio
 ** remove the rescheduling reason from the DB, that's really not needed
@@ -186,7 +185,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** move "untested" field in stats table too? (as in csv output...)
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
 ** maintenance.sh: delete the history pages once a page has been removed from all suites+archs
-** new page showing arch all packages which are cross-reproducible, and those which are not
 ** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
 ** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
 * support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL

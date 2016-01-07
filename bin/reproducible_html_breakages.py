@@ -315,8 +315,9 @@ if __name__ == '__main__':
     bugs = get_bugs()
     html = '<p>This page lists unexpected things a human should look at and '
     html += 'fix, like packages with an incoherent status or files that '
-    html += 'should not be there. Be warned that quite some of these breakages '
-    html += 'are due to bugs in <a href="http://anonscm.debian.org/cgit/reproducible/diffoscope.git">diffoscope</a>.'
+    html += 'should not be there. Some of these breakages are caused by '
+    html += 'bugs in <a href="http://anonscm.debian.org/cgit/reproducible/diffoscope.git">diffoscope</a> '
+    html += 'while others are probably due to bugs in the scripts run by jenkins. '
     html += '<em>Please help making this page empty!</em></p>\n'
     breakages = gen_html()
     if breakages:
@@ -324,7 +325,7 @@ if __name__ == '__main__':
     else:
         html += '<p><b>COOL!!!</b> Everything is GOOD and not a single issue was '
         html += 'detected. <i>Enjoy!</i></p>'
-    title = 'Breakages on reproducible.debian.net'
+    title = 'Breakage on reproducible.debian.net'
     destfile = BASE + '/index_breakages.html'
     desturl = REPRODUCIBLE_URL + '/index_breakages.html'
     write_html_page(title, html, destfile, style_note=True)

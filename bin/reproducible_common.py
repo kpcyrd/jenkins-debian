@@ -138,7 +138,7 @@ html_header = Template("""<!DOCTYPE html>
 
 try:
     JOB_URL = os.environ['JOB_URL']
-except KeyError
+except KeyError:
     JOB_FOOTER = ''
 else:
     JOB_NAME = os.path.basename(JOB_URL[:-1])

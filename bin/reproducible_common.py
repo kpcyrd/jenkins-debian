@@ -136,10 +136,12 @@ html_header = Template("""<!DOCTYPE html>
   </head>
   <body $padding>""")
 
-if os.environ['JOB_URL'] == '':
-    JOB_FOOTER=''
-else:
+try:
     JOB_URL = os.environ['JOB_URL']
+except KeyError
+    JOB_URL = ''
+    JOB_FOOTER = ''
+else:
     JOB_NAME = os.path.basename(JOB_URL[:-1])
     JOB_FOOTER = 'This page was built by the jenkins job <a href="'+JOB_URL+'">'
     JOB_FOOTER += JOB_NAME+'</a> which is configured via this '

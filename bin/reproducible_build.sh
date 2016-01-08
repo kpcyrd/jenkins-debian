@@ -675,7 +675,8 @@ check_buildinfo() {
 		echo "$(date -u) - The build environment varies according to the two .buildinfo files, probably due to mirror update. Doing the first build on $NODE1 again."
 		echo "============================================================================="
 		echo
-		remote_build 1 $NODE1 $PORT1
+		get_node_ssh_port $NODE1
+		remote_build 1 $NODE1 $PORT
 		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
 		diff $TMPFILE1 $TMPFILE2
@@ -692,7 +693,8 @@ check_buildinfo() {
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
-	remote_build 1 $NODE1 $PORT1
+	get_node_ssh_port $NODE1
+	remote_build 1 $NODE1 $PORT
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
@@ -701,7 +703,8 @@ build_rebuild() {
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
-		remote_build 2 $NODE2 $PORT2
+		get_node_ssh_port $NODE2
+		remote_build 2 $NODE2 $PORT
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
@@ -724,6 +727,7 @@ DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 JOB="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
+PORT=0
 
 #
 # determine mode
@@ -753,11 +757,6 @@ elif [ "$2" != "" ] ; then
 	MODE="master"
 	NODE1="$(echo $1 | cut -d ':' -f1).debian.net"
 	NODE2="$(echo $2 | cut -d ':' -f1).debian.net"
-	PORT1="$(echo $1 | cut -d ':' -f2)"
-	PORT2="$(echo $2 | cut -d ':' -f2)"
-	# if no port is given, assume 22
-	if [ "$NODE1" = "${PORT1}.debian.net" ] ; then PORT1=22 ; fi
-	if [ "$NODE2" = "${PORT2}.debian.net" ] ; then PORT2=22 ; fi
 	# overwrite ARCH for remote builds
 	for i in $ARCHS ; do
 		# try to match ARCH in nodenames

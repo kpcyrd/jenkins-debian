@@ -47,7 +47,9 @@ SUITES="testing unstable experimental"
 ARCHS="amd64 armhf"
 
 # define Debian build nodes in use
-BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-amd64.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net opi2a-armhf-rb.debian.net" # these also needs to be defined in bin/jenkins_master_wrapper.sh
+. /srv/jenkins/bin/jenkins_node_definitions.sh
+
+# variables on the nodes we are interested in
 BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also needs to be defined in bin/reproducible_info.sh
 
 # existing usertags in the Debian BTS

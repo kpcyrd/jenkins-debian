@@ -280,7 +280,7 @@ for i in $PBUIDS ; do
 	done
 done
 if [ -s $RESULT ] ; then
-	for PROCESS in $(cat $RESULT | cut -d " " -f1 | xargs echo) ; do
+	for PROCESS in $(cat $RESULT | cut -d " " -f1 | grep -v ^UID | xargs echo) ; do
 		AGE=$(ps -p $PROCESS -o etimes= || echo 0)
 		# a single build may only take half a day, so...
 		if [ $AGE -gt $(( 12*60*60 )) ] ; then

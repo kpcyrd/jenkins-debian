@@ -70,15 +70,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** redirect jenkins.debian.net to jenkins.debian.org - reproducible.debian.net will stay where it is.
 * party!
 
-===== leftover notes for jenkins.d.o migration
-
-* livescreenshot plugin (we use a patched version) is ok:
-** jenkins maintenance probably is best done by jenkins users (as opposed to DSA) so it's up to us what plugins we install
-* chroot jobs should use real schroot sessions, and not just use schroot as poor chroot(8) replacement. some links:
-** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
-** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
-** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
-
 ==== proper backup
 
 * postponed til we run on .debian.org
@@ -103,7 +94,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === jenkins-job-builder related
 
-* investigate whether its possible nowadays to let it delete jobs which were removed.. nope. though it is possible to compare the list of all jobs which should be generated with those which are there and delete those which should not.
+* investigate whether its possible nowadays to let it delete jobs which were removed.. nope. But there is a Makefile now which will find zombies…
 * yaml should be refactored, lots of duplication in there. this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 
 === debugging job runs should be made easy
@@ -203,7 +194,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== reproducible Debian installation
 
 * see https://wiki.debian.org/ReproducibleInstalls
-* add the test (something weekly or so)
+* run this as a new job
 
 ==== reproducible coreboot
 
@@ -352,6 +343,9 @@ notes on source and binary versions:
 === chroot-installation_*
 
 * use schroot for chroot-installation, stop using plain chroot everywhere
+** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
+** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
+** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
 * add alternative tests with aptitude and possible apt
 * split etc/schroot/default
 * inform debian-devel@l.d.o or -qa@?
@@ -454,6 +448,8 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 * nthykier wants to be able to rebuild all of sid to test how changes to eg lintian, debhelper, cdbs, gcc affect the archive:
 * h01ger> | nthykier: so a.) rebuild everything from sid plus custom repo. b.) option to only rebuild a subset, like all rdepends or all packages build-depending on something
 * h01ger> | and c.) only build once, not continously and d.) enable more cores+ram on demand to build faster
+
+* have a job to trigger such a rebuild on AWS?
 
 === Test them all
 

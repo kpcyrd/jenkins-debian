@@ -6,7 +6,7 @@
 
 OPENWRT_GIT_REPO=https://github.com/lynxis/openwrt
 OPENWRT_GIT_BRANCH=reproducible
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

@@ -32,7 +32,7 @@ bootstrap() {
 	echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
 	curl -O $BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ
 	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
-	mv $SCHROOT_BASE/root.x86_$SCHROOT_BASE/$TARGET
+	mv $SCHROOT_BASE/root.x86 $SCHROOT_BASE/$TARGET
 	rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."

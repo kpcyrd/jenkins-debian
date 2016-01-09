@@ -15,3 +15,4 @@ warning /Warning: too much difference for .+, aborting. Please investigate and u
 warning /Warning: couldn't delete old files from.+/
 warning /Warning: failed to update the .+ schroot./
 warning /Warning: failed to update Archlinux schroot./
+warning /Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled.+/

@@ -170,7 +170,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# only grep through the last 5h (300 minutes) of builds...
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
-	echo "$(date -u) - Rescheduling failed builds."
+	echo "$(date -u) - Rescheduling failed builds due to network issues."
 	FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
@@ -191,6 +191,32 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 					TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
 				done
 				schedule_packages $TO_SCHEDULE
+			done
+		done
+		DIRTY=true
+	fi
+
+	#
+	# find failed builds due to diffoscope schroot problems and reschedule them
+	#
+	# only grep through the last 5h (300 minutes) of builds...
+	# (ignore "*None.rbuild.log" because these are build which were just started)
+	# this job runs every 4h
+	echo "$(date -u) - Rescheduling failed builds due to diffoscope schroot issues."
+	FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: 10mount: error: Directory' {} \; || true)
+	if [ ! -z "$FAILED_BUILDS" ] ; then
+		echo
+		echo "Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled now:"
+		echo "$FAILED_BUILDS"
+		echo "Actually not doing so yet… please investigate manually."
+		echo
+		echo "Rescheduling packages: "
+		REQUESTER="jenkins maintenance job"
+		REASON="maintenance reschedule: reschedule builds which failed due to diffoscope schroot errors"
+		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
+			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
+				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
+				echo "_would_ schedule_packages $CANDIDATES"
 			done
 		done
 		DIRTY=true

@@ -31,9 +31,9 @@ bootstrap() {
 	BOOTSTRAP_TAR_GZ=$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
 	echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
 	curl -O $BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ
-	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
-	mv root.x86_64/* $SCHROOT_TARGET || true # proc and sys have 0555 perms, thus mv will fail... also see below
-	rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz root.x86_64 -rf
+	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
+	mv $SCHROOT_BASE/root.x86_$SCHROOT_BASE/$TARGET
+	rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
 	sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
@@ -45,8 +45,7 @@ bootstrap() {
 		source-root-users=jenkins
 		union-type=aufs
 	__END__
-	# finally, put it in place
-	mv $SCHROOT_TARGET $SCHROOT_BASE/$TARGET
+	# finally, create missing dirs
 	mkdir $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
 	chmod 555 $SCHROOT_BASE/$TARGET/proc $SCHROOT_BASE/$TARGET/sys
 	# mktemp creates directories with 700 perms

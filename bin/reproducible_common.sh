@@ -365,7 +365,16 @@ write_explaination_table() {
 	fi
 	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>hostname</td><td>one of: $(for i in $BUILD_NODES ; do echo '<br />&nbsp;&nbsp;' ; echo $i | cut -d '.' -f1 ; done)</td><td>i-capture-the-hostname</td></tr>"
+		write_page "<tr><td>hostname</td><td>one of:"
+		for a in ${ARCHS} ; do
+			for i in $(echo $BUILD_NODES | sed -s 's# #\n#g' | sort -u) ; do
+				if [ "$(echo $i | grep $a)" ] ; then
+					write_page "<br />&nbsp;&nbsp;"
+					write_page "$(echo $i | cut -d '.' -f1)"
+				fi
+			done
+		done
+		write_page "</td><td>i-capture-the-hostname</td></tr>"
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	else
 		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"

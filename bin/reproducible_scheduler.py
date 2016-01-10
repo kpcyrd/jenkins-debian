@@ -71,9 +71,9 @@ LIMITS = {
             'experimental': {'*': 440},
         },
         'armhf': {
-            'testing': {'*': 200},
-            'unstable': {'*': 200},
-            'experimental': {'*': 200},
+            'testing': {'*': 175},
+            'unstable': {'*': 175},
+            'experimental': {'*': 175},
         },
     },
     'new': {

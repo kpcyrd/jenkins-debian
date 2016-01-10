@@ -94,7 +94,7 @@ if [ $TOTAL -lt 1 ] ; then
 fi
 
 # main
-if [ "$1" != "--revert" ] ; then
+if ! $REVERT ; then
 	blacklist_packages
 else
 	revert_blacklisted_packages
@@ -115,6 +115,6 @@ echo
 echo "Probably edit notes.git/packages.yml now and enter/remove reasons for blacklisting there."
 
 # finally, let's re-schedule them if the blacklisted was reverted
-if [ "$1" = "--revert" ] ; then
+if $REVERT ; then
 	/srv/jenkins/bin/reproducible_schedule_on_demand.sh -s $SUITE -a $ARCH $PACKAGES
 fi

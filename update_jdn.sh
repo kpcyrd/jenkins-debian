@@ -64,6 +64,7 @@ for user in helmut holger mattia lunar philh ; do
 		# philh only wants to test stuff
 		continue
 	fi
+	# actually create the user
 	if ! getent passwd $user > /dev/null ; then
 		if [ "$user" = "mattia" ] ; then
 			usershell=/bin/zsh
@@ -71,12 +72,16 @@ for user in helmut holger mattia lunar philh ; do
 			usershell=/bin/bash
 		fi
 		sudo adduser --gecos "" --shell "$usershell" --disabled-password $user
-		if [ "$user" = "holger" ] ; then
-			sudo usermod -G jenkins,jenkins-adm,sudo,adm $user
-		elif [ "$user" != "lunar" ] ; then
-			sudo usermod -G jenkins,jenkins-adm $user
-		fi
 	fi
+	# put user in groups
+	if [ "$HOSTNAME" = "jenkins" ] && [ "$user" = "lunar" ] ; then
+		extra_groups="reproducible"
+	elif [ "$HOSTNAME" = "jenkins" ] ; then
+		extra_groups="reproducible,jenkins,jenkins-adm,sudo,adm"
+	else
+		extra_groups="jenkins,jenkins-adm,sudo,adm"
+	fi
+	sudo usermod -G $extra_groups $user
 done
 
 sudo mkdir -p /srv/workspace

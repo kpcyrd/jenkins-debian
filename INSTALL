@@ -71,32 +71,11 @@ cd jenkins.debian.net
 ./update_jdn.sh
 ----
 
-'jenkins-job-builder' and 'vncdotool' are the only softwares which are not installed by packages and are not covered by this script.
+'vncdotool' is the only software which is not installed by packages and is not covered by this script.
 
-=== Installing jenkins-job-builder
+=== IRC notification configuration using kgb-client
 
-* backport python-jenkins 0.4.8-2 for jessie:
-** remove python3-unittest from build-depends
-** build
-* backport jenkins-job-builder 1.3.0-5 for jessie:
-** just build it.
-
-* We are working on using packages uploaded to jessie-backports.
-
-==== Using jenkins-job-builder
-
-'update_jdn.sh' takes care of this too, so this is just a quick run through. Make sure to also look at the upstream documentation at http://ci.openstack.org/jenkins-job-builder/
-
-* run `cd /srv/jenkins/job-cfg ; jenkins-job-builder update .` to update jobs
-* for testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-job-builder test . -o test-output/ ; ls test-output/`
-
-=== Installing kgb-client
-
-Rebuild the 'kgb-bot' source package from sid on whezzy and then install the 'kbg-client' package. Configuration is done through 'update_jdn.sh'.
-
-==== IRC notification configuration
-
-The jenkins jobs are configured to send email to 'jenkins+$IRC_CHANNEL' (like 'jenkins+debian-qa'), this is parsed by a script ('/srv/jenkins/bin/email2irc.sh') run through 'procmail' which then in turn notifies 'kgb-client', which notfies 'kgb-server'(s) on the internet, which are the bots notifying the IRC channels. 'kbg-client' needs to be '>= 1.24'.
+The jenkins jobs are configured to send email to 'jenkins+$IRC_CHANNEL' (like 'jenkins+debian-qa'), this is parsed by a script ('/srv/jenkins/bin/email2irc.sh') run through 'procmail' which then in turn notifies 'kgb-client', which notfies 'kgb-server'(s) on the internet, which are the bots notifying the IRC channels.
 
 The Jenkins EMail notification plugin is used as its state tracking is best (and the Jenkins IRC plugin is way too powerful).
 
@@ -112,6 +91,14 @@ python setup.py install
 === munin
 
 link://munin-monitoring[Munin] is installed, running with link:https://jenkins.debian.net/munin/[jenkins plugins] not yet published elsewhere.
+
+=== Using jenkins-job-builder
+
+'update_jdn.sh' takes care of this too, so this is just a quick run through. Make sure to also look at the upstream documentation at http://ci.openstack.org/jenkins-job-builder/
+
+* run `cd /srv/jenkins/job-cfg ; jenkins-job-builder update .` to update jobs
+* for testing: `cd /srv/jenkins/job-cfg ; rm test-output/ -r ; mkdir test-output ; jenkins-job-builder test . -o test-output/ ; ls test-output/`
+
 
 === Backup
 

@@ -329,8 +329,10 @@ if [ -f /etc/debian_version ] ; then
 			sudo apt-get install -t jessie-backports linux-image-amd64
 		fi
 		# only needed on the main node
-		if [ "$HOSTNAME" = "jenkins" ] ; then
-			sudo apt-get install -t jessie-backports ffmpeg libav-tools
+		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+			sudo apt-get install -t jessie-backports jenkins-job-builder
+		elif [ "$HOSTNAME" = "jenkins" ] ; then
+			sudo apt-get install -t jessie-backports ffmpeg libav-tools jenkins-job-builder
 		fi
 		explain "packages installed."
 	else

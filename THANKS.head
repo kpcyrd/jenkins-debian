@@ -2,7 +2,7 @@
 
 === Sponsors
 
- * The (virtualized) hardware is sponsored since October 2012 by link:https://www.profitbricks.co.uk[Profitbricks] - Thanks a lot! Currently we are using:
+ * Since October 2012 jenkins.debian.net has been running on (virtualized) hardware sponsored by link:https://www.profitbricks.co.uk[Profitbricks] - Thanks a lot! Currently we are using:
  ** 23 cores and 64 GB memory for jenkins.debian.net
  ** 18 cores and 48 GB memory for profitbricks-build1-amd64.debian.net
  ** 18 cores and 48 GB memory for profitbricks-build2-amd64.debian.net
@@ -11,15 +11,15 @@
  ** 17 cores and 48 GB memory for profitbricks-build5-amd64.debian.net
  ** 17 cores and 48 GB memory for profitbricks-build6-amd64.debian.net
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net (also running on Profitbricks virtual hardware)
- * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] is kindly providing and hosting 13 'armhf' systems:
+ * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] provides and hosts 13 'armhf' systems:
  ** eight quad-cores with 2 GB RAM each,
  ** two quad-cores with 1 GB RAM and
  ** three dual-cores with 1 GB RAM.
- * link:https://letsencrypt.org[Let's encrypt] kindly provides free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
+ * link:https://letsencrypt.org[Let's encrypt] provides free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
 
 ==== Past sponsors
 
- * link:https://globalsign.com[GlobalSign] from January 2015 to January 2016 kindly provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
+ * link:https://globalsign.com[GlobalSign] from January 2015 to January 2016 provided free of charge SSL certificates for both jenkins.debian.net and reproducible.debian.net.
 
 === Contributors
 

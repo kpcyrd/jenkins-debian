@@ -71,9 +71,9 @@ LIMITS = {
             'experimental': {'*': 440},
         },
         'armhf': {
-            'testing': {'*': 175},
-            'unstable': {'*': 175},
-            'experimental': {'*': 175},
+            'testing': {'*': 150},
+            'unstable': {'*': 150},
+            'experimental': {'*': 150},
         },
     },
     'new': {
@@ -107,15 +107,15 @@ LIMITS = {
             'experimental': {1: (300, 70), 2: (500, 50), '*': 0},
         },
         'armhf': {
-            'testing': {1: (300, 200), 2: (500, 125), '*': 0},
-            'unstable': {1: (300, 200), 2: (500, 125), '*': 0},
-            'experimental': {1: (300, 30), 2: (500, 15), '*': 0},
+            'testing': {1: (300, 200), 2: (600, 125), '*': 0},
+            'unstable': {1: (300, 200), 2: (600, 125), '*': 0},
+            'experimental': {1: (300, 30), 2: (600, 15), '*': 0},
         }
     }
 }
 
 # only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 7, 'armhf': 42}
+MINIMUM_AGE = {'amd64': 7, 'armhf': 28}
 
 
 class Limit:

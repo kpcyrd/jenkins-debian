@@ -484,7 +484,7 @@ def schedule_404_versions(arch, total):
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
-        msg += ' versions with status \'404\''
+        msg += ' with status \'404\''
     else:
         msg = ''
     return packages, msg

@@ -126,10 +126,10 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffoscoppe/schroot problems"
 ** add check if package to be build has been blacklisted since scheduling and abort
 ** on SIGTERM, also cleanup on remote build nodes there! (via ssh &)
-** fix: "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' - maybe by making sure the cause is gone… https://jenkins.debian.net/job/reproducible_builder_amd64_14/909/ is an example for that
-** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
+** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those
 
 * higher prio:
+** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 ** pkg pages
 *** new table in pkg/test history page: schedule - if that package is currently scheduled
 *** add link to pkg set(s) if pkg is member of some
@@ -211,6 +211,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible OpenWrt
 
+* test trunk again and not lynxis' fork
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
 * incorporate popular third-party ("external feeds") packages?

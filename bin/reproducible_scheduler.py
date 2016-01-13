@@ -66,19 +66,19 @@ MAXIMA = {'amd64': 750, 'armhf': 600}
 LIMITS = {
     'untested': {
         'amd64': {
-            'testing': {'*': 440},
+            'testing': {'*': 0},
             'unstable': {'*': 440},
             'experimental': {'*': 440},
         },
         'armhf': {
-            'testing': {'*': 177},
+            'testing': {'*': 0},
             'unstable': {'*': 177},
             'experimental': {'*': 177},
         },
     },
     'new': {
         'amd64': {
-            'testing': {1: (100, 250), 2: (200, 200), '*': 0},
+            'testing': {1: (100, 0), 2: (200, 0), '*': 0},
             'unstable': {1: (100, 250), 2: (200, 200), '*': 150},
             'experimental': {1: (100, 250), 2: (200, 200), '*': 150},
         },
@@ -90,7 +90,7 @@ LIMITS = {
     },
     'ftbfs+depwait': {
         'amd64': {
-            'testing': {1: (250, 40), 2: (350, 20), '*': 0},
+            'testing': {1: (250, 0), 2: (350, 0), '*': 0},
             'unstable': {1: (250, 40), 2: (350, 20), '*': 0},
             'experimental': {1: (250, 40), 2: (350, 20), '*': 0},
         },
@@ -102,7 +102,7 @@ LIMITS = {
     },
     'old': {
         'amd64': {
-            'testing': {1: (300, 800), 2: (500, 666), '*': 0},
+            'testing': {1: (300, 0), 2: (500, 0), '*': 0},
             'unstable': {1: (300, 1000), 2: (500, 888), '*': 0},
             'experimental': {1: (300, 70), 2: (500, 50), '*': 0},
         },
@@ -478,7 +478,11 @@ def schedule_404_versions(arch, total):
         log.info('Requesting 404 packages in %s/%s...',
                  suite, arch)
 	# hard code the limit to 42 as 404s rarely happen anyway
-        packages[suite] = query_404_versions(suite, arch, 42)
+	if suite != 'testing':
+            temp_limit = 42
+        else
+            temp_limit = 0
+        packages[suite] = query_404_versions(suite, arch, temp_limit)
         log.info('Received ' + str(len(packages[suite])) +
                  ' 404 packages in ' + suite + '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')

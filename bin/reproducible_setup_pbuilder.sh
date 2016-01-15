@@ -132,7 +132,7 @@ if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	else
 		echo "$BASETGZ outdated, creating a new one..."
 	fi
-	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev debhelper
+	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev
 else
 	echo "$BASETGZ not old enough, doing nothing..."
 fi

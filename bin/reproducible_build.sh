@@ -555,6 +555,7 @@ export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 EOF
 	# remember to change the sudoers setting if you change the following command
+	# FIXME: call with --buildinfo-identifier=dummy instead
 	( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
 	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
@@ -598,6 +599,7 @@ EOF
 	# remember to change the sudoers setting if you change the following command
 	# (the 2nd build gets a longer timeout trying to make sure the first build
 	# aint wasted when then 2nd happens on a highly loaded node)
+	# FIXME: call with --buildinfo-identifier=dummy instead
 	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
 		/usr/bin/unshare --uts -- \
 		/usr/sbin/pbuilder --build \

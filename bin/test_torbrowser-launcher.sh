@@ -112,7 +112,12 @@ upgrade_to_package_build_from_git() {
 	# GIT_URL is set by jenkins
 	echo "$(date -u ) - building Debian package based on branch $BRANCH from $GIT_URL."
 	# build package
-	schroot --run-session -c $SESSION --directory $TMPDIR/git -- gbp buildpackage --git-ignore-branch --git-upstream-tree=origin/master -uc -us
+	if [ "$BRANCH" = "debian/jessie" ] ; then
+		local UPSTREAM_TREE=v0.1.9
+	else
+		local UPSTREAM_TREE=origin/master
+	fi
+	schroot --run-session -c $SESSION --directory $TMPDIR/git -- gbp buildpackage --git-ignore-branch --git-upstream-tree=$UPSTREAM_TREE -uc -us
 	# install it
 	local DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
 	local CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)

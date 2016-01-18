@@ -39,6 +39,8 @@ Then, for each category (totally _untested_ packages, _new_ versions,
 _ftbfs+depwait_ packages and _old_ versions) it depends on how many packages are
 already scheduled in that category, in a 3 steps process.
 
+Only when scheduling old versions MINIMUM_AGE is respected.
+
 
 Let's go by an example:
     'unstable': {1: (250, 40), 2: (350, 20), '*': 5},
@@ -58,11 +60,14 @@ else:
 So, the 3rd step happens only when there are more than 350 packages queued up.
 
 
-Finally, MINIMUM_AGE is respected when scheduling old versions.
+LIMITS_404 defines how many packages with status 404 are rescheduled at max.
 
 """
+# only old packages older than this will be rescheduled
+MINIMUM_AGE = {'amd64': 7, 'armhf': 28}
+# maximum queue size, see explainations above
 MAXIMA = {'amd64': 750, 'armhf': 600}
-
+# limits, see explainations above
 LIMITS = {
     'untested': {
         'amd64': {
@@ -113,9 +118,8 @@ LIMITS = {
         }
     }
 }
-
-# only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 7, 'armhf': 28}
+# maximum amount of packages with status 404 which will be rescheduled
+LIMIT_404 = 255
 
 
 class Limit:
@@ -477,8 +481,7 @@ def schedule_404_versions(arch, total):
     for suite in SUITES:
         log.info('Requesting 404 packages in %s/%s...',
                  suite, arch)
-	# hard code the limit to 42 as 404s rarely happen anyway
-        packages[suite] = query_404_versions(suite, arch, 42)
+        packages[suite] = query_404_versions(suite, arch, LIMIT_404)
         log.info('Received ' + str(len(packages[suite])) +
                  ' 404 packages in ' + suite + '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')

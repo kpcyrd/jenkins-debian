@@ -161,7 +161,7 @@
                               my_postfix:  ' python python-gtk2 python-psutil python-twisted python-lzma gnupg wmctrl tor' }
             my_description: 'Setup {dist}/amd64 schroot for testing torbrowser-launcher.'
             my_timed: '42 {my_hour} * * {my_weekday}'
-            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-{dist} {dist}{my_prefix} ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin figlet build-essential fakeroot devscripts git-buildpackage python-all debhelper dh-apparmor lsb-release iceweasel{my_postfix}'
+            my_shell: '/srv/jenkins/bin/schroot-create.sh torbrowser-launcher torbrowser-launcher-{dist} {dist}{my_prefix} ca-certificates awesome dbus xterm x11-utils x11-xserver-utils feh libnotify-bin figlet build-essential fakeroot devscripts git-buildpackage lintian python-all debhelper dh-apparmor lsb-release iceweasel{my_postfix}'
         - '{name}_test_on_{dist}_amd64{opt_name}':
             opt_name: ''
             opt_arg: ''

@@ -541,8 +541,8 @@ def scheduler(arch):
         schedule_packages(to_be_scheduled)
     # update the scheduled page
     generate_schedule(arch)  # from reproducible_html_indexes
-    # build the kgb message text
-    message = 'Scheduled in ' + '+'.join(SUITES) + ' (' + arch + '): '
+    # build the message text for this arch
+    message = ' - ' + arch + ': '
     if msg_untested:
         message += msg_untested + ', '
     if msg_new:
@@ -557,15 +557,13 @@ def scheduler(arch):
     message += ' for ' + str(sum(total))
     message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
     message += ' packages in total.'
+    log.info('Scheduling for architecture ' + arch + ' done.')
+    log.info('--------------------------------------------------------------')
     # only notifiy irc if there were packages scheduled in any suite
     for x in SUITES:
         if len(untested[x])+len(new[x])+len(old[x])+len(old_ftbfs_and_depwait[x]) > 0:
-            log.info(message)
-            irc_msg(message)
-            break
-    log.info('Scheduling for architecture ' + arch + ' done.')
-    log.info('--------------------------------------------------------------')
-
+            return message
+    return ''
 
 if __name__ == '__main__':
     log.info('Updating sources tables for all suites.')
@@ -575,6 +573,7 @@ if __name__ == '__main__':
     query = 'SELECT count(*) ' + \
             'FROM schedule AS p JOIN sources AS s ON s.id=p.package_id ' + \
             'WHERE s.architecture="{}"'
+    message = ''
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)
         overall = int(query_db(query.format(arch))[0][0])
@@ -583,4 +582,9 @@ if __name__ == '__main__':
             continue
         log.info('%s packages already scheduled for %s, probably scheduling some '
                  'more...', overall, arch)
-        scheduler(arch)
+        message += scheduler(arch)
+    if message != '':
+        # build the kgb message text
+        message = 'Scheduled in ' + '+'.join(SUITES) + ':' + message
+        log.info(message)
+        irc_msg(message)

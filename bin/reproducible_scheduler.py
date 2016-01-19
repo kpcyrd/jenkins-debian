@@ -31,7 +31,7 @@ How the scheduler chooses which limit to apply, based on the MAXIMA
 and LIMIT arrays:
 
 First, the scheduler is only started for an architecture if the number of
-currently scheduled packages is lower than MAXIMA*2. Then if the number of
+currently scheduled packages is lower than MAXIMA*3. Then if the number of
 scheduled packages is higher than MAXIMA, only new versions are scheduled...
 
 
@@ -580,7 +580,7 @@ if __name__ == '__main__':
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)
         overall = int(query_db(query.format(arch))[0][0])
-        if overall > (MAXIMA[arch]*2):
+        if overall > (MAXIMA[arch]*3):
             log.info('%s packages already scheduled for %s, nothing to do.', overall, arch)
             continue
         log.info('%s packages already scheduled for %s, probably scheduling some '

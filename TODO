@@ -314,6 +314,16 @@ notes on source and binary versions:
 ==== reproducible fdroid
 
 * https://f-droid.org/wiki/page/Build_Server_Setup
+* diskspace needs:
+----
+$ du -hd1 | sort -h | tail -n 6
+4.4G    ./android-sdk-linux_86
+8.1G    ./fdroidserver
+8.3G    ./.vagrant.d
+71G     ./VirtualBox VMs
+150G    ./fdroiddata
+242G    .
+----
 
 ==== reproducible...
 

@@ -373,6 +373,7 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 === torbrowser-launcher_*
 
 * fix "schroot session cleanup loop" in _common.sh to ignore other schroots
+* test download via system tor
 * test tbl in German
 * test tbl on i386
 * test alpha releases

@@ -313,18 +313,26 @@ notes on source and binary versions:
 
 ==== reproducible fdroid
 
-* create two jobs, 
-** bin/reproducible_setup_fdroid_buildserver.sh
-** bin/reproducible_build_fdroid_apk.sh
 
 * reproducible_setup_fdroid_buildserver.sh:
-** downloads pre build virtualbox image at first
-** ./makebuildserver is then used to run this image and update caches etc "inside"
+** git clone https://gitlab.com/fdroid/fdroidserver.git
+** ./makebuildserver
+*** this downloads a base debian image and all Android tarballs (SDK, NDK, Gradle...)
+*** then enters the image, installs all debian packages and Android stuff from the cached tarballs
+** cache is kept outside (~/.cache/fdroidserver) but installed inside
 
 * reproducible_build_fdroid_apk.sh
-** run ./makebuildserver --server to build inside the image
+** 1st run ./fdroid build some.app:vercode --server
+** 2nd run ./fdroid build some.app:vercode --server
+*** eg: org.fdroid.fdroid:98006
+*** or: "fdroid build -l org.fdroid.fdroid" to build the latest
+** run diffopscope on the results
 
-* https://f-droid.org/wiki/page/Build_Server_Setup
+* later, get a list of all available apps by listing fdroiddata/metadata/*.txt
+* later: switch reproducible_build_fdroid_apk.sh to F-Droid 'Verification Server'
+
+* also see https://f-droid.org/wiki/page/Build_Server_Setup
+
 * diskspace needs:
 ----
 $ du -hd1 | sort -h | tail -n 6

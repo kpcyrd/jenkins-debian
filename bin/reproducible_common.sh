@@ -222,7 +222,7 @@ write_page_header() {
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">email</a>,"
 		write_page "   and we care about free software in general,"
 		write_page "   so whether you are an upstream developer or working on another distribution, or have any other feedback - we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and testing of <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> has just begun, and there are plans to test F-Droid and Guix too, and more, if you contribute!"
+		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and testing of <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> has just begun, and there are plans to test <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_fdroid\">F-Droid</a> and Guix too, and more, if you contribute!"
 		write_page "</ul>"
 	fi
 	write_page "<ul><li>Have a look at:</li>"

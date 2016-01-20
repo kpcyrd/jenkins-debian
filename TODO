@@ -313,6 +313,17 @@ notes on source and binary versions:
 
 ==== reproducible fdroid
 
+* create two jobs, 
+** bin/reproducible_setup_fdroid_buildserver.sh
+** bin/reproducible_build_fdroid_apk.sh
+
+* reproducible_setup_fdroid_buildserver.sh:
+** downloads pre build virtualbox image at first
+** ./makebuildserver is then used to run this image and update caches etc "inside"
+
+* reproducible_build_fdroid_apk.sh
+** run ./makebuildserver --server to build inside the image
+
 * https://f-droid.org/wiki/page/Build_Server_Setup
 * diskspace needs:
 ----

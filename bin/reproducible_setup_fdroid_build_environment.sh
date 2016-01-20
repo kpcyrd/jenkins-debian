@@ -15,4 +15,5 @@ common_init "$@"
 
 # do I really want to run this?
 git clone https://gitlab.com/fdroid/fdroidserver.git
+cd fdroidserver
 ./makebuildserver 

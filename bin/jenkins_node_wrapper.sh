@@ -107,6 +107,8 @@ elif [[ "$*" =~ reproducible_freebsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_freebsd.sh ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_schroot_archlinux ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh ; croak "Exec failed";
+elif [[ "$*" =~ reproducible_setup_fdroid_build_environment ]] ; then
+	exec /srv/jenkins/bin/reproducible_setup_fdroid_build_environment.sh ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_mock_fedora-23_x86_64 ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64 ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

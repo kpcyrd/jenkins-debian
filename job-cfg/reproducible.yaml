@@ -549,6 +549,11 @@
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
+                - 'setup_fdroid_build_environment_profitbricks3':
+                    my_description: 'Setup a build environment for F-Droid.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks3'
             my_shell: '/srv/jenkins/bin/reproducible_{otherproject}.sh'
             my_hname: ''
 

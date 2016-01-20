@@ -326,8 +326,8 @@ download_and_launch() {
 	sleep 1
 	xvkbd -text "\r" > /dev/null 2>&1
 	sleep 2
-	# allow up up to 51 seconds to load the url
-	for i in $(seq 1 6) ; do
+	# allow up up to 76 seconds to load the url
+	for i in $(seq 1 8) ; do
 		sleep 5 ; sleep $i
 		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | grep -c -i "README" || true)
 		update_screenshot
@@ -339,7 +339,7 @@ download_and_launch() {
 	done
 	# for debugging
 	if [ $URL_LOADED -lt 4 ] ; then
-		echo "$(date -u) - URL_LOADED = '$URL_LOADED'"
+		echo "$(date -u) - URL_LOADED = '$URL_LOADED' so probably that page didnt load properly."
 	fi
 	BONUS_LEVEL_2=""
 	URL="https://www.debian.org"

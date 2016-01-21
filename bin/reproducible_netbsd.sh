@@ -60,7 +60,7 @@ git log -1
 #                 different switches to make two builds from the same source tree
 #                 result in the same build results.
 export MKREPRO="yes"
-MK_TIMESTAMP=$(git show --pretty=format:%ai|head -1|date -u "+%s")
+MK_TIMESTAMP=$(git log -1 --pretty=%ct)
 
 echo "============================================================================="
 echo "$(date -u) - Building NetBSD ${NETBSD_VERSION} - first build run."

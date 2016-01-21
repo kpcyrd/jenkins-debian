@@ -325,7 +325,7 @@ if __name__ == '__main__':
     else:
         html += '<p><b>COOL!!!</b> Everything is GOOD and not a single issue was '
         html += 'detected. <i>Enjoy!</i></p>'
-    title = 'Breakage on reproducible.debian.net'
+    title = 'Breakage on the Debian pages of tests.reproducible-builds.org'
     destfile = BASE + '/index_breakages.html'
     desturl = REPRODUCIBLE_URL + '/index_breakages.html'
     write_html_page(title, html, destfile, style_note=True)

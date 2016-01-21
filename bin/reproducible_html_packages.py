@@ -46,10 +46,16 @@ ${suites_links}
     <ul class="reproducible-links">
         Reproducible Builds projects links
         <li>
-            reproducible.debian.net - <a href="%s">Dashboard</a><br />
+            tests.reproducible-builds.org - <a href="%s">Debian Dashboard</a><br />
             Reproducible Debian - <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
             Reproducible-builds.org - <a href="https://Reproducible-builds.org/docs/">HowTo</a><br />
-            <a href="https://Reproducible-builds.org">Reproducible-builds.org</a>
+            <a href="https://Reproducible-builds.org">Reproducible-builds.org</a><br />
+            Reproducible <a href="https://tests.reproducible-builds.org/archlinux/">Archlinux</a> /
+            <a href="https://tests.reproducible-builds.org/coreboot/">coreboot</a> /
+            <a href="https://tests.reproducible-builds.org/fedora/">Fedora</a> /
+            <a href="https://tests.reproducible-builds.org/freebsd/">FreeBSD</a> /
+            <a href="https://tests.reproducible-builds.org/netbsd/">NetBSD</a> /
+            <a href="https://tests.reproducible-builds.org/openwrt/">OpenWrt</a>
         </li>
     </ul>
 </header>

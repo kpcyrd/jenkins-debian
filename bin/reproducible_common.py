@@ -68,7 +68,7 @@ RBUILD_PATH = BASE + RBUILD_URI
 HISTORY_PATH = BASE + HISTORY_URI
 BUILDINFO_PATH = BASE + BUILDINFO_URI
 
-REPRODUCIBLE_URL = 'https://reproducible.debian.net'
+REPRODUCIBLE_URL = 'https://tests.reproducible-builds.org'
 JENKINS_URL = 'https://jenkins.debian.net'
 
 parser = argparse.ArgumentParser()

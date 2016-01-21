@@ -65,7 +65,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** as we dont want irc nor mail notifications for this during the migration, we should disable those with an easily revertable commit before actual deployment
 *** then rename jenkins.debian.net to profitbricks-build0-amd64 - and switch all the jobs which used to run on the master node on that node, which already has the right sudoers, usercontent/reproducible/ and reproducible.db
 *** some authorized_keys will also need to be adopted for the change of IP address from jenkins.d.n to jenkins.d.o
-*** redirect jenkins.debian.net to jenkins.debian.org - reproducible.debian.net will stay where it is.
+*** redirect jenkins.debian.net to jenkins.debian.org - tests.reproducible-builds.org will stay where it is.
 * party!
 
 ==== proper backup
@@ -172,6 +172,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** move "untested" field in stats table too? (as in csv output...)
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
 ** maintenance.sh: delete the history pages once a page has been removed from all suites+archs
+** reproducible.debian.net rename: rgrep all the files…
 ** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
 ** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
 * support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL

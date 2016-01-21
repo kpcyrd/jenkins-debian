@@ -133,9 +133,9 @@ Installation tests inside chroot environments.
 
 * See https://wiki.debian.org/ReproducibleBuilds to learn more about "Reproducible Builds" in Debian and beyond.
 
-* Several jobs are being used to assemble the website https://reproducible.debian.net which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in an SQLite database which can be downloaded from https://reproducible.debian.net/reproducible.db. (That copy is updated every four hours.)
+* Several jobs are being used to assemble the website https://tests.reproducible-builds.org which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in an SQLite database which can be downloaded from https://reproducible.debian.net/reproducible.db. (That copy is updated every four hours.)
 
-* The (current) purpose of https://reproducible.debian.net is to show the prospects of reproducible builds for Debian. IOW: this is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project!
+* The (current) purpose of https://tests.reproducible-builds.org is to show the prospects of reproducible builds for Debian - and six other projects currently. This is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project for Debian!
 
 * Currently, three suites are tested on 'amd64' and 'armhf' architectures: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through concurrent builder jobs, 32 for 'amd64' and 34 for 'armhf', which are each constantly testing packages and saving the results of these tests.
 
@@ -188,7 +188,7 @@ usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
 
 * Job configuration is at the usual location for 'jenkins.debian.net': there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.
 
-* Finally, there are also jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt], link:http://www.netbsd.org/[NetBSD] and https://www.freebsd.org/[FreeBSD] projects. The results of the tests can be seen respectively at https://reproducible.debian.net/coreboot/, https://reproducible.debian.net/openwrt/, https://reproducible.debian.net/netbsd/ and https://reproducible.debian.net/freebsd/.
+* Finally, there are also jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt], link:http://www.netbsd.org/[NetBSD] and https://www.freebsd.org/[FreeBSD] projects. The results of the tests can be seen respectively at https://tests.reproducible-builds.org/coreboot/, https://tests.reproducible-builds.org/openwrt/, https://tests.reproducible-builds.org/netbsd/ and https://tests.reproducible-builds.org/freebsd/.
 
 
 === jenkins.d.n jobs

@@ -313,7 +313,6 @@ notes on source and binary versions:
 
 ==== reproducible fdroid
 
-
 * reproducible_setup_fdroid_buildserver.sh:
 ** git clone https://gitlab.com/fdroid/fdroidserver.git
 ** ./makebuildserver
@@ -328,6 +327,9 @@ notes on source and binary versions:
 *** or: "fdroid build -l org.fdroid.fdroid" to build the latest
 ** run diffopscope on the results
 
+* let froidserver.git trigger the setup job
+* make setup job fail, when a build job is running
+* make build job wait ("forever"), when a setup job is running
 * later, get a list of all available apps by listing fdroiddata/metadata/*.txt
 * later: switch reproducible_build_fdroid_apk.sh to F-Droid 'Verification Server'
 

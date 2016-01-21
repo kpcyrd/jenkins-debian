@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -60,6 +60,7 @@ git log -1
 #                 different switches to make two builds from the same source tree
 #                 result in the same build results.
 export MKREPRO="yes"
+MK_TIMESTAMP=$(git show --pretty=format:%ai|head -1|date -u "+%s")
 
 echo "============================================================================="
 echo "$(date -u) - Building NetBSD ${NETBSD_VERSION} - first build run."
@@ -68,7 +69,7 @@ export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
 for MACHINE in $MACHINES ; do
 	ionice -c 3 \
-		./build.sh -j $NUM_CPU -U -u -m ${MACHINE} release
+		./build.sh -j $NUM_CPU -V MKREPRO_TIMESTAMP=$MK_TIMESTAMP -U -u -m ${MACHINE} release
 	# save results in b1
 	save_netbsd_results b1 ${MACHINE}
 	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
@@ -98,7 +99,7 @@ NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 for MACHINE in $MACHINES ; do
 	ionice -c 3 \
 		linux64 --uname-2.6 \
-		./build.sh -j $NEW_NUM_CPU -U -u -m ${MACHINE} release
+		./build.sh -j $NEW_NUM_CPU -V MKREPRO_TIMESTAMP=$MK_TIMESTAMP -U -u -m ${MACHINE} release
 	# save results in b2
 	save_netbsd_results b2 ${MACHINE}
 	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
@@ -202,7 +203,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} using ${DIFFOSCOPE}.</p>"
+write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} with MKREPRO=yes and MKREPRO_TIMESTAMP=$MK_TIMESTAMP and were compared using ${DIFFOSCOPE}.</p>"
 write_explaination_table NetBSD
 cat $BAD_SECTION_HTML >> $PAGE
 cat $GOOD_SECTION_HTML >> $PAGE

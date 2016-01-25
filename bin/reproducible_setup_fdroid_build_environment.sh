@@ -13,7 +13,19 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
+# make sure we have the vagrant box image cached
+test -e ~/.cache/fdroidserver || mkdir -p ~/.cache/fdroidserver
+cd ~/.cache/fdroidserver
+wget --continue https://f-droid.org/jessie32.box || true
+echo "ff6b0c0bebcb742783becbc51a9dfff5a2a0a839bfcbfd0288dcd3113f33e533  jessie32.box" > jessie32.box.sha256
+sha256sum -c jessie32.box.sha256
+
+# wipe the whole vagrant setup and start from scratch
+export VAGRANT_HOME=$WORKSPACE/vagrant.d
+rm -rf $VAGRANT_HOME
+
 # do I really want to run this?
+cd $WORKSPACE
 git clone https://gitlab.com/fdroid/fdroidserver.git
 cd fdroidserver
 ./makebuildserver 

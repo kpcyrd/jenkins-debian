@@ -428,7 +428,7 @@ create_dashboard_page() {
 	write_suite_table
 	# write suite graphs
 	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 	done
 	write_page "</p>"
 	write_meta_pkg_graphs_links

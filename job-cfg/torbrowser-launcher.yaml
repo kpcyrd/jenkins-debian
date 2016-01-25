@@ -200,8 +200,8 @@
                                         dist: jessie,   my_hour: 4 }
               - 'debian_jessie':       { my_gitbranch: 'debian/jessie',
                                         dist: jessie,   my_hour: 4 }
-              - 'debian_sid_with_broken_settings': { my_gitbranch: 'debian/sid',
-                                        my_opt_arg: ' broken_settings', my_opt_desc: ' with a broken user configuration',
+              - 'debian_sid_via_tor':  { my_gitbranch: 'debian/sid',
+                                        my_opt_arg: ' via_tor', my_opt_desc: ' download via tor',
                                         dist: jessie,   my_hour: 4 }
               - 'debian_jessie_with_broken_settings': { my_gitbranch: 'debian/jessie',
                                         my_opt_arg: ' broken_settings', my_opt_desc: ' with a broken user configuration',

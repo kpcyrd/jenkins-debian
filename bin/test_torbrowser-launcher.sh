@@ -148,6 +148,14 @@ announce_problem_and_abort_silently() {
 	exit 0
 }
 
+prepare_other_packages() {
+	if $VIA_TOR ; then
+		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y tor
+	else
+		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y ca-certificates
+	fi
+}
+
 prepare_lauchner_settings() {
 	if $BROKEN_SETTINGS ; then
 		echo "$(date -u ) - providing broken settings for torbrowser-launcher to test if it can deal with it."
@@ -238,6 +246,11 @@ download_and_launch() {
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- /usr/bin/torbrowser-launcher --settings 2>&1 |& tee $TBL_LOGFILE || true ) &
 	sleep 20
 	update_screenshot
+	if $VIA_TOR ; then
+		# download via tor
+		echo "$(date -u) - pressing <space>"
+		xvkbd -text "\[space]" > /dev/null 2>&1
+	fi
 	echo "$(date -u) - pressing <tab>"
 	xvkbd -text "\t" > /dev/null 2>&1
 	sleep 1
@@ -438,6 +451,12 @@ elif [ "$1" = "broken_settings" ] ; then
 else
 	BROKEN_SETTINGS=false
 fi
+if [ "$1" = "via_tor" ] ; then
+	VIA_TOR=true
+	shift
+else
+	VIA_TOR=false
+fi
 SUITE=$1
 UPGRADE_SUITE=""
 TMPDIR=$(mktemp -d -t torbrowser-launcher-XXXXXX)
@@ -491,6 +510,7 @@ if [ "$2" = "git" ] ; then
 elif [ -n "$UPGRADE_SUITE" ] ; then
 	upgrade_to_newer_packaged_version_in $UPGRADE_SUITE
 fi
+prepare_other_packages
 download_and_launch
 end_session
 cleanup_duplicate_screenshots

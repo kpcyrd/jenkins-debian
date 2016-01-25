@@ -13,6 +13,11 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
+# define work space (differently than jenkins would normally do as we run via ssh on a different node…)
+$WORKSPACE=$BASE/fdroid
+mkdir -p $WORKSPACE
+cd $WORKSPACE
+
 # make sure we have the vagrant box image cached
 test -e ~/.cache/fdroidserver || mkdir -p ~/.cache/fdroidserver
 cd ~/.cache/fdroidserver
@@ -24,8 +29,7 @@ sha256sum -c jessie32.box.sha256
 export VAGRANT_HOME=$WORKSPACE/vagrant.d
 rm -rf $VAGRANT_HOME
 
-# do I really want to run this?
-cd $WORKSPACE
+# FIXME: the git cloning should be part of the jenkins job…
 git clone https://gitlab.com/fdroid/fdroidserver.git
 cd fdroidserver
 ./makebuildserver 

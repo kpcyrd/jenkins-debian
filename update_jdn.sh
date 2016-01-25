@@ -223,6 +223,7 @@ if [ -f /etc/debian_version ] ; then
 				unzip
 				util-linux
 				vagrant
+				virtualbox
 				zlib1g-dev"
 			   ;;
 			*) ;;

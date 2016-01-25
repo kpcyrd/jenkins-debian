@@ -108,6 +108,8 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === tests.reproducible-builds.org
 
+* btw, www.reproducible-builds.org is 404…
+
 * move /* to /debian/*
 * use redirects to keep old URLs working
 * setup pb9 and move rebootstrap jobs over there (needs 200gb more diskspace…=)

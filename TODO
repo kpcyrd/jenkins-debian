@@ -109,9 +109,8 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 === tests.reproducible-builds.org
 
 * move /* to /debian/*
-* rename r.d.n to tests.reproducible-builds.org
-** use redirects to keep old URLs working
-* setup pb9 and move rebootstrap jobs over there
+* use redirects to keep old URLs working
+* setup pb9 and move rebootstrap jobs over there (needs 200gb more diskspace…=)
 * configure pb4 running 398 days in future and adapt coreboot|openwrt|netbsd|archlinux|fedora jobs to use it
 * common code base (and sql database layouts - not databases) for creating the webpages for debian|coreboot|openwrt|netbsd|archlinux|fedora
 * common navigation (using left side navi menu like on the debian pkg pages), but different themes for dashboards, indexes and package pages
@@ -129,6 +128,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those
 
 * higher prio:
+** on the build nodes, /srv/reproducible-results/ doesnt get cleaned up, each one has 100k dirs in it…
 ** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 ** pkg pages
 *** new table in pkg/test history page: schedule - if that package is currently scheduled
@@ -148,7 +148,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
-** repo-comparison: check for binaries without source
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 
 * lesser prio
@@ -174,8 +173,9 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** reproducible.debian.net rename: rgrep all the files…
 ** debbindiff2diffoscope rename: do s#dbd#ds#g and s#DBD#DS#g and rename dbd directories?
 ** diffoscope needs to be run on the target arch... (or rather: run on a 64bit architecture for 64bit architectures and on 32bit for 32 bit archs), this should probably be doable with a simple i386 chroot on the host (so using qemu-static to run it on armhf should not be needed, probably.)
-* support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL
-* once stabilized notification emails should go through the package tracker.  The 'build' keyword seems to be the better fit for this.  To do so just send the emails to dispatch@tracker.debian.org, setting "X-Distro-Tracker-Package: foo" and "X-Distro-Tracker-Keyword: build".  This way people wanting to subscribe to our notification don't need to ask us and can do that by themselves.
+** support for arbitrary (to be implemented) Debian-PPAs and external repos, by just giving a source URL
+** once stabilized notification emails should go through the package tracker.  The 'build' keyword seems to be the better fit for this.  To do so just send the emails to dispatch@tracker.debian.org, setting "X-Distro-Tracker-Package: foo" and "X-Distro-Tracker-Keyword: build".  This way people wanting to subscribe to our notification don't need to ask us and can do that by themselves.
+** repo-comparison: check for binaries without source
 
 * missing tests:
 ** different cpu type (WIP)

@@ -16,7 +16,6 @@ common_init "$@"
 # define work space (differently than jenkins would normally do as we run via ssh on a different node…)
 WORKSPACE=$BASE/fdroid
 mkdir -p $WORKSPACE
-cd $WORKSPACE
 
 # make sure we have the vagrant box image cached
 test -e ~/.cache/fdroidserver || mkdir -p ~/.cache/fdroidserver
@@ -30,6 +29,7 @@ export VAGRANT_HOME=$WORKSPACE/vagrant.d
 rm -rf $VAGRANT_HOME
 
 # FIXME: the git cloning should be part of the jenkins job…
+cd $WORKSPACE
 git clone https://gitlab.com/fdroid/fdroidserver.git
 cd fdroidserver
 ./makebuildserver 

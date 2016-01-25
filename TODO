@@ -320,7 +320,8 @@ notes on source and binary versions:
 ** ./makebuildserver
 *** this downloads a base debian image and all Android tarballs (SDK, NDK, Gradle...)
 *** then enters the image, installs all debian packages and Android stuff from the cached tarballs
-** cache is kept outside (~/.cache/fdroidserver) but installed inside
+** cache is kept outside ('~/.cache/fdroidserver') but installed inside
+** '~/.cache/fdroidserver' needs to be cleaned at some times…
 
 * reproducible_build_fdroid_apk.sh
 ** 1st run ./fdroid build some.app:vercode --server

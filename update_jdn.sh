@@ -194,7 +194,7 @@ if [ -f /etc/debian_version ] ; then
 			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
-		# needed to run coreboot/openwrt/netbsd/fedora jobs
+		# needed to run coreboot/openwrt/netbsd/fedora/fdroid jobs
 		case $HOSTNAME in
 			profitbricks-build3-amd64) DEBS="$DEBS
 				bison
@@ -222,6 +222,7 @@ if [ -f /etc/debian_version ] ; then
 				tree
 				unzip
 				util-linux
+				vagrant
 				zlib1g-dev"
 			   ;;
 			*) ;;

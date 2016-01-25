@@ -14,7 +14,7 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 # define work space (differently than jenkins would normally do as we run via ssh on a different node…)
-$WORKSPACE=$BASE/fdroid
+WORKSPACE=$BASE/fdroid
 mkdir -p $WORKSPACE
 cd $WORKSPACE
 

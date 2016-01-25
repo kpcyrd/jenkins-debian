@@ -184,7 +184,7 @@
         - '{name}_test_on_{dist}_amd64_from_git_branch_{g_i_t_branch}':
             my_description: 'Test torbrowser-launcher{my_opt_desc} on {dist}/amd64 using the branch {my_gitbranch}.'
             my_timed: '23 {my_hour} 1 * *'
-            my_gitrepo: 'git://git.debian.org/git/collab-maint/torbrowser-launcher.git'
+            my_gitrepo: 'git://git.debian.org/pkg-privacy/packages/torbrowser-launcher.git'
             my_opt_arg: ''
             my_opt_desc: ''
             g_i_t_branch:

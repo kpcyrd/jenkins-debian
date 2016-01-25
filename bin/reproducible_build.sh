@@ -324,7 +324,7 @@ dbd_timeout() {
 call_diffoscope_on_changes_files() {
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
-	local TIMEOUT="30m"
+	local TIMEOUT="60m"
 	DBDSUITE=$SUITE
 	if [ "$SUITE" = "experimental" ] ; then
 		# there is no extra diffoscope-schroot for experimental ( because we specical case ghc enough already )

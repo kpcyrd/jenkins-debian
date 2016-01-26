@@ -45,16 +45,18 @@ body {
 
 a {
   text-decoration: none;
-  color:#0088cc;
 }
 
-a:link, a:visited {
-  color: green;
+a:link {
+  color: #07b;
+}
+
+a:visited {
+  color: #1a4964;
 }
 
 a:hover, a:visited:hover {
   text-decoration: underline;
-  color:#0088cc;
 }
 
 table {

@@ -55,7 +55,7 @@ BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also ne
 # existing usertags in the Debian BTS
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
-# common settings for testing Archlinux
+# common settings for testing Arch Linux
 ARCHLINUX_BUILD_NODE=profitbricks-build3-amd64
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/.archlinux_pkgs

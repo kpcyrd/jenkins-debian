@@ -99,17 +99,17 @@ for s in $SUITES ; do
 done
 set -e
 
-# for Archlinux
+# for Arch Linux
 set +e
 if [ "$HOSTNAME" = "${ARCHLINUX_BUILD_NODE}" ] ; then
-	echo "$(date -u) - updating Archlinux schroot now."
+	echo "$(date -u) - updating Arch Linux schroot now."
 	schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
 	RESULT=$?
 	if [ $RESULT -eq 1 ] ; then
-		echo "Warning: failed to update Archlinux schroot."
+		echo "Warning: failed to update Arch Linux schroot."
 		DIRTY=true
 	else
-		echo "$(date -u) - updating Archlinux schroot done."
+		echo "$(date -u) - updating Arch Linux schroot done."
 	fi
 fi
 set -e

@@ -86,7 +86,7 @@ if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
 	# the real question however is: why on earth does this work on the jenkins node, but not on pb-build3
 	# pacman starts gpg, gpg starts gpg-agent and gpg-agent is killed when the shells ends.
 	# this works nicely on one host, but not on the other. let's see how this works without gpg-agent at all…
-	sed -i -s "s#no-permission-warning#no-permission-warning --no-autostart" $SCHROOT_BASE/$TARGET/usr/bin/pacman-key
+	sed -i -s "s#no-permission-warning#no-permission-warning --no-autostart#g" $SCHROOT_BASE/$TARGET/usr/bin/pacman-key
 fi
 $ROOTCMD bash -l -c 'pacman-key --init'
 $ROOTCMD bash -l -c 'pacman-key --populate archlinux'

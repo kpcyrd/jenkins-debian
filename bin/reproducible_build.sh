@@ -628,7 +628,9 @@ remote_build() {
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
-		SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*5"|bc)
+		# sleep 15min if this happens on the first node
+		# but 1h if this happens on the 2nd node
+		SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*15"|bc)
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		unregister_build
 		sleep ${SLEEPTIME}m

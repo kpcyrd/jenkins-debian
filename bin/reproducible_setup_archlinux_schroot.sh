@@ -108,6 +108,10 @@ $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
 echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
 $USERCMD bash -l -c 'gpg --check-trustdb' # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf
+if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
+	# YOLO, see YOLO comment above
+	echo "no-autostart" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf
+fi
 $USERCMD bash -l -c 'gpg --recv-keys 0x091AB856069AAA1C'
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

@@ -356,6 +356,8 @@ download_and_launch() {
 	# for debugging
 	if [ $URL_LOADED -lt 4 ] ; then
 		echo "$(date -u) - URL_LOADED = '$URL_LOADED' so probably that page didnt load properly."
+		# extra debug, as rendering in sid has changed and thus gocr behaves differently…
+		gocr $WORKSPACE/screenshot.png 2>/dev/null
 	fi
 	BONUS_LEVEL_2=""
 	URL="https://www.debian.org"

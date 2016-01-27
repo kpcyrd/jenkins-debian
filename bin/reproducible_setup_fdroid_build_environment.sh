@@ -13,26 +13,23 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
-# define work space (differently than jenkins would normally do as we run via ssh on a different node…)
+# define and clean work space (differently than jenkins would normally do as we run via ssh on a different node…)
 WORKSPACE=$BASE/fdroid
+# TODO:
+#
+# add locking here to only run this if no build job is running…
+#
+# not yet needed, as we don't have any build jobs yet
+rm $WORKSPACE -r
 mkdir -p $WORKSPACE
 
 cleanup_all() {
 	echo "$(date -u) - cleanup in progress..."
 	killall VBoxHeadless || true
 	sleep 10
-	rm $WORKSPACE -r
 	echo "$(date -u) - cleanup done."
 }
 trap cleanup_all INT TERM EXIT
-
-# TODO:
-#
-#
-# add locking here to only run this if no build job is running…
-#
-#
-# not yet needed, as we don't have any build jobs yet
 
 
 # make sure we have the vagrant box image cached

@@ -60,7 +60,9 @@ git log -1
 #                 different switches to make two builds from the same source tree
 #                 result in the same build results.
 export MKREPRO="yes"
-MK_TIMESTAMP=$(git log -1 --pretty=%ct)
+# MK_TIMESTAMP is set to SOURCE_DATE_EPOCH of netbsd.git
+SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
+MK_TIMESTAMP=${SOURCE_DATE_EPOCH}
 
 echo "============================================================================="
 echo "$(date -u) - Building NetBSD ${NETBSD_VERSION} - first build run."

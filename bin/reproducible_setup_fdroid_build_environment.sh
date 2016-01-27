@@ -20,7 +20,7 @@ WORKSPACE=$BASE/fdroid
 # add locking here to only run this if no build job is running…
 #
 # not yet needed, as we don't have any build jobs yet
-rm $WORKSPACE -r
+rm $WORKSPACE -rf
 mkdir -p $WORKSPACE
 
 cleanup_all() {

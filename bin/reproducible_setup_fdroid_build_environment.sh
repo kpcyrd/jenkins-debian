@@ -50,7 +50,7 @@ rm -rf $VAGRANT_HOME
 cd $WORKSPACE
 git clone https://gitlab.com/fdroid/fdroidserver.git
 cd fdroidserver
-echo "boot_timeout = 1200" > makebuildserver.config.py
+echo "boot_timeout = 2400" > makebuildserver.config.py
 ./makebuildserver 
 
 # we are done here, shutdown

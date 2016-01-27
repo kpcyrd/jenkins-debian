@@ -150,8 +150,8 @@ announce_problem_and_abort_silently() {
 
 prepare_other_packages() {
 	if $VIA_TOR ; then
-		echo "$(date -u ) - installing tor and ca-certificates as this test will download torbrowser via the system tor service."
-		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y tor ca-certificates
+		echo "$(date -u ) - installing ca-certificates as this test will download torbrowser via the system tor service."
+		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y tor
 	else
 		echo "$(date -u ) - installing ca-certificates as this test will download torbrowser via https."
 		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y ca-certificates
@@ -250,8 +250,8 @@ download_and_launch() {
 	update_screenshot
 	if $VIA_TOR ; then
 		# download via system tor
-		echo "$(date -u) - pressing <space>"
-		xvkbd -text "\[space]" > /dev/null 2>&1
+		echo "$(date -u) - pressing <return> to select download via tor"
+		xvkbd -text "\r" > /dev/null 2>&1
 		update_screenshot
 	fi
 	# else the default will be used, which is download via https…

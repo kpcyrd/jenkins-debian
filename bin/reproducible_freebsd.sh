@@ -82,7 +82,9 @@ run_diffoscope_on_results() {
 #
 # main
 #
-FREEBSD_TARGETS="master stable/10 release/10.2.0"
+#FREEBSD_TARGETS="master stable/10 release/10.2.0"
+# temporarily just build one branch…
+FREEBSD_TARGETS="master"
 # arrays to save results
 declare -A ALL_FILES
 declare -A GOOD_FILES

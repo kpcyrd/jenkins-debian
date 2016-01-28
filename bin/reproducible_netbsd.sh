@@ -120,6 +120,9 @@ umask 0022
 # clean up builddir to save space on tmpfs
 rm -r $TMPBUILDDIR/netbsd
 
+# temporarily enable more debug
+set -x
+
 # run diffoscope on the results
 TIMEOUT="30m"
 DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"

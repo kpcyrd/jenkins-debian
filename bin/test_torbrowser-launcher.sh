@@ -309,7 +309,7 @@ download_and_launch() {
 		local BROWSER_PROFILE=TorBrowser/Data/Browser/profile.default
 		STATUS="$(schroot --run-session -c $SESSION -- test ! -d $BROWSER_DIR_EN/$BROWSER_PROFILE -a ! -d $BROWSER_DIR_DE/$BROWSER_PROFILE || echo $(date -u ) - torbrowser running. )"
 		if [ -n "$STATUS" ] ; then
-			sleep 10
+			sleep 15
 			break
 		fi
 	done

@@ -232,7 +232,10 @@ then
 	fi
 fi
 
-cleanup_schroot_sessions
+# no needed for torbrowser-launcher as race conditions are mostly avoided by timings
+if [ "${TARGET:0:19}" != "torbrowser-launcher" ] ; then
+	cleanup_schroot_sessions
+fi
 echo "$(date -u ) - renaming $SCHROOT_TARGET to $SCHROOT_BASE/$TARGET"
 set +e
 sudo mv $SCHROOT_TARGET $SCHROOT_BASE/"$TARGET"

@@ -131,6 +131,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those
 
 * higher prio:
+** the "packages which have notes states" counted packages twice, from september 2015 until january 28th 2016. we should probably cleanup those numbers to fix the graph
 ** on the build nodes, /srv/reproducible-results/ doesnt get cleaned up, each one has 100k dirs in it…
 ** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 ** pkg pages

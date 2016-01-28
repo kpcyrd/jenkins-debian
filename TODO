@@ -407,7 +407,6 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 === torbrowser-launcher_*
 
 * fix "schroot session cleanup loop" in _common.sh to ignore other schroots
-* test download via system tor
 * test tbl in German
 * test tbl on i386
 * test alpha releases
@@ -415,9 +414,7 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 ** get version from '~/.cache/torbrowser/download/RecommendedTBBVersions'
 ** (warning: on update checks these files are written again…)
 * fix broken screenshot while job is running via apache redirect
-* once tbl is removed from experimental, make sure the job does nothing but detect that and exits quickly+successfully.
 * notifications should go somewhere public, after a while of testing.
-* debug why iceweasel is needed to be installed… and ca-certificates too.
 * run this in qemu and enable apparmor too? -> create new tests for apparmor first :)
 ** extend setup_schroot.sh to also setup virtual harddrives, see http://diogogomes.com/2012/07/13/debootstrap-kvm-image/
 ** install linux, grub and copy the testscript and ssh keys on the the fs

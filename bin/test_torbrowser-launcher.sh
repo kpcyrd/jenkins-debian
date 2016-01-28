@@ -149,12 +149,10 @@ announce_problem_and_abort_silently() {
 }
 
 prepare_other_packages() {
+	# once #805173 is fixed in all tested suites, ca-certificates doesn't have to be installed here anymore
 	if $VIA_TOR ; then
-		echo "$(date -u ) - installing ca-certificates as this test will download torbrowser via the system tor service."
+		echo "$(date -u ) - installing tor as this test will download torbrowser via the system tor service."
 		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y tor
-	else
-		echo "$(date -u ) - installing ca-certificates as this test will download torbrowser via https."
-		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y ca-certificates
 	fi
 }
 
@@ -246,12 +244,13 @@ download_and_launch() {
 	export PYTHONUNBUFFERED=true
 	prepare_lauchner_settings
 	( timeout -k 30m 29m schroot --run-session -c $SESSION --preserve-environment -- /usr/bin/torbrowser-launcher --settings 2>&1 |& tee $TBL_LOGFILE || true ) &
-	sleep 20
+	sleep 23
 	update_screenshot
 	if $VIA_TOR ; then
 		# download via system tor
 		echo "$(date -u) - pressing <return> to select download via tor"
 		xvkbd -text "\r" > /dev/null 2>&1
+		sleep 1
 		update_screenshot
 	fi
 	# else the default will be used, which is download via https…

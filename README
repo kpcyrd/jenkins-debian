@@ -190,6 +190,15 @@ usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
 
 * Finally, there are also jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt], link:http://www.netbsd.org/[NetBSD] and https://www.freebsd.org/[FreeBSD] projects. The results of the tests can be seen respectively at https://tests.reproducible-builds.org/coreboot/, https://tests.reproducible-builds.org/openwrt/, https://tests.reproducible-builds.org/netbsd/ and https://tests.reproducible-builds.org/freebsd/.
 
+=== torbrowser-launcher jobs
+
+link:https://www.torproject.org/projects/torbrowser.html.en[Tor Browser] is not part of Debian. To easily and securely use it, one can run <pre>sudo apt-get install torbrowser-launcher</pre> and then run torbrowser-launcher which will download Tor Browser and well, launch it. And this sometimes breaks, when things change, which is rather frequently the case…
+
+There is a link:https://jenkins.debian.net/view/torbrowser/[graphical status overview of torbrowser tests on Debian] which are tests installing torbrowser-launcher on and from sid, stretch, jessie-backports, jessie and wheezy-backports, which first download torbrowser via https and via tor, then launches it to finally connect to a debian mirror via an onion-address and then to www.debian.org. In addition to these there are also tests installing the package from stretch on jessie as well as the package from sid on stretch and jessie. Finally there are also tests for building the package from our git branches for various suites and finally there's a daily build of the package based on the upstream git master branch merged with our sid packaging.
+
+There are 17 different tests currently and they are configured in just two files, a 220 line link:https://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml[yaml file defining the jenkins jobs] and 528 lines of link:https://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/test_torbrowser-launcher.sh[bash script containing the actual test code].
+
+These tests are executed either daily or weekly (those testing the package from ftp.d.o) or on every commit and at least once every month (those testing the package build from git).
 
 === jenkins.d.n jobs
 

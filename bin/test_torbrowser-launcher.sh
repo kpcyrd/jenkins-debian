@@ -117,10 +117,13 @@ upgrade_to_package_build_from_git() {
 	else
 		local UPSTREAM_TREE=origin/master
 	fi
+	# configure lintian to be pedantic
+	echo "pedantic = yes" | schroot --run-session -c $SESSION --directory $TMPDIR -u root -- tee -a /etc/lintianrc
+	# build the package
 	schroot --run-session -c $SESSION --directory $TMPDIR/git -- gbp buildpackage --git-ignore-branch --git-upstream-tree=$UPSTREAM_TREE -uc -us
-	# install it
 	local DEB=$(cd $TMPDIR ; ls torbrowser-launcher_*deb)
 	local CHANGES=$(cd $TMPDIR ; ls torbrowser-launcher_*changes)
+	# install it
 	echo "$(date -u ) - $DEB will be installed."
 	schroot --run-session -c $SESSION --directory $TMPDIR -u root -- dpkg -i $DEB
 	# cleanup

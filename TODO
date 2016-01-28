@@ -210,7 +210,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** CONFIG_PAYLOAD_TIANOCORE is not set
 * libreboot ships images, verify those?
 * explain status in plain english
-* use disorderfs for 2nd build?
+* use disorderfs for 2nd build
 
 ==== reproducible OpenWrt
 
@@ -219,13 +219,14 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
 * incorporate popular third-party ("external feeds") packages?
 * explain status in plain english
-* use disorderfs for 2nd build?
+* use disorderfs for 2nd build
 
 ==== reproducible NetBSD
 
 * explain status in plain english
-** MKREPRO is set to "yes"
-* use disorderfs for 2nd build?
+** explain MKREPRO is set to "yes"
+** explain MK_TIMESTAMP set to $SOURCE_DATE_EPOCH
+* use disorderfs for 2nd build
 
 ==== reproducible FreeBSD
 

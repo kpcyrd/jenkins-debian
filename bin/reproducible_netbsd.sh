@@ -59,7 +59,8 @@ git log -1
 # MKREPRO         If "yes", create reproducable builds. This enables
 #                 different switches to make two builds from the same source tree
 #                 result in the same build results.
-export MKREPRO="yes"
+# also see http://man.netbsd.org/HEAD/usr/share/man/html5/mk.conf.html
+export MKREPRO="yes"	
 # MK_TIMESTAMP is set to SOURCE_DATE_EPOCH of netbsd.git
 SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
 MK_TIMESTAMP=${SOURCE_DATE_EPOCH}

@@ -38,7 +38,7 @@ save_freebsd_results() {
 }
 
 run_diffoscope_on_results() {
-	TIMEOUT="30m"
+	TIMEOUT="60m"
 	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 	echo "============================================================================="
 	echo "$(date -u) - Running $DIFFOSCOPE on FreeBSD (branch $FREEBSD_TARGET at ${FREEBSD_VERSION}) build results."

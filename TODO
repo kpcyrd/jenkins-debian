@@ -125,6 +125,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 === Debian reproducible builds
 
 * make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffoscoppe/schroot problems"
+** pass scheduled version to remote build nodes and abort the build there if the to be build version is different
 ** add check if package to be build has been blacklisted since scheduling and abort
 ** on SIGTERM, also cleanup on remote build nodes there! (via ssh &)
 ** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those

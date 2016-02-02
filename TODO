@@ -352,6 +352,12 @@ $ du -hd1 | sort -h | tail -n 6
 242G    .
 ----
 
+==== reproducible guix
+
+* there's no "apt-get install", because of non-FHS conformance, but see https://www.gnu.org/software/guix/download/
+*  there's a privileged build daemon, which is needed to perform fully isolated builds, see https://www.gnu.org/software/guix/manual/html_node/Build-Environment-Setup.html#Build-Environment-Setup
+* it's a bit of work to set up, but all the steps are documented. the "binary installation" method being the easiest.
+
 ==== reproducible...
 
 * openembedded.org!

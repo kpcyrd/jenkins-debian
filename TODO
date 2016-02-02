@@ -55,7 +55,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== next steps for jenkins.d.o migration
 
 ** the machine jerea.debian.org is setup, please go to https://jenkins.debian.org
-** install jenkins-job-builder from jessie-backports once it's made it through NEW there (DSA)
 ** install all the plugins (we)
 ** add all the nodes as nodes to jenkins.d.o (we)
 *** nice to have: use static IP for the nodes (h01ger)

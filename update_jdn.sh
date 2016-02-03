@@ -329,7 +329,7 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get update
 		sudo apt-get install $DEBS $MASTERDEBS
 		sudo apt-get install -t jessie-backports \
-				pbuilder
+				pbuilder || echo "this should only fail on the firts install"
 		#		botch
 		# for varying kernels
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-amd64" ]; then

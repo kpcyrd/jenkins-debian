@@ -270,10 +270,11 @@ write_usertag_table() {
 				let "TTOTAL=TTOTAL+TOTAL"
 			fi
 		done
-		# now subtract the ftbfs bugs again (=the last value)
+		# now subtract the ftbfs bugs again (=the last fields from the result)
 		# as those others are the ones we really care about
-		let "REPRODUCIBLE_TOPEN=TOPEN-VALUE"
-		let "REPRODUCIBLE_TDONE=TDONE-VALUE"
+		let "CCOUNT=COUNT-1"
+		let "REPRODUCIBLE_TOPEN=TOPEN-$(echo $RESULT | cut -d "|" -f$CCOUNT)"
+		let "REPRODUCIBLE_TDONE=TDONE-$(echo $RESULT | cut -d "|" -f$COUNT)"
 		let "REPRODUCIBLE_TTOTAL=REPRODUCIBLE_TOPEN+REPRODUCIBLE_TDONE"
 		write_page "<tr><td>Sum of <a href=\"https://wiki.debian.org/ReproducibleBuilds/Contribute#How_to_report_bugs\">bugs with usertags related to reproducible builds</a>, excluding those tagged 'ftbfs'</td><td>$REPRODUCIBLE_TOPEN</td><td>$REPRODUCIBLE_TDONE</td><td>$REPRODUCIBLE_TTOTAL</td></tr>"
 		write_page "<tr><td>Sum of all bugs with usertags related to reproducible builds</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"

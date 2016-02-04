@@ -25,6 +25,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * fix apache ssl configuration as hinted by eg https://sslcheck.globalsign.com/en/sslcheck?host=jenkins.debian.net#78.137.96.196
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 * teach bin/chroot-*.sh and bin/d-i_build.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
+* use static IP for the nodes (h01ger)
 
 === ToDo for improving disk space
 
@@ -57,7 +58,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** the machine jerea.debian.org is setup, please go to https://jenkins.debian.org
 ** install all the plugins (we)
 ** add all the nodes as nodes to jenkins.d.o (we)
-*** nice to have: use static IP for the nodes (h01ger)
 ** disable job execution on jenkins.d.net(!) (we) 
 ** deploy this configuration on jenkins.d.o…(!) (we)
 *** make update_jdn.sh warn if things are missing on .debian.org systems
@@ -130,7 +130,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those
 
 * higher prio:
-** the "packages which have notes states" counted packages twice, from september 2015 until january 28th 2016. we should probably cleanup those numbers to fix the graph
 ** on the build nodes, /srv/reproducible-results/ doesnt get cleaned up, each one has 100k dirs in it…
 ** reenable disorderfs setup, check that it *always* unmounts + cleans up nicely
 ** pkg pages
@@ -214,7 +213,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible OpenWrt
 
-* test trunk again and not lynxis' fork
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
 * incorporate popular third-party ("external feeds") packages?

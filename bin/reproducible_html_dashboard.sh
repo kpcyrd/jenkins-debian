@@ -15,8 +15,8 @@ common_init "$@"
 # init some variables
 #
 # we only do stats up until yesterday... we also could do today too but not update the db yet...
-DATE=$(date -d "1 day ago" '+%Y-%m-%d')
-FORCE_DATE=$(date -d "3 days ago" '+%Y-%m-%d')
+DATE=$(date -u -d "1 day ago" '+%Y-%m-%d')
+FORCE_DATE=$(date -u -d "3 days ago" '+%Y-%m-%d')
 DUMMY_FILE=$(mktemp -t reproducible-dashboard-XXXXXXXX)
 touch -d "$(date '+%Y-%m-%d') 00:00 UTC" $DUMMY_FILE
 NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
@@ -327,7 +327,12 @@ write_build_performance_stats() {
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
 		write_page "<td>$RESULT</td>"
 	done
-write_page "</tr></table>"
+	write_page "</tr><tr><td>packages tested in the last 24h</td>"
+	for ARCH in ${ARCHS} ; do
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$(date -u '+%Y-%m-%d')', '-24 hours') AND r.architecture='$ARCH'")
+		write_page "<td>$RESULT</td>"
+	done
+	write_page "</tr></table>"
 }
 
 #

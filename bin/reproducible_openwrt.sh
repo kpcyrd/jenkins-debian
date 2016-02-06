@@ -6,7 +6,7 @@
 
 OPENWRT_GIT_REPO=git://git.openwrt.org/openwrt.git
 OPENWRT_GIT_BRANCH=master
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

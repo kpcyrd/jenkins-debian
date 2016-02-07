@@ -321,7 +321,7 @@ dbd_timeout() {
 	handle_ftbr "$msg"
 }
 
-call_diffoscope_on_changes_files() {
+call_diffoscope_on_buildinfo_files() {
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="120m"
@@ -350,8 +350,8 @@ call_diffoscope_on_changes_files() {
 		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
-			$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
-			$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
+			$TMPDIR/b1/${BUILDINFO} \
+			$TMPDIR/b2/${BUILDINFO}" \
 	2>&1 ) >> $TMPLOG
 	RESULT=$?
 	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG || true)
@@ -366,8 +366,8 @@ call_diffoscope_on_changes_files() {
 			-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 				--html $TMPDIR/${DBDREPORT} \
 				--text $TMPDIR/$DBDTXT \
-				$TMPDIR/b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes \
-				$TMPDIR/b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" \
+				$TMPDIR/b1/${BUILDINFO} \
+				$TMPDIR/b2/${BUILDINFO}" \
 		2>&1 ) >> $TMPLOG
 		RESULT=$?
 	fi
@@ -794,7 +794,7 @@ update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
-	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
+	call_diffoscope_on_buildinfo_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 fi
 print_out_duration
 

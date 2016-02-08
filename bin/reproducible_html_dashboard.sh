@@ -323,7 +323,7 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td>packages tested in the last 24h</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$(date -u '+%Y-%m-%d')', '-24 hours') AND r.architecture='$ARCH'")
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$(date -u '+%Y-%m-%d %H:%m')', '-24 hours') AND r.architecture='$ARCH'")
 		write_page "<td>$RESULT</td>"
 	done
 	write_page "</tr><tr><td>packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"

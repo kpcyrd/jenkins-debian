@@ -170,6 +170,46 @@
     node: '{my_node}'
 
 - defaults:
+    name: reproducible_other_projects_git
+    project-type: freestyle
+    description: *desc
+    properties:
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
+      - throttle:
+          max-total: 9
+          max-per-node: 9
+          enabled: true
+          option: category
+          categories:
+            - reproducible      # no special category yet
+    triggers:
+      - timed: '{my_timed}'
+      - pollscm: '*/6 * * * *'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
+    scm:
+      - git:
+          url: '{my_gitrepo}'
+          branches:
+            - master
+    node: '{my_node}'
+
+
+- defaults:
     name: reproducible_other_projects_trigger
     project-type: freestyle
     description: *desc
@@ -228,6 +268,10 @@
 - job-template:
     defaults: reproducible_other_projects
     name: '{name}_{otherproject}'
+
+- job-template:
+    defaults: reproducible_other_projects_git
+    name: '{name}_{otherproject_git}'
 
 - job-template:
     defaults: reproducible_other_projects_trigger
@@ -556,12 +600,18 @@
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
+            my_shell: '/srv/jenkins/bin/reproducible_{otherproject}.sh'
+            my_hname: ''
+
+        - '{name}_{otherproject_git}':
+            otherproject_git:
                 - 'setup_fdroid_build_environment_profitbricks3':
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
-            my_shell: '/srv/jenkins/bin/reproducible_{otherproject}.sh'
+                    my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
+            my_shell: '/srv/jenkins/bin/reproducible_{otherproject_git}.sh'
             my_hname: ''
 
         - '{name}_builder_{otherproject}_{my_num}':

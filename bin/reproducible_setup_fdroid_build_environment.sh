@@ -43,9 +43,7 @@ sha256sum -c jessie32.box.sha256
 export VAGRANT_HOME=$WORKSPACE/vagrant.d
 rm -rf $VAGRANT_HOME
 
-# FIXME: the git cloning should be part of the jenkins job…
 cd $WORKSPACE
-git clone https://gitlab.com/fdroid/fdroidserver.git
 cd fdroidserver
 echo "boot_timeout = 1200" > makebuildserver.config.py
 ./makebuildserver 

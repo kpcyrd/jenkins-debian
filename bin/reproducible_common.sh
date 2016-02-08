@@ -50,7 +50,7 @@ ARCHS="amd64 armhf"
 . /srv/jenkins/bin/jenkins_node_definitions.sh
 
 # variables on the nodes we are interested in
-BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL1 KERNEL2" # these also needs to be defined in bin/reproducible_info.sh
+BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL" # these also needs to be defined in bin/reproducible_info.sh
 
 # existing usertags in the Debian BTS
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
@@ -416,12 +416,12 @@ write_explaination_table() {
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
 			write_page "<tr><td>kernel version</td></td><td>one of:"
-			write_page " $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | grep amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
-			write_page " $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | grep -v amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page " $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page " $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep -v amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
 			write_page "</td>"
 			write_page "<td>(on amd64 systematically varied, on armhf not yet)<br />"
-			write_page "one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | grep amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
-			write_page "one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL1 | grep -v amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page "one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page "one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep -v amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
 			write_page "</td></tr>"
 		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"

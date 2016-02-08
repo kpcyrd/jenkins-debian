@@ -48,16 +48,22 @@ echo
 echo "$(date -u) - Showing node performance:"
 TMPFILE1=$(mktemp)
 TMPFILE2=$(mktemp)
+TMPFILE3=$(mktemp)
+NOW=$(date -u '+%Y-%m-%d %H:%m')
 for i in $BUILD_NODES ; do
 	sqlite3 -init $INIT ${PACKAGES_DB} \
-		"SELECT build_date FROM stats_build AS r WHERE r.node1=\"$i\" or r.node2=\"$i\"" > $TMPFILE1 2>/dev/null
-		j=$(wc -l $TMPFILE1|cut -d " " -f1)
-		k=$(cat $TMPFILE1|cut -d " " -f1|sort -u|wc -l)
-		l=$(echo "scale=1 ; ($j/$k)" | bc)
-		echo "$l builds/day ($j/$k) on $i" >> $TMPFILE2
+		"SELECT build_date FROM stats_build AS r WHERE ( r.node1=\"$i\" OR r.node2=\"$i\" )" > $TMPFILE1 2>/dev/null
+	j=$(wc -l $TMPFILE1|cut -d " " -f1)
+	k=$(cat $TMPFILE1|cut -d " " -f1|sort -u|wc -l)
+	l=$(echo "scale=1 ; ($j/$k)" | bc)
+	echo "$l builds/day ($j/$k) on $i" >> $TMPFILE2
+	m=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT count(build_date) FROM stats_build AS r WHERE ( r.node1=\"$i\" OR r.node2=\"$i\" ) AND r.build_date > datetime('$NOW', '-24 hours') " 2>/dev/null)
+	echo "$m builds in the last 24h on $i" >> $TMPFILE3 
 done
 rm $TMPFILE1 >/dev/null
 sort -g -r $TMPFILE2
-rm $TMPFILE2 >/dev/null
+echo
+sort -g -r $TMPFILE3
+rm $TMPFILE2 $TMPFILE3 >/dev/null
 echo
 

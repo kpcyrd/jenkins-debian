@@ -525,8 +525,14 @@ check_suitability() {
 	# check whether the package is not for us...
 	local SUITABLE=false
 	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
+
+	# packages that are *only* arch:all can be tried on any arch
+	if [ "$ARCHITECTURES" = "all" ]; then
+		ARCHITECTURES="any"
+	fi
+
 	for arch in ${ARCHITECTURES} ; do
-		if [ "$arch" = "any" ] || [ "$arch" = "$ARCH" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-$ARCH" ] || [ "$arch" = "any-$ARCH" ] || [ "$arch" = "all" ] ; then
+		if [ "$arch" = "any" ] || [ "$arch" = "$ARCH" ] || [ "$arch" = "linux-any" ] || [ "$arch" = "linux-$ARCH" ] || [ "$arch" = "any-$ARCH" ] ; then
 			SUITABLE=true
 			break
 		fi

@@ -363,7 +363,7 @@ write_explaination_table() {
 		write_page "There are no variations introduced in the $1 builds yet. Stay tuned.</p>"
 		return
 	fi
-	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th>first build</th><th>second build</th></tr>"
+	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th width=\"40%\">first build</th><th width=\"40%\">second build</th></tr>"
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>hostname</td><td>one of:"
 		local FIRST=""

@@ -406,7 +406,7 @@
                     my_shellext: ".py"
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
-                    my_timed: '*/5 * * * *'
+                    my_timed: '*/10 * * * *'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
                     my_timed: '0 */4 * * *'
@@ -434,7 +434,7 @@
                     my_timed: ''
                 - 'html_live_status':
                     my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
-                    my_timed: 'H/2 * * * *'
+                    my_timed: 'H/3 * * * *'
                     my_shellext: ".py"
                 - 'create_meta_pkg_sets':
                     my_description: 'Create meta package sets for later consumption when generating HTML stats.'

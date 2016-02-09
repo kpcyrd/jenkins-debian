@@ -165,6 +165,7 @@ rootskel
 s390-dasd
 s390-netdevice
 s390-sysconfig-writer
+s390-zfcp
 tzsetup
 udpkg
 usb-discover

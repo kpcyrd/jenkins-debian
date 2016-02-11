@@ -176,6 +176,15 @@ curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&p
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
 	tmpdir=`mktemp -d --tmpdir="$scratch" -t dpkg-trigger-cycles-curl-XXXXXXXX`
+	# we use curl as part of a pipeline to dpkg-deb instead of first
+	# downloading to a temporary file and then using dpkg-deb on it,
+	# because we do not want to download the full .deb (which could be very
+	# large) but only the beginning of it until dpkg-deb has the
+	# control.tar.gz extracted. After that, dpkg-deb will close the pipe
+	# and thus signal curl to stop downloading. Downloading the full
+	# binary package would be unnecessarily wasteful thousands of binary
+	# packages in terms of bandwidth and disk requirements.
+	#
 	# curl is allowed to fail with exit status 23 because we want to stop
 	# downloading immediately after control.tar.gz has been extracted
 	( curl --retry 3 --retry-delay 10 --location --silent "$url" || [ "$?" -eq 23 ] || ( echo "curl failed">&2 && exec /srv/jenkins/bin/abort.sh ) ) \

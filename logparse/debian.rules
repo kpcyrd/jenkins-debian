@@ -4,6 +4,9 @@ ok /not really/
 
 ok /Error while decoding stream/
 
+# ignore images…
+ok /warning\.png/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 

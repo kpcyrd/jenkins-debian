@@ -171,7 +171,7 @@ trap finish EXIT
 # happen in unstable where binarycontrol.debian.net still knows about
 # a package which was already removed.
 curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
-	| xargs python3 -c "import apt,sys;c=apt.Cache();[print(c[n].candidate.uri) for n in sys.argv[1:] if n in c]" \
+	| xargs python3 -c "import apt,sys;c=apt.Cache();[print(n, c[n].candidate.uri) for n in sys.argv[1:] if n in c]" \
 	| sort -u \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2

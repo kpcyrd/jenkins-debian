@@ -304,6 +304,7 @@
             my_hname:
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4a':         { my_arch: 'armhf' }
+                - 'cbxi4b':         { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
@@ -347,6 +348,7 @@
             my_hname:
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4a':         { my_arch: 'armhf' }
+                - 'cbxi4b':         { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
@@ -514,7 +516,10 @@
 
         # could have all archs in one block, but it seems cleaner this way
         # to choose new jobs:
-        #       for i in wbq0 cbxi4a cbxi4pro0 ff2a ff2b odxu4 odxu4b odxu4c opi2a opi2b rpi2b rpi2c bpi0 hb0 wbd0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
+        #       for i in wbq0 cbxi4a cbxi4b cbxi4pro0 ff2a ff2b odxu4 odxu4b odxu4c opi2a opi2b rpi2b rpi2c bpi0 hb0 wbd0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
+        #       8 jobs for quad-cores with 4 gb ram
+        #       6 jobs for quad-cores with 2 gb ram
+        #       3 jobs for dual-cores with 1 gb ram
         - '{name}_builder_{my_arch}_{my_num}':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'armhf'

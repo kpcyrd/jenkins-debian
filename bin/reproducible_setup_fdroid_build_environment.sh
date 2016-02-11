@@ -15,15 +15,43 @@ common_init "$@"
 
 # define and clean work space (differently than jenkins would normally do as we run via ssh on a different node…)
 WORKSPACE=$BASE/fdroid
-
 # TODO:
 #
 # add locking here to only run this if no build job is running…
+#
+# not yet needed, as we don't have any build jobs yet
+rm $WORKSPACE -rf
+mkdir -p $WORKSPACE
 
-# fdroidserver.git/jenkins-build-makebuildserver assumes $WORKSPACE is
-# the root of fdroidserver.git/
+cleanup_all() {
+	echo "$(date -u) - cleanup in progress..."
+	killall VBoxHeadless || true
+	sleep 10
+	echo "$(date -u) - cleanup done."
+}
+trap cleanup_all INT TERM EXIT
+
+
+# make sure we have the vagrant box image cached
+test -e ~/.cache/fdroidserver || mkdir -p ~/.cache/fdroidserver
+cd ~/.cache/fdroidserver
+wget --continue https://f-droid.org/jessie32.box || true
+echo "ff6b0c0bebcb742783becbc51a9dfff5a2a0a839bfcbfd0288dcd3113f33e533  jessie32.box" > jessie32.box.sha256
+sha256sum -c jessie32.box.sha256
+
+# wipe the whole vagrant setup and start from scratch
+export VAGRANT_HOME=$WORKSPACE/vagrant.d
+rm -rf $VAGRANT_HOME
+
 cd $WORKSPACE
+cd fdroidserver
+echo "boot_timeout = 1200" > makebuildserver.config.py
+./makebuildserver 
 
-# this script is maintained upstream and is also run on Guardian
-# Project's jenkins box
-./jenkins-build-makebuildserver
+# we are done here, shutdown
+cd buildserver
+vagrant halt
+
+# remove trap
+trap - INT TERM EXIT
+echo "$(date -u) - the end."

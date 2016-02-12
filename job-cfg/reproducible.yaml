@@ -565,6 +565,7 @@
                 - '39': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'cbxi4a-armhf-rb'    }
                 - '40': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
                 - '41': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
+                - '42': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'cbxi4a-armhf-rb'    }
 
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
             my_timed: '* * * * *'

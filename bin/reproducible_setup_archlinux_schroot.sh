@@ -81,13 +81,13 @@ chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
 echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
 
 # configure pacman
-#if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
+if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
 	# YOLO! https://bugs.archlinux.org/task/45351 is where we got the workaround from…
 	# the real question however is: why on earth does this work on the jenkins node, but not on pb-build3
 	# pacman starts gpg, gpg starts gpg-agent and gpg-agent is killed when the shells ends.
 	# this works nicely on one host, but not on the other. let's see how this works without gpg-agent at all…
-#	sed -i -s "s#no-permission-warning#no-permission-warning --no-autostart#g" $SCHROOT_BASE/$TARGET/usr/bin/pacman-key
-#fi
+	sed -i -s "s#no-permission-warning#no-permission-warning --no-autostart#g" $SCHROOT_BASE/$TARGET/usr/bin/pacman-key
+fi
 $ROOTCMD bash -l -c 'pacman-key --init'
 $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 # use a specific mirror
@@ -112,6 +112,6 @@ echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/li
 #	# YOLO, see YOLO comment above
 #	echo "no-autostart" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf
 #fi
-$USERCMD bash -l -c 'gpg --recv-keys 0x091AB856069AAA1C'
+#$USERCMD bash -l -c 'gpg --recv-keys 0x091AB856069AAA1C'
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

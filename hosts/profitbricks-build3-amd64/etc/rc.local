@@ -14,7 +14,8 @@
 echo "$(date -u) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
 
 # keep schroot sessions on tmpfs
-[ -L /var/lib/schroot ] || echo "$(date -u) - /var/lib/schroot is not a link to /srv/workspace/varlibschroot/  as it should, please fix manually"
+[ -L /var/lib/schroot ] || echo "$(date -u) - /var/lib/schroot is not a link (to /srv/workspace/varlibschroot/) as it should, please fix manually"
+mkdir -p /srv/workspace/varlibschroot
 cd /srv/workspace/varlibschroot || exit 1
 mkdir -p mount session union unpack
 mkdir -p union/overlay union/underlay

@@ -316,8 +316,8 @@ notes on source and binary versions:
 ==== reproducible fdroid
 
 * reproducible_setup_fdroid_buildserver.sh:
-** git clone https://gitlab.com/fdroid/fdroidserver.git
-** ./makebuildserver
+** ./jenkins-build-makebuildserver
+*** this script should probably be live-patched to use ftp.de.debian.org instead ftp.uk.d.o
 *** this downloads a base debian image and all Android tarballs (SDK, NDK, Gradle...)
 *** then enters the image, installs all debian packages and Android stuff from the cached tarballs
 ** cache is kept outside ('~/.cache/fdroidserver') but installed inside

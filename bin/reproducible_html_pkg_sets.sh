@@ -148,10 +148,7 @@ create_pkg_sets_pages() {
 			else
 				local LINKED_ARCH=amd64
 			fi
-			# no pkg sets for armhf on testing yet:
-			if [ "$SUITE" != "testing" ] ; then
-				write_page "      (this set on <a href=\"/$SUITE/$LINKED_ARCH/pkg_set_${META_PKGSET[$i]}.html\">$LINKED_ARCH</a>)"
-			fi
+			write_page "      (this set on <a href=\"/$SUITE/$LINKED_ARCH/pkg_set_${META_PKGSET[$i]}.html\">$LINKED_ARCH</a>)"
 			write_page "<br />&nbsp;<br />"
 			set_icon unreproducible
 			write_icon
@@ -195,8 +192,8 @@ create_pkg_sets_pages() {
 #
 for ARCH in $ARCHS ; do
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" = "experimental" ] || ( [ "$SUITE" = "testing" ] && [ "$ARCH" = "armhf" ] ) ; then
-			# no pkg sets in experimental and not yet for testing on armhf
+		if [ "$SUITE" = "experimental" ] ; then
+			# no pkg sets in experimental
 			continue
 		fi
 		update_meta_pkg_stats

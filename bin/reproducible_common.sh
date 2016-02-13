@@ -237,10 +237,6 @@ write_page_header() {
 			# no pkg_sets are tested in experimental
 			continue
 		fi
-		if [ "$TARGET" = "pkg_sets" ] && [ "$ARCH" = "armhf" ] && [ "$SUITE" = "testing" ] ; then
-			# no pkg_sets for testing/amd64 yet…
-			continue
-		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
 		BASEURL="/$SUITE/$ARCH"
 		local i
@@ -647,7 +643,7 @@ create_png_from_table() {
 				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19 and testing/armhf since 2016-01-01)
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
 			elif [ $1 -eq 6 ] ; then
-				# armhf only has pkg sets since its complete (and only for unstable), aka 2015-12-22
+				# armhf only has pkg sets for unstable since 2015-12-22 and since 2016-02-13 for testing
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-22'"
 			fi
 		fi

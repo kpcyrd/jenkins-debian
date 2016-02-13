@@ -129,7 +129,7 @@ upgrade_to_package_build_from_git() {
 	# cleanup
 	rm $TMPDIR/git -r
 	cat $TMPDIR/$CHANGES
-	schroot --run-session -c $SESSION --directory $TMPDIR -- dcmd rm $CHANGES
+	schroot --run-session -c $SESSION --directory $TMPDIR -- dcmd rm -v $CHANGES || true
 	echo "$(date -u ) - $DEB installed."
 }
 

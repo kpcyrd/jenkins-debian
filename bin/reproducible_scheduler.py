@@ -343,7 +343,10 @@ def query_new_versions(suite, arch, limit):
                ORDER BY r.build_date
                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
     pkgs = query_db(query)
-    # this is to avoid constant rescheduling of packages in our exp repository
+    # the next line avoids constant rescheduling of packages:
+    # packages in our repository != sid or testing,
+    # so they will always be selected by the query above
+    # so we only accept them if there version is greater than the already tested one
     packages = [(x[0], x[1]) for x in pkgs if version_compare(x[2], x[3]) > 0]
     print_schedule_result(suite, arch, criteria, packages)
     return packages

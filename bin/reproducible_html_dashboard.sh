@@ -447,34 +447,50 @@ create_dashboard_page() {
 	write_page "</p>"
 	write_meta_pkg_graphs_links
 	# write inventory table
-	write_page "<p><table class=\"main\"><tr><th colspan=\"2\">Various reproducibility statistics</th></tr>"
-	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td></tr>"
-	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td></tr>"
-	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td></tr>"
+	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th><th>amd64</th><th>armhf</th></tr>"
+	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"2\"></td></tr>"
+	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"2\"></td></tr>"
+	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td><td colspan=\"2\"></td></tr>"
+
+	local TD_PKG_NOISSUES="<tr><td>packages in $SUITE with issues but without identified ones</td><td></td>"
+	local TD_PKG_FTBR="<tr><td>&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
+	local TD_PKG_FTBFS="<tr><td>&nbsp;&nbsp;- failing to build</a></td><td></td>"
+	local TD_PKG_SID="<tr><td>packages in unstable which need to be fixed</td><td></td>"
+	local TD_PKG_TESTING="<tr><td>&nbsp;&nbsp;- in testing</td><td></td>"
+
+	for ARCH in ${ARCHS} ; do
+		SUITE="unstable"
+		gather_suite_arch_stats
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+		TD_PKG_NOISSUES="$TD_PKG_NOISSUES<td><a href=\"/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+		TD_PKG_FTBR="$TD_PKG_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+		TD_PKG_FTBFS="$TD_PKG_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_SID="$TD_PKG_SID<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+		SUITE="testing"
+		gather_suite_arch_stats
+		TD_PKG_TESTING="$TD_PKG_TESTING<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+	done
+	ARCH="amd64"
 	SUITE="unstable"
-	gather_suite_arch_stats
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-	write_page "<tr><td>packages in $SUITE with issues but <a href=\"/$SUITE/$ARCH/index_no_notes.html\">without identified ones</a></td><td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-	write_page "<tr><td>&nbsp;&nbsp;- unreproducible ones</a></td><td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td></tr>"
-	RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-	write_page "<tr><td>&nbsp;&nbsp;- failing to build</a></td><td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td></tr>"
-	write_page "<tr><td>packages in $SUITE which need to be fixed</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
-	SUITE="testing"
-	gather_suite_arch_stats
-	write_page "<tr><td>&nbsp;&nbsp;- in $SUITE</td><td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td></tr>"
-	SUITE="unstable"
+	write_page "$TD_PKG_NOISSUES</tr>"
+	write_page "$TD_PKG_FTBR</tr>"
+	write_page "$TD_PKG_FTBFS</tr>"
+	write_page "$TD_PKG_SID</tr>"
+	write_page "$TD_PKG_TESTING</tr>"
+
 	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td></tr>"
-		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td></tr>"
+		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td><td colspan=\"2\"></td></tr>"
+		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td><td colspan=\"2\"></td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td></tr>"
+	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"2\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td></tr>"
+	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"2\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	if [ "$RESULT" != "0" ] ; then
-		write_page "<tr><td>&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td></tr>"
+		write_page "<tr><td>&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"2\"></td></tr>"
 	fi
 	write_page "</table>"
 	# write bugs with usertags table

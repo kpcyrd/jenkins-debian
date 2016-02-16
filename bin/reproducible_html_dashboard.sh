@@ -452,12 +452,11 @@ create_dashboard_page() {
 	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"2\"></td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td><td colspan=\"2\"></td></tr>"
 
-	local TD_PKG_NOISSUES="<tr><td>packages in $SUITE with issues but without identified ones</td><td></td>"
+	local TD_PKG_NOISSUES="<tr><td>packages in unstable with issues but without identified ones</td><td></td>"
 	local TD_PKG_FTBR="<tr><td>&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
 	local TD_PKG_FTBFS="<tr><td>&nbsp;&nbsp;- failing to build</a></td><td></td>"
 	local TD_PKG_SID="<tr><td>packages in unstable which need to be fixed</td><td></td>"
 	local TD_PKG_TESTING="<tr><td>&nbsp;&nbsp;- in testing</td><td></td>"
-
 	for ARCH in ${ARCHS} ; do
 		SUITE="unstable"
 		gather_suite_arch_stats

@@ -120,7 +120,7 @@ OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -nam
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
-	find $REP_RESULTS -maxdepth 1 -type d -name "tmp.*" -mtime +1 -exec rm -rv {} \; || true
+	find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -name "rbuild*" -exec rm -rv {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true

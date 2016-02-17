@@ -116,11 +116,11 @@ set -e
 
 # delete old temp directories
 echo "$(date -u) - Deleting temp directories, older than 2 days."
-OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -name "rbuild*" -exec ls -lad {} \; || true)
+OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -mtime +1 -name "rbuild*" -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
-	find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -name "rbuild*" -exec rm -rv {} \; || true
+	find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -mtime +1 -name "rbuild*" -exec rm -rv {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true

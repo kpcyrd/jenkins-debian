@@ -348,13 +348,13 @@ update_pkg_sets() {
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[20]}.pkgset
 		if [ -f $TMPFILE ] ; then
-			# hardcoded list derived from looking at @package.required
-			# in $src-plinth/plinth/modules/*py
+			convert_from_deb822_into_source_packages_only
+			# hardcoded list of source packages
+			# derived from looking at "@package.required" in $src-plinth/plinth/modules/*py
 			# see https://wiki.debian.org/FreedomBox/Manual/Developer#Specifying_module_dependencies
-			for PKG in tor tor-geoipdb torsocks obfs4proxy openvpn easy-rsa monkeysphere privoxy ez-ipupdate shaarli ntp deluged deluge-web mumble-server unattended-upgrades quassel-core avahi-daemon postgresql php5-pgsql owncloud php-dropbox jwchat ejabberd network-manager ikiwiki letsencrypt firewalld transmission-daemon sqlite3 roundcube roundcube-sqlite3 ; do
+			for PKG in avahi deluge easy-rsa ejabberd ez-ipupdate firewalld ikiwiki jwchat monkeysphere mumble network-manager ntp obfs4proxy openvpn owncloud php-dropbox php5 postgresql-common privoxy python-letsencrypt quassel roundcube shaarli sqlite3 tor torsocks transmission unattended-upgrades ; do
 				echo $PKG >> $TMPFILE
 			done
-			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[20]}.pkgset
 		fi
 	fi

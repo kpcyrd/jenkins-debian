@@ -350,6 +350,7 @@ update_pkg_sets() {
 		if [ -f $TMPFILE ] ; then
 			# hardcoded list derived from looking at @package.required
 			# in $src-plinth/plinth/modules/*py
+			# see https://wiki.debian.org/FreedomBox/Manual/Developer#Specifying_module_dependencies
 			for PKG in tor tor-geoipdb torsocks obfs4proxy openvpn easy-rsa monkeysphere privoxy ez-ipupdate shaarli ntp deluged deluge-web mumble-server unattended-upgrades quassel-core avahi-daemon postgresql php5-pgsql owncloud php-dropbox jwchat ejabberd network-manager ikiwiki letsencrypt firewalld transmission-daemon sqlite3 roundcube roundcube-sqlite3 ; do
 				echo $PKG >> TMPFILE
 			done

@@ -132,7 +132,7 @@ if [ -d /srv/workspace/pbuilder/ ] ; then
 	OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec ls -lad {} \; || true)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo
-		echo "Old temp directories found in $REP_RESULTS"
+		echo "Old pbuilder build directories found in /srv/workspace/pbuilder/"
 		echo -n "$OLDSTUFF"
 		find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec sudo rm -rf --one-file-system {} \; || true
 		echo

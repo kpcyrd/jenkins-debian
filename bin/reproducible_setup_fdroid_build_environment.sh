@@ -20,6 +20,7 @@ rm $WORKSPACE -rf
 mkdir -p $WORKSPACE
 
 cleanup_all() {
+	ls -lR $WORKSPACE
 	echo "$(date -u) - cleanup in progress..."
 	killall VBoxHeadless || true
 	sleep 10

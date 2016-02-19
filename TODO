@@ -150,6 +150,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
+* improve json output, so there is _one_ result per package (so not 2 or 6 like we have now)
 
 * lesser prio
 ** remove the rescheduling reason from the DB, that's really not needed

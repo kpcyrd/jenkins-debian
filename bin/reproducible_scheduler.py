@@ -297,7 +297,6 @@ def queue_packages(all_pkgs, packages, date):
 
 
 def schedule_packages(packages):
-    random.shuffle(packages)
     pkgs = ((x, packages[x]) for x in packages)
     log.debug('IDs about to be scheduled: ' + str(packages.keys()))
     query = 'INSERT INTO schedule ' + \

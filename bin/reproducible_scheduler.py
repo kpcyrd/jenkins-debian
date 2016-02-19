@@ -15,8 +15,6 @@ import lzma
 import deb822
 import aptsources.sourceslist
 import random
-from time import sleep
-from random import randint
 from subprocess import call
 from apt_pkg import version_compare
 from urllib.request import urlopen

@@ -26,6 +26,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 * teach bin/chroot-*.sh and bin/d-i_build.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
 * use static IP for the nodes (h01ger)
+* use vmdebootstrap where applicable
 
 === ToDo for improving disk space
 

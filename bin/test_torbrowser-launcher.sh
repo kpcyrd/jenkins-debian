@@ -516,6 +516,7 @@ trap cleanup_all INT TERM EXIT
 #
 echo "$(date -u) - testing torbrowser-launcher on $SUITE now."
 begin_session
+prepare_other_packages
 # the default is to test the packaged version from $SUITE
 # and there are two variations:
 if [ "$2" = "git" ] ; then
@@ -523,7 +524,6 @@ if [ "$2" = "git" ] ; then
 elif [ -n "$UPGRADE_SUITE" ] ; then
 	upgrade_to_newer_packaged_version_in $UPGRADE_SUITE
 fi
-prepare_other_packages
 download_and_launch
 end_session
 cleanup_duplicate_screenshots

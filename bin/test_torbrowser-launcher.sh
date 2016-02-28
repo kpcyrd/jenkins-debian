@@ -153,6 +153,10 @@ announce_problem_and_abort_silently() {
 
 prepare_other_packages() {
 	# once #805173 is fixed in all tested suites, ca-certificates doesn't have to be installed here anymore
+	if [ "$SUITE" = "wheezy" ] || [ "$SUITE" = "jessie" ] ; then
+		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y ca-certificates
+	fi
+	# tor is only a recommends and we don't install recommends by default…
 	if $VIA_TOR ; then
 		echo "$(date -u ) - installing tor as this test will download torbrowser via the system tor service."
 		schroot --run-session -c $SESSION --directory $TMPDIR -u root -- apt-get install -y tor

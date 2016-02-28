@@ -61,7 +61,7 @@ if [ "$SUITE" = "experimental" ] ; then
 	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main $CONTRIB"
 elif [ "$SUITE" != "unstable" ] ; then
 	EXTRA_SOURCES[6]="deb security.debian.org $SUITE/updates main $CONTRIB"
-	EXTRA_SOURCES[6]="deb-src security.debian.org $SUITE/updates main $CONTRIB"
+	EXTRA_SOURCES[7]="deb-src security.debian.org $SUITE/updates main $CONTRIB"
 fi
 
 export SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)

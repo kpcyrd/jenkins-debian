@@ -283,10 +283,14 @@ download_and_launch() {
 	if [ -n "$SETTINGS_DONE" ] ; then
 		announce_failure_and_exit "$(date -u) - settings dialog still there, please investigate."
 	fi
-	# allow the download to take up to ~22 minutes (1323 seconds)
+	if $VIA_TOR ; then
+		MAX_LOOP=52	# allow the download to take up to ~31 minutes (1898 seconds) via tor
+	else
+		MAX_LOOP=42	# allow the download to take up to ~22 minutes (1323 seconds) via https
+	fi
 	# ( echo -n "0" ; for i in $(seq 1 42) ; do echo -n "+$i+10" ; done ; echo ) | bc
 	# we watch the download directory and parse torbrowser-launchers stdout, so usually this loop won't run this long
-	for i in $(seq 1 42) ; do
+	for i in $(seq 1 $MAX_LOOP) ; do
 		sleep 10 ; sleep $i
 		STATUS="$(grep '^Download error:' $TBL_LOGFILE || true)"
 		if [ -n "$STATUS" ] ; then

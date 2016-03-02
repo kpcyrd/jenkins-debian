@@ -274,8 +274,8 @@ download_and_launch() {
 		xvkbd -text "\t\t" > /dev/null 2>&1
 		sleep 1
 	elif dpkg --compare-versions $TBL_VERSION gt 0.2.3-1~ ; then
-		echo "$(date -u) - torbrowser-launcher version >0.2.3-1~ detected ($TBL_VERSION), pressing <tab> three times more."
-		xvkbd -text "\t\t\t" > /dev/null 2>&1
+		echo "$(date -u) - torbrowser-launcher version >0.2.3-1~ detected ($TBL_VERSION), pressing <tab> four times more."
+		xvkbd -text "\t\t\t\t" > /dev/null 2>&1
 		sleep 1
 	fi
 	update_screenshot

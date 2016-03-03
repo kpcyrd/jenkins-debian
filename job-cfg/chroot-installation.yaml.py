@@ -12,7 +12,6 @@ except ImportError:
 
 
 base_distros = [
-    'squeeze',
     'wheezy',
     'jessie',
     'stretch',
@@ -20,17 +19,13 @@ base_distros = [
     ]
 
 distro_upgrades = {
-    'squeeze': 'wheezy',
     'wheezy':  'jessie',
     'jessie':  'stretch',
     'stretch': 'sid',
     }
 
-oldoldstable = 'squeeze'
-
 # ftp.de.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = {
-    'squeeze': '30 16 25 * *',
     'wheezy':  '30 16 1,15 * *',
     'jessie':  '30 10 * * 1,4',
     'stretch': '30 10 */2 * *',
@@ -85,9 +80,6 @@ all_targets = [
 # not all packages are available in all distros
 #
 def is_target_in_distro(distro, target):
-         # haskell, cinnamon, qt5 and edu tests not in squeeze
-         if distro == 'squeeze' and ( target == 'haskell' or target[:10] == 'education-' or target == 'cinnamon' or target == 'qt5' ):
-             return False
          # qt5, education-desktop-mate and cinnamon weren't in wheezy
          if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' or target == 'qt5' ):
              return False
@@ -120,7 +112,7 @@ def get_view(target, distro):
     if target == 'haskell':
         return 'haskell'
     elif target[:10] == 'education-':
-        if distro in ('squeeze', 'wheezy'):
+        if distro in ('wheezy'):
             return 'edu_stable'
         else:
             return 'edu_devel'
@@ -163,7 +155,7 @@ jobspecs = [
       'd_ext': '',
       's_ext': '',
       'dist_func': (lambda d: d),
-      'distfilter': (lambda d: tuple(set(d) - set([oldoldstable]))),
+      'distfilter': (lambda d: tuple(set(d))),
       'skiptaryet': (lambda t: False)
     },
     { 'j_ext': '_upgrade_to_{dist2}',
@@ -177,7 +169,7 @@ jobspecs = [
       'd_ext': ', then upgrade apt and dpkg to {dist2} and then everything else',
       's_ext': ' {dist2}',
       'dist_func': (lambda d: [{dist: {'dist2': distro_upgrades[dist]}} for dist in d]),
-      'distfilter': (lambda d: tuple((set(d) & set(distro_upgrades)) - set([oldoldstable]))),
+      'distfilter': (lambda d: tuple((set(d) & set(distro_upgrades)))),
       'skiptaryet': (lambda t: t[:10] == 'education-')
     },
 ]

@@ -45,7 +45,7 @@ cleanup_all() {
 
 cleanup_duplicate_screenshots() {
 	cd $RESULTS
-	echo "$(date -u) - removing duplicate and similar creenshots."
+	echo "$(date -u) - removing duplicate and similar screenshots."
 	# loop backwards through the screenshots and remove similar ones
 	# this results in keeping the interesting ones :)
 	MAXDIFF=2500 # pixels

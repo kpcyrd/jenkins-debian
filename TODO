@@ -429,11 +429,9 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 ** configure apparmor
 ** boot qemu
 ** ssh into the vm and run the script as usal
-* probably not: test with python-pygame installed.
-* probably not: test updates - add _and_upgrade to job names) - or maybe not, as tbl doesnt do this anymore…
 ** touch -d "$(date -u -d '25 hours ago' '+%Y-%m-%d %H:%M')" $FILE
-** repeat test…
-
+*** repeat test…
+* run upstream tests on stable and sid too: https://trac.torproject.org/projects/tor/wiki/doc/TorBrowser/Hacking#QAandTesting ?
 == Further ideas...
 
 === lvc, work in progress, just started

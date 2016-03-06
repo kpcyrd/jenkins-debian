@@ -302,12 +302,14 @@
                     my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
                     my_timed: '5 0,3,6,9,12,15,18,21 * * *'
             my_hname:
+                - 'bbx15':          { my_arch: 'armhf' }
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4a':         { my_arch: 'armhf' }
                 - 'cbxi4b':         { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
+                - 'ff4a':           { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'wbq0':           { my_arch: 'armhf' }
                 - 'odxu4':          { my_arch: 'armhf' }
@@ -346,12 +348,14 @@
                     my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
                     my_timed: '40 1 * * *'
             my_hname:
+                - 'bbx15':          { my_arch: 'armhf' }
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4a':         { my_arch: 'armhf' }
                 - 'cbxi4b':         { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
+                - 'ff4a':           { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'wbq0':           { my_arch: 'armhf' }
                 - 'odxu4':          { my_arch: 'armhf' }
@@ -520,6 +524,7 @@
         # to choose new jobs:
         #       for i in wbq0 cbxi4a cbxi4b cbxi4pro0 ff2a ff2b odxu4 odxu4b odxu4c opi2a opi2b rpi2b rpi2c bpi0 hb0 wbd0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
         #       8 jobs for quad-cores with 4 gb ram
+        #       6 jobs for octo-cores with 2 gb ram
         #       6 jobs for quad-cores with 2 gb ram
         #       3 jobs for dual-cores with 1 gb ram
         - '{name}_builder_{my_arch}_{my_num}':

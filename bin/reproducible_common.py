@@ -219,7 +219,7 @@ $links
 
 html_foot_page_style_note = Template((tab*2).join("""
 <p style="font-size:0.9em;">
-  A package name displayed with a bold font is an indication that this
+  A package name displayed with a <span style="font-weight: bold;">bold font</span> is an indication that this
   package has a note. Visited packages are linked in green, those which
   have not been visited are linked in blue.<br />
   A <code><span class="bug">&#35;</span></code> sign after the name of a

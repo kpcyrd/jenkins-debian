@@ -288,7 +288,7 @@ write_usertag_table() {
 #
 write_build_performance_stats() {
 	local ARCH
-	write_page "<table class=\"main\"><tr><th>Architecture statistics</th>"
+	write_page "<table class=\"main\"><tr><th>Architecture build statistics</th>"
 	for ARCH in ${ARCHS} ; do
 		write_page " <th>$ARCH</th>"
 	done
@@ -344,18 +344,22 @@ write_build_performance_stats() {
 }
 
 #
-# write suite table
+# write suite/arch table
 #
-write_suite_table() {
+write_suite_arch_table() {
+	local SUITE=""
+	local ARCH=""
 	write_page "<p>"
 	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
 	for SUITE in $SUITES ; do
-		gather_suite_arch_stats
-		write_page "<tr><td>$SUITE/$ARCH</td><td>$AMOUNT"
-		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
-			write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
-		fi
-		write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+		for ARCH in ${ARCHS} ; do
+			gather_suite_arch_stats
+			write_page "<tr><td>$SUITE/$ARCH</td><td>$AMOUNT"
+			if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
+				write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
+			fi
+			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+		done
 	done
         write_page "</table>"
 	write_page "</p><p style=\"clear:both;\">"
@@ -416,6 +420,7 @@ create_suite_arch_stats_page() {
 		fi
 	done
 	write_page "</p>"
+	write_meta_pkg_graphs_links
 	write_page_footer
 	publish_page $SUITE
 }
@@ -439,13 +444,19 @@ create_dashboard_page() {
 	PAGE=index_${VIEW}.html
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
-	write_suite_table
+	write_suite_arch_table
 	# write suite graphs
-	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+	for ARCH in ${ARCHS} ; do
+		for SUITE in $SUITES ; do
+			write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		done
+		if [ "$ARCH" = "amd64" ] ; then
+			write_meta_pkg_graphs_links
+		fi
 	done
 	write_page "</p>"
-	write_meta_pkg_graphs_links
+	SUITE="unstable"
+	ARCH="amd64"
 	# write inventory table
 	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th><th>amd64</th><th>armhf</th></tr>"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"2\"></td></tr>"
@@ -506,29 +517,17 @@ create_dashboard_page() {
 	write_page "</p>"
 	# explain setup
 	write_explaination_table debian
-	# redo arch specific pngs once a day
+	# redo arch specific pngs once a day and write build per day graphs
+	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
+		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"halfview\" alt=\"${MAINLABEL[1]}\"></a>"
 		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[1]}_$ARCH.png ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
-	# other archs: armhf
-	ARCH="armhf"
-	write_page "</p><p style=\"clear:both;\">"
-	write_suite_table
-	# write suite graphs
-	for SUITE in $SUITES ; do
-		write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
-	done
-	write_page "</p>"
-	write_meta_pkg_graphs_links
-	# write performance stats and build per day graphs
+	# write performance stats
 	write_page "<p style=\"clear:both;\">"
 	write_build_performance_stats
-	write_page "<p style=\"clear:both;\">"
-	for ARCH in ${ARCHS} ; do
-		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"halfview\" alt=\"${MAINLABEL[$i]}\"></a>"
-	done
 	# write suite builds age graphs
 	write_page "</p><p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do

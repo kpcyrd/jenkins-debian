@@ -350,7 +350,7 @@ write_suite_arch_table() {
 	local SUITE=""
 	local ARCH=""
 	write_page "<p>"
-	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>other packages</th></tr>"
+	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>not for this architecture</th><th>blacklisted</th></tr>"
 	for SUITE in $SUITES ; do
 		for ARCH in ${ARCHS} ; do
 			gather_suite_arch_stats
@@ -358,7 +358,7 @@ write_suite_arch_table() {
 			if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 				write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 			fi
-			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_OTHER / $PERCENT_OTHER%</td></tr>"
+			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_DEPWAIT / $PERCENT_DEPWAIT%</td><td>$COUNT_NOTFORUS / $PERCENT_NOTFORUS%</td><td>$COUNT_BLACKLISTED / $PERCENT_BLACKLISTED%</td></tr>"
 		done
 	done
         write_page "</table>"

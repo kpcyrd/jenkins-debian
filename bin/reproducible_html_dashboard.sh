@@ -451,12 +451,12 @@ create_dashboard_page() {
 		for SUITE in $SUITES ; do
 			write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 		done
+		SUITE="unstable"
 		if [ "$ARCH" = "amd64" ] ; then
 			write_meta_pkg_graphs_links
 		fi
 	done
 	write_page "</p>"
-	SUITE="unstable"
 	ARCH="amd64"
 	# write inventory table
 	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th><th>amd64</th><th>armhf</th></tr>"

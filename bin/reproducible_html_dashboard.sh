@@ -420,13 +420,14 @@ create_suite_arch_stats_page() {
 		fi
 	done
 	write_page "</p>"
-	write_meta_pkg_graphs_links
+	if [ "$SUITE" != "experimental" ] ; then
+		write_meta_pkg_graphs_links
+	fi
 	write_page_footer
 	publish_page $SUITE
 }
 
 write_meta_pkg_graphs_links () {
-	local SUITE=unstable	# ARCH is taken from global namespace
 	write_page "<p style=\"clear:both;\"><center>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png

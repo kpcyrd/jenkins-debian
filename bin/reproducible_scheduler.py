@@ -34,8 +34,8 @@ scheduled packages is higher than MAXIMA, only new versions are scheduled...
 
 
 Then, for each category (totally _untested_ packages, _new_ versions,
-_ftbfs+depwait_ packages and _old_ versions) it depends on how many packages are
-already scheduled in that category, in a 3 steps process.
+_ftbfs_ and  _depwait_ packages and _old_ versions) it depends on how many
+packages are already scheduled in that category, in a 3 steps process.
 
 Only when scheduling old versions MINIMUM_AGE is respected.
 
@@ -91,7 +91,7 @@ LIMITS = {
             'experimental': {1: (100, 200), 2: (200, 200), '*': 25},
         },
     },
-    'ftbfs+depwait': {
+    'ftbfs': {
         'amd64': {
             'testing': {1: (700, 40), 2: (500, 20), '*': 5},
             'unstable': {1: (700, 40), 2: (500, 20), '*': 5},
@@ -101,6 +101,18 @@ LIMITS = {
             'testing': {1: (575, 20), 2: (450, 10), '*': 5},
             'unstable': {1: (575, 20), 2: (450, 10), '*': 5},
             'experimental': {1: (575, 20), 2: (450, 10), '*': 2},
+        }
+    },
+    'depwait': {
+        'amd64': {
+            'testing': {1: (700, 400), 2: (500, 200), '*': 50},
+            'unstable': {1: (700, 400), 2: (500, 200), '*': 50},
+            'experimental': {1: (700, 400), 2: (500, 200), '*': 20},
+        },
+        'armhf': {
+            'testing': {1: (575, 200), 2: (450, 100), '*': 50},
+            'unstable': {1: (575, 200), 2: (450, 100), '*': 50},
+            'experimental': {1: (575, 200), 2: (450, 100), '*': 20},
         }
     },
     'old': {
@@ -350,14 +362,32 @@ def query_new_versions(suite, arch, limit):
     return packages
 
 
-def query_old_ftbfs_and_depwait_versions(suite, arch, limit):
-    criteria = 'status ftbfs or depwait, no bug filed, tested at least 3 days ago, ' + \
+def query_old_ftbfs_versions(suite, arch, limit):
+    criteria = 'status ftbfs, no bug filed, tested at least 3 days ago, ' + \
                'no new version available, sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 JOIN notes AS n ON n.package_id=s.id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
-                AND r.status IN ('FTBFS', 'depwait')
+                AND r.status='FTBFS'
+                AND ( n.bugs = '[]' OR n.bugs IS NULL )
+                AND r.build_date < datetime('now', '-3 days')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                ORDER BY r.build_date
+                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+    packages = query_db(query)
+    print_schedule_result(suite, arch, criteria, packages)
+    return packages
+
+
+def query_old_depwait_versions(suite, arch, limit):
+    criteria = 'status depwait, no bug filed, tested at least 3 days ago, ' + \
+               'no new version available, sorted by last build date'
+    query = """SELECT DISTINCT s.id, s.name
+                FROM sources AS s JOIN results AS r ON s.id = r.package_id
+                JOIN notes AS n ON n.package_id=s.id
+                WHERE s.suite='{suite}' AND s.architecture='{arch}'
+                AND r.status='depwait'
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < datetime('now', '-3 days')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
@@ -438,21 +468,41 @@ def schedule_new_versions(arch, total):
     return packages, msg
 
 
-def schedule_old_ftbfs_and_depwait_versions(arch, total):
+def schedule_old_ftbfs_versions(arch, total):
     packages = {}
-    limit = Limit(arch, 'ftbfs+depwait')
+    limit = Limit(arch, 'ftbfs')
     for suite in SUITES:
         limit.suite = suite
-        old_ftbfs_and_depwait = limit.get_staged_limit(total)
-        log.info('Requesting %s old ftbfs and depwait packages in %s/%s...', old_ftbfs_and_depwait,
+        old_ftbfs = limit.get_staged_limit(total)
+        log.info('Requesting %s old ftbfs and depwait packages in %s/%s...', old_ftbfs,
                  suite, arch)
-        packages[suite] = query_old_ftbfs_and_depwait_versions(suite, arch, old_ftbfs_and_depwait)
+        packages[suite] = query_old_ftbfs_versions(suite, arch, old_ftbfs)
         log.info('Received ' + str(len(packages[suite])) +
-                 ' old ftbfs and depwait packages in ' + suite + '/' + arch + ' to schedule.')
+                 ' old ftbfs packages in ' + suite + '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
-        msg += ' ftbfs and depwait versions without bugs filed'
+        msg += ' ftbfs without bugs filed'
+    else:
+        msg = ''
+    return packages, msg
+
+
+def schedule_old_depwait_versions(arch, total):
+    packages = {}
+    limit = Limit(arch, 'depwait')
+    for suite in SUITES:
+        limit.suite = suite
+        old_depwait = limit.get_staged_limit(total)
+        log.info('Requesting %s old depwait packages in %s/%s...', old_depwait,
+                 suite, arch)
+        packages[suite] = query_old_depwait_versions(suite, arch, old_depwait)
+        log.info('Received ' + str(len(packages[suite])) +
+                 ' old depwait packages in ' + suite + '/' + arch + ' to schedule.')
+        log.info('--------------------------------------------------------------')
+    msg = add_up_numbers(packages, arch)
+    if msg != '0':
+        msg += ' in depwait state'
     else:
         msg = ''
     return packages, msg
@@ -509,7 +559,8 @@ def scheduler(arch):
             empty_pkgs[suite] = []
         untested, msg_untested = empty_pkgs, ''
         new, msg_new = schedule_new_versions(arch, total)
-        old_ftbfs_and_depwait, msg_old_ftbfs_and_depwait = empty_pkgs, ''
+        old_ftbfs, msg_old_ftbfs = empty_pkgs, ''
+        old_depwait, msg_old_depwait = empty_pkgs, ''
         old, msg_old = empty_pkgs, ''
         four04, msg_404 = empty_pkgs, ''
     else:
@@ -517,9 +568,10 @@ def scheduler(arch):
                  ', scheduling some more...')
         untested, msg_untested = schedule_untested_packages(arch, total)
         new, msg_new = schedule_new_versions(arch, total+len(untested))
-        old_ftbfs_and_depwait, msg_old_ftbfs_and_depwait = schedule_old_ftbfs_and_depwait_versions(arch, total+len(untested)+len(new))
-        old, msg_old = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs_and_depwait))
-        four04, msg_404 = schedule_404_versions(arch, total+len(untested)+len(new)+len(old_ftbfs_and_depwait)+len(old))
+        old_ftbfs, msg_old_ftbfs = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
+        old_depwait, msg_old_depwait = schedule_old_depwait_versions(arch, total+len(untested)+len(new)+len(old_ftbfs))
+        four04, msg_404 = schedule_404_versions(arch, total+len(untested)+len(new)+len(old_ftbfs)+len(old_depwait))
+        old, msg_old = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs)+len(old_depwait)+len(four04))
 
     now_queued_here = {}
     # make sure to schedule packages in unstable first
@@ -539,7 +591,8 @@ def scheduler(arch):
         to_be_scheduled = queue_packages({}, untested[suite], datetime.now())
         assert(isinstance(to_be_scheduled, dict))
         to_be_scheduled = queue_packages(to_be_scheduled, new[suite], datetime.now()+timedelta(minutes=-720))
-        to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs_and_depwait[suite], datetime.now()+timedelta(minutes=360))
+        to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
+        to_be_scheduled = queue_packages(to_be_scheduled, old_depwait[suite], datetime.now()+timedelta(minutes=360))
         to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
         to_be_scheduled = queue_packages(to_be_scheduled, four04[suite], datetime.now())
         schedule_packages(to_be_scheduled)
@@ -553,8 +606,10 @@ def scheduler(arch):
         message += msg_new + ', '
     if msg_404:
         message += msg_404 + ', '
-    if msg_old_ftbfs_and_depwait:
-        message += msg_old_ftbfs_and_depwait + ', '
+    if msg_old_ftbfs:
+        message += msg_old_ftbfs + ', '
+    if msg_old_depwait:
+        message += msg_old_depwait + ', '
     if msg_old:
         message += msg_old + ', '
     total = [now_queued_here[x] for x in SUITES]
@@ -565,7 +620,7 @@ def scheduler(arch):
     log.info('--------------------------------------------------------------')
     # only notifiy irc if there were packages scheduled in any suite
     for x in SUITES:
-        if len(untested[x])+len(new[x])+len(old[x])+len(old_ftbfs_and_depwait[x]) > 0:
+        if len(untested[x])+len(new[x])+len(old[x])+len(old_ftbfs[x])+len(old_depwait[x]) > 0:
             return message
     return ''
 

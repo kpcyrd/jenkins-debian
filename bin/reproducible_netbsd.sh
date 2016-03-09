@@ -61,9 +61,10 @@ git log -1
 #                 result in the same build results.
 # also see http://man.netbsd.org/HEAD/usr/share/man/html5/mk.conf.html
 export MKREPRO="yes"	
-# MK_TIMESTAMP is set to SOURCE_DATE_EPOCH of netbsd.git
+# MKREPRO_TIMESTAMP is set to SOURCE_DATE_EPOCH of netbsd.git
+# see http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/BUILDING 
 SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
-MK_TIMESTAMP=${SOURCE_DATE_EPOCH}
+MKREPRO_TIMESTAMP=${SOURCE_DATE_EPOCH}
 
 echo "============================================================================="
 echo "$(date -u) - Building NetBSD ${NETBSD_VERSION} - first build run."
@@ -72,7 +73,7 @@ export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 # actually build everything
 for MACHINE in $MACHINES ; do
 	ionice -c 3 \
-		./build.sh -j $NUM_CPU -V MKREPRO_TIMESTAMP=$MK_TIMESTAMP -U -u -m ${MACHINE} release
+		./build.sh -j $NUM_CPU -V MKREPRO_TIMESTAMP=$MKREPRO_TIMESTAMP -U -u -m ${MACHINE} release
 	# save results in b1
 	save_netbsd_results b1 ${MACHINE}
 	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
@@ -102,7 +103,7 @@ NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 for MACHINE in $MACHINES ; do
 	ionice -c 3 \
 		linux64 --uname-2.6 \
-		./build.sh -j $NEW_NUM_CPU -V MKREPRO_TIMESTAMP=$MK_TIMESTAMP -U -u -m ${MACHINE} release
+		./build.sh -j $NEW_NUM_CPU -V MKREPRO_TIMESTAMP=$MKREPRO_TIMESTAMP -U -u -m ${MACHINE} release
 	# save results in b2
 	save_netbsd_results b2 ${MACHINE}
 	# cleanup and explicitly delete old tooldir to force re-creation for the next $MACHINE type
@@ -209,7 +210,7 @@ if [ "$GOOD_PERCENT" = "100.0" ] ; then
 else
 	write_page "."
 fi
-write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} with MKREPRO=yes and MKREPRO_TIMESTAMP=$MK_TIMESTAMP and were compared using ${DIFFOSCOPE}.</p>"
+write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} with MKREPRO=yes and MKREPRO_TIMESTAMP=$MKREPRO_TIMESTAMP and were compared using ${DIFFOSCOPE}.</p>"
 write_explaination_table NetBSD
 cat $BAD_SECTION_HTML >> $PAGE
 cat $GOOD_SECTION_HTML >> $PAGE

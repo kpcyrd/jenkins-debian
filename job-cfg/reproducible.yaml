@@ -461,6 +461,10 @@
                     my_description: 'Build a simple webpage for Fedora 23 reproducibility tests'
                     my_timed: ''
                     my_shell: '/srv/jenkins/bin/reproducible_html_rpms.sh fedora-23 x86_64'
+                - 'diffoscope_pypi'
+                    my_description: 'Test whether PyPI has the latest diffoscope.'
+                    my_timed: '23 23 * * *'
+                    my_shell: '/srv/jenkins/bin/diffoscope_pypi_test.sh'
 
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'

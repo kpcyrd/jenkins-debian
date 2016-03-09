@@ -23,10 +23,16 @@ DIFFOSCOPE_IN_PYPI=$(grep "<title>" $TMPPYPI | cut -d ">" -f2- | cut -d ":" -f1 
 echo
 echo
 if [ "$DIFFOSCOPE_IN_DEBIAN" = "$DIFFOSCOPE_IN_PYPI" ] ; then
-	echo "Yay. diffoscope in Debian has the same version as on PyPI."
+	echo "Yay. diffoscope in Debian has the same version as on PyPI: $DIFFOSCOPE_IN_DEBIAN"
 elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_PYPI" ; then
 	echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 	echo "Fail: diffoscope in PyPI:   $DIFFOSCOPE_IN_PYPI"
+	exit 1
+else
+	echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
+	echo "diffoscope in PyPI:   $DIFFOSCOPE_IN_PYPI"
+	echo
+	echo "Failure is the default action…"
 	exit 1
 fi
 

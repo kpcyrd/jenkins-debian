@@ -4,13 +4,12 @@
 # released under the GPLv=2
 
 DEBUG=false
-#. /srv/jenkins/bin/common-functions.sh
-#common_init "$@"
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
 
 cleanup_all() {
 	rm $TMPPYPI
 }
-
 
 #
 # main
@@ -23,7 +22,6 @@ curl https://pypi.python.org/pypi/diffoscope/ -o $TMPPYPI
 DIFFOSCOPE_IN_PYPI=$(grep "<title>" $TMPPYPI | cut -d ">" -f2- | cut -d ":" -f1 |cut -d " " -f2)
 echo
 echo
-
 if [ "$DIFFOSCOPE_IN_DEBIAN" = "$DIFFOSCOPE_IN_PYPI" ] ; then
 	echo "Yay. diffoscope in Debian has the same version as on PyPI."
 elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_PYPI" ; then

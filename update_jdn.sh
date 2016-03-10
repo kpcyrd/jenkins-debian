@@ -22,6 +22,7 @@ conditional_disable() {
 	if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 		case "$1" in
 			piuparts.yaml) return 1;;
+			schroot.yaml) return 1;;
 			d-i.yaml) return 1;;
 			*) return 0;;
 		esac

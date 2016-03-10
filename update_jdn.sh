@@ -193,7 +193,10 @@ if [ -f /etc/debian_version ] ; then
 			zsh
 			"
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS squid3" ;;
+			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS
+				postfix-pcre
+				squid3"
+			   ;;
 			*) ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...

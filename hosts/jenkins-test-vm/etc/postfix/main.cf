@@ -43,3 +43,4 @@ mailbox_command = /usr/bin/procmail -a "$EXTENSION"
 luser_relay = phil@localhost
 local_recipient_maps =
 mydestination = pcre:/etc/postfix/mydestinations
+canonical_maps = regexp:/etc/postfix/canonical-redirect

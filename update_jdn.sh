@@ -194,6 +194,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS
+				python3-yaml
 				postfix-pcre
 				squid3"
 			   ;;

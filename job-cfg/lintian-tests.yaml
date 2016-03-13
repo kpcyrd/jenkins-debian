@@ -58,7 +58,8 @@
     defaults: lintian-tests
     name: '{name}_sid'
     triggers:
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org lintian-maint@debian.org'

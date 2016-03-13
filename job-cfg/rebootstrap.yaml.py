@@ -83,7 +83,8 @@ print("""
       - email:
           recipients: 'jenkins+debian-bootstrap helmutg@debian.org'
     triggers:
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
     node: '{my_node}'
 """)
 

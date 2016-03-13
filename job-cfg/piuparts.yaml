@@ -52,7 +52,8 @@
     defaults: piuparts
     name: '{name}_testsuite_sid'
     triggers:
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'

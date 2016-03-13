@@ -28,7 +28,8 @@
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} debuild -b -uc -us'
     triggers:
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
     publishers:
       - email:
           recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'

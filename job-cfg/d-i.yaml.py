@@ -298,7 +298,7 @@ def jobspec_svn(key, name, desc, defaults=None,
     if defaults is not None:
         j['defaults'] = defaults
     if trigger is not None:
-        j['triggers'] = [{'pollscm': trigger}]
+        j['triggers'] = [{'pollscm': {'cron': trigger}}]
     if logkeep is not None:
         j['logrotate'] = lr(logkeep)
     return {key: j}
@@ -339,7 +339,7 @@ data.extend(
         'description': ('Builds debian packages in sid from git {branchdesc}, '
                         'triggered by pushes to <pre>{gitrepo}</pre> '
                         '{do_not_edit}'),
-        'triggers': [{'pollscm': '{trg}'}],
+        'triggers': [{'pollscm': {'cron': '{trg}'}}],
         'scm': [{'git': {'url': '{gitrepo}',
                          'branches': ['{branch}']}}],
         'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],

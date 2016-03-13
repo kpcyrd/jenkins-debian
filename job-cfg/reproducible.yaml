@@ -43,7 +43,8 @@
     description: *desc
     triggers:
       - timed: '{my_timed}'
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
     logrotate:
       daysToKeep: 90
       numToKeep: 20
@@ -186,7 +187,8 @@
             - reproducible      # no special category yet
     triggers:
       - timed: '{my_timed}'
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
     logrotate:
       daysToKeep: 90
       numToKeep: 30

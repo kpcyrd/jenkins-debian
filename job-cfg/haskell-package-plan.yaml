@@ -58,7 +58,8 @@
     defaults: haskell-package-plan
     name: '{name}'
     triggers:
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
       - timed: '0 16 * * *'    # every day at 16:00 UTC
 
 - project:

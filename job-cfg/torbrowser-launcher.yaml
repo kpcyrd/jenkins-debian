@@ -38,7 +38,8 @@
     name: torbrowser-launcher_git
     project-type: freestyle
     triggers:
-      - pollscm: '*/6 * * * *'
+      - pollscm:
+          cron: '*/6 * * * *'
       - timed: '{my_timed}'
     sb_desc: torbrowser-launcher
     properties:

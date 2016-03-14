@@ -23,6 +23,7 @@ conditional_disable() {
 		case "$1" in
 			piuparts.yaml) return 1;;
 			schroot.yaml) return 1;;
+			lvc.yaml) return 1;;
 			d-i.yaml) return 1;;
 			*) return 0;;
 		esac
@@ -195,6 +196,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS
+				libvirt-bin
 				python3-yaml
 				postfix-pcre
 				squid3"
@@ -426,7 +428,7 @@ explain "packages configured."
 # install the heart of jenkins.debian.net
 #
 cd $BASEDIR
-for dir in bin logparse job-cfg features live ; do
+for dir in bin bin/lvc logparse job-cfg features live ; do
 	sudo cp --preserve=mode,timestamps -r $dir /srv/jenkins/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done

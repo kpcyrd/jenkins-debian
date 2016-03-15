@@ -56,8 +56,8 @@ print("""
       - priority-sorter:
           priority: '150'
       - throttle:
-          max-total: 8
-          max-per-node: 4
+          max-total: 5
+          max-per-node: 5
           enabled: true
           option: category
           categories:

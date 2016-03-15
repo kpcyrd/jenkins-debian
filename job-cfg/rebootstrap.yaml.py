@@ -124,7 +124,7 @@ for arch in sorted(architectures):
                     print(
 """        - '{name}_%(suffix)s':
             my_arch: '%(arch)s'
-            my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DEBBINDIFF=%(diffoscope_value)s'
+            my_params: 'GCC_VER=%(gccver)s ENABLE_MULTILIB=%(multilib_value)s ENABLE_MULTIARCH_GCC=%(multiarch_gcc_value)s ENABLE_DIFFOSCOPE=%(diffoscope_value)s'
             my_description: 'Verify bootstrappability of Debian using gcc-%(gccver)s%(nobiarch_comment)s for %(arch)s%(supported_comment)s%(diffoscope_comment)s'
             my_branchname: 'jenkins_%(suffix)s'
             my_node: '%(node)s'

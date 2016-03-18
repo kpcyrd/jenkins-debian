@@ -11,7 +11,7 @@
  ** 17 cores and 48 GB memory for profitbricks-build5-amd64.debian.net
  ** 17 cores and 48 GB memory for profitbricks-build6-amd64.debian.net
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net (also running on Profitbricks virtual hardware)
- * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] provides and hosts 16 'armhf' systems:
+ * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] provides and hosts 18 'armhf' systems:
  ** three quad-cores with 4 GB RAM each,
  ** three octo-cores with 2 GB RAM each,
  ** seven quad-cores with 2 GB RAM each,

@@ -107,19 +107,37 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 === tests.reproducible-builds.org
 
+==== General website
 * btw, www.reproducible-builds.org is 404…
 
 * move /* to /debian/*
 * use redirects to keep old URLs working
 * setup pb9 and move rebootstrap jobs over there (needs 200gb more diskspace…=)
 * configure pb4 running 398 days in future and adapt coreboot|openwrt|netbsd|archlinux|fedora jobs to use it
-* common code base (and sql database layouts - not databases) for creating the webpages for debian|coreboot|openwrt|netbsd|archlinux|fedora
-* common navigation (using left side navi menu like on the debian pkg pages), but different themes for dashboards, indexes and package pages
+* install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
+** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
+
+==== UI/UX/front end architecture 
+* debian: common navigation (using left side navi menu like on the debian pkg pages), but different themes for dashboards, indexes and package pages
 * improve the intro texts:
 ** explain status in plain english on each dashboard, plus add an "executive summary about reproducible builds in the free software world"
 ** document in the non-debian pages, when we don't have a clear idea yet, how to record+reproduce the build environment and that this is essential for reproducible builds too.
-* install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
-** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
+* common code base for creating the webpages for debian|coreboot|openwrt|netbsd|archlinux|fedora
+** test results from different projects should be presented in similar ways (extend the bin/reproducible_*.py scripts that create the debian web pages -- first we need to fix db)
+** bin/reproducible_$foo.sh scripts should only record results to db, not build websites
+
+==== Database
+* Migrate from SQLite to Postgres
+* Overhaul database design
+** Add results from other distros to reproducible.db
+** Should be able to compare status of same package across different architectures
+** schema will have to be adapted for non-packaged based projects (like BSD's base system)
+** reproducible_schema.svg in jenkins.d.n.git is currently out of date
+* also we dont store package set membership in the db, but just with files in the filesystem.
+
+==== Tests
+* Reduce code duplication in the backend: while always being different, tests for different projects share a good amount of logic. Ideally adding a new project—e.g. testing Tor Browser—should not require writing more than a couple shell scripts and adding the right jobs to Jenkins.
+* Get more value out of the database: some of the content of the .buildinfo files could be recorded in the database, helping to understand what changes made a package (un)reproducible. Other projects than Debian might also benefit from recording the history.
 
 === Debian reproducible builds
 

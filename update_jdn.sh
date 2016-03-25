@@ -2,7 +2,7 @@
 
 set -e
 
-# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 BASEDIR=$HOME/jenkins.debian.net
@@ -34,7 +34,7 @@ explain "$(date) - begin deployment update."
 
 # run update at current date
 case $HOSTNAME in
-	profitbricks-build5-amd64|profitbricks-build6-amd64)
+	profitbricks-build5-amd64|profitbricks-build6-i386)
 		# set correct date
 		sudo ntpdate -b de.pool.ntp.org
 		;;
@@ -99,14 +99,14 @@ case $HOSTNAME in
 		TMPFSSIZE=32
 		TMPSIZE=8
 		;;
-	profitbricks-build?-amd64)
+	profitbricks-build?-(amd64|i386))
 		TMPFSSIZE=200
 		TMPSIZE=15
 		;;
 	*) ;;
 esac
 case $HOSTNAME in
-	jenkins|profitbricks-build?-amd64)
+	jenkins|profitbricks-build?-(i386|amd64))
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
 		fi
@@ -186,12 +186,12 @@ if [ -f /etc/debian_version ] ; then
 			zsh
 			"
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS squid3" ;;
+			jenkins|jenkins-test-vm|profitbricks-build?-(i386|amd64)) DEBS="$DEBS squid3" ;;
 			*) ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
-			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-amd64) DEBS="$DEBS ntpdate" ;;
+			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-i386) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/netbsd/fedora/fdroid jobs
@@ -332,7 +332,8 @@ if [ -f /etc/debian_version ] ; then
 				pbuilder || echo "this should only fail on the firts install"
 		#		botch
 		# for varying kernels
-		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-amd64" ]; then
+		# we use bpo kernels on pb-build5+6 (and i386 kernel on pb-build2-i386)
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ]; then
 			sudo apt-get install -t jessie-backports linux-image-amd64
 		fi
 		# only needed on the main node
@@ -397,7 +398,7 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 	cd /etc/munin/plugins
 	sudo rm -f postfix_* open_inodes interrupts irqstats threads proc_pri vmstat if_err_* exim_* netstat fw_forwarded_local fw_packets forks open_files users nfs* iostat_ios 2>/dev/null
 	case $HOSTNAME in
-			jenkins|profitbricks-build?-amd64) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
+			jenkins|profitbricks-build?-(amd64|i386)) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
 			*)	;;
 	esac
 	if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
@@ -547,7 +548,7 @@ explain "$(date) - finished deployment."
 
 # set time back to the future
 case $HOSTNAME in
-	profitbricks-build5-amd64|profitbricks-build6-amd64)
+	profitbricks-build5-amd64|profitbricks-build6-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	*)	;;

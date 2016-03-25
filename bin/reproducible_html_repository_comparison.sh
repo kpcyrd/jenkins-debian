@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -11,7 +11,7 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
  
 # overwrite defaults as we need this order here
-ARCHS="amd64 armhf"
+ARCHS="amd64 i386 armhf"
 
 VIEW=repositories
 PAGE=index_${VIEW}.html

@@ -99,14 +99,14 @@ case $HOSTNAME in
 		TMPFSSIZE=32
 		TMPSIZE=8
 		;;
-	profitbricks-build?-(amd64|i386))
+	profitbricks-build*)
 		TMPFSSIZE=200
 		TMPSIZE=15
 		;;
 	*) ;;
 esac
 case $HOSTNAME in
-	jenkins|profitbricks-build?-(i386|amd64))
+	jenkins|profitbricks-build*)
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
 		fi
@@ -186,7 +186,7 @@ if [ -f /etc/debian_version ] ; then
 			zsh
 			"
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build?-(i386|amd64)) DEBS="$DEBS squid3" ;;
+			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS squid3" ;;
 			*) ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
@@ -398,7 +398,7 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 	cd /etc/munin/plugins
 	sudo rm -f postfix_* open_inodes interrupts irqstats threads proc_pri vmstat if_err_* exim_* netstat fw_forwarded_local fw_packets forks open_files users nfs* iostat_ios 2>/dev/null
 	case $HOSTNAME in
-			jenkins|profitbricks-build?-(amd64|i386)) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
+			jenkins|profitbricks-build*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
 			*)	;;
 	esac
 	if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then

@@ -491,37 +491,21 @@
             my_arch: 'amd64'
             my_num:
                 -  '1': &bd_amd_1_5 { my_node1: 'profitbricks-build1', my_node2: 'profitbricks-build5' }
-                -  '2': &bd_amd_2_6 { my_node1: 'profitbricks-build2', my_node2: 'profitbricks-build6' }
-                -  '3': &bd_amd_1_6 { my_node1: 'profitbricks-build1', my_node2: 'profitbricks-build6' }
-                -  '4': &bd_amd_2_5 { my_node1: 'profitbricks-build2', my_node2: 'profitbricks-build5' }
-                -  '5': &bd_amd_6_2 { my_node1: 'profitbricks-build6', my_node2: 'profitbricks-build2' }
-                -  '6': &bd_amd_5_1 { my_node1: 'profitbricks-build5', my_node2: 'profitbricks-build1' }
-                -  '7': &bd_amd_5_2 { my_node1: 'profitbricks-build5', my_node2: 'profitbricks-build2' }
-                -  '8': &bd_amd_6_1 { my_node1: 'profitbricks-build6', my_node2: 'profitbricks-build1' }
+                -  '2': &bd_amd_5_1 { my_node1: 'profitbricks-build5', my_node2: 'profitbricks-build1' }
+                -  '3': *bd_amd_1_5
+                -  '4': *bd_amd_5_1
+                -  '5': *bd_amd_1_5
+                -  '6': *bd_amd_5_1
+                -  '7': *bd_amd_1_5
+                -  '8': *bd_amd_5_1
                 -  '9': *bd_amd_1_5
-                - '10': *bd_amd_2_6
-                - '11': *bd_amd_1_6
-                - '12': *bd_amd_2_5
-                - '13': *bd_amd_6_2
+                - '10': *bd_amd_5_1
+                - '11': *bd_amd_1_5
+                - '12': *bd_amd_5_1
+                - '13': *bd_amd_1_5
                 - '14': *bd_amd_5_1
-                - '15': *bd_amd_5_2
-                - '16': *bd_amd_6_1
-                - '17': *bd_amd_1_5
-                - '18': *bd_amd_2_6
-                - '19': *bd_amd_1_6
-                - '20': *bd_amd_2_5
-                - '21': *bd_amd_6_2
-                - '22': *bd_amd_5_1
-                - '23': *bd_amd_5_2
-                - '24': *bd_amd_6_1
-                - '25': *bd_amd_1_5
-                - '26': *bd_amd_2_6
-                - '27': *bd_amd_1_6
-                - '28': *bd_amd_2_5
-                - '29': *bd_amd_6_2
-                - '30': *bd_amd_5_1
-                - '31': *bd_amd_5_2
-                - '32': *bd_amd_6_1
+                - '15': *bd_amd_1_5
+                - '16': *bd_amd_5_1
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

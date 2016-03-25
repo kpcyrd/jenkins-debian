@@ -329,16 +329,16 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get update
 		sudo apt-get install $DEBS $MASTERDEBS
 		sudo apt-get install -t jessie-backports \
-				pbuilder || echo "this should only fail on the firts install"
+				pbuilder || echo "this should only fail on the first install"
 		#		botch
 		# for varying kernels
 		# we use bpo kernels on pb-build5+6 (and i386 kernel on pb-build2-i386)
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ]; then
-			sudo apt-get install -t jessie-backports linux-image-amd64
+			sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"
 		fi
 		# only needed on the main node
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-			sudo apt-get install -t jessie-backports jenkins-job-builder
+			sudo apt-get install -t jessie-backports jenkins-job-builder || echo "this should only fail on the first install"
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
 			sudo apt-get install -t jessie-backports ffmpeg libav-tools jenkins-job-builder
 		fi

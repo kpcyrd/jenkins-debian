@@ -323,10 +323,10 @@
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
-                - 'profitbricks2':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'i386' }
                 - 'profitbricks3':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
-                - 'profitbricks6':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'i386' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -369,10 +369,8 @@
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
-                - 'profitbricks2':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
-                - 'profitbricks6':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 

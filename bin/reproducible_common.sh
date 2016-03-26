@@ -44,7 +44,7 @@ DBDSUITE="unstable"
 # Debian suites being tested
 SUITES="testing unstable experimental"
 # Debian architectures being tested
-ARCHS="amd64 armhf"
+ARCHS="amd64 armhf i386"
 
 # define Debian build nodes in use
 . /srv/jenkins/bin/jenkins_node_definitions.sh

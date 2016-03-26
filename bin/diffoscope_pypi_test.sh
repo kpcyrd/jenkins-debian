@@ -17,7 +17,7 @@ cleanup_all() {
 TMPPYPI=$(mktemp -t diffoscope-pypi-XXXXXXXX)
 trap cleanup_all INT TERM EXIT
 
-DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep '(unstable|sid)'| cut -d "|" -f2 || true)
+DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep '(unstable|sid)'| awk '{print $3}' || true)
 curl https://pypi.python.org/pypi/diffoscope/ -o $TMPPYPI
 DIFFOSCOPE_IN_PYPI=$(grep "<title>" $TMPPYPI | cut -d ">" -f2- | cut -d ":" -f1 |cut -d " " -f2)
 echo

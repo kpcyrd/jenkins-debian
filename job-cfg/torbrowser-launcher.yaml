@@ -204,6 +204,8 @@
                                         dist: jessie,   my_hour: 4 }
               - 'debian_jessie':       { my_gitbranch: 'debian/jessie',
                                         dist: jessie,   my_hour: 4 }
+              - 'debian_jessie_proposed':          { my_gitbranch: 'debian/jessie-proposed',
+                                        dist: jessie, my_hour: 2 }
               - 'debian_jessie_download_via_tor':  { my_gitbranch: 'debian/jessie',
                                         my_opt_arg: ' via_tor', my_opt_desc: ' (download via tor)',
                                         dist: jessie,   my_hour: 4 }

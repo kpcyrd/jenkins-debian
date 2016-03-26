@@ -35,7 +35,7 @@ if os.uname()[1] == 'jenkins-test-vm':
 # tested suites
 SUITES = ['testing', 'unstable', 'experimental']
 # tested architectures
-ARCHS = ['amd64', 'armhf']
+ARCHS = ['amd64', 'armhf', 'i386']
 # defaults
 defaultsuite = 'unstable'
 defaultarch = 'amd64'

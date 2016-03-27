@@ -457,9 +457,12 @@ create_dashboard_page() {
 		fi
 	done
 	write_page "</p>"
-	ARCH="amd64"
 	# write inventory table
-	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th><th>amd64</th><th>armhf</th></tr>"
+	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th>"
+	for ARCH in ${ARCHS} ; do
+		write_page "<th>$ARCH</th>"
+	write_page "</tr>"
+	ARCH="amd64"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"2\"></td></tr>"
 	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"2\"></td></tr>"
 	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td><td colspan=\"2\"></td></tr>"
@@ -509,7 +512,7 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
 	for i in 8 9 3 7 4 5 ; do
-		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
+		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="overview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png

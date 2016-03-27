@@ -461,6 +461,7 @@ create_dashboard_page() {
 	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th>"
 	for ARCH in ${ARCHS} ; do
 		write_page "<th>$ARCH</th>"
+	done
 	write_page "</tr>"
 	ARCH="amd64"
 	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"2\"></td></tr>"

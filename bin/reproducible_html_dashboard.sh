@@ -459,14 +459,16 @@ create_dashboard_page() {
 	write_page "</p>"
 	# write inventory table
 	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th>"
+	AC=0
 	for ARCH in ${ARCHS} ; do
 		write_page "<th>$ARCH</th>"
+		let AC+=1
 	done
 	write_page "</tr>"
 	ARCH="amd64"
-	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"2\"></td></tr>"
-	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"2\"></td></tr>"
-	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td><td colspan=\"2\"></td></tr>"
+	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td><td colspan=\"$AC\"></td></tr>"
 
 	local TD_PKG_NOISSUES="<tr><td>packages in unstable with issues but without identified ones</td><td></td>"
 	local TD_PKG_FTBR="<tr><td>&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
@@ -496,16 +498,16 @@ create_dashboard_page() {
 	write_page "$TD_PKG_TESTING</tr>"
 
 	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td><td colspan=\"2\"></td></tr>"
-		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td><td colspan=\"2\"></td></tr>"
+		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/cgit/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td><td colspan=\"$AC\"></td></tr>"
+		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |wc -l)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"2\"></td></tr>"
+	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"2\"></td></tr>"
+	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	if [ "$RESULT" != "0" ] ; then
-		write_page "<tr><td>&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"2\"></td></tr>"
+		write_page "<tr><td>&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	write_page "</table>"
 	# write bugs with usertags table
@@ -513,7 +515,7 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
 	for i in 8 9 3 7 4 5 ; do
-		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="overview" alt=\"${MAINLABEL[$i]}\"></a>"
+		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
@@ -525,7 +527,7 @@ create_dashboard_page() {
 	# redo arch specific pngs once a day and write build per day graphs
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
-		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"halfview\" alt=\"${MAINLABEL[1]}\"></a>"
+		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
 		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[1]}_$ARCH.png ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi

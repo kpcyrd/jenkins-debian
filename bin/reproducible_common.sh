@@ -263,11 +263,13 @@ write_page_header() {
 		elif [ "$TARGET" = "notify" ] ; then
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "arch" ] ; then
-			if [ "$ARCH"  = "amd64" ] ; then
-				write_page "<li><a href=\"/unstable/index_suite_armhf_stats.html\">arch: armhf</a></li>"
-			else
-				write_page "<li><a href=\"/unstable/index_suite_amd64_stats.html\">arch: amd64</a></li>"
-			fi
+			for LINKARCH in ${ARCHS} ; do
+				if [ "$ARCH"  = "$LINKARCH" ] ; then
+					continue
+				else
+					write_page "<li><a href=\"/unstable/index_suite_${LINKARCH}_stats.html\">arch: $LINKARCH</a></li>"
+				fi
+			done
 		else
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		fi

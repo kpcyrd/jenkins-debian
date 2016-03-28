@@ -1324,7 +1324,7 @@ case $NAME in
 						;;
 	*_presentation)	 			monitor_system presentation 10
 						;;
-	debian-edu_*ltsp-server|debian-edu_*combi-server)	monitor_system install wait4match 3000 100 1200
+	debian-edu_*ltsp-server|debian-edu_*combi-server)	monitor_system install wait4match 6000 100
 						;;
 	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200 100
 						;;

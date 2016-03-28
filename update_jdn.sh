@@ -106,7 +106,13 @@ case $HOSTNAME in
 	*) ;;
 esac
 case $HOSTNAME in
-	jenkins|profitbricks-build*)
+	profitbricks-build*i386)
+		if ! grep -q '/srv/workspace' /etc/fstab; then
+			echo "Warning: you need to manually create a /srv/workspace partition on i386 nodes, exiting."
+			exit 1
+		fi
+		;;
+	jenkins|profitbricks-build*amd64)
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
 		fi

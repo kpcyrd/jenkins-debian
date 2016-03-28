@@ -112,7 +112,7 @@ upgrade_to_package_build_from_git() {
 	# GIT_URL is set by jenkins
 	echo "$(date -u ) - building Debian package based on branch $BRANCH from $GIT_URL."
 	# build package
-	if [ "$BRANCH" = "debian/jessie" ] ; then
+	if [ "$BRANCH" = "debian/jessie" ] || [ "$BRANCH" = "debian/jessie-proposed" ] ; then
 		local UPSTREAM_TREE=v0.1.9
 	else
 		local UPSTREAM_TREE=origin/master

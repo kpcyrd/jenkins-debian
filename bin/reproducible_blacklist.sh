@@ -59,7 +59,7 @@ explain_syntax() {
 set +x
 ARCH="$1"
 shift
-if [ "$ARCH" != "amd64" ] && [ "$ARCH" != "armhf" ] ; then
+if [ "$ARCH" != "amd64" ] && [ "$ARCH" != "armhf" ] && [ "$ARCH" != "i386" ]; then
 	explain_syntax
 	exit 1
 fi

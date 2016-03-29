@@ -636,6 +636,9 @@ create_png_from_table() {
 	if [ "$ARCH" = "armhf" ] ; then
 		# armhf was only build since 2015-08-30
 		WHERE2_EXTRA="WHERE s.datum >= '2015-08-30'"
+	elif [ "$ARCH" = "i386" ] ; then
+		# i386 was only build since 2016-03-28
+		WHERE2_EXTRA="WHERE s.datum >= '2016-03-28'"
 	else
 		WHERE2_EXTRA=""
 	fi
@@ -653,6 +656,14 @@ create_png_from_table() {
 			elif [ $1 -eq 6 ] ; then
 				# armhf only has pkg sets for unstable since 2015-12-22 and since 2016-02-13 for testing
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-22'"
+			fi
+		elif [ "$ARCH" = "i386" ]  ; then
+			if [ $1 -eq 2 ] ; then
+				# i386 was only build since 2016-03-28
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
+			elif [ $1 -eq 6 ] ; then
+				# i386 only has pkg sets since that day too, but maybe I'll change that
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
 			fi
 		fi
 		# testing/amd64 was only build since...

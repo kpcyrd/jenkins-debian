@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
 # Based on the reproducible_common.sh by © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #

@@ -313,7 +313,7 @@ def _gen_links(suite, arch):
         html += '<li><a href="/' + i + '/index_suite_' + arch + '_stats.html">suite: ' + i + '</a></li>'
     for linkarch in ARCHS:
         if arch != linkarch:
-            html += '<li><a href="/unstable/index_suite_' + linkarch + '_stats.html\">arch: ' + arch + '</a></li>'
+            html += '<li><a href="/unstable/index_suite_' + linkarch + '_stats.html\">arch: ' + linkarch + '</a></li>'
     return html
 
 

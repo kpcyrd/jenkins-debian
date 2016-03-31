@@ -117,7 +117,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
 ** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
 
-* See https://wiki.debian.org/ReproducibleBuilds/TestsToDo for website related todo list
+* See https://wiki.debian.org/ReproducibleBuilds/TestsToDo for the tests.reproducible-builds.org related ToDo list.
 
 === Debian reproducible builds
 

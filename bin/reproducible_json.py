@@ -16,7 +16,6 @@ import json
 import os
 import tempfile
 
-
 output = []
 output4tracker = []
 
@@ -32,13 +31,49 @@ result = sorted(query_db(query))
 log.info('\tprocessing ' + str(len(result)))
 
 keys = ['package', 'version', 'suite', 'architecture', 'status', 'build_date']
+crossarchkeys = ['package', 'version', 'suite', 'status']
+archdetailkeys = ['architecture', 'status', 'build_date']
+
+# crossarch is a dictionary of all packages used to build a summary of the package's test results
+# across all archs (for suite=unstable only)
+crossarch = {}
 for row in result:
     pkg = dict(zip(keys, row))
     log.debug(pkg)
     output.append(pkg)
+
     # tracker.d.o should only care about results in unstable
     if pkg['suite'] == 'unstable':
-        output4tracker.append(pkg)
+
+        package = pkg['package']
+        if package in crossarch:
+
+            # compare statuses to get cross-arch package status
+            status1 = crossarch[package]['status']
+            status2 = pkg['status']
+            newstatus = ''
+
+            if 'FTBFS' in [status1, status2]:
+                newstatus = 'FTBFS'
+            elif 'unreproducible' in [status1, status2]:
+                newstatus = 'unreproducible'
+            elif 'reproducible' in [status1, status2]:
+                newstatus = 'reproducible'
+            else:
+                newstatus = 'depwait'
+
+            # update the crossarch status
+            crossarch[package]['status'] = newstatus
+
+            # add arch specific test results to architecture_details list
+            crossarch[package]['architecture_details'].append({key:pkg[key] for key in archdetailkeys})
+
+        else:
+            # add package to crossarch
+            crossarch[package] = {key:pkg[key] for key in crossarchkeys}
+            crossarch[package]['architecture_details'] = [{key:pkg[key] for key in archdetailkeys}]
+
+output4tracker = list(crossarch.values())
 
 # normal json
 tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_JSON))[1]

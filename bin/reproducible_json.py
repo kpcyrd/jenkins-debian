@@ -32,7 +32,7 @@ log.info('\tprocessing ' + str(len(result)))
 
 keys = ['package', 'version', 'suite', 'architecture', 'status', 'build_date']
 crossarchkeys = ['package', 'version', 'suite', 'status']
-archdetailkeys = ['architecture', 'status', 'build_date']
+archdetailkeys = ['architecture', 'version', 'status', 'build_date']
 
 # crossarch is a dictionary of all packages used to build a summary of the package's test results
 # across all archs (for suite=unstable only)

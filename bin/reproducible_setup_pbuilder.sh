@@ -126,6 +126,13 @@ setup_pbuilder() {
 BASETGZ=/var/cache/pbuilder/$SUITE-reproducible-base.tgz
 STAMP=/var/log/jenkins/$SUITE-reproducible-base.tgz.stamp
 OLDSTAMP=$(find $STAMP -mtime +1 -exec ls -lad {} \; || echo "nostamp")
+NOW=$(mktemp)
+if [ $STAMP -nt $NOW ] ; then
+	echo "$STAMP file was created in the future, please investigate..."
+	rm $NOW > /dev/null
+	exit 1
+fi
+rm $NOW > /dev/null
 if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	if [ ! -f $BASETGZ ] ; then
 		echo "No $BASETGZ exists, creating a new one..."

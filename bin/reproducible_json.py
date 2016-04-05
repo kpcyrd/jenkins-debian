@@ -12,9 +12,12 @@
 
 from reproducible_common import *
 
+from apt_pkg import version_compare
+import aptsources.sourceslist
 import json
 import os
 import tempfile
+
 
 output = []
 output4tracker = []
@@ -34,9 +37,11 @@ keys = ['package', 'version', 'suite', 'architecture', 'status', 'build_date']
 crossarchkeys = ['package', 'version', 'suite', 'status']
 archdetailkeys = ['architecture', 'version', 'status', 'build_date']
 
-# crossarch is a dictionary of all packages used to build a summary of the package's test results
-# across all archs (for suite=unstable only)
+# crossarch is a dictionary of all packages used to build a summary of the
+# package's test results across all archs (for suite=unstable only)
 crossarch = {}
+
+crossarchversions = {}
 for row in result:
     pkg = dict(zip(keys, row))
     log.debug(pkg)
@@ -47,31 +52,56 @@ for row in result:
 
         package = pkg['package']
         if package in crossarch:
-
             # compare statuses to get cross-arch package status
             status1 = crossarch[package]['status']
             status2 = pkg['status']
             newstatus = ''
 
-            if 'FTBFS' in [status1, status2]:
-                newstatus = 'FTBFS'
-            elif 'unreproducible' in [status1, status2]:
-                newstatus = 'unreproducible'
-            elif 'reproducible' in [status1, status2]:
-                newstatus = 'reproducible'
-            else:
-                newstatus = 'depwait'
+            # compare the versions (only keep most up to date!)
+            version1 = crossarch[package]['version']
+            version2 = pkg['version']
+            versionscompared = version_compare(version1, version2);
 
-            # update the crossarch status
+            # if version1 > version2,
+            # skip the package results we are currently inspecting
+            if (versionscompared > 0):
+                break
+
+            # if version1 < version2,
+            # delete the package results with the older version
+            elif (versionscompared < 0):
+                newstatus = status2
+                # remove the old package information from the list
+                archlist = crossarch[package]['architecture_details']
+                newarchlist = [a for a in archlist if a['version'] != version1]
+                crossarch[package]['architecture_details'] = newarchlist
+
+            # if version1 == version 2,
+            # we are comparing status for the same (most recent) version
+            else:
+                if 'FTBFS' in [status1, status2]:
+                    newstatus = 'FTBFS'
+                elif 'unreproducible' in [status1, status2]:
+                    newstatus = 'unreproducible'
+                elif 'reproducible' in [status1, status2]:
+                    newstatus = 'reproducible'
+                else:
+                    newstatus = 'depwait'
+
+            # update the crossarch status and version
             crossarch[package]['status'] = newstatus
+            crossarch[package]['version'] = version2
 
             # add arch specific test results to architecture_details list
-            crossarch[package]['architecture_details'].append({key:pkg[key] for key in archdetailkeys})
+            newarchdetails = {key:pkg[key] for key in archdetailkeys}
+            crossarch[package]['architecture_details'].append(newarchdetails)
+
 
         else:
             # add package to crossarch
             crossarch[package] = {key:pkg[key] for key in crossarchkeys}
-            crossarch[package]['architecture_details'] = [{key:pkg[key] for key in archdetailkeys}]
+            crossarch[package]['architecture_details'] = \
+                [{key:pkg[key] for key in archdetailkeys}]
 
 output4tracker = list(crossarch.values())
 

@@ -143,13 +143,15 @@ create_pkg_sets_pages() {
 			LABEL="package set '${META_PKGSET[$j]}' in $SUITE/$ARCH"
 			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of:"
-			if [ "$ARCH" = "amd64" ] ; then
-				local LINKED_ARCH=armhf
-			else
-				local LINKED_ARCH=amd64
-			fi
-			write_page "      (this set on <a href=\"/$SUITE/$LINKED_ARCH/pkg_set_${META_PKGSET[$i]}.html\">$LINKED_ARCH</a>)"
-			write_page "<br />&nbsp;<br />"
+			write_page "      (this set on "
+			for LINKARCH in ${ARCHS} ; do
+				if [ "$LINKARCH" = "$ARCH" ] ; then
+					continue
+				else
+					write_page "<a href=\"/$SUITE/$LINKARCH/pkg_set_${META_PKGSET[$i]}.html\">$LINKARCH</a> "
+				fi
+			done
+			write_page ") <br />&nbsp;<br />"
 			set_icon unreproducible
 			write_icon
 			write_page "$COUNT_META_BAD ($PERCENT_META_BAD%) packages failed to build reproducibly:"

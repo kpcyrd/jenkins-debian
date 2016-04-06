@@ -65,7 +65,7 @@ for row in result:
             # if version1 > version2,
             # skip the package results we are currently inspecting
             if (versionscompared > 0):
-                break
+                continue
 
             # if version1 < version2,
             # delete the package results with the older version

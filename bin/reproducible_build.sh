@@ -559,6 +559,9 @@ BUILDUSERID=1111
 BUILDUSERNAME=pbuilder1
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
+export LANG="C"
+unset LC_ALL
+export LANGUAGE="en_US:en"
 EOF
 	# remember to change the sudoers setting if you change the following command
 	# FIXME: call with --buildinfo-identifier=dummy instead and below
@@ -595,6 +598,7 @@ export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="fr_CH.UTF-8"
 export LC_ALL="fr_CH.UTF-8"
+export LANGUAGE="fr_CH:fr"
 umask 0002
 EOF
 	set +e

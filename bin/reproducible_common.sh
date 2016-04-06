@@ -395,7 +395,8 @@ write_explaination_table() {
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
 	if [ "$1" = "debian" ]  ; then
-		write_page "<tr><td>env LANG</td><td>LANG=C</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANG</td><td>LANG=\"C\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANGUAGE</td><td>LANGUAGE=\"en_US:en\"</td><td>LANGUAGE=\"fr_CH:fr\"</td></tr>"
 	elif [ "$1" = "Arch Linux" ]  ; then
 		write_page "<tr><td>env LANG</td><td><em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	else

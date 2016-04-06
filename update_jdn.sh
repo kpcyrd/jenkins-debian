@@ -172,6 +172,7 @@ if [ -f /etc/debian_version ] ; then
 			haveged
 			htop
 			less
+			locales-all
 			molly-guard
 			moreutils
 			munin-node

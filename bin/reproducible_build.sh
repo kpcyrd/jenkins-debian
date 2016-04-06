@@ -591,14 +591,26 @@ second_build() {
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	NEW_NUM_CPU=$NUM_CPU	# on amd64+i386 we vary this based on node choices (by design), on armhf only sometimes.
+	# differ locale+language depending on the architecture (mostly for readability by different people…)
+	case $ARCH in
+		armel)	locale=it_CH
+			language=it
+			;;
+		i386)	locale=de_CH
+			language=de
+			;;
+		*)	locale=fr_CH
+			language=fr
+			;;
+	esac
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=2222
 BUILDUSERNAME=pbuilder2
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-export LANG="fr_CH.UTF-8"
-export LC_ALL="fr_CH.UTF-8"
-export LANGUAGE="fr_CH:fr"
+export LANG="$locale.UTF-8"
+export LC_ALL="$locale.UTF-8"
+export LANGUAGE="$locale:$language"
 umask 0002
 EOF
 	set +e

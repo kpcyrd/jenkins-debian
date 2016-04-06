@@ -426,13 +426,17 @@ write_explaination_table() {
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
-			write_page "<tr><td>kernel version</td></td><td>one of:"
-			write_page " $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
-			write_page " $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep -v amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page "<tr><td>kernel version</td></td><td>"
+			for a in ${ARCHS} ; do
+				write_page "<br />on $a one of:"
+				write_page "$(cat /srv/reproducible-results/node-information/*$a* | grep KERNEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			done
 			write_page "</td>"
-			write_page "<td>(on amd64 systematically varied, on armhf not yet)<br />"
-			write_page "one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
-			write_page "one of: $(cat /srv/reproducible-results/node-information/* | grep KERNEL | grep -v amd64 | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page "<td>(on amd64 systematically varied, on i386 too (and also with 32 and 64 bit kernel variation) on armhf not yet)<br />"
+			for a in ${ARCHS} ; do
+				write_page "<br />on $a one of:"
+				write_page "$(cat /srv/reproducible-results/node-information/*$a* | grep KERNEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			done
 			write_page "</td></tr>"
 		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
@@ -446,7 +450,7 @@ write_explaination_table() {
 	fi
 	FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on amd64: same for both builds (currently, work in progress<br />on armhf: sometimes varied (depending on the build job)</td></tr>"
+		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on amd64 and i386: same for both builds (currently, work in progress)<br />on armhf: sometimes varied (depending on the build job)</td></tr>"
 		write_page "<tr><td>/bin/sh</td><td>/bin/dash</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>year, month, date</td><td>today ($DATE) or on amd64 also: $FUTURE</td><td>on amd64: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else

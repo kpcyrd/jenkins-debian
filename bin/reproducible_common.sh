@@ -664,8 +664,8 @@ create_png_from_table() {
 				# i386 was only build since 2016-03-28
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
 			elif [ $1 -eq 6 ] ; then
-				# i386 only has pkg sets since that day too, but maybe I'll change that
-				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
+				# i386 only has pkg sets since later to make nicer graphs
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-04-06'"
 			fi
 		fi
 		# testing/amd64 was only build since...

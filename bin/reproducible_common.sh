@@ -368,21 +368,18 @@ write_explaination_table() {
 	write_page "<table class=\"main\" id=\"variation\"><tr><th>variation</th><th width=\"40%\">first build</th><th width=\"40%\">second build</th></tr>"
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>hostname</td><td>one of:"
-		local FIRST=""
 		for a in ${ARCHS} ; do
+			local COMMA=""
 			local ARCH_NODES=""
 			write_page "<br />&nbsp;&nbsp;"
 			for i in $(echo $BUILD_NODES | sed -s 's# #\n#g' | sort -u) ; do
 				if [ "$(echo $i | grep $a)" ] ; then
-					ARCH_NODES="${ARCH_NODES}$(echo $i | cut -d '.' -f1 | sed -s 's# ##g')"
-					if [ -z $FIRST ] ; then
-						FIRST=", "
-					else
-						ARCH_NODES="${ARCH_NODES}$FIRST"
+					echo -n "$COMMA ${ARCH_NODES}$(echo $i | cut -d '.' -f1 | sed -s 's# ##g')" >> $PAGE
+					if [ -z $COMMA ] ; then
+						COMMA=","
 					fi
 				fi
 			done
-			write_page "${ARCH_NODES}"
 		done
 		write_page "</td><td>i-capture-the-hostname</td></tr>"
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"

@@ -461,7 +461,7 @@ write_explaination_table() {
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
-			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>on amd64 only: additionally the \"future builds\" also run 6h and 23min ahead</td></tr>"
+			write_page "<tr><td>hour, minute</td><td>at least the minute will probably vary between two builds anyway...</td><td>on amd64 and i386 the \"future builds\" additionally run 6h and 23min ahead</td></tr>"
 		        write_page "<tr><td>filesystem</td><td>tmpfs</td><td><em>temporarily not</em> varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\"https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"
 		else
 			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"

@@ -392,10 +392,10 @@ write_explaination_table() {
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
 	if [ "$1" = "debian" ]  ; then
-		write_page "<tr><td>env LANG</td><td>LANG=\"C\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
-		write_page "<tr><td>env LANGUAGE</td><td>LANGUAGE=\"en_US:en\"</td><td>LANGUAGE=\"fr_CH:fr\"</td></tr>"
+		write_page "<tr><td>env LANG</td><td>LANG=\"C\"</td><td>on amd64: LANG=\"fr_CH.UTF-8\"<br />on i386: LANG=\"de_CH.UTF-8\"<br />on armhf: LANG=\"it_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANGUAGE</td><td>LANGUAGE=\"en_US:en\"</td><td>on amd64: LANGUAGE=\"fr_CH:fr\"<br />on i386: LANGUAGE=\"de_CH:de\"<br />on armhf: LANGUAGE=\"it_CH:it\"</td></tr>"
 	elif [ "$1" = "Arch Linux" ]  ; then
-		write_page "<tr><td>env LANG</td><td><em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANG</td><td><em>not set</em></td><td>on amd64: LANG=\"fr_CH.UTF-8\"<br />on i386: LANG=\"de_CH.UTF-8\"<br />on armel: LANG=\"it_CH.UTF-8\"</td></tr>"
 	else
 		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 	fi

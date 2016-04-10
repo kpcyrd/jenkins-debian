@@ -109,6 +109,8 @@ peNsYNcna2Ca8Imozzc5L424lXN3MaiTql7Y1lZJFF5Y/wznbjUQj/5YXj3LVB3W
 echo
 echo "Configuring APT to ignore the Release file expiration"
 echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
+echo "Configuring APT to not download package descriptions"
+echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/10no-package-descriptions
 echo
 EOF
 }

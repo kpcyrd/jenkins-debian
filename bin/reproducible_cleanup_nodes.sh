@@ -40,8 +40,16 @@ for NODE in $BUILD_NODES ; do
 	# call jenkins_master_wrapper.sh so we only need to track different ssh ports in one place
 	# jenkins_master_wrapper.sh needs NODE_NAME and JOB_NAME
 	export NODE_NAME=$NODE
-	echo "$(date -u) - Killing build processes on $NODE now:"
-	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_slay.sh || true
-	echo "$(date -u) - done killing processes on $NODE."
+	echo "$(date -u) - Killing build processes on $NODE in background now."
+	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_slay.sh &
 done
+
+sleep 15
+echo "killing all ssh and sleep processes now. (press enter || ctrl-c)"
+read
+killall ssh
+killall sleep
+killall -9 ssh
+killall -9 sleep
+echo "$(date -u) - slaughtering done. Happy rebooting or whatever you plan to do."
 

@@ -59,7 +59,7 @@ if [ "$SUITE" = "experimental" ] ; then
 	SUITE=sid
 	EXTRA_SOURCES[0]="deb $MIRROR experimental main $CONTRIB"
 	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main $CONTRIB"
-elif [ "$SUITE" != "unstable" ] ; then
+elif [ "$SUITE" != "unstable" ] && [ "$SUITE" != "sid" ] ; then
 	EXTRA_SOURCES[6]="deb http://security.debian.org $SUITE/updates main $CONTRIB"
 	EXTRA_SOURCES[7]="deb-src http://security.debian.org $SUITE/updates main $CONTRIB"
 fi

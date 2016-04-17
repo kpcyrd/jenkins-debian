@@ -131,7 +131,7 @@ Installation tests inside chroot environments.
 
 * See https://wiki.debian.org/ReproducibleBuilds to learn more about "Reproducible Builds" in Debian and beyond.
 
-* Several jobs are being used to assemble the website https://tests.reproducible-builds.org which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in an SQLite database which can be downloaded from https://reproducible.debian.net/reproducible.db. (That copy is updated every four hours.)
+* Several jobs are being used to assemble the website https://tests.reproducible-builds.org which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in an SQLite database which can be downloaded from https://tests.reproducible-builds.org/reproducible.db. (That copy is updated every four hours.)
 
 * The (current) purpose of https://tests.reproducible-builds.org is to show the prospects of reproducible builds for Debian - and six other projects currently. This is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project for Debian!
 
@@ -152,7 +152,7 @@ Installation tests inside chroot environments.
 ** old versions, already tested (at least two weeks ago)
 ** and also some old versions which failed to build (at least ten days ago), if no bug has been filed.
 
-* Several other jobs exist to build the html pages and to create two JSON files which can be downloaded from https://reproducible.debian.net/reproducible.json and https://reproducible.debian.net/reproducible-tracker.json. The 1st one has all the data (except history) and the 2nd has all the data we consider relevant to bother maintainers with, that is, some ftbfs isses are excluded.
+* Several other jobs exist to build the html pages and to create two JSON files which can be downloaded from https://tests.reproducible-builds.org/reproducible.json and https://tests.reproducible-builds.org/reproducible-tracker.json. The 1st one has all the data (except history) and the 2nd has all the data we consider relevant to bother maintainers with, that is, some ftbfs isses are excluded.
 
 * Information from https://anonscm.debian.org/cgit/reproducible/notes.git is incorporated on pushes to that git repo.
 
@@ -176,7 +176,7 @@ Installation tests inside chroot environments.
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_blacklist.sh $suite $package1
 ----
 
-* We support sending automatic link:https://reproducible.debian.net/index_notify.html[email notification] for status changes to maintainers. Enabling/disabling these notifications can be done by people with shell access to jenkins:
+* We support sending automatic link:https://tests.reproducible-builds.org/index_notify.html[email notification] for status changes to maintainers. Enabling/disabling these notifications can be done by people with shell access to jenkins:
 
 ----
 jenkins@jenkins:~$ /srv/jenkins/bin/reproducible_setup_notify.py -h

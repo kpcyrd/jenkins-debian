@@ -565,7 +565,7 @@ export LANGUAGE="en_US:en"
 EOF
 	# remember to change the sudoers setting if you change the following command
 	# FIXME: call with --buildinfo-identifier=dummy instead and below
-	( sudo timeout -k 12.1h 12h /usr/bin/ionice -c 3 /usr/bin/nice \
+	( sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
 	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
 		--debbuildopts "-b --buildinfo-identifier=${ARCH}" \
@@ -576,7 +576,7 @@ EOF
 	) 2>&1 | tee -a $RBUILDLOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 12h." | tee -a b1/build.log $RBUILDLOG
+		echo "$(date -u) - pbuilder was killed by timeout after 18h." | tee -a b1/build.log $RBUILDLOG
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
@@ -618,7 +618,7 @@ EOF
 	# (the 2nd build gets a longer timeout trying to make sure the first build
 	# aint wasted when then 2nd happens on a highly loaded node)
 	# fix: call with --buildinfo-identifier=dummy instead (and above)
-	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
+	sudo timeout -k 24.1h 24h /usr/bin/ionice -c 3 /usr/bin/nice \
 		/usr/bin/unshare --uts -- \
 		/usr/sbin/pbuilder --build \
 			--configfile $TMPCFG \
@@ -631,7 +631,7 @@ EOF
 	PRESULT=$?
 	set -e
 	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 18h." | tee -a b2/build.log
+		echo "$(date -u) - pbuilder was killed by timeout after 24h." | tee -a b2/build.log
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG

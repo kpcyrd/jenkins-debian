@@ -84,7 +84,7 @@
       - timed: '{my_timed}'
     wrappers:
       - timeout:
-          timeout: 1560
+          timeout: 2640 # (24+18+2)*60
     logrotate:
       daysToKeep: 3
       numToKeep: 300

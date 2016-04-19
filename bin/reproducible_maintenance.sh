@@ -115,12 +115,12 @@ fi
 set -e
 
 # delete old temp directories
-echo "$(date -u) - Deleting temp directories, older than 2 days."
-OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -mtime +1 -name "rbuild*" -exec ls -lad {} \; || true)
+echo "$(date -u) - Deleting temp directories, older than 3 days."
+OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -mtime +2 -name "rbuild*" -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
-	find $REP_RESULTS -maxdepth 1 -type d -mtime +1 -name "tmp.*" -o -mtime +1 -name "rbuild*" -exec rm -rv {} \; || true
+	find $REP_RESULTS -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -mtime +2 -name "rbuild*" -exec rm -rv {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
@@ -128,13 +128,13 @@ fi
 
 # delete old pbuilder build directories
 if [ -d /srv/workspace/pbuilder/ ] ; then
-	echo "$(date -u) - Deleting pbuilder build directories, older than 2 days."
-	OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec ls -lad {} \; || true)
+	echo "$(date -u) - Deleting pbuilder build directories, older than 3 days."
+	OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec ls -lad {} \; || true)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo
 		echo "Old pbuilder build directories found in /srv/workspace/pbuilder/"
 		echo -n "$OLDSTUFF"
-		find /srv/workspace/pbuilder/ -maxdepth 1 -regex '.*/[0-9]+' -type d -mtime +1 -exec sudo rm -rf --one-file-system {} \; || true
+		find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
 		echo
 		DIRTY=true
 	fi
@@ -145,14 +145,14 @@ echo "$(date -u) - Removing unused schroot sessions."
 cleanup_schroot_sessions
 
 # find old schroots
-echo "$(date -u) - Removing schroots older than 2 days."
-OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +1 -exec ls -lad {} \; || true)
+echo "$(date -u) - Removing schroots older than 3 days."
+OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
-	echo "schroots older than 2 days found in /schroots, which will be deleted:"
-	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +1 -exec sudo rm -rf --one-file-system {} \; || true
+	echo "schroots older than 3 days found in /schroots, which will be deleted:"
+	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
 	echo "$OLDSTUFF"
-	OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +1 -exec ls -lad {} \; || true)
+	OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \; || true)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo
 		echo "Warning: Tried, but failed to delete these:"
@@ -231,14 +231,14 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
 			WHERE p.date_scheduled != ''
 			AND p.date_build_started IS NOT NULL
-			AND p.date_build_started < datetime('now', '-36 hours')
+			AND p.date_build_started < datetime('now', '-48 hours')
 			ORDER BY p.date_scheduled
 		"
 	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
 	if grep -q '|' $PACKAGES ; then
 		echo
-		echo "Packages found where the build was started more than 36h ago:"
+		echo "Packages found where the build was started more than 48h ago:"
 		printf ".width 0 25 \n $QUERY ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 		echo
 		for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
@@ -308,8 +308,8 @@ done
 if [ -s $RESULT ] ; then
 	for PROCESS in $(cat $RESULT | cut -d " " -f1 | grep -v ^UID | xargs echo) ; do
 		AGE=$(ps -p $PROCESS -o etimes= || echo 0)
-		# a single build may only take half a day, so...
-		if [ $AGE -gt $(( 12*60*60 )) ] ; then
+		# a single build may take day, so... (first build: 18h, 2nd: 24h)
+		if [ $AGE -gt $(( 24*60*60 )) ] ; then
 			echo "$PROCESS" >> $TOKILL
 		fi
 	done
@@ -336,8 +336,8 @@ PSCALL=""
 for i in $PBUIDS ; do
 	for p in $(pgrep -u $i) ; do
 		AGE=$(ps -p $p -o etimes= || echo 0)
-		# let's be generous and consider 14 hours here...
-		if [ $AGE -gt $(( 14*60*60 )) ] ; then
+		# let's be generous and consider 26 hours here...
+		if [ $AGE -gt $(( 26*60*60 )) ] ; then
 			sudo kill -9 $p 2>&1 || (echo "Could not kill:" ; ps -F -p "$p")
 			sleep 2
 			# check it's gone

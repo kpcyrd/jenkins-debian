@@ -168,6 +168,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** database issues
 *** stats_build table should have package ids, not just src+suite+arch as primary key
 *** move "untested" field in stats table too? (as in csv output...)
+*** new status: "timeout" - for when packages fail to build due to the max build time timeout
 ** blacklist script should tell if a package was already blacklisted. also proper options should be used...
 ** maintenance.sh: delete the history pages once a page has been removed from all suites+archs
 ** reproducible.debian.net rename: rgrep all the files…

@@ -42,6 +42,7 @@ check_whohas() {
 		echo "Fail: diffoscope in $DISTRIBUTION:   $DIFFOSCOPE_IN_WHOHAS"
 		exit 1
 	else
+		# FIXME: archlinux package version will be greater than Debian: 52-1 vs 52
 		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "diffoscope in $DISTRIBUTION:   $DIFFOSCOPE_IN_WHOHAS"
 		echo
@@ -62,6 +63,7 @@ case $1 in
 	FreeBSD|NetBSD|MacPorts)
 		DISTRIBUTION=$1
 		check_whohas
+		# missing to test: Arch, Fedora, maybe OpenBSD
 		;;
 	*)
 		echo "Unsupported distribution."

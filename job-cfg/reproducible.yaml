@@ -464,7 +464,7 @@
                 - 'diffoscope_pypi':
                     my_description: 'Test whether PyPI has the latest diffoscope.'
                     my_timed: '23 23 * * *'
-                    my_shell: '/srv/jenkins/bin/diffoscope_pypi_test.sh'
+                    my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh pypi'
 
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'

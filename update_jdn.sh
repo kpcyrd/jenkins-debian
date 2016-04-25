@@ -323,7 +323,8 @@ if [ -f /etc/debian_version ] ; then
 				unclutter 
 				virt-viewer 
 				vncsnapshot 
-				vnstat 
+				vnstat
+				whohas
 				x11-apps 
 				x11vnc 
 				xtightvncviewer

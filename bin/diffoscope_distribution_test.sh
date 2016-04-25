@@ -30,21 +30,42 @@ check_pypi() {
 	fi
 }
 
+check_whohas() {
+	# the following is "broken" as sort doesn't do proper version comparison
+	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | awk '{print $3}' | sort -u | tail -1)
+	echo
+	echo
+	if [ "$DIFFOSCOPE_IN_DEBIAN" = "$DIFFOSCOPE_IN_WHOHAS" ] ; then
+		echo "Yay. diffoscope in Debian has the same version as $DISTRIBUTION has: $DIFFOSCOPE_IN_DEBIAN"
+	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_WHOHAS" ; then
+		echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
+		echo "Fail: diffoscope in $DISTRIBUTION:   $DIFFOSCOPE_IN_WHOHAS"
+		exit 1
+	else
+		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
+		echo "diffoscope in $DISTRIBUTION:   $DIFFOSCOPE_IN_WHOHAS"
+		echo
+		echo "Failure is the default action…"
+		exit 1
+	fi
+}
+
+
 #
 # main
 #
 DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep '(unstable|sid)'| awk '{print $3}' || true)
 
 case $1 in
-	pypi)	
+	PyPI)	check_pypi
+		;;
+	FreeBSD|NetBSD|MacPorts)
 		DISTRIBUTION=$1
-		check_pypi
+		check_whohas
 		;;
 	*)
 		echo "Unsupported distribution."
 		exit 1
 		;;
 esac
-
-
 

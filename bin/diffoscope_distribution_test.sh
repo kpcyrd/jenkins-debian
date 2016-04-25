@@ -64,7 +64,7 @@ case $1 in
 	FreeBSD|NetBSD|MacPorts)
 		DISTRIBUTION=$1
 		check_whohas
-		# missing to test: Arch, Fedora, maybe OpenBSD
+		# missing tests: Arch, Fedora, openSUSE, maybe OpenBSD, Guix…
 		;;
 	*)
 		echo "Unsupported distribution."

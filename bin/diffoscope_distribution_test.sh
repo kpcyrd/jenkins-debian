@@ -31,7 +31,8 @@ check_pypi() {
 }
 
 check_whohas() {
-	# the following is "broken" as sort doesn't do proper version comparison
+	# the following is "broken" (but good enough for now)
+	# as sort doesn't do proper version comparison
 	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | awk '{print $3}' | sort -u | tail -1)
 	echo
 	echo
@@ -39,12 +40,12 @@ check_whohas() {
 		echo "Yay. diffoscope in Debian has the same version as $DISTRIBUTION has: $DIFFOSCOPE_IN_DEBIAN"
 	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_WHOHAS" ; then
 		echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
-		echo "Fail: diffoscope in $DISTRIBUTION:   $DIFFOSCOPE_IN_WHOHAS"
+		echo "Fail: diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
 		exit 1
 	else
 		# FIXME: archlinux package version will be greater than Debian: 52-1 vs 52
 		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
-		echo "diffoscope in $DISTRIBUTION:   $DIFFOSCOPE_IN_WHOHAS"
+		echo "diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
 		echo
 		echo "Failure is the default action…"
 		exit 1

@@ -449,7 +449,7 @@ write_explaination_table() {
 	fi
 	FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on amd64 and i386: same for both builds (currently, work in progress)<br />on armhf: sometimes varied (depending on the build job)</td></tr>"
+		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on amd64: systematically varied (AMD or Intel CPU with different names & features)<br />on i386: same for both builds (currently, work in progress)<br />on armhf: sometimes varied (depending on the build job), but only the minor CPU revision</td></tr>"
 		write_page "<tr><td>/bin/sh</td><td>/bin/dash</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>year, month, date</td><td>today ($DATE) or (on amd64 and i386 only) also: $FUTURE</td><td>on amd64 and i386: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else

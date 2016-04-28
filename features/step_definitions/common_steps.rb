@@ -376,8 +376,8 @@ Given /^I select the Desktop task$/ do
 end
 
 Given /^I install GRUB$/ do
-  #@screen.wait("d-i_InstallGRUB.png", 80 * 60)
-  @screen.wait("Install the GRUB", 80 * 60)
+  @screen.wait("d-i_InstallGRUB.png", 80 * 60)
+  #@screen.wait("Install the GRUB", 80 * 60)
   @screen.type(Sikuli::Key.ENTER)
   @screen.wait("d-i_GRUBEnterDev.png", 10 * 60)
   @screen.type(Sikuli::Key.DOWN)

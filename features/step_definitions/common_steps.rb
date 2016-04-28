@@ -399,7 +399,7 @@ Given /^I make sure that we boot from disk$/ do
 end
 
 Given /^I wait for a Login Prompt$/ do
-  @screen.wait("amnesia", 60)
+  @screen.wait("DebianLoginPromptVT.png", 2 * 60)
 end
 
 def bootsplash

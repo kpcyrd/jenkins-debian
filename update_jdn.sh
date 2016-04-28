@@ -203,7 +203,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run coreboot/openwrt/netbsd/fedora/fdroid jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64) DEBS="$DEBS
+			profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
 				bison
 				cmake
 				diffutils
@@ -359,7 +359,7 @@ fi
 #
 # prepare mock to build rpms
 #
-if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
+if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 	if ! grep mock /etc/group ; then
 		# these 4 commands are obsolete with mock 1.2.3-1 (=stretch)
 		sudo groupadd --system mock
@@ -517,7 +517,7 @@ fi
 #
 # generate the kgb-client configurations
 #
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then

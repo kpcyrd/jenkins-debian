@@ -1,0 +1,7 @@
+[fedora-23-src]
+name=fedora 23 sources
+baseurl=http://ftp.informatik.uni-frankfurt.de/fedora/releases/23/Everything/source/SRPMS
+enabled=1
+gpgcheck=0
+#gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+

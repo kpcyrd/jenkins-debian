@@ -355,7 +355,8 @@ if [ -f /etc/debian_version ] ; then
 				whohas
 				x11-apps 
 				x11vnc
-				x11vnc 
+				x11vnc
+				x264
 				xtightvncviewer
 				xvfb
 				xvkbd

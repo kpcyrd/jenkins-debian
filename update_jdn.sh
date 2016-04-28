@@ -202,27 +202,6 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS
-					cucumber
-					tesseract-ocr
-					i18nspector
-					libav-tools
-					libsikuli-script-java
-					libvirt-dev
-					ovmf
-					python-jabberbot
-					python-potr
-					ruby-guestfs
-					ruby-libvirt
-					ruby-net-irc
-					ruby-packetfu
-					ruby-rb-inotify
-					ruby-rjb
-					ruby-test-unit
-					tcpdump
-					unclutter
-					virt-viewer
-					xvfb
-					x11vnc
 				libvirt-bin
 				python3-yaml
 				postfix-pcre
@@ -270,7 +249,7 @@ if [ -f /etc/debian_version ] ; then
 			   ;;
 			*) ;;
 		esac
-		if [ "$HOSTNAME" = "jenkins" ] ; then
+		if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			MASTERDEBS=" 
 				apache2 
 				apt-file 
@@ -283,7 +262,7 @@ if [ -f /etc/debian_version ] ; then
 				cmake 
 				cron-apt 
 				csvtool 
-				cucumber 
+				cucumber
 				dnsmasq-base 
 				dose-extra 
 				dstat 
@@ -294,21 +273,25 @@ if [ -f /etc/debian_version ] ; then
 				git-notifier 
 				gocr 
 				graphviz 
+				i18nspector
 				iasl 
 				imagemagick 
 				ip2host
 				jekyll
 				kgb-client
 				libapache2-mod-macro 
+				libav-tools
 				libav-tools 
 				libcap2-bin 
 				libfile-touch-perl 
 				libguestfs-tools 
 				libjson-rpc-perl 
+				libsikuli-script-java
 				libsikuli-script-java 
 				libsoap-lite-perl 
 				libvirt0 
 				libvirt-bin 
+				libvirt-dev
 				libvirt-dev 
 				libvpx1 
 				libxslt1-dev 
@@ -332,8 +315,10 @@ if [ -f /etc/debian_version ] ; then
 				python-arpy 
 				python-hachoir-metadata 
 				python-imaging 
+				python-jabberbot
 				python-lzma 
 				python-pip 
+				python-potr
 				python-rpy2 
 				python-setuptools 
 				python-twisted 
@@ -343,28 +328,39 @@ if [ -f /etc/debian_version ] ; then
 				qemu-system-x86 
 				qemu-user-static 
 				radvd 
+				ruby-guestfs
 				ruby-json 
+				ruby-libvirt
 				ruby-libvirt 
+				ruby-net-irc
+				ruby-packetfu
 				ruby-packetfu 
+				ruby-rb-inotify
+				ruby-rjb
 				ruby-rjb 
 				ruby-rspec 
+				ruby-test-unit
 				seabios 
 				shorewall 
 				shorewall6 
 				sqlite3 
 				syslinux 
 				tcpdump
+				tesseract-ocr
 				tor
+				unclutter
 				unclutter 
+				virt-viewer
 				virt-viewer 
 				vncsnapshot 
 				vnstat
 				whohas
 				x11-apps 
+				x11vnc
 				x11vnc 
 				xtightvncviewer
-				xvkbd
 				xvfb
+				xvkbd
 				zutils"
 		else
 			MASTERDEBS=""

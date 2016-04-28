@@ -138,5 +138,5 @@ for arch in sorted(architectures):
                      supported_comment=" using the supported method" if supported else "",
                      diffoscope_value="yes" if diffoscope else "no",
                      diffoscope_comment=" showing diffoscopes" if diffoscope else "",
-                     node="profitbricks4"))
+                     node="profitbricks9"))
 

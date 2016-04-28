@@ -1,5 +1,51 @@
 def checkpoints
   {
+    'boot-d-i-to-tasksel' => {
+      :description => "I have started Debian Installer and stopped at the Tasksel prompt",
+      #:parent_checkpoint => 'no-network-logged-in',
+      :steps => [
+	'I create a 8 GiB disk named "target"',
+	'I plug ide drive "target"',
+	'I start the computer',
+	'the computer boots DebianInstaller',
+	'I select British English',
+	'I accept the hostname, using "example.com" as the domain',
+	'I set the root password to "rootme"',
+	'I set the password for "Philip Hands" to be "verysecret"',
+	'I select full-disk, single-filesystem partitioning',
+	'I note that the Base system is being installed',
+	'I accept the default mirror',
+	'I ignore Popcon',
+	'we reach the Tasksel prompt',
+      ],
+    },
+
+    'debian-minimal-install' => {
+      :description => "I have installed Minimal Debian",
+      :parent_checkpoint => 'boot-d-i-to-tasksel',
+      :steps => [
+	'I hit ENTER',
+	'I install GRUB',
+	'I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
+      ],
+    },
+
+    'debian-gnome-install' => {
+      :description => "I have installed Gnome Desktop Debian",
+      :parent_checkpoint => 'boot-d-i-to-tasksel',
+      :steps => [
+	'I select the Desktop task',
+	'I install GRUB',
+	'I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
+      ],
+    },
+
     'tails-greeter' => {
       :description => "I have started Tails from DVD without network and stopped at Tails Greeter's login screen",
       :parent_checkpoint => nil,

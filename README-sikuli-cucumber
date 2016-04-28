@@ -1,0 +1,13 @@
+Key names:
+
+  http://doc.sikuli.org/keys.html
+
+Running the thing by hand:
+
+  ./bin/lvc/run_test_suite --view --iso /var/lib/libvirt/images/debian-8.3.0-amd64-i386-netinst.iso --old-iso /var/lib/libvirt/images/debian-8.3.0-amd64-i386-netinst.iso DebianLive/apt.feature
+
+FIXME - I added a git repo to:
+
+  /var/lib/jenkins/workspace/lvc_debian-installer_jessie_standard_apt
+
+in order to shut-up Tail's script that looks for git repos to populate some variables -- need to strip that out, or make it overridable.

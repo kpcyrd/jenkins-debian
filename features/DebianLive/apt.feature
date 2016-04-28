@@ -1,19 +1,14 @@
 @product
-Feature: Installing packages through APT
-  As a Tails user
-  I should be able to install packages using APT
+Feature: Doing a trivial d-i install
+  As a normal user
+  I should be able to do a text-mode install
 
-  Background:
-    Given a computer
-    And I capture all network traffic
+  Scenario Outline: Install Debian and boot to login prompt
+    Given I have installed <type> Debian
     And I start the computer
-    And the computer boots DebianLive
-    And I save the state so the background can be restored next scenario
+    Then I wait for a Login Prompt
 
-  Scenario: APT sources are configured correctly
-    Then the only hosts in APT sources are "ftp.us.debian.org,http.debian.net,ftp.debian.org,security.debian.org"
-
-  Scenario: Install packages using apt-get
-    When I update APT using apt-get
-    Then I should be able to install a package using apt-get
-
+    Examples:
+      | type          |
+      | Minimal       |
+      | Gnome Desktop |

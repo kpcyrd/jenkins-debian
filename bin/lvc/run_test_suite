@@ -264,20 +264,13 @@ fi
 export SIKULI_HOME="/usr/share/java"
 export SIKULI_IMAGE_PATH="/srv/jenkins/features/images/"
 export RUBYLIB="/srv/jenkins"
-export FEATURE_PATH="/srv/jenkins/features"
 export VM_XML_PATH="/srv/jenkins/features/domains"
 export DISPLAY=${TARGET_DISPLAY}
-CUCUMBEROPTS="--verbose --backtrace --expand"
 check_dependencies cucumber
 
-set -x
+# cludge ruby to stop buffering output
+RUBY_STDOUT_SYNC=$TMPDIR/.stdout-sync.rb
+echo STDOUT.sync = true > $RUBY_STDOUT_SYNC
+export RUBYOPT="-r $RUBY_STDOUT_SYNC"
 
-if [ -z "${*}" ]; then
-    cucumber $CUCUMBEROPTS --format ExtraHooks::Pretty $FEATURE_PATH
-else
-    FEATURES=""
-    for f in ${*} ; do
-	FEATURES="$FEATURES $FEATURE_PATH/$f"
-    done
-    cucumber $CUCUMBEROPTS --format ExtraHooks::Pretty $FEATURE_PATH/step_definitions $FEATURE_PATH/support $FEATURES
-fi
+cucumber ${@}

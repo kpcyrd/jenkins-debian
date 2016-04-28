@@ -31,7 +31,7 @@
       - email:
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
-          artifacts: '*.webm, {my_pngs}'
+          artifacts: 'run-*/*.mkv, {my_pngs}'
           latest-only: false
       - image-gallery:
           - title: '{my_title}'
@@ -40,7 +40,7 @@
     wrappers:
       - live-screenshot
     builders:
-      - shell: 'rm $WORKSPACE/*.png -f >/dev/null; /srv/jenkins/bin/lvc/run_test_suite {my_params}'
+      - shell: 'rm $WORKSPACE/*.png $WORKSPACE/*.mvk -f >/dev/null; /srv/jenkins/bin/lvc/run_test_suite {my_params}'
     triggers:
       - timed: '{my_time}'
 
@@ -48,13 +48,17 @@
     defaults: lvc
     name: '{name}_debian-live_{distro}_{flavour}_apt'
 
+- job-template:
+    defaults: lvc
+    name: '{name}_debian-installer_{distro}_{flavour}_apt'
+
 - project:
     name: lvc
     my_title: '{dist_name} {flav_name}'
     my_time: '23 45 31 12 *'
-    my_pngs: 'apt-*.png'
+    my_pngs: 'run-*/*.png'
     my_description: 'Work in progress...'
-    my_params: '--capture lvc_debian-live_{distro}_{flavour}_apt.webm --tmpdir $WORKSPACE --iso /srv/live-build/results/{distro}_{flavour}_live_amd64.iso DebianLive/apt.feature'
+    my_params: '--capture lvc_debian-live_{distro}_{flavour}_apt.webm --tmpdir $WORKSPACE --iso /srv/live-build/results/{distro}_{flavour}_live_amd64.iso -- --verbose --backtrace --expand --format pretty DebianLive/apt.feature'
     jobs:
         - '{name}_debian-live_{distro}_{flavour}_apt':
             distro:
@@ -79,10 +83,9 @@
                 - 'xfce': {flav_name: 'Xfce Desktop'}
             my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
 
-        - '{name}_debian-live_{distro}_{flavour}_apt':
+        - '{name}_debian-installer_{distro}_{flavour}_apt':
             distro:
-                - 'wheezy': {dist_name: 'Debian Live 7'}
+                - 'jessie': {dist_name: 'Debian-Installer 8'}
             flavour:
-                - 'gnome-desktop': {flav_name: 'GNOME desktop'}
                 - 'standard':      {flav_name: 'standard'}
-            my_params: '--capture lvc_debian-live_{distro}_{flavour}_apt.webm --tmpdir $WORKSPACE --iso /var/lib/jenkins/debian-live-7.7.0-amd64-{flavour}.iso DebianLive/apt.feature'
+            my_params: '--capture --iso /srv/live-build/results/debian-8.3.0-amd64-netinst.iso --tmpdir $WORKSPACE --old-iso /srv/live-build/results/debian-8.3.0-amd64-netinst.iso -- --format pretty --format pretty_debug --out $WORKSPACE/pretty_debug.log /srv/jenkins/features/step_definitions /srv/jenkins/features/support /srv/jenkins/features/DebianLive/apt.feature'

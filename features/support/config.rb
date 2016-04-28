@@ -54,9 +54,9 @@ DEBUG_LOG_PSEUDO_FIFO = "#{$config["TMPDIR"]}/debug_log_pseudo_fifo"
 DISPLAY = ENV['DISPLAY']
 GIT_DIR = ENV['PWD']
 KEEP_SNAPSHOTS = !ENV['KEEP_SNAPSHOTS'].nil?
-LIVE_USER = cmd_helper(". config/chroot_local-includes/etc/live/config.d/username.conf; echo ${LIVE_USERNAME}").chomp
-TAILS_ISO = ENV['TAILS_ISO']
-OLD_TAILS_ISO = ENV['OLD_TAILS_ISO'] || TAILS_ISO
+LIVE_USER = "live_user"
+TAILS_ISO = ENV['ISO']
+OLD_TAILS_ISO = ENV['OLD_ISO'] || TAILS_ISO
 TIME_AT_START = Time.now
 loop do
   ARTIFACTS_DIR = $config['TMPDIR'] + "/run-" +
@@ -76,9 +76,9 @@ end
 
 # Constants that are statically initialized.
 CONFIGURED_KEYSERVER_HOSTNAME = 'hkps.pool.sks-keyservers.net'
-LIBVIRT_DOMAIN_NAME = "TailsToaster"
+LIBVIRT_DOMAIN_NAME = "DebianToaster"
 LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2545404"
-LIBVIRT_NETWORK_NAME = "TailsToasterNet"
+LIBVIRT_NETWORK_NAME = "DebianToasterNet"
 LIBVIRT_NETWORK_UUID = "f2305af3-2a64-4f16-afe6-b9dbf02a597e"
 MISC_FILES_DIR = "#{Dir.pwd}/features/misc_files"
 SERVICES_EXPECTED_ON_ALL_IFACES =
@@ -104,5 +104,5 @@ TOR_AUTHORITIES =
   ]
 VM_XML_PATH = "#{Dir.pwd}/features/domains"
 
-TAILS_SIGNING_KEY = cmd_helper(". #{Dir.pwd}/config/amnesia; echo ${AMNESIA_DEV_KEYID}").tr(' ', '').chomp
+#TAILS_SIGNING_KEY = cmd_helper(". #{Dir.pwd}/config/amnesia; echo ${AMNESIA_DEV_KEYID}").tr(' ', '').chomp
 TAILS_DEBIAN_REPO_KEY = "221F9A3C6FA3E09E182E060BC7988EA7A358D82E"

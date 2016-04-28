@@ -129,7 +129,7 @@ end
 
 BeforeFeature('@product') do |feature|
   if TAILS_ISO.nil?
-    raise "No Tails ISO image specified, and none could be found in the " +
+    raise "No ISO image specified, and none could be found in the " +
           "current directory"
   end
   if File.exist?(TAILS_ISO)

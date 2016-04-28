@@ -257,15 +257,157 @@ When /^I destroy the computer$/ do
   $vm.destroy_and_undefine
 end
 
-Given /^the computer (re)?boots DebianLive(|\d+)$/ do |reboot,version|
-  next if @skip_steps_while_restoring_background
+Given /^the computer (re)?boots DebianInstaller(|\d+)$/ do |reboot,version|
+
+  boot_timeout = 30
+  # We need some extra time for memory wiping if rebooting
+
+  @screen.wait("d-i8_bootsplash.png", boot_timeout)
+  @screen.type(Sikuli::Key.TAB)
+
+  @screen.type(' preseed/early_command="echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
+               Sikuli::Key.ENTER)
+  $vm.wait_until_remote_shell_is_up
+end
+
+Given /^I select British English$/ do
+  @screen.wait("DebianInstallerSelectLangEnglish.png", 30)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("DebianInstallerCountrySelection.png", 10)
+  @screen.type(Sikuli::Key.UP)
+  @screen.waitVanish("DebianInstallerCountrySelection.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("DebianInstallerSelectLangEnglishUK.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I accept the hostname, using "([^"]*)" as the domain$/ do |domain|
+  @screen.wait("DebianInstallerHostnamePrompt.png", 5*60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("DebianInstallerDomainPrompt.png", 10)
+  @screen.type(domain + Sikuli::Key.ENTER)
+  @screen.waitVanish("DebianInstallerDomainPrompt.png", 10)
+end
+
+Given /^I set the root password to "([^"]*)"$/ do |rootpw|
+# Root Password, twice
+  @screen.wait("DebianInstallerRootPassword.png", 30)
+  @screen.type(rootpw + Sikuli::Key.ENTER)
+  @screen.waitVanish("DebianInstallerRootPassword.png", 10)
+  @screen.type(rootpw + Sikuli::Key.ENTER)
+end
+
+Given /^I set the password for "([^"]*)" to be "([^"]*)"$/ do |fullname,password|
+# Username, and password twice
+  @screen.wait("DebianInstallerNameOfUser.png", 10)
+  @screen.type(fullname + Sikuli::Key.ENTER)
+  @screen.waitVanish("DebianInstallerNameOfUser.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("DebianInstallerUserPassword.png", 10)
+  @screen.type(password + Sikuli::Key.ENTER)
+  @screen.waitVanish("DebianInstallerUserPassword.png", 10)
+  @screen.type(password + Sikuli::Key.ENTER)
+end
+
+  #@screen.wait("DebianInstallerNoDiskFound.png", 60)
+
+Given /^I select full-disk, single-filesystem partitioning$/ do
+  @screen.wait("DebianInstallerPartitioningMethod.png", 60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("DebianInstallerSelectDiskToPartition.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("DebianInstallerPartitioningScheme.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("d-i_FinishPartitioning.png", 10)
+  sleep(5) # FIXME -- why do we need this?  It's weird that the wait is not enough
+  @screen.type(Sikuli::Key.ENTER)
+  # prompt about Writing Partitions to disk:
+  @screen.wait("d-i_No.png", 10)
+  @screen.type(Sikuli::Key.TAB)
+  @screen.wait("d-i_Yes.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I note that the Base system is being installed$/ do
+  @screen.wait("DebianInstallerInstallingBaseSystem.png", 30)
+  @screen.waitVanish("DebianInstallerInstallingBaseSystem.png", 15 * 60)
+end
+
+Given /^I accept the default mirror$/ do
+  @screen.wait("DebianInstallerMirrorCountry.png", 10 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("d-i_ArchiveMirror.png", 5)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("d-i_HttpProxy.png", 5)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I neglect to scan more CDs$/ do
+  @screen.wait("d-i_ScanCD.png", 15 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("d-i_UseNetMirror.png", 10)
+  @screen.wait("d-i_Yes.png", 10)
+  @screen.type(Sikuli::Key.TAB)
+  @screen.wait("d-i_No.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I ignore Popcon$/ do
+  #@screen.wait("d-i_popcon.png", 10 * 60)
+  @screen.wait("d-i_No.png", 10 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^we reach the Tasksel prompt$/ do
+  @screen.wait("d-i_ChooseSoftware.png", 5 * 60)
+end
+
+Given /^I hit ENTER$/ do
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I select the Desktop task$/ do
+  @screen.wait("d-i_ChooseSoftware.png", 10)
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.wait("d-i_DesktopTask_Yes.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I install GRUB$/ do
+  #@screen.wait("d-i_InstallGRUB.png", 80 * 60)
+  @screen.wait("Install the GRUB", 80 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait("d-i_GRUBEnterDev.png", 10 * 60)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.wait("d-i_GRUBdev.png", 10)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I allow reboot after the install is complete$/ do
+  @screen.wait("d-i_InstallComplete.png", 2 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I wait for the reboot$/ do
+  @screen.wait(bootsplash, 10 * 60)
+end
+
+Given /^I make sure that we boot from disk$/ do
+  @screen.wait("d-i_GRUB_Debian.png", 5 * 60)
+end
+
+Given /^I wait for a Login Prompt$/ do
+  @screen.wait("amnesia", 60)
+end
 
 def bootsplash
   case @os_loader
   when "UEFI"
     'TailsBootSplashUEFI.png'
   else
-    'TailsBootSplash.png'
+    'd-i8_bootsplash.png'
   end
 end
 
@@ -274,15 +416,16 @@ def bootsplash_tab_msg
   when "UEFI"
     'TailsBootSplashTabMsgUEFI.png'
   else
-    if reboot
-      bootsplash = 'TailsBootSplashPostReset.png'
-      bootsplash_tab_msg = 'TailsBootSplashTabMsgPostReset.png'
-      boot_timeout = 120
-    else
-      bootsplash = "DebianLive#{version}BootSplash.png"
-      bootsplash_tab_msg = "DebianLive#{version}BootSplashTabMsg.png"
+    #if reboot
+    #  bootsplash = 'TailsBootSplashPostReset.png'
+    #  bootsplash_tab_msg = 'TailsBootSplashTabMsgPostReset.png'
+    #  boot_timeout = 120
+    #else
+      #bootsplash = "DebianLive#{version}BootSplash.png"
+      bootsplash = "DebianLiveBootSplash.png"
+      bootsplash_tab_msg = "DebianLiveBootSplashTabMsg.png"
       boot_timeout = 30
-    end
+    #end
   end
 end
 

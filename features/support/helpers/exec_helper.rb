@@ -1,5 +1,6 @@
 require 'json'
 require 'socket'
+require 'io/wait'
 
 class VMCommand
 
@@ -12,8 +13,9 @@ class VMCommand
 
   def VMCommand.wait_until_remote_shell_is_up(vm, timeout = 90)
     try_for(timeout, :msg => "Remote shell seems to be down") do
-      Timeout::timeout(3) do
-        VMCommand.execute(vm, "echo 'hello?'")
+    sleep(20)
+      Timeout::timeout(10) do
+        VMCommand.execute(vm, "echo 'true'")
       end
     end
   end
@@ -34,20 +36,26 @@ class VMCommand
     socket = TCPSocket.new("127.0.0.1", vm.get_remote_shell_port)
     debug_log("#{type}ing as #{options[:user]}: #{cmd}")
     begin
-      socket.puts(JSON.dump([type, options[:user], cmd]))
-      s = socket.readline(sep = "\0").chomp("\0")
+      #socket.puts(JSON.dump([type, options[:user], cmd]))
+      socket.puts( "\n")
+      sleep(1)
+      socket.puts( "\003")
+      sleep(1)
+      socket.puts( cmd + "\n")
+      sleep(1)
+      while socket.ready?
+        s = socket.readline(sep = "\n").chomp("\n")
+        debug_log("#{type} read: #{s}") if not(options[:spawn])
+        if ('true' == s) then
+          break
+        end
+      end
     ensure
       socket.close
     end
-    debug_log("#{type} returned: #{s}") if not(options[:spawn])
-    begin
-      return JSON.load(s)
-    rescue JSON::ParserError
-      # The server often returns something unparsable for the very
-      # first execute() command issued after a VM start/restore
-      # (generally from wait_until_remote_shell_is_up()) presumably
-      # because the TCP -> serial link isn't properly setup yet. All
-      # will be well after that initial hickup, so we just retry.
+    if ('true' == s)
+      return true
+    else
       return VMCommand.execute(vm, cmd, options)
     end
   end

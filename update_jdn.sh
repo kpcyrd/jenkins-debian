@@ -57,9 +57,15 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo adduser --system --shell /bin/bash --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
-for user in helmut holger mattia lunar philh ; do
+for user in helmut holger mattia lunar philh phil ; do
 	if [ "$user" = "lunar" ] && [ "$HOSTNAME" != "jenkins" ] ; then
 		# lunar only wants to configure jekyll
+		continue
+	fi
+	if [ "$user" = "phil" ] && [ "$HOSTNAME" != "jenkins-test-vm" ] ; then
+		# phil only wants to test stuff
+		sudo adduser $user libvirt
+		sudo adduser $user libvirt-qemu
 		continue
 	fi
 	if [ "$user" = "philh" ] && [ "$HOSTNAME" != "jenkins-test-vm" ] ; then
@@ -196,10 +202,32 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS
+					cucumber
+					tesseract-ocr
+					i18nspector
+					libav-tools
+					libsikuli-script-java
+					libvirt-dev
+					ovmf
+					python-jabberbot
+					python-potr
+					ruby-guestfs
+					ruby-libvirt
+					ruby-net-irc
+					ruby-packetfu
+					ruby-rb-inotify
+					ruby-rjb
+					ruby-test-unit
+					tcpdump
+					unclutter
+					virt-viewer
+					xvfb
+					x11vnc
 				libvirt-bin
 				python3-yaml
 				postfix-pcre
 				squid3"
+				# make sure that nested KVM is enabled (see whist:/etc/modprobe.d/kvm-intel-nested.conf)
 			   ;;
 			*) ;;
 		esac

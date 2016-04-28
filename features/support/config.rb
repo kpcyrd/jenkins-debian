@@ -1,11 +1,11 @@
 require 'fileutils'
 require 'yaml'
-require "#{Dir.pwd}/features/support/helpers/misc_helpers.rb"
+require "features/support/helpers/misc_helpers.rb"
 
 # These files deal with options like some of the settings passed
 # to the `run_test_suite` script, and "secrets" like credentials
 # (passwords, SSH keys) to be used in tests.
-CONFIG_DIR = "#{Dir.pwd}/features/config"
+CONFIG_DIR = "/srv/jenkins/features/config"
 DEFAULTS_CONFIG_FILE = "#{CONFIG_DIR}/defaults.yml"
 LOCAL_CONFIG_FILE = "#{CONFIG_DIR}/local.yml"
 LOCAL_CONFIG_DIRS_FILES_GLOB = "#{CONFIG_DIR}/*.d/*.yml"
@@ -72,7 +72,7 @@ LIBVIRT_DOMAIN_NAME = "DebianToaster"
 LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2545404"
 LIBVIRT_NETWORK_NAME = "DebianToasterNet"
 LIBVIRT_NETWORK_UUID = "f2305af3-2a64-4f16-afe6-b9dbf02a597e"
-MISC_FILES_DIR = "#{Dir.pwd}/features/misc_files"
+MISC_FILES_DIR = "/srv/jenkins/features/misc_files"
 SERVICES_EXPECTED_ON_ALL_IFACES =
   [
    ["cupsd",    "0.0.0.0", "631"],
@@ -94,7 +94,7 @@ TOR_AUTHORITIES =
    "171.25.193.9",
    "154.35.175.225",
   ]
-VM_XML_PATH = "#{Dir.pwd}/features/domains"
+VM_XML_PATH = "/srv/jenkins/features/domains"
 
 #TAILS_SIGNING_KEY = cmd_helper(". #{Dir.pwd}/config/amnesia; echo ${AMNESIA_DEV_KEYID}").tr(' ', '').chomp
 TAILS_DEBIAN_REPO_KEY = "221F9A3C6FA3E09E182E060BC7988EA7A358D82E"

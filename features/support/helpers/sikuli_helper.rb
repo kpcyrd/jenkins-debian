@@ -208,6 +208,6 @@ sikuli_settings.OcrDataPath = $config["TMPDIR"]
 # positives).
 sikuli_settings.MinSimilarity = 0.9
 sikuli_settings.ActionLogs = true
-sikuli_settings.DebugLogs = true
+sikuli_settings.DebugLogs = false
 sikuli_settings.InfoLogs = true
 sikuli_settings.ProfileLogs = true

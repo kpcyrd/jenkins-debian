@@ -527,7 +527,7 @@ create_dashboard_page() {
 	done
 	write_page "</p>"
 	# explain setup
-	write_explaination_table debian
+	write_variation_table debian
 	# redo arch specific pngs once a day and write build per day graphs
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do

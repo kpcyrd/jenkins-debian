@@ -360,7 +360,7 @@ write_page_meta_sign() {
 	write_page "A <code><span class=\"bug\">&#35;</span></code> sign after the name of a package indicates that a bug is filed against it. Likewise, a <code><span class=\"bug-patch\">&#43;</span></code> sign indicates there is a patch available, a <code><span class="bug-pending">P</span></code> means a pending bug while <code><span class=\"bug-done\">&#35;</span></code> indicates a closed bug. In cases of several bugs, the symbol is repeated.</p>"
 }
 
-write_explaination_table() {
+write_variation_table() {
 	write_page "<p style=\"clear:both;\">"
 	if [ "$1" = "fedora-23" ] ; then
 		write_page "There are no variations introduced in the $1 builds yet. Stay tuned.</p>"

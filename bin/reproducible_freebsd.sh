@@ -212,7 +212,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	fi
 	write_page "        These tests were last run on $DATE for the branch $FREEBSD_TARGET at commit ${FREEBSD_VERSION[$FREEBSD_TARGET]} using ${DIFFOSCOPE}.</p>"
 done
-write_explaination_table FreeBSD
+write_variation_table FreeBSD
 set -x
 for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	ls ${FILES_HTML[$FREEBSD_TARGET]}

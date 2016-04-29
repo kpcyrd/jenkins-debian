@@ -211,7 +211,7 @@ else
 	write_page "."
 fi
 write_page "        These tests were last run on $DATE for version ${NETBSD_VERSION} with MKREPRO=yes and MKREPRO_TIMESTAMP=$MKREPRO_TIMESTAMP and were compared using ${DIFFOSCOPE}.</p>"
-write_explaination_table NetBSD
+write_variation_table NetBSD
 cat $BAD_SECTION_HTML >> $PAGE
 cat $GOOD_SECTION_HTML >> $PAGE
 write_page "     <p><pre>"

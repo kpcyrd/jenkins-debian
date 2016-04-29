@@ -239,7 +239,7 @@ else
 	write_page ", while $BAD_ROMS ($BAD_PERCENT%) failed to build from source."
 fi
 write_page "        These tests were last run on $DATE for version ${COREBOOT_VERSION} using ${DIFFOSCOPE}.</p>"
-write_explaination_table coreboot
+write_variation_table coreboot
 cat $LIST_OBJECT >> $PAGE
 write_page "     <p><pre>"
 echo -n "$COREBOOT" >> $PAGE

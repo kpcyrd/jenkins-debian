@@ -57,7 +57,7 @@
     my_title: '{dist_name} {flav_name}'
     my_time: '23 45 31 12 *'
     my_pngs: 'run-*/*.png'
-    my_description: 'LVC stands for _l_ib_v_irt-_c_ucumber… these are <a href="https://tracker.debian.org/pkg/cucumber">cucumber</a> driven tests for Debian installer and more. Currently still under heavy development and a better name should probably be choosen too.'
+    my_description: 'LVC stands for _l_ib_v_irt-_c_ucumber, so these are <a href="https://tracker.debian.org/pkg/cucumber">cucumber</a> driven tests for Debian installer and more. Currently under heavy development and a better name should probably be choosen too.'
     my_params: '--capture lvc_debian-live_{distro}_{flavour}_apt.webm --tmpdir $WORKSPACE --iso /srv/live-build/results/{distro}_{flavour}_live_amd64.iso -- --verbose --backtrace --expand --format pretty DebianLive/apt.feature'
     jobs:
         - '{name}_debian-live_{distro}_{flavour}_apt':

@@ -275,6 +275,7 @@ write_page_header() {
 		fi
 	done
 	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
+	write_page "<li><a href=\"https://reproducible.alioth.debian.org/blog/\" target=\"_blank\">blog</a></li>"
 	write_page "<li><a href=\"https://Reproducible-builds.org\" target=\"_blank\">Reproducible-builds.org</a></li>"
 	write_page "</ul></nav>"
 	if [ "$1" = "$MAINVIEW" ] ; then

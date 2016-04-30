@@ -11,16 +11,18 @@ architectures = """
    """.split()
 
 mono_architectures = """
-    armel armhf kfreebsd-armhf musl-linux-armhf arm64 hurd-amd64 musl-linux-arm64
+    armel armhf kfreebsd-armhf arm64 arm64ilp32 hurd-amd64
+    musl-linux-armhf musl-linux-arm64
     alpha
     hppa
     hurd-i386 musl-linux-i386
     m68k
+    mips64r6el mips32r6el
     musl-linux-mips musl-linux-mipsel
     nios2
     powerpcel powerpcspe ppc64el
-    or1k
     sh4
+    tilegx
     """.split()
 
 release_architectures = """

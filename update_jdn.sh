@@ -36,7 +36,7 @@ explain "$(date) - begin deployment update."
 
 # run update at current date
 case $HOSTNAME in
-	profitbricks-build5-amd64|profitbricks-build6-i386)
+	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		# set correct date (if ntpdate is installed)
 		[ ! -f /usr/sbin/ntpdate ] || sudo ntpdate -b de.pool.ntp.org
 		;;
@@ -210,7 +210,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
-			bpi0|hb0|profitbricks-build5-amd64|profitbricks-build6-i386) DEBS="$DEBS ntpdate" ;;
+			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/netbsd/fedora/fdroid jobs
@@ -586,7 +586,7 @@ explain "$(date) - finished deployment."
 
 # set time back to the future
 case $HOSTNAME in
-	profitbricks-build5-amd64|profitbricks-build6-i386)
+	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	*)	;;

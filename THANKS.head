@@ -6,8 +6,8 @@
  ** 23 cores and 64 GB memory for jenkins.debian.net
  ** 18 cores and 48 GB memory for profitbricks-build1-amd64.debian.net
  ** 18 cores and 48 GB memory for profitbricks-build2-i386.debian.net
- ** 8 cores and 16 GB memory for profitbricks-build3-amd64.debian.net
- ** 8 cores and 8 GB memory for profitbricks-build4-amd64.debian.net
+ ** 8 cores and 12 GB memory for profitbricks-build3-amd64.debian.net
+ ** 8 cores and 12 GB memory for profitbricks-build4-amd64.debian.net
  ** 17 cores and 48 GB memory for profitbricks-build5-amd64.debian.net
  ** 17 cores and 48 GB memory for profitbricks-build6-i386.debian.net
  ** 4 cores and 8 GB memory for profitbricks-build9-amd64.debian.net

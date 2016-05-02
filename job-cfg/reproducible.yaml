@@ -325,6 +325,7 @@
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386' }
                 - 'profitbricks3':  { my_arch: 'amd64' }
+                - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
@@ -639,6 +640,11 @@
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
+                - 'setup_schroot_archlinux_profitbricks4':
+                    my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks4'
                 - 'setup_mock_fedora-23_x86_64_jenkins':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
@@ -648,6 +654,11 @@
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
+                - 'setup_mock_fedora-23_x86_64_profitbricks4':
+                    my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks4'
             my_shell: '/srv/jenkins/bin/reproducible_{otherproject}.sh'
             my_hname: ''
 
@@ -658,6 +669,12 @@
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
+                    my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
+                - 'setup_fdroid_build_environment_profitbricks4':
+                    my_description: 'Setup a build environment for F-Droid.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks4'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
             my_shell: '/srv/jenkins/bin/reproducible_{otherproject_git}.sh'
             my_hname: ''

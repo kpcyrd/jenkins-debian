@@ -33,17 +33,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * make live-build jobs work again or remove them
 * make sure the live-build jobs clean up /srv/live-build/results/*iso once they are done. thats 8gb wasted.
 
-=== TODO for testing stretch
-
-Most jobs have been converted, a few are left to do:
-
-* add g-i tests for stretch
-
-=== To be done once jenkins.d.n runs jessie
-
-* bin/g-i-installation: use lvcreate without --virtualsize
-* check if the sudo workaround in bin/g-i-installation is still needed: 'guestmount -o uid=$(id -u) -o gid=$(id -g)' would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed.
-
 === To be done once jenkins.d.n runs stretch
 
 * install botch from stretch and remove botch from the reproducible-unstable schroot

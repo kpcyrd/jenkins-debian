@@ -633,6 +633,7 @@
                     my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 4'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
+                    my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
                 - 'setup_schroot_archlinux_jenkins':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
@@ -640,12 +641,10 @@
                 - 'setup_schroot_archlinux_profitbricks3':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
                 - 'setup_schroot_archlinux_profitbricks4':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks4'
                 - 'setup_mock_fedora-23_x86_64_jenkins':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
@@ -654,14 +653,12 @@
                 - 'setup_mock_fedora-23_x86_64_profitbricks3':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
                 - 'setup_mock_fedora-23_x86_64_profitbricks4':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks4'
-            my_shell: '/srv/jenkins/bin/reproducible_{otherproject}.sh'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
 
         - '{name}_{otherproject_git}':
@@ -669,16 +666,14 @@
                 - 'setup_fdroid_build_environment_profitbricks3':
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 23 1 1 *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks3'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
                 - 'setup_fdroid_build_environment_profitbricks4':
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 23 1 1 *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks4'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
-            my_shell: '/srv/jenkins/bin/reproducible_{otherproject_git}.sh'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
 
         - '{name}_builder_{otherproject}_{my_num}':

@@ -625,12 +625,14 @@
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
+            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
 
         - '{name}_{otherproject}':
             otherproject:
                 - 'freebsd':
                     my_description: 'Rebuild FreeBSD twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 4'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
                 - 'setup_schroot_archlinux_jenkins':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'

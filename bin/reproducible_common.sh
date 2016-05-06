@@ -668,7 +668,7 @@ create_png_from_table() {
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
 			elif [ $1 -eq 6 ] ; then
 				# i386 only has pkg sets since later to make nicer graphs
-				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-04-06'"
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-05-06'"
 			fi
 		fi
 		# testing/amd64 was only build since...

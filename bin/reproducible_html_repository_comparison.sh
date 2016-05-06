@@ -170,7 +170,7 @@ for PKG in $SOURCEPKGS ; do
 	esac
 	custom_curl $URL $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
-		write_row "$URL<br /><span class=\"red\">(no git repository found)</span>"
+		write_row "<span class=\"red\">no git repository found:</span><br />$URL"
 	elif [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 		URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=merged/reproducible_builds"
 		custom_curl $URL $TMPFILE

@@ -205,8 +205,6 @@ for PKG in $SOURCEPKGS ; do
 			fi
 		elif [ "$PKG" = "disorderfs" ] ; then
 			write_row "<br />(only used to modify the build environment in the 2nd build)"
-		elif ( [ "$PKG" = "strip-nondeterminism" ] || [ "$PKG" = "diffoscope" ] ) && $OBSOLETE_IN_SID ; then
-			write_row "<br />(this repo is always used)"
 		elif [ "$PKG" = "debbindiff" ] && $OBSOLETE_IN_SID ; then
 			write_row "<br />(debbindiff has been renamed to diffoscope)"
 		fi

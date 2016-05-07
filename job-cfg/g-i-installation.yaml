@@ -196,7 +196,7 @@
 
 - project:
     name: g-i-installation
-    do_not_edit: '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
+    do_not_edit: '<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/g-i-installation.yaml">g-i-installation.yaml</a>.'
     jobs:
       - '{name}_maintenance'
       - '{name}_{my_dist}_group':

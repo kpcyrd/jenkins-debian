@@ -6,7 +6,7 @@ The BTS will ensure the developers' mailing list
    debian-qa@lists.debian.org
 is notified.
 
-The code is available in the link:http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/[jenkins.debian.net.git repository].
+The code is available in the link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/[jenkins.debian.net.git repository].
 
 Patches can be submitted as requests to pull from a publicly-visible 
 git repository (this is the prefered way) communicated via IRC or mail,

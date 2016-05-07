@@ -322,7 +322,7 @@ write_page_intro() {
 		write_page "        <p>Please note that this set up is as new as December 12th, so quite some things are still lacking, eg. https://github.com/kholia/ReproducibleBuilds is not followed at all yet and there are no variations introduced for the 2nd build. Also only a subset of all source packages is currently being tested. OTOH this setup is mature enough that it requires very few trivial changes to build all 17080 source packages in $PROJECTNAME, if it were sensible. Which it isn't right now, but should be soon.</p>"
 	fi
 	if [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then
-		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. The jenkins job is running <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute."
+		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$PROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. The jenkins job is running <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_$PROJECTNAME.sh\">reproducible_$PROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute."
 		write_page "       <br />Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
 	else
 		write_page "       <p>FIXME: explain $PROJECTNAME test setup here.</p>"
@@ -334,11 +334,11 @@ write_page_footer() {
 	if [ -n "$JOB_URL" ] ; then
 		write_page "This page was built by the jenkins job"
 		write_page "<a href=\"$JOB_URL\">$(basename $JOB_URL)</a> which is configured"
-		write_page "via this <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">git repo</a>."
+		write_page "via this <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/\">git repo</a>."
 	fi
 	write_page "There is more information <a href=\"https://jenkins.debian.net/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere."
 	write_page "<br /> Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2016 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and <a href=\"https://jenkins.debian.net//userContent/thanks.html\">many others</a>."
-	write_page "The code of <a href=\"http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/\">jenkins.debian.net.git</a> is mostly GPL-2 licensed. The weather icons are public domain and have been taken from the <a href=\"http://tango.freedesktop.org/Tango_Icon_Library\" target=\"_blank\">Tango Icon Library</a>."
+	write_page "The code of <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/\">jenkins.debian.net.git</a> is mostly GPL-2 licensed. The weather icons are public domain and have been taken from the <a href=\"http://tango.freedesktop.org/Tango_Icon_Library\" target=\"_blank\">Tango Icon Library</a>."
 	write_page "<br />"
 	if [ "$1" = "coreboot" ] ; then
 		write_page "The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."

@@ -1,7 +1,7 @@
 - defaults:
     name: lvc
     project-type: freestyle
-    description: '{my_description}<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml">lvc.yaml</a>.'
+    description: '{my_description}<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml">lvc.yaml</a>.'
     properties:
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html

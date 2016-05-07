@@ -161,18 +161,18 @@ for PKG in $SOURCEPKGS ; do
 	GIT="$PKG.git"
 	case $PKG in
 		debbindiff)
-			URL="http://anonscm.debian.org/cgit/reproducible/diffoscope.git"
+			URL="https://anonscm.debian.org/git/reproducible/diffoscope.git"
 			GIT="diffoscope.git" ;;
 		strip-nondeterminism|diffoscope|disorderfs)
-			URL="http://anonscm.debian.org/cgit/reproducible/$GIT" ;;
+			URL="https://anonscm.debian.org/git/reproducible/$GIT" ;;
 		*)
-			URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=pu/reproducible_builds" ;;
+			URL="https://anonscm.debian.org/git/reproducible/$GIT/?h=pu/reproducible_builds" ;;
 	esac
 	custom_curl $URL $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
 		write_row "<span class=\"red\">no git repository found:</span><br />$URL"
 	elif [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
-		URL="http://anonscm.debian.org/cgit/reproducible/$GIT/?h=merged/reproducible_builds"
+		URL="https://anonscm.debian.org/git/reproducible/$GIT/?h=merged/reproducible_builds"
 		custom_curl $URL $TMPFILE
 		if [ "$(grep "'error'>Invalid branch" $TMPFILE 2>/dev/null)" ] ; then
 			if ! $OBSOLETE_IN_SID ; then

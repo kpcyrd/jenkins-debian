@@ -341,7 +341,7 @@ for jobindex, jobspec in enumerate(jobspecs):
 
 data.append({'project': {
                  'name': 'chroot-installation',
-                 'do_not_edit': '<br><br>Job configuration source is <a href="http://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/chroot-installation.yaml.py">chroot-installation.yaml.py</a>.',
+                 'do_not_edit': '<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/chroot-installation.yaml.py">chroot-installation.yaml.py</a>.',
                  'my_prio': '130',
                  'my_trigger': '',
                  'my_time': '',

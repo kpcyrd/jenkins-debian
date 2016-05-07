@@ -231,7 +231,7 @@ publish_page
 calculate_build_duration
 print_out_duration
 FREEBSD_TARGET="master"
-irc_message "$REPRODUCIBLE_URL/freebsd/ has been updated. (${GOOD_PERCENT[$FREEBSD_TARGET]}% reproducible)"
+irc_message reproducible-builds "$REPRODUCIBLE_URL/freebsd/ has been updated. (${GOOD_PERCENT[$FREEBSD_TARGET]}% reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

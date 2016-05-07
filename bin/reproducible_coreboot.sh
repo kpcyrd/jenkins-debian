@@ -253,7 +253,7 @@ rm -f $LIST_OBJECT $TOOLCHAIN_HTML
 # the end
 calculate_build_duration
 print_out_duration
-irc_message "$REPRODUCIBLE_URL/coreboot/ has been updated. ($GOOD_PERCENT% reproducible)"
+irc_message reproducible-builds "$REPRODUCIBLE_URL/coreboot/ has been updated. ($GOOD_PERCENT% reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

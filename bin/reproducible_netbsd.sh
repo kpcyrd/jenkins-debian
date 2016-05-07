@@ -225,7 +225,7 @@ rm -f $FILES_HTML $GOOD_FILES_HTML $BAD_FILES_HTML $GOOD_SECTION_HTML $BAD_SECTI
 # the end
 calculate_build_duration
 print_out_duration
-irc_message "$REPRODUCIBLE_URL/netbsd/ has been updated. ($GOOD_PERCENT% reproducible)"
+irc_message reproducible-builds "$REPRODUCIBLE_URL/netbsd/ has been updated. ($GOOD_PERCENT% reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

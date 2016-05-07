@@ -64,7 +64,7 @@ save_artifacts() {
 			if [ "$NOTIFY" = "diffoscope" ] ; then
 				MESSAGE="$MESSAGE (error running $DIFFOSCOPE)"
 			fi
-			irc_message "$MESSAGE"
+			irc_message debian-reproducible "$MESSAGE"
 		fi
 }
 
@@ -72,7 +72,7 @@ cleanup_all() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		save_artifacts
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
-		irc_message "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
+		irc_message debian-reproducible "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "master" ] ; then
@@ -104,7 +104,7 @@ update_db_and_html() {
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			echo -e "\n$MESSAGE" | tee -a ${RBUILDLOG}
-			irc_message "$MESSAGE"
+			irc_message debian-reproducible "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to diffoscope problems
 			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then
 				NOTIFY=""
@@ -224,7 +224,7 @@ handle_ftbfs() {
 		if zgrep -e "No space left on device" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue on $node. Please check, tune handle_ftbfs() and reschedule the package."
 			echo $MESSAGE | tee -a /var/log/jenkins/reproducible-diskspace-issues.log
-			irc_message "$MESSAGE"
+			irc_message debian-reproducible "$MESSAGE"
 		fi
 	done
 	calculate_build_duration
@@ -393,7 +393,7 @@ call_diffoscope_on_buildinfo_files() {
 			;;
 		*)
 			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
-			irc_message "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
+			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
 }
@@ -459,12 +459,12 @@ choose_package() {
 		xxxxxxx)
 			export DEBUG=true
 			set -x
-			irc_message "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
+			irc_message debian-reproducible "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
 			;;
 		*)      ;;
 	esac
 	if [ "$NOTIFY" = "2" ] ; then
-		irc_message "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
+		irc_message debian-reproducible "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
 	elif [ "$NOTIFY" = "0" ] ; then  # the build script has a different idea of notify than the scheduler,
 		NOTIFY=''                  # the scheduler uses integers, build.sh uses strings.
 	fi

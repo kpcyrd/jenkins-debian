@@ -542,8 +542,10 @@ print_out_duration() {
 }
 
 irc_message() {
+	local CHANNEL="$1"
+	shift
 	local MESSAGE="$@"
-	kgb-client --conf /srv/jenkins/kgb/debian-reproducible.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
+	kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 }
 
 call_diffoscope() {

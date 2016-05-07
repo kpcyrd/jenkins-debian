@@ -157,7 +157,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** pkg sets related:
 *** add new pkg set: torbrowser-build-depends
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
-*** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/cgit/mirror/debian.org.git/plain/debian/control
+*** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/git/mirror/debian.org.git/plain/debian/control
 *** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
 ** "fork" etc/schroot/default into etc/schroot/reproducible
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
@@ -177,7 +177,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * missing tests:
 ** different cpu type (WIP)
-** prebuilder does (user) group variation like this: https://anonscm.debian.org/cgit/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
+** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 
@@ -377,8 +377,8 @@ $ du -hd1 | sort -h | tail -n 6
 === chroot-installation_*
 
 * use schroot for chroot-installation, stop using plain chroot everywhere
-** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/schroot
-** https://anonscm.debian.org/cgit/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
+** https://anonscm.debian.org/git/mirror/dsa-puppet.git/tree/modules/schroot
+** https://anonscm.debian.org/git/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
 ** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
 * add alternative tests with aptitude and possible apt
 * split etc/schroot/default

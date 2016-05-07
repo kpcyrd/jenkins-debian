@@ -485,11 +485,11 @@
         - '{name}_html_{my_reponame}':
             my_reponame:
                 - 'notes':
-                    my_description: 'Generate HTML results ({my_reponame}) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
+                    my_description: 'Generate HTML results ({my_reponame}) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/git/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
                     my_timed: '57 0 * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_{my_reponame}.py && /srv/jenkins/bin/reproducible_html_{my_reponame}.py'
                 - 'source-date-epoch-spec':
-                    my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/cgit/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
+                    my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/git/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
                     my_timed: ''
                     my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh {my_reponame}'
                     my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'

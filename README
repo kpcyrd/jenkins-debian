@@ -154,7 +154,7 @@ Installation tests inside chroot environments.
 
 * Several other jobs exist to build the html pages and to create two JSON files which can be downloaded from https://tests.reproducible-builds.org/reproducible.json and https://tests.reproducible-builds.org/reproducible-tracker.json. The 1st one has all the data (except history) and the 2nd has all the data we consider relevant to bother maintainers with, that is, some ftbfs isses are excluded.
 
-* Information from https://anonscm.debian.org/cgit/reproducible/notes.git is incorporated on pushes to that git repo.
+* Information from https://anonscm.debian.org/git/reproducible/notes.git is incorporated on pushes to that git repo.
 
 * There are suite specific jobs to create the pbuilder base.tgz's per suite, which have the reproducible apt repo added. Similarly there's another job per suite to create the schroots used by the builder jobs to download the packages sources to build.
 
@@ -200,7 +200,7 @@ link:https://www.torproject.org/projects/torbrowser.html.en[Tor Browser] is not 
 
 There is a link:https://jenkins.debian.net/view/torbrowser/[graphical status overview of torbrowser tests on Debian] which are tests installing torbrowser-launcher on and from sid, stretch, jessie-backports, jessie and wheezy-backports, which first download torbrowser via https and via tor, then launches it to finally connect to a debian mirror via an onion-address and then to www.debian.org. In addition to these there are also tests installing the package from stretch on jessie as well as the package from sid on stretch and jessie. Finally there are also tests for building the package from our git branches for various suites and finally there's a daily build of the package based on the upstream git master branch merged with our sid packaging.
 
-There are 17 different tests currently and they are configured in just two files, a 220 line link:https://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml[yaml file defining the jenkins jobs] and 528 lines of link:https://anonscm.debian.org/cgit/qa/jenkins.debian.net.git/tree/bin/test_torbrowser-launcher.sh[bash script containing the actual test code].
+There are 17 different tests currently and they are configured in just two files, a 220 line link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml[yaml file defining the jenkins jobs] and 528 lines of link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/test_torbrowser-launcher.sh[bash script containing the actual test code].
 
 These tests are executed either daily or weekly (those testing the package from ftp.d.o) or on every commit and at least once every month (those testing the package build from git).
 

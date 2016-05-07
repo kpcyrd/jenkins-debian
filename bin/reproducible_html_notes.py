@@ -19,7 +19,7 @@ from reproducible_html_indexes import build_page
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
 
-NOTESGIT_DESCRIPTION = 'Our notes about issues affecting packages are stored in <a href="https://anonscm.debian.org/cgit/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in Debian in \'unstable/amd64\' (unless they say otherwise).'
+NOTESGIT_DESCRIPTION = 'Our notes about issues affecting packages are stored in <a href="https://anonscm.debian.org/git/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in Debian in \'unstable/amd64\' (unless they say otherwise).'
 
 note_html = Template((tab*2).join("""
 <table class="body">

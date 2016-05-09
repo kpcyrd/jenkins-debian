@@ -11,6 +11,9 @@
 #
 # By default this script does nothing.
 
-echo "$(date -u) - system was rebooted" | mail -s "$(hostname -f) rebooted" root
-
+MESSAGE="$(hostname -f) rebooted"
+echo "$(date -u) - system was rebooted" | mail -s "$MESSAGE" root
+for channel in debian-qa debian-reproducible ; do
+	kgb-client --conf /srv/jenkins/kgb/$channel.conf --relay-msg "$MESSAGE"
+done
 exit 0

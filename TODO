@@ -350,6 +350,37 @@ $ du -hd1 | sort -h | tail -n 6
 * there's no "apt-get install", because of non-FHS conformance, but see https://www.gnu.org/software/guix/download/
 *  there's a privileged build daemon, which is needed to perform fully isolated builds, see https://www.gnu.org/software/guix/manual/html_node/Build-Environment-Setup.html#Build-Environment-Setup
 * it's a bit of work to set up, but all the steps are documented. the "binary installation" method being the easiest.
+* Manolis wrote:
+----
+There are two ways to install guix, through prebuilt binaries or through
+the source.
+
+*Binary installation:
+
+Go to
+<http://www.gnu.org/software/guix/manual/html_node/Binary-Installation.html>,
+grab the tarball and follow the instructions there.
+
+*Source instalation:
+
+First make sure you have the dependencies mentioned at
+<http://www.gnu.org/software/guix/manual/guix.html#Requirements> installed.
+
+Then download Guix's source from
+ftp://alpha.gnu.org/gnu/guix/guix-0.9.0.tar.gz and use the usual
+./configure && make && make install
+
+After you have Guix built, you need to create the build-users and have
+the guix-daemon run as root, as described here
+<https://www.gnu.org/software/guix/manual/html_node/Build-Environment-Setup.html>.
+
+Keep in mind that the guix-daemon must always run as root.
+
+*Testing if everything works:
+
+Now just run `guix package -i vim` as a non-root user. If it runs
+correctly, Guix is ready for work.
+----
 
 ==== reproducible...
 

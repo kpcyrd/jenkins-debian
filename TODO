@@ -190,6 +190,21 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * see https://wiki.debian.org/ReproducibleInstalls
 * run this as a new job
 
+==== reproducible non-Debian tests, new host for 398 day variation is unused
+
+* pb-build4 is not used yet
+* locations in the code which need to be changed
+** ARCHLINUX_BUILD_NODE=profitbricks-build3-amd64
+** RPM_BUILD_NODE=profitbricks-build3-amd64
+** grep for profitbricks-build3-amd64, there's more
+* IOW: these tests should use it:
+** coreboot
+** netbsd
+** fedora
+** archlinux
+** (fdroid)
+** (openwrt|lede-project)
+
 ==== reproducible coreboot
 
 * add more variations: domain+hostname, uid+gid, USER, UTS namespace

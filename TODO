@@ -109,8 +109,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * move /* to /debian/*
 * use redirects to keep old URLs working
-* setup pb9 and move rebootstrap jobs over there (needs 200gb more diskspace…=)
-* configure pb4 running 398 days in future and adapt coreboot|openwrt|netbsd|archlinux|fedora jobs to use it
 * install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
 ** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
 

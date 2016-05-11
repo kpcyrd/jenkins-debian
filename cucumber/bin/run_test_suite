@@ -262,9 +262,9 @@ if [ -n "${VNC_VIEWER:-}" ]; then
 fi
 
 export SIKULI_HOME="/usr/share/java"
-export SIKULI_IMAGE_PATH="/srv/jenkins/features/images/"
+export SIKULI_IMAGE_PATH="/srv/jenkins/cucumber/features/images/"
 export RUBYLIB="/srv/jenkins"
-export VM_XML_PATH="/srv/jenkins/features/domains"
+export VM_XML_PATH="/srv/jenkins/cucumber/features/domains"
 export DISPLAY=${TARGET_DISPLAY}
 check_dependencies cucumber
 

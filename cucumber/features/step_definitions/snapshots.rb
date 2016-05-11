@@ -2,31 +2,94 @@ def checkpoints
   {
     'boot-d-i-to-tasksel' => {
       :description => "I have started Debian Installer and stopped at the Tasksel prompt",
-      #:parent_checkpoint => 'no-network-logged-in',
+      :parent_checkpoint => nil,
       :steps => [
 	'I create a 8 GiB disk named "target"',
 	'I plug ide drive "target"',
 	'I start the computer',
-	'the computer boots DebianInstaller',
-	'I select British English',
-	'I accept the hostname, using "example.com" as the domain',
-	'I set the root password to "rootme"',
-	'I set the password for "Philip Hands" to be "verysecret"',
-	'I select full-disk, single-filesystem partitioning',
-	'I note that the Base system is being installed',
-	'I accept the default mirror',
-	'I ignore Popcon',
-	'we reach the Tasksel prompt',
+	'I boot the computer, and select text mode',
+	'in text mode I select British English',
+	'in text mode I accept the hostname, using "example.com" as the domain',
+	'in text mode I set the root password to "rootme"',
+	'in text mode I set the password for "Philip Hands" to be "verysecret"',
+	'in text mode I select full-disk, single-filesystem partitioning',
+	'in text mode I note that the Base system is being installed',
+	'in text mode I accept the default mirror',
+	'in text mode I ignore Popcon',
+	'in text mode we reach the Tasksel prompt',
+      ],
+    },
+
+    'boot-g-i-to-tasksel' => {
+      :description => "I have started GUI Debian Installer and stopped at the Tasksel prompt",
+      :parent_checkpoint => nil,
+      :steps => [
+	'I create a 8 GiB disk named "target"',
+	'I plug ide drive "target"',
+	'I start the computer',
+	'I boot the computer, and select gui mode',
+	'in gui mode I select British English',
+	'in gui mode I accept the hostname, using "example.com" as the domain',
+	'in gui mode I set the root password to "rootme"',
+	'in gui mode I set the password for "Philip Hands" to be "verysecret"',
+	'in gui mode I select full-disk, single-filesystem partitioning',
+	'in gui mode I note that the Base system is being installed',
+	'in gui mode I accept the default mirror',
+	'in gui mode I ignore Popcon',
+	'in gui mode we reach the Tasksel prompt',
+      ],
+    },
+
+    'debian-console-install' => {
+      :description => "I install a non-GUI Debian system, in text mode",
+      :parent_checkpoint => 'boot-d-i-to-tasksel',
+      :steps => [
+	'in text mode I unset the Desktop task',
+	'in text mode I wait while the bulk of the packages are installed',
+	'in text mode I install GRUB',
+	'in text mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
+      ],
+    },
+
+    'debian-gui-console-install' => {
+      :description => "I install a non-GUI Debian system, in gui mode",
+      :parent_checkpoint => 'boot-g-i-to-tasksel',
+      :steps => [
+	'in gui mode I unset the Desktop task',
+	'in gui mode I wait while the bulk of the packages are installed',
+	'in gui mode I install GRUB',
+	'in gui mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
       ],
     },
 
     'debian-minimal-install' => {
-      :description => "I have installed Minimal Debian",
+      :description => "I install a Minimal Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'I hit ENTER',
-	'I install GRUB',
-	'I allow reboot after the install is complete',
+	'in text mode I unset the Desktop and Print tasks',
+	'in text mode I wait while the bulk of the packages are installed',
+	'in text mode I install GRUB',
+	'in text mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
+      ],
+    },
+
+    'debian-gui-minimal-install' => {
+      :description => "I install a Minimal Debian system, in gui mode",
+      :parent_checkpoint => 'boot-g-i-to-tasksel',
+      :steps => [
+	'in gui mode I unset the Desktop and Print tasks',
+	'in gui mode I wait while the bulk of the packages are installed',
+	'in gui mode I install GRUB',
+	'in gui mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
 	'the computer is set to boot from ide drive "target"',
@@ -34,169 +97,30 @@ def checkpoints
     },
 
     'debian-gnome-install' => {
-      :description => "I have installed Gnome Desktop Debian",
+      :description => "I install a Gnome Desktop Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'I select the Desktop task',
-	'I install GRUB',
-	'I allow reboot after the install is complete',
+	'in text mode I select the Desktop task',
+	'in text mode I wait while the bulk of the packages are installed',
+	'in text mode I install GRUB',
+	'in text mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
 	'the computer is set to boot from ide drive "target"',
       ],
     },
 
-    'tails-greeter' => {
-      :description => "I have started Tails from DVD without network and stopped at Tails Greeter's login screen",
-      :parent_checkpoint => nil,
+    'debian-gui-gnome-install' => {
+      :description => "I install a Gnome Desktop Debian system, in gui mode",
+      :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-        'the network is unplugged',
-        'I start the computer',
-        'the computer boots Tails'
-      ],
-    },
-
-    'no-network-logged-in' => {
-      :description => "I have started Tails from DVD without network and logged in",
-      :parent_checkpoint => "tails-greeter",
-      :steps => [
-        'I log in to a new session',
-        'Tails Greeter has dealt with the sudo password',
-        'the Tails desktop is ready',
-      ],
-    },
-
-    'with-no-network-and-i2p' => {
-      :temporary => true,
-      :description => 'I have started Tails from DVD with I2P enabled and logged in',
-      :steps => [
-        'I set Tails to boot with options "i2p"',
-        'the network is unplugged',
-        'I start the computer',
-        'the computer boots Tails',
-        'I log in to a new session',
-        'the Tails desktop is ready',
-      ],
-    },
-
-    'with-network-and-i2p' => {
-      :temporary => true,
-      :description => 'I have started Tails from DVD with I2P enabled and logged in and the network is connected',
-      :parent_checkpoint => "with-no-network-and-i2p",
-      :steps => [
-        'the network is plugged',
-        'Tor is ready',
-        'I2P is running',
-        'all notifications have disappeared',
-        'available upgrades have been checked',
-        "I2P's reseeding completed",
-      ],
-    },
-
-    'with-network-logged-in' => {
-      :description => "I have started Tails from DVD and logged in and the network is connected",
-      :parent_checkpoint => "no-network-logged-in",
-      :steps => [
-        'the network is plugged',
-        'Tor is ready',
-        'all notifications have disappeared',
-        'available upgrades have been checked',
-      ],
-    },
-
-    'no-network-bridge-mode' => {
-      :temporary => true,
-      :description => "I have started Tails from DVD without network and logged in with bridge mode enabled",
-      :parent_checkpoint => "tails-greeter",
-      :steps => [
-        'I enable more Tails Greeter options',
-        'I enable the specific Tor configuration option',
-        'I log in to a new session',
-        'Tails Greeter has dealt with the sudo password',
-        'the Tails desktop is ready',
-        'all notifications have disappeared',
-      ],
-    },
-
-    'no-network-logged-in-sudo-passwd' => {
-      :temporary => true,
-      :description => "I have started Tails from DVD without network and logged in with an administration password",
-      :parent_checkpoint => "tails-greeter",
-      :steps => [
-        'I enable more Tails Greeter options',
-        'I set an administration password',
-        'I log in to a new session',
-        'Tails Greeter has dealt with the sudo password',
-        'the Tails desktop is ready',
-      ],
-    },
-
-    'with-network-logged-in-sudo-passwd' => {
-      :temporary => true,
-      :description => "I have started Tails from DVD and logged in with an administration password and the network is connected",
-      :parent_checkpoint => "no-network-logged-in-sudo-passwd",
-      :steps => [
-        'the network is plugged',
-        'Tor is ready',
-        'all notifications have disappeared',
-        'available upgrades have been checked',
-      ],
-    },
-
-    'usb-install-tails-greeter' => {
-      :description => "I have started Tails without network from a USB drive without a persistent partition and stopped at Tails Greeter's login screen",
-      :parent_checkpoint => 'no-network-logged-in',
-      :steps => [
-        'I create a 4 GiB disk named "__internal"',
-        'I plug USB drive "__internal"',
-        'I "Clone & Install" Tails to USB drive "__internal"',
-        'the running Tails is installed on USB drive "__internal"',
-        'there is no persistence partition on USB drive "__internal"',
-        'I shutdown Tails and wait for the computer to power off',
-        'I start Tails from USB drive "__internal" with network unplugged',
-        'the boot device has safe access rights',
-        'Tails is running from USB drive "__internal"',
-        'there is no persistence partition on USB drive "__internal"',
-        'process "udev-watchdog" is running',
-        'udev-watchdog is monitoring the correct device',
-      ],
-    },
-
-    'usb-install-logged-in' => {
-      :description => "I have started Tails without network from a USB drive without a persistent partition and logged in",
-      :parent_checkpoint => 'usb-install-tails-greeter',
-      :steps => [
-        'I log in to a new session',
-        'the Tails desktop is ready',
-      ],
-    },
-
-    'usb-install-with-persistence-tails-greeter' => {
-      :description => "I have started Tails without network from a USB drive with a persistent partition and stopped at Tails Greeter's login screen",
-      :parent_checkpoint => 'usb-install-logged-in',
-      :steps => [
-        'I create a persistent partition',
-        'a Tails persistence partition exists on USB drive "__internal"',
-        'I shutdown Tails and wait for the computer to power off',
-        'I start Tails from USB drive "__internal" with network unplugged',
-        'the boot device has safe access rights',
-        'Tails is running from USB drive "__internal"',
-        'process "udev-watchdog" is running',
-        'udev-watchdog is monitoring the correct device',
-      ],
-    },
-
-    'usb-install-with-persistence-logged-in' => {
-      :description => "I have started Tails without network from a USB drive with a persistent partition enabled and logged in",
-      :parent_checkpoint => 'usb-install-with-persistence-tails-greeter',
-      :steps => [
-        'I enable persistence',
-        'I log in to a new session',
-        'the Tails desktop is ready',
-        'all persistence presets are enabled',
-        'all persistent filesystems have safe access rights',
-        'all persistence configuration files have safe access rights',
-        'all persistent directories have safe access rights',
+	'in gui mode I select the Desktop task',
+	'in gui mode I wait while the bulk of the packages are installed',
+	'in gui mode I install GRUB',
+	'in gui mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
       ],
     },
   }

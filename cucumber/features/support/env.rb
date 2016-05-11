@@ -1,5 +1,5 @@
 require 'rubygems'
-require "features/support/extra_hooks.rb"
+require "cucumber/features/support/extra_hooks.rb"
 require 'time'
 require 'rspec'
 

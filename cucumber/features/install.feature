@@ -1,14 +1,23 @@
 @product
-Feature: Doing a trivial d-i install
+Feature: Doing variations on d-i installs
   As a normal user
-  I should be able to do a text-mode install
+  I should be able to install Debian
 
-  Scenario Outline: Install Debian and boot to login prompt
-    Given I have installed <type> Debian
-    And I start the computer
-    Then I wait for a Login Prompt
+  Scenario Outline: Install Debian, and boot to a login prompt
+    Given I install a <target_ui> Debian system, in <install_ui> mode
+    When I start the computer
+    Then I should see a Login prompt
 
     Examples:
-      | type          |
-      | Minimal       |
-      | Gnome Desktop |
+      | install_ui | target_ui     |
+      | gui        | Minimal       |
+      | gui        | non-GUI       |
+      | gui        | Gnome Desktop |
+      | text       | Minimal       |
+      | text       | non-GUI       |
+      | text       | Gnome Desktop |
+
+#  Scenario: Get a useful error from a bogus HTTP proxy
+#    Given I get d-i to the HTTP proxy prompt
+#    When I set the proxy to "172.23.23.23"
+#    Then I should get an error message that mentions the proxy

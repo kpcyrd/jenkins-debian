@@ -11,3 +11,37 @@ FIXME - I added a git repo to:
   /var/lib/jenkins/workspace/lvc_debian-installer_jessie_standard_apt
 
 in order to shut-up Tail's script that looks for git repos to populate some variables -- need to strip that out, or make it overridable.
+
+
+FIXME - we don't need the OLD_ISO stuff -- make it so that it still works when not specified, so we can push the change upwards
+
+
+FIXME - we need to be able to run multiple VMs in parallel, and so multiple jobs
+
+FIXME - the VM's network currnetly needs to be started by hand
+
+FIXME - snapshots get destroyed if one clears the workspace, but virsh remembers them -- we need to either move them or know how to delete them with e.g: virsh snapshot-delete DebianToaster debian-gui-minimal-install
+
+
+Workflow:
+
+  update in local git, then run lvc-kick  (FIXME add lvc-kick to git)
+  use the web interface to build the job (FIXME see if we can nudge the job from lvc-kick)
+
+  ssh -Y -C -L 5900:localhost:5900 jekinstest
+
+  Then we can look at the install (if the --vnc-server-only option has been passed to cucumber ... see bin/lvc.sh) with this:
+
+    xvncviewer -ViewOnly localhost:0
+
+  (you should make sure to use -ViewOnly, since any mouse movement can affect the ability of Sikuli to recognise things on the screen)
+
+  (run from the local system, which gets forwarded via the ssh connection)
+
+  When the install fails, you should get a screenshot of the last moment -- that can be grabbed and cut down for the next match)
+
+  It seems that including a colour transition, such as the edge of a frame, in the thing you're looking for makes life easier for sikuli to find it, but may make it more fragile, we'll see)
+
+  At present, sadly the tesseract OCR stuff spews vast numbers of vlog messages, making it unusable -- this has been fixed upstream (in sikuli IIRC, or maybe cucumber -- something that's now version 1.x but which has not yet hit Debian ... we can use that once it's packaged)
+
+

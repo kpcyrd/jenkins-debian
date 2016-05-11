@@ -1,11 +1,11 @@
 require 'fileutils'
 require 'yaml'
-require "features/support/helpers/misc_helpers.rb"
+require "cucumber/features/support/helpers/misc_helpers.rb"
 
 # These files deal with options like some of the settings passed
 # to the `run_test_suite` script, and "secrets" like credentials
 # (passwords, SSH keys) to be used in tests.
-CONFIG_DIR = "/srv/jenkins/features/config"
+CONFIG_DIR = "/srv/jenkins/cucumber/features/config"
 DEFAULTS_CONFIG_FILE = "#{CONFIG_DIR}/defaults.yml"
 LOCAL_CONFIG_FILE = "#{CONFIG_DIR}/local.yml"
 LOCAL_CONFIG_DIRS_FILES_GLOB = "#{CONFIG_DIR}/*.d/*.yml"
@@ -15,7 +15,7 @@ $tails_iso = ENV['ISO'] || get_newest_iso
 $old_tails_iso = ENV['OLD_ISO'] || get_oldest_iso
 $tmp_dir = ENV['PWD']
 $vm_xml_path = ENV['VM_XML_PATH']
-$misc_files_dir = "features/misc_files"
+$misc_files_dir = "cucumber/features/misc_files"
 $keep_snapshots = !ENV['KEEP_SNAPSHOTS'].nil?
 $x_display = ENV['DISPLAY']
 $debug = !ENV['DEBUG'].nil?
@@ -58,13 +58,7 @@ LIVE_USER = "live_user"
 TAILS_ISO = ENV['ISO']
 OLD_TAILS_ISO = ENV['OLD_ISO'] || TAILS_ISO
 TIME_AT_START = Time.now
-loop do
-  ARTIFACTS_DIR = $config['TMPDIR'] + "/results"
-  if not(File.exist?(ARTIFACTS_DIR))
-    FileUtils.mkdir_p(ARTIFACTS_DIR)
-    break
-  end
-end
+ARTIFACTS_DIR = $config['TMPDIR'] + "/results"
 
 # Constants that are statically initialized.
 CONFIGURED_KEYSERVER_HOSTNAME = 'hkps.pool.sks-keyservers.net'
@@ -72,7 +66,7 @@ LIBVIRT_DOMAIN_NAME = "DebianToaster"
 LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2545404"
 LIBVIRT_NETWORK_NAME = "DebianToasterNet"
 LIBVIRT_NETWORK_UUID = "f2305af3-2a64-4f16-afe6-b9dbf02a597e"
-MISC_FILES_DIR = "/srv/jenkins/features/misc_files"
+MISC_FILES_DIR = "/srv/jenkins/cucumber/features/misc_files"
 SERVICES_EXPECTED_ON_ALL_IFACES =
   [
    ["cupsd",    "0.0.0.0", "631"],
@@ -94,7 +88,7 @@ TOR_AUTHORITIES =
    "171.25.193.9",
    "154.35.175.225",
   ]
-VM_XML_PATH = "/srv/jenkins/features/domains"
+VM_XML_PATH = "/srv/jenkins/cucumber/features/domains"
 
 #TAILS_SIGNING_KEY = cmd_helper(". #{Dir.pwd}/config/amnesia; echo ${AMNESIA_DEV_KEYID}").tr(' ', '').chomp
 TAILS_DEBIAN_REPO_KEY = "221F9A3C6FA3E09E182E060BC7988EA7A358D82E"

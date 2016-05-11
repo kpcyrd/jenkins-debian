@@ -18,19 +18,6 @@ explain() {
 	echo "$HOSTNAME: $1"
 }
 
-conditional_disable() {
-	if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-		case "$1" in
-			piuparts.yaml) return 1;;
-			schroot.yaml) return 1;;
-			lvc.yaml) return 1;;
-			d-i.yaml) return 1;;
-			*) return 0;;
-		esac
-	fi
-	return 1
-}
-
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
 
@@ -451,10 +438,20 @@ explain "packages configured."
 # install the heart of jenkins.debian.net
 #
 cd $BASEDIR
-for dir in bin bin/lvc logparse job-cfg features live ; do
+[ -d /srv/jenkins/features ] && sudo rm -rf /srv/jenkins/features
+for dir in bin logparse cucumber live ; do
 	sudo cp --preserve=mode,timestamps -r $dir /srv/jenkins/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
+HOST_JOBS="hosts/$HOSTNAME/job-cfg"
+if [ -e "$HOST_JOBS" ] ; then
+	sudo rsync -r --copy-links --delete "$HOST_JOBS/" /srv/jenkins/job-cfg/
+	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
+else
+    # tidying up ... assuming that we don't want clutter on peripheral servers
+    [ -d /srv/jenkins/job-cfg ] && sudo rm -rf /srv/jenkins/job-cfg
+fi
+
 sudo mkdir -p /var/lib/jenkins/.ssh
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	sudo cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
@@ -509,7 +506,6 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rm -f $TMPFILE
 	for config in *.yaml ; do
 		if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
-			conditional_disable $config && continue
 			$JJB update $config
 		else
 			echo "$config has not changed, nothing to do."

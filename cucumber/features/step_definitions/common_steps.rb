@@ -91,7 +91,9 @@ def robust_notification_wait(notification_image, time_to_wait)
 end
 
 def post_snapshot_restore_hook
-  $vm.wait_until_remote_shell_is_up
+  # FIXME -- we've got a brain-damaged version of this, unlike Tails, so it breaks after restores at present
+  # that being the case, let's not worry until we actually miss the feature
+  #$vm.wait_until_remote_shell_is_up
   post_vm_start_hook
 
   # XXX-9p: See XXX-9p above
@@ -120,6 +122,10 @@ def post_snapshot_restore_hook
   #else
   #  $vm.host_to_guest_time_sync
   #end
+end
+
+def diui_png(name,ui_mode)
+  return "d-i_" + ui_mode + "_" + name + ".png"
 end
 
 Given /^a computer$/ do
@@ -257,136 +263,243 @@ When /^I destroy the computer$/ do
   $vm.destroy_and_undefine
 end
 
-Given /^the computer (re)?boots DebianInstaller(|\d+)$/ do |reboot,version|
+Given /^I boot the computer, and select ([a-z]*) mode$/ do |ui_mode|
 
   boot_timeout = 30
-  # We need some extra time for memory wiping if rebooting
 
   @screen.wait("d-i8_bootsplash.png", boot_timeout)
-  @screen.type(Sikuli::Key.TAB)
 
-  @screen.type(' preseed/early_command="echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
+  if "gui" == ui_mode
+    @screen.type(Sikuli::Key.DOWN) 
+    @screen.wait("d-i_bootmenu_graphical.png", 10)
+  end
+
+  @screen.type(Sikuli::Key.TAB)
+  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
                Sikuli::Key.ENTER)
   $vm.wait_until_remote_shell_is_up
 end
 
-Given /^I select British English$/ do
-  @screen.wait("DebianInstallerSelectLangEnglish.png", 30)
+Given /^in ([a-z]*) mode I select British English$/ do |ui_mode|
+  @screen.wait(diui_png("English",ui_mode), 30)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("DebianInstallerCountrySelection.png", 10)
+  @screen.wait(diui_png("SelectYourLocation",ui_mode), 10)
   @screen.type(Sikuli::Key.UP)
-  @screen.waitVanish("DebianInstallerCountrySelection.png", 10)
+  @screen.wait(diui_png("UnitedKingdom",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("DebianInstallerSelectLangEnglishUK.png", 10)
+  @screen.wait(diui_png("BritishEnglish",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I accept the hostname, using "([^"]*)" as the domain$/ do |domain|
-  @screen.wait("DebianInstallerHostnamePrompt.png", 5*60)
+Given /^in ([a-z]*) mode I accept the hostname, using "([^"]*)" as the domain$/ do |ui_mode,domain|
+  @screen.wait(diui_png("EnterTheHostname",ui_mode), 5*60)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("DebianInstallerDomainPrompt.png", 10)
+  @screen.wait(diui_png("DomainName",ui_mode), 10)
   @screen.type(domain + Sikuli::Key.ENTER)
-  @screen.waitVanish("DebianInstallerDomainPrompt.png", 10)
+  @screen.waitVanish(diui_png("DomainName",ui_mode), 10)
 end
 
-Given /^I set the root password to "([^"]*)"$/ do |rootpw|
+Given /^in ([a-z]*) mode I set the root password to "([^"]*)"$/ do |ui_mode, rootpw|
 # Root Password, twice
-  @screen.wait("DebianInstallerRootPassword.png", 30)
-  @screen.type(rootpw + Sikuli::Key.ENTER)
-  @screen.waitVanish("DebianInstallerRootPassword.png", 10)
+  @screen.wait(diui_png("RootPassword",ui_mode), 30)
+  @screen.type(rootpw)
+  if "gui" == ui_mode
+    @screen.type(Sikuli::Key.TAB)
+  else
+    @screen.type(Sikuli::Key.ENTER)
+    @screen.waitVanish(diui_png("RootPassword",ui_mode), 10)
+  end
   @screen.type(rootpw + Sikuli::Key.ENTER)
 end
 
-Given /^I set the password for "([^"]*)" to be "([^"]*)"$/ do |fullname,password|
+Given /^in ([a-z]*) mode I set the password for "([^"]*)" to be "([^"]*)"$/ do |ui_mode,fullname,password|
 # Username, and password twice
-  @screen.wait("DebianInstallerNameOfUser.png", 10)
+  @screen.wait(diui_png("NameOfUser",ui_mode), 10)
   @screen.type(fullname + Sikuli::Key.ENTER)
-  @screen.waitVanish("DebianInstallerNameOfUser.png", 10)
+  @screen.waitVanish(diui_png("NameOfUser",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("DebianInstallerUserPassword.png", 10)
-  @screen.type(password + Sikuli::Key.ENTER)
-  @screen.waitVanish("DebianInstallerUserPassword.png", 10)
+  @screen.wait(diui_png("UserPassword",ui_mode), 10)
+  @screen.type(password)
+  if "gui" == ui_mode
+    @screen.type(Sikuli::Key.TAB)
+  else
+    @screen.type(Sikuli::Key.ENTER)
+    @screen.waitVanish(diui_png("UserPassword",ui_mode), 10)
+  end
   @screen.type(password + Sikuli::Key.ENTER)
 end
 
-  #@screen.wait("DebianInstallerNoDiskFound.png", 60)
+  #@screen.wait(diui_png("NoDiskFound",ui_mode), 60)
 
-Given /^I select full-disk, single-filesystem partitioning$/ do
-  @screen.wait("DebianInstallerPartitioningMethod.png", 60)
+Given /^in ([a-z]*) mode I select full-disk, single-filesystem partitioning$/ do |ui_mode|
+  @screen.wait(diui_png("PartitioningMethod",ui_mode), 60)
+  sleep(10)
+  @screen.wait(diui_png("PartitioningMethod",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("DebianInstallerSelectDiskToPartition.png", 10)
+  @screen.wait(diui_png("SelectDiskToPartition",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("DebianInstallerPartitioningScheme.png", 10)
+  @screen.wait(diui_png("PartitioningScheme",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("d-i_FinishPartitioning.png", 10)
+  @screen.wait(diui_png("FinishPartitioning",ui_mode), 10)
   sleep(5) # FIXME -- why do we need this?  It's weird that the wait is not enough
   @screen.type(Sikuli::Key.ENTER)
   # prompt about Writing Partitions to disk:
-  @screen.wait("d-i_No.png", 10)
-  @screen.type(Sikuli::Key.TAB)
-  @screen.wait("d-i_Yes.png", 10)
+  @screen.wait(diui_png("No",ui_mode), 10)
+  if "gui" == ui_mode
+    @screen.type(Sikuli::Key.DOWN)
+  else
+    @screen.type(Sikuli::Key.TAB)
+  end
+  @screen.wait(diui_png("Yes",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I note that the Base system is being installed$/ do
-  @screen.wait("DebianInstallerInstallingBaseSystem.png", 30)
-  @screen.waitVanish("DebianInstallerInstallingBaseSystem.png", 15 * 60)
+Given /^in ([a-z]*) mode I note that the Base system is being installed$/ do |ui_mode|
+  @screen.wait(diui_png("InstallingBaseSystem",ui_mode), 30)
+  @screen.waitVanish(diui_png("InstallingBaseSystem",ui_mode), 15 * 60)
 end
 
-Given /^I accept the default mirror$/ do
-  @screen.wait("DebianInstallerMirrorCountry.png", 10 * 60)
+Given /^in ([a-z]*) mode I accept the default mirror$/ do |ui_mode|
+  @screen.wait(diui_png("MirrorCountry",ui_mode), 10 * 60)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("d-i_ArchiveMirror.png", 5)
+  @screen.wait(diui_png("ArchiveMirror",ui_mode), 5)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("d-i_HttpProxy.png", 5)
-  @screen.type(Sikuli::Key.ENTER)
-end
-
-Given /^I neglect to scan more CDs$/ do
-  @screen.wait("d-i_ScanCD.png", 15 * 60)
-  @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("d-i_UseNetMirror.png", 10)
-  @screen.wait("d-i_Yes.png", 10)
-  @screen.type(Sikuli::Key.TAB)
-  @screen.wait("d-i_No.png", 10)
+  @screen.wait(diui_png("HttpProxy",ui_mode), 5)
+  #@screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I ignore Popcon$/ do
-  #@screen.wait("d-i_popcon.png", 10 * 60)
-  @screen.wait("d-i_No.png", 10 * 60)
+Given /^in ([a-z]*) mode I neglect to scan more CDs$/ do |ui_mode|
+  @screen.wait(diui_png("ScanCD",ui_mode), 15 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.wait(diui_png("UseNetMirror",ui_mode), 10)
+  @screen.wait(diui_png("Yes",ui_mode), 10)
+  if "gui" == ui_mode
+    @screen.type(Sikuli::Key.DOWN)
+  else
+    @screen.type(Sikuli::Key.TAB)
+  end
+  @screen.wait(diui_png("No",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^we reach the Tasksel prompt$/ do
-  @screen.wait("d-i_ChooseSoftware.png", 5 * 60)
+Given /^in ([a-z]*) mode I ignore Popcon$/ do |ui_mode|
+  @screen.wait(diui_png("popcon",ui_mode), 10 * 60)
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.waitVanish(diui_png("popcon",ui_mode), 10)
 end
 
-Given /^I hit ENTER$/ do
+Given /^in ([a-z]*) mode we reach the Tasksel prompt$/ do |ui_mode|
+  @screen.wait(diui_png("ChooseSoftware",ui_mode), 5 * 60)
+end
+
+Given /^in ([a-z]*) mode I unset the Desktop task$/ do |ui_mode|
+  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60)
+
+  # deal with post-snapshot screen flicker  FIXME -- check if we really need this
+  sleep(5)
+  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 10)
+
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.waitVanish(diui_png("DesktopTask_Yes",ui_mode), 10)
+
+  if "gui" == ui_mode
+    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10)
+    @screen.type(Sikuli::Key.TAB)
+    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10)
+  end
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I select the Desktop task$/ do
-  @screen.wait("d-i_ChooseSoftware.png", 10)
+Given /^in ([a-z]*) mode I unset the Desktop and Print tasks$/ do |ui_mode|
+  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60)
+
+  # deal with post-snapshot screen flicker  FIXME -- check if we really need this
+  sleep(5)
+  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 10)
+
   @screen.type(Sikuli::Key.SPACE)
   @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
   @screen.type(Sikuli::Key.SPACE)
-  @screen.wait("d-i_DesktopTask_Yes.png", 10)
+  @screen.waitVanish(diui_png("DesktopTask_Yes",ui_mode), 10)
+
+  if "gui" == ui_mode
+    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10)
+    @screen.type(Sikuli::Key.TAB)
+    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10)
+  end
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I install GRUB$/ do
-  @screen.wait("d-i_InstallGRUB.png", 80 * 60)
+Given /^in ([a-z]*) mode I select the Desktop task$/ do |ui_mode|
+  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60)
+
+  # deal with post-snapshot screen flicker -- FIXME this needs to be fixed via looking to see if the remote login is working before we look at the screen
+  debug_log("debug: Found DesktopTask_Yes, pausing for 20s", :color => :blue)
+  sleep(20)
+
+  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.SPACE)
+  @screen.wait(diui_png("Desktop+Gnome",ui_mode), 10)
+  if "gui" == ui_mode
+    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10)
+    @screen.type(Sikuli::Key.TAB)
+    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10)
+  end
+  @screen.type(Sikuli::Key.ENTER)
+  @screen.waitVanish(diui_png("Desktop+Gnome",ui_mode), 10)
+end
+
+Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ do |ui_mode|
+  @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
+  @screen.waitVanish(diui_png("InstallSoftware",ui_mode), 80 * 60)
+end
+
+Given /^in ([a-z]*) mode I install GRUB$/ do |ui_mode|
   #@screen.wait("Install the GRUB", 80 * 60)
+  debug_log("debug: Look for InstallingGRUBprogress", :color => :blue)
+  @screen.wait(diui_png("InstallingGRUBprogress",ui_mode), 2 * 60)
+  debug_log("debug: Found InstallingGRUBprogress", :color => :blue)
+  @screen.waitVanish(diui_png("InstallingGRUBprogress",ui_mode), 2 * 60)
+  debug_log("debug: InstallingGRUBprogress gone again", :color => :blue)
+  debug_log("debug: Look for InstallGRUB", :color => :blue)
+  @screen.wait(diui_png("InstallGRUB",ui_mode), 2 * 60)
+  debug_log("debug: Found InstallGRUB", :color => :blue)
+  sleep(10)
+  @screen.wait(diui_png("InstallGRUB",ui_mode), 10)
+  debug_log("debug: Found InstallGRUB (again)", :color => :blue)
+  if "gui" == ui_mode
+    debug_log("debug: We're in GUI mode", :color => :blue)
+    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10)
+    debug_log("debug: Found CONTINUEunselected", :color => :blue)
+    sleep(10)
+    debug_log("debug: Press UP", :color => :blue)
+    @screen.type(Sikuli::Key.UP)
+    sleep(10)
+    debug_log("debug: Press DOWN", :color => :blue)
+    @screen.type(Sikuli::Key.DOWN)
+    sleep(10)
+    debug_log("debug: Press TAB", :color => :blue)
+    @screen.type(Sikuli::Key.TAB)
+    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10)
+    debug_log("debug: Found CONTINUEselected", :color => :blue)
+  end
+  debug_log("debug: Press ENTER", :color => :blue)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait("d-i_GRUBEnterDev.png", 10 * 60)
+  @screen.wait(diui_png("GRUBEnterDev",ui_mode), 10 * 60)
   @screen.type(Sikuli::Key.DOWN)
-  @screen.wait("d-i_GRUBdev.png", 10)
+  @screen.wait(diui_png("GRUBdev",ui_mode), 10)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I allow reboot after the install is complete$/ do
-  @screen.wait("d-i_InstallComplete.png", 2 * 60)
+Given /^in ([a-z]*) mode I allow reboot after the install is complete$/ do |ui_mode|
+  @screen.wait(diui_png("InstallComplete",ui_mode), 2 * 60)
   @screen.type(Sikuli::Key.ENTER)
 end
 
@@ -394,11 +507,7 @@ Given /^I wait for the reboot$/ do
   @screen.wait(bootsplash, 10 * 60)
 end
 
-Given /^I make sure that we boot from disk$/ do
-  @screen.wait("d-i_GRUB_Debian.png", 5 * 60)
-end
-
-Given /^I wait for a Login Prompt$/ do
+Given /^I should see a Login prompt$/ do
   @screen.wait("DebianLoginPromptVT.png", 2 * 60)
 end
 

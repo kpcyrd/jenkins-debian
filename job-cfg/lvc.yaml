@@ -31,7 +31,7 @@
       - email:
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
       - archive:
-          artifacts: 'run-*/*.mkv, {my_pngs}'
+          artifacts: '{my_pngs}, results/*.mkv, results/*.log'
           latest-only: false
       - image-gallery:
           - title: '{my_title}'
@@ -40,52 +40,29 @@
     wrappers:
       - live-screenshot
     builders:
-      - shell: '/srv/jenkins/bin/lvc/run_test_suite {my_params}'
+      - shell: '/srv/jenkins/bin/lvc.sh {my_iso} /srv/jenkins/cucumber/features'
     triggers:
       - timed: '{my_time}'
 
 - job-template:
     defaults: lvc
-    name: '{name}_debian-live_{distro}_{flavour}_apt'
-
-- job-template:
-    defaults: lvc
-    name: '{name}_debian-installer_{distro}_{flavour}_apt'
+    name: '{name}_{distro}'
 
 - project:
     name: lvc
-    my_title: '{dist_name} {flav_name}'
-    my_time: '23 45 31 12 *'
-    my_pngs: 'run-*/*.png'
-    my_description: 'LVC stands for _l_ib_v_irt-_c_ucumber, so these are <a href="https://tracker.debian.org/pkg/cucumber">cucumber</a> driven tests for Debian installer and more. Currently under heavy development and a better name should probably be choosen too.'
-    my_params: '--capture lvc_debian-live_{distro}_{flavour}_apt.webm --tmpdir $WORKSPACE --iso /srv/live-build/results/{distro}_{flavour}_live_amd64.iso -- --verbose --backtrace --expand --format pretty DebianLive/apt.feature'
+    my_title: 'Cucumber: {dist_name}'
+    my_time: '45 23 31 12 *'
+    my_pngs: 'results/*.png'
+    my_description: 'Work in progress...'
     jobs:
-        - '{name}_debian-live_{distro}_{flavour}_apt':
+        - '{name}_{distro}':
             distro:
-                - 'debian-edu_jessie': {dist_name: 'Debian Edu Live 8'}
-            flavour:
-                - 'standalone':  {flav_name: 'Standalone'}
-                - 'workstation': {flav_name: 'Workstation'}
-            my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
-
-        - '{name}_debian-live_{distro}_{flavour}_apt':
-            distro:
-                - 'debian_jessie': {dist_name: 'Debian Live 8'}
-            flavour:
-                - 'gnome': {flav_name: 'GNOME Desktop'}
-                - 'xfce': {flav_name: 'Xfce Desktop'}
-            my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
-
-        - '{name}_debian-live_{distro}_{flavour}_apt':
-            distro:
-                - 'debian_sid': {dist_name: 'Debian Live Sid'}
-            flavour:
-                - 'xfce': {flav_name: 'Xfce Desktop'}
-            my_iso: '/srv/live-build/results/{distro}_{flavour}_live_amd64.iso'
-
-        - '{name}_debian-installer_{distro}_{flavour}_apt':
-            distro:
-                - 'jessie': {dist_name: 'Debian-Installer 8'}
-            flavour:
-                - 'standard':      {flav_name: 'standard'}
-            my_params: '--capture --iso /srv/live-build/results/debian-8.3.0-amd64-netinst.iso --tmpdir $WORKSPACE --old-iso /srv/live-build/results/debian-8.3.0-amd64-netinst.iso -- --format pretty --format pretty_debug --out $WORKSPACE/pretty_debug.log /srv/jenkins/features/step_definitions /srv/jenkins/features/support /srv/jenkins/features/DebianLive/apt.feature'
+                #- 'debian-stable':
+                #    dist_name: 'Debian-Installer stable'
+                #    my_iso: 'http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso'
+                - 'debian-8.4.0':
+                    dist_name: 'Debian-Installer 8.4.0'
+                    my_iso: 'http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso'
+                #- 'debian-testing-daily': 
+                #    dist_name: 'Debian-Installer Testing (Daily)'
+                #    my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/arm64/iso-cd/debian-testing-arm64-netinst.iso'

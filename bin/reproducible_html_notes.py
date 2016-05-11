@@ -11,7 +11,9 @@
 # Build html pages based on the content of the notes.git repository
 
 import copy
+import popcon
 import yaml
+from math import sqrt
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
@@ -224,10 +226,7 @@ def gen_html_note(package, note):
         tmp = ''
         for issue in note['issues']:
             tmp += fill_issue_in_note(issue)
-            try:
-                issues_count[issue].append(note['package'])
-            except KeyError:
-                issues_count[issue] = [note['package']]
+            issues_count.setdefault(issue, []).append(note['package'])
         infos += note_issues_html.substitute(issues=tmp)
     # check for bugs:
     if 'bugs' in note:
@@ -387,27 +386,30 @@ def iterate_over_issues(issues):
         log.info('Created ' + str(i) + ' issue pages for ' + suite)
 
 
-def sort_issues(issue):
+def sort_issues(scorefunc, issue):
     try:
-        return (-len(issues_count[issue]), issue)
+        return (-scorefunc(issues_count[issue]), issue)
     except KeyError:    # there are no packages affected by this issue
         return (0, issue)
 
-def index_issues(issues):
+def index_issues(issues, scorefuncs):
+    firstscorefunc = next(iter(scorefuncs.values()))
     templ = "\n<table class=\"body\">\n" + tab + "<tr>\n" + tab*2 + "<th>\n" \
           + tab*3 + "Identified issues\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n" \
+          + "".join(
+            tab*3 + k + "\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n"
+            for k in scorefuncs.keys()) \
           + tab*3 + "Affected packages\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
     html = (tab*2).join(templ.splitlines(True))
-    for issue in sorted(issues, key=sort_issues):
+    for issue in sorted(issues, key=lambda issue: sort_issues(firstscorefunc, issue)):
         html += tab*3 + '<tr>\n'
         html += tab*4 + '<td><a href="' + ISSUES_URI + '/' + defaultsuite + \
                 '/'+ issue + '_issue.html">' + issue + '</a></td>\n'
+        issues_list = issues_count.get(issue, [])
+        for scorefunc in scorefuncs.values():
+            html += tab*4 + '<td><b>' + str(scorefunc(issues_list)) + '</b></td>\n'
         html += tab*4 + '<td>\n'
-        try:
-            html += tab*5 + '<b>' + str(len(issues_count[issue])) + '</b>:\n'
-            html += tab*5 + ', '.join(issues_count[issue]) + '\n'
-        except KeyError:    # there are no packages affected by this issue
-            html += tab*5 + '<b>0</b>\n'
+        html += tab*5 + ', '.join(issues_list) + '\n'
         html += tab*4 + '</td>\n'
         html += tab*3 + '</tr>\n'
     html += tab*2 + '</table>\n'
@@ -433,7 +435,11 @@ if __name__ == '__main__':
     issues = load_issues()
     iterate_over_notes(notes)
     iterate_over_issues(issues)
-    index_issues(issues)
+    index_issues(issues, {
+        'Total popcon score': lambda l: sum(popcon.package(*l).values()),
+        'Total of sqrt(popcon score)': lambda l: sum(map(sqrt, popcon.package(*l).values())),
+        'Total number': len,
+    })
     purge_old_notes(notes)
     purge_old_issues(issues)
     gen_packages_html([Package(x) for x in notes])

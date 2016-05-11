@@ -456,9 +456,19 @@ Given /^in ([a-z]*) mode I select the Desktop task$/ do |ui_mode|
   @screen.waitVanish(diui_png("Desktop+Gnome",ui_mode), 10)
 end
 
-Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ do |ui_mode|
+Given /^in ([a-z]*) mode I wait while the ([a-z]* |)bulk of the packages are installed$/ do |ui_mode,vast|
   @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
-  @screen.waitVanish(diui_png("InstallSoftware",ui_mode), 80 * 60)
+  if "vast " == vast
+    40.times do
+      sleep(50)
+      @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+      sleep(10)
+      @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
+    end
+    debug_log("debug: 50 mins in...", :color => :blue)
+  end
+  @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
+  @screen.waitVanish(diui_png("InstallSoftware",ui_mode), 40 * 60)
 end
 
 Given /^in ([a-z]*) mode I install GRUB$/ do |ui_mode|

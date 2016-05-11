@@ -101,7 +101,7 @@ def checkpoints
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
 	'in text mode I select the Desktop task',
-	'in text mode I wait while the bulk of the packages are installed',
+	'in text mode I wait while the vast bulk of the packages are installed',
 	'in text mode I install GRUB',
 	'in text mode I allow reboot after the install is complete',
 	'I wait for the reboot',
@@ -115,7 +115,7 @@ def checkpoints
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
 	'in gui mode I select the Desktop task',
-	'in gui mode I wait while the bulk of the packages are installed',
+	'in gui mode I wait while the vast bulk of the packages are installed',
 	'in gui mode I install GRUB',
 	'in gui mode I allow reboot after the install is complete',
 	'I wait for the reboot',

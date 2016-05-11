@@ -300,8 +300,10 @@ update_pkg_sets() {
 			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[16]}.pkgset
 		else
-			echo "Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
-			ABORT=true
+			MESSAGE="Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
+			echo $MESSAGE
+			irc_message debian-reproducible $MESSAGE
+			ABORT=false
 		fi
 	fi
 

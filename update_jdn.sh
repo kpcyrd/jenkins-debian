@@ -498,6 +498,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	cd /srv/jenkins/job-cfg
 	for metaconfig in *.yaml.py ; do
 	# there are both python2 and python3 scripts here
+        [ -e ./$metaconfig ] || continue
 		./$metaconfig > $TMPFILE
 		if ! sudo -u jenkins-adm cmp -s ${metaconfig%.py} - < $TMPFILE ; then
 			sudo -u jenkins-adm tee ${metaconfig%.py} > /dev/null < $TMPFILE

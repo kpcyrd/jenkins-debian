@@ -273,4 +273,6 @@ RUBY_STDOUT_SYNC=$TMPDIR/.stdout-sync.rb
 echo STDOUT.sync = true > $RUBY_STDOUT_SYNC
 export RUBYOPT="-r $RUBY_STDOUT_SYNC"
 
+unset http_proxy
+
 cucumber ${@}

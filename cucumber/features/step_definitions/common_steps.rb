@@ -459,13 +459,14 @@ end
 Given /^in ([a-z]*) mode I wait while the ([a-z]* |)bulk of the packages are installed$/ do |ui_mode,vast|
   @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
   if "vast " == vast
-    40.times do
+    debug_log("debug: lots of packages, so sod about with AltF4/1 to keep things alive, hopefully", :color => :blue)
+    20.times do
       sleep(50)
       @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
       sleep(10)
       @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
     end
-    debug_log("debug: 50 mins in...", :color => :blue)
+    debug_log("debug: 20 mins in...", :color => :blue)
   end
   @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
   @screen.waitVanish(diui_png("InstallSoftware",ui_mode), 40 * 60)

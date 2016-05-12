@@ -30,6 +30,11 @@ img.halfview {
 	max-width: 49%;
 }
 
+img.setview {
+	max-width: 50pt;
+}
+
+
 img.overview {
 	max-width: 32%;
 }

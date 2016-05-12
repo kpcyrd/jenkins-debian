@@ -34,12 +34,14 @@ fetch_if_newer() {
 # define workspace + results
 #
 rm -rf results screenshot.png screenshot-thumb.png
-mkdir -p results
+
 if [ -z "$WORKSPACE" ] ; then
     WORKSPACE=$PWD
 fi
 RESULTS=$WORKSPACE/results
 mkdir -p $RESULTS
+
+mkdir -p $WORKSPACE/DebianToasterStorage
 
 trap cleanup_all INT TERM EXIT
 

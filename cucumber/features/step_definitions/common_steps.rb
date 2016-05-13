@@ -263,12 +263,14 @@ When /^I destroy the computer$/ do
   $vm.destroy_and_undefine
 end
 
-Given /^I boot the computer, and select ([a-z]*) mode$/ do |ui_mode|
+Given /^I boot to the d-i splash screen$/ do
 
   boot_timeout = 30
 
   @screen.wait("d-i8_bootsplash.png", boot_timeout)
+end
 
+Given /^I select ([a-z]*) mode and wait for the remote shell$/ do |ui_mode|
   if "gui" == ui_mode
     @screen.type(Sikuli::Key.DOWN) 
     @screen.wait("d-i_bootmenu_graphical.png", 10)

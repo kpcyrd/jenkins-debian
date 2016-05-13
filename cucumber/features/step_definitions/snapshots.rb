@@ -1,13 +1,21 @@
 def checkpoints
   {
-    'boot-d-i-to-tasksel' => {
+    'boot-d-i' => {
       :description => "I have started Debian Installer and stopped at the Tasksel prompt",
       :parent_checkpoint => nil,
       :steps => [
 	'I create a 8 GiB disk named "target"',
 	'I plug ide drive "target"',
 	'I start the computer',
-	'I boot the computer, and select text mode',
+	'I boot to the d-i splash screen',
+      ],
+    },
+
+    'boot-d-i-to-tasksel' => {
+      :description => "I have started Debian Installer and stopped at the Tasksel prompt",
+      :parent_checkpoint => 'boot-d-i',
+      :steps => [
+	'I select text mode and wait for the remote shell',
 	'in text mode I select British English',
 	'in text mode I accept the hostname, using "example.com" as the domain',
 	'in text mode I set the root password to "rootme"',
@@ -22,12 +30,9 @@ def checkpoints
 
     'boot-g-i-to-tasksel' => {
       :description => "I have started GUI Debian Installer and stopped at the Tasksel prompt",
-      :parent_checkpoint => nil,
+      :parent_checkpoint => 'boot-d-i',
       :steps => [
-	'I create a 8 GiB disk named "target"',
-	'I plug ide drive "target"',
-	'I start the computer',
-	'I boot the computer, and select gui mode',
+	'I select gui mode and wait for the remote shell',
 	'in gui mode I select British English',
 	'in gui mode I accept the hostname, using "example.com" as the domain',
 	'in gui mode I set the root password to "rootme"',

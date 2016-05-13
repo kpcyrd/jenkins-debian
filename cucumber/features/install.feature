@@ -12,10 +12,10 @@ Feature: Doing variations on d-i installs
       | install_ui | target_ui     |
       | gui        | Minimal       |
       | gui        | non-GUI       |
-      | gui        | Gnome Desktop |
+#      | gui       | Gnome Desktop |
       | text       | Minimal       |
       | text       | non-GUI       |
-      | text       | Gnome Desktop |
+#      | text       | Gnome Desktop |
 
 #  Scenario: Get a useful error from a bogus HTTP proxy
 #    Given I get d-i to the HTTP proxy prompt

@@ -521,7 +521,7 @@ Given /^I wait for the reboot$/ do
 end
 
 Given /^I should see a Login prompt$/ do
-  @screen.wait("DebianLoginPromptVT.png", 2 * 60)
+  @screen.wait("DebianLoginPromptVT.png", 20 * 60)
 end
 
 def bootsplash

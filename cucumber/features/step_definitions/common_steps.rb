@@ -367,8 +367,8 @@ Given /^in ([a-z]*) mode I accept the default mirror$/ do |ui_mode|
   @screen.wait(diui_png("ArchiveMirror",ui_mode), 5)
   @screen.type(Sikuli::Key.ENTER)
   @screen.wait(diui_png("HttpProxy",ui_mode), 5)
-  #@screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
-  @screen.type(Sikuli::Key.ENTER)
+  @screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
+  #@screen.type(Sikuli::Key.ENTER)
 end
 
 Given /^in ([a-z]*) mode I neglect to scan more CDs$/ do |ui_mode|

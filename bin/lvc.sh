@@ -94,7 +94,10 @@ fi
 
 /srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --capture-all --keep-snapshots --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
 
-cp $(ls -t1 results/*.png | head -1) $WORKSPACE/screenshot.png
+LAST_SCREENSHOT=$(ls -t1 results/*.png | head -1)
+if [ -e "$LAST_SCREENSHOT" ] ; then
+        cp $LAST_SCREENSHOT $WORKSPACE/screenshot.png
+fi
 
 cleanup_all
 

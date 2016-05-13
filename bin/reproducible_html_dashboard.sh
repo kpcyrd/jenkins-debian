@@ -501,12 +501,16 @@ create_dashboard_page() {
 	write_page "$TD_PKG_SID</tr>"
 	write_page "$TD_PKG_TESTING</tr>"
 
-	# this IGNOREPIPE needs to be manually maintained indeed… 
-	# for the last 3 months we live with errors…
-	IGNOREPIPE="grep -v alexis@passoire.fr | grep -v christoph.berg@credativ.de | grep -v d.s@daniel.shahaf.name | grep -v dhole@openmailbox.com | grep -v jelmer@jelmer.uk | grep -v mattia@mapreri.org | grep -v micha@lenk.info | grep -v mail@sandroknauss.de | grep -v sanvila@unex.es"
+	# in the following two write_page() calls we use the same
+	# insane grep to filter people who committed with several
+	# usernames…
 	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/git/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u |wc -l)</td><td colspan=\"$AC\"></td></tr>"
-		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u |$IGNOREPIPE|wc -l)</td><td colspan=\"$AC\"></td></tr>"
+		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/git/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u | \
+				grep -v alexis@passoire.fr | grep -v christoph.berg@credativ.de | grep -v d.s@daniel.shahaf.name | grep -v dhole@openmailbox.com | grep -v jelmer@jelmer.uk | grep -v mattia@mapreri.org | grep -v micha@lenk.info | grep -v mail@sandroknauss.de | grep -v sanvila@unex.es | \
+				wc -l)</td><td colspan=\"$AC\"></td></tr>"
+		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u | \
+				grep -v alexis@passoire.fr | grep -v christoph.berg@credativ.de | grep -v d.s@daniel.shahaf.name | grep -v dhole@openmailbox.com | grep -v jelmer@jelmer.uk | grep -v mattia@mapreri.org | grep -v micha@lenk.info | grep -v mail@sandroknauss.de | grep -v sanvila@unex.es | \
+				wc -l)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"

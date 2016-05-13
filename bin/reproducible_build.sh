@@ -684,8 +684,8 @@ remote_build() {
 check_buildinfo() {
 	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
 	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
-	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
-	grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
+	grep-dctrl -s Installed-Build-Depends -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
+	grep-dctrl -s Installed-Build-Depends -n ${SRCPACKAGE} ./b2/$BUILDINFO > $TMPFILE2
 	set +e
 	diff $TMPFILE1 $TMPFILE2
 	RESULT=$?
@@ -699,7 +699,7 @@ check_buildinfo() {
 		echo
 		get_node_ssh_port $NODE1
 		remote_build 1 $NODE1 $PORT
-		grep-dctrl -s Build-Environment -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
+		grep-dctrl -s Installed-Build-Depends -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
 		diff $TMPFILE1 $TMPFILE2
 		RESULT=$?

@@ -29,7 +29,7 @@
       artifactNumToKeep: -1
     publishers:
       - email:
-          recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org, phil@hands.com'
       - archive:
           artifacts: '{my_pngs}, results/*.mkv, results/*.log'
           latest-only: false

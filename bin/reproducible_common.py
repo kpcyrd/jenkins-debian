@@ -135,7 +135,7 @@ html_header = Template("""<!DOCTYPE html>
       <link href="/static/style.css" type="text/css" rel="stylesheet" />
       <title>$page_title</title>
   </head>
-  <body $padding>""")
+  <body class="wrapper">""")
 
 try:
     JOB_URL = os.environ['JOB_URL']
@@ -162,14 +162,14 @@ html_footer = Template("""
       from the <a href=http://tango.freedesktop.org/Tango_Icon_Library target=_blank>
       Tango Icon Library</a>.
      </p>
-  </body>
+  </div></body>
 </html>""" % (JOB_FOOTER, JENKINS_URL))
 
 html_head_page = Template((tab*2).join("""
-<header>
+<header class="head">
   <h2>$page_title</h2>
-  <nav><ul>
-    <li>Have a look at:</li>
+  <ul class=\"menu\">
+    <li>Package states:</li>
     <li>
       <a href="/$suite/$arch/index_reproducible.html" target="_parent">
         <img src="/static/weather-clear.png" alt="reproducible icon" />
@@ -215,8 +215,8 @@ $links
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
     <li><a href="https://reproducible.alioth.debian.org/blog/" target="_blank">blog</a></li>
     <li><a href="https://Reproducible-builds.org" target="_blank">Reproducible-builds.org</a></li>
-  </ul></nav>
-</header>""".splitlines(True)))
+  </ul>
+</header><div class="mainbody">""".splitlines(True)))
 
 
 html_foot_page_style_note = Template((tab*2).join("""
@@ -321,13 +321,10 @@ def _gen_links(suite, arch):
 def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False, packages=False, refresh_every=None):
     now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
-    # this removes the padding if we are writing a package page
-    padding = 'class="wrapper"' if packages else ''
     meta_refresh = '<meta http-equiv="refresh" content="%d">' % \
         refresh_every if refresh_every is not None else ''
     html += html_header.substitute(
             page_title=title,
-            padding=padding,
             meta_refresh=meta_refresh)
     if not noheader:
         links = _gen_links(suite, arch)

@@ -6,16 +6,18 @@ Feature: Doing variations on d-i installs
   Scenario Outline: Install Debian, and boot to a login prompt
     Given I install a <target_ui> Debian system, in <install_ui> mode
     When I start the computer
-    Then I should see a Login prompt
+    Then I should see a <login> Login prompt
 
     Examples:
-      | install_ui | target_ui     |
-      | gui        | Minimal       |
-      | gui        | non-GUI       |
-#      | gui       | Gnome Desktop |
-      | text       | Minimal       |
-      | text       | non-GUI       |
-#      | text       | Gnome Desktop |
+      | install_ui | target_ui     | login |
+      | gui        | Minimal       | VT    |
+      | gui        | non-GUI       | VT    |
+      | gui        | XFCE Desktop  | XFCE  |
+#      | gui        | Gnome Desktop | Gnome |
+      | text       | Minimal       | VT    |
+      | text       | non-GUI       | VT    |
+      | text       | XFCE Desktop  | XFCE  |
+#      | text       | Gnome Desktop | Gnome |
 
 #  Scenario: Get a useful error from a bogus HTTP proxy
 #    Given I get d-i to the HTTP proxy prompt

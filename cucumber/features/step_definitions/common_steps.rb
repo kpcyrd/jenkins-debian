@@ -440,15 +440,17 @@ Given /^in ([a-z]*) mode I unset the Desktop and Print tasks$/ do |ui_mode|
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I select the Desktop task$/ do |ui_mode|
+Given /^in ([a-z]*) mode I select the ([a-zA-Z]*) Desktop task$/ do |ui_mode,desktop|
   @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60)
 
   # deal with post-snapshot screen flicker -- FIXME this needs to be fixed via looking to see if the remote login is working before we look at the screen
   debug_log("debug: Found DesktopTask_Yes, pausing for 20s", :color => :blue)
   sleep(20)
 
-  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.SPACE)
-  @screen.wait(diui_png("Desktop+Gnome",ui_mode), 10)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN) if "XFCE" == desktop
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.wait(diui_png("Desktop+" + desktop,ui_mode), 10)
   if "gui" == ui_mode
     @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10)
     @screen.type(Sikuli::Key.TAB)
@@ -513,8 +515,12 @@ Given /^I wait for the reboot$/ do
   @screen.wait(bootsplash, 10 * 60)
 end
 
-Given /^I should see a Login prompt$/ do
+Given /^I should see a console Login prompt$/ do
   @screen.wait("DebianLoginPromptVT.png", 20 * 60)
+end
+
+Given /^I should see a XFCE Login prompt$/ do
+  @screen.wait("DebianLoginPromptXFCE.png", 20 * 60)
 end
 
 def bootsplash

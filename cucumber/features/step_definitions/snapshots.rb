@@ -105,7 +105,7 @@ def checkpoints
       :description => "I install a Gnome Desktop Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'in text mode I select the Desktop task',
+	'in text mode I select the Gnome Desktop task',
 	'in text mode I wait while the vast bulk of the packages are installed',
 	'in text mode I install GRUB',
 	'in text mode I allow reboot after the install is complete',
@@ -119,7 +119,35 @@ def checkpoints
       :description => "I install a Gnome Desktop Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I select the Desktop task',
+	'in gui mode I select the Gnome Desktop task',
+	'in gui mode I wait while the vast bulk of the packages are installed',
+	'in gui mode I install GRUB',
+	'in gui mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
+      ],
+    },
+
+    'debian-xfce-install' => {
+      :description => "I install a XFCE Desktop Debian system, in text mode",
+      :parent_checkpoint => 'boot-d-i-to-tasksel',
+      :steps => [
+	'in text mode I select the XFCE Desktop task',
+	'in text mode I wait while the vast bulk of the packages are installed',
+	'in text mode I install GRUB',
+	'in text mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "target"',
+      ],
+    },
+
+    'debian-gui-xfce-install' => {
+      :description => "I install a XFCE Desktop Debian system, in gui mode",
+      :parent_checkpoint => 'boot-g-i-to-tasksel',
+      :steps => [
+	'in gui mode I select the XFCE Desktop task',
 	'in gui mode I wait while the vast bulk of the packages are installed',
 	'in gui mode I install GRUB',
 	'in gui mode I allow reboot after the install is complete',

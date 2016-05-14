@@ -202,7 +202,7 @@ html_head_page = Template((tab*2).join(("""
      $link_pkgsets
      <li>Recently tested:<ul class="children">
       <li><a href="/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
-      <li><a href="/$suite/arch/index_last_48h.html">packages tested in the last 48h</a></li>
+      <li><a href="/$suite/$arch/index_last_48h.html">packages tested in the last 48h</a></li>
      </ul></li>
     <li><a href="/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     </ul></li>

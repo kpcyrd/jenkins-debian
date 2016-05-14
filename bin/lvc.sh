@@ -30,6 +30,13 @@ fetch_if_newer() {
         curl $curlopts -o $file $url
 }
 
+discard_snapshots() {
+        domain=$1
+        for snap in $(sudo /usr/bin/virsh snapshot-list $domain --name) ; do
+                sudo /usr/bin/virsh snapshot-delete $domain $snap
+        done
+}
+
 #
 # define workspace + results
 #
@@ -42,6 +49,11 @@ RESULTS=$WORKSPACE/results
 mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
+
+# FIXME this should discover the 'target' bit of the path, probably via: virsh vol-list
+if [ ! -e "$WORKSPACE/DebianToasterStorage/target" ] ; then
+        discard_snapshots DebianToaster
+fi
 
 trap cleanup_all INT TERM EXIT
 

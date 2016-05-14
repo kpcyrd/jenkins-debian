@@ -169,35 +169,48 @@ html_head_page = Template((tab*2).join("""
 <header class="head">
   <h2>$page_title</h2>
   <ul class=\"menu\">
-    <li>Package states:<ul class="children">
-    <li>
-      <a href="/$suite/$arch/index_reproducible.html" target="_parent">
-        <img src="/static/weather-clear.png" alt="reproducible icon" />
-      </a>
-      <a href="/$suite/$arch/index_FTBR.html" target="_parent">
-        <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
-      </a>
-      <a href="/$suite/$arch/index_FTBFS.html" target="_parent">
-        <img src="/static/weather-storm.png" alt="FTBFS icon" />
-      </a>
-      <a href="/$suite/$arch/index_depwait.html" target="_parent">
-        <img src="/static/weather-snow.png" alt="depwait icon" />
-      </a>
-      <a href="/$suite/$arch/index_not_for_us.html" target="_parent">
-        <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
-      </a>
-      <a href="/$suite/$arch/index_404.html" target="_parent">
-        <img src="/static/weather-severe-alert.png" alt="404 icon" />
-      </a>
-      <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
-        <img src="/static/error.png" alt="blacklisted icon" />
-      </a>
-    </li></ul></li>
-    <li><a href="/index_issues.html">issues</a></li>
-    <li><a href="/$suite/$arch/index_notes.html">packages with notes</a></li>
-    <li><a href="/$suite/$arch/index_no_notes.html">packages without notes</a></li>
-    <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
 $links
+    <li>$suite/$arch:<ul class="children">
+     <li>Notes:<ul class="children">
+      <li><a href="/$suite/$arch/index_notes.html">packages with notes</a></li>
+      <li><a href="/$suite/$arch/index_no_notes.html">packages without notes</a></li>
+     </ul></li>
+     <li>Package states:<ul class="children">
+      <li>
+        <a href="/$suite/$arch/index_reproducible.html" target="_parent">
+          <img src="/static/weather-clear.png" alt="reproducible icon" />
+        </a>
+        <a href="/$suite/$arch/index_FTBR.html" target="_parent">
+          <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
+        </a>
+        <a href="/$suite/$arch/index_FTBFS.html" target="_parent">
+          <img src="/static/weather-storm.png" alt="FTBFS icon" />
+        </a>
+        <a href="/$suite/$arch/index_depwait.html" target="_parent">
+          <img src="/static/weather-snow.png" alt="depwait icon" />
+        </a>
+        <a href="/$suite/$arch/index_not_for_us.html" target="_parent">
+          <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
+        </a>
+        <a href="/$suite/$arch/index_404.html" target="_parent">
+          <img src="/static/weather-severe-alert.png" alt="404 icon" />
+        </a>
+        <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
+          <img src="/static/error.png" alt="blacklisted icon" />
+        </a>
+      </li>
+     </ul></li>
+$pkgsetslink
+     <li>Recently tested:<ul class="children">
+      <li><a href="/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
+      <li><a href="/$suite/arch/index_last_48h.html">packages tested in the last 48h</a></li>
+     </ul></li>
+    <li><a href="/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
+    </ul></li>
+    <li><a href="/index_issues.html">issues</a></li>
+    <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
+    <li><a href="/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
+    <li><a href="/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
     <li><a href="/index_repositories.html">repositories overview</a></li>
     <li><a href="/reproducible.html">dashboard</a></li>
     <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
@@ -283,26 +296,22 @@ def convert_into_hms_string(duration):
     return duration
 
 
-def _gen_links(suite, arch):
-    links = [
-        ('last_24h', '<li><a href="/{suite}/{arch}/index_last_24h.html">packages tested in the last 24h</a></li>'),
-        ('last_48h', '<li><a href="/{suite}/{arch}/index_last_48h.html">packages tested in the last 48h</a></li>'),
-        ('all_abc', '<li><a href="/{suite}/{arch}/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>'),
-        ('notify', '<li><a href="/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>'),
-        ('dd-list', '<li><a href="/{suite}/index_dd-list.html">maintainers of unreproducible packages</a></li>'),
-        ('pkg_sets', '<li><a href="/{suite}/{arch}/index_pkg_sets.html">package sets</a></li>')
-    ]
+def _gen_pkg_sets_link(suite, arch):
     html = ''
-    for link in links:
-        if link[0] == 'pkg_sets' and suite == 'experimental':
-            html += link[1].format(suite=suite, arch=arch) + '\n'
-            continue
-        html += link[1].format(suite=suite, arch=arch) + '\n'
-    for i in SUITES:  # suite links
-        html += '<li><a href="/' + i + '/index_suite_' + arch + '_stats.html">suite: ' + i + '</a></li>'
-    for linkarch in ARCHS:
-        if arch != linkarch:
-            html += '<li><a href="/unstable/index_suite_' + linkarch + '_stats.html\">arch: ' + linkarch + '</a></li>'
+    if suite != 'experimental':
+            html = '<li><a href="/$suite/$arch/index_pkg_sets.html">package sets</a></li>'
+    return html
+
+
+def _gen_links(suite, arch):
+    html = '<li>Architectures:'
+    for a in ARCHS:
+        html += ' <a href="/$suite/index_suite_' + a + '_stats.html\">' + a + '</a>'
+    html += '</li>'
+    html += '<li>Suites:'
+    for s in SUITES:
+        html += ' <a href="/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>'
+    html += '</li>'
     return html
 
 
@@ -316,11 +325,13 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             meta_refresh=meta_refresh)
     if not noheader:
         links = _gen_links(suite, arch)
+        pkgsetslink = _gen_pkg_sets_link(suite, arch)
         html += html_head_page.substitute(
             page_title=title,
             suite=suite,
             arch=arch,
-            links=links)
+            links=links,
+            pkgsetslink=pkgsetslink)
     html += body
     if style_note:
         html += html_foot_page_style_note.substitute()

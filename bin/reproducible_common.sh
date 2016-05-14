@@ -194,7 +194,7 @@ write_page_header() {
 	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
 	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
 	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
-	SPOKENTARGET["notify"]="⚑"
+	SPOKENTARGET["notify"]="⚑ packages with enabled notifications"
 	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
 	SPOKENTARGET["pkg_sets"]="package sets"
 	SPOKENTARGET["suite_stats"]="suite: $SUITE"

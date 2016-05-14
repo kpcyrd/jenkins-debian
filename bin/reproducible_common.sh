@@ -214,7 +214,9 @@ write_page_header() {
 	fi
 	write_page "<ul class=\"menu\">"
 	write_page "<li>$SUITE/$ARCH:<ul class=\"children\">"
+	local CLASS=""
 	for TARGET in $ALLVIEWS ; do
+		CLASS=""
 		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then
 			# no pkg_sets are tested in experimental
 			continue
@@ -246,20 +248,33 @@ write_page_header() {
 		elif [ "$TARGET" = "arch" ] ; then
 			write_page "<li>Architectures:<ul class=\"children\"><li>"
 			for i in ${ARCHS} ; do
-				write_page " <a href=\"/$SUITE/index_suite_${i}_stats.html\">$i</a>"
+				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$ARCH" ] ; then
+					CLASS=" class=\"active\""
+				fi
+				write_page " <a href=\"/$SUITE/index_suite_${i}_stats.html\"$CLASS>$i</a>"
+				CLASS=""
 			done
 			write_page "</li>"
 		elif [ "$TARGET" = "suite_stats" ] ; then
 			write_page "<li>Suites:<ul class=\"children\"><li>"
 			for i in $SUITES ; do
-				write_page " <a href=\"/$i/index_suite_${ARCH}_stats.html\">$i</a>"
+				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$SUITE" ] ; then
+					CLASS=" class=\"active\""
+				fi
+				write_page " <a href=\"/$i/index_suite_${ARCH}_stats.html\"$CLASS>$i</a>"
+				CLASS=""
 			done
 			write_page "</li>"
 		elif [ "$TARGET" = "dashboard" ] ; then
-			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a><ul class=\"children\">"
+			if [ "$1" = "dashboard" ] ; then
+				CLASS=" class=\"active\""
+			fi
+			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\"$CLASS>${SPOKEN_TARGET}</a><ul class=\"children\">"
 		else
-			# finally, write link
-			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
+			if [ "$1" = "$TARGET" ] ; then
+				CLASS=" class=\"active\""
+			fi
+			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\"$CLASS>${SPOKEN_TARGET}</a></li>"
 		fi
 		# close unsorted lists (and package states loop)
 		if [ "$TARGET" = "all_abc" ] ; then

@@ -373,8 +373,8 @@ write_suite_arch_table() {
 # create suite stats page
 #
 create_suite_arch_stats_page() {
-	VIEW=suite_${ARCH}_stats
-	PAGE=index_${VIEW}.html
+	VIEW=suite_arch_stats
+	PAGE=index_suite_${ARCH}_stats.html
 	MAINLABEL[0]="Reproducibility status for packages in '$SUITE' for '$ARCH'"
 	MAINLABEL[2]="Age in days of oldest reproducible build result in '$SUITE' for '$ARCH'"
 	echo "$(date -u) - starting to write $PAGE page."

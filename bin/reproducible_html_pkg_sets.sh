@@ -90,6 +90,8 @@ update_meta_pkg_stats() {
 #
 create_pkg_sets_navigation() {
 	local i
+	local view=$1
+	local CLASS=""
 	write_page "<ul><li>Tracked package sets in $SUITE/$ARCH: </li>"
 	write_page "<br />"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
@@ -98,11 +100,16 @@ create_pkg_sets_navigation() {
 				;;
 			*)	;;
 		esac
+		if [ "$i" = "$view" ] ; then
+			CLASS=" class=\"active\""
+		else
+			CLASS=""
+		fi
 		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
 			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
 			write_page "<li>"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\">${META_PKGSET[$i]}</a>"
+			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"$CLASS>${META_PKGSET[$i]}</a>"
 			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"setview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
 			write_page "</li>"
 		fi
@@ -121,7 +128,7 @@ create_pkg_sets_pages() {
 	PAGE=index_${VIEW}.html
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview about reproducible builds of specific package sets in $SUITE/$ARCH"
-	create_pkg_sets_navigation
+	create_pkg_sets_navigation index
 	write_page_footer
 	publish_page $SUITE/$ARCH
 	#
@@ -132,7 +139,7 @@ create_pkg_sets_pages() {
 		PAGE="pkg_set_${META_PKGSET[$i]}.html"
 		echo "$(date -u) - starting to write $PAGE page."
 		write_page_header $VIEW "Overview about reproducible builds for the ${META_PKGSET[$i]} package set in $SUITE/$ARCH"
-		create_pkg_sets_navigation
+		create_pkg_sets_navigation $i
 		write_page "<hr />"
 		META_RESULT=true
 		gather_meta_stats $i

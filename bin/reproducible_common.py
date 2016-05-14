@@ -165,11 +165,10 @@ html_footer = Template("""
   </div></body>
 </html>""" % (JOB_FOOTER, JENKINS_URL))
 
-html_head_page = Template((tab*2).join("""
+html_head_page = Template((tab*2).join(("""
 <header class="head">
   <h2>$page_title</h2>
   <ul class=\"menu\">
-$links
     <li>$suite/$arch:<ul class="children">
      <li>Notes:<ul class="children">
       <li><a href="/$suite/$arch/index_notes.html">packages with notes</a></li>
@@ -200,25 +199,30 @@ $links
         </a>
       </li>
      </ul></li>
-$pkgsetslink
+     $link_pkgsets
      <li>Recently tested:<ul class="children">
       <li><a href="/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
       <li><a href="/$suite/arch/index_last_48h.html">packages tested in the last 48h</a></li>
      </ul></li>
     <li><a href="/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     </ul></li>
-    <li><a href="/index_issues.html">issues</a></li>
-    <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
-    <li><a href="/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
-    <li><a href="/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
-    <li><a href="/index_repositories.html">repositories overview</a></li>
-    <li><a href="/reproducible.html">dashboard</a></li>
-    <li><a href="https://wiki.debian.org/ReproducibleBuilds" target="_blank">wiki</a></li>
-    <li><a href="https://reproducible.alioth.debian.org/blog/" target="_blank">blog</a></li>
-    <li><a href="https://Reproducible-builds.org" target="_blank">Reproducible-builds.org</a></li>
+    <li>Architectures:<ul class="children">
+     $link_archs
+     <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
+    </ul></li>
+    <li>Suites:<ul class="children">
+     $link_suites
+     <li><a href="/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
+    </ul></li>
+    <li><a href="%s">Debian dashboard</a>
+    <ul class="children">
+     <li><a href="/index_issues.html">issues</a></li>
+     <li><a href="/index_repositories.html">repositories overview</a></li>
+     <li><a href="/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
+    </ul></li>
   </ul>
-</header><div class="mainbody">""".splitlines(True)))
-
+$project_links
+</header><div class="mainbody">""" % REPRODUCIBLE_URL ).splitlines(True)))
 
 html_foot_page_style_note = Template((tab*2).join("""
 <p style="font-size:0.9em;">
@@ -233,6 +237,24 @@ html_foot_page_style_note = Template((tab*2).join("""
   indicates a closed bug. In cases of several bugs, the symbol is repeated.
 </p>""".splitlines(True)))
 
+html_project_links = Template((tab*2).join("""
+    <ul class="reproducible-links">
+        <li>Reproducible Builds projects links
+         <ul class="children"><li>
+            <a href="https://Reproducible-builds.org">Reproducible-builds.org</a><br />
+            Reproducible-builds.org - <a href="https://Reproducible-builds.org/docs/">HowTo</a><br />
+            Reproducible Debian - <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
+            Reproducible builds <a href="https://reproducible.alioth.debian.org/blog/">weekly news</a><br />
+            </li><li>
+            Reproducible <a href="https://tests.reproducible-builds.org/archlinux/">Arch Linux</a> /
+            <a href="https://tests.reproducible-builds.org/coreboot/">coreboot</a> /
+            <a href="https://tests.reproducible-builds.org/fedora/">Fedora</a> /
+            <a href="https://tests.reproducible-builds.org/freebsd/">FreeBSD</a> /
+            <a href="https://tests.reproducible-builds.org/netbsd/">NetBSD</a> /
+            <a href="https://tests.reproducible-builds.org/openwrt/">OpenWrt</a>
+        </li></ul></li>
+    </ul>
+""".splitlines(True)))
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
@@ -299,16 +321,18 @@ def convert_into_hms_string(duration):
 def _gen_pkg_sets_link(suite, arch):
     html = ''
     if suite != 'experimental':
-            html = '<li><a href="/$suite/$arch/index_pkg_sets.html">package sets</a></li>'
+            html = '<li><a href="/' + suite + '/' + arch + '/index_pkg_sets.html">package sets</a></li>'
     return html
 
-
-def _gen_links(suite, arch):
-    html = '<li>Architectures:'
+def _gen_arch_links(suite, arch):
+    html = '<li>'
     for a in ARCHS:
-        html += ' <a href="/$suite/index_suite_' + a + '_stats.html\">' + a + '</a>'
+        html += ' <a href="/' + suite + '/index_suite_' + a + '_stats.html\">' + a + '</a>'
     html += '</li>'
-    html += '<li>Suites:'
+    return html
+
+def _gen_suite_links(suite, arch):
+    html = '<li>'
     for s in SUITES:
         html += ' <a href="/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>'
     html += '</li>'
@@ -324,14 +348,19 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             page_title=title,
             meta_refresh=meta_refresh)
     if not noheader:
-        links = _gen_links(suite, arch)
-        pkgsetslink = _gen_pkg_sets_link(suite, arch)
+        link_archs = _gen_arch_links(suite, arch)
+        link_suites = _gen_suite_links(suite, arch)
+        link_pkgsets = _gen_pkg_sets_link(suite, arch)
+        project_links=html_project_links.substitute()
+
         html += html_head_page.substitute(
             page_title=title,
             suite=suite,
             arch=arch,
-            links=links,
-            pkgsetslink=pkgsetslink)
+            link_archs=link_archs,
+            link_suites=link_suites,
+            link_pkgsets=link_pkgsets,
+            project_links=project_links)
     html += body
     if style_note:
         html += html_foot_page_style_note.substitute()

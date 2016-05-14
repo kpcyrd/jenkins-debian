@@ -181,10 +181,12 @@ write_icon() {
 }
 
 write_page_header() {
+	# this is really quite uncomprehensible and should be killed
+	# the solution is to write all html pages with python…
 	rm -f $PAGE
 	MAINVIEW="dashboard"
 	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="issues notes no_notes scheduled last_24h last_48h all_abc notify dd-list pkg_sets suite_stats arch repositories dashboard"
+	ALLVIEWS="notes no_notes pkg_sets last_24h last_48h all_abc arch scheduled suite_stats dd-list dashboard issues repositories notify"
 	GLOBALVIEWS="issues scheduled notify repositories dashboard"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
@@ -199,7 +201,7 @@ write_page_header() {
 	SPOKENTARGET["pkg_sets"]="package sets"
 	SPOKENTARGET["suite_stats"]="suite: $SUITE"
 	SPOKENTARGET["repositories"]="repositories overview"
-	SPOKENTARGET["dashboard"]="dashboard"
+	SPOKENTARGET["dashboard"]="Debian dashboard"
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<meta name=\"viewport\" content=\"width=device-width\" />"
@@ -210,14 +212,8 @@ write_page_header() {
 	else
 		write_page "<body class=\"wrapper\" onload=\"selectSearch()\"><header class=\"head\"><h2>$2</h2>"
 	fi
-	write_page "<ul class=\"menu\"><li>Package states:"
-	write_page "<ul class=\"children\"><li>"
-	for MY_STATE in $ALLSTATES ; do
-		set_icon $MY_STATE
-		write_icon
-		write_page " "
-	done
-	write_page "</li></ul></li>"
+	write_page "<ul class=\"menu\">"
+	write_page "<li>$SUITE/$ARCH:<ul class=\"children\">"
 	for TARGET in $ALLVIEWS ; do
 		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then
 			# no pkg_sets are tested in experimental
@@ -236,30 +232,78 @@ write_page_header() {
 				BASEURL="/$SUITE"
 			fi
 		done
-		if [ "$TARGET" = "suite_stats" ] ; then
-			for i in $SUITES ; do
-				write_page "<li><a href=\"/$i/index_suite_${ARCH}_stats.html\">suite: $i</a></li>"
-			done
-		elif [ "$TARGET" = "scheduled" ] ; then
+		# prepare unsorted lists
+		if [ "$TARGET" = "notes" ] ; then
+			write_page "<li>Notes<ul class=\"children\">"
+		elif [ "$TARGET" = "last_24h" ] ; then
+			write_page "<li>Recently tested:<ul class=\"children\">"
+		fi
+		# prepare links
+		if [ "$TARGET" = "scheduled" ] ; then
 			write_page "<li><a href=\"/index_${ARCH}_scheduled.html\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "notify" ] ; then
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "arch" ] ; then
-			for LINKARCH in ${ARCHS} ; do
-				if [ "$ARCH"  = "$LINKARCH" ] ; then
-					continue
-				else
-					write_page "<li><a href=\"/unstable/index_suite_${LINKARCH}_stats.html\">arch: $LINKARCH</a></li>"
-				fi
+			write_page "<li>Architectures:<ul class=\"children\"><li>"
+			for i in ${ARCHS} ; do
+				write_page " <a href=\"/$SUITE/index_suite_${i}_stats.html\">$i</a>"
 			done
+			write_page "</li>"
+		elif [ "$TARGET" = "suite_stats" ] ; then
+			write_page "<li>Suites:<ul class=\"children\"><li>"
+			for i in $SUITES ; do
+				write_page " <a href=\"/$i/index_suite_${ARCH}_stats.html\">$i</a>"
+			done
+			write_page "</li>"
+		elif [ "$TARGET" = "dashboard" ] ; then
+			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a><ul class=\"children\">"
 		else
+			# finally, write link
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\">${SPOKEN_TARGET}</a></li>"
 		fi
+		# close unsorted lists (and package states loop)
+		if [ "$TARGET" = "all_abc" ] ; then
+			write_page "</ul></li>"
+		elif [ "$TARGET" = "last_48h" ] ; then
+			write_page "</ul></li>"
+		elif [ "$TARGET" = "notify" ] ; then
+			write_page "</ul></li>"
+		elif [ "$TARGET" = "scheduled" ] ; then
+			write_page "</ul></li>"
+		elif [ "$TARGET" = "dd-list" ] ; then
+			write_page "</ul></li>"
+		elif [ "$TARGET" = "no_notes" ] ; then
+			write_page "</ul></li>"
+			# after notes we have package states
+			write_page "<li>Package states:"
+			write_page "<ul class=\"children\"><li>"
+			for MY_STATE in $ALLSTATES ; do
+				set_icon $MY_STATE
+			write_icon
+			write_page " "
+			done
+			write_page "</li></ul></li>"
+		fi
 	done
-	write_page "<li><a href=\"https://wiki.debian.org/ReproducibleBuilds\" target=\"_blank\">wiki</a></li>"
-	write_page "<li><a href=\"https://reproducible.alioth.debian.org/blog/\" target=\"_blank\">blog</a></li>"
-	write_page "<li><a href=\"https://Reproducible-builds.org\" target=\"_blank\">Reproducible-builds.org</a></li>"
 	write_page "</ul>"
+	# project links
+	write_page "    <ul class=\"reproducible-links\">"
+	write_page "        <li>Reproducible Builds projects links"
+	write_page "         <ul class=\"children\"><li>"
+	write_page "            <a href=\"https://Reproducible-builds.org\">Reproducible-builds.org</a><br />"
+	write_page "            Reproducible-builds.org - <a href=\"https://Reproducible-builds.org/docs/\">HowTo</a><br />"
+	write_page "            Reproducible Debian - <a href=\"https://wiki.debian.org/ReproducibleBuilds\">Wiki</a><br />"
+	write_page "            Reproducible builds <a href=\"https://reproducible.alioth.debian.org/blog/\">weekly news</a><br />"
+	write_page "            </li><li>"
+	write_page "            Reproducible <a href=\"https://tests.reproducible-builds.org/archlinux/\">Arch Linux</a> /"
+	write_page "            <a href=\"https://tests.reproducible-builds.org/coreboot/\">coreboot</a> /"
+	write_page "            <a href=\"https://tests.reproducible-builds.org/fedora/\">Fedora</a> /"
+	write_page "            <a href=\"https://tests.reproducible-builds.org/freebsd/\">FreeBSD</a> /"
+	write_page "            <a href=\"https://tests.reproducible-builds.org/netbsd/\">NetBSD</a> /"
+	write_page "            <a href=\"https://tests.reproducible-builds.org/openwrt/\">OpenWrt</a>"
+	write_page "        </li></ul></li>"
+	write_page "    </ul>"
+	# end project links
 	write_page "</header>"
 	write_page "<div class=\"mainbody\">"
 	if [ "$1" = "$MAINVIEW" ] ; then

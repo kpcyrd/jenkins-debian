@@ -39,25 +39,10 @@ html_package_page = Template((tab*2).join(("""
         <li>
           <a href="$history" target="main">Test history</a>
         </li>
-    </ul>
-
 ${suites_links}
-
-    <ul class="reproducible-links">
-        Reproducible Builds projects links
-        <li>
-            tests.reproducible-builds.org - <a href="%s">Debian Dashboard</a><br />
-            Reproducible Debian - <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
-            Reproducible-builds.org - <a href="https://Reproducible-builds.org/docs/">HowTo</a><br />
-            <a href="https://Reproducible-builds.org">Reproducible-builds.org</a><br />
-            Reproducible <a href="https://tests.reproducible-builds.org/archlinux/">Arch Linux</a> /
-            <a href="https://tests.reproducible-builds.org/coreboot/">coreboot</a> /
-            <a href="https://tests.reproducible-builds.org/fedora/">Fedora</a> /
-            <a href="https://tests.reproducible-builds.org/freebsd/">FreeBSD</a> /
-            <a href="https://tests.reproducible-builds.org/netbsd/">NetBSD</a> /
-            <a href="https://tests.reproducible-builds.org/openwrt/">OpenWrt</a>
-        </li>
+     <li><a href="%s">Debian dashboard</a></li></ul>
     </ul>
+${project_links}
 </header>
 
 <iframe id="main" name="main" tabindex="1" src="${default_view}">
@@ -271,6 +256,7 @@ def gen_packages_html(packages, no_clean=False):
                 status, icon, spokenstatus = get_status_icon(status)
                 status = gen_status_link_icon(status, spokenstatus, icon, suite, arch)
                 history = '{}/{}.html'.format(HISTORY_URI, pkg)
+                project_links = html_project_links.substitute()
 
                 html = html_package_page.substitute(
                     package=pkg,
@@ -283,6 +269,7 @@ def gen_packages_html(packages, no_clean=False):
                     links=links,
                     notify_maintainer=package.notify_maint,
                     suites_links=suites_links,
+                    project_links=project_links,
                     default_view=default_view)
                 destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
                 desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \

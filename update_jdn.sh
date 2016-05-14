@@ -426,6 +426,9 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			jenkins|profitbricks-build*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
 			*)	;;
 	esac
+	if [ "$HOSTNAME" != "jenkins" ] && [ -L /etc/munin/plugins/iostat ] ; then
+		sudo rm /etc/munin/plugins/iostat
+	fi
 	if [ "$HOSTNAME" = "jenkins" ] && [ ! -L /etc/munin/plugins/apache_accesses ] ; then
 		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
 		sudo ln -s /usr/share/munin/plugins/loggrep jenkins_oom

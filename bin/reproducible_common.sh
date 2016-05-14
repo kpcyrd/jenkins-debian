@@ -210,13 +210,14 @@ write_page_header() {
 	else
 		write_page "<body class=\"wrapper\" onload=\"selectSearch()\"><header class=\"head\"><h2>$2</h2>"
 	fi
-	write_page "<ul class=\"menu\"><li>Package states:</li>"
+	write_page "<ul class=\"menu\"><li>Package states:"
+	write_page "<ul class=\"children\"><li>"
 	for MY_STATE in $ALLSTATES ; do
 		set_icon $MY_STATE
-		write_page "<li>"
 		write_icon
-		write_page "</li>"
+		write_page " "
 	done
+	write_page "</li></ul></li>"
 	for TARGET in $ALLVIEWS ; do
 		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then
 			# no pkg_sets are tested in experimental

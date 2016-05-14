@@ -169,42 +169,30 @@ html_head_page = Template((tab*2).join("""
 <header class="head">
   <h2>$page_title</h2>
   <ul class=\"menu\">
-    <li>Package states:</li>
+    <li>Package states:<ul class="children">
     <li>
       <a href="/$suite/$arch/index_reproducible.html" target="_parent">
         <img src="/static/weather-clear.png" alt="reproducible icon" />
       </a>
-    </li>
-    <li>
       <a href="/$suite/$arch/index_FTBR.html" target="_parent">
         <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
       </a>
-    </li>
-    <li>
       <a href="/$suite/$arch/index_FTBFS.html" target="_parent">
         <img src="/static/weather-storm.png" alt="FTBFS icon" />
       </a>
-    </li>
-    <li>
       <a href="/$suite/$arch/index_depwait.html" target="_parent">
         <img src="/static/weather-snow.png" alt="depwait icon" />
       </a>
-    </li>
-    <li>
       <a href="/$suite/$arch/index_not_for_us.html" target="_parent">
         <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
       </a>
-    </li>
-    <li>
       <a href="/$suite/$arch/index_404.html" target="_parent">
         <img src="/static/weather-severe-alert.png" alt="404 icon" />
       </a>
-    </li>
-    <li>
       <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
         <img src="/static/error.png" alt="blacklisted icon" />
       </a>
-    </li>
+    </li></ul></li>
     <li><a href="/index_issues.html">issues</a></li>
     <li><a href="/$suite/$arch/index_notes.html">packages with notes</a></li>
     <li><a href="/$suite/$arch/index_no_notes.html">packages without notes</a></li>

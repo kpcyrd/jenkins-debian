@@ -312,31 +312,29 @@ update_pkg_sets() {
 	fi
 	progress_info 15
 
-	# tails
+	# freedombox-setup and plinth and everything they depend on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.binpkgs > $TMPFILE
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.srcpkgs >> $TMPFILE
-		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
-			echo "parsing $TMPFILE now..."
-			packages_list_to_deb822
+		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
+		get_installable_set ${META_PKGSET[16]}.pkgset
+		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
+			# hardcoded list of source packages
+			# derived from looking at "@package.required" in $src-plinth/plinth/modules/*py
+			# see https://wiki.debian.org/FreedomBox/Manual/Developer#Specifying_module_dependencies
+			for PKG in avahi deluge easy-rsa ejabberd ez-ipupdate firewalld ikiwiki jwchat monkeysphere mumble network-manager ntp obfs4proxy openvpn owncloud php-dropbox php5 postgresql-common privoxy python-letsencrypt quassel roundcube shaarli sqlite3 tor torsocks transmission unattended-upgrades ; do
+				echo $PKG >> $TMPFILE
+			done
 			update_if_similar ${META_PKGSET[16]}.pkgset
-		else
-			MESSAGE="Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
-			echo $MESSAGE
-			irc_message debian-reproducible $MESSAGE
-			ABORT=true
 		fi
 	fi
 	progress_info 16
 
-	# all build depends of tails
+	# all build depends of freedombox-setup and plinth
 	rm -f $TMPFILE
-	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[16]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
-		echo "parsing $TMPFILE now..."
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[17]}.pkgset
@@ -373,29 +371,31 @@ update_pkg_sets() {
 	fi
 	progress_info 19
 
-	# freedombox-setup and plinth and everything they depend on
+	# tails
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
-		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[20]}.pkgset
-		if [ -f $TMPFILE ] ; then
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.binpkgs > $TMPFILE
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.srcpkgs >> $TMPFILE
+		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+			echo "parsing $TMPFILE now..."
+			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
-			# hardcoded list of source packages
-			# derived from looking at "@package.required" in $src-plinth/plinth/modules/*py
-			# see https://wiki.debian.org/FreedomBox/Manual/Developer#Specifying_module_dependencies
-			for PKG in avahi deluge easy-rsa ejabberd ez-ipupdate firewalld ikiwiki jwchat monkeysphere mumble network-manager ntp obfs4proxy openvpn owncloud php-dropbox php5 postgresql-common privoxy python-letsencrypt quassel roundcube shaarli sqlite3 tor torsocks transmission unattended-upgrades ; do
-				echo $PKG >> $TMPFILE
-			done
 			update_if_similar ${META_PKGSET[20]}.pkgset
+		else
+			MESSAGE="Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
+			echo $MESSAGE
+			irc_message debian-reproducible $MESSAGE
+			ABORT=true
 		fi
 	fi
 	progress_info 20
 
-	# all build depends of freedombox-setup and plinth
+	# all build depends of tails
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
+	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[20]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
+		echo "parsing $TMPFILE now..."
 		packages_list_to_deb822
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[21]}.pkgset

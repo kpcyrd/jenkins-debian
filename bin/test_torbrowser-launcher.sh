@@ -115,7 +115,7 @@ upgrade_to_package_build_from_git() {
 	if [ "$BRANCH" = "debian/jessie" ] || [ "$BRANCH" = "debian/jessie-proposed" ] ; then
 		local UPSTREAM_TREE=v0.1.9
 	elif [ "$BRANCH" = "upstream-master-plus-debian-packaging" ] ; then
-		local UPSTREAM_TREE=micahflee/master
+		local UPSTREAM_TREE=origin/master
 	else
 		local UPSTREAM_TREE=origin/master
 	fi

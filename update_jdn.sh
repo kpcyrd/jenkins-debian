@@ -354,7 +354,7 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get update
 		sudo apt-get install $DEBS $MASTERDEBS
 		sudo apt-get install -t jessie-backports \
-				pbuilder || echo "this should only fail on the first install"
+				pbuilder lintian || echo "this should only fail on the first install"
 		#		botch
 		# for varying kernels
 		# we use bpo kernels on pb-build5+6 (and i386 kernel on pb-build2-i386)

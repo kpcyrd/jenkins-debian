@@ -53,6 +53,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * teach bin/chroot-*.sh and bin/d-i_build.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
 * use static IP for the nodes (h01ger)
 * use vmdebootstrap where applicable
+* Tango Icons are gone: #824477 - update footer once this bug is fixed
 
 === ToDo for improving disk space
 

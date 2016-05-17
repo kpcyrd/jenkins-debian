@@ -25,6 +25,25 @@ packages_list_to_deb822() {
 	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $PACKAGES > $TMPFILE
 }
 
+tails_build_manifest_to_deb822() {
+	tmpfile="$1"
+	packages="$2"
+	ALL_PKGS=$(python3 - "$tmpfile" <<EOF
+import sys
+import yaml
+with open(sys.argv[1]) as fd:
+	manifest = yaml.load(fd)
+	seen = {}
+	for pkg in (manifest['packages']['binary'] + manifest['packages']['source']):
+		pkgname = pkg['package']
+		if not pkgname in seen:
+			print(pkgname, end='|')
+			seen[pkgname] = True
+EOF
+)
+	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $packages > "$tmpfile"
+}
+
 convert_from_deb822_into_source_packages_only() {
 	# given a Packages file in deb822 format on standard input, the
 	# following perl "oneliner" outputs the associated (unversioned)
@@ -373,11 +392,10 @@ update_pkg_sets() {
 
 	# tails
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.binpkgs > $TMPFILE
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.srcpkgs >> $TMPFILE
+		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.build-manifest > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
 			echo "parsing $TMPFILE now..."
-			packages_list_to_deb822
+			tails_build_manifest_to_deb822 "$TMPFILE" "$PACKAGES"
 			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[20]}.pkgset
 		else

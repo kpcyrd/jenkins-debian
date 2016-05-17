@@ -184,12 +184,13 @@ for PKG in $SOURCEPKGS ; do
 			write_row "<a href=\"$URL\">$GIT</a>"
 			write_row "<br />(<span class=\"green\">merged</span>"
 			if $OBSOLETE_IN_TESTING ; then
-				write_row "and available in testing and unstable)"
+				write_row "and available in testing and unstable"
 			elif $OBSOLETE_IN_SID ; then
-				write_row "and available in unstable)"
+				write_row "and available in unstable"
 			elif $OBSOLETE_IN_EXP ; then
-				write_row "and available in experimental)"
+				write_row "and available in experimental"
 			fi
+			write_row ")"
 		fi
 	else
 		write_row "<a href=\"$URL\">$GIT</a>"

@@ -354,7 +354,25 @@ write_suite_arch_table() {
 	local SUITE=""
 	local ARCH=""
 	write_page "<p>"
-	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>not for this architecture</th><th>blacklisted</th></tr>"
+	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>"
+	set_icon reproducible
+	write_icon
+	write_page "reproducible packages</th><th>"
+	set_icon unreproducible
+	write_icon
+	write_page "unreproducible packages</th><th>"
+	set_icon FTBFS
+	write_icon
+	write_page "packages failing to build</th><th>"
+	set_icon depwait
+	write_icon
+	write_page "packages in depwait state</th><th>"
+	set_icon not_for_us
+	write_icon
+	write_page "not for this architecture</th><th>"
+	set_icon blacklisted
+	write_icon
+	write_page "blacklisted</th></tr>"
 	for SUITE in $SUITES ; do
 		for ARCH in ${ARCHS} ; do
 			gather_suite_arch_stats

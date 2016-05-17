@@ -182,7 +182,7 @@ for PKG in $SOURCEPKGS ; do
 			fi
 		else
 			write_row "<a href=\"$URL\">$GIT</a>"
-			local MERGEINFO=""
+			MERGEINFO=""
 			if $OBSOLETE_IN_TESTING ; then
 				MERGEINFO=" and available in testing and unstable"
 			elif $OBSOLETE_IN_SID ; then

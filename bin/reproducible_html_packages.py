@@ -211,6 +211,10 @@ def gen_history_page(package):
             html += '<th>{}</th>'.format(i)
         html += '\n{tab}</tr>'.format(tab=tab)
         for record in package.history:
+            # add icon to result
+            status, icon, spokenstatus = get_status_icon(record['result'])
+            result_html = '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/> ' + spokenstatus
+            record['result'] = result_html.format(icon=icon, spokenstatus=spokenstatus)
             # human formatting of build duration
             record['build duration'] = convert_into_hms_string(
                 int(record['build duration']))

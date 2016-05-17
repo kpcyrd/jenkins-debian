@@ -197,6 +197,10 @@ def gen_suites_links(package, current_suite, current_arch):
     html += '</ul>\n'
     return tab*5 + (tab*7).join(html.splitlines(True))
 
+def shorten_if_debiannet(hostname):
+    if hostname[-11:] == '.debian.net':
+        hostname = hostname[:-11]
+    return hostname
 
 def gen_history_page(package):
     keys = ('build date', 'version', 'suite', 'architecture', 'result',
@@ -211,6 +215,9 @@ def gen_history_page(package):
             html += '<th>{}</th>'.format(i)
         html += '\n{tab}</tr>'.format(tab=tab)
         for record in package.history:
+            # remove trailing .debian.net from hostnames
+            record['node1'] = shorten_if_debiannet(record['node1'])
+            record['node2'] = shorten_if_debiannet(record['node2'])
             # add icon to result
             status, icon, spokenstatus = get_status_icon(record['result'])
             result_html = '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/> ' + spokenstatus

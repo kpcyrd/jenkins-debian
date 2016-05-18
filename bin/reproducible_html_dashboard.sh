@@ -553,7 +553,24 @@ create_dashboard_page() {
 	write_page "</p>"
 	# explain setup
 	write_variation_table debian
-	# redo arch specific pngs once a day and write build per day graphs
+	# link to index_breakages
+	write_page "<p style=\"clear:both;\">"
+	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is very much appreciated.</p>"
+	# the end
+	write_page_footer
+	cp $PAGE $BASE/reproducible.html
+	publish_page
+}
+
+#
+# create performance page
+#
+create_performance_page() {
+	VIEW=performance
+	PAGE=index_${VIEW}.html
+	echo "$(date -u) - starting to write $PAGE page."
+	write_page_header $VIEW "Build node performance stats"
+	# arch performance stats
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
@@ -561,7 +578,6 @@ create_dashboard_page() {
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
-	# write performance stats
 	write_page "<p style=\"clear:both;\">"
 	write_build_performance_stats
 	# write suite builds age graphs
@@ -572,9 +588,8 @@ create_dashboard_page() {
 		done
 		write_page "</p><p style=\"clear:both;\">"
 	done
-	# link to index_breakages
-	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is very much appreciated.</p>"
 	# the end
+	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_nodes_info/lastBuild/console\">individual build node performance stats</a> are available too.</p>"
 	write_page_footer
 	cp $PAGE $BASE/reproducible.html
 	publish_page
@@ -596,4 +611,5 @@ done
 ARCH="amd64"
 SUITE="unstable"
 create_dashboard_page
+create_performance_page
 rm -f $DUMMY_FILE >/dev/null

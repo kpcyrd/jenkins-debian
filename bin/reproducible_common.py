@@ -245,6 +245,7 @@ html_project_links = Template((tab*2).join("""
             Reproducible-builds.org - <a href="https://Reproducible-builds.org/docs/">HowTo</a><br />
             Reproducible Debian - <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
             Reproducible builds <a href="https://reproducible.alioth.debian.org/blog/">weekly news</a><br />
+            <a href="https://reproducible-builds.org/specs/source-date-epoch/">SOURCE_DATE_EPOCH specification</a><br />
             </li><li>
             Reproducible <a href="https://tests.reproducible-builds.org/archlinux/">Arch Linux</a> /
             <a href="https://tests.reproducible-builds.org/coreboot/">coreboot</a> /

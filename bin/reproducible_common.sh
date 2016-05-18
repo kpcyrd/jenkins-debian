@@ -309,6 +309,7 @@ write_page_header() {
 	write_page "            Reproducible-builds.org - <a href=\"https://Reproducible-builds.org/docs/\">HowTo</a><br />"
 	write_page "            Reproducible Debian - <a href=\"https://wiki.debian.org/ReproducibleBuilds\">Wiki</a><br />"
 	write_page "            Reproducible builds <a href=\"https://reproducible.alioth.debian.org/blog/\">weekly news</a><br />"
+	write_page "            <a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a><br />"
 	write_page "            </li><li>"
 	write_page "            Reproducible <a href=\"https://tests.reproducible-builds.org/archlinux/\">Arch Linux</a> /"
 	write_page "            <a href=\"https://tests.reproducible-builds.org/coreboot/\">coreboot</a> /"

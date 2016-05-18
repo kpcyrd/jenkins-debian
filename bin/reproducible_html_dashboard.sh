@@ -591,7 +591,6 @@ create_performance_page() {
 	# the end
 	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_nodes_info/lastBuild/console\">individual build node performance stats</a> are available too.</p>"
 	write_page_footer
-	cp $PAGE $BASE/reproducible.html
 	publish_page
 }
 

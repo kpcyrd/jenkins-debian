@@ -220,7 +220,7 @@ def gen_history_page(package):
             record['node2'] = shorten_if_debiannet(record['node2'])
             # add icon to result
             status, icon, spokenstatus = get_status_icon(record['result'])
-            result_html = '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/> ' + spokenstatus
+            result_html = spokenstatus + ' <img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>'
             record['result'] = result_html.format(icon=icon, spokenstatus=spokenstatus)
             # human formatting of build duration
             record['build duration'] = convert_into_hms_string(

@@ -15,7 +15,7 @@ import glob
 def convert_into_status_html(status):
     if status != 'None':
         status, icon, spokenstatus = get_status_icon(status)
-        return '<img src="/static/' + icon +'" alt="' + status + '" title="' + status + '"/> ' + status
+        return status + ' <img src="/static/' + icon +'" alt="' + status + '" title="' + status + '"/>'
     else:
         return ''
 
@@ -36,8 +36,8 @@ def generate_schedule(arch):
     html += build_leading_text_section({'text': text}, rows, defaultsuite, arch)
     html += generate_live_status_table(arch)
     html += '<p><table class="scheduled">\n' + tab
-    html += '<tr><th>#</th><th>scheduled at</th><th>suite</th>'
-    html += '<th>arch</th><th>source package</th><th>previous build status</th><th>previous build duration</th><th>average build duration</th></tr>\n'
+    html += '<tr><th class="center">#</th><th class="center">scheduled at</th><th class="center">suite</th>'
+    html += '<th class="center">arch</th><th class="center">source package</th><th class="center">previous build status</th><th class="center">previous build duration</th><th class="center">average build duration</th></tr>n'
     bugs = get_bugs()
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name 4: previous status 5: previous build duration 6. avg build duration
@@ -66,10 +66,10 @@ def generate_live_status_table(arch):
     html = ''
     rows = query_db(query.format(arch=arch))
     html += '<p><table class="scheduled">\n' + tab
-    html += '<tr><th>#</th><th>src pkg id</th><th>suite</th><th>arch</th>'
-    html += '<th>source package</th><th>version</th></th>'
-    html += '<th>build started</th><th>previous build status</th>'
-    html += '<th>previous build duration</th><th>average build duration</th><th>builder job</th>'
+    html += '<tr><th class="center">#</th><th class="center">src pkg id</th><th class="center">suite</th><th class="center">arch</th>'
+    html += '<th class=\"center\">source package</th><th class=\"center\">version</th></th>'
+    html += '<th class=\"center\">build started</th><th class=\"center\">previous build status</th>'
+    html += '<th class=\"center\">previous build duration</th><th class=\"center\">average build duration</th><th class=\"center\">builder job</th>'
     html += '</tr>\n'
     counter = 0
     # the path should probably not be hard coded here…

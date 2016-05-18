@@ -281,12 +281,22 @@ span.bug-done {
 }
 
 td, th {
-	text-align: left;
+	text-align: right;
 	padding: 0.25em 0.5em;
 	border-bottom: 1px solid #ddd;
 	border-collapse: collapse;
 	vertical-align: top;
 }
+
+td.left, th.left {
+	text-align: left;
+}
+
+td.center, th.center {
+	text-align: center;
+}
+
+
 
 table tr:last-child td {
 	border: none;

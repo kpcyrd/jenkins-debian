@@ -278,7 +278,7 @@ write_usertag_table() {
 		let "REPRODUCIBLE_TTOTAL=REPRODUCIBLE_TOPEN+REPRODUCIBLE_TDONE"
 		write_page "<tr><td>Sum of <a href=\"https://wiki.debian.org/ReproducibleBuilds/Contribute#How_to_report_bugs\">bugs with usertags related to reproducible builds</a>, excluding those tagged 'ftbfs'</td><td>$REPRODUCIBLE_TOPEN</td><td>$REPRODUCIBLE_TDONE</td><td>$REPRODUCIBLE_TTOTAL</td></tr>"
 		write_page "<tr><td>Sum of all bugs with usertags related to reproducible builds</td><td>$TOPEN</td><td>$TDONE</td><td>$TTOTAL</td></tr>"
-		write_page "<tr><td colspan=\"4\">Stats are from $DATE.<br />The sums of usertags shown are not equivalent to the sum of bugs as a single bug can have several tags.</td></tr>"
+		write_page "<tr><td colspan=\"4\" class=\"left\">Stats are from $DATE.<br />The sums of usertags shown are not equivalent to the sum of bugs as a single bug can have several tags.</td></tr>"
 		write_page "</table>"
 	fi
 }
@@ -292,7 +292,7 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		write_page " <th>$ARCH</th>"
 	done
-	write_page "</tr><tr><td>oldest build result in testing / unstable / experimental</td>"
+	write_page "</tr><tr><td class=\"left\">oldest build result in testing / unstable / experimental</td>"
 	for ARCH in ${ARCHS} ; do
 		PERF_STATS[$ARCH]=$(mktemp -t reproducible-dashboard-perf-XXXXXXXX)
 		AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
@@ -300,7 +300,7 @@ write_build_performance_stats() {
 		AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
 		write_page "<td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
-	write_page "</tr><tr><td>average test duration (on $DATE)</td>"
+	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
@@ -309,24 +309,24 @@ write_build_performance_stats() {
 	done
 	local TIMESPAN_VERBOSE="4 weeks"
 	local TIMESPAN_RAW="28"
-	write_page "</tr><tr><td>average test duration (in the last $TIMESPAN_VERBOSE)</td>"
+	write_page "</tr><tr><td class=\"left\">average test duration (in the last $TIMESPAN_VERBOSE)</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
 	done
-	write_page "</tr><tr><td>packages tested on $DATE</td>"
+	write_page "</tr><tr><td class=\"left\">packages tested on $DATE</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 		write_page "<td>$RESULT</td>"
 	done
-	write_page "</tr><tr><td>packages tested in the last 24h</td>"
+	write_page "</tr><tr><td class=\"left\">packages tested in the last 24h</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$(date -u '+%Y-%m-%d %H:%m')', '-24 hours') AND r.architecture='$ARCH'")
 		write_page "<td>$RESULT</td>"
 	done
-	write_page "</tr><tr><td>packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
+	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND r.architecture='$ARCH'")
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
@@ -334,7 +334,7 @@ write_build_performance_stats() {
 	done
 	local TIMESPAN_VERBOSE="3 months"
 	local TIMESPAN_RAW="91.5"
-	write_page "</tr><tr><td>packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
+	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
 		if [ "$ARCH" = "i386" ] ; then
 			RESULT="&nbsp;"
@@ -354,29 +354,29 @@ write_suite_arch_table() {
 	local SUITE=""
 	local ARCH=""
 	write_page "<p>"
-	write_page "<table class=\"main\"><tr><th>suite</th><th>all sources packages</th><th>"
+	write_page "<table class=\"main\"><tr><th class=\"left\">suite</th><th class=\"center\">all sources packages</th><th class=\"center\">"
 	set_icon reproducible
 	write_icon
-	write_page "reproducible packages</th><th>"
+	write_page "reproducible packages</th><th class=\"center\">"
 	set_icon unreproducible
 	write_icon
-	write_page "unreproducible packages</th><th>"
+	write_page "unreproducible packages</th><th class=\"center\">"
 	set_icon FTBFS
 	write_icon
-	write_page "packages failing to build</th><th>"
+	write_page "packages failing to build</th><th class=\"center\">"
 	set_icon depwait
 	write_icon
-	write_page "packages in depwait state</th><th>"
+	write_page "packages in depwait state</th><th class=\"center\">"
 	set_icon not_for_us
 	write_icon
-	write_page "not for this architecture</th><th>"
+	write_page "not for this architecture</th><th class=\"center\">"
 	set_icon blacklisted
 	write_icon
 	write_page "blacklisted</th></tr>"
 	for SUITE in $SUITES ; do
 		for ARCH in ${ARCHS} ; do
 			gather_suite_arch_stats
-			write_page "<tr><td>$SUITE/$ARCH</td><td>$AMOUNT"
+			write_page "<tr><td class=\"left\">$SUITE/$ARCH</td><td>$AMOUNT"
 			if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 				write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 			fi
@@ -480,23 +480,23 @@ create_dashboard_page() {
 	done
 	write_page "</p>"
 	# write inventory table
-	write_page "<p><table class=\"main\"><tr><th>Various reproducibility statistics</th><th>source based</th>"
+	write_page "<p><table class=\"main\"><tr><th class=\"left\">Various reproducibility statistics</th><th class=\"center\">source based</th>"
 	AC=0
 	for ARCH in ${ARCHS} ; do
-		write_page "<th>$ARCH</th>"
+		write_page "<th class=\"center\">$ARCH</th>"
 		let AC+=1
 	done
 	write_page "</tr>"
 	ARCH="amd64"
-	write_page "<tr><td>identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"$AC\"></td></tr>"
-	write_page "<tr><td>total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"$AC\"></td></tr>"
-	write_page "<tr><td>packages with notes about these issues</td><td>$NOTES</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">packages with notes about these issues</td><td>$NOTES</td><td colspan=\"$AC\"></td></tr>"
 
-	local TD_PKG_NOISSUES="<tr><td>packages in unstable with issues but without identified ones</td><td></td>"
-	local TD_PKG_FTBR="<tr><td>&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
-	local TD_PKG_FTBFS="<tr><td>&nbsp;&nbsp;- failing to build</a></td><td></td>"
-	local TD_PKG_SID="<tr><td>packages in unstable which need to be fixed</td><td></td>"
-	local TD_PKG_TESTING="<tr><td>&nbsp;&nbsp;- in testing</td><td></td>"
+	local TD_PKG_NOISSUES="<tr><td class=\"left\">packages in unstable with issues but without identified ones</td><td></td>"
+	local TD_PKG_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
+	local TD_PKG_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
+	local TD_PKG_SID="<tr><td class=\"left\">packages in unstable which need to be fixed</td><td></td>"
+	local TD_PKG_TESTING="<tr><td class=\"left\">&nbsp;&nbsp;- in testing</td><td></td>"
 	for ARCH in ${ARCHS} ; do
 		SUITE="unstable"
 		gather_suite_arch_stats
@@ -523,20 +523,20 @@ create_dashboard_page() {
 	# insane grep to filter people who committed with several
 	# usernames…
 	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		write_page "<tr><td>committers to <a href=\"https://anonscm.debian.org/git/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u | \
+		write_page "<tr><td class=\"left\">committers to <a href=\"https://anonscm.debian.org/git/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u | \
 				grep -v alexis@passoire.fr | grep -v christoph.berg@credativ.de | grep -v d.s@daniel.shahaf.name | grep -v dhole@openmailbox.com | grep -v jelmer@jelmer.uk | grep -v mattia@mapreri.org | grep -v micha@lenk.info | grep -v mail@sandroknauss.de | grep -v sanvila@unex.es | \
 				wc -l)</td><td colspan=\"$AC\"></td></tr>"
-		write_page "<tr><td>committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u | \
+		write_page "<tr><td class=\"left\">committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u | \
 				grep -v alexis@passoire.fr | grep -v christoph.berg@credativ.de | grep -v d.s@daniel.shahaf.name | grep -v dhole@openmailbox.com | grep -v jelmer@jelmer.uk | grep -v mattia@mapreri.org | grep -v micha@lenk.info | grep -v mail@sandroknauss.de | grep -v sanvila@unex.es | \
 				wc -l)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td>&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	if [ "$RESULT" != "0" ] ; then
-		write_page "<tr><td>&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
+		write_page "<tr><td class=\"left\">&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	write_page "</table>"
 	# write bugs with usertags table

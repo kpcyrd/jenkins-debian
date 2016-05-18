@@ -45,7 +45,7 @@ note_issues_html = Template((tab*3).join("""
   <td>
     Identified issues:
   </td>
-  <td>
+  <td class="left">
     $issues
   </td>
 </tr>""".splitlines(True)))
@@ -55,7 +55,7 @@ note_bugs_html = Template((tab*4).join("""
   <td>
     Bugs noted:
   </td>
-  <td>
+  <td class="left">
      $bugs
   </td>
 </tr>""".splitlines(True)))
@@ -65,7 +65,7 @@ note_comments_html = Template((tab*3).join("""
   <td>
     Comments:
   </td>
-  <td>
+  <td class="left">
     $comments
   </td>
 </tr>""".splitlines(True)))
@@ -75,7 +75,7 @@ note_issue_html_url = Template((tab*6).join("""
   <td>
     URL
   </td>
-  <td>
+  <td class="left">
     <a href="$url" target="_blank">$url</a>
   </td>
 </tr>""".splitlines(True)))
@@ -85,7 +85,7 @@ note_issue_html_desc = Template((tab*6).join("""
   <td>
     Description
   </td>
-  <td>
+  <td class="left">
      $description
   </td>
 </tr>""".splitlines(True)))
@@ -96,7 +96,7 @@ note_issue_html = Template((tab*5).join(("""
     <td>
       Identifier:
     </td>
-    <td>
+    <td class="left">
       <a href="%s/${issue}_issue.html" target="_parent">$issue</a>
     </td>
   </tr>
@@ -109,7 +109,7 @@ issue_html_url = Template((tab*4).join("""
   <td>
     URL:
   </td>
-  <td>
+  <td class="left">
     <a href="$url">$url</a>
   </td>
 </tr>""".splitlines(True)))
@@ -120,7 +120,7 @@ issue_html = Template((tab*3).join("""
     <td style="min-width: 15%">
       Identifier:
     </td>
-    <th>
+    <th class="left">
       $issue
     </th>
   </tr>
@@ -128,7 +128,7 @@ issue_html = Template((tab*3).join("""
     <td>
       Suites:
     </td>
-    <td>
+    <td class="left">
       $suite_links
     </td>
   </tr>
@@ -137,7 +137,7 @@ issue_html = Template((tab*3).join("""
     <td>
       Description:
     </td>
-    <td>
+    <td class="left">
       $description
     </td>
   </tr>
@@ -145,7 +145,7 @@ issue_html = Template((tab*3).join("""
     <td>
       Packages in '$suite' known to be affected by this issue:
     </td>
-    <td>
+    <td class="left">
 $affected_pkgs
     </td>
   </tr>

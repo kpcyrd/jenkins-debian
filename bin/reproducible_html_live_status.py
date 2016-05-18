@@ -12,6 +12,14 @@ from reproducible_common import *
 from reproducible_html_indexes import build_leading_text_section
 import glob
 
+def convert_into_status_html(status):
+    if status != 'None':
+        status, icon, spokenstatus = get_status_icon(status)
+        return '<img src="/static/' + icon +'" alt="' + status + '" title="' + status + '"/> ' + status
+    else:
+        return ''
+
+
 def generate_schedule(arch):
     """ the schedule pages are very different than others index pages """
     log.info('Building the schedule index page for ' + arch + '...')
@@ -39,7 +47,7 @@ def generate_schedule(arch):
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
         html += link_package(pkg, row[1], row[2], bugs)
-        html += '</code></td><td>'+str(row[4])+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
+        html += '</code></td><td>'+convert_into_status_html(str(row[4]))+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
     html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_scheduled.html'
     desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'
@@ -81,7 +89,7 @@ def generate_live_status_table(arch):
         html += '<td>' + suite + '</td><td>' + arch + '</td>'
         html += '<td><code>' + link_package(pkg, suite, arch) + '</code></td>'
         html += '<td>' + str(row[4]) + '</td><td>' + str(row[5]) + '</td>'
-        html += '<td>' + str(row[6]) + '</td><td>' + duration + '</td><td>' + avg_duration + '</td>'
+        html += '<td>' + convert_into_status_html(str(row[6])) + '</td><td>' + duration + '</td><td>' + avg_duration + '</td>'
         html += '<td><a href="https://jenkins.debian.net/job/reproducible_builder_' + str(row[9]) + '/console">' + str(row[9]) + '</a></td>'
         html += '</tr>\n'
     html += '</table></p>\n'

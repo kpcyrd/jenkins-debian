@@ -104,7 +104,9 @@ else
         fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
 
-/srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --capture-all --keep-snapshots --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
+#  --keep-snapshots -- keeps the VM snapshots -- let's make life simple and not do that until we're using them to pass on state to the next jenkins job
+
+/srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --capture-all --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
 
 LAST_SCREENSHOT=$(ls -t1 results/*.png | head -1)
 if [ -e "$LAST_SCREENSHOT" ] ; then

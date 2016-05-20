@@ -450,80 +450,88 @@ update_pkg_sets() {
 	fi
 	progress_info 24
 
-	# debian-ocaml-maint@l.d.o maintainers
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[25]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[25]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
+	# Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[25]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[24]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-med-packaging@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[25]}.pkgset
 	fi
 	progress_info 25
 
-	# debian-x@l.d.o maintainers
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[26]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[26]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
+
+	# debian-ocaml-maint@l.d.o maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[26]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[25]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[26]}.pkgset
 	fi
 	progress_info 26
 
-	# lua packages
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[27]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[27]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+	# debian-x@l.d.o maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[27]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[26]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[27]}.pkgset
 	fi
 	progress_info 27
 
-	# pkg-golang-maintainers
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[28]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[28]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+	# lua packages
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[28]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[27]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[28]}.pkgset
 	fi
 	progress_info 28
 
-	# pkg-haskell-maintainers
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[29]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[29]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+	# pkg-golang-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[29]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[28]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[29]}.pkgset
 	fi
 	progress_info 29
 
-	# pkg-java-maintainers
+	# pkg-haskell-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[30]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[30]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
-		grep-dctrl -sPackage -n -FBuild-Depends default-jdk -o -FBuild-Depends-Indep default-jdk $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[30]}.pkgset
 	fi
 	progress_info 30
 
-	# pkg-javascript-devel
+	# pkg-java-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[31]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[31]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-javascript-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
+		grep-dctrl -sPackage -n -FBuild-Depends default-jdk -o -FBuild-Depends-Indep default-jdk $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[31]}.pkgset
 	fi
 	progress_info 31
 
-	# pkg-perl-maintainers
+	# pkg-javascript-devel
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[32]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[32]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-javascript-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[32]}.pkgset
 	fi
 	progress_info 32
 
-	# pkg-php-pear
+	# pkg-perl-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[33]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[33]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[33]}.pkgset
 	fi
 	progress_info 33
 
-	# pkg-ruby-extras-maintainers
+	# pkg-php-pear
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[34]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[34]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[34]}.pkgset
 	fi
 	progress_info 34
+
+	# pkg-ruby-extras-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[35]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[35]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[35]}.pkgset
+	fi
+	progress_info 35
 
 }
 

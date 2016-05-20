@@ -475,8 +475,8 @@ Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ d
   debug_log("debug: we see InstallSoftware", :color => :blue)
   try_for(120*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
     found = false
-    debug_log("debug: check for Installing Software/GRUBprogress", :color => :blue)
-    hit, _ = @screen.waitAny([diui_png("InstallSoftware",ui_mode),diui_png("InstallGRUB",ui_mode)], 2*60)
+    debug_log("debug: check for Install GRUB/Software", :color => :blue)
+    hit, _ = @screen.waitAny([diui_png("InstallGRUB",ui_mode),diui_png("InstallSoftware",ui_mode)], 2*60)
     if diui_png("InstallSoftware",ui_mode) == hit
       debug_log("debug: still there, so let's glance at tty4", :color => :blue)
       if "gui" == ui_mode

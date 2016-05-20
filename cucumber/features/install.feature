@@ -10,16 +10,16 @@ Feature: Doing variations on d-i installs
 
     Examples:
       | install_ui | target_ui     | login |
-      | gui        | Minimal       | VT    |
-      | gui        | non-GUI       | VT    |
-      | gui        | XFCE Desktop  | XFCE  |
-#      | gui        | Gnome Desktop | Gnome |
       | text       | Minimal       | VT    |
       | text       | non-GUI       | VT    |
       | text       | XFCE Desktop  | XFCE  |
 #      | text       | Gnome Desktop | Gnome |
+      | gui        | Minimal       | VT    |
+      | gui        | non-GUI       | VT    |
+      | gui        | XFCE Desktop  | XFCE  |
+#      | gui        | Gnome Desktop | Gnome |
 
 #  Scenario: Get a useful error from a bogus HTTP proxy
 #    Given I get d-i to the HTTP proxy prompt
-#    When I set the proxy to "172.23.23.23"
+#    When I set the proxy to "127.23.23.23"
 #    Then I should get an error message that mentions the proxy

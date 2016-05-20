@@ -277,7 +277,7 @@ Given /^I select ([a-z]*) mode and wait for the remote shell$/ do |ui_mode|
   end
 
   @screen.type(Sikuli::Key.TAB)
-  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
+  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
                Sikuli::Key.ENTER)
   $vm.wait_until_remote_shell_is_up
 end
@@ -386,7 +386,17 @@ Given /^in ([a-z]*) mode I neglect to scan more CDs$/ do |ui_mode|
 end
 
 Given /^in ([a-z]*) mode I ignore Popcon$/ do |ui_mode|
-  @screen.wait(diui_png("popcon",ui_mode), 10 * 60)
+  bad_mirror = diui_png("BadMirror",ui_mode)
+  on_screen, _ = @screen.waitAny([diui_png("popcon",ui_mode), bad_mirror], 10 * 60)
+  if on_screen == bad_mirror
+    if "gui" == ui_mode
+      @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
+    else
+      @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+    end
+    sleep(10)
+    raise "Failed to access the mirror (perhaps a duff proxy?)"
+  end
   @screen.type(Sikuli::Key.ENTER)
   @screen.waitVanish(diui_png("popcon",ui_mode), 10)
 end
@@ -460,33 +470,44 @@ Given /^in ([a-z]*) mode I select the ([a-zA-Z]*) Desktop task$/ do |ui_mode,des
   @screen.waitVanish(diui_png("Desktop+Gnome",ui_mode), 10)
 end
 
-Given /^in ([a-z]*) mode I wait while the ([a-z]* |)bulk of the packages are installed$/ do |ui_mode,vast|
+Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ do |ui_mode|
   @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
-  if "vast " == vast
-    debug_log("debug: lots of packages, so sod about with AltF4/1 to keep things alive, hopefully", :color => :blue)
-    20.times do
-      sleep(50)
-      @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+  debug_log("debug: we see InstallSoftware", :color => :blue)
+  try_for(120*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
+    found = false
+    debug_log("debug: check for Installing Software/GRUBprogress", :color => :blue)
+    hit, _ = @screen.waitAny([diui_png("InstallSoftware",ui_mode),diui_png("InstallGRUB",ui_mode)], 2*60)
+    if diui_png("InstallSoftware",ui_mode) == hit
+      debug_log("debug: still there, so let's glance at tty4", :color => :blue)
+      if "gui" == ui_mode
+        @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
+      else
+        @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+      end
+      debug_log("debug: typed F4, pausing...", :color => :blue)
       sleep(10)
-      @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
+      debug_log("debug: slept 10", :color => :blue)
+      if "gui" == ui_mode
+        @screen.type(Sikuli::Key.F5, Sikuli::KeyModifier.ALT)
+      else
+        @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
+      end
+      debug_log("debug: pressed F1", :color => :blue)
+      sleep(20)
     end
-    debug_log("debug: 20 mins in...", :color => :blue)
+    if diui_png("InstallGRUB",ui_mode) == hit
+      debug_log("debug: found InstallGRUB", :color => :blue)
+      found = true
+    end
+
+    found
   end
-  @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
-  @screen.waitVanish(diui_png("InstallSoftware",ui_mode), 40 * 60)
 end
 
 Given /^in ([a-z]*) mode I install GRUB$/ do |ui_mode|
-  #@screen.wait("Install the GRUB", 80 * 60)
-  debug_log("debug: Look for InstallingGRUBprogress", :color => :blue)
-  @screen.wait(diui_png("InstallingGRUBprogress",ui_mode), 2 * 60)
-  debug_log("debug: Found InstallingGRUBprogress", :color => :blue)
-  @screen.waitVanish(diui_png("InstallingGRUBprogress",ui_mode), 2 * 60)
-  debug_log("debug: InstallingGRUBprogress gone again", :color => :blue)
-  debug_log("debug: Look for InstallGRUB", :color => :blue)
   @screen.wait(diui_png("InstallGRUB",ui_mode), 2 * 60)
   debug_log("debug: Found InstallGRUB", :color => :blue)
-  sleep(10)
+  sleep(10)  # FIXME -- this is a kludge to deal with the snapshot coming back -- should be done via the remote shell check instead
   @screen.wait(diui_png("InstallGRUB",ui_mode), 10)
   debug_log("debug: Found InstallGRUB (again)", :color => :blue)
   if "gui" == ui_mode

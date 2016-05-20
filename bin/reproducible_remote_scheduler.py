@@ -202,7 +202,6 @@ message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing
 # the current date is subtracted twice, so it sorts before early scheduling
 # schedule on the full hour so we can recognize them easily
 epoch = int(time.time())
-yesterday = epoch - 60*60*24
 now = datetime.now()
 days = int(now.strftime('%j'))*2
 hours = int(now.strftime('%H'))*2

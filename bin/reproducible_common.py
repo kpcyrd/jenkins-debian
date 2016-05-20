@@ -220,6 +220,7 @@ html_head_page = Template((tab*2).join(("""
      <li><a href="/index_repositories.html">repositories overview</a></li>
      <li><a href="/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
      <li><a href="/index_performance.html">performance stats</a></li>
+     <li><a href="/index_variations.html">variations tested</a></li>
     </ul></li>
   </ul>
 $project_links

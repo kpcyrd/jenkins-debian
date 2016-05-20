@@ -551,8 +551,6 @@ create_dashboard_page() {
 		fi
 	done
 	write_page "</p>"
-	# explain setup
-	write_variation_table debian
 	# link to index_breakages
 	write_page "<p style=\"clear:both;\">"
 	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is very much appreciated.</p>"
@@ -595,6 +593,22 @@ create_performance_page() {
 }
 
 #
+# create variations page
+#
+create_variations_page() {
+	VIEW=variations
+	PAGE=index_${VIEW}.html
+	echo "$(date -u) - starting to write $PAGE page."
+	write_page_header $VIEW "Variations introduced when testing Debian packages"
+	# explain setup
+	write_variation_table debian
+	write_page "<p style=\"clear:both;\">"
+	write_page "</p>"
+	write_page_footer
+	publish_page
+}
+
+#
 # main
 #
 SUITE="unstable"
@@ -609,6 +623,7 @@ for ARCH in ${ARCHS} ; do
 done
 ARCH="amd64"
 SUITE="unstable"
-create_dashboard_page
 create_performance_page
+create_variations_page
+create_dashboard_page
 rm -f $DUMMY_FILE >/dev/null

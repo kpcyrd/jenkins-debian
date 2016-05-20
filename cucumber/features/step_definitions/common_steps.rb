@@ -515,12 +515,8 @@ Given /^I wait for the reboot$/ do
   @screen.wait(bootsplash, 10 * 60)
 end
 
-Given /^I should see a console Login prompt$/ do
-  @screen.wait("DebianLoginPromptVT.png", 20 * 60)
-end
-
-Given /^I should see a XFCE Login prompt$/ do
-  @screen.wait("DebianLoginPromptXFCE.png", 20 * 60)
+Given /^I should see a ([a-zA-Z]*) Login prompt$/ do |style|
+  @screen.wait("DebianLoginPrompt"+style+".png", 20 * 60)
 end
 
 def bootsplash

@@ -478,7 +478,7 @@ Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ d
     debug_log("debug: check for Install GRUB/Software", :color => :blue)
     hit, _ = @screen.waitAny([diui_png("InstallGRUB",ui_mode),diui_png("InstallSoftware",ui_mode)], 2*60)
     if diui_png("InstallSoftware",ui_mode) == hit
-      debug_log("debug: still there, so let's glance at tty4", :color => :blue)
+      debug_log("debug: 'Install Software' still there, so let's glance at tty4", :color => :blue)
       if "gui" == ui_mode
         @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
       else

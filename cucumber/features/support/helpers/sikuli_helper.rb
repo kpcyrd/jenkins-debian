@@ -211,4 +211,3 @@ sikuli_settings.ActionLogs = true
 sikuli_settings.DebugLogs = false
 sikuli_settings.InfoLogs = true
 sikuli_settings.ProfileLogs = true
-sikuli_settings.TypeDelay = 0.5

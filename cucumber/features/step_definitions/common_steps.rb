@@ -276,10 +276,12 @@ Given /^I select ([a-z]*) mode and wait for the remote shell$/ do |ui_mode|
     @screen.wait("d-i_bootmenu_graphical.png", 10)
   end
 
-  @screen.type(Sikuli::Key.TAB)
-  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
-               Sikuli::Key.ENTER)
+  #@screen.type(Sikuli::Key.TAB)
+  #@screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
+  #             Sikuli::Key.ENTER)
   #$vm.wait_until_remote_shell_is_up
+  
+  @screen.type(Sikuli::Key.ENTER) # we're disabling the above editing of the command line, since it's breaking on jenkins.debian.net for reasons unknown
   @screen.wait(diui_png("English",ui_mode), 3*60)  # FIXME -- this is just to pause until the remote shell would have been up, so is a kludge
 end
 

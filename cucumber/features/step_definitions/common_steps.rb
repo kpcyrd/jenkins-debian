@@ -273,7 +273,8 @@ end
 Given /^I select ([a-z]*) mode and wait for the remote shell$/ do |ui_mode|
   if "gui" == ui_mode
     @screen.type(Sikuli::Key.DOWN) 
-    @screen.wait("d-i_bootmenu_graphical.png", 10)
+    #@screen.wait("d-i_bootmenu_graphical.png", 10)
+    sleep(20) # FIXME -- this should not be needed, but we'll try it for j.d.n's sake
   end
 
   #@screen.type(Sikuli::Key.TAB)
@@ -281,8 +282,11 @@ Given /^I select ([a-z]*) mode and wait for the remote shell$/ do |ui_mode|
   #             Sikuli::Key.ENTER)
   #$vm.wait_until_remote_shell_is_up
   
+  debug_log("debug: About to type ENTER at the bootsplash", :color => :blue)
   @screen.type(Sikuli::Key.ENTER) # we're disabling the above editing of the command line, since it's breaking on jenkins.debian.net for reasons unknown
+  debug_log("debug: waiting for it to get to the 'English' prompt...", :color => :blue)
   @screen.wait(diui_png("English",ui_mode), 3*60)  # FIXME -- this is just to pause until the remote shell would have been up, so is a kludge
+  debug_log("debug: found the 'English' prompt", :color => :blue)
 end
 
 Given /^in ([a-z]*) mode I select British English$/ do |ui_mode|

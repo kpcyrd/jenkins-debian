@@ -330,14 +330,14 @@ def _gen_pkg_sets_link(suite, arch):
 def _gen_arch_links(suite, arch):
     html = '<li>'
     for a in ARCHS:
-        html += ' <a href="/' + suite + '/index_suite_' + a + '_stats.html\">' + a + '</a>'
+        html += ' <a href="/' + suite + '/index_suite_' + a + '_stats.html\">' + a + '</a>&nbsp;&nbsp;'
     html += '</li>'
     return html
 
 def _gen_suite_links(suite, arch):
     html = '<li>'
     for s in SUITES:
-        html += ' <a href="/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>'
+        html += ' <a href="/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>&nbsp;&nbsp;'
     html += '</li>'
     return html
 

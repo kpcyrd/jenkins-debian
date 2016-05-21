@@ -106,6 +106,8 @@ fi
 
 #  --keep-snapshots -- keeps the VM snapshots -- let's make life simple and not do that until we're using them to pass on state to the next jenkins job
 
+echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
+
 /srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --capture-all --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
 
 LAST_SCREENSHOT=$(ls -t1 results/*.png | head -1)

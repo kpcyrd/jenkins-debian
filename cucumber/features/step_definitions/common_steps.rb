@@ -265,7 +265,7 @@ end
 
 Given /^I boot to the d-i splash screen$/ do
 
-  boot_timeout = 30
+  boot_timeout = 60
 
   @screen.wait("d-i8_bootsplash.png", boot_timeout)
 end

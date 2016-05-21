@@ -271,6 +271,7 @@ Given /^I boot to the d-i splash screen$/ do
 end
 
 Given /^I select ([a-z]*) mode and wait for the remote shell$/ do |ui_mode|
+  sleep(20) # FIXME -- this should not be needed, but we'll try it for j.d.n's sake
   if "gui" == ui_mode
     @screen.type(Sikuli::Key.DOWN) 
     #@screen.wait("d-i_bootmenu_graphical.png", 10)

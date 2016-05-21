@@ -110,9 +110,11 @@ echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/
 
 /srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --capture-all --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
 
+echo "Trying to preserve last screenshot…"
 LAST_SCREENSHOT=$(ls -t1 results/*.png | head -1)
 if [ -e "$LAST_SCREENSHOT" ] ; then
         cp $LAST_SCREENSHOT $WORKSPACE/screenshot.png
+	convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.png
 fi
 
 cleanup_all

@@ -54,7 +54,8 @@ for user in helmut holger mattia lunar phil ; do
 		sudo adduser $user libvirt
 		sudo adduser $user libvirt-qemu
 		continue
-	elif [ "$user" = "phil" ] ; then
+	elif [ "$user" = "phil" ] && ( ! [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ) ; then
+		# create phil on jenkins and jenkins-test-vm only
 		continue
 	fi
 	# actually create the user

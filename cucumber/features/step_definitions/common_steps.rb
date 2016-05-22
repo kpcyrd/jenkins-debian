@@ -536,7 +536,7 @@ Given /^in ([a-z]*) mode I install GRUB$/ do |ui_mode|
 end
 
 Given /^in ([a-z]*) mode I allow reboot after the install is complete$/ do |ui_mode|
-  @screen.wait(diui_png("InstallComplete",ui_mode), 2 * 60)
+  @screen.wait(diui_png("InstallComplete",ui_mode), 4 * 60)
   @screen.type(Sikuli::Key.ENTER)
 end
 

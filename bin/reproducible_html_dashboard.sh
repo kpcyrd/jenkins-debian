@@ -465,6 +465,8 @@ write_meta_pkg_graphs_links () {
 create_dashboard_page() {
 	VIEW=dashboard
 	PAGE=index_${VIEW}.html
+	SUITE="unstable"
+	ARCH="amd64"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
 	write_suite_arch_table
@@ -566,6 +568,8 @@ create_dashboard_page() {
 create_performance_page() {
 	VIEW=performance
 	PAGE=index_${VIEW}.html
+	ARCH="amd64"
+	SUITE="unstable"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Build node performance stats"
 	# arch performance stats
@@ -598,6 +602,8 @@ create_performance_page() {
 create_variations_page() {
 	VIEW=variations
 	PAGE=index_${VIEW}.html
+	ARCH="amd64"
+	SUITE="unstable"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Variations introduced when testing Debian packages"
 	# explain setup
@@ -621,8 +627,6 @@ for ARCH in ${ARCHS} ; do
 		create_suite_arch_stats_page
 	done
 done
-ARCH="amd64"
-SUITE="unstable"
 create_performance_page
 create_variations_page
 create_dashboard_page

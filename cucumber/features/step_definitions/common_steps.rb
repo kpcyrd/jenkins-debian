@@ -263,10 +263,12 @@ When /^I destroy the computer$/ do
   $vm.destroy_and_undefine
 end
 
-Given /^I boot to the d-i splash screen$/ do
+Given /^I accept that the machine is sl(o+)w$/ do |slowness|
+  @patience = 2^slowness.length
+end
 
+Given /^I boot to the d-i splash screen$/ do
   boot_timeout = 60
-  @patience = 6
 
   @screen.wait("d-i8_bootsplash.png", boot_timeout * @patience)
 end

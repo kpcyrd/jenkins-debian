@@ -223,8 +223,10 @@ def reach_checkpoint(name)
         debug_log(scenario_indent +
                   "Step failed while creating checkpoint: #{s}",
                   :color => :red)
+        live_screenshot
         raise e
       end
+      live_screenshot
       debug_log(step_indent + "#{step_action} #{s}", :color => :green)
       step_action = "And"
     end

@@ -59,6 +59,7 @@ TAILS_ISO = ENV['ISO']
 OLD_TAILS_ISO = ENV['OLD_ISO'] || TAILS_ISO
 TIME_AT_START = Time.now
 ARTIFACTS_DIR = $config['TMPDIR'] + "/results"
+JOB_NAME = ENV['JOB_NAME']
 
 # Constants that are statically initialized.
 CONFIGURED_KEYSERVER_HOSTNAME = 'hkps.pool.sks-keyservers.net'

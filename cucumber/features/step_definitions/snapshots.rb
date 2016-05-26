@@ -4,8 +4,8 @@ def checkpoints
       :description => "I have started Debian Installer and stopped at the Tasksel prompt",
       :parent_checkpoint => nil,
       :steps => [
-	'I create a 8 GiB disk named "target"',
-	'I plug ide drive "target"',
+	'I create a 8 GiB disk named "'+JOB_NAME+'"',
+	'I plug ide drive "'+JOB_NAME+'"',
 	'I accept that the machine is slooooow',
 	'I start the computer',
 	'I boot to the d-i splash screen',
@@ -34,6 +34,8 @@ def checkpoints
       :description => "I have started GUI Debian Installer and stopped at the Tasksel prompt",
       :parent_checkpoint => 'boot-d-i',
       :steps => [
+	'I create a 8 GiB disk named "'+JOB_NAME+'"',
+	'I plug ide drive "'+JOB_NAME+'"',
 	'I accept that the machine is slooooow',
 	'I select gui mode and wait for the remote shell',
 	'in gui mode I select British English',
@@ -59,7 +61,7 @@ def checkpoints
 	'in text mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -74,7 +76,7 @@ def checkpoints
 	'in gui mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -89,7 +91,7 @@ def checkpoints
 	'in text mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -104,7 +106,7 @@ def checkpoints
 	'in gui mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -119,7 +121,7 @@ def checkpoints
 	'in text mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -134,7 +136,7 @@ def checkpoints
 	'in gui mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -149,7 +151,7 @@ def checkpoints
 	'in text mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
 
@@ -164,7 +166,7 @@ def checkpoints
 	'in gui mode I allow reboot after the install is complete',
 	'I wait for the reboot',
 	'I power off the computer',
-	'the computer is set to boot from ide drive "target"',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
   }

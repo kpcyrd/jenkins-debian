@@ -33,7 +33,10 @@ fetch_if_newer() {
                 echo "File exists, will only re-download if a newer one is available..."
                 curlopts="$curlopts -z $file"
         fi
-        curl $curlopts -o $file $url
+        curl $curlopts -o $file.new $url
+        if [ -e  $file.new ] ; then
+          mv -f $file.new $file
+        fi
 }
 
 discard_snapshots() {

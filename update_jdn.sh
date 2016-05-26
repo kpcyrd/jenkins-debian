@@ -78,6 +78,12 @@ for user in helmut holger mattia lunar phil ; do
 	sudo usermod -G $extra_groups $user
 done
 
+if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+	# jenkins needs access to libvirt
+	sudo adduser jenkins libvirt
+	sudo adduser jenkins libvirt-qemu
+fi
+
 sudo mkdir -p /srv/workspace
 [ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots

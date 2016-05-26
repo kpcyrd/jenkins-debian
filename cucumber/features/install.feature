@@ -10,13 +10,9 @@ Feature: Doing variations on d-i installs
 
     Examples:
       | install_ui | target_ui     | login |
-      | text       | Minimal       | VT    |
-      | text       | non-GUI       | VT    |
-      | text       | XFCE Desktop  | XFCE  |
-#      | text       | Gnome Desktop | Gnome |
       | gui        | Minimal       | VT    |
-      | gui        | non-GUI       | VT    |
       | gui        | XFCE Desktop  | XFCE  |
+      | text       | non-GUI       | VT    |
 #      | gui        | Gnome Desktop | Gnome |
 
 #  Scenario: Get a useful error from a bogus HTTP proxy

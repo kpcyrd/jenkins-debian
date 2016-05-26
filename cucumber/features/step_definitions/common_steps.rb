@@ -306,6 +306,7 @@ end
 Given /^in ([a-z]*) mode I set the root password to "([^"]*)"$/ do |ui_mode, rootpw|
 # Root Password, twice
   on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword",ui_mode),diui_png("RootPassword",ui_mode)], 30 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword",ui_mode),diui_png("RootPassword",ui_mode)], 30 * PATIENCE)
   @screen.type(rootpw)
   if "gui" == ui_mode
     @screen.type(Sikuli::Key.TAB)
@@ -323,6 +324,7 @@ Given /^in ([a-z]*) mode I set the password for "([^"]*)" to be "([^"]*)"$/ do |
   @screen.type(fullname + Sikuli::Key.ENTER)
   @screen.waitVanish(diui_png("NameOfUser",ui_mode), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
+  on_screen, _ = @screen.waitAny([diui_png("ShowUserPassword",ui_mode),diui_png("UserPassword",ui_mode)], 10 * PATIENCE)
   on_screen, _ = @screen.waitAny([diui_png("ShowUserPassword",ui_mode),diui_png("UserPassword",ui_mode)], 10 * PATIENCE)
   @screen.type(password)
   if "gui" == ui_mode

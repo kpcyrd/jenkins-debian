@@ -117,7 +117,7 @@ fi
 
 echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
 
-/srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --capture-all --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
+/srv/jenkins/cucumber/bin/run_test_suite --vnc-server-only --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
 
 
 cleanup_all

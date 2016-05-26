@@ -23,6 +23,7 @@ $pause_on_fail = !ENV['PAUSE_ON_FAIL'].nil?
 $time_at_start = Time.now
 $live_user = "user"
 $sikuli_retry_findfailed = !ENV['SIKULI_RETRY_FINDFAILED'].nil?
+$executor_number = ENV['EXECUTOR_NUMBER']
 
 assert File.exists?(DEFAULTS_CONFIG_FILE)
 $config = YAML.load(File.read(DEFAULTS_CONFIG_FILE))
@@ -60,10 +61,13 @@ OLD_TAILS_ISO = ENV['OLD_ISO'] || TAILS_ISO
 TIME_AT_START = Time.now
 ARTIFACTS_DIR = $config['TMPDIR'] + "/results"
 JOB_NAME = ENV['JOB_NAME']
+BUILD_ID = ENV['BUILD_ID']
 PATIENCE = ENV['PATIENCE'] || 3
 
 # Constants that are statically initialized.
 CONFIGURED_KEYSERVER_HOSTNAME = 'hkps.pool.sks-keyservers.net'
+#LIBVIRT_DOMAIN_NAME = "lvcVM-" + $executor_number
+#LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2546" + "%03d" % $executor_number
 LIBVIRT_DOMAIN_NAME = "DebianToaster"
 LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2545404"
 LIBVIRT_NETWORK_NAME = "DebianToasterNet"

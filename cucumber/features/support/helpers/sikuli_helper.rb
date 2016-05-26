@@ -211,3 +211,4 @@ sikuli_settings.ActionLogs = true
 sikuli_settings.DebugLogs = false
 sikuli_settings.InfoLogs = true
 sikuli_settings.ProfileLogs = true
+sikuli_settings.WaitScanRate = 0.25

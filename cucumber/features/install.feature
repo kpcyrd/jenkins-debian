@@ -10,6 +10,8 @@ Feature: Doing variations on d-i installs
 
     Examples:
       | install_ui | target_ui     | login |
+      | gui        | LXDE Desktop  | LXDE  |
+      | gui        | KDE Desktop   | KDE   |
       | gui        | Minimal       | VT    |
       | gui        | XFCE Desktop  | XFCE  |
       | text       | non-GUI       | VT    |

@@ -465,6 +465,10 @@ Given /^in ([a-z]*) mode I select the ([a-zA-Z]*) Desktop task$/ do |ui_mode,des
 
   @screen.type(Sikuli::Key.DOWN)
   @screen.type(Sikuli::Key.DOWN) if "XFCE" == desktop
+  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "KDE" == desktop
+  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "Cinamon" == desktop
+  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "MATE" == desktop
+  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "LXDE" == desktop
   @screen.type(Sikuli::Key.SPACE)
   @screen.wait(diui_png("Desktop+" + desktop,ui_mode), 10 * PATIENCE)
   if "gui" == ui_mode

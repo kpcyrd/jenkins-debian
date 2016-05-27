@@ -222,17 +222,6 @@
             - xfce:     { my_time: '42 2 * * 1' }
 
       - '{name}_debian_{my_ver}_desktops_group':
-          my_ver: wheezy
-          my_verdesc: wheezy
-          my_instdesc: ' using netboot gtk'
-          my_inst_url: 'http://ftp.de.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/gtk/debian-installer/amd64/'
-          my_desktop:
-            - kde:      { my_time: '42 15 2,9,16,23 * *' }
-            - xfce:     { my_time: '42 16 4 * *' }
-            - lxde:     { my_time: '42 19 4 * *' }
-            - gnome:    { my_time: '42 19 4 * *' }
-
-      - '{name}_debian_{my_ver}_desktops_group':
           my_ver: jessie
           my_verdesc: jessie
           my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'

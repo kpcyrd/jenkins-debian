@@ -151,6 +151,35 @@ def checkpoints
 	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
       ],
     },
+
+    'debian-gui-lxde-install' => {
+      :description => "I install a LXDE Desktop Debian system, in gui mode",
+      :parent_checkpoint => 'boot-g-i-to-tasksel',
+      :steps => [
+	'in gui mode I select the LXDE Desktop task',
+	'in gui mode I wait while the bulk of the packages are installed',
+	'in gui mode I install GRUB',
+	'in gui mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
+      ],
+    },
+
+    'debian-gui-kde-install' => {
+      :description => "I install a KDE Desktop Debian system, in gui mode",
+      :parent_checkpoint => 'boot-g-i-to-tasksel',
+      :steps => [
+	'in gui mode I select the KDE Desktop task',
+	'in gui mode I wait while the bulk of the packages are installed',
+	'in gui mode I install GRUB',
+	'in gui mode I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
+      ],
+    },
+
   }
 end
 

@@ -443,7 +443,7 @@
                     my_timed: ''
                 - 'html_live_status':
                     my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
-                    my_timed: 'H/3 * * * *'
+                    my_timed: 'H/6 * * * *'
                     my_shellext: ".py"
                 - 'create_meta_pkg_sets':
                     my_description: 'Create meta package sets for later consumption when generating HTML stats.'

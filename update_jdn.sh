@@ -193,7 +193,7 @@ if [ -f /etc/debian_version ] ; then
 			zsh
 			"
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build?-amd64) DEBS="$DEBS
+			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS
 				libvirt-bin
 				python3-yaml
 				postfix-pcre

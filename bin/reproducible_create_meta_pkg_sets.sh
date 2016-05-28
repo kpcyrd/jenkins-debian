@@ -287,7 +287,7 @@ update_pkg_sets() {
 
 	# kde and everything it depends on
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[12]}.pkgset ] ; then
-		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full \) > ${TMPFILE2}
+		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full --or -FPackage kde-standard \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[12]}.pkgset
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only

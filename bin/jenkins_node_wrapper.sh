@@ -69,6 +69,10 @@ elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
+elif [[ "$*" =~ lvc_.* ]] ; then
+	shift
+	COMMAND="/srv/jenkins/bin/lvc.sh $@"
+	exec $COMMAND; croak "Exec failed";
 elif [ "$*" = "reproducible_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

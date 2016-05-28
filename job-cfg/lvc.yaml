@@ -40,7 +40,7 @@
     wrappers:
       - live-screenshot
     builders:
-      - shell: '/srv/jenkins/bin/lvc.sh {my_iso} /srv/jenkins/cucumber/features'
+      - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features'
     triggers:
       - timed: '{my_time}'
     node: 'profitbricks10'

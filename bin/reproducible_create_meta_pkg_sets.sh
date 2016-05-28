@@ -291,6 +291,10 @@ update_pkg_sets() {
 		get_installable_set ${META_PKGSET[12]}.pkgset
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
+			# also add the packages maintained by those teams
+			# (maybe add the depends of those packages too?)
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-qt-kde@lists.debian.org $SOURCES >> $TMPFILE
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-kde-extras@lists.alioth.debian.org $SOURCES >> $TMPFILE
 			update_if_similar ${META_PKGSET[12]}.pkgset
 		fi
 	fi

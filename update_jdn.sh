@@ -78,7 +78,7 @@ for user in helmut holger mattia lunar phil ; do
 	sudo usermod -G $extra_groups $user
 done
 
-if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] ; then
 	# jenkins needs access to libvirt
 	sudo adduser jenkins libvirt
 	sudo adduser jenkins libvirt-qemu

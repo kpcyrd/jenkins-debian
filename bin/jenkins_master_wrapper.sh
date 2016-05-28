@@ -15,12 +15,14 @@ PORT=0
 get_node_ssh_port $NODE_NAME
 
 # by default we just use the job name as param
-PARAMS="$JOB_NAME"
-
-# though this could be used for other jobs as well...
-if [[ "$JOB_NAME" =~ rebootstrap_.* ]] ; then
-   PARAMS="$PARAMS $@"
-fi
+case $JOB_NAME in
+	rebootstrap_.*) 	PARAMS="$JOB_NAME $@"
+				;;
+	lvc_.*) 		PARAMS="$JOB_NAME $@"
+				;;
+	*)			PARAMS="$JOB_NAME"
+				;;
+esac
 
 # pseudo job used to cleanup nodes
 if [ "$JOB_NAME" = "cleanup_nodes" ] ; then

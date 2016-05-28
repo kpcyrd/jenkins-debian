@@ -1,5 +1,5 @@
 127.0.0.1	localhost
-46.16.73.145	jenkins-test-vm
+127.0.1.1	jenkins-test-vm
 
 10.2.1.1	local-http-proxy
 

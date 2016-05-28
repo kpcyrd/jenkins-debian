@@ -43,6 +43,7 @@
       - shell: '/srv/jenkins/bin/lvc.sh {my_iso} /srv/jenkins/cucumber/features'
     triggers:
       - timed: '{my_time}'
+    node: 'profitbricks10'
 
 - job-template:
     defaults: lvc

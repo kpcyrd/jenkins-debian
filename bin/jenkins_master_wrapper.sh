@@ -16,12 +16,12 @@ get_node_ssh_port $NODE_NAME
 
 # by default we just use the job name as param
 case $JOB_NAME in
-	rebootstrap_.*) 	PARAMS="$JOB_NAME $@"
-				;;
-	lvc_.*) 		PARAMS="$JOB_NAME $@"
-				;;
-	*)			PARAMS="$JOB_NAME"
-				;;
+	rebootstrap_*) 	PARAMS="$JOB_NAME $@"
+			;;
+	lvc_*) 		PARAMS="$JOB_NAME $@"
+			;;
+	*)		PARAMS="$JOB_NAME"
+			;;
 esac
 
 # pseudo job used to cleanup nodes

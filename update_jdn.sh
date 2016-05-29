@@ -479,8 +479,8 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	git log | grep ^Author| cut -d " " -f2-|sort -u -f > $TMPFILE
 	echo "----" >> $TMPFILE
 	sudo tee /var/lib/jenkins/userContent/THANKS > /dev/null < THANKS.head
-	# samuel, lunar and josch committed with several commiters, only display one
-	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" -e "mattia@mapreri.org" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
+	# samuel, lunar, josch and phil committed with several commiters, only display one
+	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" -e "mattia@mapreri.org" -e "phil@jenkins-test-vm" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
 	rm $TMPFILE
 	TMPDIR=$(mktemp -d -t update-jdn-XXXXXXXX)
 	sudo cp -pr userContent $TMPDIR/

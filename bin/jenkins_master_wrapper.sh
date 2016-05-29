@@ -5,6 +5,13 @@ set -e
 
 # don't try to run on test system
 if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+	case $JOB_NAME in
+		lvc_*)
+			exec /srv/jenkins/bin/lvc.sh "$@"
+		    echo "$(date -u) - running on $HOSTNAME, This should not happen."
+		    exit 1
+			;;
+	esac
 	echo "$(date -u) - running on $HOSTNAME, exiting successfully and cleanly immediatly."
 	exit 0
 fi

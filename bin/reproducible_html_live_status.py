@@ -12,6 +12,8 @@ from reproducible_common import *
 from reproducible_html_indexes import build_leading_text_section
 import glob
 
+bugs = get_bugs()
+
 def convert_into_status_html(status):
     if status != 'None':
         status, icon, spokenstatus = get_status_icon(status)
@@ -38,7 +40,6 @@ def generate_schedule(arch):
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th class="center">#</th><th class="center">scheduled at</th><th class="center">suite</th>'
     html += '<th class="center">arch</th><th class="center">source package</th><th class="center">previous build status</th><th class="center">previous build duration</th><th class="center">average build duration</th></tr>\n'
-    bugs = get_bugs()
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name 4: previous status 5: previous build duration 6. avg build duration
         pkg = row[3]
@@ -111,7 +112,6 @@ def generate_oldies(arch):
         html += '<p><table class="scheduled">\n' + tab
         html += '<tr><th class="center">#</th><th class="center">suite</th><th class="center">arch</th>'
         html += '<th class="center">source package</th><th class="center">status</th><th class="center">build date</th></tr>\n'
-        bugs = get_bugs()
         for row in rows:
             # 0: suite, 1: arch, 2: pkg name 3: status 4: build date
             pkg = row[2]

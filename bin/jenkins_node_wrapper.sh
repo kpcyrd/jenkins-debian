@@ -71,6 +71,7 @@ elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	exec $REBOOTSTRAPSH; croak "Exec failed";
 elif [[ "$*" =~ lvc_.* ]] ; then
 	export JOB_NAME=$0
+	export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
 	shift
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";

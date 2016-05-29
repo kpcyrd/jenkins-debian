@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
 # based on ~jenkins.d.n:~mattia/status.sh by Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
@@ -37,7 +37,7 @@ def generate_schedule(arch):
     html += generate_live_status_table(arch)
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th class="center">#</th><th class="center">scheduled at</th><th class="center">suite</th>'
-    html += '<th class="center">arch</th><th class="center">source package</th><th class="center">previous build status</th><th class="center">previous build duration</th><th class="center">average build duration</th></tr>n'
+    html += '<th class="center">arch</th><th class="center">source package</th><th class="center">previous build status</th><th class="center">previous build duration</th><th class="center">average build duration</th></tr>\n'
     bugs = get_bugs()
     for row in rows:
         # 0: date_scheduled, 1: suite, 2: arch, 3: pkg name 4: previous status 5: previous build duration 6. avg build duration
@@ -95,7 +95,38 @@ def generate_live_status_table(arch):
     html += '</table></p>\n'
     return html
 
+def generate_oldies(arch):
+    log.info('Building the oldies page for ' + arch + '...')
+    title = 'Oldest results on ' + arch
+    html = ''
+    for suite in SUITES:
+        query = 'SELECT s.suite, s.architecture, s.name, r.status, r.build_date ' + \
+                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
+                'WHERE s.suite="{suite}" AND s.architecture="{arch}" ' + \
+                'AND r.status != "blacklisted" ' + \
+                'ORDER BY r.build_date LIMIT 15'
+        text = Template('Oldest results on $suite/$arch:')
+        rows = query_db(query.format(arch=arch,suite=suite))
+        html += build_leading_text_section({'text': text}, rows, suite, arch)
+        html += '<p><table class="scheduled">\n' + tab
+        html += '<tr><th class="center">#</th><th class="center">suite</th><th class="center">arch</th>'
+        html += '<th class="center">source package</th><th class="center">status</th><th class="center">build date</th></tr>\n'
+        bugs = get_bugs()
+        for row in rows:
+            # 0: suite, 1: arch, 2: pkg name 3: status 4: build date
+            pkg = row[2]
+            html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
+            html += '<td>' + row[1] + '</td><td><code>'
+            html += link_package(pkg, row[0], row[1], bugs)
+            html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + row[4] + '</td></tr>\n'
+        html += '</table></p>\n'
+    destfile = BASE + '/index_' + arch + '_oldies.html'
+    desturl = REPRODUCIBLE_URL + '/index_' + arch + '_oldies.html'
+    write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60)
+    log.info("Page generated at " + desturl)
+
 if __name__ == '__main__':
     for arch in ARCHS:
         generate_schedule(arch)
+        generate_oldies(arch)
 

@@ -247,6 +247,7 @@ if [ -f /etc/debian_version ] ; then
 				cucumber
 				tesseract-ocr
 				i18nspector
+				imagemagick
 				libav-tools
 				libsikuli-script-java
 				libvirt-dev

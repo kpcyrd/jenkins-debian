@@ -73,7 +73,7 @@ elif [[ "$*" =~ lvc_.* ]] ; then
 	echo debug begin
 	export
 	echo debug end
-	export JOB_NAME=$0
+	export JOB_NAME=$1
 	export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
 	shift
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"

@@ -26,6 +26,7 @@ case $JOB_NAME in
 	rebootstrap_*) 	PARAMS="$JOB_NAME $@"
 			;;
 	lvc_*) 		PARAMS="$JOB_NAME $@"
+			export
 			;;
 	*)		PARAMS="$JOB_NAME"
 			;;

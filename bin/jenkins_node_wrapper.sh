@@ -70,6 +70,9 @@ elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
 elif [[ "$*" =~ lvc_.* ]] ; then
+	echo debug begin
+	export
+	echo debug end
 	export JOB_NAME=$0
 	export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
 	shift

@@ -351,6 +351,7 @@ if [ -f /etc/debian_version ] ; then
 				whohas
 				x11-apps 
 				xtightvncviewer
+				xvfb
 				xvkbd
 				zutils"
 		else

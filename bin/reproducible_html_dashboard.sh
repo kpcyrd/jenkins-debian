@@ -294,7 +294,6 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">oldest build result in testing / unstable / experimental</td>"
 	for ARCH in ${ARCHS} ; do
-		PERF_STATS[$ARCH]=$(mktemp -t reproducible-dashboard-perf-XXXXXXXX)
 		AGE_UNSTABLE=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_EXPERIMENTAL=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_TESTING=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")

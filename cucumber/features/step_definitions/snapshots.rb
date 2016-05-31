@@ -1,183 +1,138 @@
+def tasksel_steps
+  [
+	'I create a 6 GiB disk named "'+JOB_NAME+'"',
+	'I plug ide drive "'+JOB_NAME+'"',
+	'I start the computer',
+	'I select the install mode',
+	'I select British English',
+	'I accept the hostname, using "example.com" as the domain',
+	'I set the root password to "rootme"',
+	'I set the password for "Philip Hands" to be "verysecret"',
+	'I select full-disk, single-filesystem partitioning',
+	'I note that the Base system is being installed',
+	'I accept the default mirror',
+	'I ignore Popcon',
+	'we reach the Tasksel prompt',
+  ]
+end
+
+def firstboot_steps
+  [
+	'I wait while the bulk of the packages are installed',
+	'I install GRUB',
+	'I allow reboot after the install is complete',
+	'I wait for the reboot',
+	'I power off the computer',
+	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
+  ]
+end
+
 def checkpoints
   {
     'boot-d-i-to-tasksel' => {
       :description => "I have started Debian Installer and stopped at the Tasksel prompt",
       :parent_checkpoint => nil,
       :steps => [
-	'I create a 8 GiB disk named "'+JOB_NAME+'"',
-	'I plug ide drive "'+JOB_NAME+'"',
-	'I start the computer',
-	'I select text mode',
-	'in text mode I select British English',
-	'in text mode I accept the hostname, using "example.com" as the domain',
-	'in text mode I set the root password to "rootme"',
-	'in text mode I set the password for "Philip Hands" to be "verysecret"',
-	'in text mode I select full-disk, single-filesystem partitioning',
-	'in text mode I note that the Base system is being installed',
-	'in text mode I accept the default mirror',
-	'in text mode I ignore Popcon',
-	'in text mode we reach the Tasksel prompt',
-      ],
+    'I intend to use text mode',
+      ] + tasksel_steps
     },
 
     'boot-g-i-to-tasksel' => {
       :description => "I have started GUI Debian Installer and stopped at the Tasksel prompt",
       :parent_checkpoint => nil,
       :steps => [
-	'I create a 8 GiB disk named "'+JOB_NAME+'"',
-	'I plug ide drive "'+JOB_NAME+'"',
-	'I start the computer',
-	'I select gui mode',
-	'in gui mode I select British English',
-	'in gui mode I accept the hostname, using "example.com" as the domain',
-	'in gui mode I set the root password to "rootme"',
-	'in gui mode I set the password for "Philip Hands" to be "verysecret"',
-	'in gui mode I select full-disk, single-filesystem partitioning',
-	'in gui mode I note that the Base system is being installed',
-	'in gui mode I accept the default mirror',
-	'in gui mode I ignore Popcon',
-	'in gui mode we reach the Tasksel prompt',
-      ],
+    'I intend to use gui mode',
+      ] + tasksel_steps
     },
 
     'debian-console-install' => {
       :description => "I install a non-GUI Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'in text mode I unset the Desktop task',
-	'in text mode I wait while the bulk of the packages are installed',
-	'in text mode I install GRUB',
-	'in text mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use text mode',
+	'I unset the Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-gui-console-install' => {
       :description => "I install a non-GUI Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I unset the Desktop task',
-	'in gui mode I wait while the bulk of the packages are installed',
-	'in gui mode I install GRUB',
-	'in gui mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use gui mode',
+	'I unset the Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-minimal-install' => {
       :description => "I install a Minimal Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'in text mode I unset the Desktop and Print tasks',
-	'in text mode I wait while the bulk of the packages are installed',
-	'in text mode I install GRUB',
-	'in text mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use text mode',
+	'I unset the Desktop and Print tasks',
+      ] + firstboot_steps,
     },
 
     'debian-gui-minimal-install' => {
       :description => "I install a Minimal Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I unset the Desktop and Print tasks',
-	'in gui mode I wait while the bulk of the packages are installed',
-	'in gui mode I install GRUB',
-	'in gui mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use gui mode',
+	'I unset the Desktop and Print tasks',
+      ] + firstboot_steps,
     },
 
     'debian-gnome-install' => {
       :description => "I install a Gnome Desktop Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'in text mode I select the Gnome Desktop task',
-	'in text mode I wait while the bulk of the packages are installed',
-	'in text mode I install GRUB',
-	'in text mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use text mode',
+	'I select the Gnome Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-gui-gnome-install' => {
       :description => "I install a Gnome Desktop Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I select the Gnome Desktop task',
-	'in gui mode I wait while the bulk of the packages are installed',
-	'in gui mode I install GRUB',
-	'in gui mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use gui mode',
+	'I select the Gnome Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-xfce-install' => {
       :description => "I install a XFCE Desktop Debian system, in text mode",
       :parent_checkpoint => 'boot-d-i-to-tasksel',
       :steps => [
-	'in text mode I select the XFCE Desktop task',
-	'in text mode I wait while the bulk of the packages are installed',
-	'in text mode I install GRUB',
-	'in text mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use text mode',
+	'I select the XFCE Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-gui-xfce-install' => {
       :description => "I install a XFCE Desktop Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I select the XFCE Desktop task',
-	'in gui mode I wait while the bulk of the packages are installed',
-	'in gui mode I install GRUB',
-	'in gui mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use gui mode',
+	'I select the XFCE Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-gui-lxde-install' => {
       :description => "I install a LXDE Desktop Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I select the LXDE Desktop task',
-	'in gui mode I wait while the bulk of the packages are installed',
-	'in gui mode I install GRUB',
-	'in gui mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use gui mode',
+	'I select the LXDE Desktop task',
+      ] + firstboot_steps,
     },
 
     'debian-gui-kde-install' => {
       :description => "I install a KDE Desktop Debian system, in gui mode",
       :parent_checkpoint => 'boot-g-i-to-tasksel',
       :steps => [
-	'in gui mode I select the KDE Desktop task',
-	'in gui mode I wait while the bulk of the packages are installed',
-	'in gui mode I install GRUB',
-	'in gui mode I allow reboot after the install is complete',
-	'I wait for the reboot',
-	'I power off the computer',
-	'the computer is set to boot from ide drive "'+JOB_NAME+'"',
-      ],
+    'I intend to use gui mode',
+	'I select the KDE Desktop task',
+      ] + firstboot_steps,
     },
 
   }

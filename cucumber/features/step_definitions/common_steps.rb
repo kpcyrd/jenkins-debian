@@ -124,8 +124,12 @@ def post_snapshot_restore_hook
   #end
 end
 
-def diui_png(name,ui_mode)
-  return "d-i_" + ui_mode + "_" + name + ".png"
+Given /^I intend to use ([a-z]*) mode$/ do |ui_mode|
+  @ui_mode = ui_mode
+end
+
+def diui_png(name)
+  return "d-i_" + @ui_mode + "_" + name + ".png"
 end
 
 Given /^a computer$/ do
@@ -263,12 +267,12 @@ When /^I destroy the computer$/ do
   $vm.destroy_and_undefine
 end
 
-Given /^I select ([a-z]*) mode$/ do |ui_mode|
+Given /^I select the install mode$/ do
   boot_timeout = 60
 
   on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png"], boot_timeout * PATIENCE)
   debug_log("debug: found '"+on_screen+"' in the bootspash", :color => :blue)
-  if ("d-i_boot_text-default.png" == on_screen) == ("gui" == ui_mode)
+  if ("d-i_boot_text-default.png" == on_screen) == ("gui" == @ui_mode)
     @screen.type(Sikuli::Key.DOWN) 
   end
 
@@ -280,56 +284,56 @@ Given /^I select ([a-z]*) mode$/ do |ui_mode|
   debug_log("debug: About to type ENTER at the bootsplash", :color => :blue)
   @screen.type(Sikuli::Key.ENTER) # we're disabling the above editing of the command line, since it's breaking on jenkins.debian.net for reasons unknown
   debug_log("debug: waiting for it to get to the 'English' prompt...", :color => :blue)
-  @screen.wait(diui_png("English",ui_mode), 3*60 * PATIENCE)  # FIXME -- this is just to pause until the remote shell would have been up, so is a kludge
+  @screen.wait(diui_png("English"), 3*60 * PATIENCE)  # FIXME -- this is just to pause until the remote shell would have been up, so is a kludge
   debug_log("debug: found the 'English' prompt", :color => :blue)
 end
 
-Given /^in ([a-z]*) mode I select British English$/ do |ui_mode|
-  @screen.wait(diui_png("English",ui_mode), 30 * PATIENCE)
+Given /^I select British English$/ do
+  @screen.wait(diui_png("English"), 30 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("SelectYourLocation",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("SelectYourLocation"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.UP)
-  @screen.wait(diui_png("UnitedKingdom",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("UnitedKingdom"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("BritishEnglish",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("BritishEnglish"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I accept the hostname, using "([^"]*)" as the domain$/ do |ui_mode,domain|
-  @screen.wait(diui_png("EnterTheHostname",ui_mode), 5*60 * PATIENCE)
+Given /^I accept the hostname, using "([^"]*)" as the domain$/ do |domain|
+  @screen.wait(diui_png("EnterTheHostname"), 5*60 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("DomainName",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("DomainName"), 10 * PATIENCE)
   @screen.type(domain + Sikuli::Key.ENTER)
-  @screen.waitVanish(diui_png("DomainName",ui_mode), 10 * PATIENCE)
+  @screen.waitVanish(diui_png("DomainName"), 10 * PATIENCE)
 end
 
-Given /^in ([a-z]*) mode I set the root password to "([^"]*)"$/ do |ui_mode, rootpw|
+Given /^I set the root password to "([^"]*)"$/ do |rootpw|
 # Root Password, twice
-  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword",ui_mode),diui_png("RootPassword",ui_mode)], 30 * PATIENCE)
-  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword",ui_mode),diui_png("RootPassword",ui_mode)], 30 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
   @screen.type(rootpw)
-  if "gui" == ui_mode
+  if "gui" == @ui_mode
     @screen.type(Sikuli::Key.TAB)
-    @screen.type(Sikuli::Key.TAB) if on_screen == diui_png("ShowRootPassword",ui_mode)
+    @screen.type(Sikuli::Key.TAB) if on_screen == diui_png("ShowRootPassword")
   else
     @screen.type(Sikuli::Key.ENTER)
-    @screen.waitVanish(diui_png("RootPassword",ui_mode), 10 * PATIENCE)
+    @screen.waitVanish(diui_png("RootPassword"), 10 * PATIENCE)
   end
   @screen.type(rootpw + Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I set the password for "([^"]*)" to be "([^"]*)"$/ do |ui_mode,fullname,password|
+Given /^I set the password for "([^"]*)" to be "([^"]*)"$/ do |fullname,password|
 # Username, and password twice
-  @screen.wait(diui_png("NameOfUser",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("NameOfUser"), 10 * PATIENCE)
   @screen.type(fullname + Sikuli::Key.ENTER)
-  @screen.waitVanish(diui_png("NameOfUser",ui_mode), 10 * PATIENCE)
+  @screen.waitVanish(diui_png("NameOfUser"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  on_screen, _ = @screen.waitAny([diui_png("ShowUserPassword",ui_mode),diui_png("UserPassword",ui_mode)], 10 * PATIENCE)
-  on_screen, _ = @screen.waitAny([diui_png("ShowUserPassword",ui_mode),diui_png("UserPassword",ui_mode)], 10 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowUserPassword"),diui_png("UserPassword")], 10 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowUserPassword"),diui_png("UserPassword")], 10 * PATIENCE)
   @screen.type(password)
-  if "gui" == ui_mode
+  if "gui" == @ui_mode
     @screen.type(Sikuli::Key.TAB)
-    @screen.type(Sikuli::Key.TAB) if on_screen == diui_png("ShowUserPassword",ui_mode)
+    @screen.type(Sikuli::Key.TAB) if on_screen == diui_png("ShowUserPassword")
   else
     @screen.type(Sikuli::Key.ENTER)
     @screen.waitVanish(on_screen, 10 * PATIENCE)
@@ -337,65 +341,65 @@ Given /^in ([a-z]*) mode I set the password for "([^"]*)" to be "([^"]*)"$/ do |
   @screen.type(password + Sikuli::Key.ENTER)
 end
 
-  #@screen.wait(diui_png("NoDiskFound",ui_mode), 60)
+  #@screen.wait(diui_png("NoDiskFound"), 60)
 
-Given /^in ([a-z]*) mode I select full-disk, single-filesystem partitioning$/ do |ui_mode|
-  @screen.wait(diui_png("PartitioningMethod",ui_mode), 60 * PATIENCE)
+Given /^I select full-disk, single-filesystem partitioning$/ do
+  @screen.wait(diui_png("PartitioningMethod"), 60 * PATIENCE)
   sleep(10 * PATIENCE)
-  @screen.wait(diui_png("PartitioningMethod",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("PartitioningMethod"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("SelectDiskToPartition",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("SelectDiskToPartition"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("PartitioningScheme",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("PartitioningScheme"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("FinishPartitioning",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("FinishPartitioning"), 10 * PATIENCE)
   sleep(5 * PATIENCE) # FIXME -- why do we need this?  It's weird that the wait is not enough
   @screen.type(Sikuli::Key.ENTER)
   # prompt about Writing Partitions to disk:
-  @screen.wait(diui_png("No",ui_mode), 10 * PATIENCE)
-  if "gui" == ui_mode
+  @screen.wait(diui_png("No"), 10 * PATIENCE)
+  if "gui" == @ui_mode
     @screen.type(Sikuli::Key.DOWN)
   else
     @screen.type(Sikuli::Key.TAB)
   end
-  @screen.wait(diui_png("Yes",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("Yes"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I note that the Base system is being installed$/ do |ui_mode|
-  @screen.wait(diui_png("InstallingBaseSystem",ui_mode), 30 * PATIENCE)
-  @screen.waitVanish(diui_png("InstallingBaseSystem",ui_mode), 15 * 60 * PATIENCE)
+Given /^I note that the Base system is being installed$/ do
+  @screen.wait(diui_png("InstallingBaseSystem"), 30 * PATIENCE)
+  @screen.waitVanish(diui_png("InstallingBaseSystem"), 15 * 60 * PATIENCE)
 end
 
-Given /^in ([a-z]*) mode I accept the default mirror$/ do |ui_mode|
-  @screen.wait(diui_png("MirrorCountry",ui_mode), 10 * 60 * PATIENCE)
+Given /^I accept the default mirror$/ do
+  @screen.wait(diui_png("MirrorCountry"), 10 * 60 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("ArchiveMirror",ui_mode), 5 * PATIENCE)
+  @screen.wait(diui_png("ArchiveMirror"), 5 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("HttpProxy",ui_mode), 5 * PATIENCE)
+  @screen.wait(diui_png("HttpProxy"), 5 * PATIENCE)
   @screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
   #@screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I neglect to scan more CDs$/ do |ui_mode|
-  @screen.wait(diui_png("ScanCD",ui_mode), 15 * 60 * PATIENCE)
+Given /^I neglect to scan more CDs$/ do
+  @screen.wait(diui_png("ScanCD"), 15 * 60 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("UseNetMirror",ui_mode), 10 * PATIENCE)
-  @screen.wait(diui_png("Yes",ui_mode), 10 * PATIENCE)
-  if "gui" == ui_mode
+  @screen.wait(diui_png("UseNetMirror"), 10 * PATIENCE)
+  @screen.wait(diui_png("Yes"), 10 * PATIENCE)
+  if "gui" == @ui_mode
     @screen.type(Sikuli::Key.DOWN)
   else
     @screen.type(Sikuli::Key.TAB)
   end
-  @screen.wait(diui_png("No",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("No"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I ignore Popcon$/ do |ui_mode|
-  bad_mirror = diui_png("BadMirror",ui_mode)
-  on_screen, _ = @screen.waitAny([diui_png("popcon",ui_mode), bad_mirror], 10 * 60)
+Given /^I ignore Popcon$/ do
+  bad_mirror = diui_png("BadMirror")
+  on_screen, _ = @screen.waitAny([diui_png("popcon"), bad_mirror], 10 * 60)
   if on_screen == bad_mirror
-    if "gui" == ui_mode
+    if "gui" == @ui_mode
       @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
     else
       @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
@@ -404,37 +408,37 @@ Given /^in ([a-z]*) mode I ignore Popcon$/ do |ui_mode|
     raise "Failed to access the mirror (perhaps a duff proxy?)"
   end
   @screen.type(Sikuli::Key.ENTER)
-  @screen.waitVanish(diui_png("popcon",ui_mode), 10 * PATIENCE)
+  @screen.waitVanish(diui_png("popcon"), 10 * PATIENCE)
 end
 
-Given /^in ([a-z]*) mode we reach the Tasksel prompt$/ do |ui_mode|
-  @screen.wait(diui_png("ChooseSoftware",ui_mode), 5 * 60 * PATIENCE)
+Given /^we reach the Tasksel prompt$/ do
+  @screen.wait(diui_png("ChooseSoftware"), 5 * 60 * PATIENCE)
 end
 
-Given /^in ([a-z]*) mode I unset the Desktop task$/ do |ui_mode|
-  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60 * PATIENCE)
+Given /^I unset the Desktop task$/ do
+  @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
   # deal with post-snapshot screen flicker  FIXME -- check if we really need this
   sleep(5 * PATIENCE)
-  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
   @screen.type(Sikuli::Key.SPACE)
-  @screen.waitVanish(diui_png("DesktopTask_Yes",ui_mode), 10 * PATIENCE)
+  @screen.waitVanish(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
-  if "gui" == ui_mode
-    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10 * PATIENCE)
+  if "gui" == @ui_mode
+    @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
     @screen.type(Sikuli::Key.TAB)
-    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10 * PATIENCE)
+    @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
   end
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I unset the Desktop and Print tasks$/ do |ui_mode|
-  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60 * PATIENCE)
+Given /^I unset the Desktop and Print tasks$/ do
+  @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
   # deal with post-snapshot screen flicker  FIXME -- check if we really need this
   sleep(5 * PATIENCE)
-  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
   @screen.type(Sikuli::Key.SPACE)
   @screen.type(Sikuli::Key.DOWN)
@@ -446,18 +450,18 @@ Given /^in ([a-z]*) mode I unset the Desktop and Print tasks$/ do |ui_mode|
   @screen.type(Sikuli::Key.DOWN)
   @screen.type(Sikuli::Key.DOWN)
   @screen.type(Sikuli::Key.SPACE)
-  @screen.waitVanish(diui_png("DesktopTask_Yes",ui_mode), 10 * PATIENCE)
+  @screen.waitVanish(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
-  if "gui" == ui_mode
-    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10 * PATIENCE)
+  if "gui" == @ui_mode
+    @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
     @screen.type(Sikuli::Key.TAB)
-    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10 * PATIENCE)
+    @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
   end
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I select the ([a-zA-Z]*) Desktop task$/ do |ui_mode,desktop|
-  @screen.wait(diui_png("DesktopTask_Yes",ui_mode), 2 * 60 * PATIENCE)
+Given /^I select the ([a-zA-Z]*) Desktop task$/ do |desktop|
+  @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
   # deal with post-snapshot screen flicker -- FIXME this needs to be fixed via looking to see if the remote login is working before we look at the screen
   debug_log("debug: Found DesktopTask_Yes, pausing for 20s", :color => :blue)
@@ -470,26 +474,26 @@ Given /^in ([a-z]*) mode I select the ([a-zA-Z]*) Desktop task$/ do |ui_mode,des
   @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "MATE" == desktop
   @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "LXDE" == desktop
   @screen.type(Sikuli::Key.SPACE)
-  @screen.wait(diui_png("Desktop+" + desktop,ui_mode), 10 * PATIENCE)
-  if "gui" == ui_mode
-    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("Desktop+" + desktop), 10 * PATIENCE)
+  if "gui" == @ui_mode
+    @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
     @screen.type(Sikuli::Key.TAB)
-    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10 * PATIENCE)
+    @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
   end
   @screen.type(Sikuli::Key.ENTER)
-  @screen.waitVanish(diui_png("Desktop+Gnome",ui_mode), 10 * PATIENCE)
+  @screen.waitVanish(diui_png("Desktop+Gnome"), 10 * PATIENCE)
 end
 
-Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ do |ui_mode|
-  @screen.wait(diui_png("InstallSoftware",ui_mode), 10)
+Given /^I wait while the bulk of the packages are installed$/ do
+  @screen.wait(diui_png("InstallSoftware"), 10)
   debug_log("debug: we see InstallSoftware", :color => :blue)
   try_for(120*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
     found = false
     debug_log("debug: check for Install GRUB/Software", :color => :blue)
-    hit, _ = @screen.waitAny([diui_png("InstallGRUB",ui_mode),diui_png("InstallSoftware",ui_mode)], 2*60)
-    if diui_png("InstallSoftware",ui_mode) == hit
+    hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallSoftware")], 2*60)
+    if diui_png("InstallSoftware") == hit
       debug_log("debug: 'Install Software' still there, so let's glance at tty4", :color => :blue)
-      if "gui" == ui_mode
+      if "gui" == @ui_mode
         @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
       else
         @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
@@ -497,7 +501,7 @@ Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ d
       debug_log("debug: typed F4, pausing...", :color => :blue)
       sleep(10)
       debug_log("debug: slept 10", :color => :blue)
-      if "gui" == ui_mode
+      if "gui" == @ui_mode
         @screen.type(Sikuli::Key.F5, Sikuli::KeyModifier.ALT)
       else
         @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
@@ -505,7 +509,7 @@ Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ d
       debug_log("debug: pressed F1", :color => :blue)
       sleep(20)
     end
-    if diui_png("InstallGRUB",ui_mode) == hit
+    if diui_png("InstallGRUB") == hit
       debug_log("debug: found InstallGRUB", :color => :blue)
       found = true
     end
@@ -514,31 +518,31 @@ Given /^in ([a-z]*) mode I wait while the bulk of the packages are installed$/ d
   end
 end
 
-Given /^in ([a-z]*) mode I install GRUB$/ do |ui_mode|
-  @screen.wait(diui_png("InstallGRUB",ui_mode), 2 * 60 * PATIENCE)
+Given /^I install GRUB$/ do
+  @screen.wait(diui_png("InstallGRUB"), 2 * 60 * PATIENCE)
   debug_log("debug: Found InstallGRUB", :color => :blue)
   sleep(10 * PATIENCE)  # FIXME -- this is a kludge to deal with the snapshot coming back -- should be done via the remote shell check instead
-  @screen.wait(diui_png("InstallGRUB",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("InstallGRUB"), 10 * PATIENCE)
   debug_log("debug: Found InstallGRUB (again)", :color => :blue)
-  if "gui" == ui_mode
+  if "gui" == @ui_mode
     debug_log("debug: We're in GUI mode", :color => :blue)
-    @screen.wait(diui_png("CONTINUEunselected",ui_mode), 10 * PATIENCE)
+    @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
     debug_log("debug: Found CONTINUEunselected", :color => :blue)
     debug_log("debug: Press TAB", :color => :blue)
     @screen.type(Sikuli::Key.TAB)
-    @screen.wait(diui_png("CONTINUEselected",ui_mode), 10 * PATIENCE)
+    @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
     debug_log("debug: Found CONTINUEselected", :color => :blue)
   end
   debug_log("debug: Press ENTER", :color => :blue)
   @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("GRUBEnterDev",ui_mode), 10 * 60 * PATIENCE)
+  @screen.wait(diui_png("GRUBEnterDev"), 10 * 60 * PATIENCE)
   @screen.type(Sikuli::Key.DOWN)
-  @screen.wait(diui_png("GRUBdev",ui_mode), 10 * PATIENCE)
+  @screen.wait(diui_png("GRUBdev"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^in ([a-z]*) mode I allow reboot after the install is complete$/ do |ui_mode|
-  @screen.wait(diui_png("InstallComplete",ui_mode), 4 * 60 * PATIENCE)
+Given /^I allow reboot after the install is complete$/ do
+  @screen.wait(diui_png("InstallComplete"), 4 * 60 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 

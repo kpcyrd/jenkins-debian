@@ -552,7 +552,16 @@ Given /^I wait for the reboot$/ do
 end
 
 Given /^I should see a ([a-zA-Z]*) Login prompt$/ do |style|
-  @screen.waitAny(["DebianLoginPrompt"+style+".png","DebianLoginPromptXFCE_2.png"], 20 * 60) # FIXME - this _2 image should be configurable
+  def loginPrompt
+    {
+      'XFCE' => [ 'DebianLoginPromptXFCE.png', 'DebianLoginPromptXFCE_d9.png' ],
+      'KDE'  => [ 'DebianLoginPromptKDE.png',  'DebianLoginPromptKDE_d9.png' ],
+      'LXDE' => [ 'DebianLoginPromptLXDE.png', 'DebianLoginPromptLXDE_d9.png' ],
+      'VT'   => [ 'DebianLoginPromptVT.png' ],
+    }
+  end
+
+  @screen.waitAny(loginPrompt[style], 20 * 60)
 end
 
 def bootsplash

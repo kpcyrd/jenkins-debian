@@ -7,7 +7,7 @@ def checkpoints
         :parent_checkpoint => nil,
         :steps => [
           "I intend to use #{m} mode",
-          'I create a 6 GiB disk named "'+JOB_NAME+'"',
+          'I create a 10 GiB disk named "'+JOB_NAME+'"',
           'I plug ide drive "'+JOB_NAME+'"',
           'I start the computer',
           'I select the install mode',

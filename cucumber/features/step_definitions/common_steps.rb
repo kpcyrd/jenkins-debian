@@ -468,6 +468,7 @@ Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
   menu.index(desktop).times do
     @screen.type(Sikuli::Key.DOWN)
   end
+  @screen.type(Sikuli::Key.SPACE)
   expected_result = "Desktop+" + desktop
   @screen.wait(diui_png(expected_result), 10 * PATIENCE)
 

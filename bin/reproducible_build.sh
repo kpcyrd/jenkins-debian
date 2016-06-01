@@ -557,6 +557,7 @@ first_build() {
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
 BUILDUSERNAME=pbuilder1
+BUILD_HOME=/nonexistent/first-build
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 export LANG="C"
@@ -606,6 +607,7 @@ second_build() {
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=2222
 BUILDUSERNAME=pbuilder2
+BUILD_HOME=/nonexistent/second-build
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="$locale.UTF-8"

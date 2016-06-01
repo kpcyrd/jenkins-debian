@@ -478,6 +478,7 @@ write_variation_table() {
 		write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=\"1111\"</td><td>BUILDUSERID=\"2222\"</td></tr>"
 		write_page "<tr><td>env BUILDUSERNAME</td><td>BUILDUSERNAME=\"pbuilder1\"</td><td>BUILDUSERNAME=\"pbuilder2\"</td></tr>"
 		write_page "<tr><td>env USER</td><td>USER=\"pbuilder1\"</td><td>USER=\"pbuilder2\"</td></tr>"
+		write_page "<tr><td>env HOME</td><td>HOME=\"/nonexistent/first-build\"</td><td>HOME=\"/nonexistent/second-build\"</td></tr>"
 		write_page "<tr><td>uid</td><td>uid=1111</td><td>uid=2222</td></tr>"
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"
 		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64 and i386: 18 or 17<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64 and i386: 17 or 18 (!= the first build)<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"

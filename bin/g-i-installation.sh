@@ -481,7 +481,15 @@ post_install_boot() {
 						;;
 					0210)	do_and_report key alt-f2
 						;;
-					0220)	do_and_report type "iceweasel"
+					0220)
+						case $NAME in
+							*_hurd*)
+								do_and_report type "epiphany"
+								;;
+							*)
+								do_and_report type "iceweasel"
+								;;
+						esac
 						;;
 					0230)	do_and_report key space
 						;;
@@ -529,7 +537,15 @@ post_install_boot() {
 		debian_*lxde)	case $TOKEN in
 					0200)	do_and_report key alt-f2
 						;;
-					0220)	do_and_report type "iceweasel"
+					0220)
+						case $NAME in
+							*_hurd*)
+								do_and_report type "epiphany"
+								;;
+							*)
+								do_and_report type "iceweasel"
+								;;
+						esac
 						;;
 					0230)	do_and_report key space
 						;;
@@ -631,7 +647,15 @@ post_install_boot() {
 						;;
 					0200)	do_and_report key alt-f2
 						;;
-					0210)	do_and_report type "iceweasel"
+					0220)
+						case $NAME in
+							*_hurd*)
+								do_and_report type "epiphany"
+								;;
+							*)
+								do_and_report type "iceweasel"
+								;;
+						esac
 						;;
 					0230)	do_and_report key space
 						;;

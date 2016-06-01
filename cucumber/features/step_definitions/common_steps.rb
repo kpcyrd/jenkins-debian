@@ -129,7 +129,7 @@ Given /^I intend to use ([a-z]*) mode$/ do |ui_mode|
 end
 
 def diui_png(name)
-  return "d-i_" + @ui_mode + "_" + name + ".png"
+  return "d-i_#{@ui_mode}_#{name}.png"
 end
 
 Given /^a computer$/ do
@@ -271,13 +271,13 @@ Given /^I select the install mode$/ do
   boot_timeout = 60
 
   on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png"], boot_timeout * PATIENCE)
-  debug_log("debug: found '"+on_screen+"' in the bootspash", :color => :blue)
+  debug_log("debug: found '#{on_screen}' in the bootspash", :color => :blue)
   if ("d-i_boot_text-default.png" == on_screen) == ("gui" == @ui_mode)
     @screen.type(Sikuli::Key.DOWN) 
   end
 
   #@screen.type(Sikuli::Key.TAB)
-  #@screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1"' + " blacklist=psmouse #{@boot_options}" +
+  #@screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1" blacklist=psmouse ' + @boot_options +
   #             Sikuli::Key.ENTER)
   #$vm.wait_until_remote_shell_is_up
   

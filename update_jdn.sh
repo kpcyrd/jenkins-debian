@@ -192,13 +192,10 @@ if [ -f /etc/debian_version ] ; then
 			vim 
 			zsh
 			"
+		# install squid everywhere except on the armhf nodes
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS
-				libvirt-bin
-				python3-yaml
-				postfix-pcre
 				squid3"
-				# make sure that nested KVM is enabled (see whist:/etc/modprobe.d/kvm-intel-nested.conf)
 			   ;;
 			*) ;;
 		esac
@@ -242,6 +239,7 @@ if [ -f /etc/debian_version ] ; then
 			*) ;;
 		esac
 		# cucumber dependencies
+		# make sure that nested KVM is enabled (see whist:/etc/modprobe.d/kvm-intel-nested.conf)
 		case $HOSTNAME in
 			profitbricks-build10-amd64|jenkins-test-vm) DEBS="$DEBS
 				cucumber
@@ -250,10 +248,12 @@ if [ -f /etc/debian_version ] ; then
 				imagemagick
 				libav-tools
 				libsikuli-script-java
+				libvirt-bin
 				libvirt-dev
 				ovmf
 				python-jabberbot
 				python-potr
+				python3-yaml
 				ruby-guestfs
 				ruby-libvirt
 				ruby-net-irc
@@ -270,6 +270,10 @@ if [ -f /etc/debian_version ] ; then
 			   ;;
 			*) ;;
 		esac
+		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+			# for phil only
+			DEBS="$DEBS postfix-pcre"
+		fi
 		if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			MASTERDEBS=" 
 				apache2 

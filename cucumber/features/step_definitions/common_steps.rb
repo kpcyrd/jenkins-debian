@@ -453,14 +453,11 @@ Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
 
 
   menu.index(desktop).times do
-    info_log("PGH: DOWN (#{desktop})")
     @screen.type(Sikuli::Key.DOWN)
   end
   @screen.type(Sikuli::Key.SPACE)
   expected_result = "Desktop+" + desktop
   @screen.wait(diui_png(expected_result), 10 * PATIENCE)
-
-  sleep(20)
 
   if "gui" == @ui_mode
     @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)

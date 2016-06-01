@@ -239,7 +239,6 @@ if [ -f /etc/debian_version ] ; then
 			*) ;;
 		esac
 		# cucumber dependencies
-		# make sure that nested KVM is enabled (see whist:/etc/modprobe.d/kvm-intel-nested.conf)
 		case $HOSTNAME in
 			profitbricks-build10-amd64|jenkins-test-vm) DEBS="$DEBS
 				cucumber

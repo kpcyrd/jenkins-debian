@@ -416,7 +416,7 @@ Given /^we reach the Tasksel prompt$/ do
   @screen.wait(diui_png("ChooseSoftware"), 5 * 60 * PATIENCE)
 end
 
-Given /^I unset the Desktop task$/ do
+Given /^I select the non-GUI task$/ do
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
   # deal with post-snapshot screen flicker  FIXME -- check if we really need this
@@ -434,7 +434,7 @@ Given /^I unset the Desktop task$/ do
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I unset the Desktop and Print tasks$/ do
+Given /^I select the minimal task$/ do
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
   # deal with post-snapshot screen flicker  FIXME -- check if we really need this
@@ -461,7 +461,7 @@ Given /^I unset the Desktop and Print tasks$/ do
   @screen.type(Sikuli::Key.ENTER)
 end
 
-Given /^I select the ([a-zA-Z]*) Desktop task$/ do |desktop|
+Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
   # deal with post-snapshot screen flicker -- FIXME this needs to be fixed via looking to see if the remote login is working before we look at the screen

@@ -9,12 +9,12 @@ Feature: Doing variations on d-i installs
     Then I should see a <login> Login prompt
 
     Examples:
-      | install_ui | target_ui     | login |
-      | gui        | LXDE Desktop  | LXDE  |
-      | gui        | KDE Desktop   | KDE   |
-      | gui        | Minimal       | VT    |
-      | gui        | XFCE Desktop  | XFCE  |
-      | text       | non-GUI       | VT    |
+      | install_ui | target_ui | login |
+      | gui        | LXDE      | LXDE  |
+      | gui        | KDE       | KDE   |
+      | gui        | minimal   | VT    |
+      | gui        | XFCE      | XFCE  |
+      | text       | non-GUI   | VT    |
 #      | gui        | Gnome Desktop | Gnome |
 
 #  Scenario: Get a useful error from a bogus HTTP proxy

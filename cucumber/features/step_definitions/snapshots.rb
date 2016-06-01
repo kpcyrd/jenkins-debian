@@ -23,13 +23,13 @@ def checkpoints
         ]
     }
 
-    ['Minimal', 'non-GUI', 'Gnome', 'XFCE', 'LXDE', 'KDE'].each do |de|
+    ['minimal', 'non-GUI', 'Gnome', 'XFCE', 'LXDE', 'KDE'].each do |de|
       cp["debian-#{m}-#{de}-install"] = {
           :description => "I install a #{de} Debian system, in #{m} mode",
           :parent_checkpoint => "boot-d-i-#{m}-to-tasksel",
           :steps => [
-        'I intend to use #{m} mode',
-	    "I select the #{de} Desktop task",
+        "I intend to use #{m} mode",
+	    "I select the #{de} task",
 	    'I wait while the bulk of the packages are installed',
 	    'I install GRUB',
 	    'I allow reboot after the install is complete',

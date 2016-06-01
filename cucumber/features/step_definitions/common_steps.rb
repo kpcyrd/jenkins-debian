@@ -346,15 +346,12 @@ end
 
 Given /^I select full-disk, single-filesystem partitioning$/ do
   @screen.wait(diui_png("PartitioningMethod"), 60 * PATIENCE)
-  sleep(10 * PATIENCE)
-  @screen.wait(diui_png("PartitioningMethod"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
   @screen.wait(diui_png("SelectDiskToPartition"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
   @screen.wait(diui_png("PartitioningScheme"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
   @screen.wait(diui_png("FinishPartitioning"), 10 * PATIENCE)
-  sleep(5 * PATIENCE) # FIXME -- why do we need this?  It's weird that the wait is not enough
   @screen.type(Sikuli::Key.ENTER)
   # prompt about Writing Partitions to disk:
   @screen.wait(diui_png("No"), 10 * PATIENCE)
@@ -419,10 +416,6 @@ end
 Given /^I select the non-GUI task$/ do
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 
-  # deal with post-snapshot screen flicker  FIXME -- check if we really need this
-  sleep(5 * PATIENCE)
-  @screen.wait(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
-
   @screen.type(Sikuli::Key.SPACE)
   @screen.waitVanish(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
@@ -436,10 +429,6 @@ end
 
 Given /^I select the minimal task$/ do
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
-
-  # deal with post-snapshot screen flicker  FIXME -- check if we really need this
-  sleep(5 * PATIENCE)
-  @screen.wait(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
   @screen.type(Sikuli::Key.SPACE)
   8.times do
@@ -458,19 +447,20 @@ end
 
 Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
-
-  # deal with post-snapshot screen flicker -- FIXME this needs to be fixed via looking to see if the remote login is working before we look at the screen
-  debug_log("debug: Found DesktopTask_Yes, pausing for 20s", :color => :blue)
-  sleep(20 * PATIENCE)
+  debug_log("debug: Found DesktopTask_Yes", :color => :blue)
 
   menu = [ '_', 'Gnome', 'XFCE', 'KDE', 'Cinamon', 'MATE', 'LXDE' ]
 
+
   menu.index(desktop).times do
+    info_log("PGH: DOWN (#{desktop})")
     @screen.type(Sikuli::Key.DOWN)
   end
   @screen.type(Sikuli::Key.SPACE)
   expected_result = "Desktop+" + desktop
   @screen.wait(diui_png(expected_result), 10 * PATIENCE)
+
+  sleep(20)
 
   if "gui" == @ui_mode
     @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
@@ -518,9 +508,7 @@ end
 Given /^I install GRUB$/ do
   @screen.wait(diui_png("InstallGRUB"), 2 * 60 * PATIENCE)
   debug_log("debug: Found InstallGRUB", :color => :blue)
-  sleep(10 * PATIENCE)  # FIXME -- this is a kludge to deal with the snapshot coming back -- should be done via the remote shell check instead
-  @screen.wait(diui_png("InstallGRUB"), 10 * PATIENCE)
-  debug_log("debug: Found InstallGRUB (again)", :color => :blue)
+
   if "gui" == @ui_mode
     debug_log("debug: We're in GUI mode", :color => :blue)
     @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)

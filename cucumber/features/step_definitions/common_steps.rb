@@ -468,7 +468,8 @@ Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
   menu.index(desktop).times do
     @screen.type(Sikuli::Key.DOWN)
   end
-  @screen.wait(diui_png("Desktop+" + desktop), 10 * PATIENCE)
+  expected_result = "Desktop+" + desktop
+  @screen.wait(diui_png(expected_result), 10 * PATIENCE)
 
   if "gui" == @ui_mode
     @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
@@ -476,7 +477,7 @@ Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
     @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
   end
   @screen.type(Sikuli::Key.ENTER)
-  @screen.waitVanish(diui_png("Desktop+Gnome"), 10 * PATIENCE)
+  @screen.waitVanish(diui_png(expected_result), 10 * PATIENCE)
 end
 
 Given /^I wait while the bulk of the packages are installed$/ do

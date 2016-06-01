@@ -442,14 +442,9 @@ Given /^I select the minimal task$/ do
   @screen.wait(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
   @screen.type(Sikuli::Key.SPACE)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN)
+  8.times do
+    @screen.type(Sikuli::Key.DOWN)
+  end
   @screen.type(Sikuli::Key.SPACE)
   @screen.waitVanish(diui_png("DesktopTask_Yes"), 10 * PATIENCE)
 
@@ -468,14 +463,13 @@ Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
   debug_log("debug: Found DesktopTask_Yes, pausing for 20s", :color => :blue)
   sleep(20 * PATIENCE)
 
-  @screen.type(Sikuli::Key.DOWN)
-  @screen.type(Sikuli::Key.DOWN) if "XFCE" == desktop
-  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "KDE" == desktop
-  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "Cinamon" == desktop
-  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "MATE" == desktop
-  @screen.type(Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN+Sikuli::Key.DOWN) if "LXDE" == desktop
-  @screen.type(Sikuli::Key.SPACE)
+  menu = [ '_', 'Gnome', 'XFCE', 'KDE', 'Cinamon', 'MATE', 'LXDE' ]
+
+  menu.index(desktop).times do
+    @screen.type(Sikuli::Key.DOWN)
+  end
   @screen.wait(diui_png("Desktop+" + desktop), 10 * PATIENCE)
+
   if "gui" == @ui_mode
     @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
     @screen.type(Sikuli::Key.TAB)

@@ -30,9 +30,12 @@ if [ "$(readlink /proc/1/ns/uts)" != "$(readlink /proc/self/ns/uts)" ]; then
 fi
 
 # needed to ignore failures due to running 398 days in the future…
-case "$PBCURRENTCOMMANDLINEOPERATION" in
-       --create|create)
-               APTGETOPT=(-o Acquire::Check-Valid-Until="false")
-               ;;
-esac
-
+# (only on those 2 nodes running in the future…)
+if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ] ; then
+	case "$PBCURRENTCOMMANDLINEOPERATION" in
+		--create|create)
+					APTGETOPT=(-o Acquire::Check-Valid-Until="false")
+					;;
+		*)			;;
+	esac
+fi

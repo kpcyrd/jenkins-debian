@@ -62,7 +62,7 @@ TIME_AT_START = Time.now
 ARTIFACTS_DIR = $config['TMPDIR'] + "/results"
 JOB_NAME = ENV['JOB_NAME']
 BUILD_ID = ENV['BUILD_ID']
-PATIENCE = ENV['PATIENCE'] || 3
+PATIENCE = ENV['PATIENCE'] || 1
 
 # Constants that are statically initialized.
 CONFIGURED_KEYSERVER_HOSTNAME = 'hkps.pool.sks-keyservers.net'

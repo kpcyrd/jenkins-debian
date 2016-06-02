@@ -579,8 +579,8 @@
                 - '15': { my_node1: 'rpi2b-armhf-rb',     my_node2: 'odxu4c-armhf-rb'    }
                 - '16': { my_node1: 'odxu4b-armhf-rb',    my_node2: 'wbd0-armhf-rb'      }
                 - '17': { my_node1: 'odxu4c-armhf-rb',    my_node2: 'hb0-armhf-rb'       }
-                - '18': { my_node1: 'odxu4b-armhf-rb',    my_node2: 'ff2a-armhf-rb'      }
-                - '19': { my_node1: 'odxu4c-armhf-rb',    my_node2: 'ff2a-armhf-rb'      }
+                - '18': { my_node1: 'odxu4b-armhf-rb',    my_node2: 'odu3a-armhf-rb'     }
+                - '19': { my_node1: 'odxu4c-armhf-rb',    my_node2: 'opi2c-armhf-rb'     }
                 - '20': { my_node1: 'opi2b-armhf-rb',     my_node2: 'odxu4b-armhf-rb'    }
                 - '21': { my_node1: 'ff2a-armhf-rb',      my_node2: 'odxu4c-armhf-rb'    }
                 - '22': { my_node1: 'ff2a-armhf-rb',      my_node2: 'rpi2c-armhf-rb'     }
@@ -604,14 +604,21 @@
                 - '40': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
                 - '41': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
                 - '42': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'cbxi4a-armhf-rb'    }
-                - '43': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'ff4a-armhf-rb'      }
+                - '43': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'opi2c-armhf-rb'     }
                 - '44': { my_node1: 'bbx15-armhf-rb',     my_node2: 'ff4a-armhf-rb'      }
                 - '45': { my_node1: 'ff4a-armhf-rb',      my_node2: 'bbx15-armhf-rb'     }
                 - '46': { my_node1: 'wbq0-armhf-rb',      my_node2: 'bbx15-armhf-rb'     }
                 - '47': { my_node1: 'cbxi4pro0-armhf-rb', my_node2: 'bbx15-armhf-rb'     }
                 - '48': { my_node1: 'bbx15-armhf-rb',     my_node2: 'ff4a-armhf-rb'      }
                 - '49': { my_node1: 'bpi0-armhf-rb',      my_node2: 'ff4a-armhf-rb'      }
-                - '50': { my_node1: 'odxu4-armhf-rb',     my_node2: 'ff4a-armhf-rb'      }
+                - '50': { my_node1: 'odxu4-armhf-rb',     my_node2: 'odu3a-armhf-rb'     }
+                - '51': { my_node1: 'odu3a-armhf-rb',     my_node2: 'cb3a-armhf-rb'      }
+                - '52': { my_node1: 'opi2c-armhf-rb',     my_node2: 'cb3a-armhf-rb'      }
+                - '53': { my_node1: 'cb3a-armhf-rb',      my_node2: 'ff4a-armhf-rb'      }
+                - '54': { my_node1: 'odu3a-armhf-rb',     my_node2: 'opi2c-armhf-rb'     }
+                - '55': { my_node1: 'opi2c-armhf-rb',     my_node2: 'odu3a-armhf-rb'     }
+                - '56': { my_node1: 'odu3a-armhf-rb',     my_node2: 'ff2a-armhf-rb'      }
+                - '57': { my_node1: 'opi2c-armhf-rb',     my_node2: 'ff2a-armhf-rb'      }
 
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
             my_timed: '* * * * *'

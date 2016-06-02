@@ -363,7 +363,7 @@ download_and_launch() {
 	for i in $(seq 1 8) ; do
 		sleep 5 ; sleep $i
 		# ocr'ing README only sometimes works well and not so much with the new rendering
-		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep -c '(README|RE_ADh1E)' || true)
+		URL_LOADED=$(gocr $WORKSPACE/screenshot.png 2>/dev/null | egrep -c '(README|RE_ADh1E|REnDmE)' || true)
 		update_screenshot
 		if [ $URL_LOADED -ge 4 ] ; then
 			echo "$(date -u) - $URL loaded fine, very much an archive in there, great."

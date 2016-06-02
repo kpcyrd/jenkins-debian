@@ -39,13 +39,14 @@ fetch_if_newer() {
         fi
 }
 
-discard_stale_snapshots() {
-    domain=$1
-    netboot=$2
+discard_snapshots() {
+    domain=$1 ; shift
+    # if more parameters are provided, discard any snapshot younger than the files/dirs listed
+    # otherwise, get rid of all of them (hence the [ -z "$1" ] below)
 
     sudo /usr/bin/virsh -q snapshot-list $domain | \
         while read snap date time tz state ; do
-            if [ "$(find /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $netboot -newermt "$date $time $tz" -print -quit)" ] ; then
+            if [ -z "$1" ] || [ "$(find "$@" -newermt "$date $time $tz" -print -quit)" ] ; then
                 sudo /usr/bin/virsh snapshot-delete $domain $snap
             fi
         done
@@ -64,7 +65,7 @@ mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
 
-discard_stale_snapshots DebianToaster $NETBOOT
+discard_snapshots DebianToaster /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT
 
 trap cleanup_all INT TERM EXIT
 
@@ -119,8 +120,11 @@ fi
 
 echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
 
-/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
-
+/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
+  RETVAL=$?
+  discard_snapshots DebianToaster
+  exit $RETVAL
+}
 
 cleanup_all
 

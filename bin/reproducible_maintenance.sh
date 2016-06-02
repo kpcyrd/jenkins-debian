@@ -208,15 +208,16 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		echo
 		echo "Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled now:"
 		echo "$FAILED_BUILDS"
-		echo "Actually not doing so yet… please investigate manually."
 		echo
 		echo "Rescheduling packages: "
 		REQUESTER="jenkins maintenance job"
 		REASON="maintenance reschedule: reschedule builds which failed due to diffoscope schroot errors"
 		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
 			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
-				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
-				echo "_would_ schedule_packages $CANDIDATES"
+				CANDIDATES=$(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1 | xargs)
+				if [ ! -z "$CANDIDATES" ]; then
+					schedule_package $CANDIDATES
+				fi
 			done
 		done
 		DIRTY=true

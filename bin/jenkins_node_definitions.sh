@@ -64,6 +64,15 @@ get_node_ssh_port() {
 	  opi2b-armhf-rb.debian.net)
 	    PORT=2238
 	    ;;
+	  odu3a-armhf-rb.debian.net)
+	    PORT=2243
+	    ;;
+	  cb3a-armhf-rb.debian.net)
+	    PORT=2244
+	    ;;
+	  opi2c-armhf-rb.debian.net)
+	    PORT=2245
+	    ;;
 	  profitbricks-build*)
 	    PORT=22
 	    ;;

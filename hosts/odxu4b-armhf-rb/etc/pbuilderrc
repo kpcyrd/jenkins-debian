@@ -5,9 +5,9 @@
 #
 # read pbuilderrc.5 document for notes on specific options.
 case $HOSTNAME in 
-	jenkins|jenkins-test-vm|profitbricks-build*)			MIRRORSITE=http://ftp.de.debian.org/debian ;;
-	bbx15|bpi0|cbxi4*|hb0|wbq0|odxu4*|wbd0|rpi2*|ff2*|ff4*|opi2*)	MIRRORSITE=http://ftp.us.debian.org/debian ;;
-	*)							echo "unsupported host, exiting." ; exit 1 ;;
+	jenkins|jenkins-test-vm|profitbricks-build*)					MIRRORSITE=http://ftp.de.debian.org/debian ;;
+	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)	MIRRORSITE=http://ftp.us.debian.org/debian ;;
+	*)										echo "unsupported host, exiting." ; exit 1 ;;
 esac
 EXTRAPACKAGES=""	# better list them in bin/reproducible_setup_pbuilder.sh
 APTCACHE=""

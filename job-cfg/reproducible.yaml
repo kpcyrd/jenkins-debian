@@ -309,6 +309,7 @@
                 - 'cbxi4a':         { my_arch: 'armhf' }
                 - 'cbxi4b':         { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'cb3a':           { my_arch: 'armhf' }
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
@@ -317,8 +318,10 @@
                 - 'odxu4':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
                 - 'odxu4c':         { my_arch: 'armhf' }
+                - 'odu3a':          { my_arch: 'armhf' }
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
+                - 'opi2c':          { my_arch: 'armhf' }
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
@@ -356,6 +359,7 @@
                 - 'cbxi4a':         { my_arch: 'armhf' }
                 - 'cbxi4b':         { my_arch: 'armhf' }
                 - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'cb3a':           { my_arch: 'armhf' }
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
@@ -364,8 +368,10 @@
                 - 'odxu4':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
                 - 'odxu4c':         { my_arch: 'armhf' }
+                - 'odu3a':          { my_arch: 'armhf' }
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
+                - 'opi2c':          { my_arch: 'armhf' }
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
@@ -546,7 +552,7 @@
 
         # could have all archs in one block, but it seems cleaner this way
         # to choose new jobs:
-        #       for i in bbx15 bpi0 cbxi4a cbxi4b cbxi4pro0 ff2a ff2b ff4a hb0 odxu4 odxu4b odxu4c opi2a opi2b rpi2b rpi2c wbd0 wbq0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
+        #       for i in bbx15 bpi0 cbxi4a cbxi4b cbxi4pro0 cb3a ff2a ff2b ff4a hb0 odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c rpi2b rpi2c wbd0 wbq0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
         #       8 jobs for quad-cores with 4 gb ram
         #       6 jobs for octo-cores with 2 gb ram
         #       6 jobs for quad-cores with 2 gb ram

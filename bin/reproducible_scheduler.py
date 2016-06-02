@@ -410,10 +410,8 @@ def query_old_depwait_versions(suite, arch, limit):
                'no new version available, sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
-                JOIN notes AS n ON n.package_id=s.id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
-                AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < datetime('now', '-3 days')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
@@ -499,7 +497,7 @@ def schedule_old_ftbfs_versions(arch, total):
     for suite in SUITES:
         limit.suite = suite
         old_ftbfs = limit.get_staged_limit(total)
-        log.info('Requesting %s old ftbfs and depwait packages in %s/%s...', old_ftbfs,
+        log.info('Requesting %s old ftbfs packages in %s/%s...', old_ftbfs,
                  suite, arch)
         packages[suite] = query_old_ftbfs_versions(suite, arch, old_ftbfs)
         log.info('Received ' + str(len(packages[suite])) +

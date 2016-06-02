@@ -5,6 +5,7 @@ def checkpoints
     cp["boot-d-i-#{m}-to-tasksel"] = {
         :description => "I have started Debian Installer in #{m} mode and stopped at the Tasksel prompt",
         :parent_checkpoint => nil,
+        :parent_checkpoint => nil,
         :steps => [
           "I intend to use #{m} mode",
           'I create a 10 GiB disk named "'+JOB_NAME+'"',
@@ -25,6 +26,7 @@ def checkpoints
 
     ['minimal', 'non-GUI', 'Gnome', 'XFCE', 'LXDE', 'KDE'].each do |de|
       cp["debian-#{m}-#{de}-install"] = {
+          :temporary => 'XFCE' != de,
           :description => "I install a #{de} Debian system, in #{m} mode",
           :parent_checkpoint => "boot-d-i-#{m}-to-tasksel",
           :steps => [

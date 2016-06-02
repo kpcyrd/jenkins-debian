@@ -45,7 +45,7 @@ discard_stale_snapshots() {
 
     sudo /usr/bin/virsh -q snapshot-list $domain | \
         while read snap date time tz state ; do
-            if [ "$(find /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh $netboot -newermt "$date $time $tz" -print -quit)" ] ; then
+            if [ "$(find /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $netboot -newermt "$date $time $tz" -print -quit)" ] ; then
                 sudo /usr/bin/virsh snapshot-delete $domain $snap
             fi
         done

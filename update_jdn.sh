@@ -579,11 +579,16 @@ fi
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
-if [ "$HOSTNAME" = "jenkins" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
 	if [ -s $TMPFILE ] ; then
 		echo
-		cat $TMPFILE
+		# only show cucumber FIXMEs when deploying on jenkins-test-vm
+		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+			cat $TMPFILE
+		else
+			cat $TMPFILE | grep -v cucumber
+		fi
 		echo
 	fi
 	rm -f $TMPFILE

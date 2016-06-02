@@ -96,7 +96,7 @@ create_pkg_sets_navigation() {
 	write_page "<br />"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		case $i in
-			7|10|16|24)	write_page "<br />"
+			7|10|18|26)	write_page "<br />"
 				;;
 			*)	;;
 		esac

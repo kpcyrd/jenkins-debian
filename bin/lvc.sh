@@ -39,10 +39,15 @@ fetch_if_newer() {
         fi
 }
 
-discard_snapshots() {
-        domain=$1
-        for snap in $(sudo /usr/bin/virsh snapshot-list $domain --name) ; do
+discard_stale_snapshots() {
+    domain=$1
+    netboot=$2
+
+    sudo /usr/bin/virsh -q snapshot-list $domain | \
+        while read snap date time tz state ; do
+            if [ "$(find /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh $netboot -newermt "$date $time $tz" -print -quit)" ] ; then
                 sudo /usr/bin/virsh snapshot-delete $domain $snap
+            fi
         done
 }
 
@@ -59,10 +64,7 @@ mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
 
-# FIXME this should discover the 'target' bit of the path, probably via: virsh vol-list
-if [ ! -e "$WORKSPACE/DebianToasterStorage/target" ] ; then
-        discard_snapshots DebianToaster
-fi
+discard_stale_snapshots DebianToaster $NETBOOT
 
 trap cleanup_all INT TERM EXIT
 
@@ -117,7 +119,7 @@ fi
 
 echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
 
-/srv/jenkins/cucumber/bin/run_test_suite --capture-all --vnc-server-only --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
+/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}"
 
 
 cleanup_all

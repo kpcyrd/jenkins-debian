@@ -28,7 +28,7 @@ jenkins ALL=  \
 	/usr/bin/qemu-system-x86_64 *, \
 	/usr/bin/qemu-img *, \
 	/sbin/lvcreate *, /sbin/lvremove *, \
-	/usr/bin/virsh snapshot-list *, /usr/bin/virsh snapshot-delete *, \
+	/usr/bin/virsh -q snapshot-list *, /usr/bin/virsh snapshot-delete *, \
 	/bin/mkdir -p /media/*, \
 	/usr/bin/guestmount *, \
 	/bin/cp -rv /media/*, \

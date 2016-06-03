@@ -176,7 +176,8 @@ if [ -f /etc/debian_version ] ; then
 			molly-guard
 			moreutils
 			munin-node
-			munin-plugins-extra 
+			munin-plugins-extra
+			netcat-traditional
 			pigz 
 			postfix
 			procmail

@@ -66,10 +66,8 @@ PATIENCE = ENV['PATIENCE'] || 1
 
 # Constants that are statically initialized.
 CONFIGURED_KEYSERVER_HOSTNAME = 'hkps.pool.sks-keyservers.net'
-#LIBVIRT_DOMAIN_NAME = "lvcVM-" + $executor_number
-#LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2546" + "%03d" % $executor_number
-LIBVIRT_DOMAIN_NAME = "DebianToaster"
-LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2545404"
+LIBVIRT_DOMAIN_NAME = "lvcVM-" + $executor_number
+LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2546%03d" % $executor_number
 LIBVIRT_NETWORK_NAME = "DebianToasterNet"
 LIBVIRT_NETWORK_UUID = "f2305af3-2a64-4f16-afe6-b9dbf02a597e"
 MISC_FILES_DIR = "/srv/jenkins/cucumber/features/misc_files"

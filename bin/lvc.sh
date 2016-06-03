@@ -62,11 +62,13 @@ RESULTS=$WORKSPACE/results
 
 IMAGE=$WORKSPACE/$(basename $URL)
 
+LIBVIRT_DOMAIN_NAME="lvcVM-$EXECUTOR_NUMBER"
+
 mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
 
-discard_snapshots DebianToaster /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT
+discard_snapshots $LIBVIRT_DOMAIN_NAME /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT
 
 trap cleanup_all INT TERM EXIT
 
@@ -123,7 +125,7 @@ echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/
 
 /srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $WORKSPACE --old-iso $IMAGE -- --format pretty --format pretty_debug --out $WORKSPACE/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
   RETVAL=$?
-  discard_snapshots DebianToaster
+  discard_snapshots $LIBVIRT_DOMAIN_NAME
   exit $RETVAL
 }
 

@@ -11,8 +11,6 @@ common_init "$@"
 # $1 = wget url/jigdo url
 URL=$1 ; shift
 
-IMAGE=$PWD/$(basename $URL)
-
 cleanup_all() {
         find . -name \*.vlog.png -print0 | xargs -0 -r rm
 	echo "Trying to preserve last screenshot…"
@@ -61,6 +59,9 @@ if [ -z "$WORKSPACE" ] ; then
     WORKSPACE=$PWD
 fi
 RESULTS=$WORKSPACE/results
+
+IMAGE=$WORKSPACE/$(basename $URL)
+
 mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
@@ -120,7 +121,7 @@ fi
 
 echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
 
-/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $PWD --old-iso $IMAGE -- --format pretty --format pretty_debug --out $PWD/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
+/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $WORKSPACE --old-iso $IMAGE -- --format pretty --format pretty_debug --out $WORKSPACE/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
   RETVAL=$?
   discard_snapshots DebianToaster
   exit $RETVAL

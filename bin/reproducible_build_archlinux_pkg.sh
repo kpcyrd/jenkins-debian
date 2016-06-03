@@ -35,6 +35,7 @@ handle_remote_error() {
 	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
 	echo "Sleeping 5m before aborting the job."
 	sleep 5m
+	cleanup_all
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
@@ -227,6 +228,7 @@ remote_build() {
 		SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*5"|bc)
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		sleep ${SLEEPTIME}m
+		cleanup_all
 		exec /srv/jenkins/bin/abort.sh
 	fi
 	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
@@ -235,9 +237,11 @@ remote_build() {
 		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
 			echo "$(date -u) - remote job could not end schroot session properly and sent error 23 so we could abort silently."
+			cleanup_all
 			exec /srv/jenkins/bin/abort.sh
 		elif [ $RESULT -eq 42 ] ; then
 			echo "$($date -u) - sigh, failure after not being able to verify pgp signatures. work to debug why ahead."
+			cleanup_all
 			exec /srv/jenkins/bin/abort.sh
 		else
 			# FIXME: atm this is never reached…

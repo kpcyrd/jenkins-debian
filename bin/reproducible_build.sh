@@ -595,7 +595,7 @@ second_build() {
 	NEW_NUM_CPU=$NUM_CPU	# on amd64+i386 we vary this based on node choices (by design), on armhf only sometimes.
 	# differ locale+language depending on the architecture (mostly for readability by different people…)
 	case $ARCH in
-		armel)	locale=it_CH
+		armhf)	locale=it_CH
 			language=it
 			;;
 		i386)	locale=de_CH

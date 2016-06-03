@@ -6,27 +6,11 @@ Running the thing by hand:
 
   ./bin/lvc/run_test_suite --view --iso /var/lib/libvirt/images/debian-8.3.0-amd64-i386-netinst.iso --old-iso /var/lib/libvirt/images/debian-8.3.0-amd64-i386-netinst.iso DebianLive/apt.feature
 
-FIXME - I added a git repo to:
-
-  /var/lib/jenkins/workspace/lvc_debian-installer_jessie_standard_apt
-
-in order to shut-up Tail's script that looks for git repos to populate some variables -- need to strip that out, or make it overridable.
-
-
 FIXME - we don't need the OLD_ISO stuff -- make it so that it still works when not specified, so we can push the change upwards
-
 
 FIXME - we need to be able to run multiple VMs in parallel, and so multiple jobs
 
 FIXME - the VM's network currnetly needs to be started by hand
-
-FIXME - snapshots get destroyed if one clears the workspace, but virsh remembers them -- we need to either move them or know how to delete them with e.g: virsh snapshot-delete DebianToaster debian-gui-minimal-install
-
-  These need to get deleted and/or saved as seems fit:
-    boot-d-i-to-tasksel  2016-05-11 13:31:44 +0000 running
-    boot-g-i-to-tasksel  2016-05-11 12:22:26 +0000 running
-
-
 
 Workflow:
 

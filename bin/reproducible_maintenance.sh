@@ -216,7 +216,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
 				CANDIDATES=$(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1 | xargs)
 				if [ ! -z "$CANDIDATES" ]; then
-					schedule_package $CANDIDATES
+					schedule_packages $CANDIDATES
 				fi
 			done
 		done

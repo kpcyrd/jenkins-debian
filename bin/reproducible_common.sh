@@ -185,7 +185,7 @@ set_icon() {
 
 write_icon() {
 	# ICON and STATE_TARGET_NAME are set by set_icon()
-	write_page "<a href=\"/$SUITE/$ARCH/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/userContent/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
+	write_page "<a href=\"/$SUITE/$ARCH/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
 }
 
 write_page_header() {
@@ -215,7 +215,7 @@ write_page_header() {
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<meta name=\"viewport\" content=\"width=device-width\" />"
-	write_page "<link href=\"/userContent/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
+	write_page "<link href=\"/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>$2</title></head>"
 	if [ "$1" != "$MAINVIEW" ] ; then
 		write_page "<body class=\"wrapper\"><header class=\"head\"><h2>$2</h2>"

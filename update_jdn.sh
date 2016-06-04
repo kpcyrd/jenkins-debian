@@ -165,7 +165,8 @@ if [ -f /etc/debian_version ] ; then
 			bsd-mailx
 			curl 
 			debootstrap 
-			devscripts 
+			devscripts
+			eatmydata
 			etckeeper
 			figlet
 			git

@@ -471,12 +471,15 @@ end
 Given /^I wait while the bulk of the packages are installed$/ do
   @screen.wait(diui_png("InstallSoftware"), 10)
   debug_log("debug: we see InstallSoftware", :color => :blue)
+  failed = false
   try_for(120*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
     found = false
     debug_log("debug: check for Install GRUB/Software", :color => :blue)
-    hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallSoftware")], 2*60)
-    if diui_png("InstallSoftware") == hit
-      debug_log("debug: 'Install Software' still there, so let's glance at tty4", :color => :blue)
+    hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware")], 2*60)
+    debug_log("debug: found #{hit}", :color => :blue)
+    case hit
+    when diui_png("InstallSoftware"), diui_png("InstallationStepFailed")
+      debug_log("debug: so let's glance at tty4", :color => :blue)
       if "gui" == @ui_mode
         @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
       else
@@ -485,21 +488,24 @@ Given /^I wait while the bulk of the packages are installed$/ do
       debug_log("debug: typed F4, pausing...", :color => :blue)
       sleep(10)
       debug_log("debug: slept 10", :color => :blue)
-      if "gui" == @ui_mode
-        @screen.type(Sikuli::Key.F5, Sikuli::KeyModifier.ALT)
+      if diui_png("InstallationStepFailed") == hit
+        failed = true
       else
-        @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
+        if "gui" == @ui_mode
+          @screen.type(Sikuli::Key.F5, Sikuli::KeyModifier.ALT)
+        else
+          @screen.type(Sikuli::Key.F1, Sikuli::KeyModifier.ALT)
+        end
+        debug_log("debug: pressed F1", :color => :blue)
+        sleep(20)
       end
-      debug_log("debug: pressed F1", :color => :blue)
-      sleep(20)
-    end
-    if diui_png("InstallGRUB") == hit
-      debug_log("debug: found InstallGRUB", :color => :blue)
+    when diui_png("InstallGRUB")
       found = true
     end
 
-    found
+    found || failed
   end
+  raise "an Instalation Step Failed -- see the screenshot (may need to be in text-mode)" if failed
 end
 
 Given /^I install GRUB$/ do

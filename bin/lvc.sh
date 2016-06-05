@@ -68,7 +68,12 @@ mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
 
-discard_snapshots $LIBVIRT_DOMAIN_NAME /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT
+for dep in /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT ; do
+  if [ -e "$dep" ] ; then
+    LV_SNAP_DEPENDS="$LV_SNAP_DEPENDS $dep"
+  fi
+done
+discard_snapshots $LIBVIRT_DOMAIN_NAME $LV_SNAP_DEPENDS
 
 trap cleanup_all INT TERM EXIT
 

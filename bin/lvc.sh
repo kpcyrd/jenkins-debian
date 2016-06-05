@@ -68,13 +68,6 @@ mkdir -p $RESULTS
 
 mkdir -p $WORKSPACE/DebianToasterStorage
 
-for dep in /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT ; do
-  if [ -e "$dep" ] ; then
-    LV_SNAP_DEPENDS="$LV_SNAP_DEPENDS $dep"
-  fi
-done
-discard_snapshots $LIBVIRT_DOMAIN_NAME $LV_SNAP_DEPENDS
-
 trap cleanup_all INT TERM EXIT
 
 #
@@ -123,6 +116,14 @@ else
         fetch_if_newer "$KERNEL" "$URL/$KERNEL"
         fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
+
+# discard any snapshots that are older than the inputs
+for dep in /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT ; do
+  if [ -e "$dep" ] ; then
+    LV_SNAP_DEPENDS="$LV_SNAP_DEPENDS $dep"
+  fi
+done
+discard_snapshots $LIBVIRT_DOMAIN_NAME $LV_SNAP_DEPENDS
 
 #  --keep-snapshots -- keeps the VM snapshots -- let's make life simple and not do that until we're using them to pass on state to the next jenkins job
 

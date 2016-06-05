@@ -112,7 +112,7 @@ def get_view(target, distro):
     if target == 'haskell':
         return 'haskell'
     elif target[:10] == 'education-':
-        if distro in ('wheezy'):
+        if distro in ('wheezy', 'jessie'):
             return 'edu_stable'
         else:
             return 'edu_devel'

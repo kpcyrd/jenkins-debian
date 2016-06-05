@@ -14,7 +14,7 @@ URL=$1 ; shift
 cleanup_all() {
         find . -name \*.vlog.png -print0 | xargs -0 -r rm
 	echo "Trying to preserve last screenshot…"
-	LAST_SCREENSHOT=$(ls -t1 results/*.png | head -1)
+	LAST_SCREENSHOT=$(ls -t1 $RESULTS/*.png | head -1)
 	if [ -e "$LAST_SCREENSHOT" ] ; then
 	        cp $LAST_SCREENSHOT $WORKSPACE/screenshot.png
 		convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.png
@@ -53,8 +53,6 @@ discard_snapshots() {
 #
 # define workspace + results
 #
-rm -rf results screenshot.png screenshot-thumb.png
-
 if [ -z "$WORKSPACE" ] ; then
     WORKSPACE=$PWD
 fi
@@ -63,6 +61,8 @@ RESULTS=$WORKSPACE/results
 IMAGE=$WORKSPACE/$(basename $URL)
 
 LIBVIRT_DOMAIN_NAME="lvcVM-$EXECUTOR_NUMBER"
+
+rm -rf $RESULTS $WORKSPACE/screenshot{,-thumb}.png
 
 mkdir -p $RESULTS
 
@@ -128,7 +128,7 @@ fi
 
 echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
 
-/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $WORKSPACE --old-iso $IMAGE -- --format pretty --format pretty_debug --out $WORKSPACE/results/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
+/srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $WORKSPACE --old-iso $IMAGE -- --format pretty --format pretty_debug --out $RESULTS/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
   RETVAL=$?
   discard_snapshots $LIBVIRT_DOMAIN_NAME
   exit $RETVAL

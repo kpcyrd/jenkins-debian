@@ -61,10 +61,10 @@
             distro:
                 #- 'debian-stable':
                 #    dist_name: 'Debian-Installer stable'
-                #    my_iso: 'http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso'
-                - 'debian-8.4.0':
-                    dist_name: 'Debian-Installer 8.4.0'
-                    my_iso: 'http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso'
+                #    my_iso: 'http://cdimage.debian.org/debian-cd/8.5.0/amd64/iso-cd/debian-8.5.0-amd64-netinst.iso'
+                - 'debian-stable':
+                    dist_name: 'Debian-Installer Stable'
+                    my_iso: 'http://cdimage.debian.org/debian-cd/8.5.0/amd64/iso-cd/debian-8.5.0-amd64-netinst.iso'
                 - 'debian-testing-daily': 
                     dist_name: 'Debian-Installer Testing (Daily)'
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'

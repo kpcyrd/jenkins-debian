@@ -40,7 +40,7 @@
     wrappers:
       - live-screenshot
     builders:
-      - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features'
+      - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features {my_opts}'
     triggers:
       - timed: '{my_time}'
     node: 'lvc'
@@ -54,6 +54,7 @@
     my_title: 'Cucumber: {dist_name}'
     my_time: '45 23 31 12 *'
     my_pngs: 'results/*.png'
+    my_opts: '--tags ~@broken'
     my_description: 'Work in progress...'
     jobs:
         - '{name}_{distro}':
@@ -68,3 +69,8 @@
                     dist_name: 'Debian-Installer Testing (Daily)'
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                     my_time: 'H */8 * * *'
+                - 'debian-testing-daily-broken': 
+                    dist_name: 'Debian-Installer Testing (Daily) -- Broken Scenarios'
+                    my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+                    my_time: 'H H * * H'
+                    my_opts: '--tags @broken'

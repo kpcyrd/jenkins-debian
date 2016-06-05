@@ -17,6 +17,20 @@ Feature: Doing variations on d-i installs
       | text       | non-GUI   | VT    |
 #      | gui        | Gnome Desktop | Gnome |
 
+  @broken
+  Scenario: Attempt to Install KDE, expecting it to fail because #818970
+    Given I have started Debian Installer in text mode and stopped at the Tasksel prompt
+    And I intend to use text mode
+    And I select the KDE task
+    And I wait while the bulk of the packages are installed
+    And I install GRUB
+    And I allow reboot after the install is complete
+    And I wait for the reboot
+    And I power off the computer
+    And the computer is set to boot from ide drive "#{JOB_NAME}"
+    When I start the computer
+    Then I should see a KDE Login prompt
+
 #  Scenario: Get a useful error from a bogus HTTP proxy
 #    Given I get d-i to the HTTP proxy prompt
 #    When I set the proxy to "127.23.23.23"

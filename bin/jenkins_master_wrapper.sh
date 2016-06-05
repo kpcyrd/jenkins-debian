@@ -25,7 +25,7 @@ get_node_ssh_port $NODE_NAME
 case $JOB_NAME in
 	rebootstrap_*) 	PARAMS="$JOB_NAME $@"
 			;;
-	lvc_*) 		PARAMS="$JOB_NAME $@"
+	lvc_*) 		PARAMS="$JOB_NAME $EXECUTOR_NUMBER $@"
 			export
 			;;
 	*)		PARAMS="$JOB_NAME"

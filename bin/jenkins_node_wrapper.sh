@@ -73,9 +73,9 @@ elif [[ "$*" =~ lvc_.* ]] ; then
 	echo debug begin
 	export
 	echo debug end
-	export JOB_NAME=$1
+	export JOB_NAME=$1 ; shift
+	export EXECUTOR_NUMBER=$1 ; shift
 	export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
-	shift
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";
 elif [ "$*" = "reproducible_nodes_info" ] ; then

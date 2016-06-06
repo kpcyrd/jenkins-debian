@@ -53,18 +53,29 @@ else
 	if [ -z "$LC_ALL" ]; then
 		export LC_ALL=C.UTF-8
 	fi
+
 	if [ -z "$MIRROR" ]; then
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*)					export MIRROR=http://ftp.de.debian.org/debian ;;
-			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)	export MIRROR=http://ftp.us.debian.org/debian ;;
-			*)										echo "unsupported host, exiting." ; exit 1 ;;
+			jenkins|jenkins-test-vm|profitbricks-build*)
+				export MIRROR=http://ftp.de.debian.org/debian ;;
+			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)
+				export MIRROR=http://ftp.us.debian.org/debian ;;
+			spectrum)
+				export MIRROR=none ;;
+			*)
+				echo "unsupported host, exiting." ; exit 1 ;;
 		esac
 	fi
 	if [ -z "$http_proxy" ]; then
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*)					export http_proxy="http://localhost:3128" ;;
-			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)	export http_proxy="http://10.0.0.15:8000/" ;;
-			*)										echo "unsupported host, exiting." ; exit 1 ;;
+			jenkins|jenkins-test-vm|profitbricks-build*)
+				export http_proxy="http://localhost:3128" ;;
+			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)
+				export http_proxy="http://10.0.0.15:8000/" ;;
+			spectrum)
+				export MIRROR=none ;;
+			*)
+				echo "unsupported host, exiting." ; exit 1 ;;
 		esac
 	fi
 	if [ -z "$CHROOT_BASE" ]; then

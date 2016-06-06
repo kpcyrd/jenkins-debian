@@ -74,8 +74,14 @@ class VM
     rexml = REXML::Document.new(default_domain_xml)
     rexml.elements['domain'].add_element('name')
     rexml.elements['domain/name'].text = @domain_name
-    rexml.elements['domain'].add_element('uuid')
-    rexml.elements['domain/uuid'].text = LIBVIRT_DOMAIN_UUID
+    # PGH
+    begin
+      old_domain = @virt.lookup_domain_by_name(LIBVIRT_DOMAIN_NAME)
+      rexml.elements['domain'].add_element('uuid')
+      rexml.elements['domain/uuid'].text = old_domain.uuid
+      old_domain.undefine
+    rescue
+    end
     update(rexml.to_s)
     @display = Display.new(@domain_name, x_display)
     set_cdrom_boot(TAILS_ISO)

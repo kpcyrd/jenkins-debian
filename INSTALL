@@ -110,9 +110,8 @@ Currently only the configuration is backed up, but neither the jenkins results n
 
 I've cloned these two git repos on my desktop and manually run `git pull`. This is certainly not ideal but good enough to re-setup the system anytime, which is something.
 
-// vim: set filetype=asciidoc:
 
-=== Setup of standalone tests.reproducible-builds.org 
+=== Setup of standalone tests.reproducible-builds.org for development
 
 If you'd like to run tests.repoducible-builds.org without the rest of the jenkins set up, here are some necessary steps. Note that most of these steps are performed in the update_jdn.sh script, see above. Your clone of the jenkins git (git://git.debian.org/git/qa/jenkins.debian.net.git) will be referred to as $JENKINSGIT.
 
@@ -120,7 +119,7 @@ If you'd like to run tests.repoducible-builds.org without the rest of the jenkin
 
 Some dependencies:
 ----
-apt-get install python3 python3-psycopg2 sqlite3 python-rpy2 dctrl-tools
+sudo apt install python3 python3-psycopg2 sqlite3 python-rpy2 dctrl-tools
 ----
 
 Create a user jenkins for testing. Create the following directories:
@@ -143,22 +142,23 @@ Additional, give user jenkins write access to the root $JENKINSGIT directory and
 * $JENKINSGIT/bin/...
 
 ==== Database
+
 Get a recent copy of the database from:
 ----
-wget http://tests.reproducible-builds.org/reproducible.db
+wget https://tests.reproducible-builds.org/reproducible.db
 ----
 
 Keep the database (or a symlink of it) in /var/lib/jenkins/reproducible.db and give the user Jenkins write access.
 
 ==== Websites scripts
 
-All $JENKINSGIT/bin/reproducible_html_*.py and $JENKINSGIT/bin/reproducible_html_*.sh scripts produce the debian testing pages. Below are requirements for some scripts.
+THe $JENKINSGIT/bin/reproducible_html_*.py and $JENKINSGIT/bin/reproducible_html_*.sh scripts produce the debian testing pages and you probably want to run all of them at least once. Below are the requirements for some scripts.
 
-All webpages will be served out of /var/lib/jenkins/userContent/reproducible, point a websever to this directory. Build the reproducible dashboard for debian with the $JENKINSGIT/bin/reproducible_html_dashboard.sh, and navigate to <host>/reproducible.html in your browser.
+All webpages will be served out of /var/lib/jenkins/userContent/reproducible and you need to point a webserver to this directory. Build the reproducible dashboard for debian with the $JENKINSGIT/bin/reproducible_html_dashboard.sh, and navigate to <host>/reproducible.html in your browser.
 
 *Requirements for $JENKINSGIT/bin/reproducible_html_dashboard.sh*
 
-Berfore running, create the following directories and files:
+Before running, create the following directories and files:
 ----
 sudo mkdir /srv/reproducible-results/node-information/
 for i in i386 amd64 armhf ; do touch /srv/reproducible-results/node-information/dummy_$i ; done
@@ -168,3 +168,8 @@ And run the following script as user jenkins:
 ----
 $JENKINSGIT/bin/reproducible_html_repository_comparison.sh
 ----
+
+
+
+// vim: set filetype=asciidoc:
+

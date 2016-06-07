@@ -265,7 +265,7 @@ url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 filtered_issues = (
     'ftbfs_in_jenkins_setup',
     'ftbfs_build_depends_not_available_on_amd64',
-    'ftbfs_build-indep_not_build_on_armhf'
+    'ftbfs_build-indep_not_build_on_some_archs'
 )
 filter_query = ''
 for issue in filtered_issues:

@@ -42,7 +42,7 @@ defaultsuite = 'unstable'
 defaultarch = 'amd64'
 
 BIN_PATH = '/srv/jenkins/bin'
-BASE = '/var/lib/jenkins/userContent/reproducible'
+BASE = '/var/lib/jenkins/userContent/reproducible/debian'
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'

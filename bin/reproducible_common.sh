@@ -70,7 +70,7 @@ NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 # we only this array for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 
-BASE="/var/lib/jenkins/userContent/reproducible"
+BASE="/var/lib/jenkins/userContent/reproducible/debian"
 mkdir -p "$BASE"
 
 # to hold reproducible temporary files/directories without polluting /tmp

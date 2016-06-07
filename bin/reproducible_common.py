@@ -568,9 +568,7 @@ def get_bugs():
     """
     query = """
         SELECT bugs.id, bugs.source, bugs.done, ARRAY_AGG(tags.tag)
-        FROM bugs JOIN bugs_tags ON bugs.id = bugs_tags.id
-                  JOIN bugs_usertags ON bugs_tags.id = bugs_usertags.id
-                  JOIN sources ON bugs.source=sources.source
+        FROM bugs JOIN bugs_usertags ON bugs.id = bugs_usertags.id
                   LEFT JOIN (
                     SELECT id, tag FROM bugs_tags
                     WHERE tag='patch' OR tag='pending'

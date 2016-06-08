@@ -182,7 +182,7 @@ Before('@product') do |scenario|
     capture = IO.popen(['avconv',
                         '-f', 'x11grab',
                         '-s', '1024x768',
-                        '-r', '15',
+                        '-r', '5',
                         '-i', "#{$config['DISPLAY']}.0",
                         '-an',
                         '-c:v', 'libx264',

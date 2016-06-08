@@ -14,12 +14,12 @@ common_init "$@"
 set -e
 
 create_results_dirs() {
-	mkdir -vp $BASE/dbd/${SUITE}/${ARCH}
-	mkdir -vp $BASE/dbdtxt/${SUITE}/${ARCH}
-	mkdir -vp $BASE/logs/${SUITE}/${ARCH}
-	mkdir -vp $BASE/logdiffs/${SUITE}/${ARCH}
-	mkdir -vp $BASE/rbuild/${SUITE}/${ARCH}
-	mkdir -vp $BASE/buildinfo/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/dbd/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/dbdtxt/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/logs/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/logdiffs/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/rbuild/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}
 }
 
 handle_race_condition() {
@@ -44,9 +44,9 @@ save_artifacts() {
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
 		local URL="$DEBIAN_URL/$ARTIFACTS/"
-		local HEADER="$BASE/$ARTIFACTS/.HEADER.html"
-		mkdir -p $BASE/$ARTIFACTS
-		cp -r $TMPDIR/* $BASE/$ARTIFACTS/
+		local HEADER="$DEBIAN_BASE/$ARTIFACTS/.HEADER.html"
+		mkdir -p $DEBIAN_BASE/$ARTIFACTS
+		cp -r $TMPDIR/* $DEBIAN_BASE/$ARTIFACTS/
 		echo | tee -a ${RBUILDLOG}
 		local msg="Artifacts from this build have been preserved. They will be available for 24h only, so download them now.\n"
 		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
@@ -54,7 +54,7 @@ save_artifacts() {
 		printf "$msg" | tee -a $BUILDLOG
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
-		echo "Package page: <a href=\"$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
+		echo "Package page: <a href=\"$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
 		echo "</p>" >> $HEADER
 		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}
@@ -135,12 +135,12 @@ update_db_and_html() {
 
 update_rbuildlog() {
 	chmod 644 $RBUILDLOG
-	mv $RBUILDLOG $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
-	RBUILDLOG=$BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	mv $RBUILDLOG $DEBIAN_BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
+	RBUILDLOG=$DEBIAN_BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log
 }
 
 diff_copy_buildlogs() {
-	local DIFF="$BASE/logdiffs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.diff"
+	local DIFF="$DEBIAN_BASE/logdiffs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.diff"
 	if [ -f b1/build.log ] ; then
 		if [ -f b2/build.log ] ; then
 			printf "Diff of the two buildlogs:\n\n--\n" | tee -a $DIFF
@@ -150,15 +150,15 @@ diff_copy_buildlogs() {
 			fi
 			echo -e "\nCompressing the 2nd log..."
 			gzip -9vn $DIFF
-			gzip -9cvn b2/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
-			chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
+			gzip -9cvn b2/build.log > $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
+			chmod 644 $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
 		elif [ $FTBFS -eq 0 ] ; then
 			echo "Warning: No second build log, what happened?" | tee -a $RBUILDLOG
 		fi
 		set -x # # to debug diffoscope/schroot problems
 		echo "Compressing the 1st log..."
-		gzip -9cvn b1/build.log > $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
-		chmod 644 $BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
+		gzip -9cvn b1/build.log > $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
+		chmod 644 $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 	else
 		echo "Error: No first build log, not even looking for the second" | tee -a $RBUILDLOG
 	fi
@@ -207,21 +207,21 @@ handle_ftbfs() {
 		local nodevar="NODE$BUILD"
 		local node=""
 		eval node=\$$nodevar
-		if [ ! -f "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
+		if [ ! -f "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
 			continue
 		fi
-		if zgrep -F "E: pbuilder-satisfydepends failed." "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+		if zgrep -F "E: pbuilder-satisfydepends failed." "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 			handle_depwait
 			return
 		fi
 		for NEEDLE in '^tar:.*Cannot write: No space left on device' 'fatal error: error writing to .* No space left on device' './configure: line .* printf: write error: No space left on device' 'cat: write error: No space left on device' '^dpkg-deb.*No space left on device' '^cp: (erreur|impossible).*No space left on device' '^tee: .* No space left on device' '^zip I/O error: No space left on device' '^mkdir .*: No space left on device' ; do
-			if zgrep -e "$NEEDLE" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+			if zgrep -e "$NEEDLE" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 				handle_enospace $node
 				return
 			fi
 		done
 		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
-		if zgrep -e "No space left on device" "$BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+		if zgrep -e "No space left on device" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue on $node. Please check, tune handle_ftbfs() and reschedule the package."
 			echo $MESSAGE | tee -a /var/log/jenkins/reproducible-diskspace-issues.log
 			irc_message debian-reproducible "$MESSAGE"
@@ -238,18 +238,18 @@ handle_ftbr() {
 	local FTBRmessage="$@"
 	echo | tee -a ${RBUILDLOG}
 	echo "$(date -u) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
-	cp b1/${BUILDINFO} $BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
+	cp b1/${BUILDINFO} $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ ! -z "$FTRmessage" ] ; then
 		echo "$(date -u) - ${FTBRmessage}." | tee -a ${RBUILDLOG}
 	fi
 	if [ -f ./${DBDREPORT} ] ; then
-		mv ./${DBDREPORT} $BASE/dbd/${SUITE}/${ARCH}/
+		mv ./${DBDREPORT} $DEBIAN_BASE/dbd/${SUITE}/${ARCH}/
 	else
 		echo "$(date -u) - $DIFFOSCOPE produced no output (which is strange)." | tee -a $RBUILDLOG
 	fi
 	if [ -f ./$DBDTXT ] ; then
-		mv ./$DBDTXT $BASE/dbdtxt/$SUITE/$ARCH/
-		gzip -9n $BASE/dbdtxt/$SUITE/$ARCH/$DBDTXT
+		mv ./$DBDTXT $DEBIAN_BASE/dbdtxt/$SUITE/$ARCH/
+		gzip -9n $DEBIAN_BASE/dbdtxt/$SUITE/$ARCH/$DBDTXT
 	fi
 	calculate_build_duration
 	update_db_and_html "unreproducible"
@@ -257,7 +257,7 @@ handle_ftbr() {
 
 handle_reproducible() {
 	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
-		cp b1/${BUILDINFO} $BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
+		cp b1/${BUILDINFO} $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
 		echo | tee -a ${RBUILDLOG}
 		echo "$DIFFOSCOPE found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}

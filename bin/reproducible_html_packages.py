@@ -16,7 +16,7 @@ html_package_page = Template((tab*2).join(("""
     <h2 class="package-name">$package</h2>
     <ul class="menu">
         <li><ul class="children">
-          <li>$version <a href="/index_notify.html" target="_parent">
+          <li>$version <a href="debian/index_notify.html" target="_parent">
             <span class="notification" title="Notifications for this package are enabled. Every reproducibility related status change will be emailed to the maintainers">$notify_maintainer</span></a></li>
           <li>$suite/$arch </li>
           <li>$status </li>
@@ -181,17 +181,17 @@ def gen_suites_links(package, current_suite, current_arch):
                 prefix = ''
                 suffix = '\n'
             else:
-                prefix = '<a href="/{}/{}/index_{}.html">'.format(s, a, status)
+                prefix = '<a href="/debian/{}/{}/index_{}.html">'.format(s, a, status)
                 suffix = '</a>\n'
             icon_html = prefix + '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>' + suffix
             html += icon_html.format(icon=icon, status=status, spokenstatus=spokenstatus)
             if ( s == current_suite and a == current_arch ):
                 html += (tab*2 + ' {}').format(version)
             else:
-                html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
+                html += (tab*2 + ' <a href="/debian/{}/{}/{}/{}.html" target="_parent"' + \
                      ' title="{}: {}{}">{}</a>').format(RB_PKG_URI,
                      s, a, package.name, spokenstatus, version, build_date, version)
-            html += ' in <a href="/{}/{}/" target="_parent">{}</a>\n'.format(s, a, s)
+            html += ' in <a href="/debian/{}/{}/" target="_parent">{}</a>\n'.format(s, a, s)
             html += '</li>\n'
         html += tab + '</ul></li>'
     html += '</ul>\n'
@@ -283,7 +283,7 @@ def gen_packages_html(packages, no_clean=False):
                     project_links=project_links,
                     default_view=default_view)
                 destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
-                desturl = DEBIAN_URL + RB_PKG_URI + '/' + suite + \
+                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible build results'
                 write_html_page(title=title, body=html, destfile=destfile,

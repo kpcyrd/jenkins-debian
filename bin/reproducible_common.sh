@@ -71,8 +71,9 @@ NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 # we only this array for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 
-BASE="/var/lib/jenkins/userContent/reproducible/debian"
-mkdir -p "$BASE"
+BASE="/var/lib/jenkins/userContent/reproducible"
+DEBIAN_BASE="/var/lib/jenkins/userContent/reproducible/debian"
+mkdir -p "$DEBIAN_BASE"
 
 # to hold reproducible temporary files/directories without polluting /tmp
 TEMPDIR="/tmp/reproducible"
@@ -80,7 +81,7 @@ mkdir -p "$TEMPDIR"
 
 # create subdirs for suites
 for i in $SUITES ; do
-	mkdir -p "$BASE/$i"
+	mkdir -p "$DEBIAN_BASE/$i"
 done
 
 # table names and image names
@@ -186,7 +187,7 @@ set_icon() {
 
 write_icon() {
 	# ICON and STATE_TARGET_NAME are set by set_icon()
-	write_page "<a href=\"/$SUITE/$ARCH/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
+	write_page "<a href=\"/debian/$SUITE/$ARCH/index_${STATE_TARGET_NAME}.html\" target=\"_parent\"><img src=\"/static/$ICON\" alt=\"${STATE_TARGET_NAME} icon\" /></a>"
 }
 
 write_page_header() {
@@ -233,16 +234,16 @@ write_page_header() {
 			continue
 		fi
 		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
-		BASEURL="/$SUITE/$ARCH"
+		BASEURL="/debian/$SUITE/$ARCH"
 		local i
 		for i in $GLOBALVIEWS ; do
 			if [ "$TARGET" = "$i" ] ; then
-				BASEURL=""
+				BASEURL="/debian"
 			fi
 		done
 		for i in ${SUITEVIEWS} ; do
 			if [ "$TARGET" = "$i" ] ; then
-				BASEURL="/$SUITE"
+				BASEURL="/debian/$SUITE"
 			fi
 		done
 		# prepare unsorted lists
@@ -253,7 +254,7 @@ write_page_header() {
 		fi
 		# prepare links
 		if [ "$TARGET" = "scheduled" ] ; then
-			write_page "<li><a href=\"/index_${ARCH}_scheduled.html\">${SPOKEN_TARGET}</a></li>"
+			write_page "<li><a href=\"/debian/index_${ARCH}_scheduled.html\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "notify" ] ; then
 			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
 		elif [ "$TARGET" = "arch" ] ; then
@@ -262,7 +263,7 @@ write_page_header() {
 				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$ARCH" ] ; then
 					CLASS=" class=\"active\""
 				fi
-				write_page " <a href=\"/$SUITE/index_suite_${i}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
+				write_page " <a href=\"debian/$SUITE/index_suite_${i}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
 				CLASS=""
 			done
 			write_page "</li>"
@@ -272,7 +273,7 @@ write_page_header() {
 				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$SUITE" ] ; then
 					CLASS=" class=\"active\""
 				fi
-				write_page " <a href=\"/$i/index_suite_${ARCH}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
+				write_page " <a href=\"debian/$i/index_suite_${ARCH}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
 				CLASS=""
 			done
 			write_page "</li>"
@@ -564,7 +565,7 @@ publish_page() {
 	else
 		TARGET=$1/$PAGE
 	fi
-	cp $PAGE $BASE/$TARGET
+	cp $PAGE $DEBIAN_BASE/$TARGET
 	rm $PAGE
 	echo "Enjoy $DEBIAN_URL/$TARGET"
 }
@@ -696,12 +697,12 @@ get_filesize() {
 }
 
 cleanup_pkg_files() {
-	rm -vf $BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log{,.gz}
-	rm -vf $BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log{,.gz}
-	rm -vf $BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.html
-	rm -vf $BASE/dbdtxt/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.txt{,.gz}
-	rm -vf $BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo
-	rm -vf $BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff{,.gz}
+	rm -vf $DEBIAN_BASE/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_*.rbuild.log{,.gz}
+	rm -vf $DEBIAN_BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log{,.gz}
+	rm -vf $DEBIAN_BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.html
+	rm -vf $DEBIAN_BASE/dbdtxt/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.txt{,.gz}
+	rm -vf $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo
+	rm -vf $DEBIAN_BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff{,.gz}
 }
 
 #
@@ -806,10 +807,10 @@ create_png_from_table() {
 		mkdir -p $DIR
 		echo "Generating $2."
 		/srv/jenkins/bin/make_graph.py ${TABLE[$1]}.csv $2 ${COLORS} "${MAINLABEL[$1]}" "${YLABEL[$1]}" $WIDTH $HEIGHT
-		mv $2 $BASE/$DIR
+		mv $2 $DEBIAN_BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	# create empty dummy png if there havent been any results ever
-	elif [ ! -f $BASE/$DIR/$(basename $2) ] ; then
+	elif [ ! -f $DEBIAN_BASE/$DIR/$(basename $2) ] ; then
 		DIR=$(dirname $2)
 		mkdir -p $DIR
 		echo "Creating $2 dummy."
@@ -817,9 +818,9 @@ create_png_from_table() {
 		if [ "$3" != "" ] ; then
 			local THUMB="${TABLE[1]}_${3}-thumbnail.png"
 			convert $2 -adaptive-resize 160x80 ${THUMB}
-			mv ${THUMB} $BASE/$DIR
+			mv ${THUMB} $DEBIAN_BASE/$DIR
 		fi
-		mv $2 $BASE/$DIR
+		mv $2 $DEBIAN_BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi
 	rm ${TABLE[$1]}.csv

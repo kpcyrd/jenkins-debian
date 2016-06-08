@@ -140,9 +140,9 @@ update_suite_arch_stats() {
 				PREFIX=$SUITE/$ARCH
 			fi
 			# force regeneration of the image if it exists
-			if [ -f $BASE/$PREFIX/${TABLE[$i]}.png ] ; then
+			if [ -f $DEBIAN_BASE/$PREFIX/${TABLE[$i]}.png ] ; then
 				echo "Touching $PREFIX/${TABLE[$i]}.png..."
-				touch -d "$FORCE_DATE 00:00 UTC" $BASE/$PREFIX/${TABLE[$i]}.png
+				touch -d "$FORCE_DATE 00:00 UTC" $DEBIAN_BASE/$PREFIX/${TABLE[$i]}.png
 			fi
 		done
 	fi
@@ -239,7 +239,7 @@ update_bug_stats() {
 			local i=0
 			for i in 3 7 8 9 ; do
 				echo "Touching ${TABLE[$i]}.png..."
-				touch -d "$FORCE_DATE 00:00 UTC" $BASE/${TABLE[$i]}.png
+				touch -d "$FORCE_DATE 00:00 UTC" $DEBIAN_BASE/${TABLE[$i]}.png
 			done
 		fi
 	fi
@@ -433,10 +433,10 @@ create_suite_arch_stats_page() {
 	write_icon
 	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) blacklisted packages neither.</p>"
 	write_page "<p>"
-	write_page " <a href=\"/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
+	write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do
 		# recreate png once a day
-		if [ ! -f $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] ; then
+		if [ ! -f $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i $SUITE/$ARCH/${TABLE[$i]}.png
 		fi
 	done
@@ -453,7 +453,7 @@ write_meta_pkg_graphs_links () {
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
 		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-		write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+		write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 	done
 	write_page "</center></p>"
 }
@@ -472,7 +472,7 @@ create_dashboard_page() {
 	# write suite graphs
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
-			write_page " <a href=\"/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+			write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 		done
 		SUITE="unstable"
 		if [ "$ARCH" = "amd64" ] ; then
@@ -489,7 +489,7 @@ create_dashboard_page() {
 	done
 	write_page "</tr>"
 	ARCH="amd64"
-	write_page "<tr><td class=\"left\">identified <a href=\"/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">identified <a href=\"/debian/index_issues.html\">distinct and categorized issues</a></td><td>$ISSUES</td><td colspan=\"$AC\"></td></tr>"
 	write_page "<tr><td class=\"left\">total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"$AC\"></td></tr>"
 	write_page "<tr><td class=\"left\">packages with notes about these issues</td><td>$NOTES</td><td colspan=\"$AC\"></td></tr>"
 
@@ -502,7 +502,7 @@ create_dashboard_page() {
 		SUITE="unstable"
 		gather_suite_arch_stats
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-		TD_PKG_NOISSUES="$TD_PKG_NOISSUES<td><a href=\"/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_NOISSUES="$TD_PKG_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 		TD_PKG_FTBR="$TD_PKG_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
@@ -532,7 +532,7 @@ create_dashboard_page() {
 				wc -l)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td class=\"left\">packages <a href=\"/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
+	write_page "<tr><td class=\"left\">packages <a href=\"/debian/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	write_page "<tr><td class=\"left\">&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
@@ -545,9 +545,9 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
 	for i in 8 9 3 7 4 5 ; do
-		write_page " <a href=\"/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
+		write_page " <a href=\"/debian/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
-		if [ ! -f $BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[$i]}.png ] ; then
+		if [ ! -f $DEBIAN_BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
 		fi
 	done
@@ -557,7 +557,7 @@ create_dashboard_page() {
 	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is very much appreciated.</p>"
 	# the end
 	write_page_footer
-	cp $PAGE $BASE/reproducible.html
+	cp $PAGE $DEBIAN_BASE/reproducible.html
 	publish_page
 }
 
@@ -574,8 +574,8 @@ create_performance_page() {
 	# arch performance stats
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
-		write_page " <a href=\"/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
-		if [ ! -f $BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $BASE/${TABLE[1]}_$ARCH.png ] ; then
+		write_page " <a href=\"/debian/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
+		if [ ! -f $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
@@ -585,14 +585,14 @@ create_performance_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
-			write_page " <a href=\"/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+			write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 		done
 		write_page "</p><p style=\"clear:both;\">"
 	done
 	# the end
 	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_nodes_info/lastBuild/console\">individual build node performance stats</a> are available as well as views of oldest results for"
 	for ARCH in ${ARCHS} ; do
-		write_page " <a href=\"/index_${ARCH}_oldies.html\">$ARCH</a>"
+		write_page " <a href=\"/debian/index_${ARCH}_oldies.html\">$ARCH</a>"
 	done
 	write_page ".</p>"
 	write_page_footer

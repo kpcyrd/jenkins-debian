@@ -171,7 +171,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
 	echo "$(date -u) - Rescheduling failed builds due to network issues."
-	FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
+	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
 		echo "The following builds have failed due to network problems and will be rescheduled now:"
@@ -203,7 +203,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
 	echo "$(date -u) - Rescheduling failed builds due to diffoscope schroot issues."
-	FAILED_BUILDS=$(find $BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -F 'E: 10mount: error: Directory' {} \; || true)
+	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -F 'E: 10mount: error: Directory' {} \; || true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
 		echo "Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled now:"
@@ -274,7 +274,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			QUERY="DELETE FROM removed_packages
 				WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
 			sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
-			cd $BASE
+			cd $DEBIAN_BASE
 			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
 		done
 		cd - > /dev/null
@@ -366,17 +366,17 @@ fi
 
 # remove artifacts older than a day
 echo "$(date -u) - Checking for artifacts older than a day."
-ARTIFACTS=$(find $BASE/artifacts/* -maxdepth 1 -type d -mtime +1 -exec ls -lad {} \; 2>/dev/null|| true)
+ARTIFACTS=$(find $DEBIAN_BASE/artifacts/* -maxdepth 1 -type d -mtime +1 -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"
-	find $BASE/artifacts/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \;
+	find $DEBIAN_BASE/artifacts/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \;
 	echo
 fi
 
 # find + chmod files with bad permissions
 echo "$(date -u) - Checking for files with bad permissions."
-BADPERMS=$(find $BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
+BADPERMS=$(find $DEBIAN_BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo

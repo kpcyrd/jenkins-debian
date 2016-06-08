@@ -80,7 +80,7 @@ update_meta_pkg_stats() {
 				echo "Updating meta pkg set stats for ${META_PKGSET[$1]} in $SUITE/$ARCH on $DATE."
 			fi
 			echo "Touching $SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png..."
-			touch -d "$FORCE_DATE 00:00 UTC" $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
+			touch -d "$FORCE_DATE 00:00 UTC" $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png
 		fi
 	done
 }
@@ -105,12 +105,12 @@ create_pkg_sets_navigation() {
 		else
 			CLASS=""
 		fi
-		if [ -f $BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
+		if [ -f $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
 			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
 			write_page "<li>"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"$CLASS>${META_PKGSET[$i]}</a>"
-			write_page "<a href=\"/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"setview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
+			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"$CLASS>${META_PKGSET[$i]}</a>"
+			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"setview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
 			write_page "</li>"
 		fi
 	done
@@ -149,19 +149,19 @@ create_pkg_sets_pages() {
 			PNG=${TABLE[6]}_${META_PKGSET[$i]}.png
 			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 			# redo pngs once a day
-			if [ ! -f $BASE/$SUITE/$ARCH/$PNG ] || [ ! -z $(find $BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
+			if [ ! -f $DEBIAN_BASE/$SUITE/$ARCH/$PNG ] || [ ! -z $(find $DEBIAN_BASE/$SUITE/$ARCH -maxdepth 1 -mtime +0 -name $PNG) ] ; then
 				create_png_from_table 6 $SUITE/$ARCH/$PNG ${META_PKGSET[$i]}
-				convert $BASE/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 $BASE/$SUITE/$ARCH/$THUMB
+				convert $DEBIAN_BASE/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 $DEBIAN_BASE/$SUITE/$ARCH/$THUMB
 			fi
 			LABEL="package set '${META_PKGSET[$j]}' in $SUITE/$ARCH"
-			write_page "<p><a href=\"/userContent/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
+			write_page "<p><a href=\"/debian/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of:"
 			write_page "      (this set on "
 			for LINKARCH in ${ARCHS} ; do
 				if [ "$LINKARCH" = "$ARCH" ] ; then
 					continue
 				else
-					write_page "<a href=\"/$SUITE/$LINKARCH/pkg_set_${META_PKGSET[$i]}.html\">$LINKARCH</a> "
+					write_page "<a href=\"/debian/$SUITE/$LINKARCH/pkg_set_${META_PKGSET[$i]}.html\">$LINKARCH</a> "
 				fi
 			done
 			write_page ") <br />&nbsp;<br />"

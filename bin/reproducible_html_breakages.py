@@ -326,7 +326,7 @@ if __name__ == '__main__':
         html += '<p><b>COOL!!!</b> Everything is GOOD and not a single issue was '
         html += 'detected. <i>Enjoy!</i></p>'
     title = 'Breakage on the Debian pages of tests.reproducible-builds.org'
-    destfile = BASE + '/index_breakages.html'
+    destfile = DEBIAN_BASE + '/index_breakages.html'
     desturl = DEBIAN_URL + '/index_breakages.html'
     write_html_page(title, html, destfile, style_note=True)
     log.info('Breackages page created at ' + desturl)

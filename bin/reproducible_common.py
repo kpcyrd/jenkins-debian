@@ -42,22 +42,23 @@ defaultsuite = 'unstable'
 defaultarch = 'amd64'
 
 BIN_PATH = '/srv/jenkins/bin'
-BASE = '/var/lib/jenkins/userContent/reproducible/debian'
+BASE = '/var/lib/jenkins/userContent/reproducible'
+DEBIAN_BASE = '/var/lib/jenkins/userContent/reproducible/debian'
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'
 REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
 
-DBD_URI = '/dbd'
-DBDTXT_URI = '/dbdtxt'
-LOGS_URI = '/logs'
-DIFFS_URI = '/logdiffs'
-NOTES_URI = '/notes'
-ISSUES_URI = '/issues'
-RB_PKG_URI = '/rb-pkg'
-RBUILD_URI = '/rbuild'
-HISTORY_URI = '/history'
-BUILDINFO_URI = '/buildinfo'
+DBD_URI = '/debian/dbd'
+DBDTXT_URI = '/debian/dbdtxt'
+LOGS_URI = '/debian/logs'
+DIFFS_URI = '/debian/logdiffs'
+NOTES_URI = '/debian/notes'
+ISSUES_URI = '/debian/issues'
+RB_PKG_URI = '/debian/rb-pkg'
+RBUILD_URI = '/debian/rbuild'
+HISTORY_URI = '/debian/history'
+BUILDINFO_URI = '/debian/buildinfo'
 DBD_PATH = BASE + DBD_URI
 DBDTXT_PATH = BASE + DBDTXT_URI
 LOGS_PATH = BASE + LOGS_URI
@@ -173,56 +174,56 @@ html_head_page = Template((tab*2).join(("""
   <ul class=\"menu\">
     <li>$suite/$arch:<ul class="children">
      <li>Notes:<ul class="children">
-      <li><a href="/$suite/$arch/index_notes.html">packages with notes</a></li>
-      <li><a href="/$suite/$arch/index_no_notes.html">packages without notes</a></li>
+      <li><a href="debian/$suite/$arch/index_notes.html">packages with notes</a></li>
+      <li><a href="debian/$suite/$arch/index_no_notes.html">packages without notes</a></li>
      </ul></li>
      <li>Package states:<ul class="children">
       <li>
-        <a href="/$suite/$arch/index_reproducible.html" target="_parent">
+        <a href="debian/$suite/$arch/index_reproducible.html" target="_parent">
           <img src="/static/weather-clear.png" alt="reproducible icon" />
         </a>
-        <a href="/$suite/$arch/index_FTBR.html" target="_parent">
+        <a href="debian/$suite/$arch/index_FTBR.html" target="_parent">
           <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
         </a>
-        <a href="/$suite/$arch/index_FTBFS.html" target="_parent">
+        <a href="debian/$suite/$arch/index_FTBFS.html" target="_parent">
           <img src="/static/weather-storm.png" alt="FTBFS icon" />
         </a>
-        <a href="/$suite/$arch/index_depwait.html" target="_parent">
+        <a href="debian/$suite/$arch/index_depwait.html" target="_parent">
           <img src="/static/weather-snow.png" alt="depwait icon" />
         </a>
-        <a href="/$suite/$arch/index_not_for_us.html" target="_parent">
+        <a href="debian/$suite/$arch/index_not_for_us.html" target="_parent">
           <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
         </a>
-        <a href="/$suite/$arch/index_404.html" target="_parent">
+        <a href="debian/$suite/$arch/index_404.html" target="_parent">
           <img src="/static/weather-severe-alert.png" alt="404 icon" />
         </a>
-        <a href="/$suite/$arch/index_blacklisted.html" target="_parent">
+        <a href="debian/$suite/$arch/index_blacklisted.html" target="_parent">
           <img src="/static/error.png" alt="blacklisted icon" />
         </a>
       </li>
      </ul></li>
      $link_pkgsets
      <li>Recently tested:<ul class="children">
-      <li><a href="/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
-      <li><a href="/$suite/$arch/index_last_48h.html">packages tested in the last 48h</a></li>
+      <li><a href="debian/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
+      <li><a href="debian/$suite/$arch/index_last_48h.html">packages tested in the last 48h</a></li>
      </ul></li>
-    <li><a href="/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
+    <li><a href="debian/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     </ul></li>
     <li>Architectures:<ul class="children">
      $link_archs
-     <li><a href="/index_${arch}_scheduled.html">currently scheduled</a></li>
+     <li><a href="debian/index_${arch}_scheduled.html">currently scheduled</a></li>
     </ul></li>
     <li>Suites:<ul class="children">
      $link_suites
-     <li><a href="/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
+     <li><a href="debian/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
     </ul></li>
     <li><a href="%s">Debian dashboard</a>
     <ul class="children">
-     <li><a href="/index_issues.html">issues</a></li>
-     <li><a href="/index_repositories.html">repositories overview</a></li>
-     <li><a href="/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
-     <li><a href="/index_performance.html">performance stats</a></li>
-     <li><a href="/index_variations.html">variations tested</a></li>
+     <li><a href="debian/index_issues.html">issues</a></li>
+     <li><a href="debian/index_repositories.html">repositories overview</a></li>
+     <li><a href="debian/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
+     <li><a href="debian/index_performance.html">performance stats</a></li>
+     <li><a href="debian/index_variations.html">variations tested</a></li>
     </ul></li>
   </ul>
 $project_links
@@ -273,10 +274,10 @@ filter_query = ''
 for issue in filtered_issues:
     if filter_query == '':
         filter_query = 'n.issues LIKE "%' + issue + '%"'
-        filter_html = '<a href="' + DEBIAN_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+        filter_html = '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
     else:
         filter_query += ' OR n.issues LIKE "%' + issue + '%"'
-        filter_html += ' or <a href="' + DEBIAN_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+        filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
 
 
 @atexit.register
@@ -326,20 +327,20 @@ def convert_into_hms_string(duration):
 def _gen_pkg_sets_link(suite, arch):
     html = ''
     if suite != 'experimental':
-            html = '<li><a href="/' + suite + '/' + arch + '/index_pkg_sets.html">package sets</a></li>'
+            html = '<li><a href="/debian/' + suite + '/' + arch + '/index_pkg_sets.html">package sets</a></li>'
     return html
 
 def _gen_arch_links(suite, arch):
     html = '<li>'
     for a in ARCHS:
-        html += ' <a href="/' + suite + '/index_suite_' + a + '_stats.html\">' + a + '</a>&nbsp;&nbsp;'
+        html += ' <a href="/debian/' + suite + '/index_suite_' + a + '_stats.html\">' + a + '</a>&nbsp;&nbsp;'
     html += '</li>'
     return html
 
 def _gen_suite_links(suite, arch):
     html = '<li>'
     for s in SUITES:
-        html += ' <a href="/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>&nbsp;&nbsp;'
+        html += ' <a href="/debian/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>&nbsp;&nbsp;'
     html += '</li>'
     return html
 

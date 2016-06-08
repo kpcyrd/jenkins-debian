@@ -50,7 +50,7 @@ ${project_links}
         Your browser does not support iframes.
         Use a different one or follow the links above.
     </p>
-</iframe>""" % REPRODUCIBLE_URL ).splitlines(True)))
+</iframe>""" % DEBIAN_URL ).splitlines(True)))
 
 
 def sizeof_fmt(num):
@@ -111,7 +111,7 @@ def link_diffs(package, eversion, suite, arch, status):
         html += '</li>\n'
     else:
         if status == 'unreproducible' and not args.ignore_missing_files:
-            log.critical(REPRODUCIBLE_URL + '/' + suite + '/' + arch + '/' + package +
+            log.critical(DEBIAN_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')
     return html, dbd_url
 
@@ -151,7 +151,7 @@ def gen_extra_links(package, version, suite, arch, status):
             default_view = url
         links += link_buildlogs(package, eversion, suite, arch) + '</li>\n'
     elif status not in ('untested', 'blacklisted') and not args.ignore_missing_files:
-        log.critical(REPRODUCIBLE_URL  + '/' + suite + '/' + arch + '/' + package +
+        log.critical(DEBIAN_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even though it has been built.')
     default_view = '/untested.html' if not default_view else default_view
     return (links, default_view)
@@ -283,7 +283,7 @@ def gen_packages_html(packages, no_clean=False):
                     project_links=project_links,
                     default_view=default_view)
                 destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
-                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
+                desturl = DEBIAN_URL + RB_PKG_URI + '/' + suite + \
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible build results'
                 write_html_page(title=title, body=html, destfile=destfile,

@@ -51,7 +51,7 @@ def generate_schedule(arch):
         html += '</code></td><td>'+convert_into_status_html(str(row[4]))+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
     html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_scheduled.html'
-    desturl = REPRODUCIBLE_URL + '/index_' + arch + '_scheduled.html'
+    desturl = DEBIAN_URL + '/index_' + arch + '_scheduled.html'
     write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60)
     log.info("Page generated at " + desturl)
 
@@ -121,7 +121,7 @@ def generate_oldies(arch):
             html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + row[4] + '</td></tr>\n'
         html += '</table></p>\n'
     destfile = BASE + '/index_' + arch + '_oldies.html'
-    desturl = REPRODUCIBLE_URL + '/index_' + arch + '_oldies.html'
+    desturl = DEBIAN_URL + '/index_' + arch + '_oldies.html'
     write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60)
     log.info("Page generated at " + desturl)
 

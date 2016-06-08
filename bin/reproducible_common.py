@@ -70,6 +70,7 @@ HISTORY_PATH = BASE + HISTORY_URI
 BUILDINFO_PATH = BASE + BUILDINFO_URI
 
 REPRODUCIBLE_URL = 'https://tests.reproducible-builds.org'
+DEBIAN_URL = 'https://tests.reproducible-builds.org/debian'
 JENKINS_URL = 'https://jenkins.debian.net'
 
 parser = argparse.ArgumentParser()
@@ -120,6 +121,7 @@ log.debug("REPRODUCIBLE_DB:\t" + REPRODUCIBLE_DB)
 log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
 log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
 log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
+log.debug("DEBIAN_URL:\t" + DEBIAN_URL)
 
 if args.ignore_missing_files:
     log.warning("Missing files will be ignored!")
@@ -224,7 +226,7 @@ html_head_page = Template((tab*2).join(("""
     </ul></li>
   </ul>
 $project_links
-</header><div class="mainbody">""" % REPRODUCIBLE_URL ).splitlines(True)))
+</header><div class="mainbody">""" % DEBIAN_URL ).splitlines(True)))
 
 html_foot_page_style_note = Template((tab*2).join("""
 <p style="font-size:0.9em;">
@@ -271,10 +273,10 @@ filter_query = ''
 for issue in filtered_issues:
     if filter_query == '':
         filter_query = 'n.issues LIKE "%' + issue + '%"'
-        filter_html = '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+        filter_html = '<a href="' + DEBIAN_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
     else:
         filter_query += ' OR n.issues LIKE "%' + issue + '%"'
-        filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
+        filter_html += ' or <a href="' + DEBIAN_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
 
 
 @atexit.register

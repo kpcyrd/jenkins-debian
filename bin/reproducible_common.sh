@@ -36,6 +36,7 @@ fi
 
 # common variables
 REPRODUCIBLE_URL=https://tests.reproducible-builds.org
+DEBIAN_URL=https://tests.reproducible-builds.org/debian
 REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
@@ -565,7 +566,7 @@ publish_page() {
 	fi
 	cp $PAGE $BASE/$TARGET
 	rm $PAGE
-	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
+	echo "Enjoy $DEBIAN_URL/$TARGET"
 }
 
 link_packages() {

@@ -263,7 +263,7 @@ def gen_html_issue(issue, suite):
         if suite_links != '':
             suite_links += ' / '
         if i != suite:
-            suite_links += '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/' + i + '/' + issue + '_issue.html">' + i + '</a>'
+            suite_links += '<a href="' + DEBIAN_URL + ISSUES_URI + '/' + i + '/' + issue + '_issue.html">' + i + '</a>'
         else:
             suite_links += '<em>' + i + '</em>'
     # check for url:
@@ -361,7 +361,7 @@ def iterate_over_notes(notes):
         write_html_page(title=title, body=html, destfile=destfile,
                         noheader=True)
 
-        desturl = REPRODUCIBLE_URL + NOTES_URI + '/' + package + '_note.html'
+        desturl = DEBIAN_URL + NOTES_URI + '/' + package + '_note.html'
         log.debug("Note created: " + desturl)
         i = i + 1
     log.info('Created ' + str(i) + ' note pages.')
@@ -381,7 +381,7 @@ def iterate_over_issues(issues):
             write_html_page(title=title, body=html, destfile=destfile,
                             style_note=True)
 
-            desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + suite + '/' + issue + '_issue.html'
+            desturl = DEBIAN_URL + ISSUES_URI + '/' + suite + '/' + issue + '_issue.html'
             log.debug("Issue created: " + desturl)
             i = i + 1
         log.info('Created ' + str(i) + ' issue pages for ' + suite)
@@ -418,7 +418,7 @@ def index_issues(issues):
     html += tab*2 + '<p>' + NOTESGIT_DESCRIPTION + '</p>'
     title = 'Known issues related to reproducible builds'
     destfile = BASE + '/index_issues.html'
-    desturl = REPRODUCIBLE_URL + '/index_issues.html'
+    desturl = DEBIAN_URL + '/index_issues.html'
     write_html_page(title=title, body=html, destfile=destfile)
     log.info('Issues index now available at ' + desturl)
 

@@ -43,7 +43,7 @@ handle_race_condition() {
 save_artifacts() {
 		local random=$(head /dev/urandom | tr -cd '[:alnum:]'| head -c5)
 		local ARTIFACTS="artifacts/r00t-me/${SRCPACKAGE}_${SUITE}_tmp-${random}"
-		local URL="$REPRODUCIBLE_URL/$ARTIFACTS/"
+		local URL="$DEBIAN_URL/$ARTIFACTS/"
 		local HEADER="$BASE/$ARTIFACTS/.HEADER.html"
 		mkdir -p $BASE/$ARTIFACTS
 		cp -r $TMPDIR/* $BASE/$ARTIFACTS/

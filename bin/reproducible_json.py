@@ -119,5 +119,5 @@ with open(tmpfile, 'w') as fd:
 os.rename(tmpfile, REPRODUCIBLE_TRACKER_JSON)
 os.chmod(REPRODUCIBLE_TRACKER_JSON, 0o644)
 
-log.info(REPRODUCIBLE_URL + '/reproducible.json and /reproducible-tracker.json have been updated.')
+log.info(DEBIAN_URL + '/reproducible.json and /reproducible-tracker.json have been updated.')
 

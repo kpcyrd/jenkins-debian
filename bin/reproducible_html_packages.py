@@ -188,7 +188,7 @@ def gen_suites_links(package, current_suite, current_arch):
             if ( s == current_suite and a == current_arch ):
                 html += (tab*2 + ' {}').format(version)
             else:
-                html += (tab*2 + ' <a href="/debian/{}/{}/{}/{}.html" target="_parent"' + \
+                html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
                      ' title="{}: {}{}">{}</a>').format(RB_PKG_URI,
                      s, a, package.name, spokenstatus, version, build_date, version)
             html += ' in <a href="/debian/{}/{}/" target="_parent">{}</a>\n'.format(s, a, s)

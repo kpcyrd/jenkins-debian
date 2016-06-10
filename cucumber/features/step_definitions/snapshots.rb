@@ -31,7 +31,7 @@ def checkpoints
 
     ['minimal', 'non-GUI', 'Gnome', 'XFCE', 'LXDE', 'KDE'].each do |de|
       cp["debian-#{m}-#{de}-install"] = {
-          #:temporary => 'XFCE' != de,
+          :temporary => 'XFCE' != de,
           :description => "I install a #{de} Debian system, in #{m} mode",
           :parent_checkpoint => "boot-d-i-#{m}-to-tasksel",
           :steps => [

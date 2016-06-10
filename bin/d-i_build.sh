@@ -79,6 +79,18 @@ pdebuild_package() {
 	sudo dcmd rm /var/cache/pbuilder/result/${SOURCE}_*changes
 }
 
+preserve_pu_udebs() {
+    #
+    # Check is we're in a pu/* branch
+    #
+    expr "$GIT_BRANCH" : 'origin/pu/' >/dev/null || return 0
+
+    BRANCH_DIR="/srv/udebs/${GIT_BRANCH#origin/pu/}"
+    mkdir -p $PU_BRANCH_DIR
+
+    cp $WORKSPACE/../*.udeb $PU_BRANCH_DIR
+}
+
 clean_workspace
 #
 # if $1 is not given, build the package normally,
@@ -86,6 +98,7 @@ clean_workspace
 #
 if [ "$1" = "" ] ; then
 	pdebuild_package
+    preserve_pu_udebs
 else
 	echo do something else ; exit 1
 fi

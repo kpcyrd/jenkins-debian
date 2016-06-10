@@ -15,7 +15,6 @@ class VMNet
     rexml = REXML::Document.new(net_xml)
     rexml.elements['network'].add_element('name')
     rexml.elements['network/name'].text = @net_name
-    # PGH
     begin
       old_net = @virt.lookup_network_by_name(@net_name)
       rexml.elements['network'].add_element('uuid')
@@ -81,7 +80,6 @@ class VM
     rexml = REXML::Document.new(default_domain_xml)
     rexml.elements['domain'].add_element('name')
     rexml.elements['domain/name'].text = @domain_name
-    # PGH
     begin
       old_domain = @virt.lookup_domain_by_name(LIBVIRT_DOMAIN_NAME)
       rexml.elements['domain'].add_element('uuid')

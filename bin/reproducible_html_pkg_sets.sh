@@ -105,12 +105,14 @@ create_pkg_sets_navigation() {
 		else
 			CLASS=""
 		fi
+
 		if [ -f $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[6]}_${META_PKGSET[$i]}.png ] ; then
 			THUMB="${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png"
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
 			write_page "<li>"
 			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"$CLASS>${META_PKGSET[$i]}</a>"
-			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/userContent/$SUITE/$ARCH/$THUMB\" class=\"setview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
+			write_page "<span>img</span>"
+			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/debian/$SUITE/$ARCH/$THUMB\" class=\"setview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
 			write_page "</li>"
 		fi
 	done
@@ -154,7 +156,7 @@ create_pkg_sets_pages() {
 				convert $DEBIAN_BASE/$SUITE/$ARCH/$PNG -adaptive-resize 160x80 $DEBIAN_BASE/$SUITE/$ARCH/$THUMB
 			fi
 			LABEL="package set '${META_PKGSET[$j]}' in $SUITE/$ARCH"
-			write_page "<p><a href=\"/debian/$SUITE/$ARCH/$PNG\"><img src=\"/userContent/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
+			write_page "<p><a href=\"/debian/$SUITE/$ARCH/$PNG\"><img src=\"/debian/$SUITE/$ARCH/$PNG\" class=\"overview\" alt=\"$LABEL\"></a>"
 			write_page "<br />The package set '${META_PKGSET[$i]}' in $SUITE/$ARCH consists of:"
 			write_page "      (this set on "
 			for LINKARCH in ${ARCHS} ; do

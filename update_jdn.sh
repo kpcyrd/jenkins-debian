@@ -227,7 +227,6 @@ if [ -f /etc/debian_version ] ; then
 				kgb-client
 				m4
 				make
-				mock
 				python3-yaml
 				subversion
 				sysvinit-core
@@ -314,7 +313,6 @@ if [ -f /etc/debian_version ] ; then
 				libvpx1 
 				libxslt1-dev 
 				linux-image-amd64
-				mock
 				moreutils 
 				mr 
 				mtr-tiny 
@@ -367,6 +365,10 @@ if [ -f /etc/debian_version ] ; then
 		sudo apt-get install -t jessie-backports \
 				pbuilder lintian || echo "this should only fail on the first install"
 		#		botch
+		# we need mock from bpo to build current fedora
+		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
+			sudo apt-get install -t jessie-backports mock
+		fi
 		# for varying kernels
 		# we use bpo kernels on pb-build5+6 (and i386 kernel on pb-build2-i386)
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ]; then
@@ -381,19 +383,6 @@ if [ -f /etc/debian_version ] ; then
 		explain "packages installed."
 	else
 		explain "no new packages to be installed."
-	fi
-fi
-
-#
-# prepare mock to build rpms
-#
-if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
-	if ! grep mock /etc/group ; then
-		# these 4 commands are obsolete with mock 1.2.3-1 (=stretch)
-		sudo groupadd --system mock
-		sudo usermod -a -G mock jenkins
-		sudo chgrp mock /var/lib/mock/ /var/cache/mock/
-		sudo chmod 2775 /var/lib/mock/ /var/cache/mock/
 	fi
 fi
 

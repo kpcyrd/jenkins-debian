@@ -263,7 +263,7 @@ write_page_header() {
 				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$ARCH" ] ; then
 					CLASS=" class=\"active\""
 				fi
-				write_page " <a href=\"debian/$SUITE/index_suite_${i}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
+				write_page " <a href=\"/debian/$SUITE/index_suite_${i}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
 				CLASS=""
 			done
 			write_page "</li>"
@@ -273,7 +273,7 @@ write_page_header() {
 				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$SUITE" ] ; then
 					CLASS=" class=\"active\""
 				fi
-				write_page " <a href=\"debian/$i/index_suite_${ARCH}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
+				write_page " <a href=\"/debian/$i/index_suite_${ARCH}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
 				CLASS=""
 			done
 			write_page "</li>"

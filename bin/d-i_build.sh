@@ -85,7 +85,7 @@ preserve_pu_udebs() {
     #
     expr "$GIT_BRANCH" : 'origin/pu/' >/dev/null || return 0
 
-    BRANCH_DIR="/srv/udebs/${GIT_BRANCH#origin/pu/}"
+    PU_BRANCH_DIR="/srv/udebs/${GIT_BRANCH#origin/pu/}"
     mkdir -p $PU_BRANCH_DIR
 
     cp $WORKSPACE/../*.udeb $PU_BRANCH_DIR

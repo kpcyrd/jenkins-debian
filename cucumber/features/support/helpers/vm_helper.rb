@@ -15,8 +15,15 @@ class VMNet
     rexml = REXML::Document.new(net_xml)
     rexml.elements['network'].add_element('name')
     rexml.elements['network/name'].text = @net_name
-    rexml.elements['network'].add_element('uuid')
-    rexml.elements['network/uuid'].text = LIBVIRT_NETWORK_UUID
+    # PGH
+    begin
+      old_net = @virt.lookup_network_by_name(@net_name)
+      rexml.elements['network'].add_element('uuid')
+      rexml.elements['network/uuid'].text = old_net.uuid
+      old_net.undefine
+    rescue
+    end
+    update(rexml.to_s)
     update(rexml.to_s)
   rescue Exception => e
     destroy_and_undefine

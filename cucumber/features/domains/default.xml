@@ -33,7 +33,7 @@
     <controller type='virtio-serial' index='0'/>
     <interface type='network'>
       <!-- <mac address='52:54:00:ac:dd:ee'/> -->
-      <source network='DebianToasterNet'/>
+      <source network='lvcNET'/>
       <model type='virtio'/>
       <link state='up'/>
     </interface>

@@ -31,7 +31,7 @@
       - email:
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org, phil@hands.com'
       - archive:
-          artifacts: '{my_pngs}, results/*.mkv, results/*.log'
+          artifacts: '{my_pngs}, results/*.mpg, results/*.log'
           latest-only: false
       - image-gallery:
           - title: '{my_title}'

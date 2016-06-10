@@ -177,7 +177,7 @@ end
 Before('@product') do |scenario|
   $failure_artifacts = Array.new
   if $config["CAPTURE"]
-    video_name = sanitize_filename("#{scenario.name}.mkv")
+    video_name = sanitize_filename("#{scenario.name}.mpg")
     @video_path = "#{ARTIFACTS_DIR}/#{video_name}"
     capture = IO.popen(['avconv',
                         '-f', 'x11grab',

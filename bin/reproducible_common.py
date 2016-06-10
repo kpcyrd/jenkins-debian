@@ -174,56 +174,56 @@ html_head_page = Template((tab*2).join(("""
   <ul class=\"menu\">
     <li>$suite/$arch:<ul class="children">
      <li>Notes:<ul class="children">
-      <li><a href="debian/$suite/$arch/index_notes.html">packages with notes</a></li>
-      <li><a href="debian/$suite/$arch/index_no_notes.html">packages without notes</a></li>
+      <li><a href="/debian/$suite/$arch/index_notes.html">packages with notes</a></li>
+      <li><a href="/debian/$suite/$arch/index_no_notes.html">packages without notes</a></li>
      </ul></li>
      <li>Package states:<ul class="children">
       <li>
-        <a href="debian/$suite/$arch/index_reproducible.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_reproducible.html" target="_parent">
           <img src="/static/weather-clear.png" alt="reproducible icon" />
         </a>
-        <a href="debian/$suite/$arch/index_FTBR.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_FTBR.html" target="_parent">
           <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
         </a>
-        <a href="debian/$suite/$arch/index_FTBFS.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_FTBFS.html" target="_parent">
           <img src="/static/weather-storm.png" alt="FTBFS icon" />
         </a>
-        <a href="debian/$suite/$arch/index_depwait.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_depwait.html" target="_parent">
           <img src="/static/weather-snow.png" alt="depwait icon" />
         </a>
-        <a href="debian/$suite/$arch/index_not_for_us.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_not_for_us.html" target="_parent">
           <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
         </a>
-        <a href="debian/$suite/$arch/index_404.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_404.html" target="_parent">
           <img src="/static/weather-severe-alert.png" alt="404 icon" />
         </a>
-        <a href="debian/$suite/$arch/index_blacklisted.html" target="_parent">
+        <a href="/debian/$suite/$arch/index_blacklisted.html" target="_parent">
           <img src="/static/error.png" alt="blacklisted icon" />
         </a>
       </li>
      </ul></li>
      $link_pkgsets
      <li>Recently tested:<ul class="children">
-      <li><a href="debian/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
-      <li><a href="debian/$suite/$arch/index_last_48h.html">packages tested in the last 48h</a></li>
+      <li><a href="/debian/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
+      <li><a href="/debian/$suite/$arch/index_last_48h.html">packages tested in the last 48h</a></li>
      </ul></li>
-    <li><a href="debian/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
+    <li><a href="/debian/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
     </ul></li>
     <li>Architectures:<ul class="children">
      $link_archs
-     <li><a href="debian/index_${arch}_scheduled.html">currently scheduled</a></li>
+     <li><a href="/debian/index_${arch}_scheduled.html">currently scheduled</a></li>
     </ul></li>
     <li>Suites:<ul class="children">
      $link_suites
-     <li><a href="debian/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
+     <li><a href="/debian/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
     </ul></li>
     <li><a href="%s">Debian dashboard</a>
     <ul class="children">
-     <li><a href="debian/index_issues.html">issues</a></li>
-     <li><a href="debian/index_repositories.html">repositories overview</a></li>
-     <li><a href="debian/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
-     <li><a href="debian/index_performance.html">performance stats</a></li>
-     <li><a href="debian/index_variations.html">variations tested</a></li>
+     <li><a href="/debian/index_issues.html">issues</a></li>
+     <li><a href="/debian/index_repositories.html">repositories overview</a></li>
+     <li><a href="/debian/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
+     <li><a href="/debian/index_performance.html">performance stats</a></li>
+     <li><a href="/debian/index_variations.html">variations tested</a></li>
     </ul></li>
   </ul>
 $project_links

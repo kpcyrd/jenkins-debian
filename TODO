@@ -108,8 +108,6 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ==== General website
 * btw, www.reproducible-builds.org is 404…
 
-* move /* to /debian/*
-* use redirects to keep old URLs working
 * install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
 ** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
 

@@ -98,7 +98,7 @@ clean_workspace
 #
 if [ "$1" = "" ] ; then
 	pdebuild_package
-    preserve_pu_udebs
+	preserve_pu_udebs
 else
 	echo do something else ; exit 1
 fi

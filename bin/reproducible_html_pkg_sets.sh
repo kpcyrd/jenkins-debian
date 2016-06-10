@@ -111,7 +111,6 @@ create_pkg_sets_navigation() {
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
 			write_page "<li>"
 			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"$CLASS>${META_PKGSET[$i]}</a>"
-			write_page "<span>img</span>"
 			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"><img src=\"/debian/$SUITE/$ARCH/$THUMB\" class=\"setview\" alt=\"$LABEL\" title=\"${META_PKGSET[$i]}\" name=\"${META_PKGSET[$i]}\"></a>"
 			write_page "</li>"
 		fi

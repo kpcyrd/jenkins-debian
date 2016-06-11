@@ -130,7 +130,6 @@ nobootloader
 oldsys-preseed
 os-prober
 partconf
-partitioner
 partman-auto-crypto
 partman-auto-lvm
 partman-auto-raid

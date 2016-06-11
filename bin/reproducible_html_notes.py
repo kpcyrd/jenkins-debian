@@ -405,7 +405,7 @@ def index_issues(issues, scorefuncs):
     for issue in sorted(issues, key=lambda issue: sort_issues(firstscorefunc, issue)):
         html += tab*3 + '<tr>\n'
         html += tab*4 + '<td><a href="' + ISSUES_URI + '/' + defaultsuite + \
-                '/'+ issue + '_issue.html">' + issue + '</a></td>\n'
+                '/'+ issue + '_issue.html">' + issue.replace("_", " ") + '</a></td>\n'
         issues_list = issues_count.get(issue, [])
         for scorefunc in scorefuncs.values():
             html += tab*4 + '<td><b>' + str(scorefunc(issues_list)) + '</b></td>\n'

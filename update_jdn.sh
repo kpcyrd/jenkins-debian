@@ -326,6 +326,7 @@ if [ -f /etc/debian_version ] ; then
 				poxml 
 				procmail 
 				python3-debian 
+				python3-xdg
 				python3-yaml 
 				python-arpy 
 				python-hachoir-metadata 

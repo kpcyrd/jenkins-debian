@@ -74,7 +74,7 @@ update_if_similar() {
 			LENGTH=$(cat $TARGET | wc -w)
 			NEWLEN=$(cat $TMPFILE | wc -w)
 			PERCENT=$(echo "$LENGTH*100/$NEWLEN"|bc)
-			if [ $PERCENT -gt 107 ] || [ $PERCENT -lt 93 ] ; then
+			if [ $PERCENT -gt 110 ] || [ $PERCENT -lt 90 ] ; then
 				mv $TMPFILE $TARGET.new
 				echo
 				echo "Warning: too much difference for $TARGET, aborting. Please investigate and update manually:"

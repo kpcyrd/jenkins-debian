@@ -410,7 +410,9 @@ def index_issues(issues, scorefuncs):
         for scorefunc in scorefuncs.values():
             html += tab*4 + '<td><b>' + str(scorefunc(issues_list)) + '</b></td>\n'
         html += tab*4 + '<td>\n'
-        issues_with_popcon = sorted(popcon.package(*issues_list).items(), key=lambda p: p[0])
+        popcon_dict = dict((p, 0) for p in issues_list)
+        popcon_dict.update(popcon.package(*issues_list))
+        issues_with_popcon = sorted(popcon_dict.items(), key=lambda p: p[0])
         issues_by_popcon = sorted(issues_with_popcon, key=lambda p: p[1], reverse=True)
         popular_packages = set([p[0] for p in issues_by_popcon[:int(len(issues_by_popcon)/4)]])
         issue_strings = [

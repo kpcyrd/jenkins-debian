@@ -83,6 +83,10 @@ a.package:visited, a.noted:visited {
 	padding: 0.25em
 }
 
+.package-popular {
+	text-decoration: underline;
+}
+
 .build-time {
 	font-size: 0.9em;
 }

@@ -379,7 +379,7 @@ if [ -f /etc/debian_version ] ; then
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			sudo apt-get install -t jessie-backports jenkins-job-builder || echo "this should only fail on the first install"
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			sudo apt-get install -t jessie-backports ffmpeg libav-tools jenkins-job-builder
+			sudo apt-get install -t jessie-backports ffmpeg libav-tools python3-popcon jenkins-job-builder
 		fi
 		explain "packages installed."
 	else

@@ -641,23 +641,32 @@ EOF
 	rm $TMPCFG
 }
 
-remote_build() {
-	local BUILDNR=$1
-	local NODE=$2
-	get_node_ssh_port $NODE
+check_node_is_up() {
+	local NODE=$1
+	local PORT=$2
+	local SLEEPTIME=$3
 	set +e
 	ssh -o "BatchMode = yes" -p $PORT $NODE /bin/true
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
-		# sleep 15min if this happens on the first node
-		# but 1h if this happens on the 2nd node
-		SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*15"|bc)
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		unregister_build
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
+	set -e
+}
+
+remote_build() {
+	local BUILDNR=$1
+	local NODE=$2
+	get_node_ssh_port $NODE
+	# sleep 15min if first node is down
+	# but 1h if the 2nd node is down
+	local SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*15"|bc)
+	check_node_is_up $NODE $PORT $SLEEPTIME
+	set +e
 	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
 	RESULT=$?
 	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)

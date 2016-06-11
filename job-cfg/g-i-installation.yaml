@@ -119,7 +119,6 @@
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}':
           my_title: '{my_distname} ({my_ver}) {my_profile}'
-          my_inst_url: 'http://ftp.skolelinux.org/cd-{my_ver}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
@@ -130,7 +129,6 @@
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
           my_title: '{my_distname} ({my_ver}) {my_profile} ({my_desktop})'
-          my_inst_url: 'http://ftp.skolelinux.org/cd-{my_ver}-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
           my_trigger: ''
           my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
@@ -227,6 +225,7 @@
             - debian-edu:
                 my_distname: 'Debian Edu'
           my_ver: stretch
+          my_inst_url: 'http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_profile:
             - minimal:      { my_time: '23 20 * * 3' }
             - standalone:   { my_time: '42 20 * * 3' }
@@ -238,6 +237,7 @@
             - debian-edu:
                 my_distname: 'Debian Edu'
           my_ver: stretch
+          my_inst_url: 'http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_profile: standalone
           my_desktop:
             - gnome:    { my_time: '42 18 * * 3' }

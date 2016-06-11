@@ -180,9 +180,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		echo "Rescheduling packages: "
 		REQUESTER="jenkins maintenance job"
 		REASON="maintenance reschedule: reschedule builds which failed due to network errors"
-		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
-			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
-				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1) ; do echo "$PKG" ; done)
+		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
+			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f10 | sort -u) ; do
+				CANDIDATES=$(for PKG in $(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f11 | cut -d "_" -f1) ; do echo "$PKG" ; done)
 				# double check those builds actually failed
 				TO_SCHEDULE=""
 				for pkg in $CANDIDATES ; do
@@ -212,9 +212,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		echo "Rescheduling packages: "
 		REQUESTER="jenkins maintenance job"
 		REASON="maintenance reschedule: reschedule builds which failed due to diffoscope schroot errors"
-		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f8 | sort -u) ; do
-			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
-				CANDIDATES=$(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f10 | cut -d "_" -f1 | xargs)
+		for SUITE in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f9 | sort -u) ; do
+			for ARCH in $(echo $FAILED_BUILDS | sed "s# #\n#g" | cut -d "/" -f10 | sort -u) ; do
+				CANDIDATES=$(echo $FAILED_BUILDS | sed "s# #\n#g" | grep "/$SUITE/$ARCH/" | cut -d "/" -f11 | cut -d "_" -f1 | xargs)
 				if [ ! -z "$CANDIDATES" ]; then
 					schedule_packages $CANDIDATES
 				fi

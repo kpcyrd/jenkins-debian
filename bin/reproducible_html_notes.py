@@ -416,7 +416,7 @@ def index_issues(issues, scorefuncs):
         issues_by_popcon = sorted(issues_with_popcon, key=lambda p: p[1], reverse=True)
         popular_packages = set([p[0] for p in issues_by_popcon[:int(len(issues_by_popcon)/4)]])
         issue_strings = [
-            '<span %stitle="%s">%s</span>' % (
+            '<span %stitle="popcon score: %s">%s</span>' % (
                 'class="package-popular" ' if p[0] in popular_packages else '', p[1], p[0]
             ) for p in issues_with_popcon]
         html += tab*5 + ', '.join(issue_strings) + '\n'

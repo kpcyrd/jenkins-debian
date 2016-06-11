@@ -658,6 +658,14 @@ check_node_is_up() {
 	set -e
 }
 
+check_nodes_are_up() {
+	local SLEEPTIME=30
+	get_node_ssh_port $NODE1
+	check_node_is_up $NODE1 $PORT $SLEEPTIME
+	get_node_ssh_port $NODE2
+	check_node_is_up $NODE2 $PORT $SLEEPTIME
+}
+
 remote_build() {
 	local BUILDNR=$1
 	local NODE=$2
@@ -805,6 +813,7 @@ fi
 #
 # main - only used in master-mode
 #
+check_nodes_are_up
 delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
 get_source_package

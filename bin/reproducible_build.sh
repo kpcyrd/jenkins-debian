@@ -54,7 +54,7 @@ save_artifacts() {
 		printf "$msg" | tee -a $BUILDLOG
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
-		echo "Package page: <a href=\"$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$REPRODUCIBLE_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
+		echo "Package page: <a href=\"$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
 		echo "</p>" >> $HEADER
 		chmod 644 $HEADER
 		echo | tee -a ${RBUILDLOG}
@@ -72,7 +72,7 @@ cleanup_all() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		save_artifacts
 	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
-		irc_message debian-reproducible "$REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
+		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "master" ] ; then
@@ -102,7 +102,7 @@ update_db_and_html() {
 	if [ "$SUITE" != "testing" ] ; then
 		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
-			MESSAGE="${REPRODUCIBLE_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
+			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			echo -e "\n$MESSAGE" | tee -a ${RBUILDLOG}
 			irc_message debian-reproducible "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to diffoscope problems
@@ -115,7 +115,7 @@ update_db_and_html() {
 		  [ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
 			# spool notifications and mail them once a day
 			mkdir -p /srv/reproducible-results/notification-emails
-			echo "$(date -u +'%Y-%m-%d %H:%M') $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
+			echo "$(date -u +'%Y-%m-%d %H:%M') $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
 		fi
 	fi
 	sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
@@ -129,7 +129,7 @@ update_db_and_html() {
 	sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	gen_package_html $SRCPACKAGE
 	echo
-	echo "$(date -u) - successfully updated the database and updated $REPRODUCIBLE_URL/rb-pkg/${SUITE}/${ARCH}/$SRCPACKAGE.html"
+	echo "$(date -u) - successfully updated the database and updated $DEBIAN_URL/rb-pkg/${SUITE}/${ARCH}/$SRCPACKAGE.html"
 	echo
 }
 
@@ -314,7 +314,7 @@ dbd_timeout() {
 	if [ ! -s ./${DBDREPORT} ] ; then
 		echo "$(date -u) - $DIFFOSCOPE produced no output and was killed after running into timeout after ${1}..." >> ${DBDREPORT}
 	else
-		msg="$msg, but there is still $REPRODUCIBLE_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
+		msg="$msg, but there is still $DEBIAN_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
 	SAVE_ARTIFACTS=1
 	NOTIFY="diffoscope"
@@ -381,19 +381,19 @@ call_diffoscope_on_buildinfo_files() {
 			handle_reproducible
 			;;
 		1)
-			handle_ftbr "$DIFFOSCOPE found issues, please check $REPRODUCIBLE_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
+			handle_ftbr "$DIFFOSCOPE found issues, please check $DEBIAN_URL/dbd/${SUITE}/${ARCH}/${DBDREPORT}"
 			;;
 		2)
 			SAVE_ARTIFACTS=1
 			NOTIFY="diffoscope"
-			handle_ftbr "$DIFFOSCOPE had trouble comparing the two builds. Please investigate $REPRODUCIBLE_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
+			handle_ftbr "$DIFFOSCOPE had trouble comparing the two builds. Please investigate $DEBIAN_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
 			dbd_timeout $TIMEOUT
 			;;
 		*)
 			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
-			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $REPRODUCIBLE_URL/$SUITE/$ARCH/$SRCPACKAGE"
+			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
 }

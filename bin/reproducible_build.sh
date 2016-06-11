@@ -644,7 +644,7 @@ EOF
 remote_build() {
 	local BUILDNR=$1
 	local NODE=$2
-	local PORT=$3
+	get_node_ssh_port $NODE
 	set +e
 	ssh -o "BatchMode = yes" -p $PORT $NODE /bin/true
 	RESULT=$?
@@ -701,8 +701,7 @@ check_buildinfo() {
 		echo "$(date -u) - The build environment varies according to the two .buildinfo files, probably due to mirror update. Doing the first build on $NODE1 again."
 		echo "============================================================================="
 		echo
-		get_node_ssh_port $NODE1
-		remote_build 1 $NODE1 $PORT
+		remote_build 1 $NODE1
 		grep-dctrl -s Installed-Build-Depends -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
 		set +e
 		diff $TMPFILE1 $TMPFILE2
@@ -719,8 +718,7 @@ check_buildinfo() {
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
-	get_node_ssh_port $NODE1
-	remote_build 1 $NODE1 $PORT
+	remote_build 1 $NODE1
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
 			# reschedule the package for later and quit the build without saving anything
@@ -729,8 +727,7 @@ build_rebuild() {
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 		# the first build did not FTBFS, try rebuild it.
-		get_node_ssh_port $NODE2
-		remote_build 2 $NODE2 $PORT
+		remote_build 2 $NODE2
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0

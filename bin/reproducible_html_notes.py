@@ -13,6 +13,7 @@
 import copy
 import popcon
 import yaml
+from collections import OrderedDict
 from math import sqrt
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
@@ -435,11 +436,11 @@ if __name__ == '__main__':
     issues = load_issues()
     iterate_over_notes(notes)
     iterate_over_issues(issues)
-    index_issues(issues, {
-        'Total popcon score': lambda l: sum(popcon.package(*l).values()),
-        'Total of sqrt(popcon score)': lambda l: sum(map(sqrt, popcon.package(*l).values())),
-        'Total number': len,
-    })
+    index_issues(issues, OrderedDict([
+        ('Total popcon score', lambda l: sum(popcon.package(*l).values())),
+        ('Total of sqrt(popcon score)', lambda l: int(sum(map(sqrt, popcon.package(*l).values())))),
+        ('Total number', len),
+    ]))
     purge_old_notes(notes)
     purge_old_issues(issues)
     gen_packages_html([Package(x) for x in notes])

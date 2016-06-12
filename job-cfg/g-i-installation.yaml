@@ -228,11 +228,11 @@
           my_verdesc: Stretch
           my_inst_url: 'http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
           my_profile:
-            - minimal:      { my_time: '23 20 * * 3' }
-            - standalone:   { my_time: '42 20 * * 3' }
+            - minimal:      { my_time: '23 20 * * 3,6' }
+            - standalone:   { my_time: '42 20 * * 3,6' }
             - workstation:  { my_time: '42 22 * * 3' }
             - combi-server: { my_time: '42 0 * * 3', my_disksize: 30 }
-            - main-server:  { my_time: '42 2 * * 3', my_disksize: 30 }
+            - main-server:  { my_time: '42 2 * * 3,6', my_disksize: 30 }
       - '{name}_{my_dist}_desktop_group':
           my_dist:
             - debian-edu:
@@ -244,7 +244,7 @@
           my_desktop:
             - gnome:    { my_time: '42 18 * * 3' }
             - lxde:     { my_time: '42 22 * * 3' }
-            - xfce:     { my_time: '42 2 * * 3' }
+            - xfce:     { my_time: '42 2 * * 3,6' }
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: sid_daily
@@ -273,7 +273,7 @@
             - jessie:
                 my_verdesc: jessie
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
-                my_time: '42 16 */7 * *'
+                my_time: '42 16 3,18 * *'
             - sid_daily:
                 my_verdesc: 'sid daily build CD'
                 my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
@@ -290,6 +290,7 @@
                 my_inst_url: 'http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
                 my_trigdesc: '<br />This job is only triggered manually.'
                 my_verdesc: jessie
+                my_time: '42 16 3,18 * *'
                 my_optdesc2: ' on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a>'
             - sid_daily:
                 my_inst_url: 'http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
@@ -317,11 +318,11 @@
                 my_verdesc: Jessie
                 my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu0-CD~final.iso
           my_profile:
-            - standalone:       { my_time: '42 1 */2 * *', my_disksize: 25,
+            - standalone:       { my_time: '42 1 4,18 * *', my_disksize: 25,
                                   my_title_extra: ' (Default)' }
-            - standalone_mate:  { my_time: '23 2 */2 * *', my_disksize: 25 }
-            - main-server:      { my_time: '23 3 * * *',   my_disksize: 40 }
-            - main+ltsp-server: { my_time: '42 0 * * *',   my_disksize: 60 }
+            - standalone_mate:  { my_time: '23 2 4,18 * *', my_disksize: 25 }
+            - main-server:      { my_time: '23 3 4,18 * *',   my_disksize: 40 }
+            - main+ltsp-server: { my_time: '42 0 4,18 * *',   my_disksize: 60 }
 
       - '{name}_debian_{my_ver}_presentation':
           my_ver:

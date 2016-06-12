@@ -47,6 +47,7 @@ done
 sleep 15
 echo "killing all ssh and sleep processes now. (press enter || ctrl-c)"
 read
+set +e
 killall ssh
 killall sleep
 killall -9 ssh

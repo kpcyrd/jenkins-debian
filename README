@@ -139,10 +139,10 @@ Installation tests inside chroot environments.
 
 ** These builds on remote nodes run on very different hardware: for 'amd64' and 'i386' we are using two virtual machines each, profitbricks-build(1+5)-amd64 and profitbricks-build(2+6)-i386, which have 18 or 17 cores and 48gb ram each and are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
 ** To test 'armhf' we are using 21 small boards donated by vagrant@d.o:
-*** five quad-cores (cbxi4a, cbxi4b, ff4a, odu3a and opi2c) with 4gb ram,
+*** five quad-cores (cbxi4a, cbxi4b, and ff4a) with 4gb ram,
 *** three octo-cores (odxu4, odxu4b and odxu4c) with 2gb ram,
-*** seven quad-cores (bbx15, wbq0, cbxi4pro0, ff2a, ff2b, opi2a and opi2b) with 2gb ram, 
-*** one dual-core (cb3a) with 2gb ram and,
+*** eight quad-cores (wbq0, cbxi4pro0, ff2a, ff2b, odu3a, opi2a, opi2b, and opi2c) with 2gb ram, 
+*** two dual-core (bbx15 and cb3a) with 2gb ram and,
 *** two quad-cores (rpi2b and rpi2c) with 1gb ram and
 *** three dual-cores (bpi0, hb0 and wbd0) with 1gb ram, each. 
 ** We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!

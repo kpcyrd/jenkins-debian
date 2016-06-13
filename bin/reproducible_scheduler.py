@@ -406,13 +406,13 @@ def query_old_ftbfs_versions(suite, arch, limit):
 
 
 def query_old_depwait_versions(suite, arch, limit):
-    criteria = 'status depwait, no bug filed, tested at least 3 days ago, ' + \
+    criteria = 'status depwait, no bug filed, tested at least 2 days ago, ' + \
                'no new version available, sorted by last build date'
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
-                AND r.build_date < datetime('now', '-3 days')
+                AND r.build_date < datetime('now', '-2 days')
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)

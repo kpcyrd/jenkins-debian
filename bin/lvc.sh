@@ -24,6 +24,11 @@ cleanup_all() {
 fetch_if_newer() {
         url="$2"
         file="$1"
+	if [ -f $url ] ; then
+		echo "the URL turns out to be a local path ($url) -- linking"
+		ln -sf $url $file
+		return
+        fi
         echo "Downloading $url"
         curlopts="-L -s -S"
         if [ -f "$file" ] ; then
@@ -91,7 +96,7 @@ elif [ ! -z "$IMAGE" ] ; then
         #
         fetch_if_newer "$IMAGE" "$URL"
         # is this really an .iso?
-        if [ $(file "$IMAGE" | grep -cE '(ISO 9660|DOS/MBR boot sector)') -eq 1 ] ; then
+        if [ $(file -L "$IMAGE" | grep -cE '(ISO 9660|DOS/MBR boot sector)') -eq 1 ] ; then
                 # yes, so let's md5sum and mount it
                 md5sum $IMAGE
 #                sudo mkdir -p $IMAGE_MNT

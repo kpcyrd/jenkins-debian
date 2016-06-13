@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -278,6 +278,10 @@ bootstrap_system() {
 			;;
 		debian-edu_*_xfce)
 			EXTRA_APPEND="$EXTRA_APPEND desktop=xfce"
+			GUITERMINAL=xterm
+			;;
+		debian-edu_*_mate)
+			EXTRA_APPEND="$EXTRA_APPEND desktop=mate"
 			GUITERMINAL=xterm
 			;;
 		debian-edu_*)

@@ -270,10 +270,12 @@ end
 Given /^I select the install mode$/ do
   boot_timeout = 60
 
-  on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png"], boot_timeout * PATIENCE)
+  on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], boot_timeout * PATIENCE)
   debug_log("debug: found '#{on_screen}' in the bootspash", :color => :blue)
-  if ("d-i_boot_text-default.png" == on_screen) == ("gui" == @ui_mode)
-    @screen.type(Sikuli::Key.DOWN) 
+  if "d-i_boot_miniiso.png" != on_screen
+    if ("d-i_boot_text-default.png" == on_screen) == ("gui" == @ui_mode)
+      @screen.type(Sikuli::Key.DOWN) 
+    end
   end
 
   #@screen.type(Sikuli::Key.TAB)

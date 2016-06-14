@@ -459,29 +459,33 @@ def package_has_notes(package):
         return False
 
 
-def link_package(package, suite, arch, bugs={}):
+def link_package(package, suite, arch, bugs={}, popcon=None, is_popular=None):
     url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + package + '.html'
     query = 'SELECT n.issues, n.bugs, n.comments ' + \
             'FROM notes AS n JOIN sources AS s ON s.id=n.package_id ' + \
             'WHERE s.name="{pkg}" AND s.suite="{suite}" ' + \
             'AND s.architecture="{arch}"'
+    css_classes = []
+    if is_popular:
+        css_classes += ["package-popular"]
+    title = ''
+    if popcon is not None:
+        title += 'popcon score: ' + str(popcon) + '\n'
     try:
         notes = query_db(query.format(pkg=package, suite=suite, arch=arch))[0]
     except IndexError:  # no notes for this package
-        html = '<a href="' + url + '" class="package">' + package  + '</a>'
+        css_classes += ["package"]
     else:
-        title = ''
+        css_classes += ["noted"]
         for issue in json.loads(notes[0]):
             title += issue + '\n'
         for bug in json.loads(notes[1]):
             title += '#' + str(bug) + '\n'
         if notes[2]:
             title += notes[2]
-        title = HTML.escape(title.strip())
-        html = '<a href="' + url + '" class="noted" title="' + title + \
-               '">' + package + '</a>'
-    finally:
-        html += get_trailing_icon(package, bugs) + '\n'
+    html = '<a href="' + url + '" class="' + ' '.join(css_classes) \
+         + '" title="' + HTML.escape(title.strip()) + '">' + package + '</a>' \
+         + get_trailing_icon(package, bugs) + '\n'
     return html
 
 

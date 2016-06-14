@@ -276,7 +276,8 @@ def gen_html_issue(issue, suite):
     try:
         arch = 'amd64'
         for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible', 'depwait']:
-            pkgs = [x[0] for x in all_pkgs if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
+            pkgs = [x[0] for x in all_pkgs
+                    if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
             if not pkgs:
                 continue
             affected += tab*4 + '<p>\n'
@@ -284,8 +285,9 @@ def gen_html_issue(issue, suite):
             affected += ' alt="' + status + ' icon" />\n'
             affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
             affected += tab*5 + '<code>\n'
-            for pkg in sorted(pkgs, key=lambda x: x in bugs):
-                affected += tab*6 + link_package(pkg, suite, arch, bugs)
+            pkgs_popcon = issues_popcon_annotate(pkgs)
+            for pkg, popcon, is_popular in sorted(pkgs_popcon, key=lambda x: x[0] in bugs):
+                affected += tab*6 + link_package(pkg, suite, arch, bugs, popcon, is_popular)
             affected += tab*5 + '</code>\n'
             affected += tab*4 + '</p>\n'
     except KeyError:    # The note is not listed in any package, that is
@@ -387,11 +389,24 @@ def iterate_over_issues(issues):
         log.info('Created ' + str(i) + ' issue pages for ' + suite)
 
 
+def issues_popcon_annotate(issues_list):
+    # outputs [(package, popcon, is_popular)] where is_popular True if it's
+    # in the upper 1/4 of issues_list, i.e. a relative measure
+    n = len(issues_list)
+    popcon_dict = dict((p, 0) for p in issues_list)
+    popcon_dict.update(popcon.package(*issues_list))
+    issues = sorted(popcon_dict.items(), key=lambda p: p[0])
+    issues_by_popcon = sorted(issues, key=lambda p: p[1], reverse=True)
+    issues_with_popcon = [(p[0], p[1], i<n/4) for i, p in enumerate(issues_by_popcon)]
+    return sorted(issues_with_popcon, key=lambda p: p[0])
+
+
 def sort_issues(scorefunc, issue):
     try:
         return (-scorefunc(issues_count[issue]), issue)
     except KeyError:    # there are no packages affected by this issue
         return (0, issue)
+
 
 def index_issues(issues, scorefuncs):
     firstscorefunc = next(iter(scorefuncs.values()))
@@ -410,14 +425,10 @@ def index_issues(issues, scorefuncs):
         for scorefunc in scorefuncs.values():
             html += tab*4 + '<td><b>' + str(scorefunc(issues_list)) + '</b></td>\n'
         html += tab*4 + '<td>\n'
-        popcon_dict = dict((p, 0) for p in issues_list)
-        popcon_dict.update(popcon.package(*issues_list))
-        issues_with_popcon = sorted(popcon_dict.items(), key=lambda p: p[0])
-        issues_by_popcon = sorted(issues_with_popcon, key=lambda p: p[1], reverse=True)
-        popular_packages = set([p[0] for p in issues_by_popcon[:int(len(issues_by_popcon)/4)]])
+        issues_with_popcon = issues_popcon_annotate(issues_list)
         issue_strings = [
             '<span %stitle="popcon score: %s">%s</span>' % (
-                'class="package-popular" ' if p[0] in popular_packages else '', p[1], p[0]
+                'class="package-popular" ' if p[2] else '', p[1], p[0]
             ) for p in issues_with_popcon]
         html += tab*5 + ', '.join(issue_strings) + '\n'
         html += tab*4 + '</td>\n'

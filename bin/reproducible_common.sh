@@ -565,9 +565,9 @@ publish_page() {
 	else
 		TARGET=$1/$PAGE
 	fi
-	cp $PAGE $DEBIAN_BASE/$TARGET
+	cp -v $PAGE $BASE/$TARGET
 	rm $PAGE
-	echo "Enjoy $DEBIAN_URL/$TARGET"
+	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
 }
 
 link_packages() {

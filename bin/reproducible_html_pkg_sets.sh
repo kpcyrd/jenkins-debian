@@ -131,7 +131,7 @@ create_pkg_sets_pages() {
 	write_page_header $VIEW "Package sets in $SUITE/$ARCH for Reproducible builds"
 	create_pkg_sets_navigation index
 	write_page_footer
-	publish_page $SUITE/$ARCH
+	publish_page debian/$SUITE/$ARCH
 	#
 	# create individual pages for all the sets
 	#
@@ -199,7 +199,7 @@ create_pkg_sets_pages() {
 			write_page_meta_sign
 		fi
 		write_page_footer
-		publish_page $SUITE/$ARCH
+		publish_page debian/$SUITE/$ARCH
 	done
 }
 

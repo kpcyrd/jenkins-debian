@@ -445,7 +445,7 @@ create_suite_arch_stats_page() {
 		write_meta_pkg_graphs_links
 	fi
 	write_page_footer
-	publish_page $SUITE
+	publish_page debian/$SUITE
 }
 
 write_meta_pkg_graphs_links () {
@@ -558,7 +558,7 @@ create_dashboard_page() {
 	# the end
 	write_page_footer
 	cp $PAGE $DEBIAN_BASE/reproducible.html
-	publish_page
+	publish_page debian
 }
 
 #
@@ -596,7 +596,7 @@ create_performance_page() {
 	done
 	write_page ".</p>"
 	write_page_footer
-	publish_page
+	publish_page debian
 }
 
 #
@@ -614,7 +614,7 @@ create_variations_page() {
 	write_page "<p style=\"clear:both;\">"
 	write_page "</p>"
 	write_page_footer
-	publish_page
+	publish_page debian
 }
 
 #

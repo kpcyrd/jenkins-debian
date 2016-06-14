@@ -238,7 +238,7 @@ write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version i
 cat $TABLE_DONE >> $PAGE
 write_page "</table></p>"
 write_page_footer
-publish_page
+publish_page debian
 echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt
 echo "$MODIFIED_IN_EXP" > /srv/reproducible-results/modified_in_exp.txt
 echo "$BINNMUS_NEEDED" > /srv/reproducible-results/binnmus_needed.txt

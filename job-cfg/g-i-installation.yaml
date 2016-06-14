@@ -313,10 +313,10 @@
                 my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
             - jessie-final-usb:
                 my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu0-USB~final.iso
+                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu0-USB.iso
             - jessie-final-netinst:
                 my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu0-CD~final.iso
+                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu0-CD.iso
           my_profile:
             - standalone:       { my_time: '42 1 4,18 * *', my_disksize: 25,
                                   my_title_extra: ' (Default)' }

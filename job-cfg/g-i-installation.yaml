@@ -322,7 +322,7 @@
                                   my_title_extra: ' (Default)' }
             - standalone_mate:  { my_time: '23 2 4,18 * *', my_disksize: 25 }
             - main-server:      { my_time: '23 3 4,18 * *',   my_disksize: 40 }
-            - main+ltsp-server: { my_time: '42 0 4,18 * *',   my_disksize: 60 }
+            - combi-server: { my_time: '42 0 4,18 * *',   my_disksize: 60 }
 
       - '{name}_debian_{my_ver}_presentation':
           my_ver:

@@ -415,7 +415,9 @@ def index_issues(issues, scorefuncs):
           + "".join(
             tab*3 + k + "\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n"
             for k in scorefuncs.keys()) \
-          + tab*3 + "Affected packages\n" + tab*2 + "</th>\n" + tab + "</tr>\n"
+          + tab*3 + "Affected packages<br/>\n" \
+          + tab*3 + "(the 1/4 most-popular are underlined)\n" \
+          + tab*2 + "</th>\n" + tab + "</tr>\n"
     html = (tab*2).join(templ.splitlines(True))
     for issue in sorted(issues, key=lambda issue: sort_issues(firstscorefunc, issue)):
         html += tab*3 + '<tr>\n'
@@ -457,9 +459,12 @@ if __name__ == '__main__':
     iterate_over_notes(notes)
     iterate_over_issues(issues)
     index_issues(issues, OrderedDict([
-        ('Total popcon score', lambda l: sum(popcon.package(*l).values())),
-        ('Total of sqrt(popcon score)', lambda l: int(sum(map(sqrt, popcon.package(*l).values())))),
-        ('Total number', len),
+        ("Sum of packages' popcon scores",
+         lambda l: sum(popcon.package(*l).values())),
+        ("Sum of square-roots of packages' popcon scores",
+         lambda l: int(sum(map(sqrt, popcon.package(*l).values())))),
+        ("Number of packages",
+         len),
     ]))
     purge_old_notes(notes)
     purge_old_issues(issues)

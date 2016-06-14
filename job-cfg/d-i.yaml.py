@@ -174,6 +174,18 @@ yaboot-installer
 zipl-installer
 """.split()
 
+jobs = [
+    '{name}_maintenance',
+    '{name}_check_jenkins_jobs',
+    {'{name}_manual': {
+        'trg': 'H/15 * * * *'}},
+    '{name}_manual_html_group',
+    '{name}_manual_pdf_group',
+    '{name}_manual_html_po2xml_group',
+    '{name}_manual_pdf_po2xml_group',
+    '{name}_build-group',
+    '{name}_pu-build-group',
+]
 
 def scm_svn(po, inc_regs=None):
     if inc_regs is None:
@@ -456,16 +468,7 @@ data.append(
             '<a href="https://anonscm.debian.org/git/qa/'
             'jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">'
             'd-i.yaml.py</a>.'),
-        'jobs': [
-            '{name}_maintenance',
-            '{name}_check_jenkins_jobs',
-            {'{name}_manual': {
-                'trg': 'H/15 * * * *'}},
-            '{name}_manual_html_group',
-            '{name}_manual_pdf_group',
-            '{name}_manual_html_po2xml_group',
-            '{name}_manual_pdf_po2xml_group',
-            '{name}_build-group',
-            '{name}_pu-build-group']}})
+        'jobs': jobs
+    }})
 
 sys.stdout.write(dump(data, Dumper=Dumper))

@@ -312,8 +312,13 @@ end
 
 Given /^I set the root password to "([^"]*)"$/ do |rootpw|
 # Root Password, twice
-  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
-  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword"),diui_png("MirrorCountry")], 30 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword"),diui_png("MirrorCountry")], 30 * PATIENCE)
+  if diui_png("MirrorCountry") == on_screen
+    step("I accept the default mirror")
+    on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
+    on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
+  end
   @screen.type(rootpw)
   if "gui" == @ui_mode
     @screen.type(Sikuli::Key.TAB)
@@ -372,13 +377,18 @@ Given /^I note that the Base system is being installed$/ do
 end
 
 Given /^I accept the default mirror$/ do
-  @screen.wait(diui_png("MirrorCountry"), 10 * 60 * PATIENCE)
-  @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("ArchiveMirror"), 5 * PATIENCE)
-  @screen.type(Sikuli::Key.ENTER)
-  @screen.wait(diui_png("HttpProxy"), 5 * PATIENCE)
-  @screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
-  #@screen.type(Sikuli::Key.ENTER)
+  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("MirrorCountry")], 5 * 60 * PATIENCE)
+  if diui_png("MirrorCountry") == on_screen
+    @screen.wait(diui_png("MirrorCountry"), 10 * 60 * PATIENCE)
+    @screen.type(Sikuli::Key.ENTER)
+    @screen.wait(diui_png("ArchiveMirror"), 5 * PATIENCE)
+    @screen.type(Sikuli::Key.ENTER)
+    @screen.wait(diui_png("HttpProxy"), 5 * PATIENCE)
+    @screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
+    #@screen.type(Sikuli::Key.ENTER)
+  else
+    step("I ignore Popcon")
+  end
 end
 
 Given /^I neglect to scan more CDs$/ do
@@ -396,19 +406,20 @@ Given /^I neglect to scan more CDs$/ do
 end
 
 Given /^I ignore Popcon$/ do
-  bad_mirror = diui_png("BadMirror")
-  on_screen, _ = @screen.waitAny([diui_png("popcon"), bad_mirror], 10 * 60)
-  if on_screen == bad_mirror
-    if "gui" == @ui_mode
-      @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
-    else
-      @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("ChooseSoftware")], 10 * 60)
+  if diui_png("ChooseSoftware") != on_screen
+    if on_screen == diui_png("BadMirror")
+      if "gui" == @ui_mode
+        @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
+      else
+        @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+      end
+      sleep(10)
+      raise "Failed to access the mirror (perhaps a duff proxy?)"
     end
-    sleep(10)
-    raise "Failed to access the mirror (perhaps a duff proxy?)"
+    @screen.type(Sikuli::Key.ENTER)
+    @screen.waitVanish(diui_png("popcon"), 10 * PATIENCE)
   end
-  @screen.type(Sikuli::Key.ENTER)
-  @screen.waitVanish(diui_png("popcon"), 10 * PATIENCE)
 end
 
 Given /^we reach the Tasksel prompt$/ do
@@ -537,7 +548,7 @@ Given /^I allow reboot after the install is complete$/ do
 end
 
 Given /^I wait for the reboot$/ do
-  @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png"], 10 * 60 * PATIENCE)
+  @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], 10 * 60 * PATIENCE)
 end
 
 Given /^I should see a ([a-zA-Z]*) Login prompt$/ do |style|

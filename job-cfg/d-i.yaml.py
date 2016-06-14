@@ -187,6 +187,10 @@ jobs = [
     '{name}_pu-build-group',
 ]
 
+if "jenkins-test-vm" == os.uname()[1]:
+    pkgs = [ 'debian-installer', 'preseed' ]
+    jobs = [ '{name}_build-group', '{name}_pu-build-group' ]
+
 def scm_svn(po, inc_regs=None):
     if inc_regs is None:
         inc_regs = [ os.path.join('/trunk/manual/',
@@ -459,6 +463,8 @@ data.append(
         'branch': 'origin/pu/**',
         'trg': 'H/10 * * * *',
         'pkg': pkgs}})
+
+
 
 data.append(
     {'project': {

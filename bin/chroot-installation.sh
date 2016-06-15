@@ -240,7 +240,14 @@ if [ "$2" != "" ] ; then
 				;;
 		qt4)		install_binary_packages qt4 qt4-x11 qtwebkit
 				;;
-		qt5)		install_binary_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qt3d-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtquick1-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator
+		qt5)		# qt5 is >=jessie…
+				if [ "$DISTRO" = "jessie" ] ; then
+					# only in jessie, removed for stretch
+					QT_EXTRA="qt3d-opensource-src qtquick1-opensource-src"
+				else
+					QT_EXTRA=""
+				fi
+				install_binary_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator $QT_EXTRA
 				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;

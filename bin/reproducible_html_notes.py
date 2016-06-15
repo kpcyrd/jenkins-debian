@@ -146,7 +146,8 @@ issue_html = Template((tab*3).join("""
   </tr>
   <tr>
     <td>
-      Packages in '$suite' known to be affected by this issue:
+      Packages in '$suite' known to be affected by this issue:<br />
+      (the 1/4 most-popular ones (within this issue) are underlined)
     </td>
     <td class="left">
 $affected_pkgs
@@ -416,7 +417,7 @@ def index_issues(issues, scorefuncs):
             tab*3 + k + "\n" + tab*2 + "</th>\n" + tab*2 + "<th>\n"
             for k in scorefuncs.keys()) \
           + tab*3 + "Affected packages<br/>\n" \
-          + tab*3 + "(the 1/4 most-popular are underlined)\n" \
+          + tab*3 + "(the 1/4 most-popular ones (within the issue) are underlined)\n" \
           + tab*2 + "</th>\n" + tab + "</tr>\n"
     html = (tab*2).join(templ.splitlines(True))
     for issue in sorted(issues, key=lambda issue: sort_issues(firstscorefunc, issue)):

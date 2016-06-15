@@ -243,7 +243,7 @@ if [ "$2" != "" ] ; then
 		qt5)		# qt5 is >=jessie…
 				if [ "$DISTRO" = "jessie" ] ; then
 					# only in jessie, removed for stretch
-					QT_EXTRA="qt3d-opensource-src qtquick1-opensource-src"
+					QT_EXTRA="qtquick1-opensource-src"
 				else
 					QT_EXTRA=""
 				fi

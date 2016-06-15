@@ -91,6 +91,21 @@ preserve_pu_udebs() {
     cp $WORKSPACE/../*.udeb $PU_BRANCH_DIR
 }
 
+preserve_miniiso() {
+    #
+    # check if we built the images
+    #
+    IMAGETAR=../debian-installer-images_*.tar.gz
+    [ -f $IMAGETAR ] || return 0
+
+    TARGETGTK=/srv/d-i/isos/mini-gtk.iso
+    TARGETTEXT=/srv/d-i/isos/mini-text.iso
+
+    tar -xvzf $IMAGETAR --no-anchored mini.iso
+    mv -f installer-*/*/images/netboot/gtk/mini.iso $TARGETGTK # FIXME should probably include the data and the ARCH in the name, and if in a pu/ branch that as well
+    #mv installer-*/*/images/netboot/mini.iso $TARGETTEXT
+}
+
 clean_workspace
 #
 # if $1 is not given, build the package normally,
@@ -99,6 +114,7 @@ clean_workspace
 if [ "$1" = "" ] ; then
 	pdebuild_package
 	preserve_pu_udebs
+	preserve_miniiso
 else
 	echo do something else ; exit 1
 fi

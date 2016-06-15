@@ -11,6 +11,22 @@ common_init "$@"
 # $1 = wget url/jigdo url
 URL=$1 ; shift
 
+replace_origin_pu() {
+    PREFIX=$1 ; shift
+    BRANCH=$1 ; shift
+    expr "$BRANCH" : 'origin/pu/' >/dev/null || return 1
+    echo "${PREFIX}${BRANCH#origin/pu/}"
+}
+
+# if $URL is set to something that looks like a pu git branch, try to find the matching .iso
+if PU_ISO="$(replace_origin_pu "/srv/d-i/isos/mini-gtk-" $URL).iso" ; then
+	[ -f $PU_ISO ] || {
+		echo "looks like we're meant to be testing '$PU_ISO', but it's missing"
+		exit 1
+		}
+	URL=$PU_ISO
+fi
+
 cleanup_all() {
         find . -name \*.vlog.png -print0 | xargs -0 -r rm
 	echo "Trying to preserve last screenshot…"

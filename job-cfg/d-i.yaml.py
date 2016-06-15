@@ -189,7 +189,17 @@ jobs = [
 
 if "jenkins-test-vm" == os.uname()[1]:
     pkgs = [ 'debian-installer', 'preseed' ]
-    jobs = [ '{name}_build-group', '{name}_pu-build-group' ]
+    jobs = [ '{name}_build-group', '{name}_pu-build-group']
+
+# add a special job for triggering from the pu/ branches
+jobs.append( {'{name}_{act}_{pkg}': {
+                'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
+                'branchdesc': 'master branch',
+                'branch': 'origin/master',
+                'act': 'pu-triggered',
+                'pkg': 'debian-installer',
+                'trg': None,
+             }} )
 
 def scm_svn(po, inc_regs=None):
     if inc_regs is None:
@@ -357,13 +367,40 @@ data.extend(
         'triggers': [{'pollscm': {'cron': '{trg}'}}],
         'scm': [{'git': {'url': '{gitrepo}',
                          'branches': ['{branch}']}}],
-        'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'}],
+        'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'},
+                     {'trigger-builds': [{'project': 'lvc_debian-miniiso',
+                      'current-parameters': 'true',
+                    }]}],
+        'project-type': 'freestyle',
+        'properties': prop(type='packages', priority=99),
+        'parameters': [{'string': {'name': 'PU_GIT_BRANCH',
+                                    'description': 'The git branch that triggered the build that reulted in this subsequent build'}}],
+        'logrotate': lr(90),
+        'publishers': publ(irc='debian-boot')}}])
+
+data.extend(
+    [{'defaults': {
+        'name': '{name}-pu-{act}',
+        'description': ('Builds debian packages in sid from git {branchdesc}, '
+                        'triggered by pushes to <pre>{gitrepo}</pre> '
+                        '{do_not_edit}'),
+        'triggers': [{'pollscm': {'cron': '{trg}'}}],
+        'scm': [{'git': {'url': '{gitrepo}',
+                         'branches': ['{branch}']}}],
+        'builders': [ {'shell': '/srv/jenkins/bin/d-i_build.sh'},
+                      {'trigger-builds': [{'project': 'd-i_pu-triggered_debian-installer',
+                       'current-parameters': 'true',
+                       'predefined-parameters': 'PU_GIT_BRANCH=$GIT_BRANCH'
+                       },
+                      ]}
+                    ],
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),
         'logrotate': lr(90),
         'publishers': publ(irc='debian-boot')}}])
 
 templs.append(jtmpl(act='{act}', target='{pkg}'))
+templs.append(jtmpl(act='pu-{act}', target='{pkg}'))
 data.extend(templs)
 
 data.append(
@@ -456,9 +493,9 @@ data.append(
 data.append(
     {'job-group': {
         'name': '{name}_pu-build-group',
-        'jobs': ['{name}_{act}_{pkg}'],
+        'jobs': ['{name}_pu-{act}_{pkg}'],
         'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
-        'act': 'pu-build',
+        'act': 'build',
         'branchdesc': 'pu/ branches',
         'branch': 'origin/pu/**',
         'trg': 'H/10 * * * *',

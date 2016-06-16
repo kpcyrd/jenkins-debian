@@ -7,6 +7,13 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+replace_origin_pu() {
+    PREFIX=$1 ; shift
+    BRANCH=$1 ; shift
+    expr "$BRANCH" : 'origin/pu/' >/dev/null || return 1
+    echo "${PREFIX}${BRANCH#origin/pu/}"
+}
+
 clean_workspace() {
 	#
 	# clean
@@ -71,6 +78,13 @@ pdebuild_package() {
 	else
 		NUM_CPU=1
 	fi
+	#
+	# if we got a valid PU_GIT_BRANCH passed in as a parameter from the triggering job
+	# then grab the generated udebs.  FIXME -- we need to work work out a way of cleaning up old branches
+	#
+	if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $PU_GIT_BRANCH) ; then
+		cp $PU_BRANCH_DIR/* build/localudebs
+	fi
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" -- --http-proxy $http_proxy
 	# cleanup
 	echo
@@ -83,12 +97,16 @@ preserve_pu_udebs() {
     #
     # Check is we're in a pu/* branch
     #
-    expr "$GIT_BRANCH" : 'origin/pu/' >/dev/null || return 0
+    if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
+        mkdir -p $PU_BRANCH_DIR
+        cp $WORKSPACE/../*.udeb $PU_BRANCH_DIR
+    fi
+}
 
-    PU_BRANCH_DIR="/srv/udebs/${GIT_BRANCH#origin/pu/}"
-    mkdir -p $PU_BRANCH_DIR
+iso_target() {
+    UI=$1 ; shift
 
-    cp $WORKSPACE/../*.udeb $PU_BRANCH_DIR
+    echo "/srv/d-i/isos/mini-${UI}$(replace_origin_pu "-" $PU_GIT_BRANCH).iso"
 }
 
 preserve_miniiso() {
@@ -98,12 +116,9 @@ preserve_miniiso() {
     IMAGETAR=../debian-installer-images_*.tar.gz
     [ -f $IMAGETAR ] || return 0
 
-    TARGETGTK=/srv/d-i/isos/mini-gtk.iso
-    TARGETTEXT=/srv/d-i/isos/mini-text.iso
-
     tar -xvzf $IMAGETAR --no-anchored mini.iso
-    mv -f installer-*/*/images/netboot/gtk/mini.iso $TARGETGTK # FIXME should probably include the data and the ARCH in the name, and if in a pu/ branch that as well
-    #mv installer-*/*/images/netboot/mini.iso $TARGETTEXT
+    mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
+    mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
 }
 
 clean_workspace

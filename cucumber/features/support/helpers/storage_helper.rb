@@ -17,7 +17,8 @@ class VMStorage
     @virt = virt
     @xml_path = xml_path
     pool_xml = REXML::Document.new(File.read("#{@xml_path}/storage_pool.xml"))
-    pool_name = pool_xml.elements['pool/name'].text
+    pool_name = LIBVIRT_DOMAIN_NAME
+    pool_xml.elements['pool/name'].text = pool_name
     @pool_path = "#{$config["TMPDIR"]}/#{pool_name}"
     begin
       @pool = @virt.lookup_storage_pool_by_name(pool_name)

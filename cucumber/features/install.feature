@@ -14,7 +14,7 @@ Feature: Doing variations on d-i installs
 #      | gui        | KDE       | KDE   |
       | gui        | minimal   | VT    |
       | gui        | XFCE      | XFCE  |
-      | text       | non-GUI   | VT    |
+#      | text       | non-GUI   | VT    |
 #      | gui        | Gnome Desktop | Gnome |
 
   @broken

@@ -1,0 +1,30 @@
+<ul>
+  {{#architectures}}
+  <li>
+    {{arch}}
+    <ul class="children">
+      {{#suites}}
+      <li class="{{li_classes}}">
+        {{^untested}}
+        <a href="/debian/{{arch}}/{{suite}}/index_{{status}}.html">
+          <img src="/static/{{icon}}" alt="{{spokenstatus}}" title="{{spokenstatus}}"/>
+        </a>
+        {{/untested}}
+        {{#untested}}
+        <img src="/static/{{icon}}" alt="{{spokenstatus}}" title="{{spokenstatus}}"/>
+        {{/untested}}
+        {{^current_suitearch}}
+        <a href="{{package_uri}}" target="_parent" title="{{spokenstatus}}: {{version}} on {{build_date}}">
+          {{version}}
+        </a> in <a href="/debian/{{suite}}/{{arch}}/" title="Go to: summary of all tests for {{arch}}/{{suite}}" target="_parent">{{suite}}</a>
+        {{/current_suitearch}}
+        {{#current_suitearch}}
+        {{version}} in <a href="/debian/{{suite}}/{{arch}}/" title="Go to: summary of all tests for {{arch}}/{{suite}}" target="_parent">{{suite}}</a>
+        {{/current_suitearch}}
+        {{{suitearch_details_html}}}
+      </li>
+      {{/suites}}
+    </ul>
+  </li>
+  {{/architectures}}
+</ul>

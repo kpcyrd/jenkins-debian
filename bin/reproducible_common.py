@@ -44,6 +44,7 @@ defaultarch = 'amd64'
 BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent/reproducible'
 DEBIAN_BASE = '/var/lib/jenkins/userContent/reproducible/debian'
+TEMPLATE_PATH = BIN_PATH + '/templates'
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'

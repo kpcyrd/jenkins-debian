@@ -10,48 +10,18 @@
 # Build rb-pkg pages (the pages that describe the package status)
 
 from reproducible_common import *
+import pystache
 
-html_package_page = Template((tab*2).join(("""
-<header class="head">
-    <h2 class="package-name">$package</h2>
-    <ul class="menu">
-        <li><ul class="children">
-          <li>$version <a href="debian/index_notify.html" target="_parent">
-            <span class="notification" title="Notifications for this package are enabled. Every reproducibility related status change will be emailed to the maintainers">$notify_maintainer</span></a></li>
-          <li>$suite/$arch </li>
-          <li>$status </li>
-          <li><span class="build-time">$build_time</span></li>
-          $links
-        </ul></li>
-        <li>
-            <a href="https://tracker.debian.org/$package">PTS</a>
-            <a href="https://bugs.debian.org/src:$package">BTS</a>
-        </li>
-        <li>
-            <a href="https://sources.debian.net/src/$package/$version/">sources</a>
-            <a href="https://sources.debian.net/src/$package/$version/debian">debian/</a>
-            <ul class="children">
-                <li><a href="https://sources.debian.net/src/$package/$version/debian/changelog">changelog</a></li>
-                <li><a href="https://sources.debian.net/src/$package/$version/debian/control">control</a></li>
-                <li><a href="https://sources.debian.net/src/$package/$version/debian/rules">rules</a></li>
-            </ul>
-        </li>
-        <li>
-          <a href="$history" target="main">Test history</a>
-        </li>
-${suites_links}
-     <li><a href="%s">Debian dashboard</a></li></ul>
-    </ul>
-${project_links}
-</header>
-
-<iframe id="main" name="main" tabindex="1" src="${default_view}">
-    <p>
-        Your browser does not support iframes.
-        Use a different one or follow the links above.
-    </p>
-</iframe>""" % DEBIAN_URL ).splitlines(True)))
-
+# Templates used for creating package pages
+renderer = pystache.Renderer();
+package_page_template = renderer.load_template(
+    TEMPLATE_PATH + '/package_page')
+suitearch_section_template = renderer.load_template(
+    TEMPLATE_PATH + '/package_suitearch_section')
+suitearch_details_template = renderer.load_template(
+    TEMPLATE_PATH + '/package_suitearch_details')
+status_icon_link_template = renderer.load_template(
+    TEMPLATE_PATH + '/status_icon_link')
 
 def sizeof_fmt(num):
     for unit in ['B','KB','MB','GB']:
@@ -65,37 +35,33 @@ def sizeof_fmt(num):
 
 
 def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
-    html = """
-        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{spokenstatus}">
-            <img src="/static/{icon}" alt="{spokenstatus}"></a>
+    context = {
+        'status': status,
+        'spokenstatus': spokenstatus,
+        'icon': icon,
+        'suite': suite,
+        'arch': arch,
+        'untested': True if status == 'untested' else False,
+    }
+    return renderer.render(status_icon_link_template, context)
 
-        <a href="/{suite}/{arch}/index_{status}.html" target="_parent" title="{spokenstatus}">
-            {spokenstatus}</a>
-    """
-
-    # There are no indices for untested packages
-    if status == 'untested':
-        html = '<img src="/static/{icon}" alt="{spokenstatus}"> {spokenstatus}'
-
-    return html.format(status=status, spokenstatus=spokenstatus, icon=icon, suite=suite, arch=arch)
-
-
-def link_buildlogs(package, eversion, suite, arch):
-    html = ''
+def get_buildlog_links_context(package, eversion, suite, arch):
     log = suite + '/' + arch + '/' + package + '_' + eversion + '.build2.log.gz'
     diff = suite + '/' + arch + '/' + package + '_' + eversion + '.diff.gz'
+
+    context = {}
     if os.access(LOGS_PATH+'/'+log, os.R_OK):
-        uri = LOGS_URI + '/' + log
-        size = sizeof_fmt(os.stat(LOGS_PATH+'/'+log).st_size)
-        html += '<a href="' + uri + '" target="main">build2 (' + size + ')</a>\n'
+        context['build2_uri'] = LOGS_URI + '/' + log
+        context['build2_size'] = sizeof_fmt(os.stat(LOGS_PATH+'/'+log).st_size)
+
     if os.access(DIFFS_PATH+'/'+diff, os.R_OK):
-        uri = DIFFS_URI + '/' + diff
-        html += '<a href="' + uri + '" target="main">diff</a>\n'
-    return html
+        context['diff_uri'] = DIFFS_URI + '/' + diff
+
+    return context
 
 
-def link_diffs(package, eversion, suite, arch, status):
-    html = ''
+def get_dbd_link_context(package, eversion, suite, arch, status):
+
     dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
           eversion + '.diffoscope.html'
     dbdtxt = DBDTXT_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
@@ -104,98 +70,132 @@ def link_diffs(package, eversion, suite, arch, status):
               eversion + '.diffoscope.html'
     dbdtxt_url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
                 eversion + '.diffoscope.txt'
+
+    context = {}
     if os.access(dbd, os.R_OK):
-        html += '<li><a href="' + dbd_url + '" target="main">differences</a>\n'
+        context['dbd_url'] = dbd_url
         if os.access(dbdtxt, os.R_OK):
-            html += '<a href="' + dbdtxt_url + '" target="main">(txt)</a>\n'
-        html += '</li>\n'
+            context['dbdtxt_url'] = dbdtxt_url
     else:
         if status == 'unreproducible' and not args.ignore_missing_files:
             log.critical(DEBIAN_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')
-    return html, dbd_url
+    return context, dbd_url
 
 
-def gen_extra_links(package, version, suite, arch, status):
+def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
+                          build_date):
     eversion = strip_epoch(version)
-    notes = NOTES_PATH + '/' + package + '_note.html'
-    buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
+    buildinfo_file = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
                 '_' + eversion + '_' + arch + '.buildinfo'
 
-    links = ''
+    context = {}
     default_view = ''
-    if os.access(notes, os.R_OK):
-        url = NOTES_URI + '/' + package + '_note.html'
-        links += '<li><a href="' + url + '" target="main">notes</a></li>\n'
-        default_view = url
-    dbd = link_diffs(package, eversion, suite, arch, status)
-    links += dbd[0] if dbd[0] else ''
-    if dbd[0] and not default_view:
-            default_view = dbd[1]
+
+    # Make notes the default default view
+    notes_file = NOTES_PATH + '/' + package + '_note.html'
+    notes_uri = NOTES_URI + '/' + package + '_note.html'
+    if os.access(notes_file, os.R_OK):
+        default_view = notes_uri
+
+    # Get summary context
+    context['status_html'] = gen_status_link_icon(status, spokenstatus, None,
+                                                  suite, arch)
+    context['build_date'] =  build_date
+
+    default_view = ''
+    # Get diffoscope differences context
+    dbd = get_dbd_link_context(package, eversion, suite, arch, status)
+    if dbd[0]:
+        context['dbd'] = dbd[0]
+        default_view = default_view if default_view else dbd[1]
+
+    # Get buildinfo context
     if pkg_has_buildinfo(package, version, suite, arch):
         url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
               '_' + eversion + '_' + arch + '.buildinfo'
-        links += '<li><a href="' + url + '" target="main">buildinfo</a></li>\n'
-        if not default_view:
-            default_view = url
+        context['buildinfo_uri'] = url
+        default_view = default_view if default_view else url
     elif not args.ignore_missing_files and status not in \
         ('untested', 'blacklisted', 'FTBFS', 'not for us', 'depwait', '404'):
-            log.critical('buildinfo not detected at ' + buildinfo)
+            log.critical('buildinfo not detected at ' + buildinfo_file)
+
+    # Get rbuild, build2 and build diffs context
     rbuild = pkg_has_rbuild(package, version, suite, arch)
     if rbuild:  # being a tuple (rbuild path, size), empty if non existant
         url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
               eversion + '.rbuild.log'  # apache ignores the trailing .gz
-        links +='<li><a href="' + url + '" target="main">rbuild (' + \
-                sizeof_fmt(rbuild[1]) + ')</a>\n'
-        if not default_view:
-            default_view = url
-        links += link_buildlogs(package, eversion, suite, arch) + '</li>\n'
-    elif status not in ('untested', 'blacklisted') and not args.ignore_missing_files:
+        context['rbuild_uri'] = url
+        context['rbuild_size'] = sizeof_fmt(rbuild[1])
+        default_view = default_view if default_view else url
+        context['buildlogs'] = get_buildlog_links_context(package, eversion,
+                                                          suite, arch)
+    elif status not in ('untested', 'blacklisted') and \
+         not args.ignore_missing_files:
         log.critical(DEBIAN_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even though it has been built.')
+
+    context['has_buildloginfo'] = 'buildinfo_uri' in context or \
+                                  'buildlogs' in context or \
+                                  'rbuild_uri' in context
+
     default_view = '/untested.html' if not default_view else default_view
-    return (links, default_view)
+    suitearch_details_html = renderer.render(suitearch_details_template, context)
+    return (suitearch_details_html, default_view)
 
-
-def gen_suites_links(package, current_suite, current_arch):
-    html = '<ul>\n'
+def gen_suitearch_section(package, current_suite, current_arch):
+    default_view = ''
+    context = {}
+    context['architectures'] = []
     for a in ARCHS:
-        html += tab + '<li>{}\n'.format(a)
-        html += tab + '<ul class="children">\n'
+
+        suites = []
         for s in SUITES:
+
             status = package.get_status(s, a)
             if not status:  # The package is not available in that suite/arch
                 continue
             version = package.get_tested_version(s, a)
+
             build_date = package.get_build_date(s, a)
             status, icon, spokenstatus = get_status_icon(status)
-            if build_date and status != 'blacklisted':
-                build_date = ' on ' + build_date
-            else:
+
+            if not (build_date and status != 'blacklisted'):
                 build_date = ''
+
             li_classes = ['suite']
             if s == current_suite and a == current_arch:
                 li_classes.append('active')
-            html += '<li class="' + ' '.join(li_classes) + '">\n' + tab
-            if ( s == current_suite and a == current_arch ) or status == 'untested':
-                prefix = ''
-                suffix = '\n'
-            else:
-                prefix = '<a href="/debian/{}/{}/index_{}.html">'.format(s, a, status)
-                suffix = '</a>\n'
-            icon_html = prefix + '<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>' + suffix
-            html += icon_html.format(icon=icon, status=status, spokenstatus=spokenstatus)
-            if ( s == current_suite and a == current_arch ):
-                html += (tab*2 + ' {}').format(version)
-            else:
-                html += (tab*2 + ' <a href="{}/{}/{}/{}.html" target="_parent"' + \
-                     ' title="{}: {}{}">{}</a>').format(RB_PKG_URI,
-                     s, a, package.name, spokenstatus, version, build_date, version)
-            html += ' in <a href="/debian/{}/{}/" target="_parent">{}</a>\n'.format(s, a, s)
-            html += '</li>\n'
-        html += tab + '</ul></li>'
-    html += '</ul>\n'
-    return tab*5 + (tab*7).join(html.splitlines(True))
+            package_uri = ('{}/{}/{}/{}.html').format(RB_PKG_URI, s, a, package.name)
+
+            suitearch_details_html = ''
+            if (s == current_suite and a == current_arch):
+                suitearch_details_html, default_view = gen_suitearch_details(
+                    package.name, version, s, a, status, spokenstatus, build_date)
+
+            suites.append({
+                'status': status,
+                'version': version,
+                'build_date': build_date,
+                'icon': icon,
+                'spokenstatus': spokenstatus,
+                'li_classes': ' '.join(li_classes),
+                'arch': a,
+                'suite': s,
+                'untested': status == 'untested',
+                'current_suitearch': s == current_suite and a == current_arch,
+                'package_uri': package_uri,
+                'suitearch_details_html': suitearch_details_html,
+            })
+
+        if len(suites):
+            context['architectures'].append({
+                'arch': a,
+                'suites': suites,
+            })
+
+    html = renderer.render(suitearch_section_template, context)
+    return html, default_view
 
 def shorten_if_debiannet(hostname):
     if hostname[-11:] == '.debian.net':
@@ -247,42 +247,45 @@ def gen_packages_html(packages, no_clean=False):
         assert isinstance(package, Package)
         gen_history_page(package)
         pkg = package.name
+
+        notes_uri = ''
+        notes_file = NOTES_PATH + '/' + pkg + '_note.html'
+        if os.access(notes_file, os.R_OK):
+            notes_uri = NOTES_URI + '/' + pkg + '_note.html'
+
         for suite in SUITES:
             for arch in ARCHS:
+
                 status = package.get_status(suite, arch)
                 version = package.get_tested_version(suite, arch)
                 build_date = package.get_build_date(suite, arch)
-                if build_date and status != 'blacklisted':
-                    build_date = 'at ' + build_date
-                else:
-                    build_date = ''
                 if status == False:  # the package is not in the checked suite
                     continue
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',
                           pkg, suite, arch, version, build_date)
 
-                links, default_view = gen_extra_links(
-                    pkg, version, suite, arch, status)
-                suites_links = gen_suites_links(package, suite, arch)
-                status, icon, spokenstatus = get_status_icon(status)
-                status = gen_status_link_icon(status, spokenstatus, icon, suite, arch)
+                suitearch_section_html, default_view = gen_suitearch_section(
+                    package, suite, arch)
+
                 history = '{}/{}.html'.format(HISTORY_URI, pkg)
                 project_links = html_project_links.substitute()
 
-                html = html_package_page.substitute(
-                    package=pkg,
-                    suite=suite,
-                    arch=arch,
-                    status=status,
-                    version=version,
-                    build_time=build_date,
-                    history=history,
-                    links=links,
-                    notify_maintainer=package.notify_maint,
-                    suites_links=suites_links,
-                    project_links=project_links,
-                    default_view=default_view)
-                destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + pkg + '.html'
+                html = renderer.render(package_page_template, {
+                    'package': pkg,
+                    'suite': suite,
+                    'arch': arch,
+                    'version': version,
+                    'history': history,
+                    'notes_uri': notes_uri,
+                    'notify_maintainer': package.notify_maint,
+                    'suitearch_section_html': suitearch_section_html,
+                    'project_links_html': project_links,
+                    'default_view': default_view,
+                    'dashboard_url': DEBIAN_URL,
+                })
+
+                destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + \
+                           pkg + '.html'
                 desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible build results'

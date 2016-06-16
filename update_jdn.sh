@@ -328,6 +328,7 @@ if [ -f /etc/debian_version ] ; then
 				python3-debian 
 				python3-xdg
 				python3-yaml 
+				python3-pystache
 				python-arpy 
 				python-hachoir-metadata 
 				python-imaging 

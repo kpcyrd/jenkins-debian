@@ -1,0 +1,44 @@
+<header class="head">
+  <h2 class="package-name">{{package}}</h2>
+  <ul class="menu">
+    <h3>Test Details
+      <a href="debian/index_notify.html" target="_parent">
+        <span class="notification" title="Notifications for this package are enabled. Every reproducibility related status change will be emailed to the maintainers">{{notify_maintainer}}</span>
+      </a>
+    </h3>
+    {{#notes_uri}}
+    <li><a href="{{notes_uri}}" title="Additional commentary on this packages unreproduciblity"target="main">notes</a></li>
+    {{/notes_uri}}
+    <li>
+      <a href="{{history}}" target="main">test history</a>
+    </li>
+    <h3>Suite and Architecture</h3>
+    {{{suitearch_section_html}}}
+    <h3>General Package Details</h3>
+    <li>
+      <a href="https://tracker.debian.org/{{package}}" title="Go to: Debian Package Tracking Site">PTS</a>
+      <a href="https://bugs.debian.org/src:{{package}}" title="Go to: Debian Bug Tracking Site">BTS</a>
+    </li>
+    <li>
+      <a href="hxttps://sources.debian.net/src/{{package}}/{{version}}/" title="Go to: the package source!">sources</a>
+      <ul class="children">
+        <li>
+          <div><a href="https://sources.debian.net/src/{{package}}/{{version}}/debian">debian/</a></div>
+          <div><a href="https://sources.debian.net/src/{{package}}/{{version}}/debian/changelog">debian/changelog</a></div>
+          <div><a href="https://sources.debian.net/src/{{package}}/{{version}}/debian/control">debian/control</a></div>
+          <div><a href="https://sources.debian.net/src/{{package}}/{{version}}/debian/rules">debian/rules</a></div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <ul class="children">
+    <li><a href="{{dashboard_url}}">Debian dashboard</a></li>
+  </ul>
+{{{project_links_html}}}
+</header>
+<iframe id="main" name="main" tabindex="1" src="{{default_view}}">
+  <p>
+    Your browser does not support iframes.
+    Use a different one or follow the links above.
+  </p>
+</iframe>

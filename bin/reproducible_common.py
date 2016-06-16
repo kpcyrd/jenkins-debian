@@ -224,6 +224,7 @@ html_head_page = Template((tab*2).join(("""
      <li><a href="/debian/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
      <li><a href="/debian/index_performance.html">performance stats</a></li>
      <li><a href="/debian/index_variations.html">variations tested</a></li>
+     <li><a href="/debian/index_breakages.html">broken pieces</a></li>
     </ul></li>
   </ul>
 $project_links

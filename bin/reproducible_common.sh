@@ -196,8 +196,8 @@ write_page_header() {
 	rm -f $PAGE
 	MAINVIEW="dashboard"
 	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="notes no_notes pkg_sets last_24h last_48h all_abc arch scheduled suite_stats dd-list dashboard issues repositories notify performance variations"
-	GLOBALVIEWS="issues scheduled notify repositories dashboard performance variations"
+	ALLVIEWS="notes no_notes pkg_sets last_24h last_48h all_abc arch scheduled suite_stats dd-list dashboard issues repositories notify performance variations breakages"
+	GLOBALVIEWS="issues scheduled notify repositories dashboard performance variations breakages"
 	SUITEVIEWS="dd-list suite_stats"
 	SPOKENTARGET["issues"]="issues"
 	SPOKENTARGET["notes"]="packages with notes"
@@ -214,6 +214,7 @@ write_page_header() {
 	SPOKENTARGET["dashboard"]="Debian dashboard"
 	SPOKENTARGET["performance"]="performance stats"
 	SPOKENTARGET["variations"]="variations tested"
+	SPOKENTARGET["breakages"]="broken pieces"
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<meta name=\"viewport\" content=\"width=device-width\" />"
@@ -293,7 +294,7 @@ write_page_header() {
 			write_page "</ul></li>"
 		elif [ "$TARGET" = "last_48h" ] ; then
 			write_page "</ul></li>"
-		elif [ "$TARGET" = "variations" ] ; then
+		elif [ "$TARGET" = "breakages" ] ; then
 			write_page "</ul></li>"
 		elif [ "$TARGET" = "scheduled" ] ; then
 			write_page "</ul></li>"

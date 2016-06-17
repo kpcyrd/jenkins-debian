@@ -131,7 +131,7 @@ case $HOSTNAME in
 esac
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
-for directory in /schroots /srv/reproducible-results /srv/d-i /srv/udebs /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots /var/cache/pbuilder/result ; do
+for directory in /schroots /srv/reproducible-results /srv/d-i /srv/udebs /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 	fi

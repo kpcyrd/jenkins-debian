@@ -7,12 +7,8 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-replace_origin_pu() {
-    PREFIX=$1 ; shift
-    BRANCH=$1 ; shift
-    expr "$BRANCH" : 'origin/pu/' >/dev/null || return 1
-    echo "${PREFIX}${BRANCH#origin/pu/}"
-}
+RESULT_DIR=$(readlink -f ..)
+ISO_DIR=/srv/d-i/isos
 
 clean_workspace() {
 	#
@@ -35,6 +31,40 @@ clean_workspace() {
 		svn status
 	fi
 	echo
+}
+
+replace_origin_pu() {
+	PREFIX=$1 ; shift
+	BRANCH=$1 ; shift
+	expr "$BRANCH" : 'origin/pu/' >/dev/null || return 1
+	echo "${PREFIX}${BRANCH#origin/pu/}"
+}
+
+iso_target() {
+	UI=$1 ; shift
+	echo "${ISO_DIR}/mini-${UI}$(replace_origin_pu "-" $PU_GIT_BRANCH).iso"
+}
+
+preserve_artifacts() {
+	#
+	# Check is we're in a pu/* branch, and if so save the udebs
+	#
+	if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
+		mkdir -p $PU_BRANCH_DIR
+		cp ${RESULT_DIR}/*.udeb $PU_BRANCH_DIR
+	fi
+
+	#
+	# Alternatively, if we built an images tarball and were triggered by a pu/ branch
+	#
+	IMAGETAR=${RESULT_DIR}/debian-installer-images_*.tar.gz
+	if [ -f $IMAGETAR -a "$PU_GIT_BRANCH" ] ; then
+		[ -d ${ISO_DIR} ] || mkdir ${ISO_DIR}
+
+		tar -xvzf $IMAGETAR --no-anchored mini.iso
+		mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
+		mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
+	fi
 }
 
 pdebuild_package() {
@@ -85,40 +115,13 @@ pdebuild_package() {
 	if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $PU_GIT_BRANCH) ; then
 		cp $PU_BRANCH_DIR/* build/localudebs
 	fi
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" -- --http-proxy $http_proxy
+	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" --buildresult ${RESULT_DIR} -- --http-proxy $http_proxy
 	# cleanup
 	echo
-	cat /var/cache/pbuilder/result/${SOURCE}_*changes
+	cat ${RESULT_DIR}/${SOURCE}_*changes
 	echo
-	sudo dcmd rm /var/cache/pbuilder/result/${SOURCE}_*changes
-}
-
-preserve_pu_udebs() {
-    #
-    # Check is we're in a pu/* branch
-    #
-    if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
-        mkdir -p $PU_BRANCH_DIR
-        cp $WORKSPACE/../*.udeb $PU_BRANCH_DIR
-    fi
-}
-
-iso_target() {
-    UI=$1 ; shift
-
-    echo "/srv/d-i/isos/mini-${UI}$(replace_origin_pu "-" $PU_GIT_BRANCH).iso"
-}
-
-preserve_miniiso() {
-    #
-    # check if we built the images
-    #
-    IMAGETAR=../debian-installer-images_*.tar.gz
-    [ -f $IMAGETAR ] || return 0
-
-    tar -xvzf $IMAGETAR --no-anchored mini.iso
-    mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
-    mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
+	preserve_artifacts
+	sudo dcmd rm ${RESULT_DIR}/${SOURCE}_*changes
 }
 
 clean_workspace
@@ -128,8 +131,6 @@ clean_workspace
 #
 if [ "$1" = "" ] ; then
 	pdebuild_package
-	preserve_pu_udebs
-	preserve_miniiso
 else
 	echo do something else ; exit 1
 fi

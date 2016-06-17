@@ -445,7 +445,8 @@ explain "packages configured."
 cd $BASEDIR
 [ -d /srv/jenkins/features ] && sudo rm -rf /srv/jenkins/features
 for dir in bin logparse cucumber live ; do
-	sudo cp --preserve=mode,timestamps -r $dir /srv/jenkins/
+	sudo mkdir -p /srv/jenkins/$dir
+	sudo rsync -rpt --delete $dir/ /srv/jenkins/$dir/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 done
 HOST_JOBS="hosts/$HOSTNAME/job-cfg"

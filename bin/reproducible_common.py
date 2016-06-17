@@ -13,6 +13,7 @@
 import os
 import re
 import sys
+import csv
 import json
 import errno
 import atexit
@@ -74,6 +75,13 @@ BUILDINFO_PATH = BASE + BUILDINFO_URI
 REPRODUCIBLE_URL = 'https://tests.reproducible-builds.org'
 DEBIAN_URL = 'https://tests.reproducible-builds.org/debian'
 JENKINS_URL = 'https://jenkins.debian.net'
+
+# global package set definitions
+# for unknown historical reasons the meta_pkgset list is 1-indexed
+META_PKGSET = {}
+with open(os.path.join(BIN_PATH, './meta_pkgset.csv'), newline='') as f:
+    for line in csv.reader(f):
+        META_PKGSET[int(line[0])] = line[1]
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -519,6 +527,7 @@ def get_status_icon(status):
     except KeyError:
         log.error('Status ' + status + ' not recognized')
         return (status, '', spokenstatus)
+
 
 def strip_epoch(version):
     """

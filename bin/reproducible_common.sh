@@ -41,6 +41,7 @@ REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
 DBDSUITE="unstable"
+BIN_PATH=/srv/jenkins/bin
 
 # Debian suites being tested
 SUITES="testing unstable experimental"
@@ -96,49 +97,11 @@ TABLE[7]=stats_bugs_state
 TABLE[8]=stats_bugs_sin_ftbfs
 TABLE[9]=stats_bugs_sin_ftbfs_state
 
-# known package sets
-META_PKGSET[1]="essential"
-META_PKGSET[2]="required"
-META_PKGSET[3]="build-essential"
-META_PKGSET[4]="build-essential-depends"
-META_PKGSET[5]="popcon_top1337-installed-sources"
-META_PKGSET[6]="key_packages"
-META_PKGSET[7]="installed_on_debian.org"
-META_PKGSET[8]="had_a_DSA"
-META_PKGSET[9]="cii-census"
-META_PKGSET[10]="gnome"
-META_PKGSET[11]="gnome_build-depends"
-META_PKGSET[12]="kde"
-META_PKGSET[13]="kde_build-depends"
-META_PKGSET[14]="mate"
-META_PKGSET[15]="mate_build-depends"
-META_PKGSET[16]="xfce"
-META_PKGSET[17]="xfce_build-depends"
-META_PKGSET[18]="freedombox"
-META_PKGSET[19]="freedombox_build-depends"
-META_PKGSET[20]="grml"
-META_PKGSET[21]="grml_build-depends"
-META_PKGSET[22]="tails"
-META_PKGSET[23]="tails_build-depends"
-META_PKGSET[24]="subgraph_OS"
-META_PKGSET[25]="subgraph_OS_build-depends"
-META_PKGSET[26]="maint_debian-boot"
-META_PKGSET[27]="maint_debian-med"
-META_PKGSET[28]="maint_debian-ocaml"
-META_PKGSET[29]="maint_debian-python"
-META_PKGSET[30]="maint_debian-qa"
-META_PKGSET[31]="maint_debian-science"
-META_PKGSET[32]="maint_debian-x"
-META_PKGSET[33]="maint_lua"
-META_PKGSET[34]="maint_pkg-fonts-devel"
-META_PKGSET[35]="maint_pkg-games-devel"
-META_PKGSET[36]="maint_pkg-golang-maintainers"
-META_PKGSET[37]="maint_pkg-haskell-maintainers"
-META_PKGSET[38]="maint_pkg-java-maintainers"
-META_PKGSET[39]="maint_pkg-javascript-devel"
-META_PKGSET[40]="maint_pkg-perl-maintainers"
-META_PKGSET[41]="maint_pkg-php-pear"
-META_PKGSET[42]="maint_pkg-ruby-extras-maintainers"
+# package sets defined in meta_pkgsets.csv
+while IFS=, read col1 col2
+do
+	META_PKGSET[$col1]=$col2
+done < $BIN_PATH/meta_pkgset.csv
 
 # sleep 1-23 secs to randomize start times
 delay_start() {

@@ -11,6 +11,8 @@
 
 from reproducible_common import *
 import pystache
+import apt_pkg
+apt_pkg.init_system()
 
 # Templates used for creating package pages
 renderer = pystache.Renderer();
@@ -143,7 +145,35 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
     suitearch_details_html = renderer.render(suitearch_details_template, context)
     return (suitearch_details_html, default_view)
 
+
+def determine_reproducibility(status1, version1, status2, version2):
+    newstatus = ''
+    versionscompared = apt_pkg.version_compare(version1, version2);
+
+    # if version1 > version2,
+    # ignore the older package (version2)
+    if (versionscompared > 0):
+        return status1, version1
+
+    # if version1 < version2,
+    # ignore the older package (version1)
+    elif (versionscompared < 0):
+        return status2, version2
+
+    # if version1 == version 2,
+    # we are comparing status for the same (most recent) version
+    else:
+        if status1 == 'reproducible' and status2 == 'reproducible':
+            return 'reproducible', version1
+        else:
+            return 'not_reproducible', version1
+
+
 def gen_suitearch_section(package, current_suite, current_arch):
+    # keep track of whether the package is entirely reproducible
+    final_version = ''
+    final_status = ''
+
     default_view = ''
     context = {}
     context['architectures'] = []
@@ -156,6 +186,13 @@ def gen_suitearch_section(package, current_suite, current_arch):
             if not status:  # The package is not available in that suite/arch
                 continue
             version = package.get_tested_version(s, a)
+
+            if not final_version or not final_status:
+                final_version = version
+                final_status = status
+            else:
+                final_status, final_version = determine_reproducibility(
+                    final_status, final_version, status, version)
 
             build_date = package.get_build_date(s, a)
             status, icon, spokenstatus = get_status_icon(status)
@@ -195,7 +232,8 @@ def gen_suitearch_section(package, current_suite, current_arch):
             })
 
     html = renderer.render(suitearch_section_template, context)
-    return html, default_view
+    reproducible = True if final_status == 'reproducible' else False
+    return html, default_view, reproducible
 
 def shorten_if_debiannet(hostname):
     if hostname[-11:] == '.debian.net':
@@ -264,8 +302,8 @@ def gen_packages_html(packages, no_clean=False):
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',
                           pkg, suite, arch, version, build_date)
 
-                suitearch_section_html, default_view = gen_suitearch_section(
-                    package, suite, arch)
+                suitearch_section_html, default_view, reproducible = \
+                    gen_suitearch_section(package, suite, arch)
 
                 history = '{}/{}.html'.format(HISTORY_URI, pkg)
                 project_links = html_project_links.substitute()
@@ -281,6 +319,7 @@ def gen_packages_html(packages, no_clean=False):
                     'suitearch_section_html': suitearch_section_html,
                     'project_links_html': project_links,
                     'default_view': default_view,
+                    'reproducible': reproducible,
                     'dashboard_url': DEBIAN_URL,
                 })
 

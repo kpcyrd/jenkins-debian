@@ -9,6 +9,14 @@
     {{#notes_uri}}
     <li><a href="{{notes_uri}}" title="Additional commentary on this packages unreproduciblity"target="main">notes</a></li>
     {{/notes_uri}}
+    {{^notes_uri}}
+    {{^reproducible}}
+    <li>No notes exist for this package. <a href="https://anonscm.debian.org/git/reproducible/notes.git/tree/README">Add some.</a></li>
+    {{/reproducible}}
+    {{#reproducible}}
+    <li>Good work! This package is reproducible :)</li>
+    {{/reproducible}}
+    {{/notes_uri}}
     <li>
       <a href="{{history}}" target="main">test history</a>
     </li>

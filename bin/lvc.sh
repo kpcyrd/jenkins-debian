@@ -139,7 +139,7 @@ else
 fi
 
 # discard any snapshots that are older than the inputs
-for dep in /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT ; do
+for dep in /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT $PU_ISO ; do
   if [ -e "$dep" ] ; then
     LV_SNAP_DEPENDS="$LV_SNAP_DEPENDS $dep"
   fi

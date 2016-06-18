@@ -62,6 +62,7 @@ preserve_artifacts() {
 		[ -d ${ISO_DIR} ] || mkdir ${ISO_DIR}
 
 		tar -xvzf $IMAGETAR --no-anchored mini.iso
+		sha256sum installer-*/*/images/netboot/gtk/mini.iso installer-*/*/images/netboot/mini.iso
 		mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
 		mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
 	fi

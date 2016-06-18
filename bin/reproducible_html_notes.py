@@ -234,9 +234,14 @@ def gen_html_note(package, note):
     if 'bugs' in note:
         bugurls = ''
         for bug in note['bugs']:
+            try:
+                bug_title = ': "%s"' % bugs[package][bug]['title']
+            except KeyError:
+                bug_title = ''
             bugurls += '<a href="https://bugs.debian.org/' + str(bug) + \
                        '" target="_parent">' + str(bug) + '</a>' + \
-                       get_trailing_bug_icon(bug, bugs, package) + '<br />'
+                       get_trailing_bug_icon(bug, bugs, package) + \
+                       bug_title + '<br />'
         infos += note_bugs_html.substitute(bugs=bugurls)
     # check for comments:
     if 'comments' in note:

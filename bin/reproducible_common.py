@@ -570,13 +570,13 @@ def get_bugs():
     """
     This function returns a dict:
     { "package_name": {
-        bug1: {patch: True, done: False},
-        bug2: {patch: False, done: False},
+        bug1: {patch: True, done: False, title: "string"},
+        bug2: {patch: False, done: False, title: "string"},
        }
     }
     """
     query = """
-        SELECT bugs.id, bugs.source, bugs.done, ARRAY_AGG(tags.tag)
+        SELECT bugs.id, bugs.source, bugs.done, ARRAY_AGG(tags.tag), bugs.title
         FROM bugs JOIN bugs_usertags ON bugs.id = bugs_usertags.id
                   LEFT JOIN (
                     SELECT id, tag FROM bugs_tags
@@ -608,9 +608,9 @@ def get_bugs():
         if bug[1] not in packages:
             packages[bug[1]] = {}
         # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done,
-        # bug[3] = tag (patch or pending)
+        # bug[3] = tag (patch or pending), bug[4] = title
         packages[bug[1]][bug[0]] = {
-            'done': False, 'patch': False, 'pending': False
+            'done': False, 'patch': False, 'pending': False, 'title': bug[4]
         }
         if bug[2]:  # if the bug is done
             packages[bug[1]][bug[0]]['done'] = True

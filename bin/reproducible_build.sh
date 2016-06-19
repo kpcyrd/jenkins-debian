@@ -5,8 +5,8 @@
 # released under the GPLv=2
 
 # disable everything
-if true ; then
-	echo -n "temporarily stopping the builds, new debhelper is buggy. sleeping 12h now"
+if [ "$(dpkg --print-architecture)" = "armhf" ] ; then
+	echo -n "temporarily stopping the builds on armhf, new debhelper is buggy, needs investigation… sleeping 12h now…"
 	for i in $(seq 1 12) ; do
 		sleep 1
 		echo -n "."

@@ -55,6 +55,7 @@ preserve_artifacts() {
 
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
+			ssh -o 'Batchmode = yes' profitbricks-build10-amd64.debian.net mkdir -p $PU_BRANCH_DIR/
 			rsync -e "ssh -o 'Batchmode = yes'" -r profitbricks-build10-amd64.debian.net:$PU_BRANCH_DIR/ $PU_BRANCH_DIR/
 		fi
 	fi

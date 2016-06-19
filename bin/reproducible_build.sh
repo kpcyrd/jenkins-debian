@@ -4,6 +4,16 @@
 #         © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
+# disable everything
+if true ; then
+	echo -n "temporarily stopping the builds, new debhelper is buggy. sleeping 12h now"
+	for i in $(seq 1 12) ; do
+		sleep 1
+		echo -n "."
+	done
+	exit 0
+fi
+
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"

@@ -8,7 +8,7 @@
 if [ "$(dpkg --print-architecture)" = "armhf" ] ; then
 	echo -n "temporarily stopping the builds on armhf, new debhelper is buggy, needs investigation… sleeping 12h now…"
 	for i in $(seq 1 12) ; do
-		sleep 1
+		sleep 1h
 		echo -n "."
 	done
 	exit 0

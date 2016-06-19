@@ -12,6 +12,12 @@ FIXME - we need to be able to run multiple VMs in parallel, and so multiple jobs
 
 FIXME - the VM's network currnetly needs to be started by hand
 
+To do Git push we can use:
+
+    curl 'http://46.16.73.145:8080/git/notifyCommit?url=git://git.debian.org/git/d-i/preseed'
+  or
+    curl 'https://jenkins.debian.net/git/notifyCommit?url=git://git.debian.org/git/d-i/preseed'
+
 Workflow:
 
   update in local git, then run lvc-kick  (FIXME add lvc-kick to git)

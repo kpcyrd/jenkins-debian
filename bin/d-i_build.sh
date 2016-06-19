@@ -37,7 +37,7 @@ replace_origin_pu() {
 	PREFIX=$1 ; shift
 	BRANCH=$1 ; shift
 	expr "$BRANCH" : 'origin/pu/' >/dev/null || return 1
-	echo "${PREFIX}${BRANCH#origin/pu/}"
+	echo "${PREFIX}pu_${BRANCH#origin/pu/}"
 }
 
 iso_target() {

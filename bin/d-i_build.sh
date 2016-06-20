@@ -71,7 +71,7 @@ preserve_artifacts() {
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
 			ssh -o 'Batchmode = yes' $DI_HOST mkdir -p $ISO_DIR/
-			rsync -e "ssh -o 'Batchmode = yes'" -r $DI_HOST:$ISO_DIR/ $ISO_DIR/
+			rsync -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $DI_HOST:$ISO_DIR/
 		fi
 	fi
 }

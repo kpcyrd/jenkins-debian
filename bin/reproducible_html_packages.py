@@ -105,7 +105,6 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                                                   suite, arch)
     context['build_date'] =  build_date
 
-    default_view = ''
     # Get diffoscope differences context
     dbd = get_dbd_link_context(package, eversion, suite, arch, status)
     if dbd[0]:

@@ -452,7 +452,7 @@ for dir in bin logparse cucumber live ; do
 done
 HOST_JOBS="hosts/$HOSTNAME/job-cfg"
 if [ -e "$HOST_JOBS" ] ; then
-	sudo rsync -r --copy-links --delete "$HOST_JOBS/" /srv/jenkins/job-cfg/
+	sudo rsync -rpt --copy-links --delete "$HOST_JOBS/" /srv/jenkins/job-cfg/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 else
     # tidying up ... assuming that we don't want clutter on peripheral servers

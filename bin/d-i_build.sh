@@ -52,12 +52,6 @@ preserve_artifacts() {
 	if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
 		mkdir -p $PU_BRANCH_DIR
 		cp ${RESULT_DIR}/*.udeb $PU_BRANCH_DIR
-
-		if [ "$HOSTNAME" = "jenkins" ] ; then
-			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
-			ssh -o 'Batchmode = yes' profitbricks-build10-amd64.debian.net mkdir -p $PU_BRANCH_DIR/
-			rsync -e "ssh -o 'Batchmode = yes'" -r profitbricks-build10-amd64.debian.net:$PU_BRANCH_DIR/ $PU_BRANCH_DIR/
-		fi
 	fi
 
 	#
@@ -71,6 +65,12 @@ preserve_artifacts() {
 		sha256sum installer-*/*/images/netboot/gtk/mini.iso installer-*/*/images/netboot/mini.iso
 		mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
 		mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
+
+		if [ "$HOSTNAME" = "jenkins" ] ; then
+			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
+			ssh -o 'Batchmode = yes' profitbricks-build10-amd64.debian.net mkdir -p $ISO_DIR/
+			rsync -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ profitbricks-build10-amd64.debian.net:$ISO_DIR/
+		fi
 	fi
 }
 

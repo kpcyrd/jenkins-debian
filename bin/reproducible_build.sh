@@ -4,16 +4,6 @@
 #         © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-# disable everything
-if [ "$(dpkg --print-architecture)" = "armhf" ] ; then
-	echo -n "temporarily stopping the builds on armhf, new debhelper is buggy, needs investigation… sleeping 12h now…"
-	for i in $(seq 1 12) ; do
-		sleep 1h
-		echo -n "."
-	done
-	exit 0
-fi
-
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
@@ -22,6 +12,19 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 set -e
+
+exit_early_if_debian_is_broken() {
+	# disable everything until #827724 is fixed
+	# (it would be very nice to query udd to see if this bug is fixed and then automatically enable again…)
+	if [ "$ARCH" = "armhf" ] ; then
+		echo -n "temporarily stopping the builds on armhf due to #827724… sleeping 12h now…"
+		for i in $(seq 1 12) ; do
+			sleep 1h
+			echo -n "."
+		done
+		exit 0
+	fi
+}
 
 create_results_dirs() {
 	mkdir -vp $DEBIAN_BASE/dbd/${SUITE}/${ARCH}
@@ -823,6 +826,7 @@ fi
 #
 # main - only used in master-mode
 #
+exit_early_if_debian_is_broken
 check_nodes_are_up
 delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY

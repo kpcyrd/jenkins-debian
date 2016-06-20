@@ -590,18 +590,19 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 fi
 
 #
-# finally
+# almost finally…
 #
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 explain "$(date) - finished deployment."
 
-# set time back to the future
+# finally!
 case $HOSTNAME in
+	# set time back to the future
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	jenkins)
-		MESSAGE="jenkins updated to $(cd $BASEDIR ; git describe --always)."
+		MESSAGE="jenkins.d.n updated to $(cd $BASEDIR ; git describe --always)."
 		kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
 		;;
 	*)	;;

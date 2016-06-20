@@ -14,9 +14,8 @@ common_init "$@"
 set -e
 
 exit_early_if_debian_is_broken() {
-	# disable everything until #827724 is fixed
-	# (it would be very nice to query udd to see if this bug is fixed and then automatically enable again…)
-	if [ "$ARCH" = "armhf" ] ; then
+	# debian is fine, thanks
+	if false && [ "$ARCH" = "armhf" ] ; then
 		echo -n "temporarily stopping the builds on armhf due to #827724… sleeping 12h now…"
 		for i in $(seq 1 12) ; do
 			sleep 1h

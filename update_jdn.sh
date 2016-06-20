@@ -372,7 +372,7 @@ if [ -f /etc/debian_version ] ; then
 		else
 			MASTERDEBS=""
 		fi
-		sudo apt-get update
+		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		$UP2DATE || sudo apt-get install -t jessie-backports \
 				pbuilder lintian || echo "this should only fail on the first install"

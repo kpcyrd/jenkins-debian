@@ -75,6 +75,7 @@ elif [[ "$*" =~ lvc_.* ]] ; then
 	echo debug end
 	export JOB_NAME=$1 ; shift
 	export EXECUTOR_NUMBER=$1 ; shift
+	export PU_GIT_BRANCH=${1#*=} ; shift
 	export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";

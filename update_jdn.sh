@@ -14,9 +14,19 @@ TMPFILE=$(mktemp)
 # which allows one to specify --flush-cache or --ignore-cache
 JJB="jenkins-job-builder $@"
 
+# so we can later run some commands only if $0 has been updated…
+if [ ! -f $STAMP ] && [ $BASEDIR/$0 -nt $STAMP ] ;
+	UPTODATE=false
+else
+	UPTODATE=true
+fi
+
+
 explain() {
 	echo "$HOSTNAME: $1"
 }
+
+
 
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
@@ -363,25 +373,25 @@ if [ -f /etc/debian_version ] ; then
 			MASTERDEBS=""
 		fi
 		sudo apt-get update
-		sudo apt-get install $DEBS $MASTERDEBS
-		sudo apt-get install -t jessie-backports \
+		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
+		$UP2DATE || sudo apt-get install -t jessie-backports \
 				pbuilder lintian || echo "this should only fail on the first install"
 		#		botch
 		# we need mock from bpo to build current fedora
 		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
-			sudo apt-get install -t jessie-backports mock \
+			$UP2DATE || sudo apt-get install -t jessie-backports mock \
 				|| echo "this should only fail on the first install"
 		fi
 		# for varying kernels
 		# we use bpo kernels on pb-build5+6 (and i386 kernel on pb-build2-i386)
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ]; then
-			sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"
+			$UP2DATE || sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"
 		fi
 		# only needed on the main node
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-			sudo apt-get install -t jessie-backports jenkins-job-builder || echo "this should only fail on the first install"
+			$UP2DATE || sudo apt-get install -t jessie-backports jenkins-job-builder || echo "this should only fail on the first install"
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			sudo apt-get install -t jessie-backports ffmpeg libav-tools python3-popcon jenkins-job-builder
+			$UP2DATE || sudo apt-get install -t jessie-backports ffmpeg libav-tools python3-popcon jenkins-job-builder
 		fi
 		explain "packages installed."
 	else

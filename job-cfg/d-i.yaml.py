@@ -369,7 +369,7 @@ data.extend(
                          'branches': ['{branch}']}}],
         'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'},
                      {'trigger-builds': [{'project': 'lvc_debian-miniiso',
-                      'predefined-parameters': 'PU_GIT_BRANCH=$PU_GIT_BRANCH'
+                      'current-parameters': 'true',
                     }]}],
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),

@@ -513,7 +513,13 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	done
 	rm -f $TMPFILE
 	for config in *.yaml ; do
-		if [ $config -nt $STAMP ] || [ ! -f $STAMP ] ; then
+		# do update, if
+		# no stamp file exist or
+		# no .py file exists and config is newer than stamp or
+		# a .py file exists and .py file is newer than stamp
+		if [ ! -f $STAMP ] || \
+		 ( [ ! -f $config.py ] && [ $config -nt $STAMP ] ) || \
+		 ( [ -f $config.py ] && [ $config.py -nt $STAMP ] ) ; then
 			$JJB update $config
 		else
 			echo "$config has not changed, nothing to do."

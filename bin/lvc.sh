@@ -18,13 +18,18 @@ replace_origin_pu() {
     echo "${PREFIX}${BRANCH#origin/pu/}"
 }
 
-# if $URL is set to something that looks like a pu git branch, try to find the matching .iso
-if PU_ISO="$(replace_origin_pu "/srv/d-i/isos/mini-gtk-" $URL).iso" ; then
-	[ -f $PU_ISO ] || {
-		echo "looks like we're meant to be testing '$PU_ISO', but it's missing"
+# if $URL is set to "use_PU_GIT_BRANCH" then use the contents of $PU_GIT_BRANCH to work out the locally built ISO name
+if [ "use_PU_GIT_BRANCH" = "$URL" ] ; then
+	if PU_ISO="$(replace_origin_pu "/srv/d-i/isos/mini-gtk-" $PU_GIT_BRANCH).iso" ; then
+		[ -f "$PU_ISO" ] || {
+			echo "looks like we're meant to be testing '$PU_ISO', but it's missing"
+			exit 1
+			}
+		URL=$PU_ISO
+	else
+		echo "URL='$URL' but PU_GIT_BRANCH='$PU_GIT_BRANCH' -- aborting"
 		exit 1
-		}
-	URL=$PU_ISO
+	fi
 fi
 
 cleanup_all() {

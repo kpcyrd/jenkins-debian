@@ -75,7 +75,7 @@
                     my_time: 'H */8 * * *'
                 - 'debian-miniiso':
                     dist_name: 'Debian-Installer local mini.iso'
-                    my_iso: '$PU_GIT_BRANCH'
+                    my_iso: 'use_PU_GIT_BRANCH'
                 - 'debian-testing-daily-broken': 
                     dist_name: 'Debian-Installer Testing (Daily) -- Broken Scenarios'
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'

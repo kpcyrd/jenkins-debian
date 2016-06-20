@@ -487,7 +487,7 @@ data.append(
         'act': 'build',
         'branchdesc': 'master branch',
         'branch': 'origin/master',
-        'trg': 'H/6 * * * *',
+        'trg': 'H/1 H/1 * * *',
         'pkg': pkgs}})
 
 data.append(
@@ -498,7 +498,7 @@ data.append(
         'act': 'build',
         'branchdesc': 'pu/ branches',
         'branch': 'origin/pu/**',
-        'trg': 'H/10 * * * *',
+        'trg': 'H/1 H/1 * * *',
         'pkg': pkgs}})
 
 

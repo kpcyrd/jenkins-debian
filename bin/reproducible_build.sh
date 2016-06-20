@@ -4,9 +4,9 @@
 #         © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
-# disable everything
-if [ "$(dpkg --print-architecture)" = "armhf" ] ; then
-	echo -n "temporarily stopping the builds on armhf, new debhelper is buggy, needs investigation… sleeping 12h now…"
+# DONT disable everything
+if false ; then
+	echo -n "temporarily stopping all the builds… sleeping 12h now…"
 	for i in $(seq 1 12) ; do
 		sleep 1h
 		echo -n "."

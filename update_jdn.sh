@@ -600,6 +600,9 @@ case $HOSTNAME in
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
+	jenkins)
+		MESSAGE="jenkins updated to $(cd $BASEDIR ; git describe --always)."
+		kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
 	*)	;;
 esac
 

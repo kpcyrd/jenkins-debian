@@ -389,14 +389,13 @@ data.extend(
                          'branches': ['{branch}']}}],
         'builders': [ {'shell': '/srv/jenkins/bin/d-i_build.sh'},
                       {'trigger-builds': [{'project': 'd-i_pu-triggered_debian-installer',
+                       'current-parameters': 'true',
                        'predefined-parameters': 'PU_GIT_BRANCH=$GIT_BRANCH'
                        },
                       ]}
                     ],
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),
-        'parameters': [{'string': {'name': 'GIT_BRANCH',
-                                    'description': 'The git branch to act upon -- this should normally come from an SCM/GIT trigger'}}],
         'logrotate': lr(90),
         'publishers': publ(irc='debian-boot')}}])
 

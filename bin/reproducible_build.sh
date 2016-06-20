@@ -16,10 +16,10 @@ set -e
 exit_early_if_debian_is_broken() {
 	# debian is fine, thanks
 	if false && [ "$ARCH" = "armhf" ] ; then
-		echo -n "temporarily stopping the builds on armhf due to #827724… sleeping 12h now…"
+		echo "Temporarily stopping the builds on armhf due to #827724… sleeping 12h now…"
 		for i in $(seq 1 12) ; do
 			sleep 1h
-			echo -n "."
+			echo "one our passed…."
 		done
 		exit 0
 	fi

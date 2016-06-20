@@ -19,7 +19,7 @@ exit_early_if_debian_is_broken() {
 		echo "Temporarily stopping the builds on armhf due to #827724… sleeping 12h now…"
 		for i in $(seq 1 12) ; do
 			sleep 1h
-			echo "one our passed…."
+			echo "one hour passed…."
 		done
 		exit 0
 	fi

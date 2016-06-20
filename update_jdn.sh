@@ -603,6 +603,7 @@ case $HOSTNAME in
 	jenkins)
 		MESSAGE="jenkins updated to $(cd $BASEDIR ; git describe --always)."
 		kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
+		;;
 	*)	;;
 esac
 

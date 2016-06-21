@@ -139,8 +139,15 @@ def alien_log(directory=None):
             continue
         suite, arch = root.rsplit('/', 2)[1:]
         for file in files:
+            # different file have differnt name patterns and different splitting needs
+            if file.endswith('.diff.gz'):
+                rsplit_level = 2
+            elif file.endswith('.gz'):
+                rsplit_level = 3
+            else:
+                rsplit_level = 2
             try:
-                pkg, version = file.rsplit('.', 2)[0].rsplit('_', 1)
+                pkg, version = file.rsplit('.', rsplit_level)[0].rsplit('_', 1)
             except ValueError:
                 log.critical(bcolors.FAIL + '/'.join([root, file]) +
                              ' does not seem to be a file that should be there'

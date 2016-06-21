@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
@@ -128,7 +128,7 @@ def alien_log(directory=None):
             bad_files.extend(alien_log(path))
         return bad_files
     log.info('running alien_log check over ' + directory + '...')
-    query = '''SELECT s.name
+    query = '''SELECT r.version
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
@@ -153,7 +153,11 @@ def alien_log(directory=None):
                              ' does not seem to be a file that should be there'
                              + bcolors.ENDC)
                 continue
-            if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
+            try:
+                rversion = query_db(query.format(pkg=pkg, suite=suite, arch=arch))[0][0]
+            except IndexError:  # that package is not known (or not yet tested)
+                rversion = ''   # continue towards the "bad file" path
+            if strip_epoch(rversion) != version:
                 try:
                     if os.path.getmtime('/'.join([root, file]))<time.time()-1800:
                         bad_files.append('/'.join([root, file]))
@@ -167,7 +171,7 @@ def alien_log(directory=None):
 
 def alien_buildinfo():
     log.info('running alien_log check...')
-    query = '''SELECT s.name
+    query = '''SELECT r.version
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != "" AND s.name="{pkg}" AND s.suite="{suite}"
                AND s.architecture="{arch}"
@@ -186,7 +190,11 @@ def alien_buildinfo():
                              ' does not seem to be a file that should be there'
                              + bcolors.ENDC)
                 continue
-            if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):
+            try:
+                rversion = query_db(query.format(pkg=pkg, suite=suite, arch=arch))[0][0]
+            except IndexError:  # that package is not known (or not yet tested)
+                rversion = ''   # continue towards the "bad file" path
+            if strip_epoch(rversion) != version:
                 bad_files.append('/'.join([root, file]))
                 log.warning('/'.join([root, file]) + ' should not be there')
     return bad_files

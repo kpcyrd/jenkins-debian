@@ -170,6 +170,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** once stabilized notification emails should go through the package tracker.  The 'build' keyword seems to be the better fit for this.  To do so just send the emails to dispatch@tracker.debian.org, setting "X-Distro-Tracker-Package: foo" and "X-Distro-Tracker-Keyword: build".  This way people wanting to subscribe to our notification don't need to ask us and can do that by themselves.
 ** repo-comparison: check for binaries without source
 ** issues: currently only state of amd64 is shown. it would be better to display packages as unreproducible if they are unreproducible on any architecture.
+** include diffoscope run time in log
 
 * missing tests:
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user

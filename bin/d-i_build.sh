@@ -10,7 +10,7 @@ common_init "$@"
 
 RESULT_DIR=$(readlink -f ..)
 ISO_DIR=/srv/d-i/isos
-DI_HOST=profitbricks-build10-amd64.debian.net
+LVC_HOST=profitbricks-build10-amd64.debian.net
 
 clean_workspace() {
 	#
@@ -70,8 +70,8 @@ preserve_artifacts() {
 
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
-			ssh -o 'Batchmode = yes' $DI_HOST mkdir -p $ISO_DIR/
-			rsync -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $DI_HOST:$ISO_DIR/
+			ssh -o 'Batchmode = yes' $LVC_HOST mkdir -p $ISO_DIR
+			rsync -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $LVC_HOST:$ISO_DIR/
 		fi
 	fi
 }

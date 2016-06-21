@@ -191,37 +191,6 @@ def alien_dbd(directory=None):
         for path in DBD_PATH, DBDTXT_PATH:
             bad_files.extend(alien_log(path))
         return bad_files
-    log.info('running alien_dbd check...')
-    query = '''SELECT r.status
-               FROM sources AS s JOIN results AS r on r.package_id=s.id
-               WHERE s.name="{pkg}" AND s.suite="{suite}"
-               AND s.architecture="{arch}"
-               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
-    bad_files = []
-    for root, dirs, files in os.walk(directory):
-        if not files:
-            continue
-        suite, arch = root.rsplit('/', 2)[1:]
-        for file in files:
-            try:
-                pkg, version = file.rsplit('.', 2)[0].rsplit('_', 1)
-            except ValueError:
-                log.critical(bcolors.FAIL + '/'.join([root, file]) +
-                             ' does not seem to be a file that should be there'
-                             + bcolors.ENDC)
-            result = query_db(query.format(pkg=pkg, suite=suite, arch=arch))
-            try:
-                if result[0][0] != 'unreproducible':
-                    bad_files.append('/'.join([root, file]) + ' (' +
-                                     str(result[0][0]) + ' package)')
-                    log.warning('/'.join([root, file]) + ' should not be '
-                                'there (' + str(result[0][0]) + ' package)')
-            except IndexError:
-                bad_files.append('/'.join([root, file]) + ' (' +
-                                 'missing package)')
-                log.warning(bcolors.WARN + '/'.join([root, file]) + ' should '
-                            'not be there (missing package)' + bcolors.ENDC)
-    return bad_files
 
 
 def alien_rbpkg():

@@ -88,16 +88,24 @@ for user in helmut holger mattia lunar phil ; do
 	sudo usermod -G $extra_groups $user
 done
 
-if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] ; then
-	# jenkins needs access to libvirt
-	sudo adduser jenkins libvirt
-	sudo adduser jenkins libvirt-qemu
-fi
-
 sudo mkdir -p /srv/workspace
 [ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
+
+if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] ; then
+	# jenkins needs access to libvirt
+	sudo adduser jenkins libvirt
+	sudo adduser jenkins libvirt-qemu
+
+	# we need a directory for the VM's storage pools
+	VM_POOL_DIR=/srv/workspace/vm-pools
+	if [ ! -d $VM_POOL_DIR ] ; then
+		sudo mkdir $VM_POOL_DIR
+		sudo chown jenkins:libvirt-qemu $VM_POOL_DIR
+		sudo chmod 775 $VM_POOL_DIR
+	fi
+fi
 
 # prepare tmpfs on some hosts
 case $HOSTNAME in

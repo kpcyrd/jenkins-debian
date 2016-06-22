@@ -22,8 +22,6 @@ suitearch_section_template = renderer.load_template(
     TEMPLATE_PATH + '/package_suitearch_section')
 suitearch_details_template = renderer.load_template(
     TEMPLATE_PATH + '/package_suitearch_details')
-status_icon_link_template = renderer.load_template(
-    TEMPLATE_PATH + '/status_icon_link')
 
 def sizeof_fmt(num):
     for unit in ['B','KB','MB','GB']:
@@ -35,17 +33,6 @@ def sizeof_fmt(num):
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
-
-def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
-    context = {
-        'status': status,
-        'spokenstatus': spokenstatus,
-        'icon': icon,
-        'suite': suite,
-        'arch': arch,
-        'untested': True if status == 'untested' else False,
-    }
-    return renderer.render(status_icon_link_template, context)
 
 def get_buildlog_links_context(package, eversion, suite, arch):
     log = suite + '/' + arch + '/' + package + '_' + eversion + '.build2.log.gz'

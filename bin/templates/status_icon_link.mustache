@@ -4,9 +4,11 @@
   <img src="/static/{{icon}}" alt="{{spokenstatus}}">
 </a>
 {{/icon}}
+{{#spokenstatus}}
 <a href="/debian/{{suite}}/{{arch}}/index_{{status}}.html" title="Go to: summary of all {{spokenstatus}} packages" target="_parent">
   {{spokenstatus}}
 </a>
+{{/spokenstatus}}
 {{/untested}}
 
 {{#untested}}

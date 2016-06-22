@@ -20,6 +20,7 @@ import atexit
 import sqlite3
 import logging
 import argparse
+import pystache
 import psycopg2
 import html as HTML
 from string import Template
@@ -137,6 +138,11 @@ if args.ignore_missing_files:
     log.warning("Missing files will be ignored!")
 
 tab = '  '
+
+# Templates used for creating package pages
+renderer = pystache.Renderer();
+status_icon_link_template = renderer.load_template(
+    TEMPLATE_PATH + '/status_icon_link')
 
 html_header = Template("""<!DOCTYPE html>
 <html>
@@ -527,6 +533,25 @@ def get_status_icon(status):
     except KeyError:
         log.error('Status ' + status + ' not recognized')
         return (status, '', spokenstatus)
+
+
+def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
+    """
+    Returns the html for "<icon> <spokenstatus>" with both icon and status
+    linked to the appropriate index page for the status, arch and suite.
+
+    If icon is set to None, the icon will be ommited.
+    If spokenstatus is set to None, the spokenstatus link be ommited.
+    """
+    context = {
+        'status': status,
+        'spokenstatus': spokenstatus,
+        'icon': icon,
+        'suite': suite,
+        'arch': arch,
+        'untested': True if status == 'untested' else False,
+    }
+    return renderer.render(status_icon_link_template, context)
 
 
 def strip_epoch(version):

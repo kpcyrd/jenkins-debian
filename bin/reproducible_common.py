@@ -24,8 +24,8 @@ import pystache
 import psycopg2
 import html as HTML
 from string import Template
-from subprocess import call
 from traceback import print_exception
+from subprocess import call, check_call
 from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
 
@@ -49,6 +49,7 @@ BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent/reproducible'
 DEBIAN_BASE = '/var/lib/jenkins/userContent/reproducible/debian'
 TEMPLATE_PATH = BIN_PATH + '/templates'
+PKGSET_DEF_PATH = '/srv/reproducible-results'
 TEMP_PATH="/tmp/reproducible"
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
@@ -143,7 +144,7 @@ if args.ignore_missing_files:
 tab = '  '
 
 # Templates used for creating package pages
-renderer = pystache.Renderer();
+renderer = pystache.Renderer()
 status_icon_link_template = renderer.load_template(
     TEMPLATE_PATH + '/status_icon_link')
 default_page_footer_template = renderer.load_template(
@@ -260,11 +261,13 @@ def create_main_navigation(page_title, suite, arch, displayed_page=None):
         'suite': suite,
         'arch': arch,
         'project_links_html': renderer.render(project_links_template),
-        'experimental': False,
         'suite_list': [{'s': s} for s in SUITES],
         'arch_list': [{'a': a} for a in ARCHS],
         'debian_url': DEBIAN_URL,
     }
+    if suite != 'experimental':
+        # there are not package sets in experimental
+        context['include_pkgset_link'] = True
     # this argument controls which of the main page navigation items will be
     # highlighted.
     if displayed_page:
@@ -289,15 +292,18 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             arch=arch,
             displayed_page=displayed_page,
         )
-
+        # Add the 'mainbody' div only if including a header
+        html += "<div class='mainbody'>"
     html += body
     if style_note:
         html += renderer.render(pkg_legend_template, {})
     if not noendpage:
         html += create_default_page_footer(now)
-        html += '</body>\n</html>'
-    else:
-        html += '</body>\n</html>'
+    if not noheader:
+        # If the header was included, we need to end the 'mainbody' div after
+        # the 'mainbody' content
+        html += '</div>'
+    html += '</body>\n</html>'
     try:
         os.makedirs(destfile.rsplit('/', 1)[0], exist_ok=True)
     except OSError as e:
@@ -414,8 +420,9 @@ def link_package(package, suite, arch, bugs={}, popcon=None, is_popular=None):
     return html
 
 
-def link_packages(packages, suite, arch):
-    bugs = get_bugs()
+def link_packages(packages, suite, arch, bugs=None):
+    if bugs is None:
+        bugs = get_bugs()
     html = ''
     for pkg in packages:
         html += link_package(pkg, suite, arch, bugs)

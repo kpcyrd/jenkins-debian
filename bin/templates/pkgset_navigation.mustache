@@ -1,0 +1,14 @@
+<ul>
+  <li>Tracked package sets in {{suite}}/{{arch}}: </li>
+<br/>
+{{#package_sets}}
+  <li class="{{class}}">
+	<a href="/debian/{{suite}}/{{arch}}/pkg_set_{{pkgset_name}}.html">{{pkgset_name}}</a>
+  {{#thumb}}
+	<a href="/debian/{{suite}}/{{arch}}/pkg_set_{{pkgset_name}}.html">
+	  <img src="{{thumb}}" class="setview" alt="Reproducibility status for packages un {{suite}}/{{arch}} from '{{pkg_name}}'" title="{{pkgset_name}}" name="{{pkgset_name}}">
+	</a>
+  {{/thumb}}
+  </li>
+{{/package_sets}}
+</ul>

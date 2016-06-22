@@ -1,0 +1,17 @@
+<p>
+{{#png}}
+  <a href="{{png}}"><img src="{{png}}" class="overview" alt="package set {{pkgset_name}} in {{suite}}/{{arch}}"></a>"
+{{/png}}
+
+  <br />
+  The package set '{{pkgset_name}}' in {{suite}}/{{arch}} consists of:
+  (see this package set on {{#other_archs}}<a href="{{link}}" title="See this packageset in unstable/{{arch}}" target="_parent">{{arch}}</a>
+{{/other_archs}})
+
+  <br />
+  {{#status_details}}
+  {{{icon_html}}} {{status_count}} ({{status_percent}}%) packages {{description}}: {{{package_list_html}}}
+  <br />
+  {{/status_details}}
+  {{{pkg_symbol_legend_html}}}
+</op>

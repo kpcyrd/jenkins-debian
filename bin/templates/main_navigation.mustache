@@ -39,13 +39,13 @@
           </a>
         </li>
       </ul></li>
-      {{^experimental}}
+      {{#include_pkgset_link}}
       <li {{#pkg_set}}class='active'{{/pkg_set}}>
         <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html">
           package sets
         </a>
       </li>
-      {{/experimental}}
+      {{/include_pkgset_link}}
       <li>Recently tested:<ul class="children">
         <li {{#last_24h}}class='active'{{/last_24h}}>
           <a href="/debian/{{suite}}/{{arch}}/index_last_24h.html">

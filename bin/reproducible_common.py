@@ -312,6 +312,10 @@ def print_critical_message(msg):
     print('\n\n\n')
 
 
+def percent(part, whole):
+    return round(100 * float(part)/float(whole), 1)
+
+
 class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'

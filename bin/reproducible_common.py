@@ -143,6 +143,9 @@ tab = '  '
 renderer = pystache.Renderer();
 status_icon_link_template = renderer.load_template(
     TEMPLATE_PATH + '/status_icon_link')
+default_page_footer_template = renderer.load_template(
+    TEMPLATE_PATH + '/default_page_footer')
+
 
 html_header = Template("""<!DOCTYPE html>
 <html>
@@ -165,23 +168,12 @@ else:
     JOB_FOOTER += JOB_NAME+'</a> which is configured via this '
     JOB_FOOTER += '<a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/">git repo</a>.'
 
-html_footer = Template("""
-      <hr id="footer_separator" /><p style="font-size:0.9em;"><div id="page_footer">
-      %s
-      There is more information <a href="%s/userContent/about.html">about
-      jenkins.debian.net</a> and about
-      <a href="https://wiki.debian.org/ReproducibleBuilds"> reproducible builds
-      of Debian</a> available elsewhere.
-      <br /> Last update: $date.
-      Copyright 2014-2016 <a href="mailto:holger@layer-acht.org">Holger Levsen</a>
-      and <a href="https://jenkins.debian.net//userContent/thanks.html">many others</a>.
-      The code of <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/">jenkins.debian.net.git</a> is mostly
-      GPL-2 licensed. The weather icons are public domain and have been taken
-      from the <a href=http://tango.freedesktop.org/Tango_Icon_Library target=_blank>
-      Tango Icon Library</a>.
-     </p>
-  </div></body>
-</html>""" % (JOB_FOOTER, JENKINS_URL))
+def create_default_page_footer(date):
+    return renderer.render(default_page_footer_template, {
+            'date': date,
+            'job_footer': JOB_FOOTER,
+            'jenkins_url': JENKINS_URL,
+        })
 
 html_head_page = Template((tab*2).join(("""
 <header class="head">
@@ -391,7 +383,8 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
     if style_note:
         html += html_foot_page_style_note.substitute()
     if not noendpage:
-        html += html_footer.substitute(date=now)
+        html += create_default_page_footer(now)
+        html += '</body>\n</html>'
     else:
         html += '</body>\n</html>'
     try:

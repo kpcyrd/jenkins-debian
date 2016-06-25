@@ -367,6 +367,7 @@ write_page_intro() {
 	fi
 }
 
+# See the python equivelent of this function: reproducible_common.py's create_default_page_footer
 write_page_footer() {
 	write_page "<hr id=\"footer_separator\" /><p style=\"font-size:0.9em;\"><div id=\"page_footer\">"
 	if [ -n "$JOB_URL" ] ; then

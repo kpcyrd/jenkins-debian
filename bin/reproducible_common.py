@@ -145,6 +145,8 @@ status_icon_link_template = renderer.load_template(
     TEMPLATE_PATH + '/status_icon_link')
 default_page_footer_template = renderer.load_template(
     TEMPLATE_PATH + '/default_page_footer')
+pkg_legend_template = renderer.load_template(
+    TEMPLATE_PATH + '/pkg_symbol_legend')
 
 
 html_header = Template("""<!DOCTYPE html>
@@ -236,19 +238,6 @@ html_head_page = Template((tab*2).join(("""
   </ul>
 $project_links
 </header><div class="mainbody">""" % DEBIAN_URL ).splitlines(True)))
-
-html_foot_page_style_note = Template((tab*2).join("""
-<p style="font-size:0.9em;">
-  A package name displayed with a <span style="font-weight: bold;">bold font</span> is an indication that this
-  package has a note. Visited packages are linked in green, those which
-  have not been visited are linked in blue.<br />
-  A <code><span class="bug">&#35;</span></code> sign after the name of a
-  package indicates that a bug is filed against it. Likewise, a
-  <code><span class="bug-patch">&#43;</span></code> sign indicates there is
-  a patch available, a <code><span class="bug-pending">P</span></code> means a
-  pending bug while <code><span class="bug-done">&#35;</span></code>
-  indicates a closed bug. In cases of several bugs, the symbol is repeated.
-</p>""".splitlines(True)))
 
 html_project_links = Template((tab*2).join("""
     <ul class="reproducible-links">
@@ -381,7 +370,7 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             project_links=project_links)
     html += body
     if style_note:
-        html += html_foot_page_style_note.substitute()
+        html += renderer.render(pkg_legend_template, {})
     if not noendpage:
         html += create_default_page_footer(now)
         html += '</body>\n</html>'

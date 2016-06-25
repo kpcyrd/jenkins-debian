@@ -367,7 +367,7 @@ write_page_intro() {
 	fi
 }
 
-# See the python equivelent of this function: reproducible_common.py's create_default_page_footer
+# See the python equivalent of this function: reproducible_common.py's create_default_page_footer
 write_page_footer() {
 	write_page "<hr id=\"footer_separator\" /><p style=\"font-size:0.9em;\"><div id=\"page_footer\">"
 	if [ -n "$JOB_URL" ] ; then
@@ -395,6 +395,7 @@ write_page_footer() {
 	write_page "</body></html>"
 }
 
+# A mustache equivalent of this function has been created. See TEMPLATE_PATH/pkg_list_key.mustache
 write_page_meta_sign() {
 	write_page "<p style=\"font-size:0.9em;\">A package name displayed with a <span style=\"font-weight: bold;\">bold font</span> is an indication that this package has a note. Visited packages are linked in green, those which have not been visited are linked in blue.</br>"
 	write_page "A <code><span class=\"bug\">&#35;</span></code> sign after the name of a package indicates that a bug is filed against it. Likewise, a <code><span class=\"bug-patch\">&#43;</span></code> sign indicates there is a patch available, a <code><span class="bug-pending">P</span></code> means a pending bug while <code><span class=\"bug-done\">&#35;</span></code> indicates a closed bug. In cases of several bugs, the symbol is repeated.</p>"

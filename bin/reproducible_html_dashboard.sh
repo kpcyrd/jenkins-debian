@@ -335,12 +335,8 @@ write_build_performance_stats() {
 	local TIMESPAN_RAW="91.5"
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
-		if [ "$ARCH" = "i386" ] ; then
-			RESULT="&nbsp;"
-		else
-			RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND r.architecture='$ARCH'")
-			RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-		fi
+		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND r.architecture='$ARCH'")
+		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
 		write_page "<td>$RESULT</td>"
 	done
 	write_page "</tr></table>"

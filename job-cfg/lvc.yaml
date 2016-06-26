@@ -1,17 +1,17 @@
 - defaults:
     name: lvc
     project-type: freestyle
-    description: '{my_description}<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml">lvc.yaml</a>.'
+    description: &desc '{my_description}<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/lvc.yaml">lvc.yaml</a>.'
     properties:
-      - sidebar:
+      - sidebar: &sb1
           url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
-      - sidebar:
+      - sidebar: &sb2
           url: https://jenkins.debian.net/view/lvc
           text: Jobs for libvirt and cucumber based tests
           icon: /userContent/images/debian-jenkins-24x24.png
-      - sidebar:
+      - sidebar: &sb3
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
@@ -45,6 +45,11 @@
       - live-screenshot
     builders:
       - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features {my_opts}'
+      - trigger-builds:
+          - project: lvc_retreive_artifacts
+            predefined-parameters:
+              TRIG_HOST=$HOST
+              TRIG_WORKDIR=$WORKDIR
     triggers:
       - timed: '{my_time}'
     node: 'lvc'
@@ -52,6 +57,35 @@
 - job-template:
     defaults: lvc
     name: '{name}_{distro}'
+
+- job-template:
+    name: '{name}_retreive_artifacts'
+    project-type: freestyle
+    description: *desc
+    properties:
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
+    parameters:
+      - string:
+          name: TRIG_HOST
+          description: The host that the job triggering this one was running on
+      - string:
+          name: TRIG_RESULTS
+          description: The results directory for the job that triggered this one
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    publishers:
+      - email:
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org, phil@hands.com'
+    wrappers:
+      - live-screenshot
+    builders:
+      - shell: '/srv/jenkins/bin/lvc_retreive_artifacts.sh'
+    node: 'master'
 
 - project:
     name: lvc
@@ -81,3 +115,5 @@
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                     my_time: 'H H * * H'
                     my_opts: '--tags @broken'
+        - '{name}_retreive_artifacts':
+            my_title: 'Retrieve results from LVC job'

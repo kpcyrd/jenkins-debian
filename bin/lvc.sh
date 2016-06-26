@@ -15,7 +15,7 @@ replace_origin_pu() {
     PREFIX=$1 ; shift
     BRANCH=$1 ; shift
     expr "$BRANCH" : 'origin/pu/' >/dev/null || return 1
-    echo "${PREFIX}${BRANCH#origin/pu/}"
+    echo "${PREFIX}pu_${BRANCH#origin/pu/}"
 }
 
 # if $URL is set to "use_PU_GIT_BRANCH" then use the contents of $PU_GIT_BRANCH to work out the locally built ISO name

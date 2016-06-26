@@ -278,13 +278,15 @@ Given /^I select the install mode$/ do
     end
   end
 
-  #@screen.type(Sikuli::Key.TAB)
-  #@screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1" blacklist=psmouse ' + @boot_options +
-  #             Sikuli::Key.ENTER)
-  #$vm.wait_until_remote_shell_is_up
+  @screen.type(Sikuli::Key.TAB)
+  @boot_options = "" if @boot_options.nil?
+  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1" blacklist=psmouse ' + @boot_options +
+               Sikuli::Key.ENTER)
+  debug_log("debug: wait for the remote shell to respond...", :color => :blue)
+  $vm.wait_until_remote_shell_is_up
   
-  debug_log("debug: About to type ENTER at the bootsplash", :color => :blue)
-  @screen.type(Sikuli::Key.ENTER) # we're disabling the above editing of the command line, since it's breaking on jenkins.debian.net for reasons unknown
+  #debug_log("debug: About to type ENTER at the bootsplash", :color => :blue)
+  #@screen.type(Sikuli::Key.ENTER) # we're disabling the above editing of the command line, since it's breaking on jenkins.debian.net for reasons unknown
   debug_log("debug: waiting for it to get to the 'English' prompt...", :color => :blue)
   @screen.wait(diui_png("English"), 3*60 * PATIENCE)  # FIXME -- this is just to pause until the remote shell would have been up, so is a kludge
   debug_log("debug: found the 'English' prompt", :color => :blue)

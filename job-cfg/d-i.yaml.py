@@ -361,7 +361,7 @@ for f in ['html', 'pdf']:
 data.extend(
     [{'defaults': {
         'name': '{name}-{act}',
-        'description': ('Builds debian packages in sid from git {branchdesc}, '
+        'description': ('Builds Debian packages in sid from git {branchdesc}, '
                         'triggered by pushes to <pre>{gitrepo}</pre> '
                         '{do_not_edit}'),
         'triggers': [{'pollscm': {'cron': '{trg}'}}],
@@ -381,7 +381,7 @@ data.extend(
 data.extend(
     [{'defaults': {
         'name': '{name}-pu-{act}',
-        'description': ('Builds debian packages in sid from git {branchdesc}, '
+        'description': ('Builds Debian packages in sid from git {branchdesc}, '
                         'triggered by pushes to <pre>{gitrepo}</pre> '
                         '{do_not_edit}'),
         'triggers': [{'pollscm': {'cron': '{trg}'}}],

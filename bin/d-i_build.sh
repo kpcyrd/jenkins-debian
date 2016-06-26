@@ -63,15 +63,21 @@ preserve_artifacts() {
 	if [ -f $IMAGETAR -a "$PU_GIT_BRANCH" ] ; then
 		[ -d ${ISO_DIR} ] || mkdir ${ISO_DIR}
 
+		echo "untaring the .iso images from $IMAGETAR:"
 		tar -xvzf $IMAGETAR --no-anchored mini.iso
+		echo "sha256sum of .iso images:"
 		sha256sum installer-*/*/images/netboot/gtk/mini.iso installer-*/*/images/netboot/mini.iso
+		echo "move them into place..."
 		mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
 		mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
+		echo "and see if they are there (listing creation time):"
+		ls -ltrc $ISO_DIR
 
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
+			echo "and rsync them to the target node ($LVC_HOST):"
 			ssh -o 'Batchmode = yes' $LVC_HOST mkdir -p $ISO_DIR
-			rsync -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $LVC_HOST:$ISO_DIR/
+			rsync -v -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $LVC_HOST:$ISO_DIR/
 		fi
 	fi
 }

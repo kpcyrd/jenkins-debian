@@ -47,9 +47,7 @@
       - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features {my_opts}'
       - trigger-builds:
           - project: lvc_retreive_artifacts
-            predefined-parameters:
-              TRIG_HOST=$HOST
-              TRIG_WORKDIR=$WORKDIR
+            predefined-parameters: "TRIG_NODE=$NODE_NAME\nTRIG_RESULTS=$WORKSPACE/results"
     triggers:
       - timed: '{my_time}'
     node: 'lvc'
@@ -68,7 +66,7 @@
       - sidebar: *sb3
     parameters:
       - string:
-          name: TRIG_HOST
+          name: TRIG_NODE
           description: The host that the job triggering this one was running on
       - string:
           name: TRIG_RESULTS

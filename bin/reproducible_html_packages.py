@@ -17,11 +17,13 @@ apt_pkg.init_system()
 # Templates used for creating package pages
 renderer = pystache.Renderer();
 package_page_template = renderer.load_template(
-    TEMPLATE_PATH + '/package_page')
+    os.path.join(TEMPLATE_PATH, 'package_page'))
 suitearch_section_template = renderer.load_template(
-    TEMPLATE_PATH + '/package_suitearch_section')
+    os.path.join(TEMPLATE_PATH, 'package_suitearch_section'))
 suitearch_details_template = renderer.load_template(
-    TEMPLATE_PATH + '/package_suitearch_details')
+    os.path.join(TEMPLATE_PATH, 'package_suitearch_details'))
+project_links_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'project_links'))
 
 def sizeof_fmt(num):
     for unit in ['B','KB','MB','GB']:
@@ -292,7 +294,7 @@ def gen_packages_html(packages, no_clean=False):
                     gen_suitearch_section(package, suite, arch)
 
                 history = '{}/{}.html'.format(HISTORY_URI, pkg)
-                project_links = html_project_links.substitute()
+                project_links = renderer.render(project_links_template)
 
                 html = renderer.render(package_page_template, {
                     'package': pkg,

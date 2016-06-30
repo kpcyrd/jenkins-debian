@@ -147,7 +147,10 @@ default_page_footer_template = renderer.load_template(
     TEMPLATE_PATH + '/default_page_footer')
 pkg_legend_template = renderer.load_template(
     TEMPLATE_PATH + '/pkg_symbol_legend')
-
+project_links_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'project_links'))
+main_navigation_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'main_navigation'))
 
 html_header = Template("""<!DOCTYPE html>
 <html>
@@ -176,88 +179,6 @@ def create_default_page_footer(date):
             'job_footer': JOB_FOOTER,
             'jenkins_url': JENKINS_URL,
         })
-
-html_head_page = Template((tab*2).join(("""
-<header class="head">
-  <h2>$page_title</h2>
-  <ul class=\"menu\">
-    <li>$suite/$arch:<ul class="children">
-     <li>Notes:<ul class="children">
-      <li><a href="/debian/$suite/$arch/index_notes.html">packages with notes</a></li>
-      <li><a href="/debian/$suite/$arch/index_no_notes.html">packages without notes</a></li>
-     </ul></li>
-     <li>Package states:<ul class="children">
-      <li>
-        <a href="/debian/$suite/$arch/index_reproducible.html" target="_parent">
-          <img src="/static/weather-clear.png" alt="reproducible icon" />
-        </a>
-        <a href="/debian/$suite/$arch/index_FTBR.html" target="_parent">
-          <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
-        </a>
-        <a href="/debian/$suite/$arch/index_FTBFS.html" target="_parent">
-          <img src="/static/weather-storm.png" alt="FTBFS icon" />
-        </a>
-        <a href="/debian/$suite/$arch/index_depwait.html" target="_parent">
-          <img src="/static/weather-snow.png" alt="depwait icon" />
-        </a>
-        <a href="/debian/$suite/$arch/index_not_for_us.html" target="_parent">
-          <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
-        </a>
-        <a href="/debian/$suite/$arch/index_404.html" target="_parent">
-          <img src="/static/weather-severe-alert.png" alt="404 icon" />
-        </a>
-        <a href="/debian/$suite/$arch/index_blacklisted.html" target="_parent">
-          <img src="/static/error.png" alt="blacklisted icon" />
-        </a>
-      </li>
-     </ul></li>
-     $link_pkgsets
-     <li>Recently tested:<ul class="children">
-      <li><a href="/debian/$suite/$arch/index_last_24h.html">packages tested in the last 24h</a></li>
-      <li><a href="/debian/$suite/$arch/index_last_48h.html">packages tested in the last 48h</a></li>
-     </ul></li>
-    <li><a href="/debian/$suite/$arch/index_all_abc.html">all tested packages (sorted alphabetically)</a></li>
-    </ul></li>
-    <li>Architectures:<ul class="children">
-     $link_archs
-     <li><a href="/debian/index_${arch}_scheduled.html">currently scheduled</a></li>
-    </ul></li>
-    <li>Suites:<ul class="children">
-     $link_suites
-     <li><a href="/debian/$suite/index_dd-list.html">maintainers of unreproducible packages</a></li>
-    </ul></li>
-    <li><a href="%s">Debian dashboard</a>
-    <ul class="children">
-     <li><a href="/debian/index_issues.html">issues</a></li>
-     <li><a href="/debian/index_repositories.html">repositories overview</a></li>
-     <li><a href="/debian/index_notify.html" title="notify icon">⚑ packages with enabled notifications</a></li>
-     <li><a href="/debian/index_performance.html">performance stats</a></li>
-     <li><a href="/debian/index_variations.html">variations tested</a></li>
-     <li><a href="/debian/index_breakages.html">broken pieces</a></li>
-    </ul></li>
-  </ul>
-$project_links
-</header><div class="mainbody">""" % DEBIAN_URL ).splitlines(True)))
-
-html_project_links = Template((tab*2).join("""
-    <ul class="reproducible-links">
-        <li>Reproducible Builds projects links
-         <ul class="children"><li>
-            <a href="https://Reproducible-builds.org">Reproducible-builds.org</a><br />
-            Reproducible-builds.org - <a href="https://Reproducible-builds.org/docs/">HowTo</a><br />
-            Reproducible Debian - <a href="https://wiki.debian.org/ReproducibleBuilds">Wiki</a><br />
-            Reproducible builds <a href="https://reproducible.alioth.debian.org/blog/">weekly news</a><br />
-            <a href="https://reproducible-builds.org/specs/source-date-epoch/">SOURCE_DATE_EPOCH specification</a><br />
-            </li><li>
-            Reproducible <a href="https://tests.reproducible-builds.org/archlinux/">Arch Linux</a> /
-            <a href="https://tests.reproducible-builds.org/coreboot/">coreboot</a> /
-            <a href="https://tests.reproducible-builds.org/fedora/">Fedora</a> /
-            <a href="https://tests.reproducible-builds.org/freebsd/">FreeBSD</a> /
-            <a href="https://tests.reproducible-builds.org/netbsd/">NetBSD</a> /
-            <a href="https://tests.reproducible-builds.org/openwrt/">OpenWrt</a>
-        </li></ul></li>
-    </ul>
-""".splitlines(True)))
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
@@ -325,25 +246,19 @@ def convert_into_hms_string(duration):
     return duration
 
 
-def _gen_pkg_sets_link(suite, arch):
-    html = ''
-    if suite != 'experimental':
-            html = '<li><a href="/debian/' + suite + '/' + arch + '/index_pkg_sets.html">package sets</a></li>'
-    return html
-
-def _gen_arch_links(suite, arch):
-    html = '<li>'
-    for a in ARCHS:
-        html += ' <a href="/debian/' + suite + '/index_suite_' + a + '_stats.html\">' + a + '</a>&nbsp;&nbsp;'
-    html += '</li>'
-    return html
-
-def _gen_suite_links(suite, arch):
-    html = '<li>'
-    for s in SUITES:
-        html += ' <a href="/debian/' + s + '/index_suite_' + arch + '_stats.html">' + s + '</a>&nbsp;&nbsp;'
-    html += '</li>'
-    return html
+# See bash equivelent: reproducible_common.sh's "write_page_header()"
+def create_main_navigation(page_title, suite, arch):
+    context = {
+        'page_title': page_title,
+        'suite': suite,
+        'arch': arch,
+        'project_links_html': renderer.render(project_links_template),
+        'experimental': False,
+        'suite_list': [{'s': s} for s in SUITES],
+        'arch_list': [{'a': a} for a in ARCHS],
+        'debian_url': DEBIAN_URL,
+    }
+    return renderer.render(main_navigation_template, context)
 
 
 def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False, packages=False, refresh_every=None):
@@ -355,19 +270,8 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             page_title=title,
             meta_refresh=meta_refresh)
     if not noheader:
-        link_archs = _gen_arch_links(suite, arch)
-        link_suites = _gen_suite_links(suite, arch)
-        link_pkgsets = _gen_pkg_sets_link(suite, arch)
-        project_links=html_project_links.substitute()
+        html += create_main_navigation(title, suite, arch)
 
-        html += html_head_page.substitute(
-            page_title=title,
-            suite=suite,
-            arch=arch,
-            link_archs=link_archs,
-            link_suites=link_suites,
-            link_pkgsets=link_pkgsets,
-            project_links=project_links)
     html += body
     if style_note:
         html += renderer.render(pkg_legend_template, {})

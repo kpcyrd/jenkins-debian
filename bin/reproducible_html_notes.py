@@ -387,7 +387,7 @@ def iterate_over_issues(issues):
             title = 'Notes about issue ' + issue + ' in ' + suite
             destfile = ISSUES_PATH + '/' + suite + '/' + issue + '_issue.html'
             write_html_page(title=title, body=html, destfile=destfile,
-                            style_note=True)
+                            style_note=True, displayed_page='issues')
 
             desturl = REPRODUCIBLE_URL + ISSUES_URI + '/' + suite + '/' + issue + '_issue.html'
             log.debug("Issue created: " + desturl)
@@ -450,7 +450,8 @@ def index_issues(issues, scorefuncs):
     title = 'Known issues related to reproducible builds'
     destfile = DEBIAN_BASE + '/index_issues.html'
     desturl = DEBIAN_URL + '/index_issues.html'
-    write_html_page(title=title, body=html, destfile=destfile)
+    write_html_page(title=title, body=html, destfile=destfile,
+                    displayed_page='issues')
     log.info('Issues index now available at ' + desturl)
 
 

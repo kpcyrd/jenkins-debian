@@ -52,7 +52,7 @@ def generate_schedule(arch):
     html += '</table></p>\n'
     destfile = DEBIAN_BASE + '/index_' + arch + '_scheduled.html'
     desturl = DEBIAN_URL + '/index_' + arch + '_scheduled.html'
-    write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60)
+    write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60, displayed_page='scheduled')
     log.info("Page generated at " + desturl)
 
 

@@ -529,7 +529,8 @@ def build_page(page, suite=None, arch=None):
         destfile = DEBIAN_BASE + '/' + suite + '/' + arch + '/index_' + page + '.html'
         desturl = DEBIAN_URL + '/' + suite + '/' + arch + '/index_' + \
                   page + '.html'
-    write_html_page(title=title, body=html, destfile=destfile, suite=suite, arch=arch, style_note=True)
+    write_html_page(title=title, body=html, destfile=destfile, suite=suite,
+                    arch=arch, style_note=True, displayed_page=page)
     log.info('"' + title + '" now available at ' + desturl)
 
 

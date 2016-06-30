@@ -73,5 +73,6 @@ for suite in SUITES:
         html += '</pre></p>'
         title = 'Maintainers of unreproducible packages in ' + suite
         destfile = DEBIAN_BASE + '/' + suite + '/index_dd-list.html'
-        write_html_page(title, html, destfile, suite, arch, style_note=True)
+        write_html_page(title, html, destfile, suite, arch, style_note=True,
+                        displayed_page='dd_list')
         log.info('%s/%s/index_dd-list.html published', DEBIAN_URL, suite)

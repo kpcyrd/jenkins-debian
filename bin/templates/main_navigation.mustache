@@ -3,12 +3,16 @@
   <ul class="menu">
     <li>{{suite}}/{{arch}}:<ul class="children">
       <li>Notes:<ul class="children">
-        <li><a href="/debian/{{suite}}/{{arch}}/index_notes.html">
+        <li {{#notes}}class='active'{{/notes}}>
+          <a href="/debian/{{suite}}/{{arch}}/index_notes.html">
           packages with notes
-        </a></li>
-          <li><a href="/debian/{{suite}}/{{arch}}/index_no_notes.html">
+          </a>
+        </li>
+        <li {{#no_notes}}class='active'{{/no_notes}}>
+          <a href="/debian/{{suite}}/{{arch}}/index_no_notes.html">
              packages without notes
-          </a></li>
+          </a>
+        </li>
       </ul></li>
       <li>Package states:<ul class="children">
         <li>
@@ -36,23 +40,29 @@
         </li>
       </ul></li>
       {{^experimental}}
-      <li>
+      <li {{#pkg_set}}class='active'{{/pkg_set}}>
         <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html">
           package sets
         </a>
       </li>
       {{/experimental}}
       <li>Recently tested:<ul class="children">
-        <li><a href="/debian/{{suite}}/{{arch}}/index_last_24h.html">
+        <li {{#last_24h}}class='active'{{/last_24h}}>
+          <a href="/debian/{{suite}}/{{arch}}/index_last_24h.html">
             packages tested in the last 24h
-        </a></li>
-        <li><a href="/debian/{{suite}}/{{arch}}/index_last_48h.html">
+          </a>
+        </li>
+        <li {{#last_48h}}class='active'{{/last_48h}}>
+          <a href="/debian/{{suite}}/{{arch}}/index_last_48h.html">
             packages tested in the last 48h
-        </a></li>
+          </a>
+        </li>
       </ul></li>
-      <li><a href="/debian/{{suite}}/{{arch}}/index_all_abc.html">
+      <li {{#all_abc}}class='active'{{/all_abc}}>
+        <a href="/debian/{{suite}}/{{arch}}/index_all_abc.html">
           all tested packages (sorted alphabetically)
-      </a></li>
+        </a>
+      </li>
     </ul></li>
     <li>Architectures:<ul class="children">
       <li>
@@ -60,7 +70,9 @@
         <a href="/debian/{{suite}}/index_suite_{{a}}_stats.html">{{a}}</a>
         {{/arch_list}}
         </li>
-      <li><a href="/debian/index_{{arch}}_scheduled.html">currently scheduled</a></li>
+      <li {{#scheduled}}class='active'{{/scheduled}}>
+        <a href="/debian/index_{{arch}}_scheduled.html">currently scheduled</a>
+      </li>
     </ul></li>
     <li>Suites:<ul class="children">
       <li>
@@ -68,20 +80,29 @@
         <a href="/debian/{{s}}/index_suite_{{arch}}_stats.html">{{s}}</a>
         {{/suite_list}}
       </li>
-      <li><a href="/debian/{{suite}}/index_dd-list.html">
+      <li {{#dd_list}}class='active'{{/dd_list}}>
+        <a href="/debian/{{suite}}/index_dd-list.html">
           maintainers of unreproducible packages
-      </a></li>
+        </a>
+      </li>
     </ul></li>
     <li><a href="{{debian_url}}">Debian dashboard</a>
       <ul class="children">
-        <li><a href="/debian/index_issues.html">issues</a></li>
+        <li {{#issues}}class='active'{{/issues}}>
+          <a href="/debian/index_issues.html">issues</a>
+        </li>
         <li><a href="/debian/index_repositories.html">
             repositories overview</a></li>
-        <li><a href="/debian/index_notify.html" title="notify icon">
-            ⚑ packages with enabled notifications</a></li>
+        <li {{#notify}}class='active'{{/notify}}>
+          <a href="/debian/index_notify.html" title="notify icon">
+            ⚑ packages with enabled notifications
+          </a>
+        </li>
         <li><a href="/debian/index_performance.html">performance stats</a></li>
         <li><a href="/debian/index_variations.html">variations tested</a></li>
-        <li><a href="/debian/index_breakages.html">broken pieces</a></li>
+        <li {{#breakages}}class='active'{{/breakages}}>
+          <a href="/debian/index_breakages.html">broken pieces</a>
+        </li>
     </ul></li>
   </ul>
   {{{project_links_html}}}

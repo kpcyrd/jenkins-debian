@@ -254,7 +254,7 @@ def convert_into_hms_string(duration):
 
 
 # See bash equivelent: reproducible_common.sh's "write_page_header()"
-def create_main_navigation(page_title, suite, arch):
+def create_main_navigation(page_title, suite, arch, displayed_page=None):
     context = {
         'page_title': page_title,
         'suite': suite,
@@ -265,10 +265,16 @@ def create_main_navigation(page_title, suite, arch):
         'arch_list': [{'a': a} for a in ARCHS],
         'debian_url': DEBIAN_URL,
     }
+    # this argument controls which of the main page navigation items will be
+    # highlighted.
+    if displayed_page:
+       context[displayed_page] = True
     return renderer.render(main_navigation_template, context)
 
 
-def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch, noheader=False, style_note=False, noendpage=False, packages=False, refresh_every=None):
+def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
+                    noheader=False, style_note=False, noendpage=False,
+                    packages=False, refresh_every=None, displayed_page=None):
     now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
     html = ''
     meta_refresh = '<meta http-equiv="refresh" content="%d">' % \
@@ -277,7 +283,12 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             page_title=title,
             meta_refresh=meta_refresh)
     if not noheader:
-        html += create_main_navigation(title, suite, arch)
+        html += create_main_navigation(
+            page_title=title,
+            suite=suite,
+            arch=arch,
+            displayed_page=displayed_page,
+        )
 
     html += body
     if style_note:
@@ -292,6 +303,7 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
     except OSError as e:
         if e.errno != errno.EEXIST:  # that's 'File exists' error (errno 17)
             raise
+    log.debug("Writing " + destfile)
     with open(destfile, 'w', encoding='UTF-8') as fd:
         fd.write(html)
 

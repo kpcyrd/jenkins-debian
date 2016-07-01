@@ -26,7 +26,9 @@ import html as HTML
 from string import Template
 from subprocess import call
 from traceback import print_exception
+from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
+
 
 DEBUG = False
 QUIET = False
@@ -47,6 +49,7 @@ BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent/reproducible'
 DEBIAN_BASE = '/var/lib/jenkins/userContent/reproducible/debian'
 TEMPLATE_PATH = BIN_PATH + '/templates'
+TEMP_PATH="/tmp/reproducible"
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'
@@ -166,6 +169,8 @@ html_header = Template("""<!DOCTYPE html>
 try:
     JOB_URL = os.environ['JOB_URL']
 except KeyError:
+    JOB_URL = ''
+    JOB_NAME = ''
     JOB_FOOTER = ''
 else:
     JOB_NAME = os.path.basename(JOB_URL[:-1])
@@ -216,6 +221,11 @@ def print_critical_message(msg):
 
 def percent(part, whole):
     return round(100 * float(part)/float(whole), 1)
+
+
+def create_temp_file(mode='w+b'):
+    os.makedirs(TEMP_PATH, exist_ok=True)
+    return NamedTemporaryFile(suffix=JOB_NAME, dir=TEMP_PATH, mode=mode)
 
 
 class bcolors:

@@ -1,7 +1,10 @@
 <hr id="footer_separator" />
 <p style="font-size:0.9em;">
   <div id="page_footer">
-    {{job_footer}}
+    {{#job_url}}
+    This page was built by the jenkins job <a href="{{job_url}}"> {{job_name}}</a>
+    which is configured via this <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/">git repo</a>.
+    {{/job_url}}
     There is more information
     <a href="{{jenkins_url}}/userContent/about.html">about jenkins.debian.net</a>
     and about <a href="https://wiki.debian.org/ReproducibleBuilds"> reproducible builds of Debian</a>

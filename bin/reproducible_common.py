@@ -171,17 +171,14 @@ try:
 except KeyError:
     JOB_URL = ''
     JOB_NAME = ''
-    JOB_FOOTER = ''
 else:
     JOB_NAME = os.path.basename(JOB_URL[:-1])
-    JOB_FOOTER = 'This page was built by the jenkins job <a href="'+JOB_URL+'">'
-    JOB_FOOTER += JOB_NAME+'</a> which is configured via this '
-    JOB_FOOTER += '<a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/">git repo</a>.'
 
 def create_default_page_footer(date):
     return renderer.render(default_page_footer_template, {
             'date': date,
-            'job_footer': JOB_FOOTER,
+            'job_url': JOB_URL,
+            'job_name': JOB_NAME,
             'jenkins_url': JENKINS_URL,
         })
 

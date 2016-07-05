@@ -42,6 +42,7 @@ REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 JENKINS_URL=${JENKINS_URL:0:-1}
 DBDSUITE="unstable"
 BIN_PATH=/srv/jenkins/bin
+TEMPLATE_PATH=$BIN_PATH/templates
 
 # Debian suites being tested
 SUITES="testing unstable experimental"
@@ -102,6 +103,9 @@ while IFS=, read col1 col2
 do
 	META_PKGSET[$col1]=$col2
 done < $BIN_PATH/meta_pkgset.csv
+
+# mustache templates
+PAGE_FOOTER_TEMPLATE=$TEMPLATE_PATH/default_page_footer.mustache
 
 # sleep 1-23 secs to randomize start times
 delay_start() {
@@ -367,33 +371,34 @@ write_page_intro() {
 	fi
 }
 
-# See the python equivalent of this function: reproducible_common.py's create_default_page_footer
 write_page_footer() {
-	write_page "<hr id=\"footer_separator\" /><p style=\"font-size:0.9em;\"><div id=\"page_footer\">"
-	if [ -n "$JOB_URL" ] ; then
-		write_page "This page was built by the jenkins job"
-		write_page "<a href=\"$JOB_URL\">$(basename $JOB_URL)</a> which is configured"
-		write_page "via this <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/\">git repo</a>."
-	fi
-	write_page "There is more information <a href=\"https://jenkins.debian.net/userContent/about.html\">about jenkins.debian.net</a> and about <a href=\"https://wiki.debian.org/ReproducibleBuilds\"> reproducible builds of Debian</a> available elsewhere."
-	write_page "<br /> Last update: $(date +'%Y-%m-%d %H:%M %Z'). Copyright 2014-2016 <a href=\"mailto:holger@layer-acht.org\">Holger Levsen</a> and <a href=\"https://jenkins.debian.net//userContent/thanks.html\">many others</a>."
-	write_page "The code of <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/\">jenkins.debian.net.git</a> is mostly GPL-2 licensed. The weather icons are public domain and have been taken from the <a href=\"http://tango.freedesktop.org/Tango_Icon_Library\" target=\"_blank\">Tango Icon Library</a>."
-	write_page "<br />"
 	if [ "$1" = "coreboot" ] ; then
-		write_page "The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."
+		other_distro_details="The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."
 	elif [ "$1" = "NetBSD" ] ; then
-		write_page "NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
+		other_distro_details="NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
 	elif [ "$1" = "FreeBSD" ] ; then
-		write_page "FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
+		other_distro_details="FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
 	elif [ "$1" = "Arch Linux" ] ; then
-		write_page "The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis."
+		other_distro_details="The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis."
 	elif [ "$1" = "fedora-23" ] ; then
-		write_page "FIXME: add fedora copyright+trademark disclaimers here."
+		other_distro_details="FIXME: add fedora copyright+trademark disclaimers here."
+	else
+		other_distro_details=''
 	fi
-	write_page "</div></p>"
+	now=$(date +'%Y-%m-%d %H:%M %Z')
+
+	# The context for pystache3 CLI must be json
+	context=$(printf '{
+		"job_url" : "%s",
+		"job_name" : "%s",
+		"date" : "%s",
+		"other_distro_details" : "%s"
+	}' "${JOB_URL:-""}" "${JOB_NAME:-""}" "$now" "$other_distro_details")
+
+	write_page "$(pystache3 $PAGE_FOOTER_TEMPLATE "$context")"
 	write_page "</div>"
 	write_page "</body></html>"
-}
+ }
 
 # A mustache equivalent of this function has been created. See TEMPLATE_PATH/pkg_list_key.mustache
 write_page_meta_sign() {

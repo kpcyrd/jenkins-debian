@@ -529,8 +529,10 @@ create_dashboard_page() {
 	fi
 	RESULT=$(cat /srv/reproducible-results/modified_in_sid.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	write_page "<tr><td class=\"left\">packages <a href=\"/debian/index_repositories.html\">modified in our toolchain</a> (in unstable)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
-	RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
-	write_page "<tr><td class=\"left\">&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
+	if ! diff /srv/reproducible-results/modified_in_sid.txt /srv/reproducible-results/modified_in_exp.txt ; then
+		RESULT=$(cat /srv/reproducible-results/modified_in_exp.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
+		write_page "<tr><td class=\"left\">&nbsp;&nbsp;- (in experimental)</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
+	fi
 	RESULT=$(cat /srv/reproducible-results/binnmus_needed.txt || echo "unknown")	# written by reproducible_html_repository_comparison.sh
 	if [ "$RESULT" != "0" ] ; then
 		write_page "<tr><td class=\"left\">&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"

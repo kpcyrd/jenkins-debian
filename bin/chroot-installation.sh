@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=true
@@ -56,7 +56,7 @@ execute_ctmpfile() {
 	(sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG) || true
 	RESULT=$(grep "xxxxxSUCCESSxxxxx" $TMPLOG || true)
 	if [ -z "$RESULT" ] ; then
-		RESULT=$(egrep "Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)" $TMPLOG || true)
+		RESULT=$(egrep "Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)" $TMPLOG || true)
 		if [ ! -z "$RESULT" ] ; then
 			echo
 			echo "$(date -u) - Warning: Network problem detected."

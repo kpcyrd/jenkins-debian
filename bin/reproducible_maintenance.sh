@@ -171,7 +171,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
 	echo "$(date -u) - Rescheduling failed builds due to network issues."
-	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' {} \; || true)
+	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)' {} \; || true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
 		echo "The following builds have failed due to network problems and will be rescheduled now:"

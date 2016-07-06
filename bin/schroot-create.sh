@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # Copyright      2014 Joachim Breitner <nomeata@debian.org>
 # Copyright      2015 MAttia Rizzolo <mattia@mapreri.org>
@@ -118,7 +118,7 @@ EOF
 robust_chroot_apt() {
 	set +e
 	sudo chroot $SCHROOT_TARGET apt-get $@ | tee $TMPLOG
-	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway)' $TMPLOG || true)
+	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)' $TMPLOG || true)
 	set -e
 	if [ ! -z "$RESULT" ] ; then
 		echo "$(date -u) - 'apt-get $@' failed, sleeping 5min before retrying..."

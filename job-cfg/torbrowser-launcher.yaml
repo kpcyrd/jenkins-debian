@@ -10,7 +10,7 @@
           text: About jenkins.debian.net
           icon: /userContent/images/debian-swirl-24x24.png
       - sidebar: &sb10
-          url: https://jenkins.debian.net/view/torbrowser-launcher
+          url: https://jenkins.debian.net/view/torbrowser/
           text: '{sb_desc} jobs'
           icon: /userContent/images/debian-jenkins-24x24.png
       - sidebar: &sb99

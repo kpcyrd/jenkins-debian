@@ -176,7 +176,7 @@ if [ -f /etc/debian_version ] ; then
 	#
 	# install packages we need
 	#
-	if [ ./$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
+	if [ $BASEDIR/$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
 		DEBS=" 
 			bash-completion 
 			bc

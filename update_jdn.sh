@@ -228,6 +228,7 @@ if [ -f /etc/debian_version ] ; then
 		case $HOSTNAME in
 			profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
 				bison
+				ca-certificates
 				cmake
 				diffutils
 				findutils
@@ -245,6 +246,9 @@ if [ -f /etc/debian_version ] ; then
 				kgb-client
 				m4
 				make
+				python3-clint
+				python3-git
+				python3-requests
 				python3-yaml
 				subversion
 				sysvinit-core
@@ -386,8 +390,9 @@ if [ -f /etc/debian_version ] ; then
 				pbuilder lintian || echo "this should only fail on the first install"
 		#		botch
 		# we need mock from bpo to build current fedora
+		# we need vagrant from bpo to build fdroid
 		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports mock \
+			$UP2DATE || sudo apt-get install -t jessie-backports mock python3-vagrant \
 				|| echo "this should only fail on the first install"
 		fi
 		# for varying kernels

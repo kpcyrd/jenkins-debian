@@ -44,7 +44,7 @@
     triggers:
       - timed: '{my_timed}'
       - pollscm:
-          cron: '*/6 * * * *'
+          cron: '{my_scmpoll}'
     logrotate:
       daysToKeep: 90
       numToKeep: 20
@@ -287,6 +287,7 @@
     name: reproducible
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_node: '{my_hname}'
+    my_scmpoll: '*/6 * * * *'
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -493,6 +494,7 @@
                 - 'notes':
                     my_description: 'Generate HTML results ({my_reponame}) for reproducible builds, triggered by changes to the <a href="https://anonscm.debian.org/git/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
                     my_timed: '57 0 * * *'
+                    my_scmpoll: 'H/1 H/1 * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_{my_reponame}.py && /srv/jenkins/bin/reproducible_html_{my_reponame}.py'
                 - 'source-date-epoch-spec':
                     my_description: 'Generate the HTML of the reproducible builds SOURCE_DATE_EPOCH specification, triggered by changes to the <a href="https://anonscm.debian.org/git/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'

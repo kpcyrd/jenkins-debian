@@ -374,7 +374,7 @@ data.extend(
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),
         'parameters': [{'string': {'name': 'PU_GIT_BRANCH',
-                                    'description': 'The git branch that triggered the build that reulted in this subsequent build'}}],
+                                    'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
         'logrotate': lr(90),
         'publishers': publ(irc='debian-boot')}}])
 

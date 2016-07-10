@@ -568,7 +568,7 @@ first_build() {
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
-BUILDUSERNAME=pbuilder1
+export BUILDUSERNAME=pbuilder1
 # pbuilder sets HOME to the value of BUILD_HOME…
 BUILD_HOME=/nonexistent/first-build
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
@@ -619,7 +619,7 @@ second_build() {
 	esac
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=2222
-BUILDUSERNAME=pbuilder2
+export BUILDUSERNAME=pbuilder2
 # pbuilder sets HOME to the value of BUILD_HOME…
 BUILD_HOME=/nonexistent/second-build
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"

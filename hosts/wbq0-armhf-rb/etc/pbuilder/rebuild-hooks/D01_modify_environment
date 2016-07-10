@@ -17,6 +17,8 @@ export CAPTURE_ENVIRONMENT="I capture the environment"
 echo "I: Changing /bin/sh to bash" >&2
 echo "dash dash/sh boolean false" | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+echo "I: Setting user's login shell to /bin/bash" >&2
+usermod -s /bin/bash $BUILDUSERNAME
 
 # temporarily disable disorderfs as we have problems properly unmounting it
 exit 0

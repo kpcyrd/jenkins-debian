@@ -461,6 +461,8 @@ write_variation_table() {
 		write_page "<tr><td>env HOME</td><td>HOME=\"/nonexistent/first-build\"</td><td>HOME=\"/nonexistent/second-build\"</td></tr>"
 		write_page "<tr><td>uid</td><td>uid=1111</td><td>uid=2222</td></tr>"
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"
+		write_page "<tr><td>/bin/sh</td><td>/bin/dash</td><td>/bin/bash</td></tr>"
+		write_page "<tr><td>user's login shell</td><td>/bin/sh</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64 and i386: 18 or 17<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64 and i386: 17 or 18 (!= the first build)<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
 	else
@@ -498,7 +500,6 @@ write_variation_table() {
 	FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on amd64: <i>temporarily not</i> systematically varied (AMD or Intel CPU with different names & features)<br />on i386: same for both builds (currently, work in progress)<br />on armhf: sometimes varied (depending on the build job), but only the minor CPU revision</td></tr>"
-		write_page "<tr><td>/bin/sh</td><td>/bin/dash</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>year, month, date</td><td>today ($DATE) or (on amd64 and i386 only) also: $FUTURE</td><td>on amd64 and i386: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"

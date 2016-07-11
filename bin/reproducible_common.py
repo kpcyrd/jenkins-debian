@@ -155,6 +155,8 @@ project_links_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'project_links'))
 main_navigation_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'main_navigation'))
+basic_page_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'basic_page'))
 
 html_header = Template("""<!DOCTYPE html>
 <html>
@@ -278,32 +280,28 @@ def create_main_navigation(page_title, suite, arch, displayed_page=None):
 def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
                     noheader=False, style_note=False, noendpage=False,
                     packages=False, refresh_every=None, displayed_page=None):
-    now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
-    html = ''
     meta_refresh = '<meta http-equiv="refresh" content="%d">' % \
         refresh_every if refresh_every is not None else ''
-    html += html_header.substitute(
-            page_title=title,
-            meta_refresh=meta_refresh)
+    context = {
+        'page_title': title,
+        'meta_refresh': meta_refresh,
+    }
     if not noheader:
-        html += create_main_navigation(
+        context['main_navigation_html'] = create_main_navigation(
             page_title=title,
             suite=suite,
             arch=arch,
             displayed_page=displayed_page,
         )
-        # Add the 'mainbody' div only if including a header
-        html += "<div class='mainbody'>"
-    html += body
+    main_html = body
     if style_note:
-        html += renderer.render(pkg_legend_template, {})
+        main_html += renderer.render(pkg_legend_template, {})
     if not noendpage:
-        html += create_default_page_footer(now)
-    if not noheader:
-        # If the header was included, we need to end the 'mainbody' div after
-        # the 'mainbody' content
-        html += '</div>'
-    html += '</body>\n</html>'
+        now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
+        main_html += create_default_page_footer(now)
+    context['main_html'] = main_html
+    html = renderer.render(basic_page_template, context)
+
     try:
         os.makedirs(destfile.rsplit('/', 1)[0], exist_ok=True)
     except OSError as e:

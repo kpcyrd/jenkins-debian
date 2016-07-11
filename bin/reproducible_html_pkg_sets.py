@@ -24,8 +24,6 @@ pkgset_navigation_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'pkgset_navigation'))
 pkgset_details_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'pkgset_details'))
-basic_page_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'basic_page'))
 pkg_legend_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'pkg_symbol_legend'))
 
@@ -140,20 +138,13 @@ def create_pkgset_navigation(suite, arch, view=None):
 
 def create_index_page(suite, arch):
     title = 'Package sets in %s/%s for Reproducible Builds' % (suite, arch)
-    now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
-    page_context = {
-        'main_html': create_pkgset_navigation(suite, arch) +
-                     create_default_page_footer(now),
-        'main_navigation_html': create_main_navigation(title, suite, arch,
-                                                       'pkg_set'),
-    }
-    body = renderer.render(basic_page_template, page_context)
+    body = create_pkgset_navigation(suite, arch)
     destfile = os.path.join(DEBIAN_BASE, suite, arch,
                             "index_pkg_sets.html")
     log.info("Creating pkgset index page for %s/%s.",
              suite, arch)
-    write_html_page(title=title, body=body, destfile=destfile,
-                    noheader=True, noendpage=True)
+    write_html_page(title=title, body=body, destfile=destfile, suite=suite,
+                    arch=arch, displayed_page='pkg_set')
 
 
 def gen_other_arch_context(archs, suite, pkgset_name):
@@ -184,8 +175,8 @@ def stats_thumb_file_href(suite, arch, pkgset_name):
 
 
 def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
-    html = ""
-    html += create_pkgset_navigation(suite, arch, pkgset_name)
+    html_body = ""
+    html_body += create_pkgset_navigation(suite, arch, pkgset_name)
     pkgset_context = ({
         'pkgset_name': pkgset_name,
         'suite': suite,
@@ -241,23 +232,15 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
                 stats["count_" + cutename] != 0):
             pkgset_context['status_details'].append(details_context)
 
-    html += renderer.render(pkgset_details_template, pkgset_context)
-    now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
-    html += create_default_page_footer(now)
+    html_body += renderer.render(pkgset_details_template, pkgset_context)
     title = 'Reproducible Builds %s package set for %s/%s for' % \
             (pkgset_name, suite, arch)
-
-    body = renderer.render(basic_page_template, {
-        'main_html': html,
-        'main_navigation_html': create_main_navigation(title, suite, arch,
-                                                       'pkg_set'),
-    })
     page = "pkg_set_" + pkgset_name + ".html"
     destfile = os.path.join(DEBIAN_BASE, suite, arch, page)
     log.info("Creating meta pkgset page for %s in %s/%s.",
               pkgset_name, suite, arch)
-    write_html_page(title=title, body=body, destfile=destfile,
-                    noheader=True, noendpage=True)
+    write_html_page(title=title, body=html_body, destfile=destfile, suite=suite,
+                    arch=arch, displayed_page='pkg_set')
 
 
 def create_pkgset_graph(png_file, suite, arch, pkgset_name):

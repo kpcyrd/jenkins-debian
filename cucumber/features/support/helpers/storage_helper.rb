@@ -19,7 +19,7 @@ class VMStorage
     pool_xml = REXML::Document.new(File.read("#{@xml_path}/storage_pool.xml"))
     pool_name = LIBVIRT_DOMAIN_NAME
     pool_xml.elements['pool/name'].text = pool_name
-    @pool_path = "/srv/workspace/vm-pools/#{pool_name}"
+    @pool_path = "/srv/workspace/vm-pools/#{pool_name}"  # FIXME -- hardwiring the .../vm-pools path semms like a poor effort
     begin
       @pool = @virt.lookup_storage_pool_by_name(pool_name)
     rescue Libvirt::RetrieveError
@@ -29,20 +29,20 @@ class VMStorage
       VMStorage.clear_storage_pool(@pool)
       @pool = nil
     end
+    if not(Dir.exists?(@pool_path))
+      # We'd like to use @pool.build, which will just create the
+      # @pool_path directory, but it does so with root:root as owner
+      # (at least with libvirt 1.2.21-2). libvirt itself can handle
+      # that situation, but guestfs (at least with <=
+      # 1:1.28.12-1+b3) cannot when invoked by a non-root user,
+      # which we want to support.
+      FileUtils.mkdir(@pool_path)
+      FileUtils.chown(nil, 'libvirt-qemu', @pool_path)
+      FileUtils.chmod("ug+wrx", @pool_path)
+    end
     unless @pool
       pool_xml.elements['pool/target/path'].text = @pool_path
       @pool = @virt.define_storage_pool_xml(pool_xml.to_s)
-      if not(Dir.exists?(@pool_path))
-        # We'd like to use @pool.build, which will just create the
-        # @pool_path directory, but it does so with root:root as owner
-        # (at least with libvirt 1.2.21-2). libvirt itself can handle
-        # that situation, but guestfs (at least with <=
-        # 1:1.28.12-1+b3) cannot when invoked by a non-root user,
-        # which we want to support.
-        FileUtils.mkdir(@pool_path)
-        FileUtils.chown(nil, 'libvirt-qemu', @pool_path)
-        FileUtils.chmod("ug+wrx", @pool_path)
-      end
     end
     @pool.create unless @pool.active?
     @pool.refresh

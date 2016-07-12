@@ -106,6 +106,9 @@ done < $BIN_PATH/meta_pkgset.csv
 
 # mustache templates
 PAGE_FOOTER_TEMPLATE=$TEMPLATE_PATH/default_page_footer.mustache
+PROJECT_LINKS_TEMPLATE=$TEMPLATE_PATH/project_links.mustache
+MAIN_NAVIGATION_TEMPLATE=$TEMPLATE_PATH/main_navigation.mustache
+
 
 # sleep 1-23 secs to randomize start times
 delay_start() {
@@ -162,146 +165,92 @@ write_page_header() {
 	# the solution is to write all html pages with python…
 	rm -f $PAGE
 	MAINVIEW="dashboard"
-	ALLSTATES="reproducible FTBR FTBFS depwait not_for_us 404 blacklisted"
-	ALLVIEWS="notes no_notes pkg_sets last_24h last_48h all_abc arch scheduled suite_stats dd-list dashboard issues repositories notify performance variations breakages"
-	GLOBALVIEWS="issues scheduled notify repositories dashboard performance variations breakages"
-	SUITEVIEWS="dd-list suite_stats"
-	SPOKENTARGET["issues"]="issues"
-	SPOKENTARGET["notes"]="packages with notes"
-	SPOKENTARGET["no_notes"]="packages without notes"
-	SPOKENTARGET["scheduled"]="currently scheduled"
-	SPOKENTARGET["last_24h"]="packages tested in the last 24h"
-	SPOKENTARGET["last_48h"]="packages tested in the last 48h"
-	SPOKENTARGET["all_abc"]="all tested packages (sorted alphabetically)"
-	SPOKENTARGET["notify"]="⚑ packages with enabled notifications"
-	SPOKENTARGET["dd-list"]="maintainers of unreproducible packages"
-	SPOKENTARGET["pkg_sets"]="package sets"
-	SPOKENTARGET["suite_stats"]="suite: $SUITE"
-	SPOKENTARGET["repositories"]="repositories overview"
-	SPOKENTARGET["dashboard"]="Debian dashboard"
-	SPOKENTARGET["performance"]="performance stats"
-	SPOKENTARGET["variations"]="variations tested"
-	SPOKENTARGET["breakages"]="broken pieces"
 	write_page "<!DOCTYPE html><html><head>"
 	write_page "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
 	write_page "<meta name=\"viewport\" content=\"width=device-width\" />"
 	write_page "<link href=\"/static/style.css\" type=\"text/css\" rel=\"stylesheet\" />"
 	write_page "<title>$2</title></head>"
 	if [ "$1" != "$MAINVIEW" ] ; then
-		write_page "<body class=\"wrapper\"><header class=\"head\"><h2>$2</h2>"
+		write_page "<body class=\"wrapper\">"
 	else
-		write_page "<body class=\"wrapper\" onload=\"selectSearch()\"><header class=\"head\"><h2>$2</h2>"
+		write_page "<body class=\"wrapper\" onload=\"selectSearch()\">"
 	fi
-	write_page "<ul class=\"menu\">"
-	write_page "<li>$SUITE/$ARCH:<ul class=\"children\">"
-	local CLASS=""
-	for TARGET in $ALLVIEWS ; do
-		CLASS=""
-		if [ "$TARGET" = "pkg_sets" ] && [ "$SUITE" = "experimental" ] ; then
-			# no pkg_sets are tested in experimental
-			continue
-		fi
-		SPOKEN_TARGET=${SPOKENTARGET[$TARGET]}
-		BASEURL="/debian/$SUITE/$ARCH"
-		local i
-		for i in $GLOBALVIEWS ; do
-			if [ "$TARGET" = "$i" ] ; then
-				BASEURL="/debian"
-			fi
-		done
-		for i in ${SUITEVIEWS} ; do
-			if [ "$TARGET" = "$i" ] ; then
-				BASEURL="/debian/$SUITE"
-			fi
-		done
-		# prepare unsorted lists
-		if [ "$TARGET" = "notes" ] ; then
-			write_page "<li>Notes<ul class=\"children\">"
-		elif [ "$TARGET" = "last_24h" ] ; then
-			write_page "<li>Recently tested:<ul class=\"children\">"
-		fi
-		# prepare links
-		if [ "$TARGET" = "scheduled" ] ; then
-			write_page "<li><a href=\"/debian/index_${ARCH}_scheduled.html\">${SPOKEN_TARGET}</a></li>"
-		elif [ "$TARGET" = "notify" ] ; then
-			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\" title=\"notify icon\">${SPOKEN_TARGET}</a></li>"
-		elif [ "$TARGET" = "arch" ] ; then
-			write_page "<li>Architectures:<ul class=\"children\"><li>"
-			for i in ${ARCHS} ; do
-				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$ARCH" ] ; then
-					CLASS=" class=\"active\""
-				fi
-				write_page " <a href=\"/debian/$SUITE/index_suite_${i}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
-				CLASS=""
-			done
-			write_page "</li>"
-		elif [ "$TARGET" = "suite_stats" ] ; then
-			write_page "<li>Suites:<ul class=\"children\"><li>"
-			for i in $SUITES ; do
-				if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$SUITE" ] ; then
-					CLASS=" class=\"active\""
-				fi
-				write_page " <a href=\"/debian/$i/index_suite_${ARCH}_stats.html\"$CLASS>$i</a>&nbsp;&nbsp;"
-				CLASS=""
-			done
-			write_page "</li>"
-		elif [ "$TARGET" = "dashboard" ] ; then
-			if [ "$1" = "dashboard" ] ; then
-				CLASS=" class=\"active\""
-			fi
-			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\"$CLASS>${SPOKEN_TARGET}</a><ul class=\"children\">"
+
+	# Build context for the main_navigation mustache template.
+
+	# Do not show package set links for "experimental" pages
+	if [ "$SUITE" != "experimental" ] ; then
+		# no pkg_sets are tested in experimental
+		include_pkgset_link="\"include_pkgset_link\" : \"true\""
+	else
+		include_pkgset_link=''
+	fi
+
+	# Used to highlight the link for the current page
+	if [ "$1" = "dashboard" ] || [ "$1" = "performance" ] || [ "$1" = "repositories" ] || [ "$1" = "variations" ] ; then
+		displayed_page="\"$1\": \"true\""
+	else
+		displayed_page=''
+	fi
+
+	# Create json for suite links (a list of objects)
+	suite_links="\"suite_list\": ["
+	comma=0
+	for i in $SUITES ; do
+		if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$SUITE" ] ; then
+			class="class='active'"
 		else
-			if [ "$1" = "$TARGET" ] ; then
-				CLASS=" class=\"active\""
-			fi
-			write_page "<li><a href=\"$BASEURL/index_${TARGET}.html\"$CLASS>${SPOKEN_TARGET}</a></li>"
+			class=''
 		fi
-		# close unsorted lists (and package states loop)
-		if [ "$TARGET" = "all_abc" ] ; then
-			write_page "</ul></li>"
-		elif [ "$TARGET" = "last_48h" ] ; then
-			write_page "</ul></li>"
-		elif [ "$TARGET" = "breakages" ] ; then
-			write_page "</ul></li>"
-		elif [ "$TARGET" = "scheduled" ] ; then
-			write_page "</ul></li>"
-		elif [ "$TARGET" = "dd-list" ] ; then
-			write_page "</ul></li>"
-		elif [ "$TARGET" = "no_notes" ] ; then
-			write_page "</ul></li>"
-			# after notes we have package states
-			write_page "<li>Package states:"
-			write_page "<ul class=\"children\"><li>"
-			for MY_STATE in $ALLSTATES ; do
-				set_icon $MY_STATE
-			write_icon
-			write_page " "
-			done
-			write_page "</li></ul></li>"
+		if [ $comma == 1 ] ; then
+			suite_links+=", {\"s\": \"$i\", \"class\": \"$class\"}"
+		else
+			suite_links+="{\"s\": \"$i\", \"class\": \"$class\"}"
+			comma=1
 		fi
 	done
-	write_page "</ul>"
-	# project links
-	write_page "    <ul class=\"reproducible-links\">"
-	write_page "        <li>Reproducible Builds projects links"
-	write_page "         <ul class=\"children\"><li>"
-	write_page "            <a href=\"https://Reproducible-builds.org\">Reproducible-builds.org</a><br />"
-	write_page "            Reproducible-builds.org - <a href=\"https://Reproducible-builds.org/docs/\">HowTo</a><br />"
-	write_page "            Reproducible Debian - <a href=\"https://wiki.debian.org/ReproducibleBuilds\">Wiki</a><br />"
-	write_page "            Reproducible builds <a href=\"https://reproducible.alioth.debian.org/blog/\">weekly news</a><br />"
-	write_page "            <a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a><br />"
-	write_page "            </li><li>"
-	write_page "            Reproducible <a href=\"https://tests.reproducible-builds.org/archlinux/\">Arch Linux</a> /"
-	write_page "            <a href=\"https://tests.reproducible-builds.org/coreboot/\">coreboot</a> /"
-	write_page "            <a href=\"https://tests.reproducible-builds.org/fedora/\">Fedora</a> /"
-	write_page "            <a href=\"https://tests.reproducible-builds.org/freebsd/\">FreeBSD</a> /"
-	write_page "            <a href=\"https://tests.reproducible-builds.org/netbsd/\">NetBSD</a> /"
-	write_page "            <a href=\"https://tests.reproducible-builds.org/openwrt/\">OpenWrt</a>"
-	write_page "            <a href=\"https://tests.reproducible-builds.org/lede/\">LEDE</a>"
-	write_page "        </li></ul></li>"
-	write_page "    </ul>"
-	# end project links
+	suite_links+="]"
+
+	# Create json for arch links (a list of objects)
+	arch_links="\"arch_list\": ["
+	comma=0
+	for i in ${ARCHS} ; do
+		if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$ARCH" ] ; then
+			class="class='active'"
+		else
+			class=''
+		fi
+		if [ $comma == 1 ] ; then
+			arch_links+=", {\"a\": \"$i\", \"class\": \"$class\"}"
+		else
+			arch_links+="{\"a\": \"$i\", \"class\": \"$class\"}"
+			comma=1
+		fi
+	done
+	arch_links+="]"
+
+	# finally, the completely formed JSON context
+	context=$(printf '{
+		"arch" : "%s",
+		"suite" : "%s",
+		"page_title" : "%s",
+		"debian_url" : "%s",
+		%s,
+		%s
+	' "$ARCH" "$SUITE" "$2" "$DEBIAN_URL" "$arch_links" "$suite_links")
+	if [[ ! -z $displayed_page ]] ; then
+		context+=", $displayed_page"
+	fi
+	if [[ ! -z $include_pkgset_link ]] ; then
+		context+=", $include_pkgset_link"
+	fi
+	context+="}"
+
+	write_page "<header class=\"head\">"
+	write_page "$(pystache3 $MAIN_NAVIGATION_TEMPLATE "$context")"
+	write_page "$(pystache3 $PROJECT_LINKS_TEMPLATE "{}")"
 	write_page "</header>"
+
 	write_page "<div class=\"mainbody\">"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		write_page "<ul>"

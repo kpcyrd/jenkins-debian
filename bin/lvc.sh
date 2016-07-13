@@ -92,8 +92,6 @@ rm -rf $RESULTS $WORKSPACE/screenshot{,-thumb}.png
 
 mkdir -p $RESULTS
 
-mkdir -p $WORKSPACE/DebianToasterStorage
-
 trap cleanup_all INT TERM EXIT
 
 #

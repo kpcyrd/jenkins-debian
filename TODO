@@ -174,7 +174,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * missing tests:
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
-** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run. maybe vary $SHELL too.
+** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 
 ==== reproducible Debian armhf
@@ -414,7 +414,6 @@ correctly, Guix is ready for work.
 * d-i_check_jobs.sh: check for removed package (but with existing jobs) missing
 * build packages using jenkins-debian-glue and not with the custom scripts used today?
 * run scripts/digress/ ?
-* bubulle wrote: "Another interesting target would be d-i builds *including non uploaded packages* (something like "d-i from git repositories" images). That would in some way require to create a quite specific image, with all udebs (while netboot only has udebs needed before one gets a working network setup).
 
 === chroot-installation_*
 
@@ -441,13 +440,6 @@ These small changes are probably still worth doing anyway:
 * g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
 * turn job-cfg/g-i.yaml into .yaml.py
 
-The following ideas should really only be implemented for the new 'lvc*' tests.... (but are kept here for now)
-
-* pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
-** these jobs would not need to do an install, just booting them in rescue mode is probably enough
-* for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
-** same usecase:  -monitor none -nographic -serial stdio  
-
 === torbrowser-launcher_*
 
 * fix "schroot session cleanup loop" in _common.sh to ignore other schroots
@@ -469,52 +461,22 @@ The following ideas should really only be implemented for the new 'lvc*' tests..
 *** repeat test…
 * run upstream tests on stable and sid too: https://trac.torproject.org/projects/tor/wiki/doc/TorBrowser/Hacking#QAandTesting ?
 
-== Further ideas...
-
 === lvc, work in progress, just started
 
-* upgrade lvc configuration to test stretch
 
-* put this on debian isos too: config/chroot_local-includes/lib/live/config/9999-autotest
+* pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
+** these jobs would not need to do an install, just booting them in rescue mode is probably enough
+* for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
+** same usecase:  -monitor none -nographic -serial stdio  
+* d-i page showing all characters, to be called from rescue mode in all alphabets and then do "rectangle detection" to spot bad/incomple fonts
 
-* re-read the docs! 
-** http://live.debian.net/manual/stable/html/live-manual.en.html#321
-
-* generate feature files from templates? to cope with sub-products?
--> no. detect desktop type and set variables accordingly
--> simpler: pass an environment variable with the type
-
-* get iso
-* tables for looping through features: see tails/iuk.git/features/download_target_file/Download_Target_File.feature
-
+* put this on debian isos too?: config/chroot_local-includes/lib/live/config/9999-autotest
 * to debug cucumber: --verbose --backtrace --expand
-
-* drop / remove
-* can probably go: dhcp.rb firewall_leaks.rb dhcp.feature firewall_leaks.feature
-* more occurances of "the computer boots Tails"
-* @source (only keep product tests)
-
-* disabled stuff in common_steps.rb
-** #if @vm.execute("service tor status").success?
-
-* "I set sudo password" not needed for debianlive nor debian(edu):
-** #@screen.wait("TailsGreeterAdminPassword.png", 20)
-
-* $misc_files_dir needed?
-* def sort_isos_by_creation_date
-  Dir.glob("#{Dir.pwd}/*.iso").sort_by {|f| tails_iso_creation_date(f)}
-  -> useless for us, purpose is to automatically select the latest iso if none is given
 * search case-in-sensitive for tails+tor+amnesia
 
-* put in update_jdn.sh:
-----
-    addgroup tcpdump
-    dpkg-statoverride --update --add root tcpdump 754 /usr/sbin/tcpdump
-    setcap CAP_NET_RAW+eip /usr/sbin/tcpdump
-    adduser $USER tcpdump
-    adduser $USER libvirt
-    adduser $USER libvirt-qemu
-----
+
+== Further ideas...
+
 
 === rebuild sid completly on demand
 

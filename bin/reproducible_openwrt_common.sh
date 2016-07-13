@@ -153,8 +153,8 @@ build_two_times() {
 	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
 
 	# save results in b1
-	[ TYPE = "lede" ] && save_lede_results b1
-	[ TYPE = "openwrt" ] && save_openwrt_results b1
+	[ "$TYPE" = "lede" ] && save_lede_results b1
+	[ "$TYPE" = "openwrt" ] && save_openwrt_results b1
 
 	# copy logs
 	save_openwrt_logs b1
@@ -175,8 +175,8 @@ build_two_times() {
 	openwrt_build "second" "$TARGET"
 
 	# save results in b2
-	[ TYPE = "lede" ] && save_lede_results b2
-	[ TYPE = "openwrt" ] && save_openwrt_results b2
+	[ "$TYPE" = "lede" ] && save_lede_results b2
+	[ "$TYPE" = "openwrt" ] && save_openwrt_results b2
 
 	# copy logs
 	save_openwrt_logs b2

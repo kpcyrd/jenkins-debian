@@ -142,9 +142,15 @@ openwrt_cleanup() {
 	rm logs/* -rf
 }
 
+# TARGET a target including subtarget. E.g. ar71xx_generic
+# CONFIG - a simple basic .config as string. Use \n to seperate lines
+# TYPE - openwrt or lede
+# lede has a different output directory than openwrt
 build_two_times() {
-	TARGET=$1
-	CONFIG=$2
+	TYPE=$1
+	TARGET=$2
+	CONFIG=$3
+
 	openwrt_config $CONFIG
 	openwrt_build_toolchain
 
@@ -157,7 +163,8 @@ build_two_times() {
 	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
 
 	# save results in b1
-	save_openwrt_results b1
+	[ TYPE = "lede" ] && save_lede_results b1
+	[ TYPE = "openwrt" ] && save_openwrt_results b1
 
 	# copy logs
 	save_openwrt_logs b1
@@ -178,7 +185,8 @@ build_two_times() {
 	openwrt_build "second" "$TARGET"
 
 	# save results in b2
-	save_openwrt_results b2
+	[ TYPE = "lede" ] && save_lede_results b2
+	[ TYPE = "openwrt" ] && save_openwrt_results b2
 
 	# copy logs
 	save_openwrt_logs b2
@@ -223,7 +231,7 @@ git log -1
 #./scripts/feeds update -a
 #./scripts/feeds install -a
 
-build_two_times ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
+build_two_times openwrt ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
 
 # for now we only build one architecture until it's at most reproducible
 #build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"

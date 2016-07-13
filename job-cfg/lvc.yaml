@@ -41,13 +41,13 @@
           - title: '{my_title}'
             includes: '{my_pngs}'
             image-width: 300
+      - trigger-parameterized-builds:
+          - project: lvc_retreive_artifacts
+            predefined-parameters: "TRIG_NODE=$NODE_NAME\nTRIG_RESULTS=$WORKSPACE/results"
     wrappers:
       - live-screenshot
     builders:
       - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features {my_opts}'
-      - trigger-builds:
-          - project: lvc_retreive_artifacts
-            predefined-parameters: "TRIG_NODE=$NODE_NAME\nTRIG_RESULTS=$WORKSPACE/results"
     triggers:
       - timed: '{my_time}'
     node: 'lvc'

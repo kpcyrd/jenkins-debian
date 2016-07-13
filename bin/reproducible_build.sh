@@ -35,10 +35,10 @@ create_results_dirs() {
 }
 
 handle_race_condition() {
-	echo | tee -a $BUILDLOG
+	echo | tee -a $RBUILDLOG
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
 	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
-	printf "$msg" | tee -a $BUILDLOG
+	printf "$msg" | tee -a $RBUILDLOG
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
@@ -63,7 +63,7 @@ save_artifacts() {
 		local msg="Artifacts from this build have been preserved. They will be available for 24h only, so download them now.\n"
 		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
-		printf "$msg" | tee -a $BUILDLOG
+		printf "$msg" | tee -a $RBUILDLOG
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
 		echo "Package page: <a href=\"$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
@@ -405,7 +405,7 @@ call_diffoscope_on_buildinfo_files() {
 			;;
 		*)
 			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
-			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $BUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
+			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $RBUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
 }

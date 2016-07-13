@@ -26,6 +26,7 @@ if [ "use_PU_GIT_BRANCH" = "$URL" ] ; then
 			exit 1
 			}
 		URL=$PU_ISO
+		echo "using locally built ISO image: URL='$URL'"
 	else
 		echo "URL='$URL' but PU_GIT_BRANCH='$PU_GIT_BRANCH' -- aborting"
 		exit 1

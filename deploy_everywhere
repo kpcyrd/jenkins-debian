@@ -1,0 +1,145 @@
+#!/bin/bash
+#
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
+#
+# released under the GPLv=2
+#
+# deployment helper for jenkins.debian.net and build nodes
+# (misses freebsd node)
+
+# disclaimers:
+#   this script grew over the years…
+#   the code is horrible and was always ment to be a quick local hack and never to be published
+#   this script expects ~/jenkins.debian.net to be a git clone of that repo
+#   probably not all hosts have currently enough diskspace to hold several users clones
+#   use at your own risk. it might eat your cats. you have been warned.
+#   the HOSTS lists below is yet another code duplication…
+
+# useful things:
+# ./deploy_everywhere 		- will deploy on all nodes (and handle 398 days hosts properly)
+# ./deploy_everywhere only		- will deploy on jenkins only
+# ./deploy_everywhere only pb10	- will deploy on jenkins and pb10
+# ./deploy_everywhere upgrade	- will run "apt-get update && upgrade && clean" everywhere
+# ./deploy_everywhere upgradey	- will run "apt-get upgrade -y" everywhere
+# ./deploy_everywhere rmstamp	- will delete stamp files everywhere
+# ./deploy_everywhere clean	- is probably not useful anymore… :)
+
+
+START=$(date +'%s')
+export HOSTS="profitbricks-build1-amd64.debian.net profitbricks-build2-i386.debian.net profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-i386.debian.net profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net bbx15-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net cbxi4a-armhf-rb.debian.net cbxi4b-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net root@jenkins.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net ff4a-armhf-rb.debian.net opi2a-armhf-rb.debian.net opi2b-armhf-rb.debian.net odu3a-armhf-rb.debian.net cb3a-armhf-rb.debian.net opi2c-armhf-rb.debian.net"
+echo
+echo -n "$(date) - "
+real_command="export LANG=C && cd jenkins.debian.net && git pull && ./update_jdn.sh "
+reset_clock=true
+if [ -z "$1" ] ; then
+	echo -n "Running j.d.n.git updates on $HOSTS now"
+	# reset_clock can be false as update_jdn.sh sets the time
+	reset_clock=false
+elif [ "$1" = "upgrade" ] ; then
+	real_command="export LANG=C && sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade && sudo apt-get clean"
+	shift
+elif [ "$1" = "upgradey" ] ; then
+	real_command="export LANG=C && sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y dist-upgrade && sudo apt-get clean"
+	shift
+elif [ "$1" = "rmstamp" ] ; then
+	real_command="sudo rm /var/log/jenkins/*stamp"
+	reset_clock=false
+	shift
+elif [ "$1" = "clean" ] ; then
+	real_command="sudo apt-get clean"
+	reset_clock=false
+	shift
+elif [ "$1" = "check" ] ; then
+	real_command="pgrep -l -a -f _build.sh"
+	reset_clock=false
+	shift
+elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
+        export HOSTS="root@jenkins.debian.net"
+	case $2 in
+		1|pb1)	 HOSTS="$HOSTS profitbricks-build1-amd64.debian.net" ;;
+		2|pb2)	 HOSTS="$HOSTS profitbricks-build2-i386.debian.net" ;;
+		3|pb3)	 HOSTS="$HOSTS profitbricks-build3-amd64.debian.net" ;;
+		4|pb4)	 HOSTS="$HOSTS profitbricks-build4-amd64.debian.net" ;;
+		5|pb5)	 HOSTS="$HOSTS profitbricks-build5-amd64.debian.net" ;;
+		6|pb6)	 HOSTS="$HOSTS profitbricks-build6-i386.debian.net" ;;
+		9|pb9)	 HOSTS="$HOSTS profitbricks-build9-amd64.debian.net" ;;
+		10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
+	esac
+	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
+else
+	real_command="$@"
+	echo -n "Running '$real_command' on $HOSTS now."
+	real_command="$@ && echo '__reallyreally=ok__'"
+fi
+
+LOG=$(mktemp -u)
+for i in $HOSTS ; do
+	echo -n "."
+       	command="$real_command"
+	if $reset_clock ; then
+ 		case $i in
+			profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*)
+				#  set correct date
+				command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
+				;;
+			*)
+				;;
+		esac
+	fi
+	xterm -class deploy-jenkins -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
+done
+sleep 3
+COUNTER=0
+for i in $HOSTS ; do
+	while ! test -f $LOG.$i.done ; do
+		let COUNTER+=1
+		sleep 1
+		echo -n "."
+		if [ $COUNTER -eq 42 ] ; then
+			echo 
+			echo -n "$LOG.$i.done still doesnt exist, how strange…"
+			COUNTER=0
+			continue
+		fi
+	done
+done
+echo
+
+for i in $HOSTS ; do
+	HNAME1=$(echo $i | cut -d "@" -f2 | cut -d "." -f1|cut -d "-" -f1)	# pb nodes (h01ger)
+	HNAME2=$(echo $i | cut -d "@" -f2 | cut -d "." -f1)			# non -armhf ones (vagrant)
+	TAIL=$(tail -1 $LOG.$i)
+	if [ "$i" = "root@jenkins.debian.net" ] ; then
+		if ! ( [[ "$TAIL" =~ "__$HNAME1=ok__" ]] || [[ "$TAIL" =~ "__$HNAME2=ok__" ]] || [[ "$TAIL" =~ "__reallyreally=ok__" ]] || [[ "$TAIL" =~ "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." ]] ) ; then
+			echo "Problems on $i:"
+		fi
+		cat $LOG.$i
+		rm $LOG.$i $LOG.$i.done > /dev/null
+	elif [[ "$TAIL" =~ "__$HNAME1=ok__" ]] || [[ "$TAIL" =~ "__$HNAME2=ok__" ]] || [[ "$TAIL" =~ "__reallyreally=ok__" ]] || [[ "$TAIL" =~ "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." ]] ; then
+		rm $LOG.$i $LOG.$i.done > /dev/null
+	else
+		echo "Problems on $i: $TAIL"
+		xterm -class deploy-jenkins -fa 'DejaVuSansMono' -fs 10 -e "less +G $LOG.$i ; rm $LOG.$i $LOG.$i.done" &
+	fi
+done
+echo
+
+### not needed anymore as we now always output the jenkins.d.n log…
+#if [ -f ./update_jdn.sh ] ; then
+#	rgrep FI[X]ME * | grep -v echo > $LOG || true
+#	if [ -s $LOG ] ; then
+#		cat $LOG
+#		echo
+#	fi
+#	rm $LOG >/dev/null
+#fi
+
+END=$(date +'%s')
+DURATION=$(( $END - $START ))
+HOUR=$(echo "$DURATION/3600"|bc)
+MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
+SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
+echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
+echo
+echo "the end."
+

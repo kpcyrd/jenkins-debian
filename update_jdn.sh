@@ -567,7 +567,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	    figlet -f banner Error
 	    explain "you must set \$PVNAME to physical volume pathname, exiting."
 	    exit 1
-	else
+	elif ! $UP2DATE ; then
 	    if ! sudo pvs $PVNAME >/dev/null 2>&1; then
 	        sudo pvcreate $PVNAME
 	    fi

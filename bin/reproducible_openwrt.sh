@@ -2,6 +2,7 @@
 
 # Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
+#           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
 OPENWRT_GIT_REPO=git://git.openwrt.org/openwrt.git
@@ -35,6 +36,46 @@ save_openwrt_logs() {
 	local postfix="$1"
 
 	tar cJf "$BASE/openwrt/dbd/logs_${postfix}.tar.xz" logs/
+}
+
+save_lede_results() {
+	RUN=$1
+	cd bin/targets
+	for target in * ; do
+		pushd $target || continue
+		for subtarget in * ; do
+			pushd $subtarget || continue
+
+			# save firmware images
+			mkdir -p $TMPDIR/$RUN/$target/$subtarget/
+			for image in $(find * -name "*.bin" -o -name "*.squashfs") ; do
+				cp -p $image $TMPDIR/$RUN/$target/$subtarget/
+			done
+
+			# save subtarget specific packages
+			if [ -d packages ] ; then
+				pushd packages
+				for package in $(find * -name "*.ipk") ; do
+					mkdir -p $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)
+					cp -p $package $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
+				done
+				popd
+			fi
+		done
+		popd
+	done
+
+	# arch is like mips_34kc_dsp
+	popd bin/packages/
+	for arch in * ; do
+		pushd $arch || continue
+		for package in $(find * -name "*.ipk") ; do
+			mkdir -p $TMPDIR/$RUN/packages/$arch/$(dirname $package)
+			cp -p $package $TMPDIR/$RUN/packages/$arch/$(dirname $package)/
+		done
+		popd
+	done
+	pushd
 }
 
 save_openwrt_results() {

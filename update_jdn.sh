@@ -54,39 +54,46 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo adduser --system --shell /bin/bash --no-create-home --ingroup jenkins-adm --disabled-login --no-create-home jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
-for user in helmut holger mattia lunar phil ; do
-	if [ "$user" = "lunar" ] && [ "$HOSTNAME" != "jenkins" ] ; then
-		# lunar only wants to configure jekyll
-		continue
-	fi
-	if [ "$user" = "phil" ] && [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-		# phil only wants to test stuff
-		sudo adduser $user libvirt
-		sudo adduser $user libvirt-qemu
-		continue
-	elif [ "$user" = "phil" ] && ( ! [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ) ; then
-		# create phil on jenkins and jenkins-test-vm only
-		continue
-	fi
-	# actually create the user
-	if ! getent passwd $user > /dev/null ; then
-		if [ "$user" = "mattia" ] ; then
-			usershell=/bin/zsh
-		else
-			usershell=/bin/bash
+
+declare -A u_shell uh_groups
+
+sudo_groups='jenkins,jenkins-adm,sudo,adm'
+uh_groups['helmut','*']="$sudo_groups"
+uh_groups['holger','*']="$sudo_groups"
+uh_groups['holger','jenkins']="reproducible,${uh_groups['holger','*']}"
+uh_groups['mattia','*']="$sudo_groups"
+uh_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
+uh_groups['phil','profitbricks-build10-amd64']=''
+uh_groups['phil','jenkins']=''
+uh_groups['lunar','jenkins']='reproducible'
+
+u_shell['mattia']='/bin/zsh'
+
+# get the users out of the uh_groups array's index
+users=$(for i in ${!uh_groups[@]}; do echo ${i%,*} ; done | sort -u)
+
+for user in $users ; do
+	if [ -v uh_groups["$user","$HOSTNAME"] -o -v uh_groups["$user",'*'] ] ; then
+		# actually create the user
+		if ! getent passwd $user > /dev/null ; then
+			# adduser, defaulting to /bin/bash as shell
+			sudo adduser --gecos "" --shell "${u_shell[$user]:-/bin/bash}" --disabled-password $user
 		fi
-		sudo adduser --gecos "" --shell "$usershell" --disabled-password $user
+		# add groups: first try the specific host, or if unset fall-back to default '*' setting
+		for h in "$HOSTNAME" '*' ; do
+			if [ -v uh_groups["$user","$h"] ] ; then
+				sudo usermod -G ${uh_groups["$user","$h"]} $user
+				break
+			fi
+		done
+		# add the keys
+		cp # FIXME we need the paths here
 	fi
-	# put user in groups
-	if [ "$HOSTNAME" = "jenkins" ] && [ "$user" = "lunar" ] ; then
-		extra_groups="reproducible"
-	elif [ "$HOSTNAME" = "jenkins" ] ; then
-		extra_groups="reproducible,jenkins,jenkins-adm,sudo,adm"
-	else
-		extra_groups="jenkins,jenkins-adm,sudo,adm"
-	fi
-	sudo usermod -G $extra_groups $user
 done
+
+grep -q '^AuthorizedKeysFile' /etc/ssh/sshd_config || {
+    echo 'AuthorizedKeysFile /var/lib/misc/userkeys/%u' >> /etc/ssh/sshd_config
+}
 
 sudo mkdir -p /srv/workspace
 [ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
@@ -481,6 +488,7 @@ else
     # tidying up ... assuming that we don't want clutter on peripheral servers
     [ -d /srv/jenkins/job-cfg ] && sudo rm -rf /srv/jenkins/job-cfg
 fi
+
 
 sudo mkdir -p /var/lib/jenkins/.ssh
 if [ "$HOSTNAME" = "jenkins" ] ; then

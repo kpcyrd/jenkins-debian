@@ -396,6 +396,8 @@ data.extend(
                     ],
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),
+        'parameters': [{'string': {'name': 'GIT_BRANCH',
+                                    'description': 'git branch to pretend to have triggered a by-hand build.'}}],
         'logrotate': lr(90),
         'publishers': publ(irc='debian-boot')}}])
 

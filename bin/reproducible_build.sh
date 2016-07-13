@@ -13,6 +13,28 @@ common_init "$@"
 
 set -e
 
+log_info () {
+	_log "I:"
+}
+
+log_error () {
+	_log "E:"
+}
+
+log_warning () {
+	_log "W:"
+}
+
+log_file () {
+	cat $@ | tee -a $RBUILDLOG
+}
+
+_log () {
+	local prefix="$1"
+	shift 1
+	echo -e "$(date -u)  $prefix $*" | tee -a $RBUILDLOG
+}
+
 exit_early_if_debian_is_broken() {
 	# debian is fine, thanks
 	if false && [ "$ARCH" = "armhf" ] ; then
@@ -35,12 +57,11 @@ create_results_dirs() {
 }
 
 handle_race_condition() {
-	echo | tee -a $RBUILDLOG
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
-	local msg="Warning, package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
-	printf "$msg" | tee -a $RBUILDLOG
+	local msg="Package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
+	log_warning "\n$msg"
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
-	echo "$(date -u) - Terminating this build quickly and nicely..." | tee -a $RBUILDLOG
+	log_warning "Terminating this build quickly and nicely..."
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
 		SAVE_ARTIFACTS=0
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
@@ -59,17 +80,15 @@ save_artifacts() {
 		local HEADER="$DEBIAN_BASE/$ARTIFACTS/.HEADER.html"
 		mkdir -p $DEBIAN_BASE/$ARTIFACTS
 		cp -r $TMPDIR/* $DEBIAN_BASE/$ARTIFACTS/
-		echo | tee -a ${RBUILDLOG}
 		local msg="Artifacts from this build have been preserved. They will be available for 24h only, so download them now.\n"
 		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
-		printf "$msg" | tee -a $RBUILDLOG
+		log_info "\n$msg\n"
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
 		echo "Package page: <a href=\"$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
 		echo "</p>" >> $HEADER
 		chmod 644 $HEADER
-		echo | tee -a ${RBUILDLOG}
 		# irc message
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="Artifacts for ${SRCPACKAGE}, $STATUS in ${SUITE}/${ARCH}: $URL"
@@ -115,7 +134,7 @@ update_db_and_html() {
 		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
-			echo -e "\n$MESSAGE" | tee -a ${RBUILDLOG}
+			log_info "\n$MESSAGE\n"
 			irc_message debian-reproducible "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to diffoscope problems
 			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then
@@ -165,21 +184,21 @@ diff_copy_buildlogs() {
 			gzip -9cvn b2/build.log > $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
 			chmod 644 $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
 		elif [ $FTBFS -eq 0 ] ; then
-			echo "Warning: No second build log, what happened?" | tee -a $RBUILDLOG
+			log_warning "No second build log, what happened?"
 		fi
 		set -x # # to debug diffoscope/schroot problems
 		echo "Compressing the 1st log..."
 		gzip -9cvn b1/build.log > $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 		chmod 644 $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 	else
-		echo "Error: No first build log, not even looking for the second" | tee -a $RBUILDLOG
+		log_error "No first build log, not even looking for the second"
 	fi
 }
 
 handle_404() {
-	echo "Warning: Download of ${SRCPACKAGE} sources from ${SUITE} failed." | tee -a ${RBUILDLOG}
-	ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-	echo "Warning: Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate. Sleeping 30m as this should not happen." | tee -a ${RBUILDLOG}
+	log_warning "Download of ${SRCPACKAGE} sources from ${SUITE} failed."
+	ls -l ${SRCPACKAGE}* | log_file -
+	log_warning "Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate. Sleeping 30m as this should not happen."
 	DURATION=''
 	EVERSION="None"
 	update_rbuildlog
@@ -191,9 +210,9 @@ handle_404() {
 }
 
 handle_depwait() {
-	echo "Downloading the build dependencies failed" | tee -a "$RBUILDLOG"
-	echo "Maybe there was a network problem, or the build dependencies are currently uninstallable; consider filing a bug in the last case." | tee -a "$RBUILDLOG"
-	echo "Network problems are automatically rescheduled after some hours." | tee -a "$RBUILDLOG"
+	log_warning "Downloading the build dependencies failed"
+	log_warning "Maybe there was a network problem, or the build dependencies are currently uninstallable; consider filing a bug in the last case."
+	log_warning "Network problems are automatically rescheduled after some hours."
 	calculate_build_duration
 	update_db_and_html "depwait"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
@@ -202,7 +221,7 @@ handle_depwait() {
 
 handle_not_for_us() {
 	# a list of valid architecture for this package should be passed to this function
-	echo "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped." | tee -a ${RBUILDLOG}
+	log_info "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped."
 	DURATION=''
 	update_rbuildlog
 	update_db_and_html "not for us"
@@ -248,16 +267,15 @@ handle_ftbfs() {
 handle_ftbr() {
 	# a ftbr explaination message could be passed
 	local FTBRmessage="$@"
-	echo | tee -a ${RBUILDLOG}
-	echo "$(date -u) - ${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}." | tee -a ${RBUILDLOG}
+	log_error "\n${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}."
 	cp b1/${BUILDINFO} $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ ! -z "$FTRmessage" ] ; then
-		echo "$(date -u) - ${FTBRmessage}." | tee -a ${RBUILDLOG}
+		log_error "${FTBRmessage}."
 	fi
 	if [ -f ./${DBDREPORT} ] ; then
 		mv ./${DBDREPORT} $DEBIAN_BASE/dbd/${SUITE}/${ARCH}/
 	else
-		echo "$(date -u) - $DIFFOSCOPE produced no output (which is strange)." | tee -a $RBUILDLOG
+		log_warning "$DIFFOSCOPE produced no output (which is strange)."
 	fi
 	if [ -f ./$DBDTXT ] ; then
 		mv ./$DBDTXT $DEBIAN_BASE/dbdtxt/$SUITE/$ARCH/
@@ -271,16 +289,15 @@ handle_reproducible() {
 	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
-		echo | tee -a ${RBUILDLOG}
-		echo "$DIFFOSCOPE found no differences in the changes files, and a .buildinfo file also exists." | tee -a ${RBUILDLOG}
-		echo "${SRCPACKAGE} from $SUITE built successfully and reproducibly on ${ARCH}." | tee -a ${RBUILDLOG}
+		log_info "\n$DIFFOSCOPE found no differences in the changes files, and a .buildinfo file also exists."
+		log_info "${SRCPACKAGE} from $SUITE built successfully and reproducibly on ${ARCH}."
 		calculate_build_duration
 		update_db_and_html "reproducible"
 	elif [ -f ./$DBDREPORT ] ; then
-		echo "Diffoscope claims the build is reproducible, but there is a diffoscope file. Please investigate." | tee -a $RBUILDLOG
+		log_warning "Diffoscope claims the build is reproducible, but there is a diffoscope file. Please investigate."
 		handle_ftbr
 	elif [ ! -f b1/$BUILDINFO ] ; then
-		echo "Diffoscope claims the build is reproducible, but there is no .buildinfo file. Please investigate." | tee -a $RBUILDLOG
+		log_warning "Diffoscope claims the build is reproducible, but there is no .buildinfo file. Please investigate."
 		handle_ftbr
 	fi
 }
@@ -335,7 +352,6 @@ dbd_timeout() {
 
 call_diffoscope_on_buildinfo_files() {
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
-	echo | tee -a ${RBUILDLOG}
 	local TIMEOUT="120m"
 	DBDSUITE=$SUITE
 	if [ "$SUITE" = "experimental" ] ; then
@@ -352,7 +368,7 @@ call_diffoscope_on_buildinfo_files() {
 		sleep 2m
 		DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
 	fi
-	echo "$(date -u) - $DIFFOSCOPE will be used to compare the two builds:" | tee -a ${RBUILDLOG}
+	log_info "\n$DIFFOSCOPE will be used to compare the two builds:"
 	set +e
 	set -x
 	# remember to also modify the retry diffoscope call 15 lines below
@@ -385,9 +401,8 @@ call_diffoscope_on_buildinfo_files() {
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	set -e
-	cat $TMPLOG | tee -a $RBUILDLOG  # print dbd output
+	log_file $TMPLOG  # print dbd output
 	rm $TMPLOG
-	echo | tee -a ${RBUILDLOG}
 	case $RESULT in
 		0)
 			handle_reproducible
@@ -480,8 +495,8 @@ choose_package() {
 	elif [ "$NOTIFY" = "0" ] ; then  # the build script has a different idea of notify than the scheduler,
 		NOTIFY=''                  # the scheduler uses integers, build.sh uses strings.
 	fi
-	echo "$(date -u ) - starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'" | tee ${RBUILDLOG}
-	echo "The jenkins build log is/was available at ${BUILD_URL}console" | tee -a ${RBUILDLOG}
+	log_info "starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'"
+	log_info "The jenkins build log is/was available at ${BUILD_URL}console"
 }
 
 download_source() {
@@ -496,7 +511,7 @@ download_source() {
 	local ENGLISH_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
 	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
 	PARSED_RESULT="${ENGLISH_RESULT}${FRENCH_RESULT}"
-	cat ${TMPLOG} >> ${RBUILDLOG}
+	log_file ${TMPLOG}
 	rm ${TMPLOG}
 	set -e
 }
@@ -505,9 +520,9 @@ download_again_if_needed() {
 	if [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		echo "$(date -u ) - download of ${SRCPACKAGE} sources (for ${SUITE}) failed." | tee -a ${RBUILDLOG}
-		ls -l ${SRCPACKAGE}* | tee -a ${RBUILDLOG}
-		echo "$(date -u ) - sleeping 5m before re-trying..." | tee -a ${RBUILDLOG}
+		log_error "download of ${SRCPACKAGE} sources (for ${SUITE}) failed."
+		ls -l ${SRCPACKAGE}* | log_file -
+		log_error "sleeping 5m before re-trying..."
 		sleep 5m
 		download_source
 	fi
@@ -587,10 +602,12 @@ EOF
 		--buildresult $TMPDIR/b1 \
 		--logfile b1/build.log \
 		${SRCPACKAGE}_${EVERSION}.dsc
-	) 2>&1 | tee -a $RBUILDLOG
+	) 2>&1 | log_file -
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 18h." | tee -a b1/build.log $RBUILDLOG
+		msg="pbuilder was killed by timeout after 18h."
+		log_error "$msg"
+		echo "$(date -u) - $msg" | tee -a b1/build.log
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
@@ -698,7 +715,7 @@ remote_build() {
 	rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
-		echo "$(date -u ) - rsync from $NODE failed, sleeping 2m before re-trying..." | tee -a ${RBUILDLOG}
+		log_warning "rsync from $NODE failed, sleeping 2m before re-trying..."
 		sleep 2m
 		rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
@@ -710,7 +727,7 @@ remote_build() {
 	ssh -o "BatchMode = yes" -p $PORT $NODE "rm -r $TMPDIR"
 	set -e
 	if [ $BUILDNR -eq 1 ] ; then
-		cat $TMPDIR/b1/build.log >> ${RBUILDLOG}
+		log_file $TMPDIR/b1/build.log
 	fi
 }
 
@@ -749,7 +766,7 @@ build_rebuild() {
 	mkdir b1 b2
 	remote_build 1 $NODE1
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
-			echo "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..." | tee -a ${RBUILDLOG}
+			log_error "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..."
 			# reschedule the package for later and quit the build without saving anything
 			sqlite3 -init $INIT ${PACKAGES_DB} "UPDATE schedule SET date_build_started = NULL, job = NULL, date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
 			NOTIFY=""
@@ -760,9 +777,9 @@ build_rebuild() {
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
-			cat b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes | tee -a ${RBUILDLOG}
+			log_file b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
 		else
-			echo "$(date -u) - the second build failed, even though the first build was successful." | tee -a ${RBUILDLOG}
+			log_error "the second build failed, even though the first build was successful."
 		fi
 	fi
 }
@@ -831,7 +848,7 @@ delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
 get_source_package
 
-cat ${SRCPACKAGE}_${EVERSION}.dsc | tee -a ${RBUILDLOG}
+log_file ${SRCPACKAGE}_${EVERSION}.dsc
 
 check_suitability
 build_rebuild  # defines FTBFS redefines RBUILDLOG

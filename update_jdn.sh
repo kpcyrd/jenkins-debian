@@ -92,7 +92,7 @@ $UP2DATE || for user in ${users}; do
 	# add groups: first try the specific host, or if unset fall-back to default '*' setting
 	for h in "$HOSTNAME" '*' ; do
 		if [ -v user_host_groups["$user","$h"] ] ; then
-			sudo usermod -G ${user_host_groups["$user","$h"]} $user
+			sudo usermod -G "${user_host_groups["$user","$h"]}" $user
 			break
 		fi
 	done

@@ -11,7 +11,11 @@
 #   this script grew over the years…
 #   the code is horrible and was always ment to be a quick local hack and never to be published
 #   this script expects ~/jenkins.debian.net to be a git clone of that repo
-#   probably not all hosts have currently enough diskspace to hold several users clones
+#	FIXME: set HOME for jenkins-adm to /var/lib/jenkins-adm
+#	FIXME: git clone jdn.git into /var/lib/jenkins-adm
+#	FIXME: profit
+#   	no issue then:
+#		probably not all hosts have currently enough diskspace to hold several users clones
 #   use at your own risk. it might eat your cats. you have been warned.
 #   the HOSTS lists below is yet another code duplication…
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 # Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2

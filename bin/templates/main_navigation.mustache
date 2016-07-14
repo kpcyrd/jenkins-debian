@@ -15,25 +15,32 @@
     </ul></li>
     <li>Package states:<ul class="children">
       <li>
-        <a href="/debian/{{suite}}/{{arch}}/index_reproducible.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_reproducible.html"
+           target="_parent" title="reproducible">
           <img src="/static/weather-clear.png" alt="reproducible icon" />
         </a>
-        <a href="/debian/{{suite}}/{{arch}}/index_FTBR.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_FTBR.html" target="_parent"
+           title="unreproducible">
           <img src="/static/weather-showers-scattered.png" alt="FTBR icon" />
         </a>
-        <a href="/debian/{{suite}}/{{arch}}/index_FTBFS.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_FTBFS.html" target="_parent"
+           title="Failed To Build From Source">
           <img src="/static/weather-storm.png" alt="FTBFS icon" />
         </a>
-        <a href="/debian/{{suite}}/{{arch}}/index_depwait.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_depwait.html" target="_parent"
+           title="failed to install build dependencies">
           <img src="/static/weather-snow.png" alt="depwait icon" />
         </a>
-        <a href="/debian/{{suite}}/{{arch}}/index_not_for_us.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_not_for_us.html" target="_parent"
+           title="should not build on this architecture">
           <img src="/static/weather-few-clouds-night.png" alt="not_for_us icon" />
             </a>
-        <a href="/debian/{{suite}}/{{arch}}/index_404.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_404.html" target="_parent"
+           title="failed to download the source package">
           <img src="/static/weather-severe-alert.png" alt="404 icon" />
         </a>
-        <a href="/debian/{{suite}}/{{arch}}/index_blacklisted.html" target="_parent">
+        <a href="/debian/{{suite}}/{{arch}}/index_blacklisted.html" target="_parent"
+           title="blacklisted">
           <img src="/static/error.png" alt="blacklisted icon" />
         </a>
       </li>
@@ -67,8 +74,8 @@
     <li>
       {{#arch_list}}
       <a {{{class}}} href="/debian/{{suite}}/index_suite_{{a}}_stats.html">
-		  {{a}}
-		</a>
+          {{a}}
+        </a>
       {{/arch_list}}
       </li>
     <li {{#scheduled}}class='active'{{/scheduled}}>
@@ -79,8 +86,8 @@
     <li>
       {{#suite_list}}
       <a {{{class}}} href="/debian/{{s}}/index_suite_{{arch}}_stats.html">
-		  {{s}}
-		</a>
+          {{s}}
+        </a>
       {{/suite_list}}
     </li>
     <li {{#dd_list}}class='active'{{/dd_list}}>
@@ -95,21 +102,21 @@
         <a href="/debian/index_issues.html">issues</a>
       </li>
       <li {{#repositories}}class='active'{{/repositories}}>
-		  <a href="/debian/index_repositories.html">
+          <a href="/debian/index_repositories.html">
           repositories overview
-		  </a>
-		</li>
+          </a>
+        </li>
       <li {{#notify}}class='active'{{/notify}}>
         <a href="/debian/index_notify.html" title="notify icon">
           ⚑ packages with enabled notifications
         </a>
       </li>
       <li {{#performance}}class='active'{{/performance}}>
-		  <a href="/debian/index_performance.html">performance stats</a>
-		</li>
+          <a href="/debian/index_performance.html">performance stats</a>
+        </li>
       <li {{#variations}}class='active'{{/variations}}>
-		  <a href="/debian/index_variations.html">variations tested</a>
-		</li>
+          <a href="/debian/index_variations.html">variations tested</a>
+        </li>
       <li {{#breakages}}class='active'{{/breakages}}>
         <a href="/debian/index_breakages.html">broken pieces</a>
       </li>

@@ -29,7 +29,6 @@ from subprocess import call, check_call
 from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
 
-
 DEBUG = False
 QUIET = False
 
@@ -79,6 +78,7 @@ BUILDINFO_PATH = BASE + BUILDINFO_URI
 
 REPRODUCIBLE_URL = 'https://tests.reproducible-builds.org'
 DEBIAN_URL = 'https://tests.reproducible-builds.org/debian'
+DEBIAN_DASHBOARD_URI = '/debian/reproducible.html'
 JENKINS_URL = 'https://jenkins.debian.net'
 
 # global package set definitions
@@ -265,7 +265,7 @@ def create_main_navigation(page_title, suite, arch, displayed_page=None):
         'project_links_html': renderer.render(project_links_template),
         'suite_list': [{'s': s} for s in SUITES],
         'arch_list': [{'a': a} for a in ARCHS],
-        'debian_url': DEBIAN_URL,
+        'debian_uri': DEBIAN_DASHBOARD_URI,
     }
     if suite != 'experimental':
         # there are not package sets in experimental

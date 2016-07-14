@@ -37,6 +37,7 @@ fi
 # common variables
 REPRODUCIBLE_URL=https://tests.reproducible-builds.org
 DEBIAN_URL=https://tests.reproducible-builds.org/debian
+DEBIAN_DASHBOARD_URI=/debian/reproducible.html
 REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
@@ -234,10 +235,10 @@ write_page_header() {
 		"arch" : "%s",
 		"suite" : "%s",
 		"page_title" : "%s",
-		"debian_url" : "%s",
+		"debian_uri" : "%s",
 		%s,
 		%s
-	' "$ARCH" "$SUITE" "$2" "$DEBIAN_URL" "$arch_links" "$suite_links")
+	' "$ARCH" "$SUITE" "$2" "$DEBIAN_DASHBOARD_URI" "$arch_links" "$suite_links")
 	if [[ ! -z $displayed_page ]] ; then
 		context+=", $displayed_page"
 	fi
@@ -252,6 +253,7 @@ write_page_header() {
 	write_page "</header>"
 
 	write_page "<div class=\"mainbody\">"
+	write_page "<h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		write_page "<ul>"
 		write_page "   A general website <li><a href=\"https://reproducible-builds.org\">Reproducible-builds.org</a></li> is available now."

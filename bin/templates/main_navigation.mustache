@@ -1,4 +1,4 @@
-<h2>{{page_title}}</h2>
+<a href="{{debian_uri}}"><h2>Debian Dashboard</h2></a>
 <ul class="menu">
   <li>{{suite}}/{{arch}}:<ul class="children">
     <li>Notes:<ul class="children">
@@ -89,7 +89,7 @@
       </a>
     </li>
   </ul></li>
-  <li><a {{#dashboard}}class='active'{{/dashboard}} href="{{debian_url}}">Debian dashboard</a>
+  <li><a {{#dashboard}}class='active'{{/dashboard}} href="{{debian_uri}}">Debian dashboard</a>
     <ul class="children">
       <li {{#issues}}class='active'{{/issues}}>
         <a href="/debian/index_issues.html">issues</a>

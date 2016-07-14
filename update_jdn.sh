@@ -15,10 +15,10 @@ TMPFILE=$(mktemp)
 JJB="jenkins-job-builder $@"
 
 # so we can later run some commands only if $0 has been updated…
-if [ ! -f $STAMP ] && [ $BASEDIR/$0 -nt $STAMP ] ; then
-	UP2DATE=false
-else
+if [ -f $STAMP ] && [ $STAMP -nt $BASEDIR/$0 ] ; then
 	UP2DATE=true
+else
+	UP2DATE=false
 fi
 
 

@@ -497,8 +497,8 @@ if [ -e "$HOST_JOBS" ] ; then
 	sudo rsync -rpt --copy-links --delete "$HOST_JOBS/" /srv/jenkins/job-cfg/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
 else
-    # tidying up ... assuming that we don't want clutter on peripheral servers
-    [ -d /srv/jenkins/job-cfg ] && sudo rm -rf /srv/jenkins/job-cfg
+	# tidying up ... assuming that we don't want clutter on peripheral servers
+	[ -d /srv/jenkins/job-cfg ] && sudo rm -rf /srv/jenkins/job-cfg
 fi
 
 
@@ -548,7 +548,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	cd /srv/jenkins/job-cfg
 	for metaconfig in *.yaml.py ; do
 	# there are both python2 and python3 scripts here
-        [ -e ./$metaconfig ] || continue
+		[ -e ./$metaconfig ] || continue
 		./$metaconfig > $TMPFILE
 		if ! sudo -u jenkins-adm cmp -s ${metaconfig%.py} - < $TMPFILE ; then
 			sudo -u jenkins-adm tee ${metaconfig%.py} > /dev/null < $TMPFILE
@@ -584,16 +584,16 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	# creating LVM volume group for jobs
 	#
 	if [ "$PVNAME" = "" ]; then
-	    figlet -f banner Error
-	    explain "you must set \$PVNAME to physical volume pathname, exiting."
-	    exit 1
+		figlet -f banner Error
+		explain "you must set \$PVNAME to physical volume pathname, exiting."
+		exit 1
 	elif ! $UP2DATE ; then
-	    if ! sudo pvs $PVNAME >/dev/null 2>&1; then
-	        sudo pvcreate $PVNAME
-	    fi
-	    if ! sudo vgs $VGNAME >/dev/null 2>&1; then
-	        sudo vgcreate $VGNAME $PVNAME
-	    fi
+		if ! sudo pvs $PVNAME >/dev/null 2>&1; then
+			sudo pvcreate $PVNAME
+		fi
+		if ! sudo vgs $VGNAME >/dev/null 2>&1; then
+			sudo vgcreate $VGNAME $PVNAME
+		fi
 	fi
 fi
 
@@ -604,18 +604,18 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] 
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
-	    # the last condition is to assure the files are owned by the right user/team
-	    if [ "$KGB_SECRETS" -nt $STAMP ] || [ ! -f $STAMP ] ; then
-	        sudo -u jenkins-adm "./deploy_kgb.py"
-	    else
-	        explain "kgb-client configuration unchanged, nothing to do."
-	    fi
+		# the last condition is to assure the files are owned by the right user/team
+		if [ "$KGB_SECRETS" -nt $STAMP ] || [ ! -f $STAMP ] ; then
+			sudo -u jenkins-adm "./deploy_kgb.py"
+		else
+			explain "kgb-client configuration unchanged, nothing to do."
+		fi
 	else
-	    figlet -f banner Warning
-	    echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
-	    echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."
-	    echo "/srv/jenkins/kbg should be mode 755 and owned by jenkins-adm:root."
-	    echo "/srv/jenkins/kbg/client-status should be mode 755 and owned by jenkins:jenkins."
+		figlet -f banner Warning
+		echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
+		echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."
+		echo "/srv/jenkins/kbg should be mode 755 and owned by jenkins-adm:root."
+		echo "/srv/jenkins/kbg/client-status should be mode 755 and owned by jenkins:jenkins."
 	fi
 fi
 

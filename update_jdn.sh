@@ -1,9 +1,8 @@
 #!/bin/bash
-
-set -e
-
 # Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
+
+set -e
 
 BASEDIR=$HOME/jenkins.debian.net
 PVNAME=/dev/vdb      # LVM physical volume for jobs

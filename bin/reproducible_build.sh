@@ -59,7 +59,7 @@ create_results_dirs() {
 handle_race_condition() {
 	local RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
 	local msg="Package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
-	log_warning "$msg"
+	log_warning "\n$msg"
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
 	log_warning "Terminating this build quickly and nicely..."
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
@@ -83,7 +83,7 @@ save_artifacts() {
 		local msg="Artifacts from this build have been preserved. They will be available for 24h only, so download them now.\n"
 		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		msg="${msg}If you are not afraid facing your fears while helping the world by investigating reproducible build issues, you can download the artifacts from the following location: $URL\n"
-		log_info "$msg"
+		log_info "\n$msg\n"
 		echo "<p>" > $HEADER
 		printf "$msg" | sed 's#$#<br />#g' >> $HEADER
 		echo "Package page: <a href=\"$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}\">$DEBIAN_URL/${SUITE}/${ARCH}/${SRCPACKAGE}</a><br />" >> $HEADER
@@ -134,7 +134,7 @@ update_db_and_html() {
 		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
-			log_info "$MESSAGE"
+			log_info "\n$MESSAGE\n"
 			irc_message debian-reproducible "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to diffoscope problems
 			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then
@@ -267,7 +267,7 @@ handle_ftbfs() {
 handle_ftbr() {
 	# a ftbr explaination message could be passed
 	local FTBRmessage="$@"
-	log_error "${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}."
+	log_error "\n${SRCPACKAGE} failed to build reproducibly in ${SUITE} on ${ARCH}."
 	cp b1/${BUILDINFO} $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1 || true  # will fail if there is no .buildinfo
 	if [ ! -z "$FTRmessage" ] ; then
 		log_error "${FTBRmessage}."
@@ -289,7 +289,7 @@ handle_reproducible() {
 	if [ ! -f ./${DBDREPORT} ] && [ -f b1/${BUILDINFO} ] ; then
 		cp b1/${BUILDINFO} $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/ > /dev/null 2>&1
 		figlet ${SRCPACKAGE}
-		log_info "$DIFFOSCOPE found no differences in the changes files, and a .buildinfo file also exists."
+		log_info "\n$DIFFOSCOPE found no differences in the changes files, and a .buildinfo file also exists."
 		log_info "${SRCPACKAGE} from $SUITE built successfully and reproducibly on ${ARCH}."
 		calculate_build_duration
 		update_db_and_html "reproducible"
@@ -368,7 +368,7 @@ call_diffoscope_on_buildinfo_files() {
 		sleep 2m
 		DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
 	fi
-	log_info "$DIFFOSCOPE will be used to compare the two builds:"
+	log_info "\n$DIFFOSCOPE will be used to compare the two builds:"
 	set +e
 	set -x
 	# remember to also modify the retry diffoscope call 15 lines below
@@ -500,7 +500,6 @@ choose_package() {
 }
 
 download_source() {
-	log_msg "Downloading source for ${SUITE}/${SRCPACKAGE}"
 	set +e
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	if [ "$MODE" != "master" ] ; then
@@ -521,9 +520,9 @@ download_again_if_needed() {
 	if [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		log_error "Download of ${SRCPACKAGE} sources (for ${SUITE}) failed."
+		log_error "download of ${SRCPACKAGE} sources (for ${SUITE}) failed."
 		ls -l ${SRCPACKAGE}* | log_file -
-		log_error "Sleeping 5m before re-trying..."
+		log_error "sleeping 5m before re-trying..."
 		sleep 5m
 		download_source
 	fi
@@ -550,8 +549,7 @@ get_source_package() {
 }
 
 check_suitability() {
-	log_msg "Checking whether the package is not for us"
-
+	# check whether the package is not for us...
 	local SUITABLE=false
 	local ARCHITECTURES=$(grep "^Architecture: " ${SRCPACKAGE}_*.dsc| cut -d " " -f2- | sed -s "s# #\n#g" | sort -u)
 
@@ -779,7 +777,6 @@ build_rebuild() {
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
-			log_msg "${SRCPACKAGE}_${EVERSION}_${ARCH}.changes:"
 			log_file b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
 		else
 			log_error "the second build failed, even though the first build was successful."
@@ -851,7 +848,6 @@ delay_start
 choose_package  # defines SUITE, PKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
 get_source_package
 
-log_msg "${SRCPACKAGE}_${EVERSION}.dsc"
 log_file ${SRCPACKAGE}_${EVERSION}.dsc
 
 check_suitability

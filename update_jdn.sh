@@ -55,44 +55,56 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo usermod -G jenkins jenkins-adm
 fi
 
-declare -A u_shell uh_groups
+
+declare -A user_host_groups u_shell
 
 sudo_groups='jenkins,jenkins-adm,sudo,adm'
-uh_groups['helmut','*']="$sudo_groups"
-uh_groups['holger','*']="$sudo_groups"
-uh_groups['holger','jenkins']="reproducible,${uh_groups['holger','*']}"
-uh_groups['mattia','*']="$sudo_groups"
-uh_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
-uh_groups['phil','profitbricks-build10-amd64']=''
-uh_groups['phil','jenkins']=''
-uh_groups['lunar','jenkins']='reproducible'
+
+# if there's a need for host groups, a case statement on $HOSTNAME here that sets $GROUPNAME, say, should do the trick
+# then you can define user_host_groups['phil','lvm_group']=... below
+# and add checks for the GROUP version whereever the HOSTNAME is checked in the following code
+
+user_host_groups['helmut','*']="$sudo_groups"
+user_host_groups['holger','*']="$sudo_groups"
+user_host_groups['holger','jenkins']="reproducible,${user_host_groups['holger','*']}"
+user_host_groups['mattia','*']="$sudo_groups"
+user_host_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
+user_host_groups['phil','profitbricks-build10-amd64']=''
+user_host_groups['phil','jenkins']=''
+user_host_groups['lunar','jenkins']='reproducible'
+
 
 u_shell['mattia']='/bin/zsh'
 
-# get the users out of the uh_groups array's index
-users=$(for i in ${!uh_groups[@]}; do echo ${i%,*} ; done | sort -u)
+# get the users out of the user_host_groups array's index
+users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)
 
-for user in $users ; do
-	if [ -v uh_groups["$user","$HOSTNAME"] -o -v uh_groups["$user",'*'] ] ; then
-		# actually create the user
-		if ! getent passwd $user > /dev/null ; then
-			# adduser, defaulting to /bin/bash as shell
-			sudo adduser --gecos "" --shell "${u_shell[$user]:-/bin/bash}" --disabled-password $user
+$UP2DATE || for user in $users ; do
+	# -v is a bashism to check for set variables, used here to see if this user is active on this host
+	[ -v user_host_groups["$user","$HOSTNAME"] -o -v user_host_groups["$user",'*'] ] || continue
+
+	# create the user
+	if ! getent passwd $user > /dev/null ; then
+		# adduser, defaulting to /bin/bash as shell
+		sudo adduser --gecos "" --shell "${u_shell[$user]:-/bin/bash}" --disabled-password $user
+	fi
+	# add groups: first try the specific host, or if unset fall-back to default '*' setting
+	for h in "$HOSTNAME" '*' ; do
+		if [ -v user_host_groups["$user","$h"] ] ; then
+			sudo usermod -G ${user_host_groups["$user","$h"]} $user
+			break
 		fi
-		# add groups: first try the specific host, or if unset fall-back to default '*' setting
-		for h in "$HOSTNAME" '*' ; do
-			if [ -v uh_groups["$user","$h"] ] ; then
-				sudo usermod -G ${uh_groups["$user","$h"]} $user
-				break
-			fi
-		done
-		# add the keys
-		cp # FIXME we need the paths here
+	done
+	# add the user's keys (if any)
+	if ls authorized_keys/${user}@*.pub >/dev/null 2>&1 ; then
+		[ -d /var/lib/misc/userkeys ] || sudo mkdir -p /var/lib/misc/userkeys
+		cat authorized_keys/${user}@*.pub | sudo tee /var/lib/misc/userkeys/${user} > /dev/null
 	fi
 done
 
-grep -q '^AuthorizedKeysFile' /etc/ssh/sshd_config || {
-    echo 'AuthorizedKeysFile /var/lib/misc/userkeys/%u' >> /etc/ssh/sshd_config
+$UP2DATE || grep -q '^AuthorizedKeysFile' /etc/ssh/sshd_config || {
+	sudo sh -c "echo 'AuthorizedKeysFile /var/lib/misc/userkeys/%u %h/.ssh/authorized_keys' >> /etc/ssh/sshd_config"
+	sudo service ssh reload
 }
 
 sudo mkdir -p /srv/workspace

@@ -12,6 +12,8 @@ RESULT_DIR=$(readlink -f ..)
 ISO_DIR=/srv/d-i/isos
 LVC_HOST=profitbricks-build10-amd64.debian.net
 
+[ -v GIT_BRANCH ] || GIT_BRANCH="$(git branch -r --contains $GIT_COMMIT | tail -1 | cut -c3-)"
+
 clean_workspace() {
 	#
 	# clean

@@ -258,13 +258,25 @@ def convert_into_hms_string(duration):
 
 # See bash equivelent: reproducible_common.sh's "write_page_header()"
 def create_main_navigation(page_title, suite, arch, displayed_page=None):
+    suite_list = []
+    for s in SUITES:
+        suite_list.append({
+            's': s,
+            'class': 'current' if s == suite else ''
+        })
+    arch_list = []
+    for a in ARCHS:
+        arch_list.append({
+            'a': a,
+            'class': 'current' if a == arch else ''
+        })
     context = {
         'page_title': page_title,
         'suite': suite,
         'arch': arch,
         'project_links_html': renderer.render(project_links_template),
-        'suite_list': [{'s': s} for s in SUITES],
-        'arch_list': [{'a': a} for a in ARCHS],
+        'suite_list': suite_list,
+        'arch_list': arch_list,
         'debian_uri': DEBIAN_DASHBOARD_URI,
     }
     if suite != 'experimental':

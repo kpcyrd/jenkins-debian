@@ -188,7 +188,7 @@ write_page_header() {
 	fi
 
 	# Used to highlight the link for the current page
-	if [ "$1" = "dashboard" ] || [ "$1" = "performance" ] || [ "$1" = "repositories" ] || [ "$1" = "variations" ] ; then
+	if [ "$1" = "dashboard" ] || [ "$1" = "performance" ] || [ "$1" = "repositories" ] || [ "$1" = "variations" ] || [ "$1" = "suite_arch_stats" ]; then
 		displayed_page="\"$1\": \"true\""
 	else
 		displayed_page=''
@@ -198,8 +198,8 @@ write_page_header() {
 	suite_links="\"suite_list\": ["
 	comma=0
 	for i in $SUITES ; do
-		if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$SUITE" ] ; then
-			class="class='active'"
+		if [ "$i" = "$SUITE" ] ; then
+			class="current"
 		else
 			class=''
 		fi
@@ -216,8 +216,8 @@ write_page_header() {
 	arch_links="\"arch_list\": ["
 	comma=0
 	for i in ${ARCHS} ; do
-		if [ "$1" = "suite_arch_stats" ] && [ "$i" = "$ARCH" ] ; then
-			class="class='active'"
+		if [ "$i" = "$ARCH" ] ; then
+			class="current"
 		else
 			class=''
 		fi

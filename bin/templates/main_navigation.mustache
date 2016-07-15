@@ -1,20 +1,58 @@
 <a href="{{debian_uri}}"><h2>Debian Dashboard</h2></a>
 <ul class="menu">
-  <li>{{suite}}/{{arch}}:<ul class="children">
-    <li>Notes:<ul class="children">
-      <li {{#notes}}class='active'{{/notes}}>
-        <a href="/debian/{{suite}}/{{arch}}/index_notes.html">
-        packages with notes
-        </a>
-      </li>
-      <li {{#no_notes}}class='active'{{/no_notes}}>
-        <a href="/debian/{{suite}}/{{arch}}/index_no_notes.html">
-           packages without notes
-        </a>
-      </li>
-    </ul></li>
-    <li>Package states:<ul class="children">
+  <h4>Suite/Architecture Overviews</h4>
+  <li>
+    Tested architectures:
+    <ul class="children">
       <li>
+      {{#arch_list}}
+        <a class='{{class}}'
+           href="/debian/{{suite}}/index_suite_{{a}}_stats.html">
+          {{a}}
+        </a>
+      {{/arch_list}}
+      </li>
+    </ul>
+  </li>
+  <li>Tested suites:
+    <ul class="children">
+      <li>
+      {{#suite_list}}
+        <a class='{{class}}'
+           href="/debian/{{s}}/index_suite_{{arch}}_stats.html">
+          {{s}}
+        </a>
+      {{/suite_list}}
+      </li>
+    </ul>
+  </li>
+  <h4>Test Result Statistics</h4>
+  <li {{#suite_arch_stats}}class='active'{{/suite_arch_stats}}>
+    Results for
+    <a href="/debian/{{suite}}/index_suite_{{arch}}_stats.html"
+       title="Overview for {{suite}}/{{arch}}">
+      <b>{{suite}}/{{arch}}</b>
+    </a>
+    <ul class="children">
+      <li>
+        Unreproducible packages:
+        <ul class="children">
+          <li {{#notes}}class='active'{{/notes}}>
+            <a href="/debian/{{suite}}/{{arch}}/index_notes.html"
+               title="Show all packages with known issues or notes">
+              with notes
+            </a>
+          </li>
+          <li {{#no_notes}}class='active'{{/no_notes}}>
+            <a href="/debian/{{suite}}/{{arch}}/index_no_notes.html"
+               title="Show all packages that have not been investigated">
+              without notes
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>Other package states:<ul class="children">
+        <li>
         <a href="/debian/{{suite}}/{{arch}}/index_reproducible.html"
            target="_parent" title="reproducible">
           <img src="/static/weather-clear.png" alt="reproducible icon" />
@@ -43,83 +81,73 @@
            title="blacklisted">
           <img src="/static/error.png" alt="blacklisted icon" />
         </a>
-      </li>
-    </ul></li>
-    {{#include_pkgset_link}}
-    <li {{#pkg_set}}class='active'{{/pkg_set}}>
-      <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html">
-        package sets
-      </a>
-    </li>
-    {{/include_pkgset_link}}
-    <li>Recently tested:<ul class="children">
-      <li {{#last_24h}}class='active'{{/last_24h}}>
-        <a href="/debian/{{suite}}/{{arch}}/index_last_24h.html">
-          packages tested in the last 24h
-        </a>
-      </li>
-      <li {{#last_48h}}class='active'{{/last_48h}}>
-        <a href="/debian/{{suite}}/{{arch}}/index_last_48h.html">
-          packages tested in the last 48h
-        </a>
-      </li>
-    </ul></li>
-    <li {{#all_abc}}class='active'{{/all_abc}}>
-      <a href="/debian/{{suite}}/{{arch}}/index_all_abc.html">
-        all tested packages (sorted alphabetically)
-      </a>
-    </li>
-  </ul></li>
-  <li>Architectures:<ul class="children">
-    <li>
-      {{#arch_list}}
-      <a {{{class}}} href="/debian/{{suite}}/index_suite_{{a}}_stats.html">
-          {{a}}
-        </a>
-      {{/arch_list}}
-      </li>
-    <li {{#scheduled}}class='active'{{/scheduled}}>
-      <a href="/debian/index_{{arch}}_scheduled.html">currently scheduled</a>
-    </li>
-  </ul></li>
-  <li>Suites:<ul class="children">
-    <li>
-      {{#suite_list}}
-      <a {{{class}}} href="/debian/{{s}}/index_suite_{{arch}}_stats.html">
-          {{s}}
-        </a>
-      {{/suite_list}}
-    </li>
-    <li {{#dd_list}}class='active'{{/dd_list}}>
-      <a href="/debian/{{suite}}/index_dd-list.html">
-        maintainers of unreproducible packages
-      </a>
-    </li>
-  </ul></li>
-  <li><a {{#dashboard}}class='active'{{/dashboard}} href="{{debian_uri}}">Debian dashboard</a>
-    <ul class="children">
-      <li {{#issues}}class='active'{{/issues}}>
-        <a href="/debian/index_issues.html">issues</a>
-      </li>
-      <li {{#repositories}}class='active'{{/repositories}}>
-          <a href="/debian/index_repositories.html">
-          repositories overview
-          </a>
         </li>
-      <li {{#notify}}class='active'{{/notify}}>
-        <a href="/debian/index_notify.html" title="notify icon">
-          ⚑ packages with enabled notifications
+      </ul></li>
+      {{#include_pkgset_link}}
+      <li {{#pkg_set}}class='active'{{/pkg_set}}>
+        <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html"
+           title="Show stats for tracked sets of packages">
+          package sets
         </a>
       </li>
-      <li {{#performance}}class='active'{{/performance}}>
-          <a href="/debian/index_performance.html">performance stats</a>
-        </li>
-      <li {{#variations}}class='active'{{/variations}}>
-          <a href="/debian/index_variations.html">variations tested</a>
-        </li>
-      <li {{#breakages}}class='active'{{/breakages}}>
-        <a href="/debian/index_breakages.html">broken pieces</a>
+      {{/include_pkgset_link}}
+      <li>Recently tested packages:<ul>
+        <li {{#last_24h}}class='active'{{/last_24h}}><a 
+               href="/debian/{{suite}}/{{arch}}/index_last_24h.html"
+               title="Show packages tested in the last 24 hours">
+            last 24h
+        </a></li>
+        <li {{#last_48h}}class='active'{{/last_48h}}><a 
+               href="/debian/{{suite}}/{{arch}}/index_last_48h.html"
+               title="Show packages tested in the last 48 hours">
+            last 48h
+        </a></li>
+      </ul></li>
+      <li {{#all_abc}}class='active'{{/all_abc}}>
+        <a href="/debian/{{suite}}/{{arch}}/index_all_abc.html"
+           title="Show all tested packages (in alphabetical order!)">
+          all tested packages
+        </a>
       </li>
-  </ul></li>
+    </ul>
+  </li>
+  <li {{#scheduled}}class='active'{{/scheduled}}>
+    <a href="/debian/index_{{arch}}_scheduled.html"
+       title="Show packages currently scheduled for testing on {{arch}}">
+      scheduled
+    </a> for {{arch}}
+  </li>
+  <li {{#dd_list}}class='active'{{/dd_list}}>
+    <a href="/debian/{{suite}}/index_dd-list.html"
+       title="Show maintainers of unreproducible packages in {{suite}}">
+      maintainers of <img src="/static/weather-showers-scattered.png"
+                          alt="Unreproducible packages">
+    </a> in {{suite}}
+  </li>
+</ul>
+<ul class="menu new-menu">
+  <h4>Reproducible Debian Metadata</h4>
+  <li {{#issues}}class='active'{{/issues}}>
+    <a href="/debian/index_issues.html">issues</a>
+  </li>
+  <li {{#repositories}}class='active'{{/repositories}}>
+    <a href="/debian/index_repositories.html">
+      repositories overview
+    </a>
+  </li>
+  <li {{#notify}}class='active'{{/notify}}>
+    <a href="/debian/index_notify.html" title="notify icon">
+      ⚑ packages with enabled notifications
+    </a>
+  </li>
+  <li {{#performance}}class='active'{{/performance}}>
+    <a href="/debian/index_performance.html">performance stats</a>
+  </li>
+  <li {{#variations}}class='active'{{/variations}}>
+    <a href="/debian/index_variations.html">variations tested</a>
+  </li>
+  <li {{#breakages}}class='active'{{/breakages}}>
+    <a href="/debian/index_breakages.html">broken pieces</a>
+  </li>
 </ul>
 {{{project_links_html}}}

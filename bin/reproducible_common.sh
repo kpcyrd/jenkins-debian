@@ -197,16 +197,17 @@ write_page_header() {
 	# Create json for suite links (a list of objects)
 	suite_links="\"suite_list\": ["
 	comma=0
-	for i in $SUITES ; do
-		if [ "$i" = "$SUITE" ] ; then
+	for s in $SUITES ; do
+		if [ "$s" = "$SUITE" ] ; then
 			class="current"
 		else
 			class=''
 		fi
+		uri="/debian/${s}/index_suite_${ARCH}_stats.html"
 		if [ $comma == 1 ] ; then
-			suite_links+=", {\"s\": \"$i\", \"class\": \"$class\"}"
+			suite_links+=", {\"s\": \"${s}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
 		else
-			suite_links+="{\"s\": \"$i\", \"class\": \"$class\"}"
+			suite_links+="{\"s\": \"${s}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
 			comma=1
 		fi
 	done
@@ -215,16 +216,17 @@ write_page_header() {
 	# Create json for arch links (a list of objects)
 	arch_links="\"arch_list\": ["
 	comma=0
-	for i in ${ARCHS} ; do
-		if [ "$i" = "$ARCH" ] ; then
+	for a in ${ARCHS} ; do
+		if [ "$a" = "$ARCH" ] ; then
 			class="current"
 		else
 			class=''
 		fi
+		uri="/debian/$SUITE/index_suite_${a}_stats.html"
 		if [ $comma == 1 ] ; then
-			arch_links+=", {\"a\": \"$i\", \"class\": \"$class\"}"
+			arch_links+=", {\"a\": \"${a}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
 		else
-			arch_links+="{\"a\": \"$i\", \"class\": \"$class\"}"
+			arch_links+="{\"a\": \"${a}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
 			comma=1
 		fi
 	done

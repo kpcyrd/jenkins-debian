@@ -1,15 +1,22 @@
 <a href="{{debian_uri}}"><h2>Debian Dashboard</h2></a>
 <ul class="menu">
+  {{^cross_suite_arch_nav}}
   <h4>Suite/Architecture Overviews</h4>
+  {{/cross_suite_arch_nav}}
+  {{#cross_suite_arch_nav}}
+  <h4>Change Suite/Architecture</h4>
+  {{/cross_suite_arch_nav}}
   <li>
     Tested architectures:
     <ul class="children">
       <li>
       {{#arch_list}}
+        {{#uri}}
         <a class='{{class}}'
-           href="/debian/{{suite}}/index_suite_{{a}}_stats.html">
+           href="{{uri}}">
           {{a}}
         </a>
+        {{/uri}}
       {{/arch_list}}
       </li>
     </ul>
@@ -18,10 +25,12 @@
     <ul class="children">
       <li>
       {{#suite_list}}
+        {{#uri}}
         <a class='{{class}}'
-           href="/debian/{{s}}/index_suite_{{arch}}_stats.html">
+           href="{{uri}}">
           {{s}}
         </a>
+        {{/uri}}
       {{/suite_list}}
       </li>
     </ul>

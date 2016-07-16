@@ -55,6 +55,7 @@ REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'
 REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
 
+DEBIAN_URI = '/debian'
 DBD_URI = '/debian/dbd'
 DBDTXT_URI = '/debian/dbdtxt'
 LOGS_URI = '/debian/logs'
@@ -256,20 +257,41 @@ def convert_into_hms_string(duration):
     return duration
 
 
-# See bash equivelent: reproducible_common.sh's "write_page_header()"
-def create_main_navigation(page_title, suite, arch, displayed_page=None):
+def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
+                               ignore_experimental=False):
+    # if a template is not passed in to navigate between suite and archs
+    # for the current page, we use the suite/arch summary view
+    if not suite_arch_nav_template:
+        suite_arch_nav_template = '/debian/{{suite}}/index_suite_{{arch}}_stats.html'
     suite_list = []
     for s in SUITES:
+        include_suite = True
+        if s == 'experimental' and ignore_experimental:
+            include_suite = False
         suite_list.append({
             's': s,
-            'class': 'current' if s == suite else ''
+            'class': 'current' if s == suite else '',
+            'uri': renderer.render(suite_arch_nav_template,
+                                   {'suite': s, 'arch': arch})
+                   if include_suite else '',
         })
     arch_list = []
     for a in ARCHS:
         arch_list.append({
             'a': a,
-            'class': 'current' if a == arch else ''
+            'class': 'current' if a == arch else '',
+            'uri': renderer.render(suite_arch_nav_template,
+                                   {'suite': suite, 'arch': a}),
         })
+    return (suite_list, arch_list)
+
+
+# See bash equivelent: reproducible_common.sh's "write_page_header()"
+def create_main_navigation(page_title, suite, arch, displayed_page=None,
+                           suite_arch_nav_template=None,
+                           ignore_experimental=False):
+    suite_list, arch_list = gen_suite_arch_nav_context(suite, arch,
+        suite_arch_nav_template, ignore_experimental)
     context = {
         'page_title': page_title,
         'suite': suite,
@@ -278,12 +300,13 @@ def create_main_navigation(page_title, suite, arch, displayed_page=None):
         'suite_list': suite_list,
         'arch_list': arch_list,
         'debian_uri': DEBIAN_DASHBOARD_URI,
+        'cross_suite_arch_nav': True if suite_arch_nav_template else False,
     }
     if suite != 'experimental':
         # there are not package sets in experimental
         context['include_pkgset_link'] = True
-    # this argument controls which of the main page navigation items will be
-    # highlighted.
+    # the "display_page" argument controls which of the main page navigation
+    # items will be highlighted.
     if displayed_page:
        context[displayed_page] = True
     return renderer.render(main_navigation_template, context)
@@ -291,7 +314,8 @@ def create_main_navigation(page_title, suite, arch, displayed_page=None):
 
 def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
                     noheader=False, style_note=False, noendpage=False,
-                    packages=False, refresh_every=None, displayed_page=None):
+                    packages=False, refresh_every=None, displayed_page=None,
+                    suite_arch_nav_template=None, ignore_experimental=False):
     meta_refresh = '<meta http-equiv="refresh" content="%d">' % \
         refresh_every if refresh_every is not None else ''
     context = {
@@ -304,6 +328,8 @@ def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
             suite=suite,
             arch=arch,
             displayed_page=displayed_page,
+            suite_arch_nav_template=suite_arch_nav_template,
+            ignore_experimental=ignore_experimental,
         )
     main_html = body
     if style_note:

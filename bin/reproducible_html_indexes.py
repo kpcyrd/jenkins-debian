@@ -44,6 +44,7 @@ Reference doc for the folowing lists:
     - force the suite/arch to the defaults
   + notes: if true the query also takes the value "status"
 
+
 Technically speaking, a page can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
 """
@@ -521,6 +522,7 @@ def build_page(page, suite=None, arch=None):
             html1, footnote1 = build_page_section(page, section, suite, arch)
             html += html1
             footnote = True if footnote1 else footnote
+    suite_arch_nav_template = None
     if gpage:
         destfile = DEBIAN_BASE + '/index_' + page + '.html'
         desturl = DEBIAN_URL + '/index_' + page + '.html'
@@ -529,8 +531,11 @@ def build_page(page, suite=None, arch=None):
         destfile = DEBIAN_BASE + '/' + suite + '/' + arch + '/index_' + page + '.html'
         desturl = DEBIAN_URL + '/' + suite + '/' + arch + '/index_' + \
                   page + '.html'
+        suite_arch_nav_template = DEBIAN_URI + '/{{suite}}/{{arch}}/index_' + \
+                                  page + '.html'
     write_html_page(title=title, body=html, destfile=destfile, suite=suite,
-                    arch=arch, style_note=True, displayed_page=page)
+                    arch=arch, style_note=True, displayed_page=page,
+                    suite_arch_nav_template=suite_arch_nav_template)
     log.info('"' + title + '" now available at ' + desturl)
 
 

@@ -108,10 +108,10 @@ def update_stats(suite, arch, stats, pkgset_name):
             pkgset_name=pkgset_name, count_good=stats['count_good'],
             count_bad=stats['count_bad'], count_ugly=stats['count_ugly'],
             count_rest=stats['count_rest']))
-        log.info("Updating meta pkgset stats for %s in %s/%s on %s.",
+        log.info("Updating db entry for meta pkgset %s in %s/%s on %s.",
                  pkgset_name, suite, arch, YESTERDAY)
     else:
-        log.info("Stats for meta pkgset %s in %s/%s on %s exist - not updating.",
+        log.debug("Not updating db entry for meta pkgset %s in %s/%s on %s as one exists already.",
                  pkgset_name, suite, arch, YESTERDAY)
 
 

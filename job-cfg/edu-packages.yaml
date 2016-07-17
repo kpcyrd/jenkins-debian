@@ -14,7 +14,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Build the master branch of git://anonscm.debian.org/debian-edu/{my_package}.git in sid on every commit.<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/edu-packages.yaml">edu-packages.yaml</a>.'
+    description: 'Build the master branch of git://git.debian.org/git/debian-edu/{my_package}.git in sid on every commit.<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/edu-packages.yaml">edu-packages.yaml</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -22,7 +22,7 @@
       artifactNumToKeep: -1
     scm:
       - git:
-          url: 'git://anonscm.debian.org/debian-edu/{my_package}.git'
+          url: 'git://git.debian.org/git/debian-edu/{my_package}.git'
           branches:
             - master
     builders:

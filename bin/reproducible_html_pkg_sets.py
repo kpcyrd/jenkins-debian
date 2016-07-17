@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2016 Valerie Young <spectranaut@riseup.net>
-# Based on reproducible_html_pkg_sets.sh, which was
+# Based on reproducible_html_pkg_sets.sh:
 #           © 2014-2016 Holger Levsen <holger@layer-acht.org>
 #           © 2015 Mattia Rizzolo <mattia@debian.org>
 # Licensed under GPL-2

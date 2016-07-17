@@ -150,6 +150,8 @@ def create_index_page(suite, arch):
     body = renderer.render(basic_page_template, page_context)
     destfile = os.path.join(DEBIAN_BASE, suite, arch,
                             "index_pkg_sets.html")
+    log.info("Creating pkgset index page for %s/%s.",
+             suite, arch)
     write_html_page(title=title, body=body, destfile=destfile,
                     noheader=True, noendpage=True)
 
@@ -252,6 +254,8 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     })
     page = "pkg_set_" + pkgset_name + ".html"
     destfile = os.path.join(DEBIAN_BASE, suite, arch, page)
+    log.info("Creating meta pkgset page for %s in %s/%s.",
+              pkgset_name, suite, arch)
     write_html_page(title=title, body=body, destfile=destfile,
                     noheader=True, noendpage=True)
 
@@ -281,6 +285,8 @@ def create_pkgset_graph(png_file, suite, arch, pkgset_name):
         main_label = "Reproducibility status for packages in " + suite + \
                      " from " + pkgset_name
         y_label = "Amount (" + pkgset_name + " packages)"
+        log.info("Creating graph for meta pkgset %s in %s/%s.",
+                  pkgset_name, suite, arch)
         check_call([graph_command, csv_tmp_file, png_file, '4', main_label,
                     y_label, '1920', '960'])
 

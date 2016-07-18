@@ -1,5 +1,6 @@
 - defaults:
     name: reproducible
+    disabled: 'false'
     project-type: freestyle
     properties:
       - sidebar: &sb1
@@ -65,6 +66,7 @@
 
 - defaults:
     name: reproducible_builder
+    disabled: 'false'
     project-type: freestyle
     description: *desc
     properties:

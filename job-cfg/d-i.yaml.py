@@ -333,12 +333,18 @@ def gen_default(name, downstream=None, envfile=None, parameters=None):
         builders.append({'inject': {'properties-file': envfile}})
     if downstream is not None:
         builders.append({'trigger-builds': downstream})
+    if '{name}-pu-triggered' == name:
+        desc = ('Builds debian-installer in sid from git using locally built udebs, '
+                'triggered by completion of pu-build job '
+                '{do_not_edit}')
+    else:
+        desc = ('Builds Debian packages in sid from git {branchdesc}, '
+                'triggered by pushes to <pre>{gitrepo}</pre> '
+                '{do_not_edit}')
 
     ret = {'defaults': {
         'name': name,
-        'description': ('Builds Debian packages in sid from git {branchdesc}, '
-                        'triggered by pushes to <pre>{gitrepo}</pre> '
-                        '{do_not_edit}'),
+        'description': desc,
         'triggers': [{'pollscm': {'cron': '{trg}'}}],
         'scm': [{'git': {'url': '{gitrepo}',
                          'branches': ['{branch}']}}],

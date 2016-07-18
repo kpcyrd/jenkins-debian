@@ -290,7 +290,8 @@
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_node: '{my_hname}'
     my_scmpoll: '*/6 * * * *'
-    my_disabled: 'false' # it's possible to set specific jobs to true but currently this aint done
+    # it's possible to set specific jobs to true but currently this aint done
+    my_disabled: 'false' 
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:

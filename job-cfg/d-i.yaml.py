@@ -328,7 +328,28 @@ def jobspec_svn(key, name, desc, defaults=None,
         j['logrotate'] = lr(logkeep)
     return {key: j}
 
+def gen_default(name, downstream=None, envfile=None, parameters=None):
+    builders = [{'shell': '/srv/jenkins/bin/d-i_build.sh'}]
+    if envfile is not None:
+        builders.append({'inject': {'properties-file': envfile}})
+    if downstream is not None:
+        builders.append({'trigger-builds': downstream})
 
+    ret = {'defaults': {
+        'name': name,
+        'description': ('Builds Debian packages in sid from git {branchdesc}, '
+                        'triggered by pushes to <pre>{gitrepo}</pre> '
+                        '{do_not_edit}'),
+        'triggers': [{'pollscm': {'cron': '{trg}'}}],
+        'scm': [{'git': {'url': '{gitrepo}',
+                         'branches': ['{branch}']}}],
+        'builders': builders,
+        'project-type': 'freestyle',
+        'properties': prop(type='packages', priority=99),
+        'parameters': parameters,
+        'logrotate': lr(90),
+        'publishers': publ(irc='debian-boot')}}
+    return ret
 
 # -- here we build the data to be dumped as yaml
 data = []
@@ -358,46 +379,16 @@ for f in ['html', 'pdf']:
                         logkeep=90))
         templs.append(jtmpl(act='manual', target='{lang}', fmt=f, po=po))
 
-data.extend(
-    [{'defaults': {
-        'name': '{name}-{act}',
-        'description': ('Builds Debian packages in sid from git {branchdesc}, '
-                        'triggered by pushes to <pre>{gitrepo}</pre> '
-                        '{do_not_edit}'),
-        'triggers': [{'pollscm': {'cron': '{trg}'}}],
-        'scm': [{'git': {'url': '{gitrepo}',
-                         'branches': ['{branch}']}}],
-        'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'},
-                     {'trigger-builds': [{'project': 'lvc_debian-miniiso',
-                      'current-parameters': 'true',
-                    }]}],
-        'project-type': 'freestyle',
-        'properties': prop(type='packages', priority=99),
-        'parameters': [{'string': {'name': 'TRIGGERING_BRANCH',
-                                   'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
-        'logrotate': lr(90),
-        'publishers': publ(irc='debian-boot')}}])
-
-data.extend(
-    [{'defaults': {
-        'name': '{name}-pu-{act}',
-        'description': ('Builds Debian packages in sid from git {branchdesc}, '
-                        'triggered by pushes to <pre>{gitrepo}</pre> '
-                        '{do_not_edit}'),
-        'triggers': [{'pollscm': {'cron': '{trg}'}}],
-        'scm': [{'git': {'url': '{gitrepo}',
-                         'branches': ['{branch}']}}],
-        'builders': [ {'shell': '/srv/jenkins/bin/d-i_build.sh'},
-                      {'inject': {'properties-file': 'env.txt'}},
-                      {'trigger-builds': [{'project': 'd-i_pu-triggered_debian-installer',
-                       'predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'
-                       },
-                      ]}
-                    ],
-        'project-type': 'freestyle',
-        'properties': prop(type='packages', priority=99),
-        'logrotate': lr(90),
-        'publishers': publ(irc='debian-boot')}}])
+data.append(gen_default(
+    name='{name}-{act}',
+    downstream=[{'project': 'lvc_debian-miniiso', 'current-parameters': 'true'}],
+    parameters=[ {'string': {'name': 'TRIGGERING_BRANCH', 'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
+    ))
+data.append(gen_default(
+    name='{name}-pu-{act}',
+    downstream=[{'project': 'd-i_pu-triggered_debian-installer','predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'}],
+    envfile='env.txt',
+    ))
 
 templs.append(jtmpl(act='{act}', target='{pkg}'))
 templs.append(jtmpl(act='pu-{act}', target='{pkg}'))

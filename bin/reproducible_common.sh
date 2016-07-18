@@ -678,7 +678,6 @@ create_png_from_table() {
 	echo "Checking whether to update $2..."
 	# $1 = id of the stats table
 	# $2 = image file name
-	# $3 = meta package set, only sensible if $1=6
 	echo "${FIELDS[$1]}" > ${TABLE[$1]}.csv
 	# prepare query
 	WHERE_EXTRA="WHERE suite = '$SUITE'"
@@ -695,34 +694,24 @@ create_png_from_table() {
 		# TABLE[3+4+5] don't have a suite column: (and TABLE[8] (and 9) is faked, based on 3)
 		WHERE_EXTRA=""
 	fi
-	if [ $1 -eq 0 ] || [ $1 -eq 2 ] || [ $1 -eq 6 ] ; then
-		# TABLE[0+2+6] have a architecture column:
+	if [ $1 -eq 0 ] || [ $1 -eq 2 ] ; then
+		# TABLE[0+2] have a architecture column:
 		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
 		if [ "$ARCH" = "armhf" ]  ; then
 			if [ $1 -eq 2 ] ; then
 				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19 and testing/armhf since 2016-01-01)
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
-			elif [ $1 -eq 6 ] ; then
-				# armhf only has pkg sets for unstable since 2015-12-22 and since 2016-02-13 for testing
-				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-12-22'"
 			fi
 		elif [ "$ARCH" = "i386" ]  ; then
 			if [ $1 -eq 2 ] ; then
 				# i386 was only build since 2016-03-28
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
-			elif [ $1 -eq 6 ] ; then
-				# i386 only has pkg sets since later to make nicer graphs
-				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-05-06'"
 			fi
 		fi
 		# testing/amd64 was only build since...
 		# WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
 		# experimental/amd64 was only build since...
 		# WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
-	fi
-	if [ $1 -eq 6 ] ; then
-		# 6 is very special too...
-		WHERE_EXTRA="$WHERE_EXTRA and meta_pkg = '$3'"
 	fi
 	# run query
 	if [ $1 -eq 1 ] ; then
@@ -781,11 +770,6 @@ create_png_from_table() {
 		mkdir -p $DIR
 		echo "Creating $2 dummy."
 		convert -size 1920x960 xc:#aaaaaa -depth 8 $2
-		if [ "$3" != "" ] ; then
-			local THUMB="${TABLE[1]}_${3}-thumbnail.png"
-			convert $2 -adaptive-resize 160x80 ${THUMB}
-			mv ${THUMB} $DEBIAN_BASE/$DIR
-		fi
 		mv $2 $DEBIAN_BASE/$DIR
 		[ "$DIR" = "." ] || rmdir $(dirname $2)
 	fi

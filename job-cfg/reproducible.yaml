@@ -291,7 +291,7 @@
     my_node: '{my_hname}'
     my_scmpoll: '*/6 * * * *'
     # it's possible to set specific jobs to true but currently this aint done
-    my_disabled: 'false' 
+    my_disabled: 'true' 
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:

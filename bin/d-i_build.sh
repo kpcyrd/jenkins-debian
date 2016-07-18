@@ -46,23 +46,26 @@ replace_origin_pu() {
 
 iso_target() {
 	UI=$1 ; shift
-	echo "${ISO_DIR}/mini-${UI}$(replace_origin_pu "-" $PU_GIT_BRANCH).iso"
+	BRANCH=$1 ; shift
+	echo "${ISO_DIR}/mini-${UI}${BRANCH}.iso"
 }
 
 preserve_artifacts() {
 	#
 	# Check is we're in a pu/* branch, and if so save the udebs
 	#
-	if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
-		mkdir -p $PU_BRANCH_DIR
-		cp ${RESULT_DIR}/*.udeb $PU_BRANCH_DIR
+	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
+		mkdir -p $udeb_dir
+		cp ${RESULT_DIR}/*.udeb $udeb_dir
+		# this is put into env.txt below, so that the variable(s) can be injected into the jenkins environment
+		ENV_TO_INJECT="OUR_BRANCH=$GIT_BRANCH"
 	fi
 
 	#
 	# Alternatively, if we built an images tarball and were triggered by a pu/ branch
 	#
 	IMAGETAR=${RESULT_DIR}/debian-installer-images_*.tar.gz
-	if [ -f $IMAGETAR -a "$PU_GIT_BRANCH" ] ; then
+	if [ -f $IMAGETAR -a "$TRIGGERING_BRANCH" ] ; then
 		[ -d ${ISO_DIR} ] || mkdir ${ISO_DIR}
 
 		echo "untaring the .iso images from $IMAGETAR:"
@@ -70,8 +73,9 @@ preserve_artifacts() {
 		echo "sha256sum of .iso images:"
 		sha256sum installer-*/*/images/netboot/gtk/mini.iso installer-*/*/images/netboot/mini.iso
 		echo "move them into place..."
-		mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk)
-		mv -f installer-*/*/images/netboot/mini.iso $(iso_target text)
+		BRANCH=$(replace_origin_pu "-" $TRIGGERING_BRANCH)
+		mv -f installer-*/*/images/netboot/gtk/mini.iso $(iso_target gtk $BRANCH)
+		mv -f installer-*/*/images/netboot/mini.iso $(iso_target text $BRANCH)
 		echo "and see if they are there (listing creation time):"
 		ls -ltrc $ISO_DIR
 
@@ -126,11 +130,11 @@ pdebuild_package() {
 		NUM_CPU=1
 	fi
 	#
-	# if we got a valid PU_GIT_BRANCH passed in as a parameter from the triggering job
+	# if we got a valid TRIGGERING_BRANCH passed in as a parameter from the triggering job
 	# then grab the generated udebs.  FIXME -- we need to work work out a way of cleaning up old branches
 	#
-	if PU_BRANCH_DIR=$(replace_origin_pu "/srv/udebs/" $PU_GIT_BRANCH) ; then
-		cp $PU_BRANCH_DIR/* build/localudebs
+	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $TRIGGERING_BRANCH) ; then
+		cp $udeb_dir/* build/localudebs
 	fi
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" --buildresult ${RESULT_DIR} -- --http-proxy $http_proxy
 	# cleanup
@@ -152,3 +156,6 @@ else
 	echo do something else ; exit 1
 fi
 clean_workspace
+
+# write out the environment variable(s) for injection into jenkins job
+echo "$ENV_TO_INJECT" > env.txt

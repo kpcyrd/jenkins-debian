@@ -18,9 +18,9 @@ replace_origin_pu() {
     echo "${PREFIX}pu_${BRANCH#origin/pu/}"
 }
 
-# if $URL is set to "use_PU_GIT_BRANCH" then use the contents of $PU_GIT_BRANCH to work out the locally built ISO name
-if [ "use_PU_GIT_BRANCH" = "$URL" ] ; then
-	if PU_ISO="$(replace_origin_pu "/srv/d-i/isos/mini-gtk-" $PU_GIT_BRANCH).iso" ; then
+# if $URL is set to "use_TRIGGERING_BRANCH" then use the contents of $TRIGGERING_BRANCH to work out the locally built ISO name
+if [ "use_TRIGGERING_BRANCH" = "$URL" ] ; then
+	if PU_ISO="$(replace_origin_pu "/srv/d-i/isos/mini-gtk-" $TRIGGERING_BRANCH).iso" ; then
 		[ -f "$PU_ISO" ] || {
 			echo "looks like we're meant to be testing '$PU_ISO', but it's missing"
 			exit 1
@@ -28,7 +28,7 @@ if [ "use_PU_GIT_BRANCH" = "$URL" ] ; then
 		URL=$PU_ISO
 		echo "using locally built ISO image: URL='$URL'"
 	else
-		echo "URL='$URL' but PU_GIT_BRANCH='$PU_GIT_BRANCH' -- aborting"
+		echo "URL='$URL' but TRIGGERING_BRANCH='$TRIGGERING_BRANCH' -- aborting"
 		exit 1
 	fi
 fi

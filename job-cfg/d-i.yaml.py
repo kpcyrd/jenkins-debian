@@ -369,12 +369,12 @@ data.extend(
                          'branches': ['{branch}']}}],
         'builders': [{'shell': '/srv/jenkins/bin/d-i_build.sh'},
                      {'trigger-builds': [{'project': 'lvc_debian-miniiso',
-                      'predefined-parameters': 'PU_GIT_BRANCH=$PU_GIT_BRANCH'
+                      'current-parameters': 'true',
                     }]}],
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),
-        'parameters': [{'string': {'name': 'PU_GIT_BRANCH',
-                                    'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
+        'parameters': [{'string': {'name': 'TRIGGERING_BRANCH',
+                                   'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
         'logrotate': lr(90),
         'publishers': publ(irc='debian-boot')}}])
 
@@ -388,16 +388,14 @@ data.extend(
         'scm': [{'git': {'url': '{gitrepo}',
                          'branches': ['{branch}']}}],
         'builders': [ {'shell': '/srv/jenkins/bin/d-i_build.sh'},
+                      {'inject': {'properties-file': 'env.txt'}},
                       {'trigger-builds': [{'project': 'd-i_pu-triggered_debian-installer',
-                       'current-parameters': 'true',
-                       'predefined-parameters': 'PU_GIT_BRANCH=$GIT_BRANCH'
+                       'predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'
                        },
                       ]}
                     ],
         'project-type': 'freestyle',
         'properties': prop(type='packages', priority=99),
-        'parameters': [{'string': {'name': 'GIT_BRANCH',
-                                    'description': 'git branch to pretend to have triggered a by-hand build.'}}],
         'logrotate': lr(90),
         'publishers': publ(irc='debian-boot')}}])
 

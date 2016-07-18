@@ -192,11 +192,10 @@ if "jenkins-test-vm" == os.uname()[1]:
     jobs = [ '{name}_build-group', '{name}_pu-build-group']
 
 # add a special job for triggering from the pu/ branches
-jobs.append( {'{name}_{act}_{pkg}': {
+jobs.append( {'{name}_pu-triggered_{pkg}': {
                 'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
                 'branchdesc': 'master branch',
                 'branch': 'origin/master',
-                'act': 'pu-triggered',
                 'pkg': 'debian-installer',
                 'trg': None,
              }} )
@@ -379,19 +378,21 @@ for f in ['html', 'pdf']:
                         logkeep=90))
         templs.append(jtmpl(act='manual', target='{lang}', fmt=f, po=po))
 
-data.append(gen_default(
-    name='{name}-{act}',
-    downstream=[{'project': 'lvc_debian-miniiso', 'current-parameters': 'true'}],
-    parameters=[ {'string': {'name': 'TRIGGERING_BRANCH', 'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
-    ))
+data.append(gen_default( name='{name}-{act}'))
 data.append(gen_default(
     name='{name}-pu-{act}',
     downstream=[{'project': 'd-i_pu-triggered_debian-installer','predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'}],
     envfile='env.txt',
     ))
+data.append(gen_default(
+    name='{name}-pu-triggered',
+    downstream=[{'project': 'lvc_debian-miniiso', 'current-parameters': 'true'}],
+    parameters=[ {'string': {'name': 'TRIGGERING_BRANCH', 'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
+    ))
 
 templs.append(jtmpl(act='{act}', target='{pkg}'))
 templs.append(jtmpl(act='pu-{act}', target='{pkg}'))
+templs.append(jtmpl(act='pu-triggered', target='{pkg}'))
 data.extend(templs)
 
 data.append(

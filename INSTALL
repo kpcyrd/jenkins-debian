@@ -45,6 +45,7 @@ We would prefer to run a jenkins package from jessie-backports.
 * Throttle Concurrent Builds Plugin
 * Next Executions Plugin
 * Parameterized Trigger plugin
+* Environment Injector Plugin
 * Build-timeout Plugin
 * Build Token Root Plugin
 * Embeddable Build Status Plugin

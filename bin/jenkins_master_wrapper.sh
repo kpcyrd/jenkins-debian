@@ -65,7 +65,7 @@ RETVAL=0
 ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
 	# mention failures, but continue since we might want the artifacts anyway
 	RETVAL=$?
-	printf "\nnSSH EXIT CODE: %s\n" $RETVAL
+	printf "\nSSH EXIT CODE: %s\n" $RETVAL
 }
 
 # grab artifacts and tidy up at the other end

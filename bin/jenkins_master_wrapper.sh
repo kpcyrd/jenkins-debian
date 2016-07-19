@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
+#                2016 Phil Hands <phil@hands.com>
+# released under the GPLv=2
+# based on an idea by Peter Palfrader (see bin/jenkins_node_wrapper.sh)
+
 set -u
 set -e
 

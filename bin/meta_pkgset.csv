@@ -1,42 +1,42 @@
-1,essential
-2,required
-3,build-essential
-4,build-essential-depends
-5,popcon_top1337-installed-sources
-6,key_packages
-7,installed_on_debian.org
-8,had_a_DSA
-9,cii-census
-10,gnome
-11,gnome_build-depends
-12,kde
-13,kde_build-depends
-14,mate
-15,mate_build-depends
-16,xfce
-17,xfce_build-depends
-18,freedombox
-19,freedombox_build-depends
-20,grml
-21,grml_build-depends
-22,tails
-23,tails_build-depends
-24,subgraph_OS
-25,subgraph_OS_build-depends
-26,maint_debian-boot
-27,maint_debian-med
-28,maint_debian-ocaml
-29,maint_debian-python
-30,maint_debian-qa
-31,maint_debian-science
-32,maint_debian-x
-33,maint_lua
-34,maint_pkg-fonts-devel
-35,maint_pkg-games-devel
-36,maint_pkg-golang-maintainers
-37,maint_pkg-haskell-maintainers
-38,maint_pkg-java-maintainers
-39,maint_pkg-javascript-devel
-40,maint_pkg-perl-maintainers
-41,maint_pkg-php-pear
-42,maint_pkg-ruby-extras-maintainers
+1,Debian,essential
+2,Debian,required
+3,Debian,build-essential
+4,Debian,build-essential-depends
+5,Debian,popcon_top1337-installed-sources
+6,Debian,key_packages
+7,Debian,installed_on_debian.org
+8,Debian,had_a_DSA
+9,Debian,cii-census
+10,desktop,gnome
+11,desktop,gnome_build-depends
+12,desktop,kde
+13,desktop,kde_build-depends
+14,desktop,mate
+15,desktop,mate_build-depends
+16,desktop,xfce
+17,desktop,xfce_build-depends
+18,Debian distribution,freedombox
+19,Debian distribution,freedombox_build-depends
+20,Debian distribution,grml
+21,Debian distribution,grml_build-depends
+22,Debian distribution,tails
+23,Debian distribution,tails_build-depends
+24,Debian distribution,subgraph_OS
+25,Debian distribution,subgraph_OS_build-depends
+26,maintenance team,maint_debian-boot
+27,maintenance team,maint_debian-med
+28,maintenance team,maint_debian-ocaml,language
+29,maintenance team,maint_debian-python,language
+30,maintenance team,maint_debian-qa
+31,maintenance team,maint_debian-science
+32,maintenance team,maint_debian-x
+33,maintenance team,maint_lua,language
+34,maintenance team,maint_pkg-fonts-devel
+35,maintenance team,maint_pkg-games-devel
+36,maintenance team,maint_pkg-golang-maintainers
+37,maintenance team,maint_pkg-haskell-maintainers
+38,maintenance team,maint_pkg-java-maintainers
+39,maintenance team,maint_pkg-javascript-devel
+40,maintenance team,maint_pkg-perl-maintainers
+41,maintenance team,maint_pkg-php-pear
+42,maintenance team,maint_pkg-ruby-extras-maintainers

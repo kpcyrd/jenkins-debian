@@ -41,9 +41,6 @@
           - title: '{my_title}'
             includes: '{my_pngs}'
             image-width: 300
-      - trigger-parameterized-builds:
-          - project: lvc_retrieve_artifacts
-            predefined-parameters: "TRIG_NODE=$NODE_NAME\nTRIG_RESULTS=$WORKSPACE/results"
     wrappers:
       - live-screenshot
     builders:
@@ -55,35 +52,6 @@
 - job-template:
     defaults: lvc
     name: '{name}_{distro}'
-
-- job-template:
-    name: '{name}_retrieve_artifacts'
-    project-type: freestyle
-    description: *desc
-    properties:
-      - sidebar: *sb1
-      - sidebar: *sb2
-      - sidebar: *sb3
-    parameters:
-      - string:
-          name: TRIG_NODE
-          description: The host that the job triggering this one was running on
-      - string:
-          name: TRIG_RESULTS
-          description: The results directory for the job that triggered this one
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 20
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
-    publishers:
-      - email:
-          recipients: 'qa-jenkins-scm@lists.alioth.debian.org, phil@hands.com'
-    wrappers:
-      - live-screenshot
-    builders:
-      - shell: '/srv/jenkins/bin/lvc_retrieve_artifacts.sh'
-    node: 'master'
 
 - project:
     name: lvc
@@ -113,5 +81,3 @@
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                     my_time: 'H H * * H'
                     my_opts: '--tags @broken'
-        - '{name}_retrieve_artifacts':
-            my_title: 'Retrieve results from LVC job'

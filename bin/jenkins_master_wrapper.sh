@@ -26,6 +26,7 @@ case $JOB_NAME in
 	rebootstrap_*) 	PARAMS="$JOB_NAME $@"
 			;;
 	lvc_*) 		PARAMS="$JOB_NAME $EXECUTOR_NUMBER TRIGGERING_BRANCH=${TRIGGERING_BRANCH:-} $@"
+			RETRIEVE_ARTIFACTS=yes
 			export
 			;;
 	*)		PARAMS="$JOB_NAME"
@@ -50,6 +51,25 @@ if [ $RESULT -ne 0 ] ; then
 	exec /srv/jenkins/bin/abort.sh
 fi
 set -e
-# finally
-exec ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS"
+# run things on the target node
+RETVAL=0
+ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
+	# mention failures, but continue since we might want the artifacts anyway
+	RETVAL=$?
+	printf "\nnSSH EXIT CODE: %s\n" $RETVAL
+}
 
+# grab artifacts and tidy up at the other end
+if [ "$RETRIEVE_ARTIFACTS" ] ; then
+	RESULTS="$WORKSPACE/results"
+        NODE_RESULTS="/var/libjenkins/jobs/$JOB_NAME/workspace/results"
+
+	echo "$(date -u) - retrieving artifacts."
+	set -x
+	mkdir -p $RESULTS
+	rsync -r -v -e "ssh -o 'Batchmode = yes'" "$NODE_NAME:$NODE_RESULTS/" "$RESULTS/"
+	chmod 775 /$WORKSPACE/results/
+	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -rf '$NODE_RESULTS'"
+fi
+
+exit $RETVAL

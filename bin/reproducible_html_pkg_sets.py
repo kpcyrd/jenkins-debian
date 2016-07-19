@@ -162,7 +162,7 @@ def gen_other_arch_context(archs, suite, pkgset_name):
     for arch in archs:
         context.append({
             'arch': arch,
-            'link': "/".join([DEBIAN_BASE, suite, arch, page])
+            'link': "/".join(['/debian', suite, arch, page])
         })
     return context
 

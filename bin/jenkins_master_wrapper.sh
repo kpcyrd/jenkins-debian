@@ -21,6 +21,10 @@ fi
 PORT=0
 get_node_ssh_port $NODE_NAME
 
+# don't try to fetch artifacts by default
+RETRIEVE_ARTIFACTS=no
+
+# add some more params if needed,
 # by default we just use the job name as param
 case $JOB_NAME in
 	rebootstrap_*) 	PARAMS="$JOB_NAME $@"
@@ -60,9 +64,9 @@ ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
 }
 
 # grab artifacts and tidy up at the other end
-if [ "$RETRIEVE_ARTIFACTS" ] ; then
+if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 	RESULTS="$WORKSPACE/results"
-        NODE_RESULTS="/var/libjenkins/jobs/$JOB_NAME/workspace/results"
+        NODE_RESULTS="/var/lib/jenkins/jobs/$JOB_NAME/workspace/results"
 
 	echo "$(date -u) - retrieving artifacts."
 	set -x

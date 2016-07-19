@@ -1,14 +1,30 @@
-<ul>
-  <li>Tracked package sets in {{suite}}/{{arch}}: </li>
-<br/>
-{{#package_sets}}
+<ul><li>
+  <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html"
+     title="To switch suite and arch, see top left">
+    All tracked package sets for <b>{{suite}}/{{arch}}</b>
+  </a>
+</li></ul>
+{{#package_set_sections}}
+<details {{^pkgset_page}}open{{/pkgset_page}}>
+  <summary>{{section}} package sets:</summary>
+  <ul class="pkgset-list">
+  {{#pkgsets}}
   <li class="{{class}}">
-	<a href="/debian/{{suite}}/{{arch}}/pkg_set_{{pkgset_name}}.html">{{pkgset_name}}</a>
-  {{#thumb}}
-	<a href="/debian/{{suite}}/{{arch}}/pkg_set_{{pkgset_name}}.html">
-	  <img src="{{thumb}}" class="setview" alt="Reproducibility status for packages un {{suite}}/{{arch}} from '{{pkg_name}}'" title="{{pkgset_name}}" name="{{pkgset_name}}">
-	</a>
-  {{/thumb}}
+    <a href="/debian/{{suite}}/{{arch}}/pkg_set_{{pkgset_name}}.html">
+      {{pkgset_name}}
+    </a>
+    {{#thumb}}
+    <a href="/debian/{{suite}}/{{arch}}/pkg_set_{{pkgset_name}}.html">
+      <img src="{{thumb}}" class="setview"
+           alt="Reproducibility status for packages in {{suite}}/{{arch}} from '{{pkg_name}}'"
+           title="{{pkgset_name}}" name="{{pkgset_name}}">
+    </a>
+    {{/thumb}}
   </li>
-{{/package_sets}}
+  {{/pkgsets}}
 </ul>
+</details>
+{{/package_set_sections}}
+{{#pkgset_page}}
+<hr id="footer_separator" />
+{{/pkgset_page}}

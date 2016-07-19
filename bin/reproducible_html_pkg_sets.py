@@ -17,6 +17,7 @@ import csv
 import time
 import sqlite3
 import pystache
+from collections import OrderedDict
 
 # Templates used for creating package pages
 renderer = pystache.Renderer()
@@ -114,30 +115,34 @@ def update_stats(suite, arch, stats, pkgset_name):
 
 
 def create_pkgset_navigation(suite, arch, view=None):
-    context = {
-        'package_sets': [],
-        'suite': suite,
-        'arch': arch,
-    }
-
+    # Group the package sets by section
+    sections = OrderedDict()
     for index in range(1, len(META_PKGSET)+1):
-        pkgset_name = META_PKGSET[index]
+        pkgset_name = META_PKGSET[index][0]
+        pkgset_section = META_PKGSET[index][1]
         pkgset = {
             'class': "active" if pkgset_name == view else "",
             'pkgset_name': pkgset_name,
         }
-
         thumb_file, thumb_href = stats_thumb_file_href(suite, arch, pkgset_name)
         # if the graph image doesn't exist, don't include it in the context
         if os.access(thumb_file, os.R_OK):
             pkgset['thumb'] = thumb_href
-        context['package_sets'].append(pkgset)
+        # add the package set to the appropriate section
+        sections.setdefault(pkgset_section, []).append(pkgset)
 
+    context = {
+        'suite': suite,
+        'arch': arch,
+        'pkgset_page': True if view else False
+    }
+    context['package_set_sections'] = \
+        [{'section': s, 'pkgsets': sections[s]} for s in sections]
     return renderer.render(pkgset_navigation_template, context)
 
 
 def create_index_page(suite, arch):
-    title = 'Package sets in %s/%s for Reproducible Builds' % (suite, arch)
+    title = 'Package sets in %s/%s' % (suite, arch)
     body = create_pkgset_navigation(suite, arch)
     destfile = os.path.join(DEBIAN_BASE, suite, arch,
                             "index_pkg_sets.html")
@@ -242,7 +247,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
             pkgset_context['status_details'].append(details_context)
 
     html_body += renderer.render(pkgset_details_template, pkgset_context)
-    title = 'Reproducible Builds %s package set for %s/%s for' % \
+    title = '%s package set for %s/%s' % \
             (pkgset_name, suite, arch)
     page = "pkg_set_" + pkgset_name + ".html"
     destfile = os.path.join(DEBIAN_BASE, suite, arch, page)
@@ -298,7 +303,7 @@ for arch in ARCHS:
             continue
         create_index_page(suite, arch)
         for index in META_PKGSET:
-            pkgset_name = META_PKGSET[index]
+            pkgset_name = META_PKGSET[index][0]
             stats = gather_meta_stats(suite, arch, pkgset_name)
             if (stats):
                 update_stats(suite, arch, stats, pkgset_name)

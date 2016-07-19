@@ -83,11 +83,12 @@ DEBIAN_DASHBOARD_URI = '/debian/reproducible.html'
 JENKINS_URL = 'https://jenkins.debian.net'
 
 # global package set definitions
+# META_PKGSET[pkgset_id] = (pkgset_name, pkgset_group)
 # csv file columns: (pkgset_id, pkgset_group, pkgset_name)
 META_PKGSET = {}
 with open(os.path.join(BIN_PATH, './meta_pkgset.csv'), newline='') as f:
     for line in csv.reader(f):
-        META_PKGSET[int(line[0])] = line[2]
+        META_PKGSET[int(line[0])] = (line[2], line[1])
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()

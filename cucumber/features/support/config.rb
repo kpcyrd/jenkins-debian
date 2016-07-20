@@ -70,6 +70,7 @@ LIBVIRT_DOMAIN_NAME = "lvcVM-" + JOB_NAME
 #LIBVIRT_DOMAIN_UUID = "203552d5-819c-41f3-800e-2c8ef2546%03d" % $executor_number
 LIBVIRT_NETWORK_NAME = "lvcNET"
 #LIBVIRT_NETWORK_UUID = "f2305af3-2a64-4f16-afe6-b9dbf02a597e"
+LIBVIRT_REMOTE_SHELL_PORT = 13370 + Integer($executor_number)
 MISC_FILES_DIR = "/srv/jenkins/cucumber/features/misc_files"
 SERVICES_EXPECTED_ON_ALL_IFACES =
   [

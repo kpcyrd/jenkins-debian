@@ -12,7 +12,8 @@ def debug_log(*args) ; end
 
 class FakeVM
   def get_remote_shell_port
-    1337
+    # FIXME -- we really ought to be able to ask the vm to dynamically allocate the port, then tell us what it did, rather than this
+    LIBVIRT_REMOTE_SHELL_PORT
   end
 end
 

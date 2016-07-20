@@ -80,6 +80,7 @@ class VM
     rexml = REXML::Document.new(default_domain_xml)
     rexml.elements['domain'].add_element('name')
     rexml.elements['domain/name'].text = @domain_name
+    rexml.elements['domain/devices/serial/source'].attributes['service'] = LIBVIRT_REMOTE_SHELL_PORT
     begin
       old_domain = @virt.lookup_domain_by_name(LIBVIRT_DOMAIN_NAME)
       rexml.elements['domain'].add_element('uuid')

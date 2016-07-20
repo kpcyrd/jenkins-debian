@@ -216,6 +216,7 @@ if [ -f /etc/debian_version ] ; then
 			htop
 			less
 			locales-all
+			lsof
 			molly-guard
 			moreutils
 			munin-node

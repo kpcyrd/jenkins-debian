@@ -52,7 +52,10 @@ def generate_schedule(arch):
     html += '</table></p>\n'
     destfile = DEBIAN_BASE + '/index_' + arch + '_scheduled.html'
     desturl = DEBIAN_URL + '/index_' + arch + '_scheduled.html'
-    write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60, displayed_page='scheduled')
+    left_nav_html = create_main_navigation(arch=arch,
+                                           displayed_page='scheduled')
+    write_html_page(title=title, body=html, destfile=destfile, style_note=True,
+                    refresh_every=60, left_nav_html=left_nav_html)
     log.info("Page generated at " + desturl)
 
 
@@ -122,7 +125,9 @@ def generate_oldies(arch):
         html += '</table></p>\n'
     destfile = DEBIAN_BASE + '/index_' + arch + '_oldies.html'
     desturl = DEBIAN_URL + '/index_' + arch + '_oldies.html'
-    write_html_page(title=title, body=html, destfile=destfile, arch=arch, style_note=True, refresh_every=60)
+    left_nav_html = create_main_navigation(arch=arch)
+    write_html_page(title=title, body=html, destfile=destfile, style_note=True,
+                    refresh_every=60, left_nav_html=left_nav_html)
     log.info("Page generated at " + desturl)
 
 if __name__ == '__main__':

@@ -259,7 +259,7 @@ def gen_history_page(package):
     destfile = os.path.join(HISTORY_PATH, package.name+'.html')
     title = 'build history of {}'.format(package.name)
     write_html_page(title=title, body=html, destfile=destfile,
-                    noheader=True, noendpage=True)
+                    noendpage=True)
 
 
 def gen_packages_html(packages, no_clean=False):
@@ -317,7 +317,7 @@ def gen_packages_html(packages, no_clean=False):
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible build results'
                 write_html_page(title=title, body=html, destfile=destfile,
-                                noheader=True, noendpage=True, packages=True)
+                                no_header=True, noendpage=True)
                 log.debug("Package page generated at " + desturl)
     if not no_clean:
         purge_old_pages()  # housekeep is always good

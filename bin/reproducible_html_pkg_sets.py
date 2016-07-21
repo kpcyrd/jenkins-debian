@@ -143,12 +143,17 @@ def create_index_page(suite, arch):
                             "index_pkg_sets.html")
     suite_arch_nav_template = DEBIAN_URI + \
                               '/{{suite}}/{{arch}}/index_pkg_sets.html'
+    left_nav_html = create_main_navigation(
+        suite=suite,
+        arch=arch,
+        displayed_page='pkg_set',
+        suite_arch_nav_template=suite_arch_nav_template,
+        ignore_experimental=True,
+    )
     log.info("Creating pkgset index page for %s/%s.",
              suite, arch)
-    write_html_page(title=title, body=body, destfile=destfile, suite=suite,
-                    arch=arch, displayed_page='pkg_set',
-                    suite_arch_nav_template=suite_arch_nav_template,
-                    ignore_experimental=True)
+    write_html_page(title=title, body=body, destfile=destfile,
+                    left_nav_html=left_nav_html)
 
 
 def gen_other_arch_context(archs, suite, pkgset_name):
@@ -242,12 +247,17 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     page = "pkg_set_" + pkgset_name + ".html"
     destfile = os.path.join(DEBIAN_BASE, suite, arch, page)
     suite_arch_nav_template = DEBIAN_URI + '/{{suite}}/{{arch}}/' + page
+    left_nav_html = create_main_navigation(
+        suite=suite,
+        arch=arch,
+        displayed_page='pkg_set',
+        suite_arch_nav_template=suite_arch_nav_template,
+        ignore_experimental=True,
+    )
     log.info("Creating meta pkgset page for %s in %s/%s.",
               pkgset_name, suite, arch)
-    write_html_page(title=title, body=html_body, destfile=destfile, suite=suite,
-                    arch=arch, displayed_page='pkg_set',
-                    suite_arch_nav_template=suite_arch_nav_template,
-                    ignore_experimental=True)
+    write_html_page(title=title, body=html_body, destfile=destfile,
+                    left_nav_html=left_nav_html)
 
 
 def create_pkgset_graph(png_file, suite, arch, pkgset_name):

@@ -3,17 +3,21 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    {{meta_refresh}}
+    {{{meta_refresh}}}
     <link href="/static/style.css" type="text/css" rel="stylesheet" />
     <title>{{page_title}}</title>
   </head>
   <body class="wrapper">
+	{{#navigation_html}}
 	<header class="head">
-      {{{main_navigation_html}}}
+      {{{navigation_html}}}
 	</header>
-    <div class="mainbody">
-	  <h2>{{page_title}}</h2>
+	{{/navigation_html}}
+    {{#navigation_html}}<div class="mainbody">{{/navigation_html}}
+	  {{#main_header}}
+	  <h2>{{main_header}}</h2>
+	  {{/main_header}}
       {{{main_html}}}
-    </div>
+    {{#navigation_html}}</div>{{/navigation_html}}
   </body>
 </html>

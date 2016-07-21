@@ -312,5 +312,8 @@ if __name__ == '__main__':
     title = 'Breakage on the Debian pages of tests.reproducible-builds.org'
     destfile = DEBIAN_BASE + '/index_breakages.html'
     desturl = DEBIAN_URL + '/index_breakages.html'
-    write_html_page(title, html, destfile, style_note=True, displayed_page='breakages')
+
+    left_nav_html = create_main_navigation(displayed_page='breakages')
+    write_html_page(title, html, destfile, style_note=True,
+                    left_nav_html=left_nav_html)
     log.info('Breackages page created at ' + desturl)

@@ -159,17 +159,6 @@ main_navigation_template = renderer.load_template(
 basic_page_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'basic_page'))
 
-html_header = Template("""<!DOCTYPE html>
-<html>
-  <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <meta name="viewport" content="width=device-width" />
-      $meta_refresh
-      <link href="/static/style.css" type="text/css" rel="stylesheet" />
-      <title>$page_title</title>
-  </head>
-  <body class="wrapper">""")
-
 try:
     JOB_URL = os.environ['JOB_URL']
 except KeyError:
@@ -285,15 +274,13 @@ def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
         })
     return (suite_list, arch_list)
 
-
 # See bash equivelent: reproducible_common.sh's "write_page_header()"
-def create_main_navigation(page_title, suite, arch, displayed_page=None,
-                           suite_arch_nav_template=None,
+def create_main_navigation(suite=defaultsuite, arch=defaultarch,
+                           displayed_page=None, suite_arch_nav_template=None,
                            ignore_experimental=False):
     suite_list, arch_list = gen_suite_arch_nav_context(suite, arch,
         suite_arch_nav_template, ignore_experimental)
     context = {
-        'page_title': page_title,
         'suite': suite,
         'arch': arch,
         'project_links_html': renderer.render(project_links_template),
@@ -312,32 +299,23 @@ def create_main_navigation(page_title, suite, arch, displayed_page=None,
     return renderer.render(main_navigation_template, context)
 
 
-def write_html_page(title, body, destfile, suite=defaultsuite, arch=defaultarch,
-                    noheader=False, style_note=False, noendpage=False,
-                    packages=False, refresh_every=None, displayed_page=None,
-                    suite_arch_nav_template=None, ignore_experimental=False):
-    meta_refresh = '<meta http-equiv="refresh" content="%d">' % \
+def write_html_page(title, body, destfile, no_header=False, style_note=False,
+                    noendpage=False, refresh_every=None, displayed_page=None,
+                    left_nav_html=None):
+    meta_refresh_html = '<meta http-equiv="refresh" content="%d"></meta>' % \
         refresh_every if refresh_every is not None else ''
-    context = {
-        'page_title': title,
-        'meta_refresh': meta_refresh,
-    }
-    if not noheader:
-        context['main_navigation_html'] = create_main_navigation(
-            page_title=title,
-            suite=suite,
-            arch=arch,
-            displayed_page=displayed_page,
-            suite_arch_nav_template=suite_arch_nav_template,
-            ignore_experimental=ignore_experimental,
-        )
-    main_html = body
     if style_note:
-        main_html += renderer.render(pkg_legend_template, {})
+        body += renderer.render(pkg_legend_template, {})
     if not noendpage:
         now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
-        main_html += create_default_page_footer(now)
-    context['main_html'] = main_html
+        body += create_default_page_footer(now)
+    context = {
+        'page_title': title,
+        'meta_refresh_html': meta_refresh_html,
+        'navigation_html': left_nav_html,
+        'main_header': title if not no_header else "",
+        'main_html': body,
+    }
     html = renderer.render(basic_page_template, context)
 
     try:

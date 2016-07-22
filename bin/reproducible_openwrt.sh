@@ -98,7 +98,7 @@ DBD_BAD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
 GOOD_IMAGES=0
 ALL_IMAGES=0
 SIZE=""
-create_results_dirs
+create_results_dirs openwrt
 cd $TMPDIR/b1
 tree .
 for i in * ; do

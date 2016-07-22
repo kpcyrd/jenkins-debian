@@ -19,7 +19,8 @@ cleanup_tmpdirs() {
 }
 
 create_results_dirs() {
-	mkdir -p $BASE/openwrt/dbd
+	local project=$1
+	mkdir -p $BASE/$project/dbd
 }
 
 # type = openwrt or lede

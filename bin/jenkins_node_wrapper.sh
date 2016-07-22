@@ -64,7 +64,7 @@ elif [[ "$*" = "cleanup_nodes /srv/jenkins/bin/reproducible_slay.sh" ]] ; then
 	exec /srv/jenkins/bin/reproducible_slay.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^/bin/nc\ localhost\ 4949 ]] ; then
 	exec /bin/nc localhost 4949 ; croak "Exec failed";
-elif [[ "$*" =~ rebootstrap_.* ]] ; then
+elif [[ "$*" =~ ^rebootstrap_.* ]] ; then
 	shift
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
@@ -98,35 +98,35 @@ elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/rbuild.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^rm\ -r\ /var/lib/jenkins/jobs/lvc_.*/workspace/results ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_pbuilder_unstable_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_pbuilder_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_pbuilder_testing_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_pbuilder_testing_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_pbuilder_experimental_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_pbuilder_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_maintenance_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_maintenance_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_schroot_unstable_diffoscope_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_schroot_unstable_diffoscope_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_schroot_unstable_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_schroot_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable botch ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_schroot_testing_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_schroot_testing_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_schroot_experimental_.*_.* ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_schroot_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_coreboot ]] ; then
+elif [[ "$*" =~ ^reproducible_coreboot ]] ; then
 	exec /srv/jenkins/bin/reproducible_coreboot.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_openwrt ]] ; then
+elif [[ "$*" =~ ^reproducible_openwrt ]] ; then
 	exec /srv/jenkins/bin/reproducible_openwrt.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_netbsd ]] ; then
+elif [[ "$*" =~ ^reproducible_netbsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_netbsd.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_freebsd ]] ; then
+elif [[ "$*" =~ ^reproducible_freebsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_freebsd.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_schroot_archlinux ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_schroot_archlinux ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_fdroid_build_environment ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_fdroid_build_environment ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_fdroid_build_environment.sh ; croak "Exec failed";
-elif [[ "$*" =~ reproducible_setup_mock_fedora-23_x86_64 ]] ; then
+elif [[ "$*" =~ ^reproducible_setup_mock_fedora-23_x86_64 ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64 ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";

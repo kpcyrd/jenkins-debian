@@ -123,11 +123,17 @@ if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-
 	sudo adduser jenkins libvirt-qemu
 
 	# we need a directory for the VM's storage pools
-	VM_POOL_DIR=/srv/workspace/vm-pools
+	VM_POOL_DIR=/srv/lvc/vm-pools
 	if [ ! -d $VM_POOL_DIR ] ; then
-		sudo mkdir $VM_POOL_DIR
+		sudo mkdir -p $VM_POOL_DIR
 		sudo chown jenkins:libvirt-qemu $VM_POOL_DIR
 		sudo chmod 775 $VM_POOL_DIR
+	fi
+
+	# tidy up after ourselves, for a while at least
+	OLD_VM_POOL_DIR=/srv/workspace/vm-pools
+	if [ -d "$OLD_VM_POOL_DIR" ] ; then
+		sudo rm -r "$OLD_VM_POOL_DIR"
 	fi
 fi
 

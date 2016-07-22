@@ -19,7 +19,7 @@ class VMStorage
     pool_xml = REXML::Document.new(File.read("#{@xml_path}/storage_pool.xml"))
     pool_name = LIBVIRT_DOMAIN_NAME
     pool_xml.elements['pool/name'].text = pool_name
-    @pool_path = "/srv/workspace/vm-pools/#{pool_name}"  # FIXME -- hardwiring the .../vm-pools path semms like a poor effort
+    @pool_path = "/srv/lvc/vm-pools/#{pool_name}"  # FIXME -- hardwiring the .../vm-pools path semms like a poor effort
     begin
       @pool = @virt.lookup_storage_pool_by_name(pool_name)
     rescue Libvirt::RetrieveError

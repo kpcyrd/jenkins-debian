@@ -70,15 +70,12 @@ ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
 
 # grab artifacts and tidy up at the other end
 if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
-	RESULTS="$WORKSPACE/results"
-        NODE_RESULTS="/var/lib/jenkins/jobs/$JOB_NAME/workspace/results"
+	RESULTS="/var/lib/jenkins/jobs/$JOB_NAME/workspace/results"
 
 	echo "$(date -u) - retrieving artifacts."
 	set -x
-	mkdir -p $RESULTS
-	rsync -r -v -e "ssh -o 'Batchmode = yes'" "$NODE_NAME:$NODE_RESULTS/" "$RESULTS/"
-	chmod 775 /$WORKSPACE/results/
-	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -rf '$NODE_RESULTS'"
+	rsync -r -v -e "ssh -o 'Batchmode = yes' -p $PORT" "$NODE_NAME:$RESULTS/" "$RESULTS/"
+	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -r '$RESULTS'"
 fi
 
 exit $RETVAL

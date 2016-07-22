@@ -58,46 +58,45 @@ shift
 
 allowed_cmds=()
 
-if [[ "$*" =~ /bin/true ]] ; then
+if [[ "$*" = "/bin/true" ]] ; then
 	exec /bin/true ; croak "Exec failed";
 elif [[ "$*" = "cleanup_nodes /srv/jenkins/bin/reproducible_slay.sh" ]] ; then
 	exec /srv/jenkins/bin/reproducible_slay.sh ; croak "Exec failed";
-elif [[ "$*" =~ /bin/nc\ localhost\ 4949 ]] ; then
+elif [[ "$*" =~ ^/bin/nc\ localhost\ 4949 ]] ; then
 	exec /bin/nc localhost 4949 ; croak "Exec failed";
 elif [[ "$*" =~ rebootstrap_.* ]] ; then
 	shift
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
-elif [[ "$*" =~ lvc_.* ]] ; then
+elif [[ "$*" =~ ^lvc_.* ]] ; then
 	echo debug begin
 	export
 	echo debug end
 	export JOB_NAME=$1 ; shift
 	export EXECUTOR_NUMBER=$1 ; shift
 	export TRIGGERING_BRANCH=${1#*=} ; shift
-	export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";
 elif [ "$*" = "reproducible_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";
-elif [[ "$*" =~ rsync\ --server\ --sender\ .*\ .\ /srv/reproducible-results/.* ]] ; then
+elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
-elif [[ "$*" =~ rsync\ --server\ --sender\ .*\ .\ /var/lib/jenkins/userContent/reproducible/.* ]] ; then
+elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/userContent/reproducible/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
-elif [[ "$*" =~ rsync\ --server\ --sender\ .*\ .\ /var/lib/jenkins/jobs/lvc_.*/workspace/results/.* ]] ; then
+elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/jobs/lvc_[-_a-z]*/workspace/results/ ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
-elif [[ "$*" =~ rsync\ --server\ .*\ \.\ /srv/d-i/isos/ ]] ; then
+elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/d-i/isos/ ]] ; then
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";
-elif [[ "$*" =~ mkdir\ -p\ /srv/d-i/isos.* ]] ; then
+elif [[ "$*" =~ ^mkdir\ -p\ /srv/d-i/isos.* ]] ; then
 	exec mkdir -p "$3"  ; croak "Exec failed";
-elif [[ "$*" =~ rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
+elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
-elif [[ "$*" =~ rm\ -r\ /srv/reproducible-results/rbuild.* ]] ; then
+elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/rbuild.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
-elif [[ "$*" =~ rm\ -r\ /var/lib/jenkins/jobs/lvc_.*/workspace/results ]] ; then
+elif [[ "$*" =~ ^rm\ -r\ /var/lib/jenkins/jobs/lvc_.*/workspace/results ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ reproducible_setup_pbuilder_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable ; croak "Exec failed";

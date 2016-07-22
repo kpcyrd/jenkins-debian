@@ -22,10 +22,13 @@ create_results_dirs() {
 	mkdir -p $BASE/openwrt/dbd
 }
 
-save_openwrt_logs() {
-	local postfix="$1"
+# type = openwrt or lede
+# postfix = we use the postfix to save difference of the first and second build
+save_logs() {
+	local type="$1"
+	local postfix="$2"
 
-	tar cJf "$BASE/openwrt/dbd/logs_${postfix}.tar.xz" logs/
+	tar cJf "$BASE/${type}/dbd/logs_${postfix}.tar.xz" logs/
 }
 
 save_lede_results() {
@@ -157,7 +160,7 @@ build_two_times() {
 	[ "$TYPE" = "openwrt" ] && save_openwrt_results b1
 
 	# copy logs
-	save_openwrt_logs b1
+	save_logs $TYPE b1
 
 	# clean up between builds
 	openwrt_cleanup
@@ -179,7 +182,7 @@ build_two_times() {
 	[ "$TYPE" = "openwrt" ] && save_openwrt_results b2
 
 	# copy logs
-	save_openwrt_logs b2
+	save_logs $TYPE b2
 
 	# reset environment to default values again
 	export LANG="en_GB.UTF-8"

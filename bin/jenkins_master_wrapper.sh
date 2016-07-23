@@ -74,6 +74,7 @@ if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 
 	echo "$(date -u) - retrieving artifacts."
 	set -x
+	mkdir -p "$RESULTS"
 	rsync -r -v -e "ssh -o 'Batchmode = yes' -p $PORT" "$NODE_NAME:$RESULTS/" "$RESULTS/"
 	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -r '$RESULTS'"
 fi

@@ -23,13 +23,13 @@ create_results_dirs() {
 	mkdir -p $BASE/$project/dbd
 }
 
-# type = openwrt or lede
+# project = openwrt or lede
 # postfix = we use the postfix to save difference of the first and second build
 save_logs() {
-	local type="$1"
+	local project="$1"
 	local postfix="$2"
 
-	tar cJf "$BASE/${type}/dbd/logs_${postfix}.tar.xz" logs/
+	tar cJf "$BASE/${project}/dbd/logs_${postfix}.tar.xz" logs/
 }
 
 save_lede_results() {

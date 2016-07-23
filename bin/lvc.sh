@@ -35,12 +35,12 @@ fi
 
 cleanup_all() {
         find . -name \*.vlog.png -print0 | xargs -0 -r rm
-	echo "Trying to preserve last screenshot…"
-	LAST_SCREENSHOT=$(ls -t1 $RESULTS/*.png | head -1)
-	if [ -e "$LAST_SCREENSHOT" ] ; then
-	        cp $LAST_SCREENSHOT $WORKSPACE/screenshot.png
-		convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.png
-	fi
+	#echo "Trying to preserve last screenshot…"
+	#LAST_SCREENSHOT=$(ls -t1 $RESULTS/*.png | head -1)
+	#if [ -e "$LAST_SCREENSHOT" ] ; then
+	#        cp $LAST_SCREENSHOT $WORKSPACE/screenshot.png
+	#	convert $WORKSPACE/screenshot.png -adaptive-resize 128x96 $WORKSPACE/screenshot-thumb.png
+	#fi
 }
 
 fetch_if_newer() {

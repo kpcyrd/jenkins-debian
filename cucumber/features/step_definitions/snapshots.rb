@@ -51,27 +51,11 @@ def checkpoints
   return cp
 end
 
-def live_screenshot()
-  debug_log("debug: publishing live screenshot.")
-  screen_capture = @screen.capture
-  p = screen_capture.getFilename
-  if File.exist?(p)
-    s = ENV['WORKSPACE']
-    s_path = "#{s}/screenshot.png"
-    FileUtils.mv(p, s_path)
-    convert = IO.popen(['convert',
-                      s_path, '-adaptive-resize', '128x96', "#{s}/screenshot-thumb.png",
-                      :err => ['/dev/null', 'w'],
-                     ])
-  end
-end
-
 def reach_checkpoint(name)
   scenario_indent = " "*4
   step_indent = " "*6
 
   step "a computer"
-  live_screenshot
   if VM.snapshot_exists?(name)
     $vm.restore_snapshot(name)
     post_snapshot_restore_hook
@@ -104,16 +88,13 @@ def reach_checkpoint(name)
         debug_log(scenario_indent +
                   "Step failed while creating checkpoint: #{s}",
                   :color => :red)
-        live_screenshot
         raise e
       end
-      live_screenshot
       debug_log(step_indent + "#{step_action} #{s}", :color => :green)
       step_action = "And"
     end
     $vm.save_snapshot(name)
   end
-  live_screenshot
 end
 
 # For each checkpoint we generate a step to reach it.

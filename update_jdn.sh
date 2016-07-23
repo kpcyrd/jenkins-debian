@@ -228,6 +228,8 @@ if [ -f /etc/debian_version ] ; then
 			munin-node
 			munin-plugins-extra
 			netcat-traditional
+			ntp
+			ntpdate
 			pigz 
 			postfix
 			procmail

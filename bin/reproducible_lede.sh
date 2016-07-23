@@ -138,7 +138,7 @@ GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
 # run diffoscope on the packages
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
-create_results_dirs
+create_results_dirs lede
 cd $TMPDIR/b1
 for i in * ; do
 	cd $i

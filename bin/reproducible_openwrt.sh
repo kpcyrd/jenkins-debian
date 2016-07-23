@@ -45,6 +45,8 @@ git log -1
 #./scripts/feeds update -a
 #./scripts/feeds install -a
 
+create_results_dirs openwrt
+
 build_two_times openwrt ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
 
 # for now we only build one architecture until it's at most reproducible
@@ -98,7 +100,6 @@ DBD_BAD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
 GOOD_IMAGES=0
 ALL_IMAGES=0
 SIZE=""
-create_results_dirs openwrt
 cd $TMPDIR/b1
 tree .
 for i in * ; do
@@ -138,7 +139,6 @@ GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
 # run diffoscope on the packages
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
-create_results_dirs openwrt
 cd $TMPDIR/b1
 for i in * ; do
 	cd $i

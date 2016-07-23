@@ -34,7 +34,7 @@ save_logs() {
 
 save_lede_results() {
 	RUN=$1
-	cd bin/targets
+	pushd bin/targets
 	for target in * ; do
 		pushd $target || continue
 		for subtarget in * ; do
@@ -55,21 +55,27 @@ save_lede_results() {
 				done
 				popd
 			fi
+			popd
 		done
 		popd
 	done
+	popd
 
 	# arch is like mips_34kc_dsp
-	popd bin/packages/
+	pushd bin/packages/
 	for arch in * ; do
 		pushd $arch || continue
-		for package in $(find * -name "*.ipk") ; do
-			mkdir -p $TMPDIR/$RUN/packages/$arch/$(dirname $package)
-			cp -p $package $TMPDIR/$RUN/packages/$arch/$(dirname $package)/
+		for feed in * ; do
+			pushd $feed || continue
+			for package in $(find * -name "*.ipk") ; do
+				mkdir -p $TMPDIR/$RUN/packages/$arch/$feed/$(dirname $package)
+				cp -p $package $TMPDIR/$RUN/packages/$arch/$feed/$(dirname $package)/
+			done
+			popd
 		done
 		popd
 	done
-	pushd
+	popd
 }
 
 save_openwrt_results() {

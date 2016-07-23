@@ -297,6 +297,7 @@ write_page_header() {
 	write_page "            <a href=\"https://tests.reproducible-builds.org/freebsd/\">FreeBSD</a> /"
 	write_page "            <a href=\"https://tests.reproducible-builds.org/netbsd/\">NetBSD</a> /"
 	write_page "            <a href=\"https://tests.reproducible-builds.org/openwrt/\">OpenWrt</a>"
+	write_page "            <a href=\"https://tests.reproducible-builds.org/lede/\">LEDE</a>"
 	write_page "        </li></ul></li>"
 	write_page "    </ul>"
 	# end project links

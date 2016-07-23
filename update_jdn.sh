@@ -255,7 +255,7 @@ if [ -f /etc/debian_version ] ; then
 			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
-		# needed to run coreboot/openwrt/netbsd/fedora/fdroid jobs
+		# needed to run coreboot/openwrt/lede/netbsd/fedora/fdroid jobs
 		case $HOSTNAME in
 			profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
 				bison

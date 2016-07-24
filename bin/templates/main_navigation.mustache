@@ -101,13 +101,13 @@
       </li>
       {{/include_pkgset_link}}
       <li>Recently tested packages:<ul>
-        <li {{#last_24h}}class='active'{{/last_24h}}><a 
-               href="/debian/{{suite}}/{{arch}}/index_last_24h.html"
+          <li {{#last_24h}}class='active'{{/last_24h}}>
+            <a href="/debian/{{suite}}/{{arch}}/index_last_24h.html"
                title="Show packages tested in the last 24 hours">
             last 24h
         </a></li>
-        <li {{#last_48h}}class='active'{{/last_48h}}><a 
-               href="/debian/{{suite}}/{{arch}}/index_last_48h.html"
+          <li {{#last_48h}}class='active'{{/last_48h}}>
+            <a href="/debian/{{suite}}/{{arch}}/index_last_48h.html"
                title="Show packages tested in the last 48 hours">
             last 48h
         </a></li>

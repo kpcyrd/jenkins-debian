@@ -315,7 +315,7 @@ def gen_packages_html(packages, no_clean=False):
                            pkg + '.html'
                 desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
                           '/' + arch + '/' + pkg + '.html'
-                title = pkg + ' - reproducible build results'
+                title = pkg + ' - reproducible builds result'
                 write_html_page(title=title, body=html, destfile=destfile,
                                 no_header=True, noendpage=True)
                 log.debug("Package page generated at " + desturl)

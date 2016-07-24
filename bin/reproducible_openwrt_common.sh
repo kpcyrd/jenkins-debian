@@ -41,9 +41,9 @@ save_lede_results() {
 			pushd $subtarget || continue
 
 			# save firmware images
-			mkdir -p $TMPDIR/$RUN/$target/$subtarget/
+			mkdir -p $TMPDIR/$RUN/targets/$target/$subtarget/
 			for image in $(find * -name "*.bin" -o -name "*.squashfs") ; do
-				cp -p $image $TMPDIR/$RUN/$target/$subtarget/
+				cp -p $image $TMPDIR/$RUN/targets/$target/$subtarget/
 			done
 
 			# save subtarget specific packages

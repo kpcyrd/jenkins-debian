@@ -100,40 +100,44 @@ DBD_BAD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
 GOOD_IMAGES=0
 ALL_IMAGES=0
 SIZE=""
-cd $TMPDIR/b1
+cd $TMPDIR/b1/targets
 tree .
-for i in * ; do
-	cd $i
+for target in * ; do
+	cd $target
+	for subtarget in * ; do
+		cd $subtarget
 
-	# search images in both paths to find non-existing ones
-	IMGS1=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
-	pushd $TMPDIR/b2/$i
-	IMGS2=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
-	popd
+		# search images in both paths to find non-existing ones
+		IMGS1=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
+		pushd $TMPDIR/b2/targets/$target/$subtarget
+		IMGS2=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
+		popd
 
-	echo "       <table><tr><th>Images for <code>$i</code></th></tr>" >> $DBD_HTML
-	for j in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
-		let ALL_IMAGES+=1
-		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
-			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build.</td></tr>" >> $DBD_HTML
-			rm -f $BASE/lede/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
-			continue
-		fi
-		call_diffoscope $i $j
-		get_filesize $j
-		if [ -f $TMPDIR/$i/$j.html ] ; then
-			mkdir -p $BASE/lede/dbd/$i
-			mv $TMPDIR/$i/$j.html $BASE/lede/dbd/$i/$j.html
-			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML
-		else
-			SHASUM=$(sha256sum $j|cut -d " " -f1)
-			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
-			let GOOD_IMAGES+=1
-			rm -f $BASE/lede/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
-		fi
+		echo "       <table><tr><th>Images for <code>$target/$subtarget</code></th></tr>" >> $DBD_HTML
+		for image in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
+			let ALL_IMAGES+=1
+			if [ ! -f $TMPDIR/b1/$target/$subtarget/$image -o ! -f $TMPDIR/b2/$target/$subtarget/$image ] ; then
+				echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $image (${SIZE}) failed to build.</td></tr>" >> $DBD_HTML
+				rm -f $BASE/lede/dbd/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
+				continue
+			fi
+			call_diffoscope $target/$subtarget $image
+			get_filesize $image
+			if [ -f $TMPDIR/$target/$subtarget/$image.html ] ; then
+				mkdir -p $BASE/lede/dbd/$target/$subtarget
+				mv $TMPDIR/$target/$subtarget/$image.html $BASE/lede/dbd/$target/$subtarget/$image.html
+				echo "         <tr><td><a href=\"dbd/$target/$subtarget/$image.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $image</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML
+			else
+				SHASUM=$(sha256sum $image|cut -d " " -f1)
+				echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $image ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
+				let GOOD_IMAGES+=1
+				rm -f $BASE/lede/dbd/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
+			fi
+		done
+		cd ..
+		echo "       </table>" >> $DBD_HTML
 	done
 	cd ..
-	echo "       </table>" >> $DBD_HTML
 done
 GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
 # run diffoscope on the packages

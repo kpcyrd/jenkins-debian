@@ -41,8 +41,6 @@
           - title: '{my_title}'
             includes: '{my_pngs}'
             image-width: 300
-    wrappers:
-      - live-screenshot
     builders:
       - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_iso} /srv/jenkins/cucumber/features {my_opts}'
     triggers:

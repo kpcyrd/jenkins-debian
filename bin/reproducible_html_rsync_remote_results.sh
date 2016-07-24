@@ -19,15 +19,17 @@ rsync_remote_results() {
 		rsync -r -v -e "ssh -o 'Batchmode = yes'" profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
 		chmod 775 $RESULTS
 		# move old results out of the way
-		mv $BASE/$PROJECT ${RESULTS}.tmp
-		# preserve images and css
-		for OBJECT in $(find ${RESULTS}.tmp -name "*css" -o -name "*png" -o -name "*jpg") ; do
-			cp -v $OBJECT $RESULTS/
-		done
+		if [ -d $BASE/$PROJECT ] ; then
+			mv $BASE/$PROJECT ${RESULTS}.tmp
+			# preserve images and css
+			for OBJECT in $(find ${RESULTS}.tmp -name "*css" -o -name "*png" -o -name "*jpg") ; do
+				cp -v $OBJECT $RESULTS/
+			done
+			# delete the old results
+			rm ${RESULTS}.tmp -r
+		fi
 		# make the new results visible
 		mv $RESULTS $BASE/$PROJECT
-		# delete the old results
-		rm ${RESULTS}.tmp -r
 		echo "$(date -u) - $REPRODUCIBLE_URL/$PROJECT has been updated."
 	done
 }

@@ -230,7 +230,7 @@ def shorten_if_debiannet(hostname):
 
 def gen_history_page(package):
     keys = ('build date', 'version', 'suite', 'architecture', 'result',
-        'build duration', 'node1', 'node2', 'job', 'schedule message')
+        'build duration', 'node1', 'node2', 'job')
     try:
         head = package.history[0]
     except IndexError:

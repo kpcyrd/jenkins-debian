@@ -33,8 +33,9 @@ explain "$(date) - begin deployment update."
 # run update at current date
 case $HOSTNAME in
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
-		# set correct date (if ntpdate is installed)
-		[ ! -f /usr/sbin/ntpdate ] || sudo ntpdate -b de.pool.ntp.org
+		# set correct date
+		sudo service ntp stop
+		sudo ntpdate -b de.pool.ntp.org
 		;;
 	*)	;;
 esac

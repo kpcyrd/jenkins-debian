@@ -387,7 +387,7 @@ for f in ['html', 'pdf']:
 data.append(gen_default( name='{name}-{act}'))
 data.append(gen_default(
     name='{name}-pu-{act}',
-    downstream=[{'project': 'd-i_pu-triggered_debian-installer','predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'}],
+    downstream=[{'project': 'd-i_pu-triggered_debian-installer', 'predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'}],
     envfile='env.txt',
     ))
 data.append(gen_default(

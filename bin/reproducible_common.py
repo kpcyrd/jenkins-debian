@@ -17,8 +17,9 @@ import csv
 import json
 import errno
 import atexit
-import sqlite3
+import hashlib
 import logging
+import sqlite3
 import argparse
 import pystache
 import psycopg2
@@ -54,6 +55,7 @@ TEMP_PATH="/tmp/reproducible"
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'
 REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
+REPRODUCIBLE_STYLES = BASE +'/static/style.css'
 
 DEBIAN_URI = '/debian'
 DBD_URI = '/debian/dbd'
@@ -144,6 +146,12 @@ if args.ignore_missing_files:
     log.warning("Missing files will be ignored!")
 
 tab = '  '
+
+# take a SHA1 of the css page for style version
+hasher = hashlib.sha1()
+with open(REPRODUCIBLE_STYLES, 'rb') as f:
+        hasher.update(f.read())
+REPRODUCIBLE_STYLE_SHA1 = hasher.hexdigest()
 
 # Templates used for creating package pages
 renderer = pystache.Renderer()
@@ -316,6 +324,7 @@ def write_html_page(title, body, destfile, no_header=False, style_note=False,
         'navigation_html': left_nav_html,
         'main_header': title if not no_header else "",
         'main_html': body,
+        'style_dot_css_sha1sum': REPRODUCIBLE_STYLE_SHA1,
     }
     html = renderer.render(basic_page_template, context)
 

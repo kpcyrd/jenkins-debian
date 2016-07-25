@@ -1,9 +1,13 @@
-<ul><li>
-  <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html"
-     title="To switch suite and arch, see top left">
-    All tracked package sets for <b>{{suite}}/{{arch}}</b>
-  </a>
-</li></ul>
+<ul>
+  {{#pkgset_page}}
+  <li>
+    <a href="/debian/{{suite}}/{{arch}}/index_pkg_sets.html"
+       title="To switch suite and arch, see top left">
+      All tracked package sets for <b>{{suite}}/{{arch}}</b>
+    </a>
+  </li>
+  {{/pkgset_page}}
+</ul>
 {{#package_set_sections}}
 <details {{^pkgset_page}}open{{/pkgset_page}}>
   <summary>{{section}} package sets:</summary>

@@ -262,7 +262,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     log.info("Creating meta pkgset page for %s in %s/%s.",
               pkgset_name, suite, arch)
     write_html_page(title=title, body=html_body, destfile=destfile,
-                    left_nav_html=left_nav_html)
+                    left_nav_html=left_nav_html, include_pkgset_js=True)
 
 
 def create_pkgset_graph(png_file, suite, arch, pkgset_name):

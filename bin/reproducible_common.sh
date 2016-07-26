@@ -43,7 +43,7 @@ REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 JENKINS_URL=${JENKINS_URL:0:-1}
 DBDSUITE="unstable"
 BIN_PATH=/srv/jenkins/bin
-TEMPLATE_PATH=$BIN_PATH/templates
+TEMPLATE_PATH=/srv/jenkins/mustache-templates/reproducible
 
 # Debian suites being tested
 SUITES="testing unstable experimental"

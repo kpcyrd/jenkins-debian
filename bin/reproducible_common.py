@@ -48,7 +48,7 @@ defaultarch = 'amd64'
 BIN_PATH = '/srv/jenkins/bin'
 BASE = '/var/lib/jenkins/userContent/reproducible'
 DEBIAN_BASE = '/var/lib/jenkins/userContent/reproducible/debian'
-TEMPLATE_PATH = BIN_PATH + '/templates'
+TEMPLATE_PATH = '/srv/jenkins/mustache-templates/reproducible'
 PKGSET_DEF_PATH = '/srv/reproducible-results'
 TEMP_PATH="/tmp/reproducible"
 

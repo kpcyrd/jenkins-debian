@@ -502,7 +502,7 @@ explain "packages configured."
 #
 cd $BASEDIR
 [ -d /srv/jenkins/features ] && sudo rm -rf /srv/jenkins/features
-for dir in bin logparse cucumber live ; do
+for dir in bin logparse cucumber live mustache-templates ; do
 	sudo mkdir -p /srv/jenkins/$dir
 	sudo rsync -rpt --delete $dir/ /srv/jenkins/$dir/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir

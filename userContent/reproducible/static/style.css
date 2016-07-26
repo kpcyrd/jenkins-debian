@@ -78,11 +78,6 @@ a.package:visited, a.noted:visited {
 	float: right;
 }
 
-.package-name {
-	display: block;
-	padding: 0.25em
-}
-
 .package-popular {
 	text-decoration: underline;
 }

@@ -11,37 +11,23 @@
 # Build html pages based on the content of the notes.git repository
 
 import copy
-import popcon
 import yaml
+import popcon
+import pystache
 from collections import OrderedDict
 from math import sqrt
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 
+renderer = pystache.Renderer()
+notes_body_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'notes_body'))
+
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
 
 NOTESGIT_DESCRIPTION = 'Our notes about issues affecting packages are stored in <a href="https://anonscm.debian.org/git/reproducible/notes.git" target="_parent">notes.git</a> and are targeted at packages in Debian in \'unstable/amd64\' (unless they say otherwise).'
-
-note_html = Template((tab*2).join("""
-<table class="body">
-  <tr>
-    <td>Version annotated:</td>
-    <td>$version</td>
-  </tr>
-  $infos
-  <tr>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td colspan="2" style="text-align:right; font-size:0.9em;">
-      <p>
-       $notesgit_description
-      </p>
-    </td>
-  </tr>
-</table>""".splitlines(True)))
 
 note_issues_html = Template((tab*3).join("""
 <tr>
@@ -250,11 +236,20 @@ def gen_html_note(package, note):
         comment = comment.replace('\n', '<br />')
         infos += note_comments_html.substitute(comments=comment)
     try:
-        return note_html.substitute(version=str(note['version']), infos=infos, notesgit_description=NOTESGIT_DESCRIPTION)
+        version = str(note['version'])
+        return renderer.render(notes_body_template, {
+            'version': version,
+            'infos': infos,
+            'notesgit_description': NOTESGIT_DESCRIPTION
+        })
     except KeyError:
         log.warning('You should really include a version in the ' +
               str(note['package']) + ' note')
-        return note_html.substitute(version='N/A', infos=infos, notesgit_description=NOTESGIT_DESCRIPTION)
+        return renderer.render(notes_body_template, {
+            'version': 'N/A',
+            'infos': infos,
+            'notesgit_description': NOTESGIT_DESCRIPTION
+        })
 
 
 def gen_html_issue(issue, suite):

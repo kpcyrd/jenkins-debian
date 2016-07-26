@@ -18,6 +18,8 @@ apt_pkg.init_system()
 renderer = pystache.Renderer();
 package_page_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'package_page'))
+package_navigation_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'package_navigation'))
 suitearch_section_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'package_suitearch_section'))
 suitearch_details_template = renderer.load_template(
@@ -296,7 +298,7 @@ def gen_packages_html(packages, no_clean=False):
                 history = '{}/{}.html'.format(HISTORY_URI, pkg)
                 project_links = renderer.render(project_links_template)
 
-                html = renderer.render(package_page_template, {
+                navigation_html = renderer.render(package_navigation_template, {
                     'package': pkg,
                     'suite': suite,
                     'arch': arch,
@@ -306,9 +308,12 @@ def gen_packages_html(packages, no_clean=False):
                     'notify_maintainer': package.notify_maint,
                     'suitearch_section_html': suitearch_section_html,
                     'project_links_html': project_links,
-                    'default_view': default_view,
                     'reproducible': reproducible,
                     'dashboard_url': DEBIAN_URL,
+                })
+
+                body_html = renderer.render(package_page_template, {
+                    'default_view': default_view,
                 })
 
                 destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + \
@@ -316,8 +321,9 @@ def gen_packages_html(packages, no_clean=False):
                 desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible builds result'
-                write_html_page(title=title, body=html, destfile=destfile,
-                                no_header=True, noendpage=True)
+                write_html_page(title=title, body=body_html, destfile=destfile,
+                                no_header=True, noendpage=True,
+                                left_nav_html=navigation_html)
                 log.debug("Package page generated at " + desturl)
     if not no_clean:
         purge_old_pages()  # housekeep is always good

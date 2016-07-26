@@ -459,7 +459,6 @@ span.dangerous { color: orange; }
 		overflow: auto;
 	}
 	iframe#main {
-		width: 80%;
 		float: right;
 	}
 }

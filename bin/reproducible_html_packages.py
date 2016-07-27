@@ -53,27 +53,64 @@ def get_buildlog_links_context(package, eversion, suite, arch):
     return context
 
 
-def get_dbd_link_context(package, eversion, suite, arch, status):
+def get_dbd_links(package, eversion, suite, arch):
+    """Returns dictionary of links to diffoscope pages.
 
-    dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
-          eversion + '.diffoscope.html'
-    dbdtxt = DBDTXT_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
-             eversion + '.diffoscope.txt.gz'
-    dbd_url = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+    dictionary keys:
+    dbd_uri -- included only if file for formatted diffoscope results exists
+    dbdtxt_uri -- included only if file for unformatted diffoscope results
+                  exists
+    dbd_page_uri -- included only if file for formatted diffoscope results
+                    (dbd_uri) exists. This uri is a package page with diffoscope
+                    results in main iframe by default.
+    dbd_page_file -- always returned, check existence of dbd_uri to know whether
+                     it this file is valid
+    """
+    dbd_file = os.path.join(DBD_PATH, suite, arch, package + '_' + eversion
+                       + '.diffoscope.html')
+    dbdtxt_file = os.path.join(DBDTXT_PATH, suite, arch, package + '_' + eversion
+                          + '.diffoscope.txt.gz')
+    dbd_page_file = os.path.join(RB_PKG_PATH, suite, arch, package,
+                                 'diffoscope.html')
+    dbd_uri = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
               eversion + '.diffoscope.html'
-    dbdtxt_url = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+    dbdtxt_uri = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
                 eversion + '.diffoscope.txt'
+    dbd_page_uri = RB_PKG_URI + '/' + suite + '/' + arch + '/' +  package + \
+                   '/diffoscope.html'
+    links = {}
+    # only return dbd_uri and dbdtext_uri if they exist
+    if os.access(dbd_file, os.R_OK):
+        links['dbd_uri'] = dbd_uri
+        links['dbd_page_uri'] = dbd_page_uri
+        if os.access(dbdtxt_file, os.R_OK):
+            links['dbdtxt_uri'] = dbdtxt_uri
 
-    context = {}
-    if os.access(dbd, os.R_OK):
-        context['dbd_url'] = dbd_url
-        if os.access(dbdtxt, os.R_OK):
-            context['dbdtxt_url'] = dbdtxt_url
+    # always return dbd_page_file, because we might need to delete it
+    links['dbd_page_file'] = dbd_page_file
+    return links
+
+
+def get_and_clean_dbd_links(package, eversion, suite, arch, status):
+    links = get_dbd_links(package, eversion, suite, arch)
+
+    dbd_links = {}
+    if 'dbd_uri' in links:
+        dbd_links = {
+            'dbd_page_file': links['dbd_page_file'],
+            'dbd_page_uri': links['dbd_page_uri'],
+            'dbd_uri': links['dbd_uri'],
+        }
     else:
         if status == 'unreproducible' and not args.ignore_missing_files:
             log.critical(DEBIAN_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')
-    return context, dbd_url
+        # if there are no diffoscope results, we want to remove the old package
+        # page used to display diffoscope results
+        if os.access(links['dbd_page_file'], os.R_OK):
+            os.remove(links['dbd_page_file'])
+
+    return dbd_links
 
 
 def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
@@ -97,10 +134,14 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
     context['build_date'] =  build_date
 
     # Get diffoscope differences context
-    dbd = get_dbd_link_context(package, eversion, suite, arch, status)
-    if dbd[0]:
-        context['dbd'] = dbd[0]
-        default_view = default_view if default_view else dbd[1]
+    dbd_links = get_dbd_links(package, eversion, suite, arch)
+    dbd_uri = dbd_links.get('dbd_uri', '')
+    if dbd_uri:
+        context['dbd'] = {
+            'dbd_page_uri': dbd_links['dbd_page_uri'],
+            'dbdtxt_uri': dbd_links.get('dbdtxt_uri', ''),
+        }
+        default_view = default_view if default_view else dbd_uri
 
     # Get buildinfo context
     if pkg_has_buildinfo(package, version, suite, arch):
@@ -200,6 +241,8 @@ def gen_suitearch_section(package, current_suite, current_arch):
                 suitearch_details_html, default_view = gen_suitearch_details(
                     package.name, version, s, a, status, spokenstatus, build_date)
 
+            dbd_links = get_dbd_links(package.name, strip_epoch(version), s, a)
+            dbd_page_uri = dbd_links.get('dbd_page_uri', '')
             suites.append({
                 'status': status,
                 'version': version,
@@ -213,6 +256,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
                 'current_suitearch': s == current_suite and a == current_arch,
                 'package_uri': package_uri,
                 'suitearch_details_html': suitearch_details_html,
+                'dbd_page_uri': dbd_page_uri
             })
 
         if len(suites):
@@ -316,8 +360,7 @@ def gen_packages_html(packages, no_clean=False):
                     'default_view': default_view,
                 })
 
-                destfile = RB_PKG_PATH + '/' + suite + '/' + arch + '/' + \
-                           pkg + '.html'
+                destfile = os.path.join(RB_PKG_PATH, suite, arch, pkg + '.html')
                 desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
                           '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible builds result'
@@ -325,6 +368,27 @@ def gen_packages_html(packages, no_clean=False):
                                 no_header=True, noendpage=True,
                                 left_nav_html=navigation_html)
                 log.debug("Package page generated at " + desturl)
+
+                # Optionally generate a page in which the main iframe shows the
+                # diffoscope results by default. Needed for navigation between
+                # diffoscope pages for different suites/archs
+                eversion = strip_epoch(version)
+                dbd_links = get_and_clean_dbd_links(pkg, eversion, suite, arch,
+                                                    status)
+                # only generate the diffoscope page if diffoscope results exist
+                if 'dbd_uri' in dbd_links:
+                    body_html = renderer.render(package_page_template, {
+                        'default_view': dbd_links['dbd_uri'],
+                    })
+                    destfile = dbd_links['dbd_page_file']
+                    desturl = REPRODUCIBLE_URL + "/" + dbd_links['dbd_page_uri']
+                    title = "{} ({}) diffoscope results in {}/{}".format(
+                        pkg, version, suite, arch)
+                    write_html_page(title=title, body=body_html, destfile=destfile,
+                                    no_header=True, noendpage=True,
+                                    left_nav_html=navigation_html)
+                    log.debug("Package diffoscope page generated at " + desturl)
+
     if not no_clean:
         purge_old_pages()  # housekeep is always good
 

@@ -17,7 +17,13 @@
   {{/reproducible}}
   {{/notes_uri}}
   <li>
-    <a href="{{history}}" target="main">test history</a>
+    <a href="{{history_uri}}" target="main">test history</a>
+    <ul class="children"><li>
+    Filter by:
+    {{#history_archs}}
+       <a href="{{history_arch_uri}}" target="main"><span class="filter-history">{{history_arch}}<span></a>
+    {{/history_archs}}
+    </li></ul>
   </li>
   <h4>Suite and Architecture</h4>
   {{{suitearch_section_html}}}

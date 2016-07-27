@@ -1,0 +1,17 @@
+{{^rows}}
+<p>No historical data available for this package{{#arch}} on architecture: {{arch}}{{/arch}}.</p>
+{{/rows}}
+<table>
+  <tr>
+    {{#keys}}
+    <th>{{key}}</th>
+    {{/keys}}
+  </tr>
+  {{#rows}}
+  <tr>
+    {{#row_items}}
+    <td>{{{item}}}</td>
+    {{/row_items}}
+  </tr>
+  {{/rows}}
+</table>

@@ -26,6 +26,9 @@ suitearch_details_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'package_suitearch_details'))
 project_links_template = renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'project_links'))
+package_history_template = renderer.load_template(
+    os.path.join(TEMPLATE_PATH, 'package_history'))
+
 
 def sizeof_fmt(num):
     for unit in ['B','KB','MB','GB']:
@@ -274,19 +277,24 @@ def shorten_if_debiannet(hostname):
         hostname = hostname[:-11]
     return hostname
 
-def gen_history_page(package):
-    keys = ('build date', 'version', 'suite', 'architecture', 'result',
-        'build duration', 'node1', 'node2', 'job')
+def gen_history_page(package, arch=None):
+    keys = ['build date', 'version', 'suite', 'architecture', 'result',
+        'build duration', 'node1', 'node2', 'job']
+
+    context = {}
     try:
         head = package.history[0]
     except IndexError:
-        html = '<p>No historical data available for this package.</p>'
+        context['arch'] = arch
     else:
-        html = '<table>\n{tab}<tr>\n{tab}{tab}'.format(tab=tab)
-        for i in keys:
-            html += '<th>{}</th>'.format(i)
-        html += '\n{tab}</tr>'.format(tab=tab)
-        for record in package.history:
+        context['keys'] = [{'key': key} for key in keys]
+        rows = []
+        for r in package.history:
+            # make a copy, since we modify in place
+            record = dict(r)
+            # skip records for other archs if we care about arch
+            if arch and record['architecture'] != arch:
+                continue
             # remove trailing .debian.net from hostnames
             record['node1'] = shorten_if_debiannet(record['node1'])
             record['node2'] = shorten_if_debiannet(record['node2'])
@@ -297,16 +305,21 @@ def gen_history_page(package):
             # human formatting of build duration
             record['build duration'] = convert_into_hms_string(
                 int(record['build duration']))
-            html += '\n{tab}<tr>\n{tab}{tab}'.format(tab=tab)
-            for i in keys:
-                html += '<td>{}</td>'.format(record[i])
-            html += '\n{tab}</tr>'.format(tab=tab)
-        html += '</table>'
-    destfile = os.path.join(HISTORY_PATH, package.name+'.html')
+            row_items = [{'item': record[key]} for key in keys]
+            rows.append({'row_items': row_items})
+        context['rows'] = rows
+
+    html = renderer.render(package_history_template, context)
+    if arch:
+        destfile = os.path.join(HISTORY_PATH, arch, package.name+'.html')
+    else:
+        destfile = os.path.join(HISTORY_PATH, package.name+'.html')
     title = 'build history of {}'.format(package.name)
+    print(arch)
+    if arch:
+        title += ' on {}'.format(arch)
     write_html_page(title=title, body=html, destfile=destfile,
                     noendpage=True)
-
 
 def gen_packages_html(packages, no_clean=False):
     """
@@ -318,6 +331,9 @@ def gen_packages_html(packages, no_clean=False):
     for package in sorted(packages, key=lambda x: x.name):
         assert isinstance(package, Package)
         gen_history_page(package)
+        for arch in ARCHS:
+            gen_history_page(package, arch)
+
         pkg = package.name
 
         notes_uri = ''
@@ -339,7 +355,13 @@ def gen_packages_html(packages, no_clean=False):
                 suitearch_section_html, default_view, reproducible = \
                     gen_suitearch_section(package, suite, arch)
 
-                history = '{}/{}.html'.format(HISTORY_URI, pkg)
+                history_uri = '{}/{}.html'.format(HISTORY_URI, pkg)
+                history_archs = []
+                for a in ARCHS:
+                    history_archs.append({
+                        'history_arch': a,
+                        'history_arch_uri': '{}/{}/{}.html'.format(HISTORY_URI, a, pkg)
+                    })
                 project_links = renderer.render(project_links_template)
 
                 navigation_html = renderer.render(package_navigation_template, {
@@ -347,7 +369,8 @@ def gen_packages_html(packages, no_clean=False):
                     'suite': suite,
                     'arch': arch,
                     'version': version,
-                    'history': history,
+                    'history_uri': history_uri,
+                    'history_archs': history_archs,
                     'notes_uri': notes_uri,
                     'notify_maintainer': package.notify_maint,
                     'suitearch_section_html': suitearch_section_html,

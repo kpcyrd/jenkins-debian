@@ -118,7 +118,7 @@ def get_and_clean_dbd_links(package, eversion, suite, arch, status):
 
 def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                           build_date):
-    eversion = strip_epoch(version)
+    eversion = strip_epoch(version) # epoch_free_version is too long
     buildinfo_file = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
                 '_' + eversion + '_' + arch + '.buildinfo'
 

@@ -1,0 +1,12 @@
+mustache is documented in PLEASE FIXME valerie! :)
+
+{{#foo}}
+	-> if foo is defined
+
+{{^foo}}
+	-> if foo is not defined
+
+{{#foo}}{{^bar}}
+	-> if foo is defined and bar is not defined
+
+

@@ -143,6 +143,7 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
+** once firefox 48 is available: revert 1b4dc1b3191e3623a0eeb7cacef80be1ab71d0a2 / grep for _js and remove it…
 
 * lesser prio
 ** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.

@@ -102,6 +102,9 @@ ALL_IMAGES=0
 SIZE=""
 cd $TMPDIR/b1/targets
 tree .
+
+# iterate over all images (merge b1 and b2 images into one list)
+# call diffoscope on the images
 for target in * ; do
 	cd $target
 	for subtarget in * ; do
@@ -116,22 +119,22 @@ for target in * ; do
 		echo "       <table><tr><th>Images for <code>$target/$subtarget</code></th></tr>" >> $DBD_HTML
 		for image in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
 			let ALL_IMAGES+=1
-			if [ ! -f $TMPDIR/b1/$target/$subtarget/$image -o ! -f $TMPDIR/b2/$target/$subtarget/$image ] ; then
+			if [ ! -f $TMPDIR/b1/targets/$target/$subtarget/$image -o ! -f $TMPDIR/b2/targets/$target/$subtarget/$image ] ; then
 				echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $image (${SIZE}) failed to build.</td></tr>" >> $DBD_HTML
-				rm -f $BASE/lede/dbd/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
+				rm -f $BASE/lede/dbd/targets/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
 				continue
 			fi
 			call_diffoscope $target/$subtarget $image
 			get_filesize $image
 			if [ -f $TMPDIR/$target/$subtarget/$image.html ] ; then
-				mkdir -p $BASE/lede/dbd/$target/$subtarget
-				mv $TMPDIR/$target/$subtarget/$image.html $BASE/lede/dbd/$target/$subtarget/$image.html
-				echo "         <tr><td><a href=\"dbd/$target/$subtarget/$image.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $image</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML
+				mkdir -p $BASE/lede/dbd/targets/$target/$subtarget
+				mv $TMPDIR/targets/$target/$subtarget/$image.html $BASE/lede/dbd/targets/$target/$subtarget/$image.html
+				echo "         <tr><td><a href=\"dbd/targets/$target/$subtarget/$image.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $image</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML
 			else
 				SHASUM=$(sha256sum $image|cut -d " " -f1)
 				echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $image ($SHASUM, $SIZE) is reproducible.</td></tr>" >> $DBD_HTML
 				let GOOD_IMAGES+=1
-				rm -f $BASE/lede/dbd/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
+				rm -f $BASE/lede/dbd/targets/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
 			fi
 		done
 		cd ..

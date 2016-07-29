@@ -123,7 +123,7 @@ openwrt_build_toolchain() {
 # TYPE - openwrt or lede
 # RUN - b1 or b2. b1 means first run, b2 second
 # TARGET - a target including subtarget. E.g. ar71xx_generic
-openwrt_build() {
+openwrt_compile() {
 	TYPE=$1
 	RUN=$2
 	TARGET=$3
@@ -167,7 +167,7 @@ build_two_times() {
 	# FIRST BUILD
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	MAKE=make
-	openwrt_build "$TYPE" b1 "$TARGET"
+	openwrt_compile "$TYPE" b1 "$TARGET"
 
 	# get banner
 	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
@@ -192,7 +192,7 @@ build_two_times() {
 	# use allmost all cores for second build
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	MAKE="linux64 --uname-2.6 make"
-	openwrt_build "$TYPE" b2 "$TARGET"
+	openwrt_compile "$TYPE" b2 "$TARGET"
 
 	# save results in b2
 	[ "$TYPE" = "lede" ] && save_lede_results b2

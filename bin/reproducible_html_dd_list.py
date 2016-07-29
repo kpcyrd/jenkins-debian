@@ -50,8 +50,8 @@ for suite in SUITES:
         html = '<p>The following maintainers and uploaders are listed '
         html += 'for packages in ' + suite + ' which have built '
         html += 'unreproducibly. Please note that the while the link '
-        html += 'always points to the amd64 version, the unreproducibility '
-        html += 'can be in any arch.</p>\n<p><pre>'
+        html += 'always points to the amd64 version, it\'s possible that'
+        html += 'the unreproducibility is only present in another architecture(s).</p>\n<p><pre>'
         out = out.decode().splitlines()
         get_mail = re.compile('<(.*)>')
         for line in out:

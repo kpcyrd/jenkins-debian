@@ -274,13 +274,12 @@ write_page_header() {
 		write_page "<input type=\"text\" name=\"SrcPkg\" placeholder=\"Type my friend..\" value=\"$LATEST\" />"
 		write_page "<input type=\"submit\" value=\"submit source package name\" />"
 		write_page "</form>"
-	elif [ "$1" = "dd-list" ] || [ "$1" = "$MAINVIEW" ] ; then
 		write_page "<ul>"
 		write_page "   We are reachable via IRC (<code>#debian-reproducible</code> and <code>#reproducible-builds</code> on OFTC),"
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">email</a>,"
 		write_page "   and we care about free software in general,"
 		write_page "   so whether you are an upstream developer or working on another distribution, or have any other feedback - we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"netbsd\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li> and <li><a href=\"archlinux\">Arch Linux</a></li> now, though not as thoroughly as Debian (yet?) - and testing of <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> has just begun, and there are plans to test <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_fdroid\">F-Droid</a> and <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_guix\">GNU Guix</a> too, and more, if you contribute!"
+		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"/netbsd/\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li>, <li><a href=\"/archlinux/\">Arch Linux</a></li> and <li><a href=\"/lede/\">LEDE</a></li>, though not as thoroughly as Debian (yet?) - and testing of <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> has just begun, and there are plans to test <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_fdroid\">F-Droid</a> and <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_guix\">GNU Guix</a> too, and more, if you contribute!"
 		write_page "</ul>"
 	fi
 }
@@ -328,7 +327,7 @@ write_page_intro() {
 
 write_page_footer() {
 	if [ "$1" = "coreboot" ] ; then
-		other_distro_details="The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can be freely used to refer to the Coreboot project."
+		other_distro_details="The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can freely be used to refer to the Coreboot project."
 	elif [ "$1" = "NetBSD" ] ; then
 		other_distro_details="NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
 	elif [ "$1" = "FreeBSD" ] ; then

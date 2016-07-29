@@ -121,8 +121,9 @@ openwrt_build_toolchain() {
 }
 
 openwrt_build() {
-	RUN=$1
-	TARGET=$2
+	TYPE=$1
+	RUN=$2
+	TARGET=$3
 
 	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
 
@@ -131,7 +132,7 @@ openwrt_build() {
 	[ "$RUN" = "b2" ] && RUN="second"
 
 	echo "============================================================================="
-	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
+	echo "$(date -u) - Building $TYPE ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
 	ionice -c 3 $MAKE $OPTIONS target/compile
 	ionice -c 3 $MAKE $OPTIONS package/cleanup
@@ -163,7 +164,7 @@ build_two_times() {
 	# FIRST BUILD
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	MAKE=make
-	openwrt_build b1 "$TARGET"
+	openwrt_build "$TYPE" b1 "$TARGET"
 
 	# get banner
 	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
@@ -188,7 +189,7 @@ build_two_times() {
 	# use allmost all cores for second build
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	MAKE="linux64 --uname-2.6 make"
-	openwrt_build b2 "$TARGET"
+	openwrt_build "$TYPE" b2 "$TARGET"
 
 	# save results in b2
 	[ "$TYPE" = "lede" ] && save_lede_results b2

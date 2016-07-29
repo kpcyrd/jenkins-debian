@@ -38,13 +38,6 @@ echo "This is lede $OPENWRT_VERSION."
 echo
 git log -1
 
-# External feeds disabled for now as they break building (especially with CONFIG_ALL=y).
-#echo "============================================================================="
-#echo "$(date -u) - Updating package feeds."
-#echo "============================================================================="
-#./scripts/feeds update -a
-#./scripts/feeds install -a
-
 create_results_dirs lede
 
 build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"

@@ -32,6 +32,7 @@ save_logs() {
 	tar cJf "$BASE/${project}/dbd/logs_${postfix}.tar.xz" logs/
 }
 
+# RUN - is b1 or b2. b1 for first run, b2 for second
 save_lede_results() {
 	RUN=$1
 	pushd bin/targets
@@ -61,6 +62,7 @@ save_lede_results() {
 	done
 	popd
 
+	# save all generic packages
 	# arch is like mips_34kc_dsp
 	pushd bin/packages/
 	for arch in * ; do

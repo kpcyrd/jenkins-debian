@@ -449,6 +449,10 @@ def purge_old_pages():
                     log.info('There is no package named ' + pkg + ' from ' +
                              suite + '/' + arch + ' in the database. ' +
                              'Removing old page.')
-                    os.remove(RB_PKG_PATH + '/' + suite + '/' + arch + '/' +
+                    try:
+                        os.remove(RB_PKG_PATH + '/' + suite + '/' + arch + '/' +
                               page)
+                    try:
+                        os.remove(RB_PKG_PATH + '/' + suite + '/' + arch + '/diffoscope/' +
+                              pkg + '.html')
 

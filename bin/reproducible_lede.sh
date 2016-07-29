@@ -124,9 +124,9 @@ for target in * ; do
 				rm -f $BASE/lede/dbd/targets/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
 				continue
 			fi
-			call_diffoscope $target/$subtarget $image
+			call_diffoscope targets/$target/$subtarget $image
 			get_filesize $image
-			if [ -f $TMPDIR/$target/$subtarget/$image.html ] ; then
+			if [ -f $TMPDIR/targets/$target/$subtarget/$image.html ] ; then
 				mkdir -p $BASE/lede/dbd/targets/$target/$subtarget
 				mv $TMPDIR/targets/$target/$subtarget/$image.html $BASE/lede/dbd/targets/$target/$subtarget/$image.html
 				echo "         <tr><td><a href=\"dbd/targets/$target/$subtarget/$image.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $image</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML

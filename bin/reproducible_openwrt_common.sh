@@ -33,8 +33,11 @@ save_logs() {
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
+# save the images and packages under $TMPDIR/$RUN
 save_lede_results() {
 	RUN=$1
+
+	# first save all images and target specific packages
 	pushd bin/targets
 	for target in * ; do
 		pushd $target || continue
@@ -80,6 +83,8 @@ save_lede_results() {
 	popd
 }
 
+# RUN - is b1 or b2. b1 for first run, b2 for second
+# save the images and packages under $TMPDIR/$RUN
 save_openwrt_results() {
 	RUN=$1
 	cd bin

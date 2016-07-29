@@ -120,6 +120,9 @@ openwrt_build_toolchain() {
 	ionice -c 3 make -j $NUM_CPU toolchain/install
 }
 
+# TYPE - openwrt or lede
+# RUN - b1 or b2. b1 means first run, b2 second
+# TARGET - a target including subtarget. E.g. ar71xx_generic
 openwrt_build() {
 	TYPE=$1
 	RUN=$2

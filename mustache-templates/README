@@ -1,0 +1,26 @@
+﻿mustache is a templating language with the following simple rules.
+The template accepts a "context" -- a python dictionary. Values can be
+Booleans, strings, numbers, html, and lists of dictionaries. Empty stings,
+None and False values are interpreted as false.
+
+See complete description here: https://mustache.github.io/mustache.5.html
+
+Syntax:
+{{foo}}
+	-> subsitute with the value of foo
+
+{{#foo}}some html{{/foo}}
+	-> if foo exists and it's value is not false, include "some html"
+
+{{^foo}}some html{{/foo}}
+	-> if foo does not exists or it's value is false, include "some html"
+
+{{#foo}}{{^bar}}some html{{/bar}}{{/foo}}
+	-> if foo exists and bar does not exist, include "some html"
+
+{{#items}}<ul>{{item}}</ul>{{/items}}
+	-> if context['items'] is a list of dictionaries, repeat the html between
+	the "items" tags using each object as the context iteratively.
+
+{{{additional_html}}}
+	-> three "{"  must be used to pass html into a template

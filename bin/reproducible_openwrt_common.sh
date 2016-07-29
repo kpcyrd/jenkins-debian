@@ -126,6 +126,10 @@ openwrt_build() {
 
 	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
 
+	# make $RUN more human readable
+	[ "$RUN" = "b1" ] && RUN="first"
+	[ "$RUN" = "b2" ] && RUN="second"
+
 	echo "============================================================================="
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
@@ -159,7 +163,7 @@ build_two_times() {
 	# FIRST BUILD
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	MAKE=make
-	openwrt_build "first" "$TARGET"
+	openwrt_build b1 "$TARGET"
 
 	# get banner
 	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
@@ -184,7 +188,7 @@ build_two_times() {
 	# use allmost all cores for second build
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	MAKE="linux64 --uname-2.6 make"
-	openwrt_build "second" "$TARGET"
+	openwrt_build b2 "$TARGET"
 
 	# save results in b2
 	[ "$TYPE" = "lede" ] && save_lede_results b2

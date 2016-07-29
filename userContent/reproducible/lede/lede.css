@@ -1,0 +1,27 @@
+a {
+    text-decoration: none;
+}
+
+p {
+    line-height: 1.8;
+}
+
+.top-bar .toggle-topbar span,
+.fa-ul a {
+    font-family:"Open Sans","DejaVu Sans",sans-serif;
+}
+
+.top-bar-section {
+    max-width: 100rem !important;
+}
+
+@media only screen and (min-width: 40.063em) {
+    .top-bar {
+        height: auto;
+        min-height: 2.8125rem;
+    }
+}
+
+.top-bar .top-bar-title {
+    padding-left: 10px;
+}

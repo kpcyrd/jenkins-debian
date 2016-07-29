@@ -204,7 +204,11 @@ cat > $PAGE <<- EOF
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <title>Reproducible LEDE ?</title>
-    <link rel='stylesheet' id='kamikaze-style-css'  href='cascade.css?ver=4.0' type='text/css' media='all'>
+    <link rel="stylesheet" href="foundation.css"/>
+    <link rel="stylesheet" href="font-awesome.css"/>
+    <link rel="stylesheet" href="coderay.css"/>
+    <link rel="stylesheet" href="asciidoctor.css"/>
+    <link rel="stylesheet" href="lede.css"/>
   </head>
   <body>
     <div id="header">

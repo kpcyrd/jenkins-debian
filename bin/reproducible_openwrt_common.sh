@@ -101,6 +101,29 @@ save_openwrt_results() {
 	cd ..
 }
 
+# apply variations change the environment for
+# the subsequent run
+# RUN - b1 or b2. b1 for first run, b2 for the second
+openwrt_apply_variations() {
+	RUN=$1
+
+	if [ "$RUN" = "b1" ] ; then
+		export TZ="/usr/share/zoneinfo/Etc/GMT+12"
+		export MAKE=make
+	else
+		export TZ="/usr/share/zoneinfo/Etc/GMT-14"
+		export LANG="fr_CH.UTF-8"
+		export LC_ALL="fr_CH.UTF-8"
+		export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
+		export CAPTURE_ENVIRONMENT="I capture the environment"
+		umask 0002
+		# use allmost all cores for second build
+		export NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
+		export MAKE="linux64 --uname-2.6 make"
+	fi
+}
+
+
 openwrt_config() {
 	CONFIG=$1
 
@@ -165,8 +188,7 @@ build_two_times() {
 	openwrt_build_toolchain
 
 	# FIRST BUILD
-	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
-	MAKE=make
+	openwrt_apply_variations b1
 	openwrt_compile "$TYPE" b1 "$TARGET"
 
 	# get banner
@@ -183,15 +205,7 @@ build_two_times() {
 	openwrt_cleanup
 
 	# SECOND BUILD
-	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
-	export LANG="fr_CH.UTF-8"
-	export LC_ALL="fr_CH.UTF-8"
-	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
-	export CAPTURE_ENVIRONMENT="I capture the environment"
-	umask 0002
-	# use allmost all cores for second build
-	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-	MAKE="linux64 --uname-2.6 make"
+	openwrt_apply_variations b2
 	openwrt_compile "$TYPE" b2 "$TARGET"
 
 	# save results in b2

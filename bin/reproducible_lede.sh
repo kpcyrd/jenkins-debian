@@ -211,12 +211,11 @@ cat > $PAGE <<- EOF
     <link rel="stylesheet" href="lede.css"/>
   </head>
   <body>
-    <div id="header">
-        <p><center>
-        <code>
+    <div id="content">
+        <pre>
 EOF
 cat $BANNER_HTML >> $PAGE
-write_page "       </code></center></p>"
+write_page "       </pre>"
 write_page "     </div><div id=\"main-content\">"
 write_page "       <h1>LEDE - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
 write_page_intro LEDE

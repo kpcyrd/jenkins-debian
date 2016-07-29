@@ -73,14 +73,14 @@ def get_dbd_links(package, eversion, suite, arch):
                        + '.diffoscope.html')
     dbdtxt_file = os.path.join(DBDTXT_PATH, suite, arch, package + '_' + eversion
                           + '.diffoscope.txt.gz')
-    dbd_page_file = os.path.join(RB_PKG_PATH, suite, arch, package,
-                                 'diffoscope.html')
+    dbd_page_file = os.path.join(RB_PKG_PATH, suite, arch, 'diffoscope', package +
+                                 '.html')
     dbd_uri = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
               eversion + '.diffoscope.html'
     dbdtxt_uri = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
                 eversion + '.diffoscope.txt'
-    dbd_page_uri = RB_PKG_URI + '/' + suite + '/' + arch + '/' +  package + \
-                   '/diffoscope.html'
+    dbd_page_uri = RB_PKG_URI + '/' + suite + '/' + arch + '/diffoscope/' + \
+                   package + '.html'
     links = {}
     # only return dbd_uri and dbdtext_uri if they exist
     if os.access(dbd_file, os.R_OK):

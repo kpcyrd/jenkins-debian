@@ -315,7 +315,6 @@ def gen_history_page(package, arch=None):
     else:
         destfile = os.path.join(HISTORY_PATH, package.name+'.html')
     title = 'build history of {}'.format(package.name)
-    print(arch)
     if arch:
         title += ' on {}'.format(arch)
     write_html_page(title=title, body=html, destfile=destfile,

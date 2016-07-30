@@ -258,7 +258,7 @@ build_two_times() {
 	TMPDIR_B1=$(ssh $HOST_B1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
 	# TODO check tmpdir exist
 
-	SCRIPT="$0 slave"
+	SCRIPT="$0 node"
 	ssh $HOST_B1 $SCRIPT openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
 	# rsync back

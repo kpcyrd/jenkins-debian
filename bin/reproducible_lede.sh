@@ -20,8 +20,7 @@ set -e
 # * it's called from the reproducible_wrapper when running on the master
 # * it's called from reproducible_opewnrt_common when doing remote builds
 case $1 in
-	slave)
-		# execute the slave
+	node)
 		shift
 		$@
 		exit $?

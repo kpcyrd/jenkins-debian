@@ -9,7 +9,7 @@ OPENWRT_GIT_REPO=https://git.lede-project.org/source.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
-common_init "$@"
+common_init
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh

@@ -22,6 +22,16 @@ set -e
 case $1 in
 	node)
 		shift
+		case $1 in
+			openwrt_build |\
+			openwrt_get_banner |\
+			openwrt_mktempdir |\
+			openwrt_cleanup_tmpdirs) ;; # this is the allowed list
+			*)
+				echo "Unsupported remote node function $@"
+				exit 1
+				;;
+		esac
 		$@
 		exit $?
 	;;

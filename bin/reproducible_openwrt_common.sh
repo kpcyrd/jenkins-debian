@@ -5,6 +5,15 @@
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
+# only called direct on a remote build node
+openwrt_cleanup_tmpdirs() {
+	export TMPDIR=$1
+	export TMPBUILDDIR=$TMPDIR/build
+	cleanup_tmpdirs
+}
+
+# called as trap handler
+# called on cleanup
 cleanup_tmpdirs() {
 	cd
 	# (very simple) check we are deleting the right stuff
@@ -23,13 +32,11 @@ create_results_dirs() {
 	mkdir -p $BASE/$project/dbd
 }
 
-# project = openwrt or lede
-# postfix = we use the postfix to save difference of the first and second build
 save_logs() {
-	local project="$1"
-	local postfix="$2"
+	local TYPE=$1
+	local RUN=$2
 
-	tar cJf "$BASE/${project}/dbd/logs_${postfix}.tar.xz" logs/
+	tar cJf "$TMPDIR/$RUN/logs_${TYPE}.tar.xz" logs/
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
@@ -173,6 +180,13 @@ openwrt_compile() {
 	ionice -c 3 $MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
 }
 
+openwrt_get_banner() {
+	TMPDIR=$1
+	TYPE=$2
+	cd $TMPDIR/build/$TYPE
+	cat $(find build_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null)
+}
+
 openwrt_cleanup() {
 	rm build_dir/target-* -rf
 	rm staging_dir/target-* -rf
@@ -180,6 +194,54 @@ openwrt_cleanup() {
 	rm logs/* -rf
 }
 
+# openwrt_build is run on a remote host
+# TYPE - openwrt or lede
+# RUN - b1 or b2. b1 means first run, b2 second
+# TARGET - a target including subtarget. E.g. ar71xx_generic
+# CONFIG - a simple basic .config as string. Use \n to seperate lines
+# TMPPATH - is a unique path generated with mktmp
+# lede has a different output directory than openwrt
+openwrt_build() {
+	local TYPE=$1
+	local RUN=$2
+	local TARGET=$3
+	local CONFIG=$4
+	export TMPDIR=$5
+	export TMPBUILDDIR=$TMPDIR/build/
+	mkdir -p $TMPBUILDDIR
+
+	# we have also to set the TMP
+
+	cd $TMPBUILDDIR
+
+	# checkout the repo
+	echo "============================================================================="
+	echo "$(date -u) - Cloning $TYPE git repository."
+	echo "============================================================================="
+	git clone --depth 1 -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO $TYPE
+	cd $TYPE
+
+	# set tz, date, core, ..
+	openwrt_apply_variations $RUN
+
+	# configure openwrt
+	openwrt_config $CONFIG
+	openwrt_build_toolchain
+	# build images and packages
+	openwrt_compile $TYPE $RUN $TARGET
+
+	# save the results
+	[ "$TYPE" = "lede" ] && save_lede_results $RUN
+	[ "$TYPE" = "openwrt" ] && save_openwrt_results $RUN
+
+	# copy logs
+	save_logs $TYPE $RUN
+
+	# clean up between builds
+	openwrt_cleanup
+}
+
+# build openwrt/lede on two different hosts
 # TARGET a target including subtarget. E.g. ar71xx_generic
 # CONFIG - a simple basic .config as string. Use \n to seperate lines
 # TYPE - openwrt or lede
@@ -188,46 +250,29 @@ build_two_times() {
 	TYPE=$1
 	TARGET=$2
 	CONFIG=$3
+	HOST_B1=$4
+	HOST_B2=$5
 
-	openwrt_config $CONFIG
-	openwrt_build_toolchain
+	## HOST_B1
+	RUN=b1
+	TMPDIR_B1=$(ssh $HOST_B1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
+	# TODO check tmpdir exist
 
-	# FIRST BUILD
-	openwrt_apply_variations b1
-	openwrt_compile "$TYPE" b1 "$TARGET"
+	SCRIPT="$0 slave"
+	ssh $HOST_B1 $SCRIPT openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
-	# get banner
-	cat $(find build_dir/ -name banner | grep etc/banner|head -1) > $BANNER_HTML
+	# rsync back
+	# copy logs and images
+	rsync -a $HOST_B1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
 
-	# save results in b1
-	[ "$TYPE" = "lede" ] && save_lede_results b1
-	[ "$TYPE" = "openwrt" ] && save_openwrt_results b1
+	ssh $HOST_B1 $SCRIPT openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
+	ssh $HOST_B1 $SCRIPT openwrt_cleanup_tmpdirs $TMPDIR_B1
 
-	# copy logs
-	save_logs $TYPE b1
+	## HOST_B2
+	RUN=b2
+	TMPDIR_B2=$(ssh $HOST_A mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
+	ssh $HOST_B2 $SCRIPT openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
 
-	# clean up between builds
-	openwrt_cleanup
-
-	# SECOND BUILD
-	openwrt_apply_variations b2
-	openwrt_compile "$TYPE" b2 "$TARGET"
-
-	# save results in b2
-	[ "$TYPE" = "lede" ] && save_lede_results b2
-	[ "$TYPE" = "openwrt" ] && save_openwrt_results b2
-
-	# copy logs
-	save_logs $TYPE b2
-
-	# reset environment to default values again
-	export LANG="en_GB.UTF-8"
-	unset LC_ALL
-	export TZ="/usr/share/zoneinfo/UTC"
-	export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:"
-	umask 0022
-
-	# clean up again
-	openwrt_cleanup
+	rsync -a $HOST_B2:$TMPDIR_B2/$RUN/ $TMPDIR/$RUN/
+	ssh $HOST_B2 $SCRIPT openwrt_cleanup_tmpdirs $TMPDIR_B2
 }
-

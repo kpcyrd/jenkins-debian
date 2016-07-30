@@ -42,20 +42,10 @@ START=$(date +'%s')
 trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
-echo "============================================================================="
-echo "$(date -u) - Cloning LEDE git repository."
-echo "============================================================================="
-git clone --depth 1 -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO lede
-cd lede
-OPENWRT="$(git log -1)"
-OPENWRT_VERSION=$(git describe --always)
-echo "This is lede $OPENWRT_VERSION."
-echo
-git log -1
 
 create_results_dirs lede
 
-build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
+build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n" profitbricks-build3-amd64 profitbricks-build4-amd64
 
 # for now we only build one architecture until it's at most reproducible
 #build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"

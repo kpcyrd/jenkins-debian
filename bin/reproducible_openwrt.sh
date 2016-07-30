@@ -42,27 +42,11 @@ START=$(date +'%s')
 trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
-echo "============================================================================="
-echo "$(date -u) - Cloning OpenWrt git repository."
-echo "============================================================================="
-git clone --depth 1 -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO openwrt
-cd openwrt
-OPENWRT="$(git log -1)"
-OPENWRT_VERSION=$(git describe --always)
-echo "This is openwrt $OPENWRT_VERSION."
-echo
-git log -1
-
-# External feeds disabled for now as they break building (especially with CONFIG_ALL=y).
-#echo "============================================================================="
-#echo "$(date -u) - Updating package feeds."
-#echo "============================================================================="
-#./scripts/feeds update -a
-#./scripts/feeds install -a
 
 create_results_dirs openwrt
 
-build_two_times openwrt ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
+build_two_times openwrt ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n" profitbricks-build3-amd64 profitbricks-build4-amd64
+
 
 # for now we only build one architecture until it's at most reproducible
 #build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"

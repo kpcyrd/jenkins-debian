@@ -262,20 +262,20 @@ build_two_times() {
 	## first run
 	RUN=b1
 	TMPDIR_B1=$(ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_mktempdir)
-	ssh $GENERIC_NODE1 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
-	ssh $GENERIC_NODE1 $0 node openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
 
 	# rsync back logs and images
 	rsync -a $GENERIC_NODE1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
-	ssh $GENERIC_NODE1 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B1
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_cleanup_tmpdirs $TMPDIR_B1
 
 	## second run
 	RUN=b2
 	TMPDIR_B2=$(ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_mktempdir)
-	ssh $GENERIC_NODE2 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
+	ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
 
 	# rsync back logs and images
 	rsync -a $GENERIC_NODE2:$TMPDIR_B2/$RUN/ $TMPDIR/$RUN/
-	ssh $GENERIC_NODE2 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B2
+	ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_cleanup_tmpdirs $TMPDIR_B2
 }

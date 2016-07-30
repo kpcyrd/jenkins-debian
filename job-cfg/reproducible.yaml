@@ -634,11 +634,12 @@
                 - 'lede':
                     my_description: 'Rebuild LEDE (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 4'
+                    my_shell: '/srv/jenkins/bin/reproducible_lede.sh master'
                 - 'openwrt':
                     my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 2'
+                    my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh master'
             my_trigger: 'reproducible_html_rsync_remote_results'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
 
@@ -647,13 +648,14 @@
                 - 'coreboot':
                     my_description: 'Rebuild all coreboot ROMs twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 1'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
                 - 'netbsd':
                     my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 3'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
-            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
+            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
 
         - '{name}_{otherproject}':
             otherproject:

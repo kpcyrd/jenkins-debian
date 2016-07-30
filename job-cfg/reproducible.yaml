@@ -640,7 +640,7 @@
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
-            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
+            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
 
         - '{name}_{otherproject_triggering}':
             otherproject_triggering:
@@ -653,7 +653,7 @@
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
-            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
+            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
 
         - '{name}_{otherproject}':
             otherproject:

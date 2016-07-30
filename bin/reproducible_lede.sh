@@ -16,6 +16,21 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_openwrt_common.sh
 set -e
 
+# this script is called from positions
+# * it's called from the reproducible_wrapper when running on the master
+# * it's called from reproducible_opewnrt_common when doing remote builds
+case $1 in
+	slave)
+		# execute the slave
+		shift
+		$@
+		exit $?
+	;;
+	master)
+		# master code following
+	;;
+esac
+
 #
 # main
 #

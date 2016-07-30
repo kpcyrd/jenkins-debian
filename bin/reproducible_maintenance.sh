@@ -43,6 +43,8 @@ fi
 
 # for Debian
 echo "$(date -u) - updating the schroots and pbuilder now..."
+# testing whether the proxy works
+curl http://www.debian.org > /dev/null
 set +e
 # use host architecture (only)
 ARCH=$(dpkg --print-architecture)

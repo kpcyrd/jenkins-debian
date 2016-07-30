@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
@@ -20,9 +20,8 @@ set -e
 # * it's called from the reproducible_wrapper when running on the master
 # * it's called from reproducible_opewnrt_common when doing remote builds
 case $1 in
-	slave)
-		# execute the slave
-		shift
+	1|2)
+		# execute build 1 or 2
 		$@
 		exit $?
 	;;

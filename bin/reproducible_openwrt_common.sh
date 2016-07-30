@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
@@ -258,21 +258,20 @@ build_two_times() {
 	TMPDIR_B1=$(ssh $HOST_B1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
 	# TODO check tmpdir exist
 
-	SCRIPT="$0 slave"
-	ssh $HOST_B1 $SCRIPT openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
+	ssh $HOST_B1 $0 openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
 	# rsync back
 	# copy logs and images
 	rsync -a $HOST_B1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
 
-	ssh $HOST_B1 $SCRIPT openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
-	ssh $HOST_B1 $SCRIPT openwrt_cleanup_tmpdirs $TMPDIR_B1
+	ssh $HOST_B1 $0 openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
+	ssh $HOST_B1 $0 openwrt_cleanup_tmpdirs $TMPDIR_B1
 
 	## HOST_B2
 	RUN=b2
 	TMPDIR_B2=$(ssh $HOST_A mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
-	ssh $HOST_B2 $SCRIPT openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
+	ssh $HOST_B2 $0 openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
 
 	rsync -a $HOST_B2:$TMPDIR_B2/$RUN/ $TMPDIR/$RUN/
-	ssh $HOST_B2 $SCRIPT openwrt_cleanup_tmpdirs $TMPDIR_B2
+	ssh $HOST_B2 $0 openwrt_cleanup_tmpdirs $TMPDIR_B2
 }

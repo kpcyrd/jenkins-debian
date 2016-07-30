@@ -117,10 +117,10 @@ elif [[ "$*" =~ ^reproducible_setup_schroot_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_coreboot ]] ; then
 	exec /srv/jenkins/bin/reproducible_coreboot.sh ; croak "Exec failed";
-elif [ "$1" = "/srv/jenkins/bin/reproducible_openwrt.sh" ] && ( [ "$2" = "master" ] || [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
-	exec /srv/jenkins/bin/reproducible_openwrt.sh "$2" "$3" "$4" "$5" "$6" "$7" "$8" ; croak "Exec failed";
-elif [ "$1" = "/srv/jenkins/bin/reproducible_lede.sh" ] && ( [ "$2" = "master" ] || [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
-	exec /srv/jenkins/bin/reproducible_lede.sh "$2" "$3" "$4" "$5" "$6" "$7" "$8" ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_openwrt ]] ; then
+	exec /srv/jenkins/bin/reproducible_openwrt.sh master ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_lede ]] ; then
+	exec /srv/jenkins/bin/reproducible_lede.sh master ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_netbsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_netbsd.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_freebsd ]] ; then

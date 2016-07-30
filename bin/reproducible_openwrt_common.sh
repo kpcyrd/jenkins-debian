@@ -9,6 +9,10 @@
 GENERIC_NODE1=profitbricks-build3-amd64.debian.net
 GENERIC_NODE2=profitbricks-build4-amd64.debian.net
 
+openwrt_mktempdir() {
+	mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX
+}
+
 # only called direct on a remote build node
 openwrt_cleanup_tmpdirs() {
 	export TMPDIR=$1
@@ -257,7 +261,7 @@ build_two_times() {
 
 	## first run
 	RUN=b1
-	TMPDIR_B1=$(ssh $GENERIC_NODE1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
+	TMPDIR_B1=$(ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_mktempdir)
 	ssh $GENERIC_NODE1 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
 	ssh $GENERIC_NODE1 $0 node openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
@@ -268,7 +272,7 @@ build_two_times() {
 
 	## second run
 	RUN=b2
-	TMPDIR_B2=$(ssh $HOST_A mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
+	TMPDIR_B2=$(ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_mktempdir)
 	ssh $GENERIC_NODE2 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
 
 	# rsync back logs and images

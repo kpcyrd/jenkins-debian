@@ -5,6 +5,10 @@
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
+# configuration
+GENERIC_NODE1=profitbricks-build3-amd64.debian.net
+GENERIC_NODE2=profitbricks-build4-amd64.debian.net
+
 # only called direct on a remote build node
 openwrt_cleanup_tmpdirs() {
 	export TMPDIR=$1
@@ -250,28 +254,26 @@ build_two_times() {
 	TYPE=$1
 	TARGET=$2
 	CONFIG=$3
-	HOST_B1=$4
-	HOST_B2=$5
 
-	## HOST_B1
+	## GENERIC_NODE1
 	RUN=b1
-	TMPDIR_B1=$(ssh $HOST_B1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
+	TMPDIR_B1=$(ssh $GENERIC_NODE1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
 	# TODO check tmpdir exist
 
-	ssh $HOST_B1 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
+	ssh $GENERIC_NODE1 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
 	# rsync back
 	# copy logs and images
-	rsync -a $HOST_B1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
+	rsync -a $GENERIC_NODE1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
 
-	ssh $HOST_B1 $0 node openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
-	ssh $HOST_B1 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B1
+	ssh $GENERIC_NODE1 $0 node openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
+	ssh $GENERIC_NODE1 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B1
 
-	## HOST_B2
+	## GENERIC_NODE2
 	RUN=b2
 	TMPDIR_B2=$(ssh $HOST_A mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
-	ssh $HOST_B2 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
+	ssh $GENERIC_NODE2 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
 
-	rsync -a $HOST_B2:$TMPDIR_B2/$RUN/ $TMPDIR/$RUN/
-	ssh $HOST_B2 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B2
+	rsync -a $GENERIC_NODE2:$TMPDIR_B2/$RUN/ $TMPDIR/$RUN/
+	ssh $GENERIC_NODE2 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B2
 }

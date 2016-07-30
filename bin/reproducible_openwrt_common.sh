@@ -255,25 +255,23 @@ build_two_times() {
 	TARGET=$2
 	CONFIG=$3
 
-	## GENERIC_NODE1
+	## first run
 	RUN=b1
 	TMPDIR_B1=$(ssh $GENERIC_NODE1 mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
-	# TODO check tmpdir exist
-
 	ssh $GENERIC_NODE1 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B1
 
-	# rsync back
-	# copy logs and images
-	rsync -a $GENERIC_NODE1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
-
 	ssh $GENERIC_NODE1 $0 node openwrt_get_banner $TMPDIR_B1 $TYPE > $BANNER_HTML
+
+	# rsync back logs and images
+	rsync -a $GENERIC_NODE1:$TMPDIR_B1/$RUN/ $TMPDIR/$RUN/
 	ssh $GENERIC_NODE1 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B1
 
-	## GENERIC_NODE2
+	## second run
 	RUN=b2
 	TMPDIR_B2=$(ssh $HOST_A mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-XXXXXXXX)
 	ssh $GENERIC_NODE2 $0 node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR_B2
 
+	# rsync back logs and images
 	rsync -a $GENERIC_NODE2:$TMPDIR_B2/$RUN/ $TMPDIR/$RUN/
 	ssh $GENERIC_NODE2 $0 node openwrt_cleanup_tmpdirs $TMPDIR_B2
 }

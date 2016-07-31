@@ -1,10 +1,10 @@
-<a href="{{debian_uri}}"><h2>Debian Dashboard</h2></a>
+<a href="{{debian_uri}}"><h2>Debian navigation</h2></a>
 <ul class="menu">
   {{^cross_suite_arch_nav}}
-  <h4>Suite/Architecture Overviews</h4>
+  <h4>Suite/architecture overviews</h4>
   {{/cross_suite_arch_nav}}
   {{#cross_suite_arch_nav}}
-  <h4>Change Suite/Architecture</h4>
+  <h4>Change suite/architecture</h4>
   {{/cross_suite_arch_nav}}
   <li>
     Tested architectures:
@@ -35,7 +35,7 @@
       </li>
     </ul>
   </li>
-  <h4>Test Result Statistics</h4>
+  <h4>Test results statistics</h4>
   <li {{#suite_arch_stats}}class='active'{{/suite_arch_stats}}>
     Results for
     <a href="/debian/{{suite}}/index_suite_{{arch}}_stats.html"
@@ -135,28 +135,31 @@
   </li>
 </ul>
 <ul class="menu new-menu">
-  <h4>Reproducible Debian Metadata</h4>
+  <h4>Reproducible Debian Overview</h4>
   <li {{#issues}}class='active'{{/issues}}>
-    <a href="/debian/index_issues.html">issues</a>
+    <a href="/debian/">Dashboard</a>
+  </li>
+  <li {{#issues}}class='active'{{/issues}}>
+    Categorized <a href="/debian/index_issues.html">issues</a>
   </li>
   <li {{#repositories}}class='active'{{/repositories}}>
     <a href="/debian/index_repositories.html">
-      repositories overview
+      Repositories overview
     </a>
   </li>
   <li {{#notify}}class='active'{{/notify}}>
     <a href="/debian/index_notify.html" title="notify icon">
-      ⚑ packages with enabled notifications
-    </a>
+      Packages with notifications enabled ⚑
+ </a>
   </li>
   <li {{#performance}}class='active'{{/performance}}>
     <a href="/debian/index_performance.html">performance stats</a>
   </li>
   <li {{#variations}}class='active'{{/variations}}>
-    <a href="/debian/index_variations.html">variations tested</a>
+    <a href="/debian/index_variations.html">Variations tested</a>
   </li>
   <li {{#breakages}}class='active'{{/breakages}}>
-    <a href="/debian/index_breakages.html">broken pieces</a>
+    <a href="/debian/index_breakages.html">Broken pieces</a>
   </li>
 </ul>
 {{{project_links_html}}}

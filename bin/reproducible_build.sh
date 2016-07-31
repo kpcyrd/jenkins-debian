@@ -594,6 +594,10 @@ export LANG="C"
 unset LC_ALL
 export LANGUAGE="en_US:en"
 EOF
+	# build path is for now only varied on testing/i386
+	if [ "${ARCH}" = "i386" -a "${SUITE}" = "testing" ]; then
+		echo "BUILDDIR=/build-1st" >> "$TMPCFG"
+	fi
 	# remember to change the sudoers setting if you change the following command
 	# FIXME: call with --buildinfo-identifier=dummy instead and below
 	( sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
@@ -648,6 +652,10 @@ export LC_ALL="$locale.UTF-8"
 export LANGUAGE="$locale:$language"
 umask 0002
 EOF
+	# build path is for now only varied on testing/i386
+	if [ "${ARCH}" = "i386" -a "${SUITE}" = "testing" ]; then
+		echo "BUILDDIR=/build-2nd" >> "$TMPCFG"
+	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command
 	# (the 2nd build gets a longer timeout trying to make sure the first build

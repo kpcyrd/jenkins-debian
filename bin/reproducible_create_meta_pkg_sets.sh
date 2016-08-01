@@ -577,26 +577,33 @@ update_pkg_sets() {
 	fi
 	progress_info 39
 
-	# pkg-perl-maintainers
+	# pkg-multimedia-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[40]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[40]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-multimedia-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[40]}.pkgset
 	fi
 	progress_info 40
 
-	# pkg-php-pear
+	# pkg-perl-maintainers
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[41]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[41]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[41]}.pkgset
 	fi
 	progress_info 41
 
-	# pkg-ruby-extras-maintainers
+	# pkg-php-pear
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[42]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[42]}.pkgset ] ; then
-		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[42]}.pkgset
 	fi
 	progress_info 42
+
+	# pkg-ruby-extras-maintainers
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[43]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[43]}.pkgset ] ; then
+		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
+		update_if_similar ${META_PKGSET[43]}.pkgset
+	fi
+	progress_info 43
 
 }
 

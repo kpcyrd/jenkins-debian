@@ -52,8 +52,8 @@ def load_notes():
                                    + '\nThis means there is no tested ' +
                                    'package with the name ' + pkg)
             try:
-                irc_msg('There is problem with the note for ' + pkg +
-                        ' - please check ' + os.environ['BUILD_URL'])
+                irc_msg("There is problem with the note for {} - "
+                    "please check {}".format(pkg, os.environ['BUILD_URL']))
             except KeyError:
                 log.error('There is a problem with the note for %s - please '
                           'check.', pkg)

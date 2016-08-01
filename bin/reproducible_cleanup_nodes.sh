@@ -20,12 +20,14 @@ elif [ "$(whoami)" != "jenkins" ] ; then
 fi
 
 # deny running this if jenkins is still running
-RESULT=$(ps fax|grep '/usr/share/jenkins/jenkins.war'|grep -v grep||true)
-if [ -n "$RESULT" ] ; then
-	echo "jenkins is still running, aborting."
-	exit 1
-else
-	echo "jenkins is not running, ok, let's go."
+if [ "$1" != "--force" ] ; then
+	RESULT=$(ps fax|grep '/usr/share/jenkins/jenkins.war'|grep -v grep||true)
+	if [ -n "$RESULT" ] ; then
+		echo "jenkins is still running, aborting."
+		exit 1
+	else
+		echo "jenkins is not running, ok, let's go."
+	fi
 fi
 
 # simple confirmation needed

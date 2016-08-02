@@ -52,8 +52,9 @@ def generate_schedule(arch):
     html += '</table></p>\n'
     destfile = DEBIAN_BASE + '/index_' + arch + '_scheduled.html'
     desturl = DEBIAN_URL + '/index_' + arch + '_scheduled.html'
-    left_nav_html = create_main_navigation(arch=arch,
-                                           displayed_page='scheduled')
+    suite_arch_nav_template = DEBIAN_URI + '/index_{{arch}}_scheduled.html'
+    left_nav_html = create_main_navigation(arch=arch, no_suite=True,
+        displayed_page='scheduled', suite_arch_nav_template=suite_arch_nav_template)
     write_html_page(title=title, body=html, destfile=destfile, style_note=True,
                     refresh_every=60, left_nav_html=left_nav_html)
     log.info("Page generated at " + desturl)

@@ -73,8 +73,10 @@ for suite in SUITES:
         html += '</pre></p>'
         title = 'Maintainers of unreproducible packages in ' + suite
         destfile = DEBIAN_BASE + '/' + suite + '/index_dd-list.html'
+        suite_arch_nav_template = DEBIAN_URI + '/{{suite}}/index_dd-list.html'
         left_nav_html = create_main_navigation(suite=suite, arch=arch,
-                                               displayed_page='dd_list')
+            displayed_page='dd_list', no_arch=True,
+            suite_arch_nav_template=suite_arch_nav_template)
         write_html_page(title, html, destfile, style_note=True,
                         left_nav_html=left_nav_html)
         log.info('%s/%s/index_dd-list.html published', DEBIAN_URL, suite)

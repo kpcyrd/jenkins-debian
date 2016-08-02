@@ -54,7 +54,7 @@ if ! getent passwd jenkins-adm > /dev/null  ; then
 	sudo adduser --system --shell /bin/bash --hone /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
-if [ ! -d /home/jenkins-adm ];
+if [ ! -d /home/jenkins-adm ]; then
     sudo mkdir /home/jenkins-adm
     sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
 fi

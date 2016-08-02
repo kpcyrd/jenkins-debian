@@ -37,6 +37,10 @@ case $1 in
 	master)
 		# master code following
 	;;
+	*)
+		echo "Unsupported mode $1. Arguments are $@"
+		exit 1
+	;;
 esac
 
 #

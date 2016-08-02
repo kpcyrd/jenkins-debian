@@ -229,7 +229,7 @@ openwrt_build() {
 	echo "============================================================================="
 	echo "$(date -u) - Cloning $TYPE git repository."
 	echo "============================================================================="
-	git clone --depth 1 -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO $TYPE
+	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO $TYPE
 	cd $TYPE
 
 	# set tz, date, core, ..

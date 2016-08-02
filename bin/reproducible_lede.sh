@@ -16,6 +16,7 @@ common_init
 . /srv/jenkins/bin/reproducible_openwrt_common.sh
 set -e
 
+echo "$0 got called with '$@'"
 # this script is called from positions
 # * it's called from the reproducible_wrapper when running on the master
 # * it's called from reproducible_opewnrt_common when doing remote builds

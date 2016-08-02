@@ -80,6 +80,7 @@ user_host_groups['lunar','jenkins']='reproducible'
 
 
 u_shell['mattia']='/bin/zsh'
+u_shell['jenkins-adm']='/bin/bash'
 
 # get the users out of the user_host_groups array's index
 users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)

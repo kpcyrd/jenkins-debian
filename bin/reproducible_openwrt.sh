@@ -43,11 +43,11 @@ esac
 #
 # main
 #
-TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-openwrt-build-XXXXXXXX)  # used to build on tmpfs
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-openwrt-results-XXXXXXXX)  # accessable in schroots, used to compare results
-BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
+TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-openwrt-build-${DATE}-XXXXXXXX)  # used to build on tmpfs
+TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-openwrt-results-XXXXXXXX)  # accessable in schroots, used to compare results
+BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
 trap cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR

@@ -63,6 +63,7 @@ elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
 		1|pb1)	 HOSTS="$HOSTS profitbricks-build1-amd64.debian.net" ;;
 		2|pb2)	 HOSTS="$HOSTS profitbricks-build2-i386.debian.net" ;;
 		3|pb3)	 HOSTS="$HOSTS profitbricks-build3-amd64.debian.net" ;;
+		3+4|pb3+pb4|pb3+4) HOSTS="$HOSTS profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net" ;;
 		4|pb4)	 HOSTS="$HOSTS profitbricks-build4-amd64.debian.net" ;;
 		5|pb5)	 HOSTS="$HOSTS profitbricks-build5-amd64.debian.net" ;;
 		6|pb6)	 HOSTS="$HOSTS profitbricks-build6-i386.debian.net" ;;

@@ -163,9 +163,9 @@ openwrt_build_toolchain() {
 # RUN - b1 or b2. b1 means first run, b2 second
 # TARGET - a target including subtarget. E.g. ar71xx_generic
 openwrt_compile() {
-	TYPE=$1
-	RUN=$2
-	TARGET=$3
+	local TYPE=$1
+	local RUN=$2
+	local TARGET=$3
 
 	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
 

@@ -503,8 +503,6 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 fi
 explain "packages configured."
 
-set -x
-
 #
 # install the heart of jenkins.debian.net
 #

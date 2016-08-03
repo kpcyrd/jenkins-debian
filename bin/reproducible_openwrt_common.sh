@@ -9,8 +9,16 @@
 GENERIC_NODE1=profitbricks-build3-amd64.debian.net
 GENERIC_NODE2=profitbricks-build4-amd64.debian.net
 
+# run on jenkins master
+master_cleanup_tmpdirs() {
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
+	# cleanup local dirs
+	cleanup_tmpdirs
+}
+
 # only called direct on a remote build node
-openwrt_cleanup_tmpdirs() {
+node_cleanup_tmpdirs() {
 	export TMPDIR=$1
 	export TMPBUILDDIR=$TMPDIR/build
 	cleanup_tmpdirs
@@ -28,7 +36,9 @@ cleanup_tmpdirs() {
 	fi
 	rm -rf $TMPDIR
 	rm -rf $TMPBUILDDIR
-	rm -f $BANNER_HTML
+	if [ -f $BANNER_HTML ] ; then
+		rm -f $BANNER_HTML
+	fi
 }
 
 create_results_dirs() {
@@ -220,6 +230,7 @@ openwrt_build() {
 		exit 1
 	fi
 	mkdir -p $TMPBUILDDIR
+	trap cleanup_tmpdirs INT TERM EXIT
 
 	# we have also to set the TMP
 
@@ -269,7 +280,7 @@ build_two_times() {
 
 	# rsync back logs and images
 	rsync -a $GENERIC_NODE1:$TMPDIR/$RUN/ $TMPDIR/$RUN/
-	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_cleanup_tmpdirs $TMPDIR
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 
 	## second run
 	RUN=b2
@@ -277,5 +288,5 @@ build_two_times() {
 
 	# rsync back logs and images
 	rsync -a $GENERIC_NODE2:$TMPDIR/$RUN/ $TMPDIR/$RUN/
-	ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_cleanup_tmpdirs $TMPDIR
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 }

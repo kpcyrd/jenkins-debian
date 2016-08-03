@@ -26,7 +26,7 @@ case $1 in
 		case $1 in
 			openwrt_build |\
 			openwrt_get_banner |\
-			openwrt_cleanup_tmpdirs) ;; # this is the allowed list
+			node_cleanup_tmpdirs) ;; # this is the allowed list
 			*)
 				echo "Unsupported remote node function $@"
 				exit 1
@@ -52,7 +52,7 @@ START=$(date +'%s')
 TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-openwrt-build-${DATE}-XXXXXXXX)  # used to build on tmpfs
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-openwrt-results-XXXXXXXX)  # accessable in schroots, used to compare results
 BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
-trap cleanup_tmpdirs INT TERM EXIT
+trap master_cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
 
@@ -241,5 +241,5 @@ irc_message reproducible-builds "$REPRODUCIBLE_URL/openwrt/ has been updated. ($
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...
-cleanup_tmpdirs
+master_cleanup_tmpdirs
 trap - INT TERM EXIT

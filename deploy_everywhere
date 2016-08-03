@@ -141,16 +141,6 @@ for i in $HOSTS ; do
 done
 echo
 
-### not needed anymore as we now always output the jenkins.d.n log…
-#if [ -f ./update_jdn.sh ] ; then
-#	rgrep FI[X]ME * | grep -v echo > $LOG || true
-#	if [ -s $LOG ] ; then
-#		cat $LOG
-#		echo
-#	fi
-#	rm $LOG >/dev/null
-#fi
-
 END=$(date +'%s')
 DURATION=$(( $END - $START ))
 HOUR=$(echo "$DURATION/3600"|bc)

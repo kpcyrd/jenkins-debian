@@ -25,12 +25,12 @@
 25,Debian distribution,subgraph_OS_build-depends
 26,maintenance team,maint_debian-boot
 27,maintenance team,maint_debian-med
-28,maintenance team,maint_debian-ocaml,language
-29,maintenance team,maint_debian-python,language
+28,maintenance team,maint_debian-ocaml
+29,maintenance team,maint_debian-python
 30,maintenance team,maint_debian-qa
 31,maintenance team,maint_debian-science
 32,maintenance team,maint_debian-x
-33,maintenance team,maint_lua,language
+33,maintenance team,maint_lua
 34,maintenance team,maint_pkg-fonts-devel
 35,maintenance team,maint_pkg-games-devel
 36,maintenance team,maint_pkg-golang-maintainers

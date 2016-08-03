@@ -4,7 +4,7 @@
 
 set -e
 
-BASEDIR=$HOME/jenkins.debian.net
+BASEDIR="$(dirname $0)"
 PVNAME=/dev/vdb      # LVM physical volume for jobs
 VGNAME=jenkins01     # LVM volume group
 STAMP=/var/log/jenkins/update-jenkins.stamp

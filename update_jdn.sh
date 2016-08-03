@@ -452,6 +452,9 @@ if [ -f /etc/debian_version ] ; then
 	fi
 fi
 
+#debug where opi2a is hanging
+set -x
+
 #
 # deploy package configuration in /etc and /usr/local/
 #

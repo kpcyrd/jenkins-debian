@@ -260,38 +260,33 @@ def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
                                no_arch=None):
     # if a template is not passed in to navigate between suite and archs the
     # current page, we use the "default" suite/arch summary view.
-    # OR if there is not suite equivalent for this page, use the default
-    # for suite links.
     default_nav_template = '/debian/{{suite}}/index_suite_{{arch}}_stats.html'
-    uri_template = suite_arch_nav_template
-    if not uri_template or no_suite:
-        uri_template = default_nav_template
-    suite_list = []
-    for s in SUITES:
-        include_suite = True
-        if s == 'experimental' and ignore_experimental:
-            include_suite = False
-        suite_list.append({
-            's': s,
-            'class': 'current' if s == suite and not no_suite else '',
-            'uri': renderer.render(uri_template,
-                                   {'suite': s, 'arch': arch})
-                   if include_suite else '',
-        })
+    if not suite_arch_nav_template:
+        suite_arch_nav_template = default_nav_template
 
-    # if there is no arch equivalents for this page, use the default
-    # for arch links.
-    uri_template = suite_arch_nav_template
-    if not uri_template or no_arch:
-        uri_template = default_nav_template
+    suite_list = []
+    if not no_suite:
+        for s in SUITES:
+            include_suite = True
+            if s == 'experimental' and ignore_experimental:
+                include_suite = False
+            suite_list.append({
+                's': s,
+                'class': 'current' if s == suite else '',
+                'uri': renderer.render(suite_arch_nav_template,
+                                       {'suite': s, 'arch': arch})
+                if include_suite else '',
+            })
+
     arch_list = []
-    for a in ARCHS:
-        arch_list.append({
-            'a': a,
-            'class': 'current' if a == arch and not no_arch else '',
-            'uri': renderer.render(uri_template,
-                                   {'suite': suite, 'arch': a}),
-        })
+    if not no_arch:
+        for a in ARCHS:
+            arch_list.append({
+                'a': a,
+                'class': 'current' if a == arch else '',
+                'uri': renderer.render(suite_arch_nav_template,
+                                       {'suite': suite, 'arch': a}),
+            })
     return (suite_list, arch_list)
 
 # See bash equivelent: reproducible_common.sh's "write_page_header()"
@@ -305,8 +300,12 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
         'suite': suite,
         'arch': arch,
         'project_links_html': renderer.render(project_links_template),
-        'suite_list': suite_list,
-        'arch_list': arch_list,
+        'suite_nav': {
+            'suite_list': suite_list
+        } if len(suite_list) else '',
+        'arch_nav': {
+            'arch_list': arch_list
+        } if len(arch_list) else '',
         'debian_uri': DEBIAN_DASHBOARD_URI,
         'cross_suite_arch_nav': True if suite_arch_nav_template else False,
     }

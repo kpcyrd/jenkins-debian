@@ -6,6 +6,7 @@
   {{#cross_suite_arch_nav}}
   <h4>Change suite/architecture</h4>
   {{/cross_suite_arch_nav}}
+  {{#arch_nav}}
   <li>
     Tested architectures:
     <ul class="children">
@@ -21,6 +22,8 @@
       </li>
     </ul>
   </li>
+  {{/arch_nav}}
+  {{#suite_nav}}
   <li>Tested suites:
     <ul class="children">
       <li>
@@ -35,6 +38,7 @@
       </li>
     </ul>
   </li>
+  {{/suite_nav}}
   <h4>Test results statistics</h4>
   <li {{#suite_arch_stats}}class='active'{{/suite_arch_stats}}>
     Results for

@@ -30,7 +30,7 @@
 
 
 START=$(date +'%s')
-export HOSTS="profitbricks-build1-amd64.debian.net profitbricks-build2-i386.debian.net profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-i386.debian.net profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net bbx15-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net cbxi4a-armhf-rb.debian.net cbxi4b-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net root@jenkins.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net ff4a-armhf-rb.debian.net opi2a-armhf-rb.debian.net opi2b-armhf-rb.debian.net odu3a-armhf-rb.debian.net cb3a-armhf-rb.debian.net opi2c-armhf-rb.debian.net"
+export HOSTS="profitbricks-build1-amd64.debian.net profitbricks-build2-i386.debian.net profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-i386.debian.net profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net bbx15-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net cbxi4a-armhf-rb.debian.net cbxi4b-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net jenkins.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net ff4a-armhf-rb.debian.net opi2a-armhf-rb.debian.net opi2b-armhf-rb.debian.net odu3a-armhf-rb.debian.net cb3a-armhf-rb.debian.net opi2c-armhf-rb.debian.net"
 echo
 echo -n "$(date) - "
 read -r -d '' real_command <<-'EOF'
@@ -73,7 +73,7 @@ elif [ "$1" = "check" ] ; then
 	reset_clock=false
 	shift
 elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
-        export HOSTS="root@jenkins.debian.net"
+        export HOSTS="jenkins.debian.net"
 	case $2 in
 		1|pb1)	 HOSTS="$HOSTS profitbricks-build1-amd64.debian.net" ;;
 		2|pb2)	 HOSTS="$HOSTS profitbricks-build2-i386.debian.net" ;;
@@ -132,7 +132,7 @@ for i in $HOSTS ; do
 	HNAME1=$(echo $i | cut -d "@" -f2 | cut -d "." -f1|cut -d "-" -f1)	# pb nodes (h01ger)
 	HNAME2=$(echo $i | cut -d "@" -f2 | cut -d "." -f1)			# non -armhf ones (vagrant)
 	TAIL=$(tail -1 $LOG.$i)
-	if [ "$i" = "root@jenkins.debian.net" ] ; then
+	if [ "$i" = "jenkins.debian.net" ] ; then
 		if ! ( [[ "$TAIL" =~ "__$HNAME1=ok__" ]] || [[ "$TAIL" =~ "__$HNAME2=ok__" ]] || [[ "$TAIL" =~ "__reallyreally=ok__" ]] || [[ "$TAIL" =~ "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." ]] ) ; then
 			echo "Problems on $i:"
 		fi

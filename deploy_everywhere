@@ -38,6 +38,9 @@ set -e
 export LANG=C
 cd ~jenkins-adm
 if [ ! -d jenkins.debian.net ]; then
+    if [ -d ~holger/jenkins.debian.net ] ; then
+	rm ~holger/jenkins.debian.net -rf
+    fi
     sudo -u jenkins-adm git clone https://anonscm.debian.org/git/qa/jenkins.debian.net.git
 else
     cd jenkins.debian.net

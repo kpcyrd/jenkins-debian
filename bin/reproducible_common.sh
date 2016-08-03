@@ -196,7 +196,7 @@ write_page_header() {
 	fi
 
 	# Create json for suite links (a list of objects)
-	suite_links="\"suite_list\": ["
+	suite_links="\"suite_nav\": { \"suite_list\": ["
 	comma=0
 	for s in $SUITES ; do
 		if [ "$s" = "$SUITE" ] ; then
@@ -212,10 +212,10 @@ write_page_header() {
 			comma=1
 		fi
 	done
-	suite_links+="]"
+	suite_links+="]}"
 
 	# Create json for arch links (a list of objects)
-	arch_links="\"arch_list\": ["
+	arch_links="\"arch_nav\": {\"arch_list\": ["
 	comma=0
 	for a in ${ARCHS} ; do
 		if [ "$a" = "$ARCH" ] ; then
@@ -231,7 +231,7 @@ write_page_header() {
 			comma=1
 		fi
 	done
-	arch_links+="]"
+	arch_links+="]}"
 
 	# finally, the completely formed JSON context
 	context=$(printf '{

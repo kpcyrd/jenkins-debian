@@ -37,6 +37,7 @@ if [ ! -d jenkins.debian.net ]; then
     fi
     [ -x /usr/bin/git ] || sudo apt-get install -y git 
     sudo -u jenkins-adm git clone https://anonscm.debian.org/git/qa/jenkins.debian.net.git
+    cd jenkins.debian.net
 else
     cd jenkins.debian.net
     sudo -u jenkins-adm git pull

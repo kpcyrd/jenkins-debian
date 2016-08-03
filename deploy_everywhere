@@ -71,6 +71,9 @@ elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
 		10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
 	esac
 	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
+elif [ "$1" = "nojenkins" ]; then
+	HOSTS="$2"
+	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
 else
 	real_command="$@"
 	echo -n "Running '$real_command' on $HOSTS now."

@@ -41,11 +41,18 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	cp -v $PACKAGES_DB $BASE/
 fi
 
-# for Debian
-echo "$(date -u) - updating the schroots and pbuilder now..."
+# for Debian, first run some checks…
 echo "$(date -u) - testing whether the proxy works..."
 curl http://www.debian.org > /dev/null
+echo "$(date -u) - testing whether the network interfaces MTU is 1500..."
+if [ "$(LANG=C /sbin/ifconfig | grep -i -v loopback | grep -i mtu | cut -d ":" -f2|cut -d " " -f1)" != "1500" ] ; then
+	/sbin/ifconfig
+	echo "$(date -u) - network interfaces MTU != 1500 - this is wrong."
+	exit 1
+fi
 set +e
+
+echo "$(date -u) - updating the schroots and pbuilder now..."
 # use host architecture (only)
 ARCH=$(dpkg --print-architecture)
 # use host apt proxy configuration for pbuilder

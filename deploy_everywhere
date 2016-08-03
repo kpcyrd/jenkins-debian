@@ -41,6 +41,7 @@ if [ ! -d jenkins.debian.net ]; then
     if [ -d ~holger/jenkins.debian.net ] ; then
 	rm ~holger/jenkins.debian.net -rf
     fi
+    [ -x /usr/bin/git ] || sudo apt-get install -y git 
     sudo -u jenkins-adm git clone https://anonscm.debian.org/git/qa/jenkins.debian.net.git
 else
     cd jenkins.debian.net

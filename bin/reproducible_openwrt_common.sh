@@ -10,23 +10,25 @@ GENERIC_NODE1=profitbricks-build3-amd64.debian.net
 GENERIC_NODE2=profitbricks-build4-amd64.debian.net
 
 # run on jenkins master
-master_cleanup_tmpdirs() {
-	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
-	# cleanup local dirs
-	cleanup_tmpdirs
-}
 
 # only called direct on a remote build node
 node_cleanup_tmpdirs() {
 	export TMPDIR=$1
-	export TMPBUILDDIR=$TMPDIR/build
-	cleanup_tmpdirs
+	cd
+	# (very simple) check we are deleting the right stuff
+	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] ; then
+		echo "Something very strange with \$TMPDIR=$TMPDIR exiting instead of doing cleanup."
+		exit 1
+	fi
+	rm -rf $TMPDIR
 }
 
 # called as trap handler
 # called on cleanup
-cleanup_tmpdirs() {
+master_cleanup_tmpdirs() {
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
+
 	cd
 	# (very simple) check we are deleting the right stuff
 	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] || \
@@ -230,7 +232,7 @@ openwrt_build() {
 		exit 1
 	fi
 	mkdir -p $TMPBUILDDIR
-	trap cleanup_tmpdirs INT TERM EXIT
+	trap node_cleanup_tmpdirs INT TERM EXIT
 
 	# we have also to set the TMP
 

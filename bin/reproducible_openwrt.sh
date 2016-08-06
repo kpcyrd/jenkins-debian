@@ -33,7 +33,8 @@ case $1 in
 				;;
 		esac
 		$@
-		exit $?
+		trap - INT TERM EXIT
+		exit 0
 	;;
 	master)
 		# master code following

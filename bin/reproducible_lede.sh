@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
-OPENWRT_GIT_REPO=https://git.lede-project.org/source.git
+OPENWRT_GIT_REPO=git://git.lede-project.org/source.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh

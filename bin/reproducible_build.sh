@@ -782,7 +782,7 @@ build_rebuild() {
 			NOTIFY=""
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-		# the first build did not FTBFS, try rebuild it.
+		log_info "Build successful. Starting remote build."
 		remote_build 2 $NODE2
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.

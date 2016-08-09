@@ -35,3 +35,11 @@ Feature: Doing variations on d-i installs
 #    Given I get d-i to the HTTP proxy prompt
 #    When I set the proxy to "127.23.23.23"
 #    Then I should get an error message that mentions the proxy
+
+  @trivial
+  Scenario: Minimal Boot test
+    Given a disk is created for Debian Installer tests
+    And I intend to use gui mode
+    When I start the computer
+    Then I select the install mode
+

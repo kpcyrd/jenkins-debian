@@ -1,7 +1,7 @@
 def checkpoints
   cp = Hash.new
   cp['disk-for-d-i'] = {
-    :description => "Create a disk for Debian Installer tests",
+    :description => "a disk is created for Debian Installer tests",
     :parent_checkpoint => nil,
     :steps => [
       'I create a 8 GiB disk named "'+JOB_NAME+'"',

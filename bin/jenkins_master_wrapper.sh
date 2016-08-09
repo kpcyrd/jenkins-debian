@@ -70,8 +70,13 @@ ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
 
 # grab artifacts and tidy up at the other end
 if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
+	echo "debug…"
+	echo "WORKSPACE=$WORKSPACE"
+	echo "JOB_NAME=$JOB_NAME"
+	echo "debug… end."
 	RESULTS="$WORKSPACE/results"
 	NODE_RESULTS="/var/lib/jenkins/jobs/$JOB_NAME/workspace/results"
+	RESULTS=$NODE_RESULTS	# yes, this is redundant. let's see if this works.
 
 	echo "$(date -u) - retrieving artifacts."
 	set -x

@@ -76,7 +76,8 @@ elif [[ "$*" =~ ^lvc_.* ]] ; then
 	export JOB_NAME=$1 ; shift
 	export EXECUTOR_NUMBER=$1 ; shift
 	export TRIGGERING_BRANCH=${1#*=} ; shift
-	#export WORKSPACE=~jenkins/jobs/$JOB_NAME/workspace
+	# FIXME: Phil, please, this is not my department, but we need to get the rockets down…
+	export WORKSPACE=srv/jenkins/pseudo-hosts/profitbricks-build10-amd64~jenkins/$JOB_NAME/workspace
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";
 elif [ "$*" = "reproducible_nodes_info" ] ; then

@@ -79,6 +79,7 @@ if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -r $NODE_RESULTS"
 	ls -lad "$RESULTS"
 	ls -la "$RESULTS"
+	echo "WORKSPACE=$WORKSPACE"
 fi
 
 exit $RETVAL

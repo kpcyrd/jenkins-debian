@@ -98,7 +98,7 @@ elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/rbuild.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
-elif [[ "$*" =~ ^rm\ -r\ /var/lib/jenkins/jobs/lvc_.*/workspace/results ]] ; then
+elif [[ "$*" =~ ^rm\ -r\ /var/lib/jenkins/srv/jenkins/pseudo-hosts/.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_pbuilder_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable ; croak "Exec failed";

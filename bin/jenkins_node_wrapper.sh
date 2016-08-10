@@ -88,7 +88,7 @@ elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/reproducible-results/.*
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/userContent/reproducible/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
-elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/jenkins/pseudo-hosts/.* ]] ; then
+elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/jobs/lvc_[-_a-z]*/workspace/results/ ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/d-i/isos/ ]] ; then
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";

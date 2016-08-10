@@ -76,9 +76,8 @@ elif [[ "$*" =~ ^lvc_.* ]] ; then
 	export JOB_NAME=$1 ; shift
 	export EXECUTOR_NUMBER=$1 ; shift
 	export TRIGGERING_BRANCH=${1#*=} ; shift
-	# FIXME: Phil, please, this is not my department, but we need to get the rockets down…
-	# FIXME: there is a typo, the missing / prefix… but i want to get this rocket up now…
-	export WORKSPACE=srv/jenkins/pseudo-hosts/profitbricks-build10-amd64~jenkins/$JOB_NAME/workspace
+	# FIXME: hard-coding profitbricks-build10-amd64… and ~ there is ugly too…
+	export WORKSPACE=/var/lib/jenkins/srv/jenkins/pseudo-hosts/profitbricks-build10-amd64~jenkins/$JOB_NAME/workspace/results
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";
 elif [ "$*" = "reproducible_nodes_info" ] ; then
@@ -89,7 +88,7 @@ elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/reproducible-results/.*
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/userContent/reproducible/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
-elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/jobs/jenkins/pseudo-hosts/.* ]] ; then
+elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/srv/jenkins/pseudo-hosts/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/d-i/isos/ ]] ; then
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";

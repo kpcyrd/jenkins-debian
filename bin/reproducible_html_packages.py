@@ -362,8 +362,13 @@ def gen_packages_html(packages, no_clean=False):
                         'history_arch_uri': '{}/{}/{}.html'.format(HISTORY_URI, a, pkg)
                     })
                 project_links = renderer.render(project_links_template)
-                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
-                          '/' + arch + '/' + pkg + '.html'
+                desturl = '{}{}/{}/{}/{}.html'.format(
+                    REPRODUCIBLE_URL,
+                    RB_PKG_URI,
+                    suite,
+                    arch,
+                    pkg,
+                )
 
                 navigation_html = renderer.render(package_navigation_template, {
                     'package': pkg,

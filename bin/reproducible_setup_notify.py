@@ -29,7 +29,6 @@ from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 
-
 class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
@@ -51,14 +50,18 @@ def _good(text):
 
 def process_pkg(package, deactivate):
     if deactivate:
-        _good('Deactovating notification for package ' + str(package))
+        _good('Deactivating notification for package ' + str(package))
         flag = 0
     else:
         _good('Activating notification for package ' + str(package))
         flag = 1
-    rows = c.execute(('UPDATE OR FAIL sources SET notify_maintainer="{}" ' +
-                     'WHERE name="{}"').format(flag, package)).rowcount
-    conn_db.commit()
+
+    sources_table = db_table('sources')
+    update_query = sources_table.update().\
+                   where(sources_table.c.name == package).\
+                   values(notify_maintainer=flag)
+    rows = conn_db.execute(update_query).rowcount
+
     if rows == 0:
         log.error(bcolors.FAIL + str(package) + ' does not exists')
         sys.exit(1)
@@ -86,8 +89,6 @@ if maintainer:
     log.info('\t' + ', '.join(pkgs))
     packages.extend(pkgs)
 
-
-c = conn_db.cursor()
 for package in packages:
     process_pkg(package, local_args.deactivate)
 

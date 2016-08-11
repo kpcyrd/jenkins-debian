@@ -29,6 +29,7 @@ from traceback import print_exception
 from subprocess import call, check_call
 from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
+from sqlalchemy import MetaData, Table, sql, create_engine
 
 DEBUG = False
 QUIET = False
@@ -91,6 +92,11 @@ META_PKGSET = {}
 with open(os.path.join(BIN_PATH, './meta_pkgset.csv'), newline='') as f:
     for line in csv.reader(f):
         META_PKGSET[int(line[0])] = (line[2], line[1])
+
+# init the database data and connection
+DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB)
+DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
+conn_db = DB_ENGINE.connect()  # the local sqlite3 reproducible db
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -349,18 +355,46 @@ def write_html_page(title, body, destfile, no_header=False, style_note=False,
     with open(destfile, 'w', encoding='UTF-8') as fd:
         fd.write(html)
 
-def start_db_connection():
-    return sqlite3.connect(REPRODUCIBLE_DB, timeout=60)
+
+def db_table(table_name):
+    """Returns a SQLAlchemy Table objects to be used in queries
+    using SQLAlchemy's Expressive Language.
+
+    Arguments:
+        table_name: a string corrosponding to an existing table name
+    """
+    try:
+        return Table(table_name, DB_METADATA, autoload=True)
+    except sqlalchemy.exc.NoSuchTableError:
+        log.error("Table %s does not exist or schema for %s could not be loaded",
+                  table_name, REPRODUCIBLE_DB)
+        raise
+
 
 def query_db(query):
-    cursor = conn_db.cursor()
+    """Excutes a raw SQL query. Return depends on query type.
+
+    Returns:
+        select:
+            list of tuples
+        update or delete:
+            the number of rows affected
+        insert:
+            None
+    """
     try:
-        cursor.execute(query)
+        result = conn_db.execute(query)
     except:
         print_critical_message('Error executing this query:\n' + query)
         raise
-    conn_db.commit()
-    return cursor.fetchall()
+
+    if result.returns_rows:
+        return result.fetchall()
+    elif result.supports_sane_rowcount() and result.rowcount > -1:
+        return result.rowcount
+    else:
+        return None
+
 
 def start_udd_connection():
     username = "public-udd-mirror"
@@ -797,8 +831,6 @@ class Package:
             return False
 
 
-# init the databases connections
-conn_db = start_db_connection()  # the local sqlite3 reproducible db
 # get_bugs() is the only user of this, let it initialize the connection itself,
 # during it's first call to speed up things when unneeded
 # also "share" the bugs, to avoid collecting them multiple times per run

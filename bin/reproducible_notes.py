@@ -8,12 +8,14 @@
 #
 # Import the content of the notes.git repository into the reproducible database
 
-import apt
-import json
-import yaml
-from apt_pkg import version_compare
 from reproducible_common import *
+
 import os
+import apt
+import yaml
+import json
+from sqlalchemy import sql
+from apt_pkg import version_compare
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -100,53 +102,74 @@ def load_issues():
 
 
 def store_issues():
-    query = 'REPLACE INTO issues (name, url, description) ' + \
-            'VALUES (?, ?, ?)'
-    cursor = conn_db.cursor()
-    to_add = []
-    for issue in sorted(issues):
-        name = issue
+    issues_table = db_table('issues')
+    # Get existing issues
+    results = conn_db.execute(sql.select([issues_table.c.name]))
+    existing_issues = set([row[0] for row in results])
+    to_insert = []
+    to_update = []
+    for name in issues:
         url = issues[name]['url'] if 'url' in issues[name] else ''
         desc = issues[name]['description']
-        to_add.append((name, url, desc))
-    cursor.executemany(query, to_add)
-    conn_db.commit()
-    log.debug('Issues saved in the database')
+        if name in existing_issues:
+            to_update.append({
+                'issuename': name,
+                'url': url,
+                'description': desc
+            })
+            # remove this package from the set, to know who to delete later
+            existing_issues.remove(name)
+        else:
+            to_insert.append({
+                'name': name,
+                'url': url,
+                'description': desc
+            })
 
+    if to_update:
+        update_query = issues_table.update().\
+                  where(issues_table.c.name == sql.bindparam('issuename'))
+        conn_db.execute(update_query, to_update)
+        log.debug('Issues updated in the database')
+    if to_insert:
+        conn_db.execute(issues_table.insert(), to_insert)
+        log.debug('Issues added to the database')
 
-def drop_old_issues():
-    old = [x[0] for x in query_db('SELECT name FROM issues')]
-    to_drop = [x for x in old if x not in issues]
-    if to_drop:
-        log.info("I'm about to remove the following issues: " + str(to_drop))
-    for issue in to_drop:
-        query_db('DELETE FROM issues WHERE name="{}"'.format(issue))
+    # if there are any existing issues left, delete them.
+    if existing_issues:
+        to_delete = [{'issuename': name} for name in existing_issues]
+        delete_query = issues_table.delete().\
+                  where(issues_table.c.name == sql.bindparam('issuename'))
+        conn_db.execute(delete_query, to_delete)
+        log.info("Removed the following issues: " + str(existing_issues))
 
 
 def store_notes():
     log.debug('Removing all notes')
-    query_db('DELETE FROM notes')
-    query = 'REPLACE INTO notes ' + \
-            '(package_id, version, issues, bugs, comments) ' + \
-            'VALUES (?, ?, ?, ?, ?)'
-    to_add = []
+    notes_table = db_table('notes')
+    conn_db.execute(notes_table.delete())
+    to_insert = []
     for entry in [x for y in sorted(notes) for x in notes[y]]:
         pkg_id = entry['id']
         pkg_version = entry['version']
         pkg_issues = json.dumps(entry['issues'])
         pkg_bugs = json.dumps(entry['bugs'])
         pkg_comments = entry['comments']
-        pkg = (pkg_id, pkg_version, pkg_issues, pkg_bugs, pkg_comments)
-        to_add.append(pkg)
-    cursor = conn_db.cursor()
-    cursor.executemany(query, to_add)
-    conn_db.commit()
-    log.info('Saved ' + str(len(to_add)) + ' notes in the database')
+        to_insert.append({
+            'id': pkg_id,
+            'version': pkg_version,
+            'issues': pkg_issues,
+            'bugs': pkg_bugs,
+            'comments': pkg_comments
+        })
+
+    if (len(to_insert)):
+        conn_db.execute(notes_table.insert(), to_insert)
+        log.info('Saved ' + str(len(to_insert)) + ' notes in the database')
 
 
 if __name__ == '__main__':
     notes = load_notes()
     issues = load_issues()
     store_issues()
-    drop_old_issues()
     store_notes()

@@ -11,7 +11,7 @@
 import sys
 import time
 import argparse
-
+from sqlalchemy import sql
 
 parser = argparse.ArgumentParser(
     description='Reschedule packages to re-test their reproducibility',
@@ -229,7 +229,8 @@ if amount + len(ids) > 200 and not local:
 
 
 # do the actual scheduling
-to_schedule = []
+add_to_schedule = []
+update_schedule = []
 save_schedule = []
 artifacts_value = 1 if artifacts else 0
 if notify_on_start:
@@ -238,23 +239,54 @@ elif notify or artifacts:
     do_notify = 1
 else:
     do_notify = 0
-for id in ids:
-    to_schedule.append((id, date, artifacts_value, str(do_notify), requester,
-                        None))
-    save_schedule.append((id, requester, epoch))
-log.debug('Packages about to be scheduled: ' + str(to_schedule))
 
-query1 = '''REPLACE INTO schedule
-    (package_id, date_scheduled, save_artifacts, notify, scheduler, message)
-    VALUES (?, ?, ?, ?, ?, ?)'''
-query2 = '''INSERT INTO manual_scheduler
-    (package_id, requester, date_request) VALUES (?, ?, ?)'''
+schedule_table = db_table('schedule')
+existing_pkg_ids = dict(query_db(sql.select([
+        schedule_table.c.package_id,
+        schedule_table.c.id,
+    ]).where(schedule_table.c.package_id.in_(ids))))
+
+for id in ids:
+    if id in existing_pkg_ids:
+        update_schedule.append({
+            'update_id': existing_pkg_ids[id],
+            'package_id': id,
+            'date_scheduled': date,
+            'save_artifacts': artifacts_value,
+            'notify': str(do_notify),
+            'scheduler': requester,
+        })
+    else:
+        add_to_schedule.append({
+            'package_id': id,
+            'date_scheduled': date,
+            'save_artifacts': artifacts_value,
+            'notify': str(do_notify),
+            'scheduler': requester,
+        })
+
+    save_schedule.append({
+        'package_id': id,
+        'requester': requester,
+        'date_request': epoch,
+    })
+
+log.debug('Packages about to be scheduled: ' + str(add_to_schedule)
+          + str(update_schedule))
+
+update_schedule_query = schedule_table.update().\
+                        where(schedule_table.c.id == sql.bindparam('update_id'))
+insert_schedule_query = schedule_table.insert()
+insert_manual_query = db_table('manual_scheduler').insert()
 
 if not dry_run:
-    cursor = conn_db.cursor()
-    cursor.executemany(query1, to_schedule)
-    cursor.executemany(query2, save_schedule)
-    conn_db.commit()
+    transaction = conn_db.begin()
+    if len(add_to_schedule):
+        conn_db.execute(insert_schedule_query, add_to_schedule)
+    if len(update_schedule):
+        conn_db.execute(update_schedule_query, update_schedule)
+    conn_db.execute(insert_manual_query, save_schedule)
+    transaction.commit()
 else:
     log.info('Ran with --dry-run, scheduled nothing')
 

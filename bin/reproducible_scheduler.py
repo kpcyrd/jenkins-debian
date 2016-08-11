@@ -18,6 +18,7 @@ import random
 from subprocess import call
 from apt_pkg import version_compare
 from urllib.request import urlopen
+from sqlalchemy import sql
 
 from reproducible_common import *
 from reproducible_html_live_status import generate_schedule
@@ -228,8 +229,8 @@ def update_sources_db(suite, arch, sources):
     pkgs_to_add = []
     updated_pkgs = []
     different_pkgs = [x for x in new_pkgs if x not in cur_pkgs]
-    log.debug('Packages different in the archive and in the db: ' +
-              str(different_pkgs))
+    log.debug('Packages different in the archive and in the db: %s',
+              different_pkgs)
     for pkg in different_pkgs:
         # pkg: (name, version, suite, arch)
         query = 'SELECT id, version, notify_maintainer FROM sources ' + \
@@ -238,7 +239,12 @@ def update_sources_db(suite, arch, sources):
         try:
             result = query_db(query)[0]
         except IndexError:  # new package
-            pkgs_to_add.append(pkg)
+            pkgs_to_add.append({
+                'name': pkg[0],
+                'version': pkg[1],
+                'suite': pkg[2],
+                'architecture': pkg[3],
+            })
             continue
         pkg_id = result[0]
         old_version = result[1]
@@ -246,53 +252,71 @@ def update_sources_db(suite, arch, sources):
         if version_compare(pkg[1], old_version) > 0:
             log.debug('New version: ' + str(pkg) + ' (we had  ' +
                       old_version + ')')
-            updated_pkgs.append(
-                (pkg_id, pkg[0], pkg[1], pkg[2], pkg[3], notify_maint))
+            updated_pkgs.append({
+                'update_id': pkg_id,
+                'name': pkg[0],
+                'version': pkg[1],
+                'suite': pkg[2],
+                'architecture': pkg[3],
+                'notify_maintainer': notify_maint,
+            })
     # Now actually update the database:
-    cursor = conn_db.cursor()
+    sources_table = db_table('sources')
     # updated packages
     log.info('Pushing ' + str(len(updated_pkgs)) +
              ' updated packages to the database...')
-    cursor.executemany(
-        'REPLACE INTO sources ' +
-        '(id, name, version, suite, architecture, notify_maintainer) ' +
-        'VALUES (?, ?, ?, ?, ?, ?)',
-        updated_pkgs)
-    conn_db.commit()
+    if updated_pkgs:
+        transaction = conn_db.begin()
+        update_query = sources_table.update().\
+                       where(sources_table.c.id == sql.bindparam('update_id'))
+        conn_db.execute(update_query, updated_pkgs)
+        transaction.commit()
+
     # new packages
-    log.info('Now inserting ' + str(len(pkgs_to_add)) +
-             ' new sources in the database: ' +
-             str(pkgs_to_add))
-    cursor.executemany('INSERT INTO sources ' +
-                       '(name, version, suite, architecture) ' +
-                       'VALUES (?, ?, ?, ?)', pkgs_to_add)
-    conn_db.commit()
+    if pkgs_to_add:
+        log.info('Now inserting %i new sources in the database: %s',
+                 len(pkgs_to_add), pkgs_to_add)
+        transaction = conn_db.begin()
+        conn_db.execute(sources_table.insert(), pkgs_to_add)
+        transaction.commit()
+
     # RM'ed packages
     cur_pkgs_name = [x[0] for x in cur_pkgs]
     new_pkgs_name = [x[0] for x in new_pkgs]
     rmed_pkgs = [x for x in cur_pkgs_name if x not in new_pkgs_name]
-    log.info('Now deleting ' + str(len(rmed_pkgs)) +
-             ' removed packages: ' + str(rmed_pkgs))
+    log.info('Now deleting %i removed packages: %s', len(rmed_pkgs),
+             rmed_pkgs)
     rmed_pkgs_id = []
     pkgs_to_rm = []
     query = 'SELECT id FROM sources WHERE name="{}" AND suite="{}" ' + \
             'AND architecture="{}"'
     for pkg in rmed_pkgs:
         result = query_db(query.format(pkg, suite, arch))
-        rmed_pkgs_id.extend(result)
-        pkgs_to_rm.append((pkg, suite, arch))
-    log.debug('removed packages ID: ' + str([str(x[0]) for x in rmed_pkgs_id]))
-    log.debug('removed packages: ' + str(pkgs_to_rm))
-    cursor.executemany('DELETE FROM sources '
-                       'WHERE id=?', rmed_pkgs_id)
-    cursor.executemany('DELETE FROM results '
-                       'WHERE package_id=?', rmed_pkgs_id)
-    cursor.executemany('DELETE FROM schedule '
-                       'WHERE package_id=?', rmed_pkgs_id)
-    cursor.executemany('INSERT INTO removed_packages '
-                       '(name, suite, architecture) '
-                       'VALUES (?, ?, ?)', pkgs_to_rm)
-    conn_db.commit()
+        rmed_pkgs_id.append({'deleteid': result[0][0]})
+        pkgs_to_rm.append({'name': pkg, 'suite': suite, 'architecture': arch})
+    log.debug('removed packages ID: %s',
+              [str(x['deleteid']) for x in rmed_pkgs_id])
+    log.debug('removed packages: %s', pkgs_to_rm)
+
+    if rmed_pkgs_id:
+        transaction = conn_db.begin()
+        results_table = db_table('results')
+        schedule_table = db_table('schedule')
+        removed_packages_table = db_table('removed_packages')
+
+        delete_sources_query = sources_table.delete().\
+            where(sources_table.c.id == sql.bindparam('deleteid'))
+        delete_results_query = results_table.delete().\
+            where(results_table.c.package_id == sql.bindparam('deleteid'))
+        delete_schedule_query = schedule_table.delete().\
+            where(schedule_table.c.package_id == sql.bindparam('deleteid'))
+
+        conn_db.execute(delete_sources_query, rmed_pkgs_id)
+        conn_db.execute(delete_results_query, rmed_pkgs_id)
+        conn_db.execute(delete_schedule_query, rmed_pkgs_id)
+        conn_db.execute(removed_packages_table.insert(), pkgs_to_rm)
+        transaction.commit()
+
     # finally check whether the db has the correct number of packages
     query = 'SELECT count(*) FROM sources WHERE suite="{}" ' + \
             'AND architecture="{}"'
@@ -301,14 +325,14 @@ def update_sources_db(suite, arch, sources):
     if int(pkgs_end[0][0]) != count_new_pkgs:
         print_critical_message('AH! The number of source in the Sources file' +
                                ' is different than the one in the DB!')
-        log.critical('source in the debian archive for the ' + suite +
-                     ' suite:' + str(count_new_pkgs))
-        log.critical('source in the reproducible db for the ' + suite +
-                     ' suite:' + str(pkgs_end[0][0]))
+        log.critical('source in the debian archive for the %s suite: %s',
+                     suite, str(count_new_pkgs))
+        log.critical('source in the reproducible db for the  %s suite: %s',
+                     suite, str(pkgs_end[0][0]))
         sys.exit(1)
     if pkgs_to_add:
         log.info('Building pages for the new packages')
-        gen_packages_html([Package(x[0]) for x in pkgs_to_add], no_clean=True)
+        gen_packages_html([Package(x['name']) for x in pkgs_to_add], no_clean=True)
 
 
 def print_schedule_result(suite, arch, criteria, packages):
@@ -334,14 +358,10 @@ def queue_packages(all_pkgs, packages, date):
 
 
 def schedule_packages(packages):
-    pkgs = ((x, packages[x]) for x in packages)
-    log.debug('IDs about to be scheduled: ' + str(packages.keys()))
-    query = 'INSERT INTO schedule ' + \
-            '(package_id, date_scheduled) ' + \
-            'VALUES (?, ?)'
-    cursor = conn_db.cursor()
-    cursor.executemany(query, pkgs)
-    conn_db.commit()
+    pkgs = [{'package_id': x, 'date_scheduled': packages[x]} for x in packages.keys()]
+    log.debug('IDs about to be scheduled: %s', packages.keys())
+    if pkgs:
+        conn_db.execute(db_table('schedule').insert(), pkgs)
 
 
 def add_up_numbers(packages, arch):

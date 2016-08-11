@@ -145,6 +145,10 @@ header.head {
 	background: #fafafa;
 }
 
+header.head h2.package-name a {
+	color: #fff;
+}
+
 footer {
 	text-align: center;
 	margin-top: 1em;

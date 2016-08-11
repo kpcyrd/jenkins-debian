@@ -362,6 +362,8 @@ def gen_packages_html(packages, no_clean=False):
                         'history_arch_uri': '{}/{}/{}.html'.format(HISTORY_URI, a, pkg)
                     })
                 project_links = renderer.render(project_links_template)
+                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
+                          '/' + arch + '/' + pkg + '.html'
 
                 navigation_html = renderer.render(package_navigation_template, {
                     'package': pkg,
@@ -376,6 +378,7 @@ def gen_packages_html(packages, no_clean=False):
                     'project_links_html': project_links,
                     'reproducible': reproducible,
                     'dashboard_url': DEBIAN_URL,
+                    'desturl': desturl,
                 })
 
                 body_html = renderer.render(package_page_template, {
@@ -383,8 +386,6 @@ def gen_packages_html(packages, no_clean=False):
                 })
 
                 destfile = os.path.join(RB_PKG_PATH, suite, arch, pkg + '.html')
-                desturl = REPRODUCIBLE_URL + RB_PKG_URI + '/' + suite + \
-                          '/' + arch + '/' + pkg + '.html'
                 title = pkg + ' - reproducible builds result'
                 write_html_page(title=title, body=body_html, destfile=destfile,
                                 no_header=True, noendpage=True,

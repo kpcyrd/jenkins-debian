@@ -703,6 +703,12 @@
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
+                - 'diffoscope_master_brach':
+                    my_description: 'Build diffoscope debian package from the master branch.'
+                    my_timed: '42 23 1 1 *'
+                    my_hname: ''
+                    my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
 

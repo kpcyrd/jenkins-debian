@@ -13,7 +13,8 @@ error /(?i)^error /
 # ignore some stuff
 ok /update-binfmts: warning:/
 ok /update-rc.d: warning: start and stop actions are no longer supported/
-ok /E: Can not write log (Is /dev/pts mounted?/
+ok /E: Can not write log \(Is /dev/pts mounted/
+ok /Warning: there was a problem reading the certificate file \/etc\/ssl\/certs/
 
 # list of warnings here...
 warning /[Ww]arning/

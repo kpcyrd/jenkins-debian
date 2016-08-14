@@ -24,11 +24,12 @@
 
 
 START=$(date +'%s')
+GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"
 export HOSTS="profitbricks-build1-amd64.debian.net profitbricks-build2-i386.debian.net profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-i386.debian.net profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net bbx15-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net wbq0-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net cbxi4a-armhf-rb.debian.net cbxi4b-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net root@jenkins.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net ff4a-armhf-rb.debian.net opi2a-armhf-rb.debian.net opi2b-armhf-rb.debian.net odu3a-armhf-rb.debian.net cb3a-armhf-rb.debian.net opi2c-armhf-rb.debian.net"
 echo
 echo -n "$(date) - "
 # real command, for running manually: cd ~jenkins-adm/jenkins.debian.net/ ; sudo -u jenkins-adm git pull ; ./update_jdn.sh
-read -r -d '' real_command <<-'EOF'
+read -r -d '' real_command <<-EOF
 set -e
 export LANG=C
 cd ~jenkins-adm
@@ -36,12 +37,13 @@ if [ ! -d jenkins.debian.net ]; then
     if [ -d ~holger/jenkins.debian.net ] ; then
 	rm ~holger/jenkins.debian.net -rf
     fi
-    [ -x /usr/bin/git ] || sudo apt-get install -y git 
-    sudo -u jenkins-adm git clone https://anonscm.debian.org/git/qa/jenkins.debian.net.git
+    [ -x /usr/bin/git ] || sudo apt-get install -y git
+    sudo -u jenkins-adm git clone $GIT_REPO
     cd jenkins.debian.net
 else
     cd jenkins.debian.net
-    sudo -u jenkins-adm git pull
+
+    sudo -u jenkins-adm git pull $GIT_REPO
 fi
 ./update_jdn.sh
 EOF

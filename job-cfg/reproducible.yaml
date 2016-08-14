@@ -703,7 +703,7 @@
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
-                - 'diffoscope_master_brach':
+                - 'diffoscope_master_branch':
                     my_description: 'Build diffoscope debian package from the master branch.'
                     my_timed: '42 23 1 1 *'
                     my_hname: ''

@@ -26,11 +26,10 @@ BUILDPLACE=/srv/workspace/pbuilder  # build in /srv/workspace, which is in tmpfs
 # unset proxy, see #780587
 unset http_proxy
 export -n http_proxy
-# /sys and /proc were added as workarounds for #773767
 # there are software wanting /dev/shm writable, so give them so. There are tons
 # of bug shm related in pbuilder, that's just a workaround for all of them.
 # /run/shm is already mounted as a tmpfs by default.
-BINDMOUNTS="$BINDMOUNTS /sys /dev/shm"
+BINDMOUNTS="/dev/shm"
 # set PATH to predictable values, see #780729 and #780725
 PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
 

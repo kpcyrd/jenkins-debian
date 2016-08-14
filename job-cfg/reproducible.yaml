@@ -200,7 +200,7 @@
       - shell: '{my_shell}'
     publishers:
       - logparser:
-          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+          parse-rules: '{my_parse_rules}'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
       - email:
@@ -709,7 +709,10 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+                    my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+                    my_parse_rules: '/srv/jenkins/logparse/debian.rules'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
 
         - '{name}_builder_{otherproject}_{my_num}':

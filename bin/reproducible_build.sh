@@ -774,6 +774,7 @@ check_buildinfo() {
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
+	log_info "Starting 1st build on remote node $NODE1."
 	remote_build 1 $NODE1
 	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			log_error "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..."
@@ -782,7 +783,7 @@ build_rebuild() {
 			NOTIFY=""
 			exit 0
 	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
-		log_info "Build successful. Starting remote build."
+		log_info "1st build successful. Starting 2nd build on remote node $NODE2."
 		remote_build 2 $NODE2
 		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
 			# both builds were fine, i.e., they did not FTBFS.

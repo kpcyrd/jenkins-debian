@@ -31,12 +31,14 @@ Reference doc for the folowing lists:
       packages to show
     - `text` a string. Template instance with $tot (total of packages listed)
       and $percent (percentage of all packages)
-    - `timely`: boolean value to enable to add $count and $count_total to the
-      text, where:
+    - `timespan`: value set to '24' or '48' to enable to add $count, $count_total.
+      $timespan_cound and $timespan_percent to the text, where:
       * $percent becomes count/count_total
       * $count_total being the number of all tested packages
       * $count being the len() of the query indicated by `query2`
-    - `query2`: useful only if `timely` is True.
+      * $timespan_count is the number of packages tested in that timespan in hours
+      * $timespan_percent is the percentage of $query in that timespan
+    - `query2`: useful only if `timespan` is set to a value.
     - `nosuite`: if true do not iterate over the suite/archs, use only the
       current suite+arch
   + global: if true, then the page will saved on the root of rb.d.n, and:
@@ -52,6 +54,7 @@ section must have at least a `query` defining what to file in.
 # filter_query is defined in reproducible_common.py and excludes some FTBFS issues
 queries = {
     'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
+    'count_timespan': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND build_date > datetime("now", "-{timespan} hours")',
     'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',
     'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
     'reproducible_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
@@ -212,8 +215,8 @@ pages = {
                 'query': 'FTBR_last24h',
                 'query2': 'FTBR_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to build reproducibly in total, $tot of them in the last 24h in $suite/$arch:'),
-                'timely': True
+                                 'failed to build reproducibly in total, $tot ($timespan_percent% of $timespan_count) of them in the last 24h in $suite/$arch:'),
+                'timespan': 24
             },
             {
                 'icon_status': 'FTBFS',
@@ -221,8 +224,8 @@ pages = {
                 'query': 'FTBFS_last24h',
                 'query2': 'FTBFS_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to build from source in total, $tot of them  in the last 24h in $suite/$arch:'),
-                'timely': True
+                                 'failed to build from source in total, $tot ($timespan_percent% of $timespan_count) of them  in the last 24h in $suite/$arch:'),
+                'timespan': 24
             },
             {
                 'icon_status': 'depwait',
@@ -230,8 +233,8 @@ pages = {
                 'query': 'depwait_last24h',
                 'query2': 'depwait_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to satisfy their build-dependencies, $tot of them  in the last 24h in $suite/$arch:'),
-                'timely': True
+                                 'failed to satisfy their build-dependencies, $tot ($timespan_percent% of $timespan_count) of them  in the last 24h in $suite/$arch:'),
+                'timespan': 24
             },
             {
                 'icon_status': 'reproducible',
@@ -239,8 +242,8 @@ pages = {
                 'query': 'reproducible_last24h',
                 'query2': 'reproducible_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'successfully built reproducibly in total, $tot of them in the last 24h in $suite/$arch:'),
-                'timely': True
+                                 'successfully built reproducibly in total, $tot ($timespan_percent% of $timespan_count) of them in the last 24h in $suite/$arch:'),
+                'timespan': 24
             },
         ]
     },
@@ -253,8 +256,8 @@ pages = {
                 'query': 'FTBR_last48h',
                 'query2': 'FTBR_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to build reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
-                'timely': True
+                                 'failed to build reproducibly in total, $tot ($timespan_percent% of $timespan_count) of them in the last 48h in $suite/$arch:'),
+                'timespan': 48
             },
             {
                 'icon_status': 'FTBFS',
@@ -262,8 +265,8 @@ pages = {
                 'query': 'FTBFS_last48h',
                 'query2': 'FTBFS_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to build from source in total, $tot of them  in the last 48h in $suite/$arch:'),
-                'timely': True
+                                 'failed to build from source in total, $tot ($timespan_percent% of $timespan_count) of them  in the last 48h in $suite/$arch:'),
+                'timespan': 48
             },
             {
                 'icon_status': 'depwait',
@@ -271,8 +274,8 @@ pages = {
                 'query': 'depwait_last48h',
                 'query2': 'depwait_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'failed to satisfy their build-dependencies, $tot of them  in the last 48h in $suite/$arch:'),
-                'timely': True
+                                 'failed to satisfy their build-dependencies, $tot ($timespan_percent% of $timespan_count) of them  in the last 48h in $suite/$arch:'),
+                'timespan': 48
             },
             {
                 'icon_status': 'reproducible',
@@ -280,8 +283,8 @@ pages = {
                 'query': 'reproducible_last48h',
                 'query2': 'reproducible_all',
                 'text': Template('$count packages ($percent% of ${count_total}) ' +
-                                 'successfully built reproducibly in total, $tot of them in the last 48h in $suite/$arch:'),
-                'timely': True
+                                 'successfully built reproducibly in total, $tot ($timespan_percent% of $timespan_count) of them in the last 48h in $suite/$arch:'),
+                'timespan': 48
             },
         ]
     },
@@ -429,10 +432,20 @@ def build_leading_text_section(section, rows, suite, arch):
     if not no_icon_link:
         html += '</a>'
     html += '\n' + tab
-    if section.get('text') and section.get('timely') and section['timely']:
+    if section.get('text') and section.get('timespan'):
         count = len(query_db(queries[section['query2']].format(suite=suite, arch=arch)))
         percent = round(((count/count_total)*100), 1)
+        timespan = section['timespan']
+        timespan_count = int(query_db(queries['count_timespan'].format(suite=suite, arch=arch, timespan=timespan))[0][0])
+        try:
+            timespan_percent = round(((total/timespan_count)*100), 1)
+        except ZeroDivisionError:
+            log.error('Looks like there are either no tested package or no ' +
+                  'packages available at all. Maybe it\'s a new database?')
+            timespan_percent = 0
+
         html += section['text'].substitute(tot=total, percent=percent,
+                                           timespan_percent=timespan_percent, timespan_count=timespan_count,
                                            count_total=count_total,
                                            count=count, suite=suite, arch=arch)
     elif section.get('text'):

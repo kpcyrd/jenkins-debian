@@ -10,7 +10,7 @@
 
 from reproducible_common import *
 import time
-
+import os.path
 
 def unrep_with_dbd_issues():
     log.info('running unrep_with_dbd_issues check...')
@@ -219,7 +219,15 @@ def alien_rbpkg():
     for root, dirs, files in os.walk(RB_PKG_PATH):
         if not files:
             continue
-        suite, arch = root.rsplit('/', 2)[1:]
+        # Extract the "suite" and "arch" from the directory structure
+        if os.path.split(root)[1] == 'diffoscope-results':
+            # We are presently inspecting package pages in the
+            # RB_PKG_PATH/{{suite}}/{{arch}}/diffoscope-results directory
+            suite, arch = os.path.split(root)[0].rsplit('/', 2)[1:]
+        else:
+            # We are presently inspecting package pages in the
+            # RB_PKG_PATH/{{suite}}/{{arch}}/ directory
+            suite, arch = root.rsplit('/', 2)[1:]
         for file in files:
             pkg = file.rsplit('.', 1)[0]
             if not query_db(query.format(pkg=pkg, suite=suite, arch=arch)):

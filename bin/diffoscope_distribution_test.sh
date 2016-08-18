@@ -20,6 +20,7 @@ check_pypi() {
 	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_PYPI" ; then
 		echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "Fail: diffoscope in PyPI:   $DIFFOSCOPE_IN_PYPI"
+		irc_message debian-reproducible "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on PyPI, which only has $DIFFOSCOPE_IN_PYPI."
 		exit 1
 	else
 		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"

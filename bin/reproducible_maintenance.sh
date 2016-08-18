@@ -48,6 +48,7 @@ echo "$(date -u) - testing whether the network interfaces MTU is 1500..."
 if [ "$(ip link | sed -n '/LOOPBACK/!s/.* mtu \([0-9]*\) .*/\1/p' | sort -u)" != "1500" ] ; then
 	ip link
 	echo "$(date -u) - network interfaces MTU != 1500 - this is wrong."
+	irc_message debian-reproducible "$HOSTNAME has wrong MTU, please tell the jenkins admins to fix this."
 	exit 1
 fi
 set +e

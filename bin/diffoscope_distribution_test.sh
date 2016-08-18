@@ -7,6 +7,9 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# common code (used for irc_message)
+. /srv/jenkins/bin/reproducible_common.sh
+
 check_pypi() {
 	TMPPYPI=$(mktemp -t diffoscope-distribution-XXXXXXXX)
 	# the following two lines are a bit fragile…

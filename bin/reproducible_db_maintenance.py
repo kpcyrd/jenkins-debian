@@ -24,7 +24,7 @@ db_schema = [
                      (version INTEGER NOT NULL,
                       date TEXT NOT NULL,
                       PRIMARY KEY (version))''',
-                  'INSERT INTO rb_schema VALUES ("1", "''' + now + '")']
+                  "INSERT INTO rb_schema VALUES (1, '" + now + "')"]
     },
     {
         'name': 'source_packages',
@@ -34,8 +34,8 @@ db_schema = [
                       status TEXT NOT NULL
                       CHECK
                         (status IN
-                            ("blacklisted", "FTBFS", "reproducible",
-                             "unreproducible", "404", "not for us")
+                            ('blacklisted', 'FTBFS', 'reproducible',
+                             'unreproducible', '404', 'not for us')
                         ),
                       build_date TEXT NOT NULL,
                       PRIMARY KEY (name))''']
@@ -150,7 +150,7 @@ db_schema = [
 # and here are some queries, split by update, that can be used to
 # update the live schema
 schema_updates = {
-    1: ['INSERT INTO rb_schema VALUES ("1", "' + now + '")'],
+    1: ["INSERT INTO rb_schema (version, date) VALUES (1, '" + now + "')"],
     2: [  # do a funny dance to add an id, suite and architecture values to
           # the `suites` table
         '''CREATE TABLE sources_new_tmp
@@ -159,18 +159,16 @@ schema_updates = {
             version TEXT NOT NULL,
             suite TEXT,
             architecture TEXT,
-            UNIQUE (name, suite, architecture)
-            ON CONFLICT REPLACE)''',
+            UNIQUE (name, suite, architecture))''',
         '''CREATE TABLE sources_new
            (id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
             version TEXT NOT NULL,
             suite TEXT NOT NULL,
             architecture TEXT NOT NULL,
-            UNIQUE (name, suite, architecture)
-            ON CONFLICT REPLACE)''',
+            UNIQUE (name, suite, architecture))''',
         'INSERT INTO sources_new_tmp (name, version) SELECT * FROM sources',
-        'UPDATE sources_new_tmp SET suite="sid", architecture="amd64"',
+        "UPDATE sources_new_tmp SET suite='sid', architecture='amd64'",
         'INSERT INTO sources_new SELECT * FROM sources_new_tmp',
         'DROP TABLE sources_new_tmp',
         'DROP TABLE sources',
@@ -198,7 +196,7 @@ schema_updates = {
             status TEXT,
             build_date TEXT,
             build_duration TEXT DEFAULT '0',
-            UNIQUE (package_id)
+            UNIQUE (package_id),
             FOREIGN KEY(package_id) REFERENCES sources(id))''',
         '''INSERT INTO results (package_id, version, status, build_date)
            SELECT s.id, r.version, r.status, r.build_date
@@ -215,11 +213,11 @@ schema_updates = {
             build_date TEXT NOT NULL,
             build_duration TEXT NOT NULL,
             UNIQUE (name, version, suite, architecture, build_date))''',
-        'INSERT INTO rb_schema VALUES ("2", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (2, '" + now + "')"],
     3: [ # add columns to stats_bugs for new usertag umask
         '''ALTER TABLE stats_bugs ADD COLUMN open_umask INTEGER''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_umask INTEGER''',
-        'INSERT INTO rb_schema VALUES ("3", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (3, '" + now + "')"],
     4: [ # stats_pkg_state needs (datum, suite) as primary key
         '''CREATE TABLE stats_pkg_state_tmp
            (datum TEXT NOT NULL,
@@ -236,7 +234,7 @@ schema_updates = {
             FTBFS, other FROM stats_pkg_state;''',
         '''DROP TABLE stats_pkg_state;''',
         '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
-        'INSERT INTO rb_schema VALUES ("4", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (4, '" + now + "')"],
     5: [ # stats_builds_per_day needs (datum, suite) as primary key
         '''CREATE TABLE stats_builds_per_day_tmp
                      (datum TEXT NOT NULL,
@@ -252,7 +250,7 @@ schema_updates = {
             FTBFS, other FROM stats_builds_per_day;''',
         '''DROP TABLE stats_builds_per_day;''',
         '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
-        'INSERT INTO rb_schema VALUES ("5", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (5, '" + now + "')"],
     6: [ # stats_builds_age needs (datum, suite) as primary key
         '''CREATE TABLE stats_builds_age_tmp
                      (datum TEXT NOT NULL,
@@ -267,7 +265,7 @@ schema_updates = {
             oldest_FTBFS FROM stats_builds_age;''',
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
-        'INSERT INTO rb_schema VALUES ("6", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (6, '" + now + "')"],
     7: [ # change build_duration field in results and stats_build from str to int
         '''CREATE TABLE stats_build_tmp
            (id INTEGER PRIMARY KEY,
@@ -279,7 +277,9 @@ schema_updates = {
             build_date TEXT NOT NULL,
             build_duration INTEGER NOT NULL,
             UNIQUE (name, version, suite, architecture, build_date))''',
-        'INSERT INTO stats_build_tmp SELECT * FROM stats_build',
+        '''INSERT INTO stats_build_tmp
+            SELECT id, name, version, suite, architecture, status, build_date,
+            CAST (build_duration AS INTEGER) FROM stats_build''',
         'DROP TABLE stats_build',
         'ALTER TABLE stats_build_tmp RENAME TO stats_build',
         '''CREATE TABLE results_tmp
@@ -289,12 +289,14 @@ schema_updates = {
             status TEXT,
             build_date TEXT,
             build_duration INTEGER DEFAULT '0',
-            UNIQUE (package_id)
+            UNIQUE (package_id),
             FOREIGN KEY(package_id) REFERENCES sources(id))''',
-        'INSERT INTO results_tmp SELECT * FROM results',
+        '''INSERT INTO results_tmp
+            SELECT id, package_id, version, status,
+            build_date, CAST (build_duration AS INTEGER) FROM results''',
         'DROP TABLE results',
         'ALTER TABLE results_tmp RENAME TO results',
-        'INSERT INTO rb_schema VALUES ("7", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (7, '" + now + "')"],
     8: [ # add default value to stats_bugs to get a full 'done vs open bugs' graph
         '''CREATE TABLE stats_bugs_tmp
            (datum TEXT NOT NULL,
@@ -330,15 +332,15 @@ schema_updates = {
         'INSERT INTO stats_bugs_tmp SELECT * FROM stats_bugs',
         'DROP TABLE stats_bugs',
         'ALTER TABLE stats_bugs_tmp RENAME TO stats_bugs',
-        'INSERT INTO rb_schema VALUES ("8", "' + now + '")'],
-    9: [ # rename "sid" to "unstable"
-        'UPDATE sources SET suite = "unstable" WHERE suite = "sid"',
-        'UPDATE stats_build SET suite = "unstable" WHERE suite = "sid"',
-        'UPDATE stats_pkg_state SET suite = "unstable" WHERE suite = "sid"',
-        'UPDATE stats_builds_per_day SET suite = "unstable" WHERE suite = "sid"',
-        'UPDATE stats_builds_age SET suite = "unstable" WHERE suite = "sid"',
-        'UPDATE stats_meta_pkg_state SET suite = "unstable" WHERE suite = "sid"',
-        'INSERT INTO rb_schema VALUES ("9", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (8, '" + now + "')"],
+    9: [ # rename 'sid' to 'unstable'
+        "UPDATE sources SET suite = 'unstable' WHERE suite = 'sid'",
+        "UPDATE stats_build SET suite = 'unstable' WHERE suite = 'sid'",
+        "UPDATE stats_pkg_state SET suite = 'unstable' WHERE suite = 'sid'",
+        "UPDATE stats_builds_per_day SET suite = 'unstable' WHERE suite = 'sid'",
+        "UPDATE stats_builds_age SET suite = 'unstable' WHERE suite = 'sid'",
+        "UPDATE stats_meta_pkg_state SET suite = 'unstable' WHERE suite = 'sid'",
+        "INSERT INTO rb_schema (version, date) VALUES (9, '" + now + "')"],
     10: [ # add the notes and issues tables
         '''CREATE TABLE notes (
             package_id INTEGER,
@@ -353,18 +355,18 @@ schema_updates = {
             description TEXT NOT NULL,
             url TEXT,
             PRIMARY KEY (name))''',
-        'INSERT INTO rb_schema VALUES ("10", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (10, '" + now + "')"],
     11: [ # table with removed packages, to enable the maintenance job to do clean up
         '''CREATE TABLE removed_packages (
             name TEXT NOT NULL,
             suite TEXT NOT NULL,
             architecture TEXT NOT NULL,
             PRIMARY KEY (name, suite, architecture))''',
-        'INSERT INTO rb_schema VALUES ("11", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (11, '" + now + "')"],
     12: [ # refactor the artifacts handling, splitting artifacts saving from
           # IRC notification
         'ALTER TABLE schedule ADD COLUMN notify TEXT',
-        'INSERT INTO rb_schema VALUES ("12", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (12, '" + now + "')"],
     13: [ # record manual scheduling done, to be able to limit people
         '''CREATE TABLE manual_scheduler (
             id INTEGER PRIMARY KEY,
@@ -372,14 +374,14 @@ schema_updates = {
             requester TEXT NOT NULL,
             date_request INTEGER NOT NULL)''',
         'ALTER TABLE schedule ADD COLUMN scheduler TEXT',
-        'INSERT INTO rb_schema VALUES ("13", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (13, '" + now + "')"],
     14: [ # column to enable mail notification to maintainers
         'ALTER TABLE sources ADD COLUMN notify_maintainer INTEGER NOT NULL DEFAULT 0',
-        'INSERT INTO rb_schema VALUES ("14", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (14, '" + now + "')"],
     15: [ # add columns to stats_bugs for new usertag ftbfs
         '''ALTER TABLE stats_bugs ADD COLUMN open_ftbfs INTEGER''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_ftbfs INTEGER''',
-        'INSERT INTO rb_schema VALUES ("15", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (15, '" + now + "')"],
     16: [ # add default value to stats_bugs.(open|done)_ftbfs to get a full 'done vs open bugs' graph
         '''CREATE TABLE stats_bugs_tmp
            (datum TEXT NOT NULL,
@@ -417,21 +419,21 @@ schema_updates = {
         'INSERT INTO stats_bugs_tmp SELECT * FROM stats_bugs',
         'DROP TABLE stats_bugs',
         'ALTER TABLE stats_bugs_tmp RENAME TO stats_bugs',
-        'INSERT INTO rb_schema VALUES ("16", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (16, '" + now + "')"],
     17: [ # add column to save which builders builds what
-        'ALTER TABLE schedule ADD COLUMN builder TEXT',
-        'ALTER TABLE results ADD COLUMN builder TEXT NOT NULL DEFAULT ""',
-        'ALTER TABLE stats_build ADD COLUMN builder TEXT NOT NULL DEFAULT ""',
-        'INSERT INTO rb_schema VALUES ("17", "' + now + '")'],
+        "ALTER TABLE schedule ADD COLUMN builder TEXT",
+        "ALTER TABLE results ADD COLUMN builder TEXT NOT NULL DEFAULT ''",
+        "ALTER TABLE stats_build ADD COLUMN builder TEXT NOT NULL DEFAULT ''",
+        "INSERT INTO rb_schema (version, date) VALUES (17, '" + now + "')"],
     18: [ # add columns to stats_bugs for new usertag locale
-        '''ALTER TABLE stats_bugs ADD COLUMN open_locale INTEGER DEFAULT "0"''',
-        '''ALTER TABLE stats_bugs ADD COLUMN done_locale INTEGER DEFAULT "0"''',
-        'INSERT INTO rb_schema VALUES ("18", "' + now + '")'],
+        '''ALTER TABLE stats_bugs ADD COLUMN open_locale INTEGER DEFAULT 0''',
+        '''ALTER TABLE stats_bugs ADD COLUMN done_locale INTEGER DEFAULT 0''',
+        "INSERT INTO rb_schema (version, date) VALUES (18, '" + now + "')"],
     19: [ # add column architecture to stats_pkg_state, stats_builds_per_day and stats_builds_age tables and set previous values to amd64
-        'ALTER TABLE stats_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
-        'ALTER TABLE stats_builds_per_day ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
-        'ALTER TABLE stats_builds_age ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
-        'INSERT INTO rb_schema VALUES ("19", "' + now + '")'],
+        "ALTER TABLE stats_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
+        "ALTER TABLE stats_builds_per_day ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
+        "ALTER TABLE stats_builds_age ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
+        "INSERT INTO rb_schema (version, date) VALUES (19, '" + now + "')"],
     20: [ # use (datum, suite, architecture) as primary key for stats_pkg_state
         '''CREATE TABLE stats_pkg_state_tmp
            (datum TEXT NOT NULL,
@@ -449,7 +451,7 @@ schema_updates = {
             FTBFS, other FROM stats_pkg_state;''',
         '''DROP TABLE stats_pkg_state;''',
         '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
-        'INSERT INTO rb_schema VALUES ("20", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (20, '" + now + "')"],
     21: [ # use (datum, suite, architecture) as primary key for stats_builds_per_day
         '''CREATE TABLE stats_builds_per_day_tmp
                      (datum TEXT NOT NULL,
@@ -466,7 +468,7 @@ schema_updates = {
             FTBFS, other FROM stats_builds_per_day;''',
         '''DROP TABLE stats_builds_per_day;''',
         '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
-        'INSERT INTO rb_schema VALUES ("21", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (21, '" + now + "')"],
     22: [ # use (datum, suite, architecture) as primary key for stats_builds_age
         '''CREATE TABLE stats_builds_age_tmp
                      (datum TEXT NOT NULL,
@@ -482,7 +484,7 @@ schema_updates = {
             oldest_FTBFS FROM stats_builds_age;''',
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
-        'INSERT INTO rb_schema VALUES ("22", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (22, '" + now + "')"],
     23: [ # save which builders built a package and change the name of the
           # field keeping the job name
         '''CREATE TABLE stats_build_tmp
@@ -494,8 +496,8 @@ schema_updates = {
              status TEXT NOT NULL,
              build_date TEXT NOT NULL,
              build_duration TEXT NOT NULL,
-             node1 TEXT NOT NULL DEFAULT "",
-             node2 TEXT NOT NULL DEFAULT "",
+             node1 TEXT NOT NULL DEFAULT '',
+             node2 TEXT NOT NULL DEFAULT '',
              job TEXT NOT NULL,
              UNIQUE (name, version, suite, architecture, build_date))''',
         '''INSERT INTO stats_build_tmp (id, name, version, suite, architecture,
@@ -504,7 +506,7 @@ schema_updates = {
                     build_duration, builder FROM stats_build''',
         'DROP TABLE stats_build',
         'ALTER TABLE stats_build_tmp RENAME TO stats_build',
-        'INSERT INTO rb_schema VALUES ("23", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (23, '" + now + "')"],
     24: [ # the same as #23 but for the results table
         '''CREATE TABLE results_tmp
            (id INTEGER PRIMARY KEY,
@@ -516,7 +518,7 @@ schema_updates = {
             node1 TEXT,
             node2 TEXT,
             job TEXT NOT NULL,
-            UNIQUE (package_id)
+            UNIQUE (package_id),
             FOREIGN KEY(package_id) REFERENCES sources(id))''',
         '''INSERT INTO results_tmp (id, package_id, version, status,
                     build_date, build_duration, job)
@@ -524,7 +526,7 @@ schema_updates = {
                     builder FROM results''',
         'DROP TABLE results',
         'ALTER TABLE results_tmp RENAME TO results',
-        'INSERT INTO rb_schema VALUES ("24", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (24, '" + now + "')"],
     25: [ # rename the builder column also in the schedule table.
         '''CREATE TABLE schedule_tmp
            (id INTEGER PRIMARY KEY,
@@ -537,7 +539,7 @@ schema_updates = {
             save_artifacts INTEGER DEFAULT 0,
             UNIQUE (package_id),
             FOREIGN KEY(package_id) REFERENCES sources(id))''',
-        'UPDATE schedule SET notify = "" WHERE notify IS NULL',
+        '''UPDATE schedule SET notify = '' WHERE notify IS NULL''',
         '''INSERT INTO schedule_tmp (id, package_id, date_scheduled, scheduler,
                     date_build_started, job, notify, save_artifacts)
            SELECT id, package_id, date_scheduled, scheduler,
@@ -545,14 +547,14 @@ schema_updates = {
            FROM schedule''',
         'DROP TABLE schedule',
         'ALTER TABLE schedule_tmp RENAME TO schedule',
-        'INSERT INTO rb_schema VALUES ("25", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (25, '" + now + "')"],
     26: [ # add a column to the schedule table to save the schedule message
-        'ALTER TABLE schedule ADD COLUMN message TEXT',
-        'ALTER TABLE stats_build ADD COLUMN schedule_message TEXT NOT NULL DEFAULT ""',
-        'INSERT INTO rb_schema VALUES ("26", "' + now + '")'],
+        "ALTER TABLE schedule ADD COLUMN message TEXT",
+        "ALTER TABLE stats_build ADD COLUMN schedule_message TEXT NOT NULL DEFAULT ''",
+        "INSERT INTO rb_schema (version, date) VALUES (26, '" + now + "')"],
     27: [ # add column architecture to stats_meta_pkg_state and set previous values to amd64
-        'ALTER TABLE stats_meta_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT "amd64"',
-        'INSERT INTO rb_schema VALUES ("27", "' + now + '")'],
+        "ALTER TABLE stats_meta_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
+        "INSERT INTO rb_schema (version, date) VALUES (27, '" + now + "')"],
     28: [ # use (datum, suite, architecture, meta_pkg) as primary key for stats_meta_pkg_state
         '''CREATE TABLE stats_meta_pkg_state_tmp
            (datum TEXT NOT NULL,
@@ -570,8 +572,16 @@ schema_updates = {
             FTBFS, other FROM stats_meta_pkg_state;''',
         '''DROP TABLE stats_meta_pkg_state;''',
         '''ALTER TABLE stats_meta_pkg_state_tmp RENAME TO stats_meta_pkg_state;''',
-        'INSERT INTO rb_schema VALUES ("28", "' + now + '")'],
+        "INSERT INTO rb_schema (version, date) VALUES (28, '" + now + "')"],
 }
+
+
+def table_exists(tablename):
+    DB_METADATA.reflect()
+    if tablename in DB_METADATA.tables:
+        return True
+    else:
+        return False
 
 
 def db_create_tables():
@@ -582,9 +592,7 @@ def db_create_tables():
     """
     changed = False
     for table in db_schema:
-        query = 'SELECT name FROM sqlite_master WHERE name="{}"'
-        query = query.format(table['name'])
-        if not query_db(query):
+        if not table_exists(table['name']):
             log.warning(table['name'] + ' does not exists. Creating...')
             for query in table['query']:
                 log.info('\t' + re.sub(' +', ' ', query.replace('\n', ' ')))
@@ -626,10 +634,11 @@ def db_update():
 
 if __name__ == '__main__':
     changed_created = False
-    try:
+    if table_exists('rb_schema'):
         if not query_db('SELECT * FROM rb_schema'):
+            # table exists but there is nothing in it
             changed_create = db_create_tables()
-    except:
+    else:
         log.error('There is no rb_schema table in the database.')
         log.error('Will run a full db_create_tables().')
         changed_created = db_create_tables()

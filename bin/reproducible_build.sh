@@ -594,8 +594,8 @@ export LANG="C"
 unset LC_ALL
 export LANGUAGE="en_US:en"
 EOF
-	# build path is for now only varied on testing/i386
-	if [ "${ARCH}" = "i386" -a "${SUITE}" = "testing" ]; then
+	# build path is not yet varied on testing
+	if [ "${SUITE}" != "testing" ]; then
 		echo "BUILDDIR=/build-1st" >> "$TMPCFG"
 	fi
 	# remember to change the sudoers setting if you change the following command
@@ -652,8 +652,8 @@ export LC_ALL="$locale.UTF-8"
 export LANGUAGE="$locale:$language"
 umask 0002
 EOF
-	# build path is for now only varied on testing/i386
-	if [ "${ARCH}" = "i386" -a "${SUITE}" = "testing" ]; then
+	# build path is not yet varied on testing
+	if [ "${SUITE}" != "testing" ]; then
 		echo "BUILDDIR=/build-2nd" >> "$TMPCFG"
 	fi
 	set +e

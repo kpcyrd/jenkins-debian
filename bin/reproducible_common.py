@@ -30,6 +30,7 @@ from subprocess import call, check_call
 from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
 from sqlalchemy import MetaData, Table, sql, create_engine
+from sqlalchemy.exc import NoSuchTableError, OperationalError
 
 DEBUG = False
 QUIET = False
@@ -365,7 +366,7 @@ def db_table(table_name):
     """
     try:
         return Table(table_name, DB_METADATA, autoload=True)
-    except sqlalchemy.exc.NoSuchTableError:
+    except NoSuchTableError:
         log.error("Table %s does not exist or schema for %s could not be loaded",
                   table_name, REPRODUCIBLE_DB)
         raise
@@ -384,9 +385,16 @@ def query_db(query):
     """
     try:
         result = conn_db.execute(query)
-    except:
-        print_critical_message('Error executing this query:\n' + query)
-        raise
+    except OperationalError as ex:
+        # if this sqlalchemy.exc.OperationalError was caused by a sqlite3
+        # database locking error, the error will have the following format:
+        if ex.orig and ex.orig.args and ex.orig.args[0] == "database is locked":
+            print_critical_message('SQLite database locked, could not execute ' +
+                                   'query:\n"%s"\nExiting script.' % query)
+            exit(1)
+        else:
+            print_critical_message('Error executing this query:\n' + query)
+            raise
 
     if result.returns_rows:
         return result.fetchall()

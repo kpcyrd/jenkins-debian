@@ -391,7 +391,7 @@ def query_db(query):
         if ex.orig and ex.orig.args and ex.orig.args[0] == "database is locked":
             print_critical_message('SQLite database locked, could not execute ' +
                                    'query:\n"%s"\nExiting script.' % query)
-            exit(1)
+            sys.exit(1)
         else:
             print_critical_message('Error executing this query:\n' + query)
             raise

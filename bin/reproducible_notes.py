@@ -36,7 +36,7 @@ def load_notes():
     log.info("notes loaded. There are " + str(len(original)) +
              " packages listed")
     notes = {}
-    for pkg in original:
+    for pkg in sorted(original):
         assert isinstance(pkg, str)
         try:
             assert 'version' in original[pkg]
@@ -83,6 +83,7 @@ def load_notes():
                 pkg_details['issues'] = original[pkg]['issues'] if \
                     'issues' in original[pkg] else []
                 pkg_details['id'] = int(suite[0])
+                log.debug('adding %s => %s', pkg, pkg_details)
                 notes[pkg].append(pkg_details)
 
     log.info("notes checked. There are " + str(len(notes)) +

@@ -156,7 +156,7 @@ def store_notes():
         pkg_bugs = json.dumps(entry['bugs'])
         pkg_comments = entry['comments']
         to_insert.append({
-            'id': pkg_id,
+            'package_id': pkg_id,
             'version': pkg_version,
             'issues': pkg_issues,
             'bugs': pkg_bugs,

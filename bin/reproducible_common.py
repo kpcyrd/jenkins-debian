@@ -95,7 +95,7 @@ with open(os.path.join(BIN_PATH, './meta_pkgset.csv'), newline='') as f:
         META_PKGSET[int(line[0])] = (line[2], line[1])
 
 # init the database data and connection
-DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB)
+DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB, connect_args={'timeout': 30})
 DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
 conn_db = DB_ENGINE.connect()  # the local sqlite3 reproducible db
 

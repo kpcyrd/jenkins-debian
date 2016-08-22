@@ -60,7 +60,7 @@ allowed_cmds=()
 
 if [[ "$*" = "/bin/true" ]] ; then
 	exec /bin/true ; croak "Exec failed";
-elif [[ "$*" = "rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)" ]] ; then
+elif [[ "$*" = 'rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)' ]] ; then
 	exec rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX) ; croak "Exec failed";
 elif [[ "$*" = "cleanup_nodes /srv/jenkins/bin/reproducible_slay.sh" ]] ; then
 	exec /srv/jenkins/bin/reproducible_slay.sh ; croak "Exec failed";

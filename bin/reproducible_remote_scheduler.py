@@ -64,6 +64,7 @@ except KeyError:
                  'schedule packages. Ask in #debian-reproducible if you have '
                  'trouble with that.' + bcolors.ENDC)
     sys.exit(1)
+
 # this variable is set by reproducible scripts and so it only available in calls made on the local host (=main node)
 try:
     local = True if os.environ['LOCAL_CALL'] == 'true' else False
@@ -241,7 +242,8 @@ else:
     do_notify = 0
 
 schedule_table = db_table('schedule')
-existing_pkg_ids = dict(query_db(sql.select([
+if ids:
+    existing_pkg_ids = dict(query_db(sql.select([
         schedule_table.c.package_id,
         schedule_table.c.id,
     ]).where(schedule_table.c.package_id.in_(ids))))
@@ -281,11 +283,12 @@ insert_manual_query = db_table('manual_scheduler').insert()
 
 if not dry_run:
     transaction = conn_db.begin()
-    if len(add_to_schedule):
+    if add_to_schedule:
         conn_db.execute(insert_schedule_query, add_to_schedule)
-    if len(update_schedule):
+    if update_schedule:
         conn_db.execute(update_schedule_query, update_schedule)
-    conn_db.execute(insert_manual_query, save_schedule)
+    if save_schedule:
+        conn_db.execute(insert_manual_query, save_schedule)
     transaction.commit()
 else:
     log.info('Ran with --dry-run, scheduled nothing')

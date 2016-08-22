@@ -42,6 +42,16 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** redirect jenkins.debian.net to jenkins.debian.org - tests.reproducible-builds.org will stay where it is.
 * party!
 
+==== meeting agenda for jenkins-qa meeting
+
+* short intro, why are we here (individually)
+* jenkins.d.o migration
+* git merge policy + procedures
+* deployment improvements
+* future meeting schedule
+* give at least mattia access to my.profitbricks.com, for remote access
+
+
 == General ToDo
 
 * replace amd64 in scripts with $HOSTARCH

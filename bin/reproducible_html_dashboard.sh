@@ -550,9 +550,6 @@ create_dashboard_page() {
 		fi
 	done
 	write_page "</p>"
-	# link to index_breakages
-	write_page "<p style=\"clear:both;\">"
-	write_page "<br />There are <a href=\"$BASEURL/index_breakages.html\">some problems in this test setup itself</a> too. And there is <a href=\"https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs\">documentation</a> too, in case you missed the link at the top. Feedback is very much appreciated.</p>"
 	# the end
 	write_page_footer
 	cp $PAGE $DEBIAN_BASE/reproducible.html

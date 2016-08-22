@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014,2016 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
@@ -9,8 +9,7 @@ set -e
 if [ ! -z "$SUDO_USER" ] ; then
 	REQUESTER="$SUDO_USER"
 else
-	echo "Looks like you logged into this host as the jenkins user without sudoing to it. How can that be possible?!?!"
-	echo "You're doing something too weird to be supported, please be normal, exiting."
+	echo "Please run this script as the jenkins user, exiting."
 	exit 1
 fi
 

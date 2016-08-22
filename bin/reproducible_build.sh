@@ -681,11 +681,14 @@ EOF
 }
 
 check_node_is_up() {
+	# this actually tests two things:
+	# - ssh login works
+	# - /tmp is not mounted in read-only mode
 	local NODE=$1
 	local PORT=$2
 	local SLEEPTIME=$3
 	set +e
-	ssh -o "BatchMode = yes" -p $PORT $NODE /bin/true
+	ssh -o "BatchMode = yes" -p $PORT $NODE 'rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)'
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then

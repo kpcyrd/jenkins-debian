@@ -30,12 +30,17 @@ explain() {
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
 
-# run update at current date
+# some nodes need special treatment…
 case $HOSTNAME in
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		# set correct date
 		sudo service ntp stop
 		sudo ntpdate -b de.pool.ntp.org
+		;;
+	opi2a)
+		# this host is acting strange…
+		# restarting services cause hangs, so we don't do that
+		echo -e "#!/bin/sh\nexit 0" | sudo tee /usr/sbin/policy-rc.d
 		;;
 	*)	;;
 esac
@@ -672,7 +677,13 @@ case $HOSTNAME in
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
+	opi2a)
+		# this host is acting strange…
+		# cleaning up our workaround…
+		sudo rm /usr/sbin/policy-rc.d
+		;;
 	jenkins)
+		# notify irc
 		MESSAGE="jenkins.d.n updated to $(cd $BASEDIR ; git describe --always)."
 		kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
 		;;

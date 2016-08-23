@@ -37,12 +37,6 @@ case $HOSTNAME in
 		sudo service ntp stop
 		sudo ntpdate -b de.pool.ntp.org
 		;;
-	opi2a)
-		# this host is acting strange…
-		# restarting services cause hangs, so we don't do that
-		echo -e "#!/bin/sh\nexit 101" | sudo tee /usr/sbin/policy-rc.d
-		sudo chmod +x /usr/sbin/policy-rc.d
-		;;
 	*)	;;
 esac
 
@@ -506,7 +500,11 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
 		sudo ln -s /usr/share/munin/plugins/loggrep jenkins_oom
 	fi
-	sudo service munin-node force-reload
+	if [ "$HOSTNAME" != "opi2a" ] ; then
+		# opi2a is strangely broken
+		# so this is just a hackish workaround for that…
+		sudo service munin-node force-reload
+	fi
 fi
 explain "packages configured."
 
@@ -677,11 +675,6 @@ case $HOSTNAME in
 	# set time back to the future
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
-		;;
-	opi2a)
-		# this host is acting strange…
-		# cleaning up our workaround…
-		sudo rm /usr/sbin/policy-rc.d
 		;;
 	jenkins)
 		# notify irc

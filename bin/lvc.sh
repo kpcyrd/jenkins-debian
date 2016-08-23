@@ -83,6 +83,7 @@ discard_snapshots() {
 if [ -z "$WORKSPACE" ] ; then
     WORKSPACE=$PWD
 fi
+echo WORKSPACE=$WORKSPACE
 RESULTS=$WORKSPACE/results
 
 IMAGE=$WORKSPACE/$(basename $URL)

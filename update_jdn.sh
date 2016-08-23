@@ -40,7 +40,7 @@ case $HOSTNAME in
 	opi2a)
 		# this host is acting strange…
 		# restarting services cause hangs, so we don't do that
-		echo -e "#!/bin/sh\nexit 0" | sudo tee /usr/sbin/policy-rc.d
+		echo -e "#!/bin/sh\nexit 101" | sudo tee /usr/sbin/policy-rc.d
 		sudo chmod +x /usr/sbin/policy-rc.d
 		;;
 	*)	;;

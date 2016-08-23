@@ -41,6 +41,7 @@ case $HOSTNAME in
 		# this host is acting strange…
 		# restarting services cause hangs, so we don't do that
 		echo -e "#!/bin/sh\nexit 0" | sudo tee /usr/sbin/policy-rc.d
+		chmod +x /usr/sbin/policy-rc.d
 		;;
 	*)	;;
 esac

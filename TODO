@@ -30,8 +30,9 @@ The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== next steps for jenkins.d.o migration
 
-** the machine jerea.debian.org is setup, please go to https://jenkins.debian.org
-** install all the plugins (we)
+The machine jerea.debian.org is setup, please go to https://jenkins.debian.org
+and log in using link:https://sso.debian.org[Debian SSO].
+
 ** add all the nodes as nodes to jenkins.d.o (we)
 ** disable job execution on jenkins.d.net(!) (we) 
 ** deploy this configuration on jenkins.d.o…(!) (we)

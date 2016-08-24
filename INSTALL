@@ -28,10 +28,10 @@ We would prefer to run a jenkins package from jessie-backports.
 
 ==== Jenkins plugins
 
-* Jenkins GIT plugin
-* Jenkins Subversion Plug-in
+* Git plugin
+* Subversion Plug-in
 
-* Email-ext Plugin
+* Email Extension Plugin
 * Log Parser Plugin
 * HTML Publisher plugin
 * Static Analysis Utilities
@@ -43,11 +43,11 @@ We would prefer to run a jenkins package from jessie-backports.
 * Console Column Plugin
 * Priority Sorter Plugin
 * Throttle Concurrent Builds Plugin
-* Next Executions Plugin
+* Next Executions
 * Parameterized Trigger plugin
 * Environment Injector Plugin
-* Build-timeout Plugin
-* Build Token Root Plugin
+* build timeout plugin
+* Build Authorization Token Root Plugin
 * Embeddable Build Status Plugin
 * Plot Plugin
 
@@ -55,11 +55,10 @@ We would prefer to run a jenkins package from jessie-backports.
 * Green Balls
 * Compact Columns
 * Console Tail Plugin
-* Cron Column
+* Cron Column Plugin
 * Simple Theme Plugin
-* LiveScreenshot Plugin
+* Live Screenshot
 * Locale plugin
-* Jenkins Translation Assistance plugin
 
 === updating jenkins.debian.net with 'update_jdn.sh'
 

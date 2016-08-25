@@ -245,6 +245,7 @@ if [ -f /etc/debian_version ] ; then
 			schroot 
 			screen
 			slay
+			stunnel
 			subversion 
 			subversion-tools 
 			sudo 

@@ -708,7 +708,7 @@
                     my_timed: '42 23 1 1 *'
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
-                    my_gitbranches: '**'
+                    my_gitbranches: ''
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
                     my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
                     my_parse_rules: '/srv/jenkins/logparse/debian-diffoscope.rules'

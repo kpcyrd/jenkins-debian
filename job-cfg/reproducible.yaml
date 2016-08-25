@@ -209,7 +209,7 @@
       - git:
           url: '{my_gitrepo}'
           branches:
-            - master
+            - '{my_gitbranches}'
     node: '{my_node}'
 
 
@@ -703,14 +703,16 @@
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
-                - 'diffoscope_master_branch':
-                    my_description: 'Build diffoscope debian package from the master branch.'
+                - 'diffoscope_from_git':
+                    my_description: 'Build diffoscope Debian package from git branches.'
                     my_timed: '42 23 1 1 *'
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
+                    my_gitbranches: '**'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
                     my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
                     my_parse_rules: '/srv/jenkins/logparse/debian-diffoscope.rules'
+            my_gitbranches: 'master'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''

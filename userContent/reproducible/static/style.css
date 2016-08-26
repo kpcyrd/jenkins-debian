@@ -357,6 +357,10 @@ form {
 	border-bottom: 1px solid #ddd;
 }
 
+details {
+	cursor: pointer;
+}
+
 label {
 	cursor: pointer;
 	display: inline-block;

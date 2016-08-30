@@ -45,6 +45,11 @@ and log in using link:https://sso.debian.org[Debian SSO].
 
 ==== meeting agenda for jenkins-qa meetings
 
+* next meeting: Wednesday, September 28th 2016, 18 UTC on #debian-qa on irc.debian.org
+* schedule: every 4th Wednesday of each month, at 18 UTC (during European summer time, 19 UTC in winter time)
+
+===== reoccuring agenda
+
 * short intro, why are we here (individually)
 * jenkins.d.n status 
 * jenkins.d.o migration

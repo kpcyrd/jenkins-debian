@@ -727,7 +727,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/strip-nondeterminism.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'strip-nondeterminism_from_git_branches':
                     my_description: 'Build strip-nondeterminism Debian package from git branches other than master.'
@@ -735,7 +735,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/strip-nondeterminism.git'
                     my_gitbranches: ':^(?!origin/master$).*'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'disorderfs_from_git_master':
                     my_description: 'Build disorderfs Debian package from git branch master.'
@@ -743,7 +743,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/disorderfs.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'disorderfs_from_git_branches':
                     my_description: 'Build disorderfs Debian package from git branches other than master.'
@@ -751,7 +751,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/disorderfs.git'
                     my_gitbranches: ':^(?!origin/master$).*'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
             my_gitbranches: 'master'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # released under the GPLv=2
 
@@ -138,10 +138,17 @@ EOF
 		cat >> $CHROOT_TARGET/tmp/chroot-testrun <<-EOF
 echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
 apt-get install build-essential devscripts git
+if [ "$1" = "gbp" ] ; then
+	apt-get install git-buildpackage
+	git checkout debian
+fi
 if [ -f debian/control ] ; then
 	cat debian/control
 	# install build-depends
 	mk-build-deps -ir
+fi
+if [ "$1" = "gbp" ] ; then
+	git checkout -
 fi
 EOF
 	fi

@@ -404,8 +404,8 @@ write_variation_table() {
 	fi
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>env BUILDUSERID</td><td>BUILDUSERID=\"1111\"</td><td>BUILDUSERID=\"2222\"</td></tr>"
-		write_page "<tr><td>env BUILDUSERNAME</td><td>BUILDUSERNAME=\"pbuilder1\"</td><td>BUILDUSERNAME=\"pbuilder2\"</td></tr>"
-		write_page "<tr><td>env USER</td><td>USER=\"pbuilder1\"</td><td>USER=\"pbuilder2\"</td></tr>"
+		write_page "<tr><td>env BUILDUSERNAME</td><td>BUILDUSERNAME=\"pbuilderfirst\"</td><td>BUILDUSERNAME=\"pbuildersecond\"</td></tr>"
+		write_page "<tr><td>env USER</td><td>USER=\"pbuilderfirst\"</td><td>USER=\"pbuildersecond\"</td></tr>"
 		write_page "<tr><td>env HOME</td><td>HOME=\"/nonexistent/first-build\"</td><td>HOME=\"/nonexistent/second-build\"</td></tr>"
 		write_page "<tr><td>uid</td><td>uid=1111</td><td>uid=2222</td></tr>"
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"

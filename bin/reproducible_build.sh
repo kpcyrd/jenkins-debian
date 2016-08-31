@@ -598,7 +598,7 @@ export LANGUAGE="en_US:en"
 EOF
 	# build path is not yet varied on testing
 	if [ "${SUITE}" != "testing" ]; then
-		echo "BUILDDIR=/build-first" >> "$TMPCFG"
+		echo "BUILDDIR=/build-1st" >> "$TMPCFG"
 	fi
 	# remember to change the sudoers setting if you change the following command
 	# FIXME: call with --buildinfo-identifier=dummy instead and below
@@ -657,7 +657,7 @@ umask 0002
 EOF
 	# build path is not yet varied on testing
 	if [ "${SUITE}" != "testing" ]; then
-		echo "BUILDDIR=/build-second" >> "$TMPCFG"
+		echo "BUILDDIR=/build-2nd" >> "$TMPCFG"
 	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command

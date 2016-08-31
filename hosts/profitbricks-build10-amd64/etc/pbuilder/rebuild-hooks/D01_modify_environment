@@ -20,6 +20,10 @@ DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 if [ -n "$BUILDUSERNAME" ] ; then
 	echo "I: Setting $BUILDUSERNAME's login shell to /bin/bash" >&2
 	usermod -s /bin/bash $BUILDUSERNAME
+	if [ -n "$BUILDUSERGECOS" ] ; then
+		echo "I: Setting $BUILDUSERNAME's GECOS to $BUILDUSERGECOS" >&2
+		usermod -c "$BUILDUSERGECOS" $BUILDUSERNAME
+	fi
 fi
 
 # temporarily disable disorderfs as we have problems properly unmounting it

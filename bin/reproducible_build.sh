@@ -587,6 +587,7 @@ first_build() {
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
 export BUILDUSERNAME=pbuilder1
+export BUILDUSERGECOS="first user,first room,first work-phone,first home-phone,first other"
 # pbuilder sets HOME to the value of BUILD_HOME…
 BUILD_HOME=/nonexistent/first-build
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"
@@ -644,6 +645,7 @@ second_build() {
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=2222
 export BUILDUSERNAME=pbuilder2
+export BUILDUSERGECOS="second user,second room,second work-phone,second home-phone,second other"
 # pbuilder sets HOME to the value of BUILD_HOME…
 BUILD_HOME=/nonexistent/second-build
 export DEB_BUILD_OPTIONS="parallel=$NUM_CPU"

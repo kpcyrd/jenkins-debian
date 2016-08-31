@@ -96,14 +96,6 @@ cleanup() {
 	fi
 
 	#
-	# special case: diffoscope: run autotest suite after build
-	#
-	CHANGES=$(ls -1 $CHROOT_TARGET/tmp/diffoscope_*.changes 2>/dev/null|| true)
-	if [ ! -z "$CHANGES" ] ; then
-		sudo chroot $CHROOT_TARGET py.test-3 -v -r s
-	fi
-
-	#
 	# special case: publish debian-edu-doc on the webserver
 	#
 	CHANGES=$(ls -1 $CHROOT_TARGET/tmp/debian-edu-doc_*.changes 2>/dev/null|| true)

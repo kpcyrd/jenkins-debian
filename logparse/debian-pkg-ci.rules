@@ -18,6 +18,7 @@ ok /Warning: there was a problem reading the certificate file \/etc\/ssl\/certs/
 ok /dpkg-buildpackage: warning: using a gain-root-command while being root/
 ok /warning: the authors of lintian do not recommend running it with root privileges/
 ok /test_no_warnings PASSED/
+ok /pytest-warning/
 
 # list of warnings here...
 warning /[Ww]arning/

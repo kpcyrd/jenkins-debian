@@ -29,8 +29,9 @@ cleanup_all() {
 trap cleanup_all INT TERM EXIT
 
 # report info about virtualization
-dmesg | grep -i -e hypervisor -e qemu -e kvm
-lspci | grep -i -e virtio -e virtualbox -e qemu -e kvm
+(dmesg | grep -i -e hypervisor -e qemu -e kvm) || true
+(lspci | grep -i -e virtio -e virtualbox -e qemu -e kvm) || true
+lsmod
 if systemd-detect-virt -q ; then
         echo "Virtualization is used:" `systemd-detect-virt`
 else

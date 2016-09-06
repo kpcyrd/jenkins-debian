@@ -28,6 +28,16 @@ cleanup_all() {
 }
 trap cleanup_all INT TERM EXIT
 
+# report info about virtualization
+dmesg | grep -i -e hypervisor -e qemu -e kvm
+lspci | grep -i -e virtio -e virtualbox -e qemu -e kvm
+if systemd-detect-virt -q ; then
+        echo "Virtualization is used:" `systemd-detect-virt`
+else
+        echo "No virtualization is used."
+fi
+cat /etc/issue
+
 # the way we handle jenkins slaves doesn't copy the workspace to the slaves
 # so we need to "manually" clone the git repo here…
 cd $WORKSPACE

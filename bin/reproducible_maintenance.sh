@@ -47,8 +47,8 @@ curl http://www.debian.org > /dev/null
 echo "$(date -u) - testing whether the network interfaces MTU is 1500..."
 if [ "$(ip link | sed -n '/LOOPBACK/!s/.* mtu \([0-9]*\) .*/\1/p' | sort -u)" != "1500" ] ; then
 	ip link
-	echo "$(date -u) - network interfaces MTU != 1500 - this is wrong."
-	irc_message debian-reproducible "$HOSTNAME has wrong MTU, please tell the jenkins admins to fix this."
+	echo "$(date -u) - network interfaces MTU != 1500 - this is wrong.  => please \`sudo ifconfig eth0 mtu 1500\`"
+	irc_message debian-reproducible "$HOSTNAME has wrong MTU, please tell the jenkins admins to fix this.  (sudo ifconfig eth0 mtu 1500)"
 	exit 1
 fi
 set +e

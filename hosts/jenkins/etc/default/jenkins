@@ -10,7 +10,7 @@ JAVA=/usr/bin/java
 #JAVA_ARGS="-Djava.awt.headless=true"  # Allow graphs etc. to work even when an X server is present
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
-JAVA_ARGS="-Djava.awt.headless=true -Xmx3072m -XX:MaxPermSize=384m"
+JAVA_ARGS="-Djava.awt.headless=true -Xmx3072m -XX:MaxPermSize=384m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/lib/jenkins/heapDumps/"
 
 PIDFILE=/var/run/$NAME/$NAME.pid
 

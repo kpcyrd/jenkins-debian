@@ -92,6 +92,11 @@ check_tcp_port() {
 #
 do_start()
 {
+    # java will store heap dumps here in case of OutOfMemoryError.
+    # delete old heap dumps when starting
+    rm -r "$JENKINS_HOME/heapDumps/" > /dev/null 2>&1 || true
+    mkdir -p "$JENKINS_HOME/heapDumps/"
+    chown ${JENKINS_USER}.${JENKINS_GROUP} "$JENKINS_HOME/heapDumps"
     # the default location is /var/run/jenkins/jenkins.pid but the parent directory needs to be created
     mkdir `dirname $PIDFILE` > /dev/null 2>&1 || true
     chown $JENKINS_USER `dirname $PIDFILE`

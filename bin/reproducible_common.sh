@@ -307,8 +307,8 @@ write_page_intro() {
 		write_page "        <p><em>Reproducible FreeBSD</em> is an effort to apply this to FreeBSD. Thus FreeBSD is build twice, with a few varitations added and then the resulting filesystems from the two builds are put into a compressed tar archive, which is finally compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="freebsd"
 		local PROJECTURL="https://github.com/freebsd/freebsd.git"
-		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.2 system"
-		local BRANCH="release/10.2.0"
+		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 10.3 system"
+		local BRANCH="release/10.3.0"
 	elif [ "$1" = "Arch Linux" ] ; then
 		local PROJECTNAME="Arch Linux"
 		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few varitations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"

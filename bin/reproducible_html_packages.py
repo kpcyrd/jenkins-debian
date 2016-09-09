@@ -450,10 +450,10 @@ def purge_old_pages():
                 if page == 'diffoscope-results':
                     continue
                 pkg = page.rsplit('.', 1)[0]
-                query = 'SELECT s.name ' + \
-                    'FROM sources AS s ' + \
-                    'WHERE s.name="{name}" ' + \
-                    'AND s.suite="{suite}" AND s.architecture="{arch}"'
+                query = "SELECT s.name " + \
+                    "FROM sources AS s " + \
+                    "WHERE s.name='{name}' " + \
+                    "AND s.suite='{suite}' AND s.architecture='{arch}'"
                 query = query.format(name=pkg, suite=suite, arch=arch)
                 result = query_db(query)
                 if not result: # actually, the query produces no results
@@ -476,10 +476,10 @@ def purge_old_pages():
             log.debug('diffoscope page presents: ' + str(presents))
             for page in presents:
                 pkg = page.rsplit('.', 1)[0]
-                query = 'SELECT s.name ' + \
-                    'FROM sources AS s ' + \
-                    'WHERE s.name="{name}" ' + \
-                    'AND s.suite="{suite}" AND s.architecture="{arch}"'
+                query = "SELECT s.name " + \
+                    "FROM sources AS s " + \
+                    "WHERE s.name='{name}' " + \
+                    "AND s.suite='{suite}' AND s.architecture='{arch}'"
                 query = query.format(name=pkg, suite=suite, arch=arch)
                 result = query_db(query)
                 if not result: # actually, the query produces no results

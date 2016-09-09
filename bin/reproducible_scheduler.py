@@ -226,8 +226,8 @@ def update_sources_db(suite, arch, sources):
         pkg = (src['Package'], src['Version'], suite, arch)
         new_pkgs.append(pkg)
     # get the current packages in the database
-    query = 'SELECT name, version, suite, architecture FROM sources ' + \
-            'WHERE suite="{}" AND architecture="{}"'.format(suite, arch)
+    query = "SELECT name, version, suite, architecture FROM sources " + \
+            "WHERE suite='{}' AND architecture='{}'".format(suite, arch)
     cur_pkgs = query_db(query)
     pkgs_to_add = []
     updated_pkgs = []
@@ -236,8 +236,8 @@ def update_sources_db(suite, arch, sources):
               different_pkgs)
     for pkg in different_pkgs:
         # pkg: (name, version, suite, arch)
-        query = 'SELECT id, version, notify_maintainer FROM sources ' + \
-                'WHERE name="{}" AND suite="{}" AND architecture="{}"'
+        query = "SELECT id, version, notify_maintainer FROM sources " + \
+                "WHERE name='{}' AND suite='{}' AND architecture='{}'"
         query = query.format(pkg[0], pkg[2], pkg[3])
         try:
             result = query_db(query)[0]
@@ -291,8 +291,8 @@ def update_sources_db(suite, arch, sources):
              rmed_pkgs)
     rmed_pkgs_id = []
     pkgs_to_rm = []
-    query = 'SELECT id FROM sources WHERE name="{}" AND suite="{}" ' + \
-            'AND architecture="{}"'
+    query = "SELECT id FROM sources WHERE name='{}' AND suite='{}' " + \
+            "AND architecture='{}'"
     for pkg in rmed_pkgs:
         result = query_db(query.format(pkg, suite, arch))
         rmed_pkgs_id.append({'deleteid': result[0][0]})
@@ -321,8 +321,8 @@ def update_sources_db(suite, arch, sources):
         transaction.commit()
 
     # finally check whether the db has the correct number of packages
-    query = 'SELECT count(*) FROM sources WHERE suite="{}" ' + \
-            'AND architecture="{}"'
+    query = "SELECT count(*) FROM sources WHERE suite='{}' " + \
+            "AND architecture='{}'"
     pkgs_end = query_db(query.format(suite, arch))
     count_new_pkgs = len(set([x[0] for x in new_pkgs]))
     if int(pkgs_end[0][0]) != count_new_pkgs:
@@ -413,16 +413,18 @@ def query_new_versions(suite, arch, limit):
 def query_old_ftbfs_versions(suite, arch, limit):
     criteria = 'status ftbfs, no bug filed, tested at least 3 days ago, ' + \
                'no new version available, sorted by last build date'
+    date = (datetime.now()-timedelta(days=3)).strftime('%Y-%m-%d %H:%M')
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 JOIN notes AS n ON n.package_id=s.id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='FTBFS'
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
-                AND r.build_date < datetime('now', '-3 days')
+                AND r.build_date < {date}
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
-                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
+                                        date=date)
     packages = query_db(query)
     print_schedule_result(suite, arch, criteria, packages)
     return packages
@@ -431,14 +433,16 @@ def query_old_ftbfs_versions(suite, arch, limit):
 def query_old_depwait_versions(suite, arch, limit):
     criteria = 'status depwait, no bug filed, tested at least 2 days ago, ' + \
                'no new version available, sorted by last build date'
+    date = (datetime.now()-timedelta(days=2)).strftime('%Y-%m-%d %H:%M')
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
-                AND r.build_date < datetime('now', '-2 days')
+                AND r.build_date < {date}
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
-                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
+                                        date=date)
     packages = query_db(query)
     print_schedule_result(suite, arch, criteria, packages)
     return packages
@@ -447,14 +451,17 @@ def query_old_depwait_versions(suite, arch, limit):
 def query_old_versions(suite, arch, limit):
     criteria = """tested at least {minimum_age} days ago, no new version available,
                sorted by last build date""".format(minimum_age=MINIMUM_AGE[arch])
+    date = (datetime.now()-timedelta(days=MINIMUM_AGE[arch]))\
+           .strftime('%Y-%m-%d %H:%M')
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status != 'blacklisted'
-                AND r.build_date < datetime('now', '-{minimum_age} day')
+                AND r.build_date < {date}
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
-                LIMIT {limit}""".format(suite=suite, arch=arch, minimum_age=MINIMUM_AGE[arch], limit=limit)
+                LIMIT {limit}""".format(suite=suite, arch=arch,
+                                        date=date, limit=limit)
     packages = query_db(query)
     print_schedule_result(suite, arch, criteria, packages)
     return packages
@@ -462,14 +469,16 @@ def query_old_versions(suite, arch, limit):
 def query_404_versions(suite, arch, limit):
     criteria = """tested at least a day ago, status 404,
                sorted by last build date"""
+    date = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d %H:%M')
     query = """SELECT DISTINCT s.id, s.name
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status = '404'
-                AND r.build_date < datetime('now', '-1 day')
+                AND r.build_date < {date}
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
-                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
+                                        date=date)
     packages = query_db(query)
     print_schedule_result(suite, arch, criteria, packages)
     return packages
@@ -591,9 +600,9 @@ def schedule_404_versions(arch, total):
 
 
 def scheduler(arch):
-    query = 'SELECT count(*) ' + \
-            'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' + \
-            'WHERE s.architecture="{arch}"'
+    query = "SELECT count(*) " + \
+            "FROM schedule AS p JOIN sources AS s ON p.package_id=s.id " + \
+            "WHERE s.architecture='{arch}'"
     total = int(query_db(query.format(arch=arch))[0][0])
     log.info('==============================================================')
     log.info('Currently scheduled packages in all suites on ' + arch + ': ' + str(total))
@@ -627,9 +636,9 @@ def scheduler(arch):
         if suite not in priotized_suite_order:
             priotized_suite_order.append(suite)
     for suite in priotized_suite_order:
-        query = 'SELECT count(*) ' \
-                'FROM schedule AS p JOIN sources AS s ON p.package_id=s.id ' \
-                'WHERE s.suite="{suite}" AND s.architecture="{arch}"'
+        query = "SELECT count(*) " \
+                "FROM schedule AS p JOIN sources AS s ON p.package_id=s.id " \
+                "WHERE s.suite='{suite}' AND s.architecture='{arch}'"
         query = query.format(suite=suite, arch=arch)
         now_queued_here[suite] = int(query_db(query)[0][0]) + \
             len(untested[suite]+new[suite]+old[suite])
@@ -676,9 +685,9 @@ if __name__ == '__main__':
         update_sources(suite)
         log.info('Sources for suite %s done at %s.', suite, datetime.now())
     purge_old_pages()
-    query = 'SELECT count(*) ' + \
-            'FROM schedule AS p JOIN sources AS s ON s.id=p.package_id ' + \
-            'WHERE s.architecture="{}"'
+    query = "SELECT count(*) " + \
+            "FROM schedule AS p JOIN sources AS s ON s.id=p.package_id " + \
+            "WHERE s.architecture='{}'"
     message = ''
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)

@@ -116,23 +116,23 @@ if arch not in ARCHS:
 if issue or status or built_after or built_before:
     formatter = dict(suite=suite, arch=arch, notes_table='')
     log.info('Querying packages with given issues/status...')
-    query = 'SELECT s.name ' + \
-            'FROM sources AS s, {notes_table} results AS r ' + \
-            'WHERE r.package_id=s.id ' + \
-            'AND s.architecture= "{arch}" ' + \
-            'AND s.suite = "{suite}" AND r.status != "blacklisted" '
+    query = "SELECT s.name " + \
+            "FROM sources AS s, {notes_table} results AS r " + \
+            "WHERE r.package_id=s.id " + \
+            "AND s.architecture= '{arch}' " + \
+            "AND s.suite = '{suite}' AND r.status != 'blacklisted' "
     if issue:
-        query += 'AND n.package_id=s.id AND n.issues LIKE "%{issue}%" '
+        query += "AND n.package_id=s.id AND n.issues LIKE '%{issue}%' "
         formatter['issue'] = issue
-        formatter['notes_table'] = 'notes AS n,'
+        formatter['notes_table'] = "notes AS n,"
     if status:
-        query += 'AND r.status = "{status}"'
+        query += "AND r.status = '{status}'"
         formatter['status'] = status
     if built_after:
-        query += 'AND r.build_date > "{built_after}" '
+        query += "AND r.build_date > '{built_after}' "
         formatter['built_after'] = built_after
     if built_before:
-        query += 'AND r.build_date < "{built_before}" '
+        query += "AND r.build_date < '{built_before}' "
         formatter['built_before'] = built_before
     results = query_db(query.format_map(formatter))
     results = [x for (x,) in results]
@@ -158,11 +158,11 @@ if notify_on_start:
 ids = []
 pkgs = []
 
-query1 = '''SELECT id FROM sources WHERE name="{pkg}" AND suite="{suite}"
-            AND architecture="{arch}"'''
-query2 = '''SELECT p.date_build_started
+query1 = """SELECT id FROM sources WHERE name='{pkg}' AND suite='{suite}'
+            AND architecture='{arch}'"""
+query2 = """SELECT p.date_build_started
             FROM sources AS s JOIN schedule as p ON p.package_id=s.id
-            WHERE p.package_id="{id}"'''
+            WHERE p.package_id='{id}'"""
 for pkg in packages:
     # test whether the package actually exists
     result = query_db(query1.format(pkg=pkg, suite=suite, arch=arch))
@@ -214,8 +214,8 @@ log.debug('date_scheduled = ' + date + ' time_delta = ' + str(time_delta))
 
 # a single person can't schedule more than 200 packages in the same day; this
 # is actually easy to bypass, but let's give some trust to the Debian people
-query = '''SELECT count(*) FROM manual_scheduler
-           WHERE requester = "{}" AND date_request > "{}"'''
+query = """SELECT count(*) FROM manual_scheduler
+           WHERE requester = '{}' AND date_request > '{}'"""
 try:
     amount = int(query_db(query.format(requester, int(time.time()-86400)))[0][0])
 except IndexError:

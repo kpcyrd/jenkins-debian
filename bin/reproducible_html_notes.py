@@ -162,9 +162,9 @@ def load_notes():
     notes = copy.copy(possible_notes)
     for package in possible_notes:   # check if every package listed on the notes
         try:                         # actually have been tested
-            query = 'SELECT s.name ' + \
-                    'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                    'WHERE s.name="{pkg}" AND r.status != ""'
+            query = "SELECT s.name " + \
+                    "FROM results AS r JOIN sources AS s ON r.package_id=s.id " + \
+                    "WHERE s.name='{pkg}' AND r.status != ''"
             query = query.format(pkg=package)
             result = query_db(query)[0]
         except IndexError:
@@ -325,9 +325,9 @@ def purge_old_notes(notes):
     for pkg in removed_pages:
         for suite in SUITES:
             try:
-                query = 'SELECT s.name ' + \
-                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                        'WHERE s.name="{pkg}" AND r.status != "" AND s.suite="{suite}"'
+                query = "SELECT s.name " + \
+                        "FROM results AS r JOIN sources AS s ON r.package_id=s.id " + \
+                        "WHERE s.name='{pkg}' AND r.status != '' AND s.suite='{suite}'"
                 query = query.format(pkg=pkg, suite=suite)
                 to_rebuild.append(query_db(query)[0][0])
             except IndexError:  # the package is not tested. this can happen if

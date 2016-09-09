@@ -202,10 +202,10 @@ filtered_issues = (
 filter_query = ''
 for issue in filtered_issues:
     if filter_query == '':
-        filter_query = 'n.issues LIKE "%' + issue + '%"'
+        filter_query = "n.issues LIKE '%%" + issue + "%%'"
         filter_html = '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
     else:
-        filter_query += ' OR n.issues LIKE "%' + issue + '%"'
+        filter_query += " OR n.issues LIKE '%%" + issue + "%%'"
         filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
 
 
@@ -470,10 +470,10 @@ def package_has_notes(package):
 
 def link_package(package, suite, arch, bugs={}, popcon=None, is_popular=None):
     url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + package + '.html'
-    query = 'SELECT n.issues, n.bugs, n.comments ' + \
-            'FROM notes AS n JOIN sources AS s ON s.id=n.package_id ' + \
-            'WHERE s.name="{pkg}" AND s.suite="{suite}" ' + \
-            'AND s.architecture="{arch}"'
+    query = """SELECT n.issues, n.bugs, n.comments
+               FROM notes AS n JOIN sources AS s ON s.id=n.package_id
+               WHERE s.name='{pkg}' AND s.suite='{suite}'
+               AND s.architecture='{arch}'"""
     css_classes = []
     if is_popular:
         css_classes += ["package-popular"]
@@ -564,9 +564,9 @@ def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultar
     reproducible.db
     """
     if not version:
-        query = 'SELECT r.version ' + \
-                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
+        query = """SELECT r.version
+                   FROM results AS r JOIN sources AS s ON r.package_id=s.id
+                   WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'"""
         query = query.format(package, suite, arch)
         version = str(query_db(query)[0][0])
     buildinfo = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
@@ -579,9 +579,9 @@ def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultar
 
 def pkg_has_rbuild(package, version=False, suite=defaultsuite, arch=defaultarch):
     if not version:
-        query = 'SELECT r.version ' + \
-                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
+        query = """SELECT r.version
+                   FROM results AS r JOIN sources AS s ON r.package_id=s.id
+                   WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'"""
         query = query.format(package, suite, arch)
         version = str(query_db(query)[0][0])
     rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + package + '_' + \
@@ -709,7 +709,7 @@ class Bug:
 class Issue:
     def __init__(self, name):
         self.name = name
-        query = 'SELECT url, description  FROM issues WHERE name="{}"'
+        query = "SELECT url, description  FROM issues WHERE name='{}'"
         result = query_db(query.format(self.name))
         try:
             self.url = result[0][0]
@@ -734,9 +734,9 @@ class NotedPkg:
         self.package = package
         self.suite = suite
         self.arch = arch
-        query = 'SELECT n.issues, n.bugs, n.comments ' + \
-                'FROM sources AS s JOIN notes AS n ON s.id=n.package_id ' + \
-                'WHERE s.name="{}" AND s.suite="{}" AND s.architecture="{}"'
+        query = """SELECT n.issues, n.bugs, n.comments
+                   FROM sources AS s JOIN notes AS n ON s.id=n.package_id
+                   WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'"""
         result = query_db(query.format(self.package, self.suite, self.arch))
         try:
             result = result[0]
@@ -757,15 +757,15 @@ class Build:
 
     def _get_package_status(self):
         try:
-            query = 'SELECT r.status, r.version, r.build_date ' + \
-                    'FROM results AS r JOIN sources AS s ' + \
-                    'ON r.package_id=s.id WHERE s.name="{}" ' + \
-                    'AND s.architecture="{}" AND s.suite="{}"'
+            query = """SELECT r.status, r.version, r.build_date
+                       FROM results AS r JOIN sources AS s
+                       ON r.package_id=s.id WHERE s.name='{}'
+                       AND s.architecture='{}' AND s.suite='{}'"""
             query = query.format(self.package, self.arch, self.suite)
             result = query_db(query)[0]
         except IndexError:  # not tested, look whether it actually exists
-            query = 'SELECT version FROM sources WHERE name="{}" ' + \
-                    'AND suite="{}" AND architecture="{}"'
+            query = """SELECT version FROM sources WHERE name='{}'
+                       AND suite='{}' AND architecture='{}'"""
             query = query.format(self.package, self.suite, self.arch)
             try:
                 result = query_db(query)[0][0]
@@ -795,7 +795,7 @@ class Package:
             self.status = self._status[defaultsuite][defaultarch].status
         except KeyError:
             self.status = False
-        query = 'SELECT notify_maintainer FROM sources WHERE name="{}"'
+        query = "SELECT notify_maintainer FROM sources WHERE name='{}'"
         try:
             result = int(query_db(query.format(self.name))[0][0])
         except IndexError:

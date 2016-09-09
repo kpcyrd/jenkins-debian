@@ -255,8 +255,8 @@ and log in using link:https://sso.debian.org[Debian SSO].
 ==== reproducible FreeBSD
 
 * useful improvements:
-** investigate how to use tmpfs on freebsd and build there. see mdconfig(8)
-** find a way to be informed about updates and keep it updated
+** investigate how to use tmpfs on freebsd and build there. see mdmfs(8)
+** find a way to be informed about updates and keep it updated - see 'freebsd-update cron' and 'pkg audit'.  The latter is run periodic(8) as part of the nightly root@ emails.
 ** modify PATH, uid, gid and USER too and host+domainname as well. The VM is only used for this, so we could change the host+domainname temporaily between builds too.
 ** add freebsd vm as node to jenkins and run the script directly there, saves lot of ssh hassle
 ** run diffoscope nativly

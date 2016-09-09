@@ -11,6 +11,7 @@
 # Build quite all index_* pages
 
 from reproducible_common import *
+from sqlalchemy import select, and_, or_, func, bindparam, desc
 
 """
 Reference doc for the folowing lists:
@@ -51,35 +52,255 @@ Technically speaking, a page can be empty (we all love nonsense) but every
 section must have at least a `query` defining what to file in.
 """
 
-# filter_query is defined in reproducible_common.py and excludes some FTBFS issues
+timespan_date_map = {}
+timespan_date_map[24] = (datetime.now()-timedelta(hours=24)).strftime('%Y-%m-%d %H:%M')
+timespan_date_map[48] = (datetime.now()-timedelta(hours=48)).strftime('%Y-%m-%d %H:%M')
+
+# sqlalchemy table definitions needed for queries
+results = db_table('results')
+sources = db_table('sources')
+notes = db_table('notes')
+
+# filtered_issues is defined in reproducible_common.py and
+# can be used to excludes some FTBFS issues
+filter_issues_list = []
+for issue in filtered_issues:
+    filter_issues_list.append(notes.c.issues.contains(issue))
+if not filtered_issues:
+    filter_issues_list = [None]
+
+count_results = select(
+    [func.count(results.c.id)]
+).select_from(
+    results.join(sources)
+).where(
+    and_(
+        sources.c.suite == bindparam('suite'),
+        sources.c.architecture == bindparam('arch')
+    )
+)
+
+select_sources = select(
+    [sources.c.name]
+).select_from(
+    results.join(sources)
+).where(
+    and_(
+        sources.c.suite == bindparam('suite'),
+        sources.c.architecture == bindparam('arch')
+    )
+)
+
 queries = {
-    'count_total': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}"',
-    'count_timespan': 'SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND build_date > datetime("now", "-{timespan} hours")',
-    'reproducible_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY r.build_date DESC',
-    'reproducible_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-24 hours") ORDER BY r.build_date DESC',
-    'reproducible_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" AND r.build_date > datetime("now", "-48 hours") ORDER BY r.build_date DESC',
-    'reproducible_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="reproducible" ORDER BY name',
-    'FTBR_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "unreproducible" ORDER BY build_date DESC',
-    'FTBR_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "unreproducible" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'FTBR_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "unreproducible" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBR_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "unreproducible" ORDER BY name',
-    'FTBFS_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY build_date DESC',
-    'FTBFS_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'FTBFS_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'FTBFS_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "FTBFS" ORDER BY s.name',
-    'FTBFS_filtered': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id NOT IN (SELECT n.package_id FROM NOTES AS n WHERE ' + filter_query + ' ) ORDER BY s.name',
-    'FTBFS_caused_by_us': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status = "FTBFS" AND r.package_id IN (SELECT n.package_id FROM NOTES AS n WHERE ' + filter_query + ' ) ORDER BY s.name',
-    '404_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY build_date DESC',
-    '404_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "404" ORDER BY name',
-    'depwait_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" ORDER BY build_date DESC',
-    'depwait_all_abc': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" ORDER BY name',
-    'depwait_last24h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" AND build_date > datetime("now", "-24 hours") ORDER BY build_date DESC',
-    'depwait_last48h': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "depwait" AND build_date > datetime("now", "-48 hours") ORDER BY build_date DESC',
-    'not_for_us_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "not for us" ORDER BY name',
-    'blacklisted_all': 'SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND status = "blacklisted" ORDER BY name',
-    'notes': 'SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" ORDER BY r.build_date DESC',
-    'no_notes': 'SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY r.build_date DESC',
-    'notification': 'SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.suite="{suite}" AND s.architecture="{arch}" AND r.status="{status}" AND s.notify_maintainer = 1',
+    "count_total": count_results,
+    "count_timespan":
+        count_results.where(
+                results.c.build_date > bindparam('timespan_date'),
+        ),
+    "reproducible_all":
+        select_sources.where(
+            results.c.status == 'reproducible',
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "reproducible_last24h":
+        select_sources.where(
+            results.c.build_date > timespan_date_map[24]
+        ),
+    "reproducible_last48h":
+        select_sources.where(
+            results.c.build_date > timespan_date_map[48],
+        ),
+    "reproducible_all_abc":
+        select_sources.where(
+            results.c.status == 'reproducible',
+        ).order_by(
+            sources.c.name
+        ),
+    "FTBR_all":
+        select_sources.where(
+            results.c.status == 'unreproducible',
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBR_last24h":
+        select_sources.where(
+            and_(
+                results.c.status == 'unreproducible',
+                results.c.build_date > timespan_date_map[24],
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBR_last48h":
+        select_sources.where(
+            and_(
+                results.c.status == 'unreproducible',
+                results.c.build_date > timespan_date_map[48],
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBR_all_abc":
+        select_sources.where(
+            results.c.status == 'unreproducible',
+        ).order_by(
+            sources.c.name
+        ),
+    "FTBFS_all":
+        select_sources.where(
+            results.c.status == 'FTBFS',
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBFS_last24h":
+        select_sources.where(
+            and_(
+                results.c.status == 'FTBFS',
+                results.c.build_date > timespan_date_map[24],
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBFS_last48h":
+        select_sources.where(
+            and_(
+                results.c.status == 'FTBFS',
+                results.c.build_date > timespan_date_map[48],
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBFS_all_abc":
+        select_sources.where(
+            results.c.status == 'FTBFS',
+        ).order_by(
+            sources.c.name
+        ),
+    "FTBFS_filtered":
+        select_sources.where(
+            and_(
+                results.c.status == 'FTBFS',
+                sources.c.id.notin_(
+                    select(
+                        [notes.c.package_id]
+                    ).select_from(
+                        notes
+                    ).where(
+                        or_(*filter_issues_list)
+                    )
+                )
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "FTBFS_caused_by_us":
+        select_sources.where(
+            and_(
+                results.c.status == 'FTBFS',
+                sources.c.id.in_(
+                    select(
+                        [notes.c.package_id]
+                    ).select_from(
+                        notes
+                    ).where(
+                        or_(*filter_issues_list)
+                    )
+                )
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "404_all":
+        select_sources.where(
+            results.c.status == '404',
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "404_all_abc":
+        select_sources.where(
+            results.c.status == '404',
+        ).order_by(
+            sources.c.name
+        ),
+    "depwait_all":
+        select_sources.where(
+            results.c.status == 'depwait',
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "depwait_all_abc":
+        select_sources.where(
+            results.c.status == 'depwait',
+        ).order_by(
+            sources.c.name
+        ),
+    "depwait_last24h":
+        select_sources.where(
+            and_(
+                results.c.status == 'depwait',
+                results.c.build_date > timespan_date_map[24],
+
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "depwait_last48h":
+        select_sources.where(
+            and_(
+                results.c.status == 'depwait',
+                results.c.build_date > timespan_date_map[48],
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "not_for_us_all":
+        select_sources.where(
+            and_(
+                results.c.status == 'not for us',
+
+            )
+        ).order_by(
+            sources.c.name
+        ),
+    "blacklisted_all":
+        select_sources.where(
+            results.c.status == 'blacklisted',
+        ).order_by(
+            sources.c.name
+        ),
+    "notes":
+        select(
+            [sources.c.name]
+        ).select_from(
+            sources.join(results).join(notes)
+        ).where(
+            and_(
+                results.c.status == bindparam('status'),
+                sources.c.suite == bindparam('suite'),
+                sources.c.architecture == bindparam('arch')
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "no_notes":
+        select_sources.where(
+            and_(
+                results.c.status == bindparam('status'),
+                sources.c.id.notin_(select([notes.c.package_id]).select_from(notes))
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
+    "notification":
+        select_sources.where(
+            and_(
+                results.c.status == bindparam('status'),
+                sources.c.notify_maintainer == 1
+            )
+        ).order_by(
+            desc(results.c.build_date)
+        ),
 }
 
 pages = {
@@ -292,7 +513,7 @@ pages = {
         'notes': True,
         'title': 'Packages with notes',
         'header': '<p>There are {tot} packages with notes in {suite}/{arch}.</p>',
-        'header_query': 'SELECT count(*) FROM (SELECT * FROM sources AS s JOIN notes AS n ON n.package_id=s.id WHERE s.suite="{suite}" AND s.architecture="{arch}" GROUP BY s.name) AS tmp',
+        'header_query': "SELECT count(*) FROM (SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id WHERE s.suite='{suite}' AND s.architecture='{arch}' GROUP BY s.name) AS tmp",
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -348,7 +569,7 @@ pages = {
         'notes_hint': True,
         'title': 'Packages without notes',
         'header': '<p>There are {tot} faulty packages without notes in {suite}/{arch}.{hint}</p>',
-        'header_query': 'SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ("unreproducible", "FTBFS", "blacklisted") AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite="{suite}" AND s.architecture="{arch}")',
+        'header_query': "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='{suite}' AND s.architecture='{arch}') AS tmp",
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -379,7 +600,7 @@ pages = {
         'nosuite': True,
         'title': 'Packages with notification enabled',
         'header': '<p>The following {tot} packages have notifications enabled. (This page only shows packages in {suite}/{arch} though notifications are send for these packages in unstable and experimental in all tested architectures.) On status changes (e.g. reproducible → unreproducible) the system notifies the maintainer and relevant parties via an email to $srcpackage@packages.debian.org. Notifications are collected and send once a day to avoid flooding.<br />Please ask us to enable notifications for your package(s) in our IRC channel #debian-reproducible or via <a href="mailto:reproducible-builds@lists.alioth.debian.org">mail</a> - but ask your fellow team members first if they want to receive such notifications.</p>',
-        'header_query': 'SELECT COUNT(*) FROM sources WHERE suite="{suite}" AND architecture="{arch}" AND notify_maintainer = 1',
+        'header_query': "SELECT COUNT(*) FROM sources WHERE suite='{suite}' AND architecture='{arch}' AND notify_maintainer = 1",
         'body': [
             {
                 'icon_status': 'FTBR',
@@ -413,7 +634,7 @@ pages = {
 def build_leading_text_section(section, rows, suite, arch):
     html = '<p>\n' + tab
     total = len(rows)
-    count_total = int(query_db(queries['count_total'].format(suite=suite, arch=arch))[0][0])
+    count_total = int(query_db(queries['count_total'].params({'suite': suite, 'arch': arch}))[0][0])
     try:
         percent = round(((total/count_total)*100), 1)
     except ZeroDivisionError:
@@ -433,10 +654,13 @@ def build_leading_text_section(section, rows, suite, arch):
         html += '</a>'
     html += '\n' + tab
     if section.get('text') and section.get('timespan'):
-        count = len(query_db(queries[section['query2']].format(suite=suite, arch=arch)))
+        count = len(query_db(queries[section['query2']].params(
+            {'suite': suite, 'arch': arch})))
         percent = round(((count/count_total)*100), 1)
         timespan = section['timespan']
-        timespan_count = int(query_db(queries['count_timespan'].format(suite=suite, arch=arch, timespan=timespan))[0][0])
+        timespan_date = timespan_date_map[timespan]
+        timespan_count = int(query_db(queries['count_timespan'].params(
+            {'suite': suite, 'arch': arch, 'timespan_date': timespan_date}))[0][0])
         try:
             timespan_percent = round(((total/timespan_count)*100), 1)
         except ZeroDivisionError:
@@ -445,7 +669,8 @@ def build_leading_text_section(section, rows, suite, arch):
             timespan_percent = 0
 
         html += section['text'].substitute(tot=total, percent=percent,
-                                           timespan_percent=timespan_percent, timespan_count=timespan_count,
+                                           timespan_percent=timespan_percent,
+                                           timespan_count=timespan_count,
                                            count_total=count_total,
                                            count=count, suite=suite, arch=arch)
     elif section.get('text'):
@@ -463,18 +688,18 @@ def build_page_section(page, section, suite, arch):
             suite = defaultsuite
             arch = defaultarch
         if pages[page].get('notes') and pages[page]['notes']:
-            query = queries[section['query']].format(
-                status=section['db_status'], suite=suite, arch=arch)
+            query = queries[section['query']].params({
+                'status': section['db_status'], 'suite': suite, 'arch': arch})
         else:
-            query = queries[section['query']].format(suite=suite, arch=arch)
+            query = queries[section['query']].params({'suite': suite, 'arch': arch})
         rows = query_db(query)
     except:
-        print_critical_message('A query failed: ' + query)
+        print_critical_message('A query failed: %s' % query)
         raise
     html = ''
     footnote = True if rows else False
     if not rows:                            # there are no package in this set
-        log.debug('empty query: ' + query)  # do not output anything.
+        log.debug('empty query: %s' % query)  # do not output anything.
         return (html, footnote)
     html += build_leading_text_section(section, rows, suite, arch)
     html += '<p>\n' + tab + '<code>\n'

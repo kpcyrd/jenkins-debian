@@ -10,9 +10,16 @@
 
 from reproducible_common import *
 from reproducible_html_indexes import build_leading_text_section
+from sqlalchemy import select, func, cast, Integer, and_, bindparam
 import glob
 
 bugs = get_bugs()
+
+# sqlalchemy table definitions needed for queries
+results = db_table('results')
+sources = db_table('sources')
+schedule = db_table('schedule')
+stats_build = db_table('stats_build')
 
 def convert_into_status_html(status):
     if status != 'None':
@@ -26,15 +33,43 @@ def generate_schedule(arch):
     """ the schedule pages are very different than others index pages """
     log.info('Building the schedule index page for ' + arch + '...')
     title = 'Packages currently scheduled on ' + arch + ' for testing for build reproducibility'
-    query = 'SELECT sch.date_scheduled, s.suite, s.architecture, s.name, ' + \
-            'r.status, r.build_duration, ' + \
-            '(SELECT coalesce(AVG(h.build_duration), 0) FROM stats_build AS h WHERE h.status IN ("reproducible", "unreproducible") AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture) ' + \
-            'FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
-            'WHERE sch.date_build_started IS NULL AND s.architecture="{arch}" ORDER BY sch.date_scheduled'
-    # 'AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture' in this query and the query below is needed due to not using package_id in the stats_build table, which should be fixed...
+
+    # 'AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture'
+    # in this query and the query below is needed due to not using package_id
+    # in the stats_build table, which should be fixed...
+    averagesql = select([
+        func.coalesce(func.avg(cast(stats_build.c.build_duration, Integer)), 0)
+    ]).where(
+        and_(
+            stats_build.c.status.in_(('reproducible', 'unreproducible')),
+            stats_build.c.name == sources.c.name,
+            stats_build.c.suite == sources.c.suite,
+            stats_build.c.architecture == sources.c.architecture,
+        )
+    ).as_scalar()
+
+    query = select([
+        schedule.c.date_scheduled,
+        sources.c.suite,
+        sources.c.architecture,
+        sources.c.name,
+        results.c.status,
+        results.c.build_duration,
+        averagesql
+    ]).select_from(
+        sources.join(schedule).join(results, isouter=True)
+    ).where(
+        and_(
+            schedule.c.date_build_started == None,
+            sources.c.architecture == bindparam('arch'),
+        )
+    ).order_by(
+        schedule.c.date_scheduled
+    )
+
     text = Template('$tot packages are currently scheduled for testing on $arch:')
     html = ''
-    rows = query_db(query.format(arch=arch))
+    rows = query_db(query.params({'arch': arch}))
     html += build_leading_text_section({'text': text}, rows, defaultsuite, arch)
     html += generate_live_status_table(arch)
     html += '<p><table class="scheduled">\n' + tab
@@ -61,15 +96,40 @@ def generate_schedule(arch):
 
 
 def generate_live_status_table(arch):
-    query = 'SELECT s.id, s.suite, s.architecture, s.name, s.version, ' + \
-            'p.date_build_started, r.status, r.build_duration, ' + \
-            '(SELECT coalesce(AVG(h.build_duration), 0) FROM stats_build AS h WHERE h.status IN ("reproducible", "unreproducible") AND h.name=s.name AND h.suite=s.suite AND h.architecture=s.architecture) ' + \
-            ', p.job ' + \
-            'FROM sources AS s JOIN schedule AS p ON p.package_id=s.id LEFT JOIN results AS r ON s.id=r.package_id ' + \
-            'WHERE p.date_build_started IS NOT NULL AND s.architecture="{arch}" ' + \
-            'ORDER BY p.date_build_started DESC'
+    averagesql = select([
+        func.coalesce(func.avg(cast(stats_build.c.build_duration, Integer)), 0)
+    ]).where(
+        and_(
+            stats_build.c.status.in_(('reproducible', 'unreproducible')),
+            stats_build.c.name == sources.c.name,
+            stats_build.c.suite == sources.c.suite,
+            stats_build.c.architecture == sources.c.architecture,
+        )
+    ).as_scalar()
+
+    query = select([
+        sources.c.id,
+        sources.c.suite,
+        sources.c.architecture,
+        sources.c.name,
+        sources.c.version,
+        schedule.c.date_build_started,
+        results.c.status,
+        results.c.build_duration,
+        averagesql,
+        schedule.c.job,
+    ]).select_from(
+        sources.join(schedule).join(results, isouter=True)
+    ).where(
+        and_(
+            schedule.c.date_build_started != None,
+            sources.c.architecture == bindparam('arch'),
+        )
+    ).order_by(
+        schedule.c.date_scheduled
+    )
     html = ''
-    rows = query_db(query.format(arch=arch))
+    rows = query_db(query.params({'arch': arch}))
     html += '<p><table class="scheduled">\n' + tab
     html += '<tr><th class="center">#</th><th class="center">src pkg id</th><th class="center">suite</th><th class="center">arch</th>'
     html += '<th class=\"center\">source package</th><th class=\"center\">version</th></th>'
@@ -105,13 +165,25 @@ def generate_oldies(arch):
     title = 'Oldest results on ' + arch
     html = ''
     for suite in SUITES:
-        query = 'SELECT s.suite, s.architecture, s.name, r.status, r.build_date ' + \
-                'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' + \
-                'WHERE s.suite="{suite}" AND s.architecture="{arch}" ' + \
-                'AND r.status != "blacklisted" ' + \
-                'ORDER BY r.build_date LIMIT 15'
+        query = select([
+            sources.c.suite,
+            sources.c.architecture,
+            sources.c.name,
+            results.c.status,
+            results.c.build_date
+        ]).select_from(
+            results.join(sources)
+        ).where(
+            and_(
+                sources.c.suite == bindparam('suite'),
+                sources.c.architecture == bindparam('arch'),
+                results.c.status != 'blacklisted'
+            )
+        ).order_by(
+            results.c.build_date
+        ).limit(15)
         text = Template('Oldest results on $suite/$arch:')
-        rows = query_db(query.format(arch=arch,suite=suite))
+        rows = query_db(query.params({'arch': arch, 'suite': suite}))
         html += build_leading_text_section({'text': text}, rows, suite, arch)
         html += '<p><table class="scheduled">\n' + tab
         html += '<tr><th class="center">#</th><th class="center">suite</th><th class="center">arch</th>'

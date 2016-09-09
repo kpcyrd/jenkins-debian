@@ -281,7 +281,9 @@ and log in using link:https://sso.debian.org[Debian SSO].
 ** chown -R jenkins:jenkins /srv/
 
 * system maintenance
-** upgrade the VM to FreeBSD 10.3 LTS
+** upgraded the VM to FreeBSD 10.2
+*** done with: freebsd-update upgrade -r 10.2
+** TODO: upgrade the VM to FreeBSD 10.3 LTS
 
 ==== reproducible Fedora
 

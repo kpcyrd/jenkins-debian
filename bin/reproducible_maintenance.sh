@@ -204,7 +204,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 				for pkg in $CANDIDATES ; do
 					QUERY="SELECT s.name FROM sources AS s JOIN results AS r ON r.package_id=s.id
 						   WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND (r.status='FTBFS' OR r.status='depwait') AND s.name='$pkg'"
-					TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(sqlite3 -init $INIT $PACKAGES_DB "$QUERY")
+					TO_SCHEDULE=${TO_SCHEDULE:+"$TO_SCHEDULE "}$(query_db "$QUERY")
 				done
 				schedule_packages $TO_SCHEDULE
 			done
@@ -252,7 +252,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			ORDER BY p.date_scheduled
 		"
 	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
-	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed." 
+	query_db "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	if grep -q '|' $PACKAGES ; then
 		echo
 		echo "Packages found where the build was started more than 48h ago:"
@@ -260,7 +260,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		echo
 		for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
 			echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
-			sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id = '$PKG';"
+			query_db "DELETE FROM schedule WHERE package_id = '$PKG';"
 		done
 		echo "Packages have been removed from scheduling."
 		echo
@@ -275,7 +275,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXX)
 	QUERY="SELECT name, suite, architecture FROM removed_packages
 			LIMIT 25"
-	sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+	query_db "$QUERY" > $PACKAGES 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 	if grep -q '|' $PACKAGES ; then
 		DIRTY=true
 		echo
@@ -289,7 +289,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			ARCH=$(echo "$pkg" | cut -d '|' -f 3)
 			QUERY="DELETE FROM removed_packages
 				WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
-			sqlite3 -init $INIT ${PACKAGES_DB} "$QUERY"
+			query_db "$QUERY"
 			cd $DEBIAN_BASE
 			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
 		done

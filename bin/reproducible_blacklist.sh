@@ -14,20 +14,20 @@ common_init "$@"
 blacklist_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	for PKG in $PACKAGES ; do
-		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+		VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+		PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 		cleanup_pkg_files
-		sqlite3 -init $INIT ${PACKAGES_DB} "REPLACE INTO results (package_id, version, status, build_date, job) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE', '');"
-		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM schedule WHERE package_id='$PKGID'"
+		query_db "REPLACE INTO results (package_id, version, status, build_date, job) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE', '');"
+		query_db "DELETE FROM schedule WHERE package_id='$PKGID'"
 	done
 }
 
 revert_blacklisted_packages() {
 	DATE=$(date +'%Y-%m-%d %H:%M')
 	for PKG in $PACKAGES ; do
-		VERSION=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-		PKGID=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-		sqlite3 -init $INIT ${PACKAGES_DB} "DELETE FROM results WHERE package_id='$PKGID' AND status='blacklisted';"
+		VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+		PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+		query_db "DELETE FROM results WHERE package_id='$PKGID' AND status='blacklisted';"
 	done
 }
 
@@ -35,7 +35,7 @@ check_candidates() {
 	PACKAGES=""
 	TOTAL=0
 	for PKG in $CANDIDATES ; do
-		RESULT=$(sqlite3 -init $INIT ${PACKAGES_DB} "SELECT name from sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+		RESULT=$(query_db "SELECT name from sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 		if [ ! -z "$RESULT" ] ; then
 			PACKAGES="$PACKAGES $RESULT"
 			let "TOTAL+=1"

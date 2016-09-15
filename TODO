@@ -377,6 +377,23 @@ $ du -hd1 | sort -h | tail -n 6
 242G    .
 ----
 
+==== reproducible qubes
+
+* dont forget: rm holger@profitbricks-build3-amd64:qubes-test/
+* dont forget: rm userContent/qubes/q(1|2) on jenkins
+* add qubes test on pb3 / t.r-b.o
+----
+        git clone https://github.com/qubesos/qubes-builder
+        make get-sources BUILDERCONF=scripts/travis-builder.conf COMPONENTS=installer-qubes-os
+        export DIST_DOM0=fc23
+        export USE_QUBES_REPO_VERSION=3.2
+        export INSTALLER_KICKSTART=/tmp/qubes-installer/conf/travis-iso.ks
+
+        make qubes iso BUILDERCONF=scripts/travis-builder.conf VERBOSE=0 COMPONENTS=installer-qubes-os
+----
+* pb3 has been modified manually:  apt install createrepo python-yaml
+* once this iso is being tested, it will be interesting to build the Qubes templates as well, as those images (Qubes templates are images) will be copied on the installation iso. the above iso is a stripped down iso without templates… (and not the real thing)
+
 ==== reproducible guix
 
 * there's no "apt-get install", because of non-FHS conformance, but see https://www.gnu.org/software/guix/download/

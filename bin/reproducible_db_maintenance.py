@@ -573,6 +573,24 @@ schema_updates = {
         '''DROP TABLE stats_meta_pkg_state;''',
         '''ALTER TABLE stats_meta_pkg_state_tmp RENAME TO stats_meta_pkg_state;''',
         "INSERT INTO rb_schema (version, date) VALUES (28, '" + now + "')"],
+
+    # THE FOLLOWING UPDATE CAN ONLY BE PREFORMED ON POSTGRES DATABASE
+
+    29: [ # Add auto incrementing to the id columns of some tables
+        "CREATE SEQUENCE schedule_id_seq",
+        "ALTER TABLE schedule ALTER id SET DEFAULT NEXTVAL('schedule_id_seq')",
+        "CREATE SEQUENCE manual_scheduler_id_seq",
+        """ALTER TABLE manual_scheduler ALTER id SET DEFAULT
+            NEXTVAL('manual_scheduler_id_seq')""",
+        "CREATE SEQUENCE sources_id_seq",
+        "ALTER TABLE sources ALTER id SET DEFAULT NEXTVAL('sources_id_seq')",
+        "CREATE SEQUENCE stats_build_id_seq",
+        """ALTER TABLE stats_build ALTER id SET DEFAULT
+            NEXTVAL('stats_build_id_seq')""",
+        "CREATE SEQUENCE results_id_seq",
+        "ALTER TABLE results ALTER id SET DEFAULT NEXTVAL('results_id_seq')",
+        "INSERT INTO rb_schema (version, date) VALUES (29, '" + now + "')"
+    ],
 }
 
 

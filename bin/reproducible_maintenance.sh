@@ -14,6 +14,12 @@ common_init "$@"
 DIRTY=false
 REP_RESULTS=/srv/reproducible-results
 
+
+# query reproducible database, print output
+query_to_print() {
+	printf ".width 0 25 \n $@ ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB}
+}
+
 # backup db
 if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	echo "$(date -u) - backup db and update public copy."
@@ -256,7 +262,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	if grep -q '|' $PACKAGES ; then
 		echo
 		echo "Packages found where the build was started more than 48h ago:"
-		printf ".width 0 25 \n $QUERY ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+		query_to_print "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 		echo
 		for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
 			echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
@@ -281,7 +287,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		echo
 		echo "Found files relative to old packages, no more in the archive:"
 		echo "Removing these removed packages from database:"
-		printf ".width 25 12 \n $QUERY ;" | sqlite3 -init $INIT -header -column ${PACKAGES_DB} 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
+		query_to_print "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 		echo
 		for pkg in $(cat $PACKAGES) ; do
 			PKGNAME=$(echo "$pkg" | cut -d '|' -f 1)

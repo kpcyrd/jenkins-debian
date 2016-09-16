@@ -39,6 +39,11 @@ query_db() {
 	sqlite3 -init ${INIT} ${PACKAGES_DB} "$@"
 }
 
+# query reproducible database, output to csv format
+query_to_csv() {
+	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "$@"
+}
+
 # common variables
 REPRODUCIBLE_URL=https://tests.reproducible-builds.org
 DEBIAN_URL=https://tests.reproducible-builds.org/debian
@@ -683,7 +688,23 @@ create_png_from_table() {
 	if [ $1 -eq 1 ] ; then
 		# not sure if it's worth to generate the following query...
 		WHERE_EXTRA="AND architecture='$ARCH'"
-		sqlite3 -init ${INIT} --nullvalue 0 -csv ${PACKAGES_DB} "SELECT s.datum,
+
+		# This query becomes much more obnoxious when gaining
+		# compatibility with postgres
+		query_to_csv "SELECT stats.datum,
+			 COALESCE(reproducible_testing,0) AS reproducible_testing,
+			 COALESCE(reproducible_unstable,0) AS reproducible_unstable,
+			 COALESCE(reproducible_experimental,0) AS reproducible_experimental,
+			 COALESCE(unreproducible_testing,0) AS unreproducible_testing,
+			 COALESCE(unreproducible_unstable,0) AS unreproducible_unstable,
+			 COALESCE(unreproducible_experimental,0) AS unreproducible_experimental,
+			 COALESCE(FTBFS_testing,0) AS FTBFS_testing,
+			 COALESCE(FTBFS_unstable,0) AS FTBFS_unstable,
+			 COALESCE(FTBFS_experimental,0) AS FTBFS_experimental,
+			 COALESCE(other_testing,0) AS other_testing,
+			 COALESCE(other_unstable,0) AS other_unstable,
+			 COALESCE(other_experimental,0) AS other_experimental
+			FROM (SELECT s.datum,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA),0) AS reproducible_testing,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS reproducible_unstable,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS reproducible_experimental,
@@ -696,18 +717,19 @@ create_png_from_table() {
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA) AS other_testing,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS other_unstable,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS other_experimental
-			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum" >> ${TABLE[$1]}.csv
+			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum) as stats
+			ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
 		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+		query_to_csv "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
+		query_to_csv "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 8 ] ; then
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[3]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+		query_to_csv "SELECT ${FIELDS[$1]} from ${TABLE[3]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 9 ] ; then
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT datum, $REPRODUCIBLE_DONE, $REPRODUCIBLE_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
+		query_to_csv "SELECT datum, $REPRODUCIBLE_DONE, $REPRODUCIBLE_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv
 	else
-		sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
+		query_to_csv "SELECT ${FIELDS[$1]} from ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	fi
 	# this is a gross hack: normally we take the number of colors a table should have...
 	#  for the builds_age table we only want one color, but different ones, so this hack:

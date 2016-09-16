@@ -429,7 +429,7 @@ create_suite_arch_stats_page() {
 	write_icon
 	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) blacklisted packages neither.</p>"
 	write_page "<p>"
-	write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
+	write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do
 		# recreate png once a day
 		if [ ! -f $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] ; then
@@ -468,7 +468,7 @@ create_dashboard_page() {
 	# write suite graphs
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
-			write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+			write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 		done
 		SUITE="unstable"
 		if [ "$ARCH" = "amd64" ] ; then
@@ -543,7 +543,7 @@ create_dashboard_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	# do other global graphs
 	for i in 8 9 3 7 4 5 ; do
-		write_page " <a href=\"/debian/${TABLE[$i]}.png\"><img src=\"/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
+		write_page " <a href=\"/debian/${TABLE[$i]}.png\"><img src=\"/debian/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 		# redo pngs once a day
 		if [ ! -f $DEBIAN_BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[$i]}.png ] ; then
 			create_png_from_table $i ${TABLE[$i]}.png
@@ -569,7 +569,7 @@ create_performance_page() {
 	# arch performance stats
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
-		write_page " <a href=\"/debian/${TABLE[1]}_$ARCH.png\"><img src=\"/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
+		write_page " <a href=\"/debian/${TABLE[1]}_$ARCH.png\"><img src=\"/debian/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
 		if [ ! -f $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
@@ -580,7 +580,7 @@ create_performance_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
-			write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+			write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 		done
 		write_page "</p><p style=\"clear:both;\">"
 	done

@@ -145,8 +145,15 @@ update_db_and_html() {
 			echo "$(date -u +'%Y-%m-%d %H:%M') $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
 		fi
 	fi
-	query_db "REPLACE INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
-	query_db "REPLACE INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
+	RESULTID=$(query_db "SELECT id FROM results WHERE package_id=$SRCPKGID")
+	# Insert or replace existing entry in results table
+	if [ ! -z "$RESULTID" ] ; then
+		query_db "UPDATE results set package_id='$SRCPKGID', version='$VERSION', status='$STATUS', build_date='$DATE', build_duration='$DURATION', node1='$NODE1', node2='$NODE2', job='$JOB' WHERE id=$RESULTID" || \
+		query_db "UPDATE results set package_id='$SRCPKGID', version='$VERSION', status='$STATUS', build_date='$DATE', build_duration='$DURATION', node1='$NODE1', node2='$NODE2', job='$JOB' WHERE id=$RESULTID"
+	else
+		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
+		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
+	fi
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job, schedule_message) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB', '$SCHEDULE_MESSAGE')" || \
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job, schedule_message) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB', '$SCHEDULE_MESSAGE')"
@@ -195,7 +202,7 @@ handle_404() {
 	log_warning "Download of ${SRCPACKAGE} sources from ${SUITE} failed."
 	ls -l ${SRCPACKAGE}* | log_file -
 	log_warning "Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate. Sleeping 30m as this should not happen."
-	DURATION=''
+	DURATION=0
 	EVERSION="None"
 	update_rbuildlog
 	update_db_and_html "404"
@@ -218,7 +225,7 @@ handle_depwait() {
 handle_not_for_us() {
 	# a list of valid architecture for this package should be passed to this function
 	log_info "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped."
-	DURATION=''
+	DURATION=0
 	update_rbuildlog
 	update_db_and_html "not for us"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi

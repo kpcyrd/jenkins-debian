@@ -249,12 +249,13 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# find packages which build didnt end correctly
 	#
 	echo "$(date -u) - Rescheduling builds which didn't end correctly."
+	DATE=$(date '+%Y-%m-%d %H:%M' -d "-2 days")
 	QUERY="
 		SELECT s.id, s.name, p.date_scheduled, p.date_build_started
 			FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
 			WHERE p.date_scheduled != ''
 			AND p.date_build_started IS NOT NULL
-			AND p.date_build_started < datetime('now', '-48 hours')
+			AND p.date_build_started < '$DATE'
 			ORDER BY p.date_scheduled
 		"
 	PACKAGES=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)

@@ -17,7 +17,12 @@ blacklist_packages() {
 		VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 		PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 		cleanup_pkg_files
-		query_db "REPLACE INTO results (package_id, version, status, build_date, job) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE', '');"
+		RESULTID=$(query_db "SELECT id FROM results WHERE package_id=$PKGID")
+		if [ ! -z "$RESULTID" ] ; then
+			query_db "UPDATE results set package_id='$PKGID', version='$VERSION', status='blacklisted', build_date='$DATE', job='' WHERE id=$RESULTID;"
+		else
+			query_db "INSERT into results (package_id, version, status, build_date, job) VALUES ('$PKGID', '$VERSION', 'blacklisted', '$DATE', '');"
+		fi
 		query_db "DELETE FROM schedule WHERE package_id='$PKGID'"
 	done
 }

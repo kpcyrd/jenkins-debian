@@ -103,7 +103,7 @@ YLABEL[9]="Amount of bugs open / closed"
 # update package + build stats
 #
 update_suite_arch_stats() {
-	RESULT=$(query_db "SELECT datum,suite from ${TABLE[0]} WHERE datum = \"$DATE\" AND suite = \"$SUITE\" AND architecture = \"$ARCH\"")
+	RESULT=$(query_db "SELECT datum,suite from ${TABLE[0]} WHERE datum = '$DATE' AND suite = '$SUITE' AND architecture = '$ARCH'")
 	if [ -z $RESULT ] ; then
 		echo "Updating packages and builds stats for $SUITE/$ARCH in $DATE."
 		ALL=$(query_db "SELECT count(name) FROM sources WHERE suite='${SUITE}' AND architecture='$ARCH'")
@@ -130,9 +130,9 @@ update_suite_arch_stats() {
 		else
 			UNTESTED=0
 		fi
-		query_db "INSERT INTO ${TABLE[0]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", $UNTESTED, $GOOD, $BAD, $UGLY, $REST)" 
-		query_db "INSERT INTO ${TABLE[1]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
-		query_db "INSERT INTO ${TABLE[2]} VALUES (\"$DATE\", \"$SUITE\", \"$ARCH\", \"$DIFFG\", \"$DIFFB\", \"$DIFFU\")"
+		query_db "INSERT INTO ${TABLE[0]} VALUES ('$DATE', '$SUITE', '$ARCH', $UNTESTED, $GOOD, $BAD, $UGLY, $REST)"
+		query_db "INSERT INTO ${TABLE[1]} VALUES ('$DATE', '$SUITE', '$ARCH', $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
+		query_db "INSERT INTO ${TABLE[2]} VALUES ('$DATE', '$SUITE', '$ARCH', '$DIFFG', '$DIFFB', '$DIFFU')"
 		# we do 3 later and 6 is special anyway...
 		for i in 0 1 2 4 5 ; do
 			PREFIX=""
@@ -152,30 +152,30 @@ update_suite_arch_stats() {
 # update notes stats
 #
 update_notes_stats() {
-	NOTES=$(query_db "SELECT COUNT(package_id) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\"")
+	NOTES=$(query_db "SELECT COUNT(package_id) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64'")
 	ISSUES=$(query_db "SELECT COUNT(name) FROM issues")
 	# the following is a hack to workaround the bad sql db design which is the issue_s_ column in the notes table...
 	# it assumes we don't have packages with more than 7 issues. (we have one with 6...)
 	COUNT_ISSUES=$(query_db "SELECT \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues = \"[]\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues = '[]') \
 		+ \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues != \"[]\" AND n.issues NOT LIKE \"%,%\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues != '[]' AND n.issues NOT LIKE '%,%') \
 		+ \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues LIKE \"%,%\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues LIKE '%,%') \
 		+ \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues LIKE \"%,%,%\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues LIKE '%,%,%') \
 		+ \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues LIKE \"%,%,%,%\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues LIKE '%,%,%,%') \
 		+ \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues LIKE \"%,%,%,%,%\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues LIKE '%,%,%,%,%') \
 		+ \
-		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite=\"unstable\" AND s.architecture=\"amd64\" AND n.issues LIKE \"%,%,%,%,%,%\") \
+		(SELECT COUNT(issues) FROM notes AS n JOIN sources AS s ON n.package_id=s.id WHERE s.suite='unstable' AND s.architecture='amd64' AND n.issues LIKE '%,%,%,%,%,%') \
 		")
-	RESULT=$(query_db "SELECT datum from ${TABLE[4]} WHERE datum = \"$DATE\"")
+	RESULT=$(query_db "SELECT datum from ${TABLE[4]} WHERE datum = '$DATE'")
 	if [ -z $RESULT ] ; then
 		echo "Updating notes stats for $DATE."
-		query_db "INSERT INTO ${TABLE[4]} VALUES (\"$DATE\", \"$NOTES\")"
-		query_db "INSERT INTO ${TABLE[5]} VALUES (\"$DATE\", \"$ISSUES\")"
+		query_db "INSERT INTO ${TABLE[4]} VALUES ('$DATE', '$NOTES')"
+		query_db "INSERT INTO ${TABLE[5]} VALUES ('$DATE', '$ISSUES')"
 	fi
 }
 
@@ -183,15 +183,15 @@ update_notes_stats() {
 # gather suite/arch stats
 #
 gather_suite_arch_stats() {
-	AMOUNT=$(query_db "SELECT count(*) FROM sources WHERE suite=\"${SUITE}\" AND architecture=\"$ARCH\"")
-	COUNT_TOTAL=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND s.architecture=\"$ARCH\"")
-	COUNT_GOOD=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite=\"${SUITE}\" AND s.architecture=\"$ARCH\" AND r.status=\"reproducible\"")
-	COUNT_BAD=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture=\"$ARCH\" AND r.status = \"unreproducible\"")
-	COUNT_UGLY=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture=\"$ARCH\" AND r.status = \"FTBFS\"")
-	COUNT_SOURCELESS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture=\"$ARCH\" AND r.status = \"404\"")
-	COUNT_NOTFORUS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture=\"$ARCH\" AND r.status = \"not for us\"")
-	COUNT_BLACKLISTED=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture=\"$ARCH\" AND r.status = \"blacklisted\"")
-	COUNT_DEPWAIT=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture=\"$ARCH\" AND r.status = \"depwait\"")
+	AMOUNT=$(query_db "SELECT count(*) FROM sources WHERE suite='${SUITE}' AND architecture='$ARCH'")
+	COUNT_TOTAL=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH'")
+	COUNT_GOOD=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status='reproducible'")
+	COUNT_BAD=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible'")
+	COUNT_UGLY=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS'")
+	COUNT_SOURCELESS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = '404'")
+	COUNT_NOTFORUS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'not for us'")
+	COUNT_BLACKLISTED=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'blacklisted'")
+	COUNT_DEPWAIT=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'depwait'")
 	COUNT_OTHER=$(( $COUNT_SOURCELESS+$COUNT_NOTFORUS+$COUNT_BLACKLISTED+$COUNT_DEPWAIT ))
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc || echo 0)
@@ -208,13 +208,13 @@ gather_suite_arch_stats() {
 # update bug stats
 #
 update_bug_stats() {
-	RESULT=$(query_db "SELECT * from ${TABLE[3]} WHERE datum = \"$DATE\"")
+	RESULT=$(query_db "SELECT * from ${TABLE[3]} WHERE datum = '$DATE'")
 	if [ -z $RESULT ] ; then
 		echo "Updating bug stats for $DATE."
 		declare -a DONE
 		declare -a OPEN
 		GOT_BTS_RESULTS=false
-		SQL="INSERT INTO ${TABLE[3]} VALUES (\"$DATE\" "
+		SQL="INSERT INTO ${TABLE[3]} VALUES ('$DATE' "
 		for TAG in $USERTAGS ; do
 			OPEN[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:open status:forwarded 2>/dev/null|wc -l)
 			DONE[$TAG]=$(bts select usertag:$TAG users:reproducible-builds@lists.alioth.debian.org status:done archive:both 2>/dev/null|wc -l)
@@ -249,7 +249,7 @@ update_bug_stats() {
 # gather bugs stats and generate html table
 #
 write_usertag_table() {
-	RESULT=$(query_db "SELECT ${FIELDS[3]} from ${TABLE[3]} WHERE datum = \"$DATE\"")
+	RESULT=$(query_db "SELECT ${FIELDS[3]} from ${TABLE[3]} WHERE datum = '$DATE'")
 	if [ ! -z "$RESULT" ] ; then
 		COUNT=0
 		TOPEN=0 ; TDONE=0 ; TTOTAL=0
@@ -308,9 +308,12 @@ write_build_performance_stats() {
 	done
 	local TIMESPAN_VERBOSE="4 weeks"
 	local TIMESPAN_RAW="28"
+	# Find stats for 28 days since yesterday, no stats exist for today
+	local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
+	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "$TIMESPAN days")
 	write_page "</tr><tr><td class=\"left\">average test duration (in the last $TIMESPAN_VERBOSE)</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND s.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > '$TIMESPAN_DATE' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
@@ -322,20 +325,23 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">packages tested in the last 24h</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$(date -u '+%Y-%m-%d %H:%m')', '-24 hours') AND r.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$(date '+%Y-%m-%d %H:%M' -d '-1 days')' AND r.architecture='$ARCH'")
 		write_page "<td>$RESULT</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND r.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
 		write_page "<td>$RESULT</td>"
 	done
 	local TIMESPAN_VERBOSE="3 months"
-	local TIMESPAN_RAW="91.5"
+	local TIMESPAN_RAW="91"
+	# Find stats for 91 days since yesterday, no stats exist for today
+	local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
+	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "$TIMESPAN days")
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > datetime('$DATE', '-$TIMESPAN_RAW days') AND r.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
 		write_page "<td>$RESULT</td>"
 	done

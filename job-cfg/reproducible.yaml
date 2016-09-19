@@ -592,19 +592,19 @@
                 - '23': { my_node1: 'rpi2c-armhf-rb',     my_node2: 'odxu4b-armhf-rb'    }
                 - '24': { my_node1: 'rpi2c-armhf-rb',     my_node2: 'odxu4c-armhf-rb'    }
                 - '25': { my_node1: 'odxu4b-armhf-rb',    my_node2: 'ff2b-armhf-rb'      }
-                - '26': { my_node1: 'opi2a-armhf-rb',     my_node2: 'ff2a-armhf-rb'      }
+                - '26': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'ff2a-armhf-rb'      }
                 - '27': { my_node1: 'odxu4c-armhf-rb',    my_node2: 'cbxi4a-armhf-rb'    }
-                - '28': { my_node1: 'opi2a-armhf-rb',     my_node2: 'ff2b-armhf-rb'      }
-                - '29': { my_node1: 'ff2b-armhf-rb',      my_node2: 'opi2a-armhf-rb'     }
+                - '28': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'ff2b-armhf-rb'      }
+                - '29': { my_node1: 'ff2b-armhf-rb',      my_node2: 'jtk1a-armhf-rb'     }
                 - '30': { my_node1: 'ff2b-armhf-rb',      my_node2: 'cbxi4b-armhf-rb'    }
                 - '31': { my_node1: 'ff2b-armhf-rb',      my_node2: 'opi2b-armhf-rb'     }
-                - '32': { my_node1: 'opi2a-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
+                - '32': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
                 - '33': { my_node1: 'ff2a-armhf-rb',      my_node2: 'opi2b-armhf-rb'     }
                 - '34': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'opi2b-armhf-rb'     }
                 - '35': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'ff2b-armhf-rb'      }
-                - '36': { my_node1: 'opi2a-armhf-rb',     my_node2: 'cbxi4a-armhf-rb'    }
+                - '36': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'cbxi4a-armhf-rb'    }
                 - '37': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'wbq0-armhf-rb'      }
-                - '38': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'opi2a-armhf-rb'     }
+                - '38': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'jtk1a-armhf-rb'     }
                 - '39': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'cbxi4a-armhf-rb'    }
                 - '40': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
                 - '41': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }

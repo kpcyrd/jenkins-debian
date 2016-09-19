@@ -17,7 +17,7 @@ REP_RESULTS=/srv/reproducible-results
 
 # query reproducible database, print output
 query_to_print() {
-	printf ".width 0 25 \n %s ; " "$1" | sqlite3 -init $INIT -header -column ${PACKAGES_DB}
+	printf "$(psql -c "$@")"
 }
 
 # backup db
@@ -25,26 +25,27 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	echo "$(date -u) - backup db and update public copy."
 	# prepare backup
 	mkdir -p $REP_RESULTS/backup
-	cd $REP_RESULTS/backup
 
 	# keep 30 days and the 1st of the month
 	DAY=(date -d "30 day ago" '+%d')
 	DATE=$(date -d "30 day ago" '+%Y-%m-%d')
-	if [ "$DAY" != "01" ] &&  [ -f reproducible_$DATE.db.xz ] ; then
-		rm -f reproducible_$DATE.db.xz
+	BACKUPFILE="$REP_RESULTS/backup/reproducible_$DATE.sql.xz"
+	if [ "$DAY" != "01" ] &&  [ -f "$BACKUPFILE" ] ; then
+		rm -f "$BACKUPFILE"
 	fi
 
-	# actually do the backup
+	# Make a daily backup of database
 	DATE=$(date '+%Y-%m-%d')
-	if [ ! -f reproducible_$DATE.db.xz ] ; then
-		cp -v $PACKAGES_DB .
+	BACKUPFILE="$REP_RESULTS/backup/reproducible_$DATE.sql"
+	if [ ! -f $BACKUPFILE.xz ] ; then
+		# make the backup
 		DATE=$(date '+%Y-%m-%d')
-		mv -v reproducible.db reproducible_$DATE.db
-		xz reproducible_$DATE.db
-	fi
+		pg_dump $PGDATABASE > "$BACKUPFILE"
+		xz "$BACKUPFILE"
 
-	# provide copy for external backups
-	cp -v $PACKAGES_DB $BASE/
+		# make the backup public
+		ln -s -f "$BACKUPFILE.xz" $BASE/reproducible.sql.xz
+	fi
 fi
 
 # for Debian, first run some checks…
@@ -258,7 +259,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		query_to_print "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 		echo
 		for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
-			echo "sqlite3 ${PACKAGES_DB}  \"DELETE FROM schedule WHERE package_id = '$PKG';\""
+			echo "query_db \"DELETE FROM schedule WHERE package_id = '$PKG';\""
 			query_db "DELETE FROM schedule WHERE package_id = '$PKG';"
 		done
 		echo "Packages have been removed from scheduling."

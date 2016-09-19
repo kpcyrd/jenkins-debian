@@ -7,41 +7,17 @@
 # included by all reproducible_*.sh scripts, so be quiet
 set +x
 
-# define db
-PACKAGES_DB=/var/lib/jenkins/reproducible.db
-INIT=/var/lib/jenkins/reproducible.init
-MAINNODE="jenkins" # host which contains reproducible.db
-if [ -f $PACKAGES_DB ] && [ -f $INIT ] ; then
-	if [ -f ${PACKAGES_DB}.lock ] ; then
-		for i in $(seq 0 200) ; do
-			sleep 15
-			echo "sleeping 15s, $PACKAGES_DB is locked."
-			if [ ! -f ${PACKAGES_DB}.lock ] ; then
-				break
-			fi
-		done
-		if [ -f ${PACKAGES_DB}.lock ] ; then
-			echo "${PACKAGES_DB}.lock still exist, exiting."
-			exit 1
-		fi
-	fi
-elif [ ! -f ${PACKAGES_DB} ] && [ "$HOSTNAME" = "$MAINNODE" ] ; then
-	echo "Warning: $PACKAGES_DB doesn't exist, creating it now."
-		/srv/jenkins/bin/reproducible_db_maintenance.py
-	# 60 seconds timeout when trying to get a lock
-	cat > $INIT <<-EOF
-.timeout 60000
-EOF
-fi
+# postgres database definitions
+export PGDATABASE=reproducibledb
 
 # query reproducible database
 query_db() {
-	sqlite3 -init ${INIT} ${PACKAGES_DB} "$@"
+	psql -t --no-align -c "$@"
 }
 
 # query reproducible database, output to csv format
 query_to_csv() {
-	sqlite3 -init ${INIT} -csv ${PACKAGES_DB} "$@"
+	psql -c "COPY ($@) to STDOUT with csv DELIMITER ','"
 }
 
 # common variables
@@ -674,7 +650,7 @@ create_png_from_table() {
 	fi
 	if [ $1 -eq 0 ] || [ $1 -eq 2 ] ; then
 		# TABLE[0+2] have a architecture column:
-		WHERE_EXTRA="$WHERE_EXTRA AND architecture = \"$ARCH\""
+		WHERE_EXTRA="$WHERE_EXTRA AND architecture = '$ARCH'"
 		if [ "$ARCH" = "armhf" ]  ; then
 			if [ $1 -eq 2 ] ; then
 				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19 and testing/armhf since 2016-01-01)

@@ -121,11 +121,11 @@ update_suite_arch_stats() {
 		OLDESTG=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status = 'reproducible' AND s.suite='$SUITE' AND s.architecture='$ARCH' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 		OLDESTB=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 		OLDESTU=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
-		DIFFG=$(query_db "SELECT julianday('$DATE') - julianday('$OLDESTG');")
+		DIFFG=$(query_db "SELECT (date '$DATE' - date '$OLDESTG');")
 		if [ -z $DIFFG ] ; then DIFFG=0 ; fi
-		DIFFB=$(query_db "SELECT julianday('$DATE') - julianday('$OLDESTB');")
+		DIFFB=$(query_db "SELECT (date '$DATE' - date '$OLDESTB');")
 		if [ -z $DIFFB ] ; then DIFFB=0 ; fi
-		DIFFU=$(query_db "SELECT julianday('$DATE') - julianday('$OLDESTU');")
+		DIFFU=$(query_db "SELECT (date '$DATE' - date '$OLDESTU');")
 		if [ -z $DIFFU ] ; then DIFFU=0 ; fi
 		let "TOTAL=GOOD+BAD+UGLY+REST" || true # let FOO=0+0 returns error in bash...
 		if [ "$ALL" != "$TOTAL" ] ; then
@@ -236,7 +236,7 @@ update_bug_stats() {
 		SQL="$SQL)"
 		echo $SQL
 		if $GOT_BTS_RESULTS ; then
-			echo "Updating ${PACKAGES_DB} with bug stats for $DATE."
+			echo "Updating database with bug stats for $DATE."
 			query_db "$SQL"
 			# force regeneration of the image
 			local i=0
@@ -297,14 +297,14 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">oldest build result in testing / unstable / experimental</td>"
 	for ARCH in ${ARCHS} ; do
-		AGE_UNSTABLE=$(query_db "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_EXPERIMENTAL=$(query_db "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_TESTING=$(query_db "SELECT CAST(max(oldest_reproducible, oldest_unreproducible, oldest_FTBFS) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_UNSTABLE=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_EXPERIMENTAL=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_TESTING=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
 		write_page "<td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
@@ -318,7 +318,7 @@ write_build_performance_stats() {
 
 	write_page "</tr><tr><td class=\"left\">average test duration (in the last $TIMESPAN_VERBOSE)</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > '$TIMESPAN_DATE' AND s.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='0' AND r.build_date > '$TIMESPAN_DATE' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
@@ -522,11 +522,11 @@ create_dashboard_page() {
 		gather_suite_arch_stats
 		TD_PKG_SID_ISSUES="$TD_PKG_SID_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
 
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_NOISSUES="$TD_PKG_SID_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_FTBR="$TD_PKG_SID_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_FTBFS="$TD_PKG_SID_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 
 		SUITE="testing"

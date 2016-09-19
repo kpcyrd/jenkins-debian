@@ -100,9 +100,9 @@ save_artifacts() {
 }
 
 cleanup_all() {
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
+	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts
-	elif [ ! -z "$NOTIFY" ] && [ $SAVE_ARTIFACTS -eq 0 ] ; then
+	elif [ ! -z "$NOTIFY" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
 		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	fi
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG

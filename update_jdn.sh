@@ -51,7 +51,7 @@ if ! getent group jenkins-adm > /dev/null ; then
 	sudo addgroup --system jenkins-adm
 fi
 if ! getent passwd jenkins-adm > /dev/null  ; then
-	sudo adduser --system --shell /bin/bash --hone /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
+	sudo adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
 	sudo usermod -G jenkins jenkins-adm
 fi
 if [ ! -d /home/jenkins-adm ]; then

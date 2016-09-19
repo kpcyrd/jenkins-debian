@@ -4,7 +4,7 @@
 # released under the GPLv=2
 
 # define Debian build nodes in use
-BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-i386.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-i386.debian.net wbq0-armhf-rb.debian.net cb3a-armhf-rb.debian.net cbxi4a-armhf-rb.debian.net cbxi4b-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bbx15-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net odu3a-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net ff4a-armhf-rb.debian.net opi2a-armhf-rb.debian.net opi2b-armhf-rb.debian.net opi2c-armhf-rb.debian.net"
+BUILD_NODES="profitbricks-build1-amd64.debian.net profitbricks-build2-i386.debian.net profitbricks-build5-amd64.debian.net profitbricks-build6-i386.debian.net wbq0-armhf-rb.debian.net cb3a-armhf-rb.debian.net cbxi4a-armhf-rb.debian.net cbxi4b-armhf-rb.debian.net cbxi4pro0-armhf-rb.debian.net bbx15-armhf-rb.debian.net bpi0-armhf-rb.debian.net hb0-armhf-rb.debian.net odu3a-armhf-rb.debian.net odxu4-armhf-rb.debian.net wbd0-armhf-rb.debian.net rpi2b-armhf-rb.debian.net rpi2c-armhf-rb.debian.net odxu4b-armhf-rb.debian.net odxu4c-armhf-rb.debian.net ff2a-armhf-rb.debian.net ff2b-armhf-rb.debian.net ff4a-armhf-rb.debian.net jtk1a-armhf-rb.debian.net opi2b-armhf-rb.debian.net opi2c-armhf-rb.debian.net"
 
 # return the ports sshd is listening on
 get_node_ssh_port() {
@@ -58,9 +58,6 @@ get_node_ssh_port() {
 	  ff4a-armhf-rb.debian.net)
 	    PORT=2241
 	    ;;
-	  opi2a-armhf-rb.debian.net)
-	    PORT=2236
-	    ;;
 	  opi2b-armhf-rb.debian.net)
 	    PORT=2238
 	    ;;
@@ -72,6 +69,9 @@ get_node_ssh_port() {
 	    ;;
 	  opi2c-armhf-rb.debian.net)
 	    PORT=2245
+	    ;;
+	  jtk1a-armhf-rb.debian.net)
+	    PORT=2246
 	    ;;
 	  profitbricks-build*)
 	    PORT=22

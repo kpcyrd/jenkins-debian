@@ -8,14 +8,14 @@
 # cater for different locations
 case $HOSTNAME in
 	jenkins|jenkins-test-vm|profitbricks-build*)					MIRRORSITE=http://ftp.de.debian.org/debian ;;
-	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)	MIRRORSITE=http://ftp.us.debian.org/debian ;;
+	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*)	MIRRORSITE=http://ftp.us.debian.org/debian ;;
 	*)										echo "unsupported host, exiting." ; exit 1 ;;
 esac
 # only use eatmydata on armhf+i386 - on amd64 we build in tmpfs anyway
 case $HOSTNAME in
 	profitbricks-build*i386)
 		EATMYDATA=yes ;;
-	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*)
+	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*)
 		EATMYDATA=yes ;;
 	*)	;;
 esac

@@ -36,6 +36,7 @@
 
 - defaults:
     name: reproducible_git
+    disabled: '{my_disabled}'
     project-type: freestyle
     properties:
       - sidebar: *sb1
@@ -103,6 +104,7 @@
 
 - defaults:
     name: reproducible_builder_trigger
+    disabled: '{my_disabled}'
     project-type: freestyle
     description: *desc
     properties:
@@ -141,6 +143,7 @@
 
 - defaults:
     name: reproducible_other_projects
+    disabled: '{my_disabled}'
     project-type: freestyle
     description: *desc
     properties:
@@ -174,6 +177,7 @@
 
 - defaults:
     name: reproducible_other_projects_git
+    disabled: '{my_disabled}'
     project-type: freestyle
     description: *desc
     properties:
@@ -215,6 +219,7 @@
 
 - defaults:
     name: reproducible_other_projects_trigger
+    disabled: '{my_disabled}'
     project-type: freestyle
     description: *desc
     properties:

@@ -1,6 +1,6 @@
 - defaults:
     name: reproducible
-    disabled: false
+    disabled: {my_disabled}
     project-type: freestyle
     properties:
       - sidebar: &sb1
@@ -66,7 +66,7 @@
 
 - defaults:
     name: reproducible_builder
-    disabled: false
+    disabled: {my_disabled}
     project-type: freestyle
     description: *desc
     properties:
@@ -290,6 +290,7 @@
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_node: '{my_hname}'
     my_scmpoll: '*/6 * * * *'
+    my_disabled: false
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -468,6 +469,7 @@
                 - 'html_archlinux':
                     my_description: 'Build a simple webpage for Arch Linux reproducibility tests'
                     my_timed: ''
+                    my_disabled: true
                 - 'html_fedora-23_x86_64':
                     my_description: 'Build a simple webpage for Fedora 23 reproducibility tests'
                     my_timed: ''
@@ -668,14 +670,17 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
+                    my_disabled: true
                 - 'setup_schroot_archlinux_profitbricks3':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks3'
+                    my_disabled: true
                 - 'setup_schroot_archlinux_profitbricks4':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
+                    my_disabled: true
                 - 'setup_mock_fedora-23_x86_64_jenkins':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
@@ -764,9 +769,11 @@
                 - 'archlinux':
                     my_num: 1
                     op_descname: 'an Arch Linux'
+                    my_disabled: true
                 - 'archlinux':
                     my_num: 2
                     op_descname: 'an Arch Linux'
+                    my_disabled: true
                 - 'fedora-23_x86_64':
                     my_num: 1
                     op_descname: 'a Fedora 23'

@@ -267,7 +267,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run coreboot/openwrt/lede/netbsd/fedora/fdroid jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
+			profitbricks-build3-amd64|profitbricks-build4-amd64|profitbricks-build7-amd64) DEBS="$DEBS
 				bison
 				ca-certificates
 				cmake
@@ -433,7 +433,7 @@ if [ -f /etc/debian_version ] ; then
 		#		botch
 		# we need mock from bpo to build current fedora
 		# we need vagrant from bpo to build fdroid
-		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
+		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports mock python3-vagrant \
 				|| echo "this should only fail on the first install"
 		fi
@@ -622,7 +622,7 @@ fi
 #
 # generate the kgb-client configurations
 #
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then

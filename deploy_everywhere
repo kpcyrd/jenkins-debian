@@ -80,6 +80,7 @@ elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
 		4|pb4)	 HOSTS="$HOSTS profitbricks-build4-amd64.debian.net" ;;
 		5|pb5)	 HOSTS="$HOSTS profitbricks-build5-amd64.debian.net" ;;
 		6|pb6)	 HOSTS="$HOSTS profitbricks-build6-i386.debian.net" ;;
+		7|pb7)	 HOSTS="$HOSTS profitbricks-build7-amd64.debian.net" ;;
 		9|pb9)	 HOSTS="$HOSTS profitbricks-build9-amd64.debian.net" ;;
 		10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
 	esac

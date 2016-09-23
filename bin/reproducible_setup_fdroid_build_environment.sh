@@ -42,8 +42,10 @@ cat /etc/issue
 # the way we handle jenkins slaves doesn't copy the workspace to the slaves
 # so we need to "manually" clone the git repo here…
 cd $WORKSPACE
-git clone https://gitlab.com/fdroid/fdroidserver.git
+#git clone https://gitlab.com/fdroid/fdroidserver.git
+git clone https://gitlab.com/eighthave/fdroidserver.git
 cd fdroidserver
+git checkout jenkins # normally master too
 
 # this script is maintained upstream and is also run on Guardian
 # Project's jenkins box

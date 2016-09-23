@@ -703,7 +703,7 @@
 
         - '{name}_{otherproject_git}':
             otherproject_git:
-                - 'setup_fdroid_build_environment_profitbricks3':
+                - 'setup_fdroid_build_environment_profitbricks7':
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks7'

@@ -636,8 +636,8 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] 
 		figlet -f banner Warning
 		echo "Warning: $KGB_SECRETS either does not exist or has bad permissions. Please fix. KGB configs not generated"
 		echo "We expect the secrets file to be mode 640 and owned by jenkins-adm:jenkins-adm."
-		echo "/srv/jenkins/kbg should be mode 755 and owned by jenkins-adm:root."
-		echo "/srv/jenkins/kbg/client-status should be mode 755 and owned by jenkins:jenkins."
+		echo "/srv/jenkins/kgb should be mode 755 and owned by jenkins-adm:root."
+		echo "/srv/jenkins/kgb/client-status should be mode 755 and owned by jenkins:jenkins."
 	fi
 fi
 

@@ -401,7 +401,7 @@ def issues_popcon_annotate(issues_list):
         issues_by_popcon = sorted(issues, key=lambda p: p[1], reverse=True)
         issues_with_popcon = [(p[0], p[1], i<n/4) for i, p in enumerate(issues_by_popcon)]
         return sorted(issues_with_popcon, key=lambda p: p[0])
-    except:
+    except UnicodeDecodeError:
         return issues_list
 
 

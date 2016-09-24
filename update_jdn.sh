@@ -303,9 +303,11 @@ if [ -f /etc/debian_version ] ; then
 		# needed to run fdroid jobs
 		case $HOSTNAME in
 			profitbricks-build7-amd64) DEBS="$DEBS
+				libvirt-clients
 				libvirt-daemon
 				libvirt-daemon-system
 				python3-vagrant
+				qemu-kvm
 				vagrant
 				vagrant-mutate
 				vagrant-libvirt"

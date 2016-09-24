@@ -124,7 +124,7 @@ sudo mkdir -p /srv/workspace
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
 
-if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] ; then
+if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
 	# jenkins needs access to libvirt
 	sudo adduser jenkins libvirt
 	sudo adduser jenkins libvirt-qemu

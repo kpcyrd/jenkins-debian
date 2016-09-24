@@ -265,9 +265,9 @@ if [ -f /etc/debian_version ] ; then
 			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
-		# needed to run coreboot/openwrt/lede/netbsd/fedora/fdroid jobs
+		# needed to run coreboot/openwrt/lede/netbsd/fedora jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64|profitbricks-build4-amd64|profitbricks-build7-amd64) DEBS="$DEBS
+			profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
 				bison
 				ca-certificates
 				cmake
@@ -296,13 +296,21 @@ if [ -f /etc/debian_version ] ; then
 				tree
 				unzip
 				util-linux
-				vagrant
-				virtualbox
 				zlib1g-dev"
+			   ;;
+		# needed to run fdroid jobs
+		case $HOSTNAME in
+			profitbricks-build7-amd64) DEBS="$DEBS
+				libvirt-daemon
+				libvirt-daemon-system
+				python3-vagrant
+				vagrant
+				vagrant-mutate
+				vagrant-libvirt"
 			   ;;
 			*) ;;
 		esac
-		# cucumber dependencies
+		# cucumber dependencies (for lvc jobs)
 		case $HOSTNAME in
 			profitbricks-build10-amd64|jenkins-test-vm) DEBS="$DEBS
 				cucumber
@@ -432,9 +440,8 @@ if [ -f /etc/debian_version ] ; then
 				pbuilder lintian || echo "this should only fail on the first install"
 		#		botch
 		# we need mock from bpo to build current fedora
-		# we need vagrant from bpo to build fdroid
-		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports mock python3-vagrant \
+		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
+			$UP2DATE || sudo apt-get install -t jessie-backports mock \
 				|| echo "this should only fail on the first install"
 		fi
 		# for varying kernels

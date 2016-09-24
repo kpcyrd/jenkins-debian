@@ -761,7 +761,7 @@
                     my_description: 'Build https://reproducible-builds.org on every git commit to https://anonscm.debian.org/git/reproducible/reproducible-website.git with jekyll.'
                     my_timed: ''
                     my_hname: ''
-                    my_gitrepo: 'git://anonscm.debian.org/git/reproducible/reproducible-website.git'
+                    my_gitrepo: 'git://git.debian.org/git/reproducible/reproducible-website.git'
                     my_gitbranches: 'origin/master'
                     my_shell: 'umask 002 ; jekyll build -s . -d /srv/reproducible-builds.org/www'
             my_gitbranches: 'master'

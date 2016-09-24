@@ -393,13 +393,16 @@ def iterate_over_issues(issues):
 def issues_popcon_annotate(issues_list):
     # outputs [(package, popcon, is_popular)] where is_popular True if it's
     # in the upper 1/4 of issues_list, i.e. a relative measure
-    n = len(issues_list)
-    popcon_dict = dict((p, 0) for p in issues_list)
-    popcon_dict.update(popcon.package(*issues_list))
-    issues = sorted(popcon_dict.items(), key=lambda p: p[0])
-    issues_by_popcon = sorted(issues, key=lambda p: p[1], reverse=True)
-    issues_with_popcon = [(p[0], p[1], i<n/4) for i, p in enumerate(issues_by_popcon)]
-    return sorted(issues_with_popcon, key=lambda p: p[0])
+    try:
+        n = len(issues_list)
+        popcon_dict = dict((p, 0) for p in issues_list)
+        popcon_dict.update(popcon.package(*issues_list))
+        issues = sorted(popcon_dict.items(), key=lambda p: p[0])
+        issues_by_popcon = sorted(issues, key=lambda p: p[1], reverse=True)
+        issues_with_popcon = [(p[0], p[1], i<n/4) for i, p in enumerate(issues_by_popcon)]
+        return sorted(issues_with_popcon, key=lambda p: p[0])
+    except:
+        return issues_list
 
 
 def sort_issues(scorefunc, issue):

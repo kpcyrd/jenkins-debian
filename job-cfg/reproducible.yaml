@@ -763,7 +763,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/reproducible-website.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: 'jekyll build -s . -d /srv/reproducible-builds.org/www'
+                    my_shell: 'umask 002 ; jekyll build -s . -d /srv/reproducible-builds.org/www'
             my_gitbranches: 'master'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'

@@ -467,14 +467,17 @@ if __name__ == '__main__':
     issues = load_issues()
     iterate_over_notes(notes)
     iterate_over_issues(issues)
-    index_issues(issues, OrderedDict([
-        ("Sum of packages' popcon scores",
-         lambda l: sum(popcon.package(*l).values())),
-        ("Sum of square-roots of packages' popcon scores",
-         lambda l: int(sum(map(sqrt, popcon.package(*l).values())))),
-        ("Number of packages",
-         len),
-    ]))
+    try:
+        index_issues(issues, OrderedDict([
+            ("Sum of packages' popcon scores",
+             lambda l: sum(popcon.package(*l).values())),
+            ("Sum of square-roots of packages' popcon scores",
+             lambda l: int(sum(map(sqrt, popcon.package(*l).values())))),
+            ("Number of packages",
+             len),
+        ]))
+    except UnicodeDecodeError:
+        pass
     purge_old_notes(notes)
     purge_old_issues(issues)
     gen_packages_html([Package(x) for x in notes])

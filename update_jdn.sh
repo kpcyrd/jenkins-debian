@@ -126,6 +126,7 @@ sudo mkdir -p /srv/workspace
 
 if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
 	# jenkins needs access to libvirt
+	sudo adduser jenkins kvm
 	sudo adduser jenkins libvirt
 	sudo adduser jenkins libvirt-qemu
 

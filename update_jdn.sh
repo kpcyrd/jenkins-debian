@@ -297,7 +297,9 @@ if [ -f /etc/debian_version ] ; then
 				unzip
 				util-linux
 				zlib1g-dev"
-			   ;;
+			;;
+			*) ;;
+		esac
 		# needed to run fdroid jobs
 		case $HOSTNAME in
 			profitbricks-build7-amd64) DEBS="$DEBS
@@ -307,7 +309,7 @@ if [ -f /etc/debian_version ] ; then
 				vagrant
 				vagrant-mutate
 				vagrant-libvirt"
-			   ;;
+			;;
 			*) ;;
 		esac
 		# cucumber dependencies (for lvc jobs)

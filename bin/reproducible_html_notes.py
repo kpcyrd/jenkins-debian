@@ -288,7 +288,10 @@ def gen_html_issue(issue, suite):
             affected += tab*5 + '<code>\n'
             pkgs_popcon = issues_popcon_annotate(pkgs)
             for pkg, popcon, is_popular in sorted(pkgs_popcon, key=lambda x: x[0] in bugs):
-                affected += tab*6 + link_package(pkg, suite, arch, bugs, popcon, is_popular)
+                try:
+                    affected += tab*6 + link_package(pkg, suite, arch, bugs, popcon, is_popular)
+                except ValueError:
+                    pass
             affected += tab*5 + '</code>\n'
             affected += tab*4 + '</p>\n'
     except KeyError:    # The note is not listed in any package, that is

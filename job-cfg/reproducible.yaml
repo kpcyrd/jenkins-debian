@@ -757,6 +757,13 @@
                     my_gitbranches: ':^(?!origin/master$).*'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
+                - 'builds_website':
+                    my_description: 'Build https://reproducible-builds.org on every git commit to website.git with jekyll.'
+                    my_timed: ''
+                    my_hname: ''
+                    my_gitrepo: 'git://anonscm.debian.org/git/reproducible/website.git'
+                    my_gitbranches: 'origin/master'
+                    my_shell: 'jekyll build -s . -d /srv/reproducible-builds.org/www'
             my_gitbranches: 'master'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'

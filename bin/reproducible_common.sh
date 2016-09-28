@@ -259,7 +259,7 @@ write_page_header() {
 	write_page "<h2>$2</h2>"
 	if [ "$1" = "$MAINVIEW" ] ; then
 		write_page "<ul>"
-		write_page "   A general website <li><a href=\"https://reproducible-builds.org\">Reproducible-builds.org</a></li> is available now."
+		write_page "   Please also visit the more general website <li><a href=\"https://reproducible-builds.org\">Reproducible-builds.org</a></li> where <em>reproducible builds</em> are explained in more detail than just <em>bit by bit identical rebuilds to enable verifcation of the sources used to build</em>."
 		write_page "   We think that reproducible builds should become the norm, so we wrote <li><a href=\"https://reproducible-builds.org/howto\">How to make your software reproducible</a></li>."
 		write_page "   Also aimed at the free software world at large, is the first specification we have written: the <li><a href=\"https://reproducible-builds.org/specs/source-date-epoch/\">SOURCE_DATE_EPOCH specification</a></li>."
 		write_page "</ul>"

@@ -16,6 +16,7 @@ def unrep_with_dbd_issues():
     log.info('running unrep_with_dbd_issues check...')
     without_dbd = []
     bad_dbd = []
+    sources_without_dbd = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status="unreproducible"
@@ -27,6 +28,8 @@ def unrep_with_dbd_issues():
             eversion + '.diffoscope.html'
         if not os.access(dbd, os.R_OK):
             without_dbd.append((pkg, version, suite, arch))
+            if pkg not in sources_without_dbd:
+                sources_without_dbd.append(pkg)
             log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') is '
                         'unreproducible without diffoscope file.')
         else:
@@ -37,7 +40,9 @@ def unrep_with_dbd_issues():
                 log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has '
                             'diffoscope output, but it does not seem to '
                             'be an html page.')
-    return without_dbd, bad_dbd
+                if pkg not in sources_without_dbd:
+                    sources_without_dbd.append(pkg)
+    return without_dbd, bad_dbd, sources_without_dbd
 
 
 def not_unrep_with_dbd_file():
@@ -290,7 +295,7 @@ def gen_html():
     html += _gen_section('have been built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
     # diffoscope troubles
-    without_dbd, bad_dbd = unrep_with_dbd_issues()
+    without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
     html += _gen_section('are marked as unreproducible, but there is no ' +
                          'diffoscope output - so probably diffoscope ' +
                          'crashed:', without_dbd)
@@ -298,6 +303,9 @@ def gen_html():
                          'diffoscope output does not seem to be an html ' +
                          'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
+    # TODO: graph this
+    html += str(len(sources_without_dbd))
+    html += ' source packages on which diffoscope ran into a timeout or crashed.'
     # pbuilder-satisfydepends failed
     html += _gen_section('failed to satisfy their build-dependencies:',
                          pbuilder_dep_fail())

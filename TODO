@@ -58,7 +58,8 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ===== reoccuring agenda
 
 * short intro, why are we here (individually)
-* jenkins.d.n status 
+* jenkins.d.n status
+** OOMs
 * jenkins.d.o migration
 * AOB
 * thanks to profitbricks for hosting

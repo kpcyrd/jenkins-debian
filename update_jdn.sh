@@ -307,6 +307,7 @@ if [ -f /etc/debian_version ] ; then
 				libvirt-clients
 				libvirt-daemon
 				libvirt-daemon-system
+				python3-libvirt
 				python3-vagrant
 				qemu-kvm
 				vagrant

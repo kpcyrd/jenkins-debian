@@ -96,7 +96,6 @@
     builders:
       - shell: '{my_shell}'
     publishers:
-      - logparser: *logparse
       - email:
           recipients: '{my_recipients}'
           notify-every-unstable-build: false

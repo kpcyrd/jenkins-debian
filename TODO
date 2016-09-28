@@ -35,8 +35,8 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * The machine jerea.debian.org is setup, please go to https://jenkins.debian.org
 * login using link:https://sso.debian.org[Debian SSO]
 * Jenkins and plugins are installed…
-* update_jdn.sh needs to be adapted for this new host…
-* then start with migrating a single job…
+* update_jdn.sh needs to be adapted for this new host… and for new path /srv/jenkins.debian.org/ )
+* then start with migrating a single job: self_maintenance
 ** add pb7 as a node to jenkins.d.o
 ** add fdroid job to jenkins.d.o 
 * nmigrate all the jobs
@@ -67,7 +67,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ===== old meetings
 
 * 2016-08-24: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-08-24-18.00.html
-* 2016-09-28: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-09-28-19.00.html
+* 2016-09-28: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-09-28-19.02.html
 
 == General ToDo
 

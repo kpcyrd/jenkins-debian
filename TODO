@@ -24,17 +24,24 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
  Start doing that… first with a few jobs and then… more… and then we are done and have a better & cleaner setup.
 
+ see below for status
+
 ----
 
-The plan is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins nodes, in the long term probably/maybe also maintained by DSA, on which we can use sudo as we need it.
+The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins nodes, in the long term probably/maybe also maintained by DSA, on which we can use sudo as we need it.
 
 ==== next steps for jenkins.d.o migration
 
-The machine jerea.debian.org is setup, please go to https://jenkins.debian.org
-and log in using link:https://sso.debian.org[Debian SSO].
-
-** add all the nodes as nodes to jenkins.d.o (we)
-** disable job execution on jenkins.d.net(!) (we) 
+* The machine jerea.debian.org is setup, please go to https://jenkins.debian.org
+* login using link:https://sso.debian.org[Debian SSO]
+* Jenkins and plugins are installed…
+* update_jdn.sh needs to be adapted for this new host…
+* then start with migrating a single job…
+** add pb7 as a node to jenkins.d.o
+** add fdroid job to jenkins.d.o 
+* nmigrate all the jobs
+** add all the nodes as nodes to jenkins.d.o
+** disable job execution on jenkins.d.net(!)
 ** deploy this configuration on jenkins.d.o…(!) (we)
 *** make update_jdn.sh warn if things are missing on .debian.org systems
 *** as we dont want irc nor mail notifications for this during the migration, we should disable those with an easily revertable commit before actual deployment
@@ -45,8 +52,8 @@ and log in using link:https://sso.debian.org[Debian SSO].
 
 ==== meeting agenda for jenkins-qa meetings
 
-* next meeting: Wednesday, September 28th 2016, 18 UTC on #debian-qa on irc.debian.org
-* schedule: every 4th Wednesday of each month, at 18 UTC (during European summer time, 19 UTC in winter time)
+* next meeting: Wednesday, September 28th 2016, 19 UTC on #debian-qa on irc.debian.org
+* schedule: every 4th Wednesday of each month, at 19 UTC (during European summer time, 20 UTC in winter time)
 
 ===== reoccuring agenda
 
@@ -54,11 +61,12 @@ and log in using link:https://sso.debian.org[Debian SSO].
 * jenkins.d.n status 
 * jenkins.d.o migration
 * AOB
-* thanks to profitbricks for hosting this
+* thanks to profitbricks for hosting
 
 ===== old meetings
 
 * 2016-08-24: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-08-24-18.00.html
+* 2016-09-28: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-09-28-19.00.html
 
 == General ToDo
 

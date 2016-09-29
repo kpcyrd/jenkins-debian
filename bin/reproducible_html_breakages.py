@@ -254,9 +254,8 @@ def alien_history():
     return bad_files
 
 
-def _gen_section(header, pkgs, entries=None):
-    if not pkgs and not entries:
-        return ''
+def _gen_packages_html(header, pkgs):
+    html = ''
     if pkgs:
         html = '<p><b>' + str(len(pkgs)) + '</b> '
         html += header
@@ -264,43 +263,47 @@ def _gen_section(header, pkgs, entries=None):
         for pkg in pkgs:
             html += tab + link_package(pkg[0], pkg[2], pkg[3]).strip()
             html += ' (' + pkg[1] + ' in ' + pkg[2] + '/' + pkg[3] + ')\n'
-    elif entries:
+        html += '</pre></p>\n'
+    return html
+
+def _gen_files_html(header, entries):
+    html = ''
+    if entries:
         html = '<p><b>' + str(len(entries)) + '</b> '
         html += header
         html += '<br/><pre>\n'
         for entry in entries:
             html += tab + entry + '\n'
-    html += '</pre></p>\n'
+        html += '</pre></p>\n'
     return html
-
 
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed package without cleanup)
-    html += _gen_section('log files that should not be there:', None,
+    html += _gen_files_html('log files that should not be there:',
                          entries=alien_log())
-    html += _gen_section('diffoscope files that should not be there:', None,
+    html += _gen_files_html('diffoscope files that should not be there:',
                          entries=alien_dbd())
-    html += _gen_section('rb-pkg pages that should not be there:', None,
+    html += _gen_files_html('rb-pkg pages that should not be there:',
                          entries=alien_rbpkg())
-    html += _gen_section('buildinfo files that should not be there:', None,
+    html += _gen_files_html('buildinfo files that should not be there:',
                          entries=alien_buildinfo())
-    html += _gen_section('history tables that should not be there:', None,
+    html += _gen_files_html('history tables that should not be there:',
                          entries=alien_history())
     # diffoscope report where it shouldn't be
-    html += _gen_section('are not marked as unreproducible, but they ' +
+    html += _gen_packages_html('are not marked as unreproducible, but they ' +
                          'have a diffoscope file:', not_unrep_with_dbd_file())
     # missing files
-    html += _gen_section('have been built but don\'t have a buildlog:',
+    html += _gen_packages_html('have been built but don\'t have a buildlog:',
                          lack_rbuild())
-    html += _gen_section('have been built but don\'t have a .buildinfo file:',
+    html += _gen_packages_html('have been built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
     # diffoscope troubles
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
-    html += _gen_section('are marked as unreproducible, but there is no ' +
+    html += _gen_packages_html('are marked as unreproducible, but there is no ' +
                          'diffoscope output - so probably diffoscope ' +
                          'crashed:', without_dbd)
-    html += _gen_section('are marked as unreproducible, but their ' +
+    html += _gen_packages_html('are marked as unreproducible, but their ' +
                          'diffoscope output does not seem to be an html ' +
                          'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
@@ -308,7 +311,7 @@ def gen_html():
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into a timeout or crashed.'
     # pbuilder-satisfydepends failed
-    html += _gen_section('failed to satisfy their build-dependencies:',
+    html += _gen_packages_html('failed to satisfy their build-dependencies:',
                          pbuilder_dep_fail())
     return html
 

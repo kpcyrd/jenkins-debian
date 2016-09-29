@@ -248,10 +248,11 @@ def alien_history():
     actual_packages = [x[0] for x in result]
     bad_files = []
     for f in sorted(os.listdir(HISTORY_PATH)):
-        if f.rsplit('.', 1)[0] not in actual_packages:
-            bad_files.append(os.path.join(HISTORY_PATH, f))
-            os.remove(os.path.join(HISTORY_PATH, f))
-            log.warning('%s should not be there so it has been removed.', os.path.join(HISTORY_PATH, f))
+        full_path = os.path.join(HISTORY_PATH, f)
+        if f.rsplit('.', 1)[0] not in actual_packages and not os.path.isdir(full_path):
+            bad_files.append(full_path)
+            os.remove(full_path)
+            log.warning('%s should not be there so it has been removed.', full_path)
     return bad_files
 
 

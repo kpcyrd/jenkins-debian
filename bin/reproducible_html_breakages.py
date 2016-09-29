@@ -249,8 +249,9 @@ def alien_history():
     bad_files = []
     for f in sorted(os.listdir(HISTORY_PATH)):
         if f.rsplit('.', 1)[0] not in actual_packages:
-            log.warning('%s should not be there', os.path.join(HISTORY_PATH, f))
             bad_files.append(os.path.join(HISTORY_PATH, f))
+            os.remove(os.path.join(HISTORY_PATH, f))
+            log.warning('%s should not be there so it has been removed.', os.path.join(HISTORY_PATH, f))
     return bad_files
 
 
@@ -288,7 +289,7 @@ def gen_html():
                          entries=alien_rbpkg())
     html += _gen_files_html('buildinfo files that should not be there:',
                          entries=alien_buildinfo())
-    html += _gen_files_html('history tables that should not be there:',
+    html += _gen_files_html('history pages that should not be there and thus have been removed:',
                          entries=alien_history())
     # diffoscope report where it shouldn't be
     html += _gen_packages_html('are not marked as unreproducible, but they ' +

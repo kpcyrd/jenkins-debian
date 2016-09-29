@@ -250,6 +250,7 @@ def alien_history():
     for f in sorted(os.listdir(HISTORY_PATH)):
         if f.rsplit('.', 1)[0] not in actual_packages:
             log.warning('%s should not be there', os.path.join(HISTORY_PATH, f))
+            bad_files.append(os.path.join(HISTORY_PATH, f))
     return bad_files
 
 

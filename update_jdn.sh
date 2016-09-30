@@ -75,7 +75,7 @@ user_host_groups['mattia','*']="$sudo_groups"
 user_host_groups['mattia','jenkins']="reproducible,${user_host_groups['mattia','*']}"
 user_host_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
 user_host_groups['phil','profitbricks-build10-amd64']="$sudo_groups"
-user_host_groups['phil','jenkins']=''
+user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
 
 

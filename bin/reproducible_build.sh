@@ -135,7 +135,7 @@ update_db_and_html() {
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			log_info "$MESSAGE"
-			irc_message debian-reproducible "$MESSAGE"
+			irc_message debian-reproducible-changes "$MESSAGE"
 			# disable ("regular") irc notification unless it's due to diffoscope problems
 			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then
 				NOTIFY=""

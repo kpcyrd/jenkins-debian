@@ -26,6 +26,7 @@ channels = [
     {'name': 'debian-haskell', 'id': 'jenkins-debian-haskell'},
     {'name': 'debian-qa', 'id': 'jenkins-debian-qa'},
     {'name': 'debian-reproducible', 'id': 'jenkins-debian-reproducible'},
+    {'name': 'debian-reproducible-changes', 'id': 'debian-reproducible-changes'},
     {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
     {'name': 'debian-ruby', 'id': 'pkg-ruby-extras'},
 ]

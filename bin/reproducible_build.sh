@@ -136,10 +136,6 @@ update_db_and_html() {
 			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
 			log_info "$MESSAGE"
 			irc_message debian-reproducible-changes "$MESSAGE"
-			# disable ("regular") irc notification unless it's due to diffoscope problems
-			if [ ! -z "$NOTIFY" ] && [ "$NOTIFY" != "diffoscope" ] ; then
-				NOTIFY=""
-			fi
 		fi
 		if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
 		  [ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \

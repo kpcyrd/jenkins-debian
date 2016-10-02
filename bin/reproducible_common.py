@@ -691,8 +691,8 @@ def get_trailing_bug_icon(bug, bugs, package=None):
     return html
 
 
-def irc_msg(msg):
-    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/debian-reproducible.conf',
+def irc_msg(msg, channel='debian-reproducible'):
+    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/%s.conf' % channel,
            '--relay-msg']
     kgb.extend(str(msg).strip().split())
     call(kgb)

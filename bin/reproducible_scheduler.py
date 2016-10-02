@@ -689,4 +689,4 @@ if __name__ == '__main__':
         # build the kgb message text
         message = 'Scheduled in ' + '+'.join(SUITES) + ':' + message
         log.info(message)
-        irc_msg(message)
+        irc_msg(message, channel='debian-reproducible-changes')

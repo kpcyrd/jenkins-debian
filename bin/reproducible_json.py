@@ -47,8 +47,8 @@ for row in result:
     log.debug(pkg)
     output.append(pkg)
 
-    # tracker.d.o should only care about results in unstable
-    if pkg['suite'] == 'unstable':
+    # tracker.d.o should only care about results in testing
+    if pkg['suite'] == 'testing':
 
         package = pkg['package']
         if package in crossarch:

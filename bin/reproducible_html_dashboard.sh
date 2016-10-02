@@ -489,32 +489,33 @@ create_dashboard_page() {
 	write_page "<tr><td class=\"left\">total number of identified issues in packages</td><td>$COUNT_ISSUES</td><td colspan=\"$AC\"></td></tr>"
 	write_page "<tr><td class=\"left\">packages with notes about these issues</td><td>$NOTES</td><td colspan=\"$AC\"></td></tr>"
 
-	local TD_PKG_NOISSUES="<tr><td class=\"left\">packages in unstable with issues but without identified ones</td><td></td>"
-	local TD_PKG_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
-	local TD_PKG_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
-	local TD_PKG_SID="<tr><td class=\"left\">packages in unstable which need to be fixed</td><td></td>"
-	local TD_PKG_TESTING="<tr><td class=\"left\">&nbsp;&nbsp;- in testing</td><td></td>"
+	local TD_PKG_SID_NOISSUES="<tr><td class=\"left\">packages in unstable with issues but without identified ones</td><td></td>"
+	local TD_PKG_SID_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
+	local TD_PKG_SID_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
+	local TD_PKG_SID_ISSUES="<tr><td class=\"left\">packages in unstable which need to be fixed</td><td></td>"
+	local TD_PKG_TESTING_ISSUES="<tr><td class=\"left\">&nbsp;&nbsp;- in testing</td><td></td>"
 	for ARCH in ${ARCHS} ; do
 		SUITE="unstable"
 		gather_suite_arch_stats
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-		TD_PKG_NOISSUES="$TD_PKG_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_SID_NOISSUES="$TD_PKG_SID_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-		TD_PKG_FTBR="$TD_PKG_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_SID_FTBR="$TD_PKG_SID_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
-		TD_PKG_FTBFS="$TD_PKG_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
-		TD_PKG_SID="$TD_PKG_SID<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+		TD_PKG_SID_FTBFS="$TD_PKG_SID_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_SID_ISSUES="$TD_PKG_SID_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+
 		SUITE="testing"
 		gather_suite_arch_stats
-		TD_PKG_TESTING="$TD_PKG_TESTING<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+		TD_PKG_TESTING_ISSUES="$TD_PKG_TESTING_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
 	done
 	ARCH="amd64"
 	SUITE="unstable"
-	write_page "$TD_PKG_NOISSUES</tr>"
-	write_page "$TD_PKG_FTBR</tr>"
-	write_page "$TD_PKG_FTBFS</tr>"
-	write_page "$TD_PKG_SID</tr>"
-	write_page "$TD_PKG_TESTING</tr>"
+	write_page "$TD_PKG_SID_NOISSUES</tr>"
+	write_page "$TD_PKG_SID_FTBR</tr>"
+	write_page "$TD_PKG_SID_FTBFS</tr>"
+	write_page "$TD_PKG_SID_ISSUES</tr>"
+	write_page "$TD_PKG_TESTING_ISSUES</tr>"
 
 	# in the following two write_page() calls we use the same
 	# insane grep to filter people who committed with several

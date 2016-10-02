@@ -497,13 +497,14 @@ create_dashboard_page() {
 	for ARCH in ${ARCHS} ; do
 		SUITE="unstable"
 		gather_suite_arch_stats
+		TD_PKG_SID_ISSUES="$TD_PKG_SID_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 		TD_PKG_SID_NOISSUES="$TD_PKG_SID_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 		TD_PKG_SID_FTBR="$TD_PKG_SID_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(sqlite3 -init ${INIT} ${PACKAGES_DB} "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH')")
 		TD_PKG_SID_FTBFS="$TD_PKG_SID_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
-		TD_PKG_SID_ISSUES="$TD_PKG_SID_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
 
 		SUITE="testing"
 		gather_suite_arch_stats

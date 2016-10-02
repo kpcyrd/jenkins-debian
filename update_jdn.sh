@@ -640,7 +640,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] 
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
 		# the last condition is to assure the files are owned by the right user/team
-		if [ "$KGB_SECRETS" -nt $STAMP ] || [ ! -f $STAMP ] ; then
+		if [ "$KGB_SECRETS" -nt $STAMP ] || [ "deploy_kgb.py" -nt "$STAMP" ] || [ ! -f $STAMP ] ; then
 			sudo -u jenkins-adm "./deploy_kgb.py"
 		else
 			explain "kgb-client configuration unchanged, nothing to do."

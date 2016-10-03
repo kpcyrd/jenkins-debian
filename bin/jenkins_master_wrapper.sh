@@ -70,7 +70,7 @@ ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
 
 # grab artifacts and tidy up at the other end
 if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
-	RESULTS="$WORKSPACE/results"
+	RESULTS="$WORKSPACE/workspace/$JOB_NAME/results"
 	NODE_RESULTS="/var/lib/jenkins/srv/jenkins/pseudo-hosts/profitbricks-build10-amd64~jenkins/$JOB_NAME/workspace/results"
 	echo "$(date -u) - retrieving artifacts."
 	set -x

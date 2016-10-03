@@ -79,7 +79,7 @@ elif [[ "$*" =~ ^lvc_.* ]] ; then
 	export EXECUTOR_NUMBER=$1 ; shift
 	export TRIGGERING_BRANCH=${1#*=} ; shift
 	# FIXME: hard-coding profitbricks-build10-amd64… and ~ there is ugly too…
-	export WORKSPACE=/var/lib/jenkins/srv/jenkins/pseudo-hosts/profitbricks-build10-amd64~jenkins/$JOB_NAME/workspace/results
+	export WORKSPACE=/var/lib/jenkins/srv/jenkins/pseudo-hosts/profitbricks-build10-amd64~jenkins/$JOB_NAME/workspace
 	COMMAND="/srv/jenkins/bin/lvc.sh $@"
 	exec $COMMAND; croak "Exec failed";
 elif [ "$*" = "reproducible_nodes_info" ] ; then

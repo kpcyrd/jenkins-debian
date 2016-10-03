@@ -44,7 +44,7 @@ write_page "<p>These source packages (and their binaries packages) are different
 write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
 write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
 write_page "</pre></p>"
-write_page "<p><table><tr><th class=\"center\">package</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug</th><th class=\"center\">old versions in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'testing'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+write_page "<p><table><tr><th class=\"center\">package</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old versions in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'testing'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
 
 custom_curl http://reproducible.alioth.debian.org/debian/Sources $SOURCES
 custom_curl http://reproducible.alioth.debian.org/debian/Packages $PACKAGES
@@ -235,7 +235,7 @@ done
 cat $TABLE_TODO >> $PAGE
 write_page "</table></p>"
 if [ -s $TABLE_DONE ] ; then
-	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'testing'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'testing'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
 	cat $TABLE_DONE >> $PAGE
 	write_page "</table></p>"
 fi

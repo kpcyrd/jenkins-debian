@@ -234,9 +234,11 @@ for PKG in $SOURCEPKGS ; do
 done
 cat $TABLE_TODO >> $PAGE
 write_page "</table></p>"
-write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'testing'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
-cat $TABLE_DONE >> $PAGE
-write_page "</table></p>"
+if [ -s $TABLE_DONE ] ; then
+	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'testing'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+	cat $TABLE_DONE >> $PAGE
+	write_page "</table></p>"
+fi
 write_page_footer
 publish_page debian
 echo "$MODIFIED_IN_SID" > /srv/reproducible-results/modified_in_sid.txt

@@ -77,9 +77,6 @@ if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 	mkdir -p "$RESULTS"
 	rsync -r --delete -v -e "ssh -o 'Batchmode = yes' -p $PORT" "$NODE_NAME:$NODE_RESULTS/" "$RESULTS/"
 	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -r $NODE_RESULTS"
-	ls -lad "$RESULTS"
-	ls -la "$RESULTS"
-	echo "WORKSPACE=$WORKSPACE"
 fi
 
 exit $RETVAL

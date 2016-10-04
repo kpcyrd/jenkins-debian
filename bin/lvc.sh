@@ -4,7 +4,7 @@
 # Copyright 2016 Philip Hands <phil@hands.com>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -83,7 +83,6 @@ discard_snapshots() {
 if [ -z "$WORKSPACE" ] ; then
     WORKSPACE=$PWD
 fi
-echo WORKSPACE=$WORKSPACE
 RESULTS=$WORKSPACE/results
 
 IMAGE=$WORKSPACE/$(basename $URL)

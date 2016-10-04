@@ -72,9 +72,6 @@ elif [[ "$*" =~ ^rebootstrap_.* ]] ; then
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
 elif [[ "$*" =~ ^lvc_.* ]] ; then
-	echo debug begin
-	export
-	echo debug end
 	export JOB_NAME=$1 ; shift
 	export EXECUTOR_NUMBER=$1 ; shift
 	export TRIGGERING_BRANCH=${1#*=} ; shift

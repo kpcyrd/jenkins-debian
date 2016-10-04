@@ -714,11 +714,11 @@ post_install_boot() {
 							;;
 						0220)	! $EDUTESTMODE || do_and_report key enter
 							;;
-						0250)	do_and_report type jenkins
+						0250)	do_and_report type root
 							;;
 						0260)	do_and_report key enter
 							;;
-						0270)	do_and_report type insecure
+						0270)	do_and_report type r00t
 							;;
 						0280)	do_and_report key enter
 							;;
@@ -742,17 +742,13 @@ post_install_boot() {
 							;;
 						0400)	do_and_report key enter
 							;;
-						0420)	do_and_report type "su"
+						0420)	do_and_report type "id"
 							;;
 						0430)	do_and_report key enter
 							;;
-						0440)	do_and_report type r00tme
+						0450)	do_and_report type poweroff
 							;;
-						0450)	do_and_report key enter
-							;;
-						0460)	do_and_report type poweroff
-							;;
-						0470)	do_and_report key enter
+						0460)	do_and_report key enter
 							;;
 						*)	;;
 					esac

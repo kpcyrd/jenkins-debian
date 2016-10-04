@@ -976,11 +976,7 @@ post_install_boot() {
 							;;
 						0300)	do_and_report key enter
 							;;
-						0350)	do_and_report key alt-f2
-							;;
-						0410)	do_and_report type "iceweasel"
-							;;
-						0420)	do_and_report key space
+						0350)	do_and_report key ctrl-l
 							;;
 						0430)	do_and_report type "www"
 							;;

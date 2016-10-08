@@ -52,7 +52,7 @@
     name: '{name}_sid'
     triggers:
       - pollscm:
-          cron: '*/6 * * * *'
+          cron: '* H/2 * * *'
 
 - project:
     name: lintian-tests

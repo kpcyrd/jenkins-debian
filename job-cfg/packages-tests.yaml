@@ -1,0 +1,76 @@
+- defaults:
+    name: packages-tests
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/qa.debian.org/
+          text: Jobs for Debian QA related packages
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description} running on {my_distro}.<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    scm:
+      - git:
+          url: '{my_git_url}'
+          branches:
+            - master
+            - 'origin/smoke-me/**'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+    publishers:
+      - email:
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org {my_recipients}'
+      - trigger:
+          project: '{my_trigger}'
+
+
+- job-template:
+    defaults: packages-tests
+    name: '{name}_wheezy'
+
+- job-template:
+    defaults: packages-tests
+    name: '{name}_stretch'
+
+- job-template:
+    defaults: packages-tests
+    name: '{name}_jessie'
+
+- job-template:
+    defaults: packages-tests
+    name: '{name}_sid'
+    triggers:
+      - pollscm:
+          cron: '*/6 * * * *'
+
+- project:
+    name: lintian-tests
+    my_git_url: 'git://anonscm.debian.org/lintian/lintian.git'
+    my_recipients: 'jenkins+debian-qa lintian-maint@debian.org'
+    my_shell: 'timeout 6h debian/rules runtests'
+    my_description: 'Debian/Lintian testsuite'
+    my_trigger:
+    jobs:
+        - '{name}_sid':
+            my_distro: 'sid'
+            my_trigger: '{name}_stretch'
+        - '{name}_stretch':
+            my_distro: 'stretch'
+            my_trigger: '{name}_jessie'
+        - '{name}_jessie':
+            my_distro: 'jessie'
+            my_trigger: '{name}_wheezy'
+        - '{name}_wheezy':
+            my_distro: 'wheezy backports'
+

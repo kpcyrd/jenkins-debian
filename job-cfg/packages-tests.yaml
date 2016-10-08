@@ -90,4 +90,3 @@
             my_trigger: '{name}_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'
-            my_trigger: '{name}_wheezy'

@@ -74,3 +74,20 @@
         - '{name}_wheezy':
             my_distro: 'wheezy backports'
 
+- project:
+    name: debhelper-tests
+    my_git_url: 'git://anonscm.debian.org/debhelper/debhelper.git'
+    my_recipients: 'jenkins+debian-qa debhelper-devel@lists.alioth.debian.org'
+    my_shell: 'timeout 6h dpkg-buildpackage -us -uc -tc'
+    my_description: 'Debhelper testsuite'
+    my_trigger:
+    jobs:
+        - '{name}_sid':
+            my_distro: 'sid'
+            my_trigger: '{name}_stretch'
+        - '{name}_stretch':
+            my_distro: 'stretch'
+            my_trigger: '{name}_jessie'
+        - '{name}_jessie':
+            my_distro: 'jessie'
+            my_trigger: '{name}_wheezy'

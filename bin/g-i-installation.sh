@@ -945,14 +945,15 @@ post_install_boot() {
 						# debian-edu installations report error found during installation, go forward
 						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
-						0150)	do_and_report type jenkins
-							;;
-						0160)	do_and_report key enter
-							;;
-						0170)	do_and_report type insecure
-							;;
-						0180)	do_and_report key enter
-							;;
+						# disabled, workstation needs main-server for login…
+						#0150)	do_and_report type jenkins
+						#	;;
+						#0160)	do_and_report key enter
+						#	;;
+						#0170)	do_and_report type insecure
+						#	;;
+						#0180)	do_and_report key enter
+						#	;;
 						*)	;;
 					esac
 					;;

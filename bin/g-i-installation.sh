@@ -823,54 +823,55 @@ post_install_boot() {
 							;;
 						0840)	do_and_report key enter
 							;;
-						0850)	do_and_report type apt-get 	# apt-get install w3m
-							;;
-						0860)	do_and_report key space
-							;;
-						0870)	do_and_report type '-y'
-							;;
-						0880)	do_and_report key space
-							;;
-						0890)	do_and_report type install
-							;;
-						0900)	do_and_report key space
-							;;
-						0910)	do_and_report type w3m
-							;;
-						0920)	do_and_report key enter
-							;;
-						1000)	do_and_report type w3m 		# check nagios
-							;;
-						1010)	do_and_report key space
-							;;
-						1020)	do_and_report type 'https;'
-							;;
-						1030)	do_and_report type '//www'
-							;;
-						1040)	do_and_report type '/nagios'
-							;;
-						1050)	do_and_report key enter
-							;;
-						1090)	do_and_report type q
-							;;
-						1100)	do_and_report key enter
-							;;
-						1010)	do_and_report type w3m		# check cups
-							;;
-						1120)	do_and_report key space
-							;;
-						1130)	do_and_report type 'https;'
-							;;
-						1150)	do_and_report type '//www'
-							;;
-						1170)	do_and_report type ';631'
-							;;
-						1180)	do_and_report key enter
-							;;
-						1250)	do_and_report type q
-							;;
-						1270)	do_and_report key enter
-							;;
+						# there is not network, so dont try to install w3m…
+						#0850)	do_and_report type apt-get 	# apt-get install w3m
+						#	;;
+						#0860)	do_and_report key space
+						#	;;
+						#0870)	do_and_report type '-y'
+						#	;;
+						#0880)	do_and_report key space
+						#	;;
+						#0890)	do_and_report type install
+						#	;;
+						#0900)	do_and_report key space
+						#	;;
+						#0910)	do_and_report type w3m
+						#	;;
+						#0920)	do_and_report key enter
+						#	;;
+						#1000)	do_and_report type w3m 		# check nagios
+						#	;;
+						#1010)	do_and_report key space
+						#	;;
+						#1020)	do_and_report type 'https;'
+						#	;;
+						#1030)	do_and_report type '//www'
+						#	;;
+						#1040)	do_and_report type '/nagios'
+						#	;;
+						#1050)	do_and_report key enter
+						#	;;
+						#1090)	do_and_report type q
+						#	;;
+						#1100)	do_and_report key enter
+						#	;;
+						#1010)	do_and_report type w3m		# check cups
+						#	;;
+						#1120)	do_and_report key space
+						#	;;
+						#1130)	do_and_report type 'https;'
+						#	;;
+						#1150)	do_and_report type '//www'
+						#	;;
+						#1170)	do_and_report type ';631'
+						#	;;
+						#1180)	do_and_report key enter
+						#	;;
+						#1250)	do_and_report type q
+						#	;;
+						#1270)	do_and_report key enter
+						#	;;
 						1330)	do_and_report type poweroff	# poweroff
 							;;
 						1340)	do_and_report key enter

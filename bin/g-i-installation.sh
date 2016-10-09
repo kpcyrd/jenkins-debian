@@ -718,7 +718,7 @@ post_install_boot() {
 							;;
 						0260)	do_and_report key enter
 							;;
-						0270)	do_and_report type r00t
+						0270)	do_and_report type r00tme
 							;;
 						0280)	do_and_report key enter
 							;;

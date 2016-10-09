@@ -231,7 +231,7 @@
             - minimal:      { my_time: '23 20 * * 3,6' }
             - standalone:   { my_time: '42 20 * * 3,6' }
             - workstation:  { my_time: '42 22 * * 3' }
-            - combi-server: { my_time: '42 0 * * 3', my_disksize: 60 }
+            - combi-server: { my_time: '42 0 * * 3', my_disksize: 70 }
             - main-server:  { my_time: '42 2 * * 3,6', my_disksize: 30 }
       - '{name}_{my_dist}_desktop_group':
           my_dist:

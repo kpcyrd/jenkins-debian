@@ -15,10 +15,12 @@ import lzma
 import deb822
 import aptsources.sourceslist
 import random
+import smtplib
 from subprocess import call
 from apt_pkg import version_compare
 from urllib.request import urlopen
 from sqlalchemy import sql
+from email.mime.text import MIMEText
 
 from reproducible_common import *
 from reproducible_html_live_status import generate_schedule
@@ -689,4 +691,12 @@ if __name__ == '__main__':
         # build the kgb message text
         message = 'Scheduled in ' + '+'.join(SUITES) + ':' + message
         log.info(message)
-        irc_msg(message, channel='debian-reproducible-changes')
+        # irc_msg(message, channel='debian-reproducible-changes')
+        # send mail instead of notifying via irc, less intrusive
+        msg = MIMEText(message)
+        msg['Subject'] = 'packages scheduled for reproducible Debian'
+        msg['From'] = 'jenkins@jenkins.debian.net'
+        msg['To'] = 'qa-jenkins-scm@lists.alioth.debian.org'
+        s = smtplib.SMTP('localhost')
+        s.sendmail(me, [you], msg.as_string())
+        s.quit()

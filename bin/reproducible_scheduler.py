@@ -697,9 +697,11 @@ if __name__ == '__main__':
         # irc_msg(message, channel='debian-reproducible-changes')
         # send mail instead of notifying via irc, less intrusive
         msg = MIMEText(message)
+        mail_from = 'jenkins@jenkins.debian.net'
+        mail_to = 'qa-jenkins-scm@lists.alioth.debian.org'
+        msg['From'] = mail_from
+        msg['To'] = mail_to
         msg['Subject'] = 'packages scheduled for reproducible Debian'
-        msg['From'] = 'jenkins@jenkins.debian.net'
-        msg['To'] = 'qa-jenkins-scm@lists.alioth.debian.org'
         s = smtplib.SMTP('localhost')
-        s.sendmail(me, [you], msg.as_string())
+        s.sendmail(mail_from, [mail_to], msg.as_string())
         s.quit()

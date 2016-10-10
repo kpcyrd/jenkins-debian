@@ -138,10 +138,10 @@ Installation tests inside chroot environments.
 * Currently, three suites are tested on 'amd64', 'i386' and 'armhf' architectures: 'testing', 'unstable' and 'experimental'. The tests are done using 'pbuilder' using link:https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain[our toolchain] through concurrent builder jobs, 16 for 'amd64' and 'i386' each, and 57 for 'armhf', which are each constantly testing packages and saving the results of these tests.
 
 ** These builds on remote nodes run on very different hardware: for 'amd64' and 'i386' we are using two virtual machines each, profitbricks-build(1+5)-amd64 and profitbricks-build(2+6)-i386, which have 18 or 17 cores and 48gb ram each and are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
-** To test 'armhf' we are using 21 small boards donated by vagrant@d.o:
+** To test 'armhf' we are using 22 small boards donated by vagrant@d.o:
 *** five quad-cores (cbxi4a, cbxi4b, and ff4a) with 4gb ram,
 *** three octo-cores (odxu4, odxu4b and odxu4c) with 2gb ram,
-*** eight quad-cores (wbq0, cbxi4pro0, ff2a, ff2b, odu3a, opi2b, opi2c and jtk1a) with 2gb ram, 
+*** nine quad-cores (wbq0, cbxi4pro0, ff2a, ff2b, odu3a, opi2a, opi2b, opi2c and jtk1a) with 2gb ram, 
 *** two dual-core (bbx15 and cb3a) with 2gb ram and,
 *** two quad-cores (rpi2b and rpi2c) with 1gb ram and
 *** three dual-cores (bpi0, hb0 and wbd0) with 1gb ram, each. 

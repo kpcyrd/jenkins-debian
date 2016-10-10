@@ -34,6 +34,7 @@ ff2a-armhf-rb.debian.net
 ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
+opi2a-armhf-rb.debian.net
 opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net"
 
@@ -88,6 +89,9 @@ get_node_ssh_port() {
 	    ;;
 	  ff4a-armhf-rb.debian.net)
 	    PORT=2241
+	    ;;
+	  opi2a-armhf-rb.debian.net)
+	    PORT=2236
 	    ;;
 	  opi2b-armhf-rb.debian.net)
 	    PORT=2238

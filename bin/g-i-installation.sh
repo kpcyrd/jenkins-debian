@@ -946,6 +946,9 @@ post_install_boot() {
 						# debian-edu installations report error found during installation, go forward
 						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
+						# try shutdown
+						0200)	do_and_report key ctrl-alt-del
+							;;
 						# disabled, workstation needs main-server for login…
 						#0150)	do_and_report type jenkins
 						#	;;

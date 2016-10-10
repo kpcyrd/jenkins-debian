@@ -772,6 +772,14 @@ check_buildinfo() {
 	rm -f $TMPFILE1 $TMPFILE2
 }
 
+share_buildinfo() {
+	# Submit the buildinfo files to third-party archives:
+
+	# buildinfo.kfreebsd.eu administered by Steven Chamberlain <steven@pyro.eu.org>
+	mail -s "buildinfo from $NODE1" submit@buildinfo.kfreebsd.eu < ./b1/$BUILDINFO || true
+	mail -s "buildinfo from $NODE2" submit@buildinfo.kfreebsd.eu < ./b2/$BUILDINFO || true
+}
+
 build_rebuild() {
 	FTBFS=1
 	mkdir b1 b2
@@ -876,6 +884,7 @@ if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
 	call_diffoscope_on_buildinfo_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
+	share_buildinfo
 fi
 print_out_duration
 

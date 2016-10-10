@@ -349,7 +349,7 @@ write_suite_arch_table() {
 	local SUITE=""
 	local ARCH=""
 	write_page "<p>"
-	write_page "<table class=\"main\"><tr><th class=\"left\">suite</th><th class=\"center\">all sources packages</th><th class=\"center\">"
+	write_page "<table class=\"main\"><tr><th class=\"left\">suite</th><th class=\"center\">all source packages</th><th class=\"center\">"
 	set_icon reproducible
 	write_icon
 	write_page "reproducible packages</th><th class=\"center\">"

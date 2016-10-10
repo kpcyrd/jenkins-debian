@@ -135,7 +135,7 @@ cat > $PAGE <<- EOF
 EOF
 write_page_intro "$RELEASE"
 write_variation_table "$RELEASE"
-write_page "    <table><tr><th>release (architecture)</th><th>all sources packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download failures</th><th>unknown state</th></tr>"
+write_page "    <table><tr><th>release (architecture)</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download failures</th><th>unknown state</th></tr>"
 cat $HTML_RPM_STATS >> $PAGE
 rm $HTML_RPM_STATS > /dev/null
 write_page "    </table>"

@@ -216,6 +216,7 @@ def update_sources(suite):
     for arch in ARCHS:
         log.info('Updating sources db for %s/%s...', suite, arch)
         update_sources_db(suite, arch, sources)
+        log.info('DB update done for %s/%s done at %s.', suite, arch, datetime.now())
 
 
 def update_sources_db(suite, arch, sources):

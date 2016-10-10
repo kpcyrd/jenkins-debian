@@ -565,7 +565,7 @@
 
         # could have all archs in one block, but it seems cleaner this way
         # to choose new jobs:
-        #       for i in bbx15 bpi0 cbxi4a cbxi4b cbxi4pro0 cb3a ff2a ff2b ff4a hb0 jtk1a odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c rpi2b rpi2c wbd0 wbq0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; echo ; done
+        #       for i in bbx15 bpi0 cbxi4a cbxi4b cbxi4pro0 cb3a ff2a ff2b ff4a hb0 jtk1a odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c rpi2b rpi2c wbd0 wbq0 ; do echo "$i: " ; grep my_node1 job-cfg/reproducible.yaml|grep armhf|grep $i-armhf ; done
         #       8 jobs for quad-cores with 4 gb ram
         #       6 jobs for octo-cores with 2 gb ram
         #       6 jobs for quad-cores with 2 gb ram
@@ -609,9 +609,9 @@
                 - '32': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
                 - '33': { my_node1: 'ff2a-armhf-rb',      my_node2: 'opi2b-armhf-rb'     }
                 - '34': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'opi2b-armhf-rb'     }
-                - '35': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'ff2b-armhf-rb'      }
-                - '36': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'cbxi4a-armhf-rb'    }
-                - '37': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'wbq0-armhf-rb'      }
+                - '35': { my_node1: 'opi2a-armhf-rb',     my_node2: 'ff2b-armhf-rb'      }
+                - '36': { my_node1: 'opi2a-armhf-rb',     my_node2: 'cbxi4a-armhf-rb'    }
+                - '37': { my_node1: 'opi2a-armhf-rb',     my_node2: 'wbq0-armhf-rb'      }
                 - '38': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'jtk1a-armhf-rb'     }
                 - '39': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'cbxi4a-armhf-rb'    }
                 - '40': { my_node1: 'opi2b-armhf-rb',     my_node2: 'cbxi4b-armhf-rb'    }
@@ -632,6 +632,9 @@
                 - '55': { my_node1: 'opi2c-armhf-rb',     my_node2: 'odu3a-armhf-rb'     }
                 - '56': { my_node1: 'odu3a-armhf-rb',     my_node2: 'ff2a-armhf-rb'      }
                 - '57': { my_node1: 'opi2c-armhf-rb',     my_node2: 'ff2a-armhf-rb'      }
+                - '58': { my_node1: 'cbxi4a-armhf-rb',    my_node2: 'opi2a-armhf-rb'     }
+                - '59': { my_node1: 'jtk1a-armhf-rb',     my_node2: 'opi2a-armhf-rb'     }
+                - '60': { my_node1: 'cbxi4b-armhf-rb',    my_node2: 'opi2a-armhf-rb'     }
 
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1} {my_node2}'
             my_timed: '* * * * *'

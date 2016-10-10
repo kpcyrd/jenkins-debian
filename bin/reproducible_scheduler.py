@@ -673,6 +673,7 @@ if __name__ == '__main__':
     log.info('Updating sources tables for all suites.')
     for suite in SUITES:
         update_sources(suite)
+        log.info('Sources for suite %s done at %s.', suite, datetime.now())
     purge_old_pages()
     query = 'SELECT count(*) ' + \
             'FROM schedule AS p JOIN sources AS s ON s.id=p.package_id ' + \
@@ -687,6 +688,7 @@ if __name__ == '__main__':
         log.info('%s packages already scheduled for %s, probably scheduling some '
                  'more...', overall, arch)
         message += scheduler(arch)
+        log.info('Arch %s scheduled at %s.', arch, datetime.now())
     if message != '':
         # build the kgb message text
         message = 'Scheduled in ' + '+'.join(SUITES) + ':' + message

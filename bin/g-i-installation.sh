@@ -947,17 +947,20 @@ post_install_boot() {
 						0100)	! $EDUTESTMODE || do_and_report move 760 560 click 1
 							;;
 						# try shutdown
-						0200)	do_and_report key ctrl-alt-del
+						0150)	do_and_report key ctrl-alt-f1
 							;;
-						# disabled, workstation needs main-server for login…
-						#0150)	do_and_report type jenkins
-						#	;;
-						#0160)	do_and_report key enter
-						#	;;
-						#0170)	do_and_report type insecure
-						#	;;
-						#0180)	do_and_report key enter
-						#	;;
+						0170)	do_and_report type root
+							;;
+						0180)	do_and_report key enter
+							;;
+						0190)	do_and_report type r00tme
+							;;
+						0200)	do_and_report key enter
+							;;
+						0220)	do_and_report type "poweroff"
+						       ;;
+						0240)	do_and_report key enter
+							;;
 						*)	;;
 					esac
 					;;

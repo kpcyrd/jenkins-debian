@@ -507,6 +507,10 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 			jenkins|profitbricks-build*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
 			*)	;;
 	esac
+	case $HOSTNAME in
+			jenkins) [ -L /etc/munin/plugins/postfix_mailstats ] || for i in postfix_mailstats postfix_mailvolume postfix_mailqueue ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
+			*)	;;
+	esac
 	if [ "$HOSTNAME" != "jenkins" ] && [ -L /etc/munin/plugins/iostat ] ; then
 		sudo rm /etc/munin/plugins/iostat
 	fi

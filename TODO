@@ -201,11 +201,12 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** issues: currently only state of amd64 is shown. it would be better to display packages as unreproducible if they are unreproducible on any architecture.
 ** include diffoscope run time in log
 
-* missing tests:
+* missing varitations:
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 ** vary the length of the build paths (/build/first vs /build/second), only once the unreproducibilities caused by different build paths are solved
+** vary the init system: sysv and systemd
 
 ==== reproducible Debian armhf
 

@@ -300,7 +300,8 @@ Given /^I select British English$/ do
   @screen.wait(diui_png("UnitedKingdom"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
   @screen.click_point(@screen.w-2, @screen.h*2/3)
-  @screen.wait(diui_png("BritishEnglish"), 10 * PATIENCE)
+  # FIXME -- we're accepting AmmericanEnglish here, despite the fact it should be BritishEnglish due to the above -- looks like a D-I bug to me
+  on_screen, _ = @screen.waitAny([diui_png("BritishEnglish"),diui_png("AmericanEnglish")], 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 

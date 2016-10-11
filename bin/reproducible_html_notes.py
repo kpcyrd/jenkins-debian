@@ -399,7 +399,7 @@ def issues_popcon_annotate(issues_list):
     try:
         n = len(issues_list)
         popcon_dict = dict((p, 0) for p in issues_list)
-        popcon_dict.update(popcon.package(*issues_list))
+        popcon_dict.update(popcon.source_package(*issues_list))
         issues = sorted(popcon_dict.items(), key=lambda p: p[0])
         issues_by_popcon = sorted(issues, key=lambda p: p[1], reverse=True)
         issues_with_popcon = [(p[0], p[1], i<n/4) for i, p in enumerate(issues_by_popcon)]
@@ -470,9 +470,9 @@ if __name__ == '__main__':
     try:
         index_issues(issues, OrderedDict([
             ("Sum of packages' popcon scores",
-             lambda l: sum(popcon.package(*l).values())),
+             lambda l: sum(popcon.source_package(*l).values())),
             ("Sum of square-roots of packages' popcon scores",
-             lambda l: int(sum(map(sqrt, popcon.package(*l).values())))),
+             lambda l: int(sum(map(sqrt, popcon.source_package(*l).values())))),
             ("Number of packages",
              len),
         ]))

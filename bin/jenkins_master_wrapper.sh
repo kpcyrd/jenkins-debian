@@ -60,7 +60,9 @@ if [ $RESULT -ne 0 ] ; then
 	exec /srv/jenkins/bin/abort.sh
 fi
 set -e
-# run things on the target node
+#
+# actually run things on the target node
+#
 RETVAL=0
 ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
 	# mention failures, but continue since we might want the artifacts anyway
@@ -79,4 +81,7 @@ if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -r $NODE_RESULTS"
 fi
 
+#
+# exit with the actual exit code from the target node 
+#
 exit $RETVAL

@@ -272,14 +272,7 @@ openwrt_build() {
 	trap node_cleanup_tmpdirs INT TERM EXIT
 
 	# openwrt/lede is checkouted under /download
-	cd $TMPBUILDDIR
-
-	# checkout the repo
-	echo "============================================================================="
-	echo "$(date -u) - Cloning $TYPE git repository."
-	echo "============================================================================="
-	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO $TYPE
-	cd $TYPE
+	cd $TMPBUILDDIR/$TYPE
 
 	# set tz, date, core, ..
 	openwrt_apply_variations $RUN

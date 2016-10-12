@@ -215,8 +215,8 @@ openwrt_download() {
 	cd $TYPE
 
 	# update feeds
-	./scripts/feeds update
-	./scripts/feeds install -a
+	#./scripts/feeds update
+	#./scripts/feeds install -a
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config $CONFIG

@@ -144,7 +144,9 @@ openwrt_apply_variations() {
 		export LC_ALL="fr_CH.UTF-8"
 		export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
 		export CAPTURE_ENVIRONMENT="I capture the environment"
-		umask 0002
+		# needs to fix openwrt/lede ;)
+		# umask 0002
+
 		# use allmost all cores for second build
 		export NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 		export MAKE="linux64 --uname-2.6 make"

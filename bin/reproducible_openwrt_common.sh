@@ -317,8 +317,8 @@ build_two_times() {
 	echo "== node2"
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPDIR
 
-	rsync -av $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
-	rsync -av $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
+	rsync -a $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
+	rsync -a $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
 
 	## first run
 	RUN=b1

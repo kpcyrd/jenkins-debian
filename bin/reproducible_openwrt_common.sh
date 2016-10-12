@@ -23,6 +23,16 @@ node_cleanup_tmpdirs() {
 	rm -rf $TMPDIR
 }
 
+node_create_tmpdirs() {
+	export TMPDIR=$1
+	# (very simple) check what we are creating
+	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] ; then
+		echo "Something very strange with \$TMPDIR=$TMPDIR exiting instead of doing create."
+		exit 1
+	fi
+	mkdir -p $TMPDIR/download
+}
+
 # called as trap handler
 # called on cleanup
 master_cleanup_tmpdirs() {
@@ -206,7 +216,6 @@ openwrt_download() {
 	local CONFIG=$3
 	local TMPDIR=$4
 
-	mkdir -p $TMPDIR/download
 	cd $TMPDIR/download
 
 	# checkout the repo
@@ -295,6 +304,8 @@ build_two_times() {
 	TARGET=$2
 	CONFIG=$3
 
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
 	# download and prepare openwrt on node b1
 	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
 	rsync -a $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/

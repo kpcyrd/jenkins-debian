@@ -27,6 +27,7 @@ case $1 in
 			openwrt_build |\
 			openwrt_download |\
 			openwrt_get_banner |\
+			node_create_tmpdirs |\
 			node_cleanup_tmpdirs) ;; # this is the allowed list
 			*)
 				echo "Unsupported remote node function $@"

@@ -196,6 +196,33 @@ openwrt_compile() {
 	ionice -c 3 $MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
 }
 
+# called by openwrt_two_times
+# ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
+openwrt_download() {
+	local TYPE=$1
+	local TARGET=$2
+	local CONFIG=$3
+	local TMPDIR=$4
+
+	mkdir -p $TMPDIR/download
+	cd $TMPDIR/download
+
+	# checkout the repo
+	echo "============================================================================="
+	echo "$(date -u) - Cloning $TYPE git repository."
+	echo "============================================================================="
+	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO $TYPE
+	cd $TYPE
+
+	# update feeds
+	./scripts/feeds update
+	./scripts/feeds install -a
+
+	# configure openwrt because otherwise it wont download everything
+	openwrt_config $CONFIG
+	make download -j $NUM_CPU
+}
+
 openwrt_get_banner() {
 	TMPDIR=$1
 	TYPE=$2
@@ -225,17 +252,10 @@ openwrt_build() {
 	export TMPDIR=$5
 	export TMPBUILDDIR=$TMPDIR/build/
 
-	if [ -d $TMPDIR ] ; then
-		echo "============================================================================="
-		echo "TMPDIR already exists! $TMPDIR"
-		echo "============================================================================="
-		exit 1
-	fi
-	mkdir -p $TMPBUILDDIR
+	mv "$TMPDIR/download" "$TMPBUILDDIR"
 	trap node_cleanup_tmpdirs INT TERM EXIT
 
-	# we have also to set the TMP
-
+	# openwrt/lede is checkouted under /download
 	cd $TMPBUILDDIR
 
 	# checkout the repo
@@ -248,8 +268,6 @@ openwrt_build() {
 	# set tz, date, core, ..
 	openwrt_apply_variations $RUN
 
-	# configure openwrt
-	openwrt_config $CONFIG
 	openwrt_build_toolchain
 	# build images and packages
 	openwrt_compile $TYPE $RUN $TARGET
@@ -274,6 +292,11 @@ build_two_times() {
 	TYPE=$1
 	TARGET=$2
 	CONFIG=$3
+
+	# download and prepare openwrt on node b1
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
+	rsync -a $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
+	rsync -a $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
 
 	## first run
 	RUN=b1

@@ -25,6 +25,7 @@ case $1 in
 		shift
 		case $1 in
 			openwrt_build |\
+			openwrt_download |\
 			openwrt_get_banner |\
 			node_cleanup_tmpdirs) ;; # this is the allowed list
 			*)

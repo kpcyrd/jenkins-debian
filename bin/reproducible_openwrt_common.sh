@@ -320,7 +320,7 @@ build_two_times() {
 	echo "== master"
 	ls -la "$TMPDIR/download/" || true
 	echo "== node1"
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPDIR
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_debug $TMPDIR
 	echo "== node2"
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPDIR
 

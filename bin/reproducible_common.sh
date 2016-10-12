@@ -286,8 +286,8 @@ write_page_header() {
 
 write_page_intro() {
 	write_page "       <p><em>Reproducible builds</em> enable anyone to reproduce bit by bit identical binary packages from a given source, so that anyone can verify that a given binary derived from the source it was said to be derived."
-	write_page "         There is a lot more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://tests.reproducible-builds.org\">https://tests.reproducible-builds.org</a>."
-	write_page "         The wiki explains in more depth why this is useful, what common issues exist and which workarounds and solutions are known."
+	write_page "         There is more information about <a href=\"https://wiki.debian.org/ReproducibleBuilds\">reproducible builds on the Debian wiki</a> and on <a href=\"https://reproducible-builds.org\">https://reproducible-builds.org</a>."
+	write_page "         These pages explain in more depth why this is useful, what common issues exist and which workarounds and solutions are known."
 	write_page "        </p>"
 	local BUILD_ENVIRONMENT=" in a Debian environment"
 	local BRANCH="master"

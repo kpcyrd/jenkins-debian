@@ -304,8 +304,11 @@ build_two_times() {
 	TARGET=$2
 	CONFIG=$3
 
+	# create openwrt
 	ssh $GENERIC_NODE1 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
+	mkdir -p $TMPDIR/download/
+
 	# download and prepare openwrt on node b1
 	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
 	rsync -av $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/

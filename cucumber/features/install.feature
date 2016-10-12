@@ -10,18 +10,18 @@ Feature: Doing variations on d-i installs
 
     Examples:
       | install_ui | target_ui | login |
-      | gui        | LXDE      | LXDE  |
-#      | gui        | KDE       | KDE   |
+#      | gui        | Gnome     | Gnome |   #  FIXME -- X fails to start at present -- possibly related to "qxl too old" seen on flickering console, which seems like it might be something to do with 'spice'
       | gui        | minimal   | VT    |
+      | gui        | LXDE      | LXDE  |
       | gui        | XFCE      | XFCE  |
+      | gui        | KDE       | KDE   |
 #      | text       | non-GUI   | VT    |
-#      | gui        | Gnome Desktop | Gnome |
 
   @broken
-  Scenario: Attempt to Install KDE, expecting it to fail because #818970
+  Scenario: Attempt to Install Gnome, expecting it to fail because X doesn't start for some reason
     Given I have started Debian Installer in text mode and stopped at the Tasksel prompt
     And I intend to use text mode
-    And I select the KDE task
+    And I select the Gnome task
     And I wait while the bulk of the packages are installed
     And I install GRUB
     And I allow reboot after the install is complete
@@ -29,13 +29,14 @@ Feature: Doing variations on d-i installs
     And I power off the computer
     And the computer is set to boot from ide drive "#{JOB_NAME}"
     When I start the computer
-    Then I should see a KDE Login prompt
+    Then I should see a Gnome Login prompt
 
 #  Scenario: Get a useful error from a bogus HTTP proxy
 #    Given I get d-i to the HTTP proxy prompt
 #    When I set the proxy to "127.23.23.23"
 #    Then I should get an error message that mentions the proxy
 
+  # this is useful for just proving that the d-i image is able to boot
   @trivial
   Scenario: Minimal Boot test
     Given a disk is created for Debian Installer tests

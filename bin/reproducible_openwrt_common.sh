@@ -10,6 +10,11 @@ GENERIC_NODE1=profitbricks-build3-amd64.debian.net
 GENERIC_NODE2=profitbricks-build4-amd64.debian.net
 
 # run on jenkins master
+node_debug() {
+	ls -al "$1" || true
+	ls -al "$1/" || true
+	ls -al "$1/download" || true
+}
 
 # only called direct on a remote build node
 node_cleanup_tmpdirs() {
@@ -311,6 +316,14 @@ build_two_times() {
 
 	# download and prepare openwrt on node b1
 	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
+
+	echo "== master"
+	ls -la "$TMPDIR/download/" || true
+	echo "== node1"
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPDIR
+	echo "== node2"
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPDIR
+
 	rsync -av $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
 	rsync -av $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
 

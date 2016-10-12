@@ -308,8 +308,8 @@ build_two_times() {
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
 	# download and prepare openwrt on node b1
 	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
-	rsync -a $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
-	rsync -a $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
+	rsync -av $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
+	rsync -av $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
 
 	## first run
 	RUN=b1
@@ -317,7 +317,7 @@ build_two_times() {
 	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_get_banner $TMPDIR $TYPE > $BANNER_HTML
 
 	# rsync back logs and images
-	rsync -a $GENERIC_NODE1:$TMPDIR/$RUN/ $TMPDIR/$RUN/
+	rsync -av $GENERIC_NODE1:$TMPDIR/$RUN/ $TMPDIR/$RUN/
 	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 
 	## second run
@@ -325,6 +325,6 @@ build_two_times() {
 	ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR
 
 	# rsync back logs and images
-	rsync -a $GENERIC_NODE2:$TMPDIR/$RUN/ $TMPDIR/$RUN/
+	rsync -av $GENERIC_NODE2:$TMPDIR/$RUN/ $TMPDIR/$RUN/
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 }

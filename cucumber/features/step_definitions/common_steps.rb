@@ -560,6 +560,7 @@ Given /^I should see a ([a-zA-Z]*) Login prompt$/ do |style|
       'XFCE' => [ 'DebianLoginPromptXFCE.png', 'DebianLoginPromptXFCE_d9.png' ],
       'KDE'  => [ 'DebianLoginPromptKDE.png',  'DebianLoginPromptKDE_d9.png' ],
       'LXDE' => [ 'DebianLoginPromptLXDE.png', 'DebianLoginPromptLXDE_d9.png' ],
+      'Gnome' => [ 'DebianLoginPromptGnome.png' ],
       'VT'   => [ 'DebianLoginPromptVT.png' ],
     }
   end

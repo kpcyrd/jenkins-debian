@@ -82,9 +82,6 @@ elif [ "$*" = "reproducible_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" ; croak "Exec failed";
-elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
-	# allow to push files to /srv/reproducible-results/
-	exec rsync --server "$3" . "$5" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/userContent/reproducible/.* ]] ; then
@@ -92,6 +89,9 @@ elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/userContent
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/jobs/.*/workspace/results/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/d-i/isos/ ]] ; then
+	exec rsync --server "$3" . "$5" ; croak "Exec failed";
+elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
+	# allow to push files to /srv/reproducible-results/
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";
 elif [[ "$*" =~ ^mkdir\ -p\ /srv/d-i/isos.* ]] ; then
 	exec mkdir -p "$3"  ; croak "Exec failed";

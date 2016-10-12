@@ -56,7 +56,7 @@
     my_title: 'Cucumber: {dist_name}'
     my_time: '45 23 31 12 *'
     my_pngs: 'results/*.png'
-    my_opts: '--tags ~@broken'
+    my_opts: '--tags ~@broken --tags ~@trivial'
     my_description: 'Work in progress...'
     jobs:
         - '{name}_{distro}':
@@ -71,7 +71,7 @@
                 - 'debian-miniiso':
                     dist_name: 'Debian-Installer local mini.iso'
                     my_iso: 'use_TRIGGERING_BRANCH'
-                    my_opts: '--tags @trivial'
+                    #my_opts: '--tags @trivial'
                 - 'debian-testing-daily-broken': 
                     dist_name: 'Debian-Installer Testing (Daily) -- Broken Scenarios'
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'

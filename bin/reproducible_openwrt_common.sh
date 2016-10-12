@@ -74,7 +74,7 @@ create_results_dirs() {
 	mkdir -p $BASE/$project/dbd
 }
 
-save_logs() {
+node_save_logs() {
 	local TYPE=$1
 	local RUN=$2
 
@@ -297,7 +297,7 @@ openwrt_build() {
 	[ "$TYPE" = "openwrt" ] && save_openwrt_results $RUN
 
 	# copy logs
-	save_logs $TYPE $RUN
+	node_save_logs $TMPDIR/build_logs.tar.xz $TMPBUILDDIR
 
 	# clean up between builds
 	openwrt_cleanup

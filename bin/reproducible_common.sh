@@ -1,12 +1,12 @@
 #!/bin/bash
 
-
 # Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 #              © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 #
-# included by all reproducible_*.sh scripts
-#
+# included by all reproducible_*.sh scripts, so be quiet
+set +x
+
 # define db
 PACKAGES_DB=/var/lib/jenkins/reproducible.db
 INIT=/var/lib/jenkins/reproducible.init
@@ -111,6 +111,10 @@ PAGE_FOOTER_TEMPLATE=$TEMPLATE_PATH/default_page_footer.mustache
 PROJECT_LINKS_TEMPLATE=$TEMPLATE_PATH/project_links.mustache
 MAIN_NAVIGATION_TEMPLATE=$TEMPLATE_PATH/main_navigation.mustache
 
+# be loud again if DEBUG
+if $DEBUG ; then
+	set -x
+fi
 
 # sleep 1-23 secs to randomize start times
 delay_start() {

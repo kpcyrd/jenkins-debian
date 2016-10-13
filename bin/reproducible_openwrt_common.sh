@@ -267,13 +267,6 @@ openwrt_get_banner() {
 	cat $(find build_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null)
 }
 
-openwrt_cleanup() {
-	rm build_dir/target-* -rf
-	rm staging_dir/target-* -rf
-	rm bin/* -rf
-	rm logs/* -rf
-}
-
 # openwrt_build is run on a remote host
 # TYPE - openwrt or lede
 # RUN - b1 or b2. b1 means first run, b2 second
@@ -308,9 +301,6 @@ openwrt_build() {
 
 	# copy logs
 	node_save_logs "$TMPDIR"
-
-	# clean up between builds
-	openwrt_cleanup
 }
 
 # build openwrt/lede on two different hosts

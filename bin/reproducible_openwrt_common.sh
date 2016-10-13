@@ -42,7 +42,7 @@ node_create_tmpdirs() {
 master_cleanup_tmpdirs() {
 	# we will save the logs in case we got called as trap handler
 	# in a success build the logs are saved on a different function
-	if [ "$1" != "success"] ; then
+	if [ "$1" != "success" ] ; then
 		# job failed
 		ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
 		ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_save_logs $TMPDIR/logs.xz $TMPDIR/build || true

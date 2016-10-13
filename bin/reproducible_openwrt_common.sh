@@ -44,8 +44,8 @@ master_cleanup_tmpdirs() {
 	# in a success build the logs are saved on a different function
 	if [ "$1" != "success" ] ; then
 		# job failed
-		ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
-		ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
+		ssh $GENERIC_NODE1 reproducible_$TYPE node node_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
+		ssh $GENERIC_NODE2 reproducible_$TYPE node node_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
 		# save failure logs
 		mkdir -p $WORKSPACE/results/
 		rsync -av $GENERIC_NODE1:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz
@@ -264,7 +264,7 @@ openwrt_get_banner() {
 	TMPDIR=$1
 	TYPE=$2
 	cd $TMPDIR/build/$TYPE
-	cat $(find build_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null)
+	find build_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null
 }
 
 # openwrt_build is run on a remote host

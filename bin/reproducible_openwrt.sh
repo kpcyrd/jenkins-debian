@@ -245,5 +245,5 @@ irc_message reproducible-builds "$REPRODUCIBLE_URL/openwrt/ has been updated. ($
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...
-master_cleanup_tmpdirs
+master_cleanup_tmpdirs success
 trap - INT TERM EXIT

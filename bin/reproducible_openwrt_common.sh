@@ -38,9 +38,20 @@ node_create_tmpdirs() {
 	mkdir -p $TMPDIR/download
 }
 
-# called as trap handler
-# called on cleanup
+# called as trap handler and also to cleanup after a success build
 master_cleanup_tmpdirs() {
+	# we will save the logs in case we got called as trap handler
+	# in a success build the logs are saved on a different function
+	if [ "$1" != "success"] ; then
+		# job failed
+		ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
+		ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_save_logs $TMPDIR/logs.xz $TMPDIR/build || true
+		# save failure logs
+		mkdir -p $WORKSPACE/results/
+		rsync -av $GENERIC_NODE1:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz
+		rsync -av $GENERIC_NODE2:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz
+	fi
+
 	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
 

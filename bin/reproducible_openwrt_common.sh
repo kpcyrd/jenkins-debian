@@ -74,11 +74,21 @@ create_results_dirs() {
 	mkdir -p $BASE/$project/dbd
 }
 
+# node_save_logs can be called over ssh OR called within openwrt_build
 node_save_logs() {
-	local TYPE=$1
-	local RUN=$2
+	local tmpdir=$1
 
-	tar cJf "$TMPDIR/$RUN/logs_${TYPE}.tar.xz" logs/
+	if [ "${tmpdir:0:26}" != "/srv/reproducible-results/" ] || [ ${#tmpdir} -le 26 ] ; then
+		echo "Something very strange with \$TMPDIR=$tmpdir exiting instead of doing node_save_logs."
+		exit 1
+	fi
+
+	if [ ! -d "$tmpdir/build/logs" ] ; then
+		# we create an empty tar.xz instead of failing
+		touch "$tmpdir/build_logs.tar.xz"
+	else
+		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/logs"
+	fi
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
@@ -297,7 +307,7 @@ openwrt_build() {
 	[ "$TYPE" = "openwrt" ] && save_openwrt_results $RUN
 
 	# copy logs
-	node_save_logs $TMPDIR/build_logs.tar.xz $TMPBUILDDIR
+	node_save_logs "$TMPDIR"
 
 	# clean up between builds
 	openwrt_cleanup

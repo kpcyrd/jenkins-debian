@@ -669,6 +669,7 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
+            my_artifacts: ''
 
         - '{name}_{otherproject}':
             otherproject:

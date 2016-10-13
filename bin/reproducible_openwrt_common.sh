@@ -307,6 +307,9 @@ build_two_times() {
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
 	mkdir -p $TMPDIR/download/
 
+	# create results directory saved by jenkins as artifacts
+	mkdir -p $WORKSPACE/results/
+
 	# download and prepare openwrt on node b1
 	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
 
@@ -327,6 +330,7 @@ build_two_times() {
 
 	# rsync back logs and images
 	rsync -av $GENERIC_NODE1:$TMPDIR/$RUN/ $TMPDIR/$RUN/
+	rsync -av $GENERIC_NODE1:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz
 	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 
 	## second run
@@ -335,5 +339,6 @@ build_two_times() {
 
 	# rsync back logs and images
 	rsync -av $GENERIC_NODE2:$TMPDIR/$RUN/ $TMPDIR/$RUN/
+	rsync -av $GENERIC_NODE2:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz
 	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 }

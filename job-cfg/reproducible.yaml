@@ -246,12 +246,14 @@
           parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
           unstable-on-warning: 'true'
           fail-on-error: 'true'
+      - archive:
+          artifacts: '{my_artifacts}'
+          latest-only: false
       - email:
           recipients: '{my_recipients}'
       - trigger:
           project: '{my_trigger}'
     node: '{my_node}'
-    artifacts: '{my_artifacts}'
 
 - job-template:
     defaults: reproducible

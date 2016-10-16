@@ -218,7 +218,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
 
     status_cutename_descriptions = [
         ('unreproducible', 'bad', 'failed to build reproducibly'),
-        ('FTBFS', 'ugly', 'failed to build from souce'),
+        ('FTBFS', 'ugly', 'failed to build from source'),
         ('rest', 'rest',
          'are either blacklisted, not for us or cannot be downloaded'),
         ('reproducible', 'good', 'successfully build reproducibly'),

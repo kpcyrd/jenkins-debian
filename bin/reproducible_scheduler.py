@@ -420,7 +420,7 @@ def query_old_ftbfs_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='FTBFS'
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
-                AND r.build_date < {date}
+                AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -438,7 +438,7 @@ def query_old_depwait_versions(suite, arch, limit):
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
-                AND r.build_date < {date}
+                AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -457,7 +457,7 @@ def query_old_versions(suite, arch, limit):
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status != 'blacklisted'
-                AND r.build_date < {date}
+                AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch,
@@ -474,7 +474,7 @@ def query_404_versions(suite, arch, limit):
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status = '404'
-                AND r.build_date < {date}
+                AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 ORDER BY r.build_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,

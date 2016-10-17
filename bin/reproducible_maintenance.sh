@@ -42,8 +42,15 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 fi
 
 # for Debian, first run some checks…
+set +e
+# check for working proxy
 echo "$(date -u) - testing whether the proxy works..."
 curl http://www.debian.org > /dev/null
+if [ $? -eq 1 ] ; then
+	irc_message debian-reproducible "Proxy is down for $HOSTNAME, please tell the jenkins admins to fix this. (sudo service squid3 restart)"
+	exit 1
+fi
+# check for correct MTU
 echo "$(date -u) - testing whether the network interfaces MTU is 1500..."
 if [ "$(ip link | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' | sort -u)" != "1500" ] ; then
 	ip link
@@ -51,7 +58,6 @@ if [ "$(ip link | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' | sort 
 	irc_message debian-reproducible "$HOSTNAME has wrong MTU, please tell the jenkins admins to fix this.  (sudo ifconfig eth0 mtu 1500)"
 	exit 1
 fi
-set +e
 
 echo "$(date -u) - updating the schroots and pbuilder now..."
 # use host architecture (only)

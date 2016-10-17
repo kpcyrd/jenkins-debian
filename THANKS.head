@@ -11,9 +11,9 @@ Debian packages for t.r-b.o
  ** 8 cores and 16 GB memory for profitbricks-build4-amd64.debian.net used for building OpenWrt, LEDE, coreboot, Fedora, Archlinux and NetBSD for t.r-b.o, running in the future
  ** 17 cores and 48 GB memory for profitbricks-build5-amd64.debian.net used for building amd64 Debian packages for t.r-b.o, running in the future
  ** 17 cores and 48 GB memory for profitbricks-build6-i386.debian.net sed for building i386 Debian packages for t.r-b.o, running in the future
- ** 5 cores and 5 GB memory for profitbricks-build7-amd64.debian.net used for building F-Droid for t.r-b.o
+ ** 5 cores and 12 GB memory for profitbricks-build7-amd64.debian.net used for building F-Droid for t.r-b.o
  ** 4 cores and 8 GB memory for profitbricks-build9-amd64.debian.net used for rebootstrap jobs
- ** 4 cores and 7 GB memory for profitbricks-build10-amd64.debian.net used for lvc jobs
+ ** 4 cores and 12 GB memory for profitbricks-build10-amd64.debian.net used for lvc jobs
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net (also running on Profitbricks virtual hardware), used for building FreeBSD for t.r-b.o
  * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] provides and hosts 22 'armhf' systems, used for building armhf Debian packages for t.r-b.o:
  ** three quad-cores with 4 GB RAM each,

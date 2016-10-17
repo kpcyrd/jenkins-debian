@@ -83,11 +83,11 @@ node_save_logs() {
 		exit 1
 	fi
 
-	if [ ! -d "$tmpdir/build/logs" ] ; then
+	if [ ! -d "$tmpdir/build/source/logs" ] ; then
 		# we create an empty tar.xz instead of failing
 		touch "$tmpdir/build_logs.tar.xz"
 	else
-		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/" ./logs
+		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/source" ./logs
 	fi
 }
 
@@ -237,19 +237,18 @@ openwrt_compile() {
 # called by openwrt_two_times
 # ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
 openwrt_download() {
-	local TYPE=$1
-	local TARGET=$2
-	local CONFIG=$3
-	local TMPDIR=$4
+	local TARGET=$1
+	local CONFIG=$2
+	local TMPDIR=$3
 
 	cd $TMPDIR/download
 
 	# checkout the repo
-	echo "============================================================================="
-	echo "$(date -u) - Cloning $TYPE git repository."
-	echo "============================================================================="
-	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO $TYPE
-	cd $TYPE
+	echo "================================================================================"
+	echo "$(date -u) - Cloning git repository from $OPENWRT_GIT_REPO $OPENWRT_GIT_BRANCH. "
+	echo "================================================================================"
+	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO source
+	cd source
 
 	# update feeds
 	#./scripts/feeds update
@@ -263,7 +262,7 @@ openwrt_download() {
 openwrt_get_banner() {
 	TMPDIR=$1
 	TYPE=$2
-	cd $TMPDIR/build/$TYPE
+	cd $TMPDIR/build/source
 	find build_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null
 }
 
@@ -285,7 +284,7 @@ openwrt_build() {
 	mv "$TMPDIR/download" "$TMPBUILDDIR"
 
 	# openwrt/lede is checkouted under /download
-	cd $TMPBUILDDIR/$TYPE
+	cd $TMPBUILDDIR/source
 
 	# set tz, date, core, ..
 	openwrt_apply_variations $RUN
@@ -321,7 +320,7 @@ build_two_times() {
 	mkdir -p $WORKSPACE/results/
 
 	# download and prepare openwrt on node b1
-	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TARGET $CONFIG $TMPDIR
 
 	echo "== master"
 	ls -la "$TMPDIR/download/" || true

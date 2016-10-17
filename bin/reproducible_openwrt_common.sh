@@ -87,7 +87,7 @@ node_save_logs() {
 		# we create an empty tar.xz instead of failing
 		touch "$tmpdir/build_logs.tar.xz"
 	else
-		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/logs"
+		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/" ./logs
 	fi
 }
 

@@ -283,7 +283,6 @@ openwrt_build() {
 	export TMPBUILDDIR=$TMPDIR/build/
 
 	mv "$TMPDIR/download" "$TMPBUILDDIR"
-	trap node_cleanup_tmpdirs INT TERM EXIT
 
 	# openwrt/lede is checkouted under /download
 	cd $TMPBUILDDIR/$TYPE

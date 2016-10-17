@@ -113,7 +113,6 @@ get_installable_set() {
 	if [ $RESULT -ne 0 ] ; then
 		rm -f $TMPFILE
 		MESSAGE="Warning: dose-deb-coinstall cannot calculate the installable set for $1"
-		echo $MESSAGE
 		irc_message debian-reproducible $MESSAGE
 		dose-deb-coinstall --explain --failures --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2}
 		ABORT=true
@@ -400,7 +399,6 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[20]}.pkgset
 		else
 			MESSAGE="Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
-			echo $MESSAGE
 			irc_message debian-reproducible $MESSAGE
 			ABORT=true
 		fi
@@ -430,7 +428,6 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[22]}.pkgset
 		else
 			MESSAGE="Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
-			echo $MESSAGE
 			irc_message debian-reproducible $MESSAGE
 			ABORT=true
 		fi

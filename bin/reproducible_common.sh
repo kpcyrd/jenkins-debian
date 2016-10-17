@@ -547,6 +547,7 @@ irc_message() {
 	local CHANNEL="$1"
 	shift
 	local MESSAGE="$@"
+	echo "Sending '$MESSAGE' to $CHANNEL now."
 	kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" || true # don't fail the whole job
 }
 

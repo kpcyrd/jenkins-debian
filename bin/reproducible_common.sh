@@ -336,13 +336,13 @@ write_page_intro() {
 
 write_page_footer() {
 	if [ "$1" = "coreboot" ] ; then
-		other_distro_details="The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can freely be used to refer to the Coreboot project."
+		other_distro_details='The <a href=\"http://www.coreboot.org\">Coreboot</a> logo is Copyright © 2008 by Konsult Stuge and coresystems GmbH and can freely be used to refer to the Coreboot project.'
 	elif [ "$1" = "NetBSD" ] ; then
 		other_distro_details="NetBSD® is a registered trademark of The NetBSD Foundation, Inc."
 	elif [ "$1" = "FreeBSD" ] ; then
 		other_distro_details="FreeBSD is a registered trademark of The FreeBSD Foundation. The FreeBSD logo and The Power to Serve are trademarks of The FreeBSD Foundation."
 	elif [ "$1" = "Arch Linux" ] ; then
-		other_distro_details="The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis."
+		other_distro_details='The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis.'
 	elif [ "$1" = "fedora-23" ] ; then
 		other_distro_details="FIXME: add fedora copyright+trademark disclaimers here."
 	else

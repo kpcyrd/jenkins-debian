@@ -205,8 +205,10 @@ openwrt_build_toolchain() {
 	echo "$(date -u) - Building the toolchain."
 	echo "============================================================================="
 
-	ionice -c 3 make -j $NUM_CPU tools/install
-	ionice -c 3 make -j $NUM_CPU toolchain/install
+	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
+
+	ionice -c 3 make $OPTIONS tools/install
+	ionice -c 3 make $OPTIONS toolchain/install
 }
 
 # TYPE - openwrt or lede

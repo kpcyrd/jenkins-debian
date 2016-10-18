@@ -249,6 +249,7 @@
       - archive:
           artifacts: '{my_artifacts}'
           latest-only: false
+          allow-empty: true
       - email:
           recipients: '{my_recipients}'
       - trigger:

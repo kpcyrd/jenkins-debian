@@ -13,7 +13,8 @@ common_init "$@"
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
-. /srv/jenkins/bin/reproducible_openwrt_common.sh
+# common code defining functions for OpenWrt/LEDE
+. /srv/jenkins/bin/reproducible_lede_common.sh
 set -e
 
 echo "$0 got called with '$@'"

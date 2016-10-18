@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
@@ -13,7 +13,8 @@ common_init "$@"
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
-. /srv/jenkins/bin/reproducible_openwrt_common.sh
+# common code defining functions for OpenWrt/LEDE
+. /srv/jenkins/bin/reproducible_lede_common.sh
 set -e
 
 echo "$0 got called with '$@'"

@@ -90,3 +90,4 @@
             my_trigger: '{name}_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'
+            disabled: true

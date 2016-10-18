@@ -185,7 +185,7 @@ openwrt_apply_variations() {
 
 		# use allmost all cores for second build
 		export NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
-		export MAKE="linux64 --uname-2.6 make"
+		export MAKE=make
 	fi
 }
 

@@ -290,6 +290,7 @@ if [ -f /etc/debian_version ] ; then
 				make
 				python3-clint
 				python3-git
+				python3-pystache
 				python3-requests
 				python3-yaml
 				subversion

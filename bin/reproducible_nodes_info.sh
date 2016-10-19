@@ -29,7 +29,13 @@ for NODE in $BUILD_NODES jenkins.debian.net ; do
 	export NODE_NAME=$NODE
 	export JOB_NAME=$JOB_NAME
 	echo "$(date -u) - Trying to update $TARGET_DIR/$NODE."
+	set +e
 	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_info.sh > $TMPFILE_SRC
+	if [ $? -eq 1 ] ; then
+		echo "$(date -u) - Warning: could not update $TARGET_DIR/$NODE."
+		continue
+	fi
+	set -e
 	for KEY in $BUILD_ENV_VARS ; do
 		VALUE=$(egrep "^$KEY=" $TMPFILE_SRC | cut -d "=" -f2-)
 		if [ ! -z "$VALUE" ] ; then

@@ -284,12 +284,6 @@ Given /^I select the install mode$/ do
                Sikuli::Key.ENTER)
   debug_log("debug: wait for the remote shell to respond...", :color => :blue)
   $vm.wait_until_remote_shell_is_up
-  
-  #debug_log("debug: About to type ENTER at the bootsplash", :color => :blue)
-  #@screen.type(Sikuli::Key.ENTER) # we're disabling the above editing of the command line, since it's breaking on jenkins.debian.net for reasons unknown
-  debug_log("debug: waiting for it to get to the 'English' prompt...", :color => :blue)
-  @screen.wait(diui_png("English"), 3*60 * PATIENCE)  # FIXME -- this is just to pause until the remote shell would have been up, so is a kludge
-  debug_log("debug: found the 'English' prompt", :color => :blue)
 end
 
 Given /^I select British English$/ do

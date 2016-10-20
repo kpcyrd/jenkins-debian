@@ -305,8 +305,7 @@ Given /^I select British English$/ do
   @screen.wait(diui_png("UnitedKingdom"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
   @screen.click_point(@screen.w-2, @screen.h*2/3)
-  # FIXME -- we're accepting AmmericanEnglish here, despite the fact it should be BritishEnglish due to the above - this seems to be #840209: console-setup: fails to change keyboard layout in d-i
-  on_screen, _ = @screen.waitAny([diui_png("BritishEnglish"),diui_png("AmericanEnglish")], 10 * PATIENCE)
+  @screen.wait(diui_png("BritishEnglish"), 10 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)
 end
 

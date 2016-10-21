@@ -141,6 +141,13 @@ Given /^the computer has (\d+) ([[:alpha:]]+) of RAM$/ do |size, unit|
   $vm.set_ram_size(size, unit)
 end
 
+Then /^the VM shuts down within (\d+) minutes$/ do |mins|
+  timeout = 60*mins.to_i
+  try_for(timeout, :msg => "VM is still running after #{timeout} seconds") do
+    ! $vm.is_running?
+  end
+end
+
 Given /^the computer is set to boot from the Tails DVD$/ do
   $vm.set_cdrom_boot(TAILS_ISO)
 end

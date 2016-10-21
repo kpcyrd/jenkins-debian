@@ -48,7 +48,7 @@ Feature: Doing variations on d-i installs
   Scenario: Preseed using hands.com with checksum
     Given a disk is created for Debian Installer tests
     And I intend to use gui mode
-    And I intend to boot with options "auto=true priority=critical url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;desktop/lxde DEBCONF_DEBUG=5"
+    And I intend to boot with options "auto=true priority=critical url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;partition/atomic;desktop/lxde DEBCONF_DEBUG=5"
     When I start the computer
     And I select the install mode
     And the VM shuts down within 20 minutes

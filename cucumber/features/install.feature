@@ -51,4 +51,6 @@ Feature: Doing variations on d-i installs
     And I intend to boot with options "auto=true priority=critical url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;desktop/lxde DEBCONF_DEBUG=5"
     When I start the computer
     And I select the install mode
-    Then I should see a XFCE Login prompt
+    And the VM shuts down within 20 minutes
+    And the computer is set to boot from ide drive "#{JOB_NAME}"
+    Then I should see a LXDE Login prompt

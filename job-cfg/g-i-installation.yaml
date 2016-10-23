@@ -272,7 +272,7 @@
           my_ver:
             - jessie:
                 my_verdesc: jessie
-                my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
+                my_inst_url: 'http://ftp.de.debian.org/debian/dists/jessie-kfreebsd/main/installer-kfreebsd-amd64/current/images/netboot-10/gtk/netboot.tar.gz'
                 my_time: '42 16 3,18 * *'
             - sid_daily:
                 my_verdesc: 'sid daily build CD'

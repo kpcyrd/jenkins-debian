@@ -305,18 +305,22 @@ def update_sources_db(suite, arch, sources):
         transaction = conn_db.begin()
         results_table = db_table('results')
         schedule_table = db_table('schedule')
+        notes_table = db_table('notes')
         removed_packages_table = db_table('removed_packages')
 
-        delete_sources_query = sources_table.delete().\
-            where(sources_table.c.id == sql.bindparam('deleteid'))
         delete_results_query = results_table.delete().\
             where(results_table.c.package_id == sql.bindparam('deleteid'))
         delete_schedule_query = schedule_table.delete().\
             where(schedule_table.c.package_id == sql.bindparam('deleteid'))
+        delete_notes_query = notes_table.delete().\
+            where(notes_table.c.package_id == sql.bindparam('deleteid'))
+        delete_sources_query = sources_table.delete().\
+            where(sources_table.c.id == sql.bindparam('deleteid'))
 
-        conn_db.execute(delete_sources_query, rmed_pkgs_id)
         conn_db.execute(delete_results_query, rmed_pkgs_id)
         conn_db.execute(delete_schedule_query, rmed_pkgs_id)
+        conn_db.execute(delete_notes_query, rmed_pkgs_id)
+        conn_db.execute(delete_sources_query, rmed_pkgs_id)
         conn_db.execute(removed_packages_table.insert(), pkgs_to_rm)
         transaction.commit()
 
@@ -391,14 +395,15 @@ def query_untested_packages(suite, arch, limit):
 
 def query_new_versions(suite, arch, limit):
     criteria = 'tested before, new version available, sorted by last build date'
-    query = """SELECT DISTINCT s.id, s.name, s.version, r.version
+    query = """SELECT s.id, s.name, s.version, r.version, max(r.build_date) max_date
                FROM sources AS s JOIN results AS r ON s.id = r.package_id
                WHERE s.suite='{suite}' AND s.architecture='{arch}'
                AND s.version != r.version
                AND r.status != 'blacklisted'
                AND s.id IN (SELECT package_id FROM results)
                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
-               ORDER BY r.build_date
+               GROUP BY s.id, s.name, s.version, r.version
+               ORDER BY max_date
                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
     pkgs = query_db(query)
     # the next line avoids constant rescheduling of packages:
@@ -414,7 +419,7 @@ def query_old_ftbfs_versions(suite, arch, limit):
     criteria = 'status ftbfs, no bug filed, tested at least 3 days ago, ' + \
                'no new version available, sorted by last build date'
     date = (datetime.now()-timedelta(days=3)).strftime('%Y-%m-%d %H:%M')
-    query = """SELECT DISTINCT s.id, s.name
+    query = """SELECT s.id, s.name, max(r.build_date) max_date
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 JOIN notes AS n ON n.package_id=s.id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
@@ -422,7 +427,8 @@ def query_old_ftbfs_versions(suite, arch, limit):
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
-                ORDER BY r.build_date
+                GROUP BY s.id, s.name
+                ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
                                         date=date)
     packages = query_db(query)
@@ -434,13 +440,14 @@ def query_old_depwait_versions(suite, arch, limit):
     criteria = 'status depwait, no bug filed, tested at least 2 days ago, ' + \
                'no new version available, sorted by last build date'
     date = (datetime.now()-timedelta(days=2)).strftime('%Y-%m-%d %H:%M')
-    query = """SELECT DISTINCT s.id, s.name
+    query = """SELECT s.id, s.name, max(r.build_date) max_date
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
                 AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
-                ORDER BY r.build_date
+                GROUP BY s.id, s.name
+                ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
                                         date=date)
     packages = query_db(query)
@@ -453,13 +460,14 @@ def query_old_versions(suite, arch, limit):
                sorted by last build date""".format(minimum_age=MINIMUM_AGE[arch])
     date = (datetime.now()-timedelta(days=MINIMUM_AGE[arch]))\
            .strftime('%Y-%m-%d %H:%M')
-    query = """SELECT DISTINCT s.id, s.name
+    query = """SELECT s.id, s.name, max(r.build_date) max_date
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status != 'blacklisted'
                 AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
-                ORDER BY r.build_date
+                GROUP BY s.id, s.name
+                ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch,
                                         date=date, limit=limit)
     packages = query_db(query)
@@ -470,13 +478,14 @@ def query_404_versions(suite, arch, limit):
     criteria = """tested at least a day ago, status 404,
                sorted by last build date"""
     date = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d %H:%M')
-    query = """SELECT DISTINCT s.id, s.name
+    query = """SELECT s.id, s.name, max(r.build_date) max_date
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status = '404'
                 AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
-                ORDER BY r.build_date
+                GROUP BY s.id, s.name
+                ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
                                         date=date)
     packages = query_db(query)

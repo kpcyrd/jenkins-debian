@@ -221,10 +221,21 @@ def update_sources(suite):
 
 def update_sources_db(suite, arch, sources):
     # extract relevant info (package name and version) from the sources file
-    new_pkgs = []
+    new_pkgs = set()
+    newest_version = {}
     for src in deb822.Sources.iter_paragraphs(sources.split('\n')):
         pkg = (src['Package'], src['Version'], suite, arch)
-        new_pkgs.append(pkg)
+
+        # only keep the most recent version of a src for each package/suite/arch
+        key = src['Package'] + suite + arch
+        if key in newest_version:
+            oldversion = newest_version[key]
+            oldpackage = (src['Package'], oldversion, suite, arch)
+            new_pkgs.remove(oldpackage)
+
+        newest_version[key] = src['Version']
+        new_pkgs.add(pkg)
+
     # get the current packages in the database
     query = "SELECT name, version, suite, architecture FROM sources " + \
             "WHERE suite='{}' AND architecture='{}'".format(suite, arch)

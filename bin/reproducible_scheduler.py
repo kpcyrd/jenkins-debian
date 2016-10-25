@@ -239,7 +239,7 @@ def update_sources_db(suite, arch, sources):
     # get the current packages in the database
     query = "SELECT name, version, suite, architecture FROM sources " + \
             "WHERE suite='{}' AND architecture='{}'".format(suite, arch)
-    cur_pkgs = query_db(query)
+    cur_pkgs = set([(p.name, p.version, p.suite, p.architecture) for p in query_db(query)])
     pkgs_to_add = []
     updated_pkgs = []
     different_pkgs = [x for x in new_pkgs if x not in cur_pkgs]

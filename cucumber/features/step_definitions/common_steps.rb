@@ -377,11 +377,13 @@ end
 
 Given /^I note that the Base system is being installed$/ do
   @screen.wait(diui_png("InstallingBaseSystem"), 30 * PATIENCE)
+  debug_log("debug: Found InstallingBaseSystem. Wait for it to vanish", :color => :blue)
   @screen.waitVanish(diui_png("InstallingBaseSystem"), 15 * 60 * PATIENCE)
+  debug_log("debug: InstallingBaseSystem vanished", :color => :blue)
 end
 
 Given /^I accept the default mirror$/ do
-  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("MirrorCountry")], 5 * 60 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("MirrorCountry")], 10 * 60 * PATIENCE)
   if diui_png("MirrorCountry") == on_screen
     @screen.wait(diui_png("MirrorCountry"), 10 * 60 * PATIENCE)
     @screen.type(Sikuli::Key.ENTER)
@@ -410,7 +412,7 @@ Given /^I neglect to scan more CDs$/ do
 end
 
 Given /^I ignore Popcon$/ do
-  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("ChooseSoftware")], 10 * 60)
+  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("ChooseSoftware")], 10 * 60  * PATIENCE)
   if diui_png("ChooseSoftware") != on_screen
     if on_screen == diui_png("BadMirror")
       if "gui" == @ui_mode

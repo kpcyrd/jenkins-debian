@@ -19,6 +19,7 @@ from math import sqrt
 from reproducible_common import *
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
+from sqlalchemy import select, and_, bindparam
 
 renderer = pystache.Renderer()
 notes_body_template = renderer.load_template(
@@ -274,11 +275,28 @@ def gen_html_issue(issue, suite):
         url = ''
     # add affected packages:
     affected = ''
+
+    results = db_table('results')
+    sources = db_table('sources')
+    sql = select(
+        [sources.c.name]
+    ).select_from(
+        results.join(sources)
+    ).where(
+        and_(
+            sources.c.suite == bindparam('suite'),
+            sources.c.architecture == bindparam('arch'),
+            results.c.status == bindparam('status'),
+        )
+    ).order_by(
+        sources.c.name
+    )
     try:
         arch = 'amd64'
         for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible', 'depwait']:
-            pkgs = [x[0] for x in all_pkgs
-                    if x[1] == status and x[2] == suite and x[3] == arch and x[0] in issues_count[issue]]
+            pkgs = query_db(sql.where(sources.c.name.in_(issues_count[issue]))\
+                   .params({'suite': suite, 'arch': arch, 'status': status}))
+            pkgs = [p[0] for p in pkgs]
             if not pkgs:
                 continue
             affected += tab*4 + '<p>\n'
@@ -458,9 +476,6 @@ def index_issues(issues, scorefuncs):
 
 
 if __name__ == '__main__':
-    all_pkgs = query_db('SELECT s.name, r.status, s.suite, s.architecture ' +
-                        'FROM results AS r JOIN sources AS s ON r.package_id=s.id ' +
-                        'ORDER BY s.name')
     issues_count = {}
     bugs = get_bugs()
     notes = load_notes()

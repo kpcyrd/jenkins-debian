@@ -215,9 +215,44 @@
             - '{my_gitbranches}'
     node: '{my_node}'
 
-
 - defaults:
     name: reproducible_other_projects_trigger
+    disabled: false
+    project-type: freestyle
+    description: *desc
+    properties:
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
+      - throttle:
+          max-total: 9
+          max-per-node: 9
+          enabled: true
+          option: category
+          categories:
+            - reproducible      # no special category yet
+    triggers:
+      - timed: '{my_timed}'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '{my_shell}'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+          unstable-on-warning: 'true'
+          fail-on-error: 'true'
+      - email:
+          recipients: '{my_recipients}'
+      - trigger:
+          project: '{my_trigger}'
+    node: '{my_node}'
+
+- defaults:
+    name: reproducible_other_projects_trigger+artifacts
     disabled: false
     project-type: freestyle
     description: *desc
@@ -287,6 +322,10 @@
 - job-template:
     defaults: reproducible_other_projects_trigger
     name: '{name}_{otherproject_triggering}'
+
+- job-template:
+    defaults: reproducible_other_projects_trigger+artifacts
+    name: '{name}_{otherproject_triggering+artifacts}'
 
 - job-template:
     defaults: reproducible_builder_trigger
@@ -643,7 +682,7 @@
             my_timed: '* * * * *'
             my_hname: ''
 
-        - '{name}_{otherproject_triggering}':
+        - '{name}_{otherproject_triggering+artifacts}':
             otherproject_triggering:
                 - 'lede':
                     my_description: 'Rebuild LEDE (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
@@ -672,7 +711,6 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
-            my_artifacts: ''
 
         - '{name}_{otherproject}':
             otherproject:

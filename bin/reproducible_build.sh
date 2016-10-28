@@ -775,19 +775,19 @@ check_buildinfo() {
 
 sign_buildinfo() {
 	# Greate GPG key if it does not already exist
-	if ! gpg --list-secret-keys | grep -qs '^sec' >/dev/null 2>&1
+	if ! gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1
 	then
 		log_info "Generating GPG key"
 
-		gpg --batch --gen-key <<EOF
+		gpg --no-tty --batch --gen-key <<EOF
 Key-Type: RSA
 Key-Length: 4096
-Subkey-Type: ELG-E
-Subkey-Length: 1024
+Key-Usage: sign
 Name-Real: $(hostname -f)
-Name-Comment: Automatically generated key
+Name-Comment: Automatically generated key for signing .buildinfo files
 Expire-Date: 0
 %no-ask-passphrase
+%no-protection
 %commit
 EOF
 	fi

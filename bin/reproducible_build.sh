@@ -774,7 +774,7 @@ check_buildinfo() {
 
 share_buildinfo() {
 	# Submit the -buildinfo files to third-party archives:
-	echo "$(date -u) - submitting .buildinfo files to external archives."
+	log_info "Submitting .buildinfo files to external archives."
 
 	# buildinfo.kfreebsd.eu administered by Steven Chamberlain <steven@pyro.eu.org>
 	mail -s "buildinfo from $NODE1" submit@buildinfo.kfreebsd.eu < ./b1/$BUILDINFO || true
@@ -783,7 +783,7 @@ share_buildinfo() {
 	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE1" < ./b1/$BUILDINFO || true
 	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE2" < ./b2/$BUILDINFO || true
 
-	echo "$(date -u) - done submitting .buildinfo files."
+	log_info "Done submitting .buildinfo files."
 }
 
 build_rebuild() {

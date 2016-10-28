@@ -543,6 +543,7 @@ get_source_package() {
 	DBDREPORT="${SRCPACKAGE}_${EVERSION}.diffoscope.html"
 	DBDTXT="${SRCPACKAGE}_${EVERSION}.diffoscope.txt"
 	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
+	BUILDINFO_SIGNED="${BUILDINFO}.asc"
 }
 
 check_suitability() {

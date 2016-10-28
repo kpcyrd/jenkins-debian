@@ -773,6 +773,30 @@ check_buildinfo() {
 	rm -f $TMPFILE1 $TMPFILE2
 }
 
+sign_buildinfo() {
+	# Greate GPG key if it does not already exist
+	if ! gpg --list-secret-keys | grep -qs '^sec' >/dev/null 2>&1
+	then
+		log_info "Generating GPG key"
+
+		gpg --batch --gen-key <<EOF
+Key-Type: RSA
+Key-Length: 4096
+Subkey-Type: ELG-E
+Subkey-Length: 1024
+Name-Real: $(hostname -f)
+Name-Comment: Automatically generated key
+Expire-Date: 0
+%no-ask-passphrase
+%commit
+EOF
+	fi
+
+	log_info "Signing $BUILDINFO as $BUILDINFO_SIGNED"
+	gpg --output=$BUILDINFO_SIGNED --clearsign $BUILDINFO
+	log_info "Signed $BUILDINFO as $BUILDINFO_SIGNED"
+}
+
 share_buildinfo() {
 	# Submit the -buildinfo files to third-party archives:
 	log_info "Submitting .buildinfo files to external archives."
@@ -781,8 +805,8 @@ share_buildinfo() {
 	mail -s "buildinfo from $NODE1" submit@buildinfo.kfreebsd.eu < ./b1/$BUILDINFO || true
 	mail -s "buildinfo from $NODE2" submit@buildinfo.kfreebsd.eu < ./b2/$BUILDINFO || true
 	# buildinfo.debian.net administred by Chris Lamb <lamby@debian.org>
-	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE1" < ./b1/$BUILDINFO || true
-	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE2" < ./b2/$BUILDINFO || true
+	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE1" < ./b1/$BUILDINFO_SIGNED || true
+	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE2" < ./b2/$BUILDINFO_SIGNED || true
 
 	log_info "Done submitting .buildinfo files."
 }
@@ -848,6 +872,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
+	sign_buildinfo
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE/$SUITE/$ARCH on $HOSTNAME done."
 	exit 0
 elif [ "$2" != "" ] ; then

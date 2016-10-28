@@ -1066,7 +1066,7 @@ monitor_system() {
 			rm snapshot_${PRINTF_NR}.jpg
 		else
 			echo "$(date -u) $PRINTF_NR          - could not take vncsnapshot from $DISPLAY - using a blank fake one instead"
-			convert -size $VIDEOSIZE xc:#000000 -depth 8 snapshot_${PRINTF_NR}.png
+			convert -size $VIDEOSIZE xc:black -depth 8 snapshot_${PRINTF_NR}.png
 		fi
 		# every 100 ticks take a screenshot and analyse it
 		if [ $(($NR % 100)) -eq 0 ] ; then

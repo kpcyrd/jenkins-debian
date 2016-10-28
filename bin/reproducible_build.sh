@@ -809,6 +809,9 @@ share_buildinfo() {
 	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE2" < ./b2/$BUILDINFO_SIGNED || true
 
 	log_info "Done submitting .buildinfo files."
+
+	log_info "Removing signed $BUILDINFO_SIGNED files"
+	rm -vf ./b1/$BUILDINFO_SIGNED ./b2/$BUILDINFO_SIGNED
 }
 
 build_rebuild() {

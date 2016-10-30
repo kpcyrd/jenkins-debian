@@ -55,8 +55,10 @@ preserve_artifacts() {
 	# Check is we're in a pu/* branch, and if so save the udebs
 	#
 	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
-		mkdir -p $udeb_dir
-		cp ${RESULT_DIR}/*.udeb $udeb_dir
+		if [ "$JOB_NAME" != "d-i_pu-triggered_debian-installer" ] ; then
+			mkdir -p $udeb_dir
+			cp ${RESULT_DIR}/*.udeb $udeb_dir
+		fi
 		# this is put into env.txt below, so that the variable(s) can be injected into the jenkins environment
 		ENV_TO_INJECT="OUR_BRANCH=$GIT_BRANCH"
 	fi

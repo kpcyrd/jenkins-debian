@@ -152,9 +152,8 @@ Given /^the computer is set to boot from the Tails DVD$/ do
   $vm.set_cdrom_boot(TAILS_ISO)
 end
 
-Given /^the computer is set to boot from (.+?) drive "(.+?)"$/ do |type, name|
-  debug_log("debug: setting computer to boot from drive: name='#{name}' (type=#{type})", :color => :blue)
-  $vm.set_disk_boot(name, type.downcase)
+Given /^the computer is set to boot from (.+?) drive$/ do |type|
+  $vm.set_disk_boot(JOB_NAME, type.downcase)
 end
 
 Given /^I (temporarily )?create a (\d+) ([[:alpha:]]+) disk named "([^"]+)"$/ do |temporary, size, unit, name|

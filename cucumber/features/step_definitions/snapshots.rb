@@ -42,7 +42,7 @@ def checkpoints
             'I allow reboot after the install is complete',
             'I wait for the reboot',
             'I power off the computer',
-            'the computer is set to boot from ide drive "'+JOB_NAME+'"',
+            'the computer is set to boot from ide drive',
           ]
         }
     end

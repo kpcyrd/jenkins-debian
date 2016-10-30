@@ -27,7 +27,7 @@ Feature: Doing variations on d-i installs
     And I allow reboot after the install is complete
     And I wait for the reboot
     And I power off the computer
-    And the computer is set to boot from ide drive "#{JOB_NAME}"
+    And the computer is set to boot from ide drive
     When I start the computer
     Then I should see a Gnome Login prompt
 
@@ -52,5 +52,5 @@ Feature: Doing variations on d-i installs
     When I start the computer
     And I select the install mode
     And the VM shuts down within 20 minutes
-    And the computer is set to boot from ide drive "#{JOB_NAME}"
+    And the computer is set to boot from ide drive
     Then I should see a LXDE Login prompt

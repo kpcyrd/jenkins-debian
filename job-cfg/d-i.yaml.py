@@ -195,7 +195,7 @@ if "jenkins-test-vm" == os.uname()[1]:
 jobs.append( {'{name}_pu-triggered_{pkg}': {
                 'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
                 'branchdesc': 'master branch',
-                'branch': 'origin/master',
+                'branch': 'origin/pu/**',
                 'pkg': 'debian-installer',
                 'trg': None,
              }} )

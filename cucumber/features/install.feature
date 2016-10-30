@@ -53,4 +53,5 @@ Feature: Doing variations on d-i installs
     And I select the install mode
     And the VM shuts down within 20 minutes
     And the computer is set to boot from ide drive
+    And I start the computer
     Then I should see a LXDE Login prompt

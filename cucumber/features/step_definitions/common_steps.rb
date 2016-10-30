@@ -153,6 +153,7 @@ Given /^the computer is set to boot from the Tails DVD$/ do
 end
 
 Given /^the computer is set to boot from (.+?) drive "(.+?)"$/ do |type, name|
+  debug_log("debug: setting computer to boot from drive: name='#{name}' (type=#{type})", :color => :blue)
   $vm.set_disk_boot(name, type.downcase)
 end
 

@@ -68,6 +68,10 @@
                     dist_name: 'Debian-Installer Testing (Daily)'
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                     my_time: 'H */8 * * *'
+                - 'debian-testing-netboot-daily': 
+                    dist_name: 'Debian-Installer Testing Netboot (Daily)'
+                    my_iso: 'https://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/mini.iso'
+                    my_time: 'H */8 * * *'
                 - 'debian-miniiso':
                     dist_name: 'Debian-Installer local mini.iso'
                     my_iso: 'use_TRIGGERING_BRANCH'

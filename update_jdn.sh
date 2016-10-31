@@ -678,16 +678,15 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rm -f $TMPFILE
 fi
 
-# Greate GPG key on nodes if they do not already exist in order to sign .buildinfo files
-if [ "$HOSTNAME" != "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+#
+# Create GPG key for jenkins user if they do not already exist (eg. to sign .buildinfo files)
+#
+if sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1 ; then
+	explain "$(date) Not generating GPG key as one already exists"
+else
+	explain "$(date) Generating GPG key"
 
-	if gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1
-	then
-		explain "$(date) Not generating GPG key as one already exists"
-	else
-		explain "$(date) Generating GPG key"
-
-		gpg --no-tty --batch --gen-key <<EOF
+	sudo -u jenkins gpg --no-tty --batch --gen-key <<EOF
 Key-Type: RSA
 Key-Length: 4096
 Key-Usage: sign
@@ -698,7 +697,6 @@ Expire-Date: 0
 %no-protection
 %commit
 EOF
-	fi
 fi
 
 #

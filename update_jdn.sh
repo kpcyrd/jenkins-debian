@@ -660,6 +660,27 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] 
 fi
 
 #
+# Create GPG key for jenkins user if they do not already exist (eg. to sign .buildinfo files)
+#
+if sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1 ; then
+	explain "$(date) - Not generating GPG key as one already exists for jenkins user."
+else
+	explain "$(date) - Generating GPG key for jenkins user."
+
+	sudo -u jenkins gpg --no-tty --batch --gen-key <<EOF
+Key-Type: RSA
+Key-Length: 4096
+Key-Usage: sign
+Name-Real: $(hostname -a)
+Name-Comment: Automatically generated key for signing .buildinfo files
+Expire-Date: 0
+%no-ask-passphrase
+%no-protection
+%commit
+EOF
+fi
+
+#
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
@@ -676,27 +697,6 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 		echo
 	fi
 	rm -f $TMPFILE
-fi
-
-#
-# Create GPG key for jenkins user if they do not already exist (eg. to sign .buildinfo files)
-#
-if sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1 ; then
-	explain "$(date) Not generating GPG key as one already exists"
-else
-	explain "$(date) Generating GPG key"
-
-	sudo -u jenkins gpg --no-tty --batch --gen-key <<EOF
-Key-Type: RSA
-Key-Length: 4096
-Key-Usage: sign
-Name-Real: $(hostname -a)
-Name-Comment: Automatically generated key for signing .buildinfo files
-Expire-Date: 0
-%no-ask-passphrase
-%no-protection
-%commit
-EOF
 fi
 
 #

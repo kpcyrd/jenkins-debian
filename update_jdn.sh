@@ -671,7 +671,7 @@ else
 Key-Type: RSA
 Key-Length: 4096
 Key-Usage: sign
-Name-Real: $(hostname -a)
+Name-Real: $HOSTNAME
 Name-Comment: Automatically generated key for signing .buildinfo files
 Expire-Date: 0
 %no-ask-passphrase

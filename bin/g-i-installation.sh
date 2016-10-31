@@ -1356,6 +1356,8 @@ case $NAME in
 						;;
 	debian-edu_*wheezy*standalone*)		monitor_system install wait4match 1200 100
 						;;
+	*hurd*)					monitor_system install wait4match 1200 100
+						;;
 	*)					monitor_system install wait4match
 						;;
 esac

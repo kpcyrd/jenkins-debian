@@ -188,7 +188,7 @@ jobs = [
 ]
 
 if "jenkins-test-vm" == os.uname()[1]:
-    pkgs = [ 'debian-installer', 'preseed', 'debootstrap' ]
+    pkgs = [ 'debian-installer', 'preseed', 'debootstrap', 'debian-installer-utils' ]
     jobs = [ '{name}_build-group', '{name}_pu-build-group']
 
 # add a special job for triggering from the pu/ branches

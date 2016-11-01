@@ -774,7 +774,7 @@ check_buildinfo() {
 }
 
 sign_buildinfo() {
-	local $BUILDPATH = "./$1"
+	local $BUILDPATH="./$1"
 	log_info "Signing $BUILDPATH/$BUILDINFO as $BUILDINFO_SIGNED"
 	gpg --output=$BUILDPATH/$BUILDINFO_SIGNED --clearsign $BUILDPATH/$BUILDINFO || log_error "Could not sign $PWD/$BUILDPATH/$BUILDINFO"
 	log_info "Signed $BUILDPATH/$BUILDINFO as $BUILDPATH/$BUILDINFO_SIGNED"

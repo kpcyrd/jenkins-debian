@@ -775,7 +775,7 @@ check_buildinfo() {
 
 sign_buildinfo() {
 	log_info "Signing $BUILDINFO as $BUILDINFO_SIGNED"
-	gpg --output=$BUILDINFO_SIGNED --clearsign $BUILDINFO
+	gpg --output=$BUILDINFO_SIGNED --clearsign $BUILDINFO || log_error "Could not sign $BUILDINFO"
 	log_info "Signed $BUILDINFO as $BUILDINFO_SIGNED"
 }
 

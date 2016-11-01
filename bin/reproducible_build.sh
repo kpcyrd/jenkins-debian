@@ -774,9 +774,10 @@ check_buildinfo() {
 }
 
 sign_buildinfo() {
-	log_info "Signing $BUILDINFO as $BUILDINFO_SIGNED"
-	gpg --output=$BUILDINFO_SIGNED --clearsign $BUILDINFO || log_error "Could not sign $BUILDINFO"
-	log_info "Signed $BUILDINFO as $BUILDINFO_SIGNED"
+	local $BUILDPATH = "./$1"
+	log_info "Signing $BUILDPATH/$BUILDINFO as $BUILDINFO_SIGNED"
+	gpg --output=$BUILDPATH/$BUILDINFO_SIGNED --clearsign $BUILDPATH/$BUILDINFO || log_error "Could not sign $PWD/$BUILDPATH/$BUILDINFO"
+	log_info "Signed $BUILDPATH/$BUILDINFO as $BUILDPATH/$BUILDINFO_SIGNED"
 }
 
 share_buildinfo() {
@@ -857,7 +858,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
-	sign_buildinfo
+	sign_buildinfo "b$MODE"
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE/$SUITE/$ARCH on $HOSTNAME done."
 	exit 0
 elif [ "$2" != "" ] ; then

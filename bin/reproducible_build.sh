@@ -788,8 +788,8 @@ share_buildinfo() {
 	mail -s "buildinfo from $NODE1" submit@buildinfo.kfreebsd.eu < ./b1/$BUILDINFO || log_error "Could not submit buildinfo from $NODE1 to submit@buildinfo.kfreebsd.eu."
 	mail -s "buildinfo from $NODE2" submit@buildinfo.kfreebsd.eu < ./b2/$BUILDINFO || log_error "Could not submit buildinfo from $NODE2 to submit@buildinfo.kfreebsd.eu"
 	# buildinfo.debian.net administred by Chris Lamb <lamby@debian.org>
-	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE1" < ./b1/$BUILDINFO_SIGNED || log_error "Could not submit buildinfo from $NODE1 to http://buildinfo.debian.net/api/submit?node=$NODE1"
-	curl -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE2" < ./b2/$BUILDINFO_SIGNED || log_error "Could not submit buildinfo from $NODE2 to http://buildinfo.debian.net/api/submit?node=$NODE2"
+	curl -s -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE1" < ./b1/$BUILDINFO_SIGNED || log_error "Could not submit buildinfo from $NODE1 to http://buildinfo.debian.net/api/submit?node=$NODE1"
+	curl -s -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit?node=$NODE2" < ./b2/$BUILDINFO_SIGNED || log_error "Could not submit buildinfo from $NODE2 to http://buildinfo.debian.net/api/submit?node=$NODE2"
 
 	log_info "Done submitting .buildinfo files."
 

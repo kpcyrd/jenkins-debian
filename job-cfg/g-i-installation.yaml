@@ -290,7 +290,7 @@
                 my_inst_url: 'http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
                 my_trigdesc: '<br />This job is only triggered manually.'
                 my_verdesc: jessie
-                my_time: '42 16 3,18 * *'
+                my_time: '42 16 31 12 4'
                 my_optdesc2: ' on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a>'
             - sid_daily:
                 my_inst_url: 'http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'

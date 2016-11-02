@@ -469,7 +469,7 @@
             my_task:
                 - 'scheduler':
                     my_description: 'Schedule packages to be tested for reproducibility.'
-                    my_timed: '55 */2 * * *'
+                    my_timed: '55 */3 * * *'
                     my_shellext: ".py"
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'

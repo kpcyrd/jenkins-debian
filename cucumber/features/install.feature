@@ -49,9 +49,11 @@ Feature: Doing variations on d-i installs
     Given a disk is created for Debian Installer tests
     And I intend to use gui mode
     And I intend to boot with options "auto=true priority=critical url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;partition/atomic;desktop/lxde hands-off/checksigs=true DEBCONF_DEBUG=5"
-    When I start the computer
+    And I start the computer
     And I select the install mode
+    And I expect package installation to start
+    And I wait while the bulk of the packages are installed
     And the VM shuts down within 20 minutes
-    And the computer is set to boot from ide drive
+    When the computer is set to boot from ide drive
     And I start the computer
     Then I should see a LXDE Login prompt

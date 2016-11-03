@@ -293,6 +293,10 @@ Given /^I select the install mode$/ do
   $vm.wait_until_remote_shell_is_up
 end
 
+Given /^I expect package installation to start$/ do
+  @screen.wait(diui_png("InstallSoftware"), 20 * 60)
+end
+
 Given /^I select British English$/ do
   @screen.wait(diui_png("English"), 30 * PATIENCE)
   @screen.type(Sikuli::Key.ENTER)

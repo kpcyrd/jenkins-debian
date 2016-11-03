@@ -678,6 +678,16 @@ Expire-Date: 0
 %no-protection
 %commit
 EOF
+
+	GPG_KEY_ID="$(sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | grep '^sec' | cut -d: -f5 | tail -n1)"
+
+	if [ "$GPG_KEY_ID" = "" ]
+	then
+		explain "$(date) - Generated GPG key but could not parse key ID"
+	else
+		explain "$(date) - Generated GPG key $GPG_KEY_ID - submitting to keyserver"
+		sudo -u jenkins gpg --send-keys $GPG_KEY_ID
+	fi
 fi
 
 #

@@ -506,8 +506,14 @@ Given /^I wait while the bulk of the packages are installed$/ do
   failed = false
   try_for(120*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
     found = false
+    sleep(30)
     debug_log("debug: check for Install GRUB/Software", :color => :blue)
-    hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallGRUB-heading"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware")], 2*60)
+    if $vm.is_running?
+      hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallGRUB-heading"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware")], 10)
+    else
+      found = true
+      hit = ''
+    end
     debug_log("debug: found #{hit}", :color => :blue)
     case hit
     when diui_png("InstallSoftware"), diui_png("InstallationStepFailed")
@@ -518,7 +524,7 @@ Given /^I wait while the bulk of the packages are installed$/ do
         @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
       end
       debug_log("debug: typed F4, pausing...", :color => :blue)
-      sleep(10)
+      sleep(5)
       debug_log("debug: slept 10", :color => :blue)
       if diui_png("InstallationStepFailed") == hit
         failed = true

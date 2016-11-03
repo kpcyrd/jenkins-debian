@@ -94,15 +94,12 @@ with open(os.path.join(BIN_PATH, './reproducible_pkgsets.csv'), newline='') as f
     for line in csv.reader(f):
         META_PKGSET.append((line[1], line[0]))
 
-# init the database data and connection
-DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB, connect_args={'timeout': 60})
-DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
-conn_db = DB_ENGINE.connect()  # the local sqlite3 reproducible db
-
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-d", "--debug", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
+group.add_argument("--skip-database-connection", action="store_true",
+                   help="skip connecting to database")
 parser.add_argument("--ignore-missing-files", action="store_true",
                     help="useful for local testing, where you don't have all the build logs, etc..")
 args, unknown_args = parser.parse_known_args()
@@ -120,6 +117,12 @@ log.addHandler(sh)
 
 started_at = datetime.now()
 log.info('Starting at %s', started_at)
+
+# init the database data and connection
+if not args.skip_database_connection:
+    DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB, connect_args={'timeout': 60})
+    DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
+    conn_db = DB_ENGINE.connect()  # the local sqlite3 reproducible db
 
 log.debug("BIN_PATH:\t" + BIN_PATH)
 log.debug("BASE:\t\t" + BASE)

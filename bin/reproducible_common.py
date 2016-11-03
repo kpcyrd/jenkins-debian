@@ -19,7 +19,6 @@ import errno
 import atexit
 import hashlib
 import logging
-import sqlite3
 import argparse
 import pystache
 import psycopg2
@@ -56,7 +55,6 @@ TEMP_PATH="/tmp/reproducible"
 
 REPRODUCIBLE_JSON = BASE + '/reproducible.json'
 REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'
-REPRODUCIBLE_DB = '/var/lib/jenkins/reproducible.db'
 REPRODUCIBLE_STYLES = BASE +'/static/style.css'
 
 DEBIAN_URI = '/debian'
@@ -94,6 +92,9 @@ with open(os.path.join(BIN_PATH, './reproducible_pkgsets.csv'), newline='') as f
     for line in csv.reader(f):
         META_PKGSET.append((line[1], line[0]))
 
+# DATABSE CONSTANT
+PGDATABASE = 'reproducibledb'
+
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-d", "--debug", action="store_true")
@@ -120,9 +121,9 @@ log.info('Starting at %s', started_at)
 
 # init the database data and connection
 if not args.skip_database_connection:
-    DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB, connect_args={'timeout': 60})
+    DB_ENGINE = create_engine("postgresql:///%s" % PGDATABASE)
     DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
-    conn_db = DB_ENGINE.connect()  # the local sqlite3 reproducible db
+    conn_db = DB_ENGINE.connect()      # the local postgres reproducible db
 
 log.debug("BIN_PATH:\t" + BIN_PATH)
 log.debug("BASE:\t\t" + BASE)
@@ -146,7 +147,6 @@ log.debug("HISTORY_URI:\t" + HISTORY_URI)
 log.debug("HISTORY_PATH:\t" + HISTORY_PATH)
 log.debug("BUILDINFO_URI:\t" + BUILDINFO_URI)
 log.debug("BUILDINFO_PATH:\t" + BUILDINFO_PATH)
-log.debug("REPRODUCIBLE_DB:\t" + REPRODUCIBLE_DB)
 log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
 log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
 log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
@@ -371,7 +371,7 @@ def db_table(table_name):
         return Table(table_name, DB_METADATA, autoload=True)
     except NoSuchTableError:
         log.error("Table %s does not exist or schema for %s could not be loaded",
-                  table_name, REPRODUCIBLE_DB)
+                  table_name, PGDATABASE)
         raise
 
 
@@ -389,15 +389,8 @@ def query_db(query):
     try:
         result = conn_db.execute(query)
     except OperationalError as ex:
-        # if this sqlalchemy.exc.OperationalError was caused by a sqlite3
-        # database locking error, the error will have the following format:
-        if ex.orig and ex.orig.args and ex.orig.args[0] == "database is locked":
-            print_critical_message('SQLite database locked, could not execute ' +
-                                   'query:\n"%s"\nExiting script.' % query)
-            sys.exit(1)
-        else:
-            print_critical_message('Error executing this query:\n' + query)
-            raise
+        print_critical_message('Error executing this query:\n' + query)
+        raise
 
     if result.returns_rows:
         return result.fetchall()

@@ -7,7 +7,7 @@
 #           © 2015 Mattia Rizzolo <mattia@debian.org>
 # Licensed under GPL-2
 #
-# Depends: python3, reproducible_common, time, sqlite3, pystache, csv
+# Depends: python3, reproducible_common, time, pystache, csv
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
@@ -15,7 +15,6 @@ from reproducible_common import *
 
 import csv
 import time
-import sqlite3
 import pystache
 from collections import OrderedDict
 

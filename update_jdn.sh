@@ -690,17 +690,6 @@ EOF
 	fi
 fi
 
-# As a one-off, send our key to the keyserver
-GPG_KEY_ID="$(sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | grep '^sec' | cut -d: -f5 | tail -n1)"
-
-if [ "$GPG_KEY_ID" = "" ]
-then
-	explain "$(date) - Could not find existing GPG key to submit"
-else
-	explain "$(date) - Submitting previously-generated GPG key $GPG_KEY_ID to keyserver"
-	sudo -u jenkins gpg --send-keys $GPG_KEY_ID
-fi
-
 #
 # There's always some work left...
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work

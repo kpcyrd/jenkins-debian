@@ -420,6 +420,7 @@ if [ -f /etc/debian_version ] ; then
 				openbios-sparc 
 				openjdk-7-jre 
 				pandoc
+				postgresql
 				postgresql-client-9.4 
 				poxml 
 				procmail 

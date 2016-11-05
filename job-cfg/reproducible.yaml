@@ -382,6 +382,8 @@
                 - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386' }
+                - 'profitbricks11': { my_arch: 'amd64' }
+                - 'profitbricks15': { my_arch: 'amd64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':

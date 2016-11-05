@@ -34,6 +34,8 @@ profitbricks-build6-i386.debian.net
 profitbricks-build7-amd64.debian.net
 profitbricks-build9-amd64.debian.net
 profitbricks-build10-amd64.debian.net
+profitbricks-build11-amd64.debian.net
+profitbricks-build15-amd64.debian.net
 bbx15-armhf-rb.debian.net
 bpi0-armhf-rb.debian.net
 hb0-armhf-rb.debian.net
@@ -114,6 +116,8 @@ elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
 		7|pb7)	 HOSTS="$HOSTS profitbricks-build7-amd64.debian.net" ;;
 		9|pb9)	 HOSTS="$HOSTS profitbricks-build9-amd64.debian.net" ;;
 		10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
+		11|pb11) HOSTS="$HOSTS profitbricks-build11-amd64.debian.net" ;;
+		15|pb15) HOSTS="$HOSTS profitbricks-build15-amd64.debian.net" ;;
 	esac
 	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
 else

@@ -15,6 +15,8 @@ BUILD_NODES="profitbricks-build1-amd64.debian.net
 profitbricks-build2-i386.debian.net
 profitbricks-build5-amd64.debian.net
 profitbricks-build6-i386.debian.net
+profitbricks-build11-amd64.debian.net
+profitbricks-build15-amd64.debian.net
 wbq0-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net

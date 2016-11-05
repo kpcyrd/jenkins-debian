@@ -32,7 +32,7 @@ explain "$(date) - begin deployment update."
 
 # some nodes need special treatment…
 case $HOSTNAME in
-	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
+	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
 		# set correct date
 		sudo service ntp stop
 		sudo ntpdate -b de.pool.ntp.org
@@ -263,7 +263,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
-			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386) DEBS="$DEBS ntpdate" ;;
+			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/lede/netbsd/fedora jobs
@@ -452,8 +452,9 @@ if [ -f /etc/debian_version ] ; then
 				|| echo "this should only fail on the first install"
 		fi
 		# for varying kernels
-		# we use bpo kernels on pb-build5+6 (and i386 kernel on pb-build2-i386)
-		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ]; then
+		# we use bpo kernels on pb-build5+6+15+16 (and i386 kernel on pb-build2-i386)
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ] || \
+		   [ "$HOSTNAME" = "profitbricks-build15-amd64" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"
 		fi
 		# only needed on the main node
@@ -718,7 +719,7 @@ explain "$(date) - finished deployment."
 # finally!
 case $HOSTNAME in
 	# set time back to the future
-	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386)
+	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	jenkins)

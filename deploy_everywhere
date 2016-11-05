@@ -132,7 +132,7 @@ for i in $HOSTS ; do
        	command="$real_command"
 	if $reset_clock ; then
  		case $i in
-			profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*)
+			profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*)
 				#  set correct date
 				command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
 				;;

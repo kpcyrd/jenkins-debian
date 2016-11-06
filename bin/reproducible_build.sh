@@ -752,6 +752,7 @@ filter_buildinfo_files() {
 	grep-dctrl -I -s Environment . ./b2/$BUILDINFO > $TMPFILE2
 	mv $TMPFILE1 ./b1/$BUILDINFO
 	mv $TMPFILE2 ./b2/$BUILDINFO
+	chmod 644 ./b1/$BUILDINFO ./b2/$BUILDINFO
 }
 
 check_buildinfo() {

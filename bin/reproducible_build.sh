@@ -804,7 +804,7 @@ share_buildinfo() {
 	# buildinfo.debian.net administred by Chris Lamb <lamby@debian.org>
 	for X in b1 b2
 	do
-		curl -s -X PUT --max-time 30 --data-binary @- "http://buildinfo.debian.net/api/submit" < ./${X}/$BUILDINFO_SIGNED || log_error "Could not submit buildinfo from ${X} to http://buildinfo.debian.net/api/submit"
+		curl -s -X PUT --max-time 30 --data-binary @- "https://buildinfo.debian.net/api/submit" < ./${X}/$BUILDINFO_SIGNED || log_error "Could not submit buildinfo from ${X} to http://buildinfo.debian.net/api/submit"
 	done
 	log_info "Done submitting .buildinfo files to http://buildinfo.debian.net/api/submit."
 

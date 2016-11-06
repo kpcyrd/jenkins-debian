@@ -743,6 +743,17 @@ remote_build() {
 	fi
 }
 
+filter_buildinfo_files() {
+	# filters out the Environment section from buildinfo files
+
+	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
+	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
+	grep-dctrl -I -s Environment . ./b1/$BUILDINFO > $TMPFILE1
+	grep-dctrl -I -s Environment . ./b2/$BUILDINFO > $TMPFILE2
+	mv $TMPFILE1 ./b1/$BUILDINFO
+	mv $TMPFILE2 ./b2/$BUILDINFO
+}
+
 check_buildinfo() {
 	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
 	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
@@ -905,6 +916,7 @@ update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
+	filter_buildinfo_files
 	call_diffoscope_on_buildinfo_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 	share_buildinfo
 fi

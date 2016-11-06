@@ -346,7 +346,7 @@ dbd_timeout() {
 	handle_ftbr "$msg"
 }
 
-call_diffoscope_on_buildinfo_files() {
+call_diffoscope_on_changes_files() {
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	local TIMEOUT="120m"
 	DBDSUITE=$SUITE
@@ -374,8 +374,8 @@ call_diffoscope_on_buildinfo_files() {
 		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
-			$TMPDIR/b1/${BUILDINFO} \
-			$TMPDIR/b2/${BUILDINFO}" \
+			$TMPDIR/b1/${CHANGES} \
+			$TMPDIR/b2/${CHANGES}" \
 	2>&1 ) >> $TMPLOG
 	RESULT=$?
 	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG || true)
@@ -390,8 +390,8 @@ call_diffoscope_on_buildinfo_files() {
 			-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 				--html $TMPDIR/${DBDREPORT} \
 				--text $TMPDIR/$DBDTXT \
-				$TMPDIR/b1/${BUILDINFO} \
-				$TMPDIR/b2/${BUILDINFO}" \
+				$TMPDIR/b1/${CHANGES} \
+				$TMPDIR/b2/${CHANGES}" \
 		2>&1 ) >> $TMPLOG
 		RESULT=$?
 	fi
@@ -747,19 +747,13 @@ remote_build() {
 	fi
 }
 
-filter_buildinfo_files() {
-	# filters out the Environment section from buildinfo files
+filter_changes_files() {
+	# filters .buildinfo from .changes
 
-	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
-	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
-	grep-dctrl -I -s Environment . ./b1/$BUILDINFO > $TMPFILE1
-	grep-dctrl -I -s Environment . ./b2/$BUILDINFO > $TMPFILE2
-	mv $TMPFILE1 ./b1/$BUILDINFO
-	mv $TMPFILE2 ./b2/$BUILDINFO
-	chmod 644 ./b1/$BUILDINFO ./b2/$BUILDINFO
+	sed -i -e '/^ [a-f0-9]\{32,64\} .*\.buildinfo$/d' b{1,2}/$CHANGES
 }
 
-check_buildinfo() {
+check_installed_build_depends() {
 	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
 	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
 	grep-dctrl -s Installed-Build-Depends -n ${SRCPACKAGE} ./b1/$BUILDINFO > $TMPFILE1
@@ -772,7 +766,7 @@ check_buildinfo() {
 		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror update. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-hit-mirror-update.log
 		echo
 		echo "============================================================================="
-		echo "$(date -u) - The build environment varies according to the two .buildinfo files, probably due to mirror update. Doing the first build on $NODE1 again."
+		echo "$(date -u) - The installed build depends vary according to the two .buildinfo files, probably due to mirror update. Doing the first build on $NODE1 again."
 		echo "============================================================================="
 		echo
 		remote_build 1 $NODE1
@@ -819,23 +813,24 @@ share_buildinfo() {
 
 build_rebuild() {
 	FTBFS=1
+	CHANGES="${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" # changes file with expected version
 	mkdir b1 b2
 	log_info "Starting 1st build on remote node $NODE1."
 	remote_build 1 $NODE1
-	if [ ! -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
+	if [ ! -f b1/$CHANGES ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
 			log_error "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..."
 			# reschedule the package for later and quit the build without saving anything
 			query_db "UPDATE schedule SET date_build_started = NULL, job = NULL, date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
 			NOTIFY=""
 			exit 0
-	elif [ -f b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
+	elif [ -f b1/$CHANGES ] ; then
 		log_info "1st build successful. Starting 2nd build on remote node $NODE2."
 		remote_build 2 $NODE2
-		if [ -f b2/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes ] ; then
+		if [ -f b2/$CHANGES ] ; then
 			# both builds were fine, i.e., they did not FTBFS.
 			FTBFS=0
-			log_info "${SRCPACKAGE}_${EVERSION}_${ARCH}.changes:"
-			log_file b1/${SRCPACKAGE}_${EVERSION}_${ARCH}.changes
+			log_info "$CHANGES:"
+			log_file b1/$CHANGES
 		else
 			log_error "the second build failed, even though the first build was successful."
 		fi
@@ -911,9 +906,9 @@ log_info "${SRCPACKAGE}_${EVERSION}.dsc"
 log_file ${SRCPACKAGE}_${EVERSION}.dsc
 
 check_suitability
-build_rebuild  # defines FTBFS redefines RBUILDLOG
+build_rebuild  # defines FTBFS, CHANGES redefines RBUILDLOG
 if [ $FTBFS -eq 0 ] ; then
-	check_buildinfo
+	check_installed_build_depends
 fi
 cleanup_pkg_files
 diff_copy_buildlogs
@@ -921,8 +916,8 @@ update_rbuildlog
 if [ $FTBFS -eq 1 ] ; then
 	handle_ftbfs
 elif [ $FTBFS -eq 0 ] ; then
-	filter_buildinfo_files
-	call_diffoscope_on_buildinfo_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
+	filter_changes_files
+	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 	share_buildinfo
 fi
 print_out_duration

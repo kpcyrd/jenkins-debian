@@ -407,8 +407,8 @@ update_pkg_sets() {
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
 		echo "parsing $TMPFILE now..."
-		packages_list_to_deb819
-		convert_from_deb819_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[19]}.pkgset
 	fi
 	progress_info_end 19
@@ -471,8 +471,8 @@ update_pkg_sets() {
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
 		echo "parsing $TMPFILE now..."
-		packages_list_to_deb823
-		convert_from_deb823_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[23]}.pkgset
 	fi
 	progress_info_end 23
@@ -504,8 +504,8 @@ update_pkg_sets() {
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		done
 		echo "parsing $TMPFILE now..."
-		packages_list_to_deb823
-		convert_from_deb823_into_source_packages_only
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[25]}.pkgset
 	fi
 	progress_info_end 25

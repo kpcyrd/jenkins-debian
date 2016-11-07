@@ -33,13 +33,13 @@ import sys
 import yaml
 with open(sys.argv[1]) as fd:
 	manifest = yaml.load(fd)
-	seen = {}
+	seen = set()
 	try:
 		for pkg in (manifest['packages']['binary'] + manifest['packages']['source']):
 			pkgname = pkg['package']
 			if pkgname not in seen:
 				print(pkgname, end='|')
-				seen[pkgname] = True
+				seen.add(pkgname)
 	except Exception as exc:
 		print("Warning: something went wrong while parsing the build manifest as YAML file: {}".format(exc))
 

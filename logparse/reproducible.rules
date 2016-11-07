@@ -12,7 +12,9 @@ warning /Warning: Found files with bad permissions.+/
 warning /Warning: .+ could not be fully removed.+/
 warning /Warning: cannot update html pages for.+/
 warning /Warning: too much difference for .+, aborting. Please investigate and update manually./
-warning /Warning: couldn't delete old files from.+/
+warning /Warning: something went wrong while parsing the build manifest as YAML file.+/
+warning /Warning: dose-deb-coinstall cannot calculate the installable set for.+/
+warning /Warning: could not download .+, skipping.+/warning /Warning: couldn't delete old files from.+/
 warning /Warning: failed to update the .+ schroot./
 warning /Warning: failed to update Arch Linux schroot./
 warning /Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled.+/

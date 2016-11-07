@@ -14,9 +14,9 @@ else
 fi
 
 if [ -z "$@" ] ; then
-	PARAMS = "--help"
+	PARAMS="--help"
 else
-	PARAMS = "$@"
+	PARAMS="$@"
 fi
 
 LC_USER="$REQUESTER" \

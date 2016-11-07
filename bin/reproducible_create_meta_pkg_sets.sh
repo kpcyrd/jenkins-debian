@@ -37,7 +37,7 @@ with open(sys.argv[1]) as fd:
 	try:
 		for pkg in (manifest['packages']['binary'] + manifest['packages']['source']):
 			pkgname = pkg['package']
-			if not pkgname in seen:
+			if pkgname not in seen:
 				print(pkgname, end='|')
 				seen[pkgname] = True
 	except Exception as exc:

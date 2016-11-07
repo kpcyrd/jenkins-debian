@@ -421,7 +421,9 @@ update_pkg_sets() {
 	# grml
 	progress_info_begin 20
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
-		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
+		URL="http://grml.org/files/grml64-full_latest/dpkg.selections"
+		echo "Downloading $URL now."
+		curl $URL | cut -f1 > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
 			echo "parsing $TMPFILE now..."
 			packages_list_to_deb822
@@ -452,7 +454,9 @@ update_pkg_sets() {
 	# tails
 	progress_info_begin 22
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[22]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[22]}.pkgset ] ; then
-		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.build-manifest > $TMPFILE
+		URL="http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.build-manifest"
+		echo "Downloading $URL now."
+		curl $URL > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
 			echo "parsing $TMPFILE now..."
 			tails_build_manifest_to_deb822 "$TMPFILE" "$PACKAGES"

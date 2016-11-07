@@ -41,7 +41,7 @@ with open(sys.argv[1]) as fd:
 				print(pkgname, end='|')
 				seen[pkgname] = True
 	except:
-		print "Warning: something went wrong while parsing the build manifest as YAML file."
+		print("Warning: something went wrong while parsing the build manifest as YAML file.")
 
 EOF
 )

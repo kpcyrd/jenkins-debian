@@ -121,29 +121,37 @@ get_installable_set() {
 	set -e
 }
 
-progress_info() {
+progress_info_begin() {
 	local table=$1
-	echo "Updating ${META_PKGSET[$table]}.pkgset"
+	echo "$(date -u) - Checking ${META_PKGSET[$table]}.pkgset for updates."
+}
+
+progress_info_end() {
+	local table=$1
+	echo "$(date -u) - Done checking ${META_PKGSET[$table]}.pkgset for updates."
 }
 
 update_pkg_sets() {
 	# the essential package set
+	progress_info_begin 1
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[1]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[1]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[1]}.pkgset
 	fi
-	progress_info 1
+	progress_info_end 1
 
 	# the required package set
+	progress_info_begin 2
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[2]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[2]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FPriority required > $TMPFILE
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[2]}.pkgset
 	fi
-	progress_info 2
+	progress_info_end 2
 
 	# build-essential
+	progress_info_begin 3
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[3]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[3]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
 		# here we want the installable set:
@@ -153,7 +161,7 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[3]}.pkgset
 		fi
 	fi
-	progress_info 3
+	progress_info_end 3
 
 	# build-essential-depends
 	#
@@ -179,6 +187,7 @@ update_pkg_sets() {
 	# in the essential or build-essential set trusted.
 	# Since this is only the strong set, it is a minimal set. In reality
 	# more packages are needed to build build-essential
+	progress_info_begin 4
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[4]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[4]}.pkgset ] ; then
 		grep-dctrl --exact-match --field Package build-essential "$PACKAGES" \
 			| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-latest-version - - \
@@ -189,9 +198,10 @@ update_pkg_sets() {
 			| grep-dctrl --no-field-names --show-field=Package '' > $TMPFILE
 		update_if_similar ${META_PKGSET[4]}.pkgset
 	fi
-	progress_info 4
+	progress_info_end 4
 
 	# popcon top 1337 installed sources
+	progress_info_begin 5
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[5]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[5]}.pkgset ] ; then
 		SQL_QUERY="SELECT popcon_src.source FROM popcon_src ORDER BY popcon_src.insts DESC LIMIT 1337;"
 		PGPASSWORD=public-udd-mirror \
@@ -201,9 +211,10 @@ update_pkg_sets() {
 			udd -c"${SQL_QUERY}" > $TMPFILE
 		update_if_similar ${META_PKGSET[5]}.pkgset
 	fi
-	progress_info 5
+	progress_info_end 5
 
 	# key packages (same for all suites)
+	progress_info_begin 6
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[6]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[6]}.pkgset ] ; then
 		SQL_QUERY="SELECT source FROM key_packages;"
 		PGPASSWORD=public-udd-mirror \
@@ -213,9 +224,10 @@ update_pkg_sets() {
 			udd -c"${SQL_QUERY}" > $TMPFILE
 		update_if_similar ${META_PKGSET[6]}.pkgset
 	fi
-	progress_info 6
+	progress_info_end 6
 
 	# installed on one or more .debian.org machines
+	progress_info_begin 7
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[7]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[7]}.pkgset ] ; then
 		# one day we will get a proper data provider from DSA...
 		# (so far it was a manual "dpkg --get-selections" on all machines
@@ -223,18 +235,20 @@ update_pkg_sets() {
 		cat /srv/jenkins/bin/reproducible_installed_on_debian.org > $TMPFILE
 		update_if_similar ${META_PKGSET[7]}.pkgset
 	fi
-	progress_info 7
+	progress_info_end 7
 
 	# packages which had a DSA
+	progress_info_begin 8
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[8]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[8]}.pkgset ] ; then
 		rm -f ${TMPFILE2}
 		svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
 		grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5 > $TMPFILE
 		update_if_similar ${META_PKGSET[8]}.pkgset
 	fi
-	progress_info 8
+	progress_info_end 8
 
 	# packages from the cii-census
+	progress_info_begin 9
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[9]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[9]}.pkgset ] ; then
 		CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
 		git clone --depth 1 https://github.com/linuxfoundation/cii-census.git $CII
@@ -250,9 +264,10 @@ update_pkg_sets() {
 		update_if_similar ${META_PKGSET[9]}.pkgset
 		rm $CII -r
 	fi
-	progress_info 9
+	progress_info_end 9
 
 	# gnome and everything it depends on
+	progress_info_begin 10
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[10]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[10]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[10]}.pkgset
@@ -261,7 +276,7 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[10]}.pkgset
 		fi
 	fi
-	progress_info 10
+	progress_info_end 10
 
 	# The build-depends of X tasks can be solved once dose-ceve is able to read
 	# Debian source packages (possible in dose3 git but needs a new dose3 release
@@ -274,6 +289,7 @@ update_pkg_sets() {
 
 	# all build depends of gnome
 	rm -f $TMPFILE
+	progress_info_begin 11
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[10]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -282,9 +298,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[11]}.pkgset
 	fi
-	progress_info 11
+	progress_info_end 11
 
 	# kde and everything it depends on
+	progress_info_begin 12
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[12]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[12]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full --or -FPackage kde-standard \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[12]}.pkgset
@@ -297,10 +314,11 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[12]}.pkgset
 		fi
 	fi
-	progress_info 12
+	progress_info_end 12
 
 	# all build depends of kde
 	rm -f $TMPFILE
+	progress_info_begin 13
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[12]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -309,9 +327,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[13]}.pkgset
 	fi
-	progress_info 13
+	progress_info_end 13
 
 	# mate and everything it depends on
+	progress_info_begin 14
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[14]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[14]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage mate-desktop-environment --or -FPackage mate-desktop-environment-extras \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[14]}.pkgset
@@ -323,9 +342,10 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[14]}.pkgset
 		fi
 	fi
-	progress_info 14
+	progress_info_end 14
 
 	# all build depends of mate
+	progress_info_begin 15
 	rm -f $TMPFILE
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[15]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[15]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[14]}.pkgset) ; do
@@ -335,9 +355,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[15]}.pkgset
 	fi
-	progress_info 15
+	progress_info_end 15
 
 	# xfce and everything it depends on
+	progress_info_begin 16
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[16]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[16]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage xfce4 \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[16]}.pkgset
@@ -346,10 +367,11 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[16]}.pkgset
 		fi
 	fi
-	progress_info 16
+	progress_info_end 16
 
 	# all build depends of xfce
 	rm -f $TMPFILE
+	progress_info_begin 17
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[16]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -358,9 +380,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[17]}.pkgset
 	fi
-	progress_info 17
+	progress_info_end 17
 
 	# freedombox-setup and plinth and everything they depend on
+	progress_info_begin 18
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[18]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[18]}.pkgset
@@ -375,10 +398,11 @@ update_pkg_sets() {
 			update_if_similar ${META_PKGSET[18]}.pkgset
 		fi
 	fi
-	progress_info 18
+	progress_info_end 18
 
 	# all build depends of freedombox-setup and plinth
 	rm -f $TMPFILE
+	progress_info_begin 19
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[19]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[19]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[18]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -387,9 +411,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[19]}.pkgset
 	fi
-	progress_info 19
+	progress_info_end 19
 
 	# grml
+	progress_info_begin 20
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[20]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[20]}.pkgset ] ; then
 		curl http://grml.org/files/grml64-full_latest/dpkg.selections | cut -f1 > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
@@ -403,10 +428,11 @@ update_pkg_sets() {
 			ABORT=true
 		fi
 	fi
-	progress_info 20
+	progress_info_end 20
 
 	# all build depends of grml
 	rm -f $TMPFILE
+	progress_info_begin 21
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[20]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -416,9 +442,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[21]}.pkgset
 	fi
-	progress_info 21
+	progress_info_end 21
 
 	# tails
+	progress_info_begin 22
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[22]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[22]}.pkgset ] ; then
 		curl http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.build-manifest > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
@@ -432,10 +459,11 @@ update_pkg_sets() {
 			ABORT=true
 		fi
 	fi
-	progress_info 22
+	progress_info_end 22
 
 	# all build depends of tails
 	rm -f $TMPFILE
+	progress_info_begin 23
 	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[23]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[23]}.pkgset ] ; then
 		for PKG in $(cat $TPATH/${META_PKGSET[22]}.pkgset) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -445,9 +473,10 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[23]}.pkgset
 	fi
-	progress_info 23
+	progress_info_end 23
 
 	# installed by Subgraph OS
+	progress_info_begin 24
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[24]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[24]}.pkgset ] ; then
 		# one day we will get a proper data provider from Subgraph OSA...
 		# (so far it was a manual "dpkg -l")
@@ -456,10 +485,11 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[24]}.pkgset
 	fi
-	progress_info 24
+	progress_info_end 24
 
 	# all build depends of Subgraph OS
 	rm -f $TMPFILE
+	progress_info_begin 25
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[25]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[25]}.pkgset ] ; then
 		for PKG in $(cat /srv/jenkins/bin/reproducible_installed_by_subgraphos) ; do
 			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
@@ -468,139 +498,157 @@ update_pkg_sets() {
 		convert_from_deb822_into_source_packages_only
 		update_if_similar ${META_PKGSET[25]}.pkgset
 	fi
-	progress_info 25
+	progress_info_end 25
 
 	# debian-boot@l.d.o maintainers
+	progress_info_begin 26
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[26]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[26]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[26]}.pkgset
 	fi
-	progress_info 26
+	progress_info_end 26
 
 	# Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+	progress_info_begin 27
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[27]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[27]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-med-packaging@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[27]}.pkgset
 	fi
-	progress_info 27
+	progress_info_end 27
 
 	# debian-ocaml-maint@l.d.o maintainers
+	progress_info_begin 28
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[28]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[28]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[28]}.pkgset
 	fi
-	progress_info 28
+	progress_info_end 28
 
 	# debian python maintainers
+	progress_info_begin 29
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[29]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[29]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders python-modules-team@lists.alioth.debian.org $SOURCES > $TMPFILE
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders python-apps-team@lists.alioth.debian.org $SOURCES >> $TMPFILE
 		update_if_similar ${META_PKGSET[29]}.pkgset
 	fi
-	progress_info 29
+	progress_info_end 29
 
 	# debian-qa maintainers
+	progress_info_begin 30
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[30]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[30]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders packages@qa.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[30]}.pkgset
 	fi
-	progress_info 30
+	progress_info_end 30
 
 	# Debian Science Team
+	progress_info_begin 31
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[31]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[31]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-science-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[31]}.pkgset
 	fi
-	progress_info 31
+	progress_info_end 31
 
 	# debian-x@l.d.o maintainers
+	progress_info_begin 32
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[32]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[32]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[32]}.pkgset
 	fi
-	progress_info 32
+	progress_info_end 32
 
 	# lua packages
+	progress_info_begin 33
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[33]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[33]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
 		grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[33]}.pkgset
 	fi
-	progress_info 33
+	progress_info_end 33
 
 	# pkg-fonts-devel
+	progress_info_begin 34
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[34]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[34]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-fonts-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[34]}.pkgset
 	fi
-	progress_info 34
+	progress_info_end 34
 
 	# pkg-games-devel
+	progress_info_begin 35
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[35]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[35]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-games-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[35]}.pkgset
 	fi
-	progress_info 35
+	progress_info_end 35
 
 	# pkg-golang-maintainers
+	progress_info_begin 36
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[36]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[36]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 		grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[36]}.pkgset
 	fi
-	progress_info 36
+	progress_info_end 36
 
 	# pkg-haskell-maintainers
+	progress_info_begin 37
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[37]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[37]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		grep-dctrl -sPackage -n -FBuild-Depends ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[37]}.pkgset
 	fi
-	progress_info 37
+	progress_info_end 37
 
 	# pkg-java-maintainers
+	progress_info_begin 38
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[38]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[38]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
 		grep-dctrl -sPackage -n -FBuild-Depends default-jdk -o -FBuild-Depends-Indep default-jdk $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 		update_if_similar ${META_PKGSET[38]}.pkgset
 	fi
-	progress_info 38
+	progress_info_end 38
 
 	# pkg-javascript-devel
+	progress_info_begin 39
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[39]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[39]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-javascript-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[39]}.pkgset
 	fi
-	progress_info 39
+	progress_info_end 39
 
 	# pkg-multimedia-maintainers
+	progress_info_begin 40
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[40]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[40]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-multimedia-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[40]}.pkgset
 	fi
-	progress_info 40
+	progress_info_end 40
 
 	# pkg-perl-maintainers
+	progress_info_begin 41
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[41]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[41]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[41]}.pkgset
 	fi
-	progress_info 41
+	progress_info_end 41
 
 	# pkg-php-pear
+	progress_info_begin 42
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[42]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[42]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[42]}.pkgset
 	fi
-	progress_info 42
+	progress_info_end 42
 
 	# pkg-ruby-extras-maintainers
+	progress_info_begin 43
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[43]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[43]}.pkgset ] ; then
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 		update_if_similar ${META_PKGSET[43]}.pkgset
 	fi
-	progress_info 43
+	progress_info_end 43
 
 }
 

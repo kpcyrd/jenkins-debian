@@ -41,8 +41,8 @@ try:
 		if pkgname not in seen:
 			print(pkgname, end='|')
 			seen.add(pkgname)
-	except Exception as exc:
-		print("Warning: something went wrong while parsing the build manifest as YAML file: {}".format(exc))
+except Exception as exc:
+	print("Warning: something went wrong while parsing the build manifest as YAML file: {}".format(exc))
 EOF
 )
 	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $packages > "$tmpfile"

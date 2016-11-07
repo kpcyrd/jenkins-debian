@@ -34,11 +34,15 @@ import yaml
 with open(sys.argv[1]) as fd:
 	manifest = yaml.load(fd)
 	seen = {}
-	for pkg in (manifest['packages']['binary'] + manifest['packages']['source']):
-		pkgname = pkg['package']
-		if not pkgname in seen:
-			print(pkgname, end='|')
-			seen[pkgname] = True
+	try:
+		for pkg in (manifest['packages']['binary'] + manifest['packages']['source']):
+			pkgname = pkg['package']
+			if not pkgname in seen:
+				print(pkgname, end='|')
+				seen[pkgname] = True
+	except:
+		print "Warning: something went wrong while parsing the build manifest as YAML file."
+
 EOF
 )
 	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $packages > "$tmpfile"

@@ -13,6 +13,12 @@ else
 	exit 1
 fi
 
+if [ "$@" = "" ] ; then
+	PARAMS = "--help"
+else
+	PARAMS = "$@"
+fi
+
 LC_USER="$REQUESTER" \
 LOCAL_CALL="true" \
-/srv/jenkins/bin/reproducible_remote_scheduler.py "$@"
+/srv/jenkins/bin/reproducible_remote_scheduler.py $PARAMS

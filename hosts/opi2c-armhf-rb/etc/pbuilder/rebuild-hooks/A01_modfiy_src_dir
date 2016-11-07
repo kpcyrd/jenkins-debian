@@ -7,7 +7,7 @@ set -e
 
 cd $BUILDDIR
 
-if [ "$(basename $(pwd))" != "2nd" ]; then
+if [ "$PWD" == "/build" ]; then
 	# build path variation disabled, so do nothing
 	exit 0
 fi
@@ -15,6 +15,4 @@ fi
 # There should be only one file, the source directory.
 src_dir=$(ls | head -n 1)
 
-# We want to keep the build path length to minimise the diff. So we just
-# replace the first char of the source dir.
-mv $src_dir _${src_dir:1}
+mv $src_dir 2nd

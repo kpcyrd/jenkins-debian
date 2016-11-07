@@ -655,7 +655,8 @@ umask 0002
 EOF
 	# build path is not yet varied on testing
 	if [ "${SUITE}" != "testing" ]; then
-		echo "BUILDDIR=/build/2nd" >> "$TMPCFG"
+		local src_dir_name="$(perl -mDpkg::Source::Package -e '$_ = Dpkg::Source::Package->new(filename => $ARGV[0])->get_basename; s/_/-/g; print' -- "${SRCPACKAGE}_${EVERSION}.dsc")"
+		echo "BUILDDIR=/build/$src_dir_name" >> "$TMPCFG"
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
 	fi

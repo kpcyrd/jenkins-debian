@@ -390,7 +390,7 @@ update_pkg_sets() {
 	# Debian Edu
 	progress_info_begin 18
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[18]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
-		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FMaintainer,Uploaders debian-edu@lists.debian.org \) > ${TMPFILE2}
+		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FMaintainer debian-edu@lists.debian.org \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[18]}.pkgset
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only

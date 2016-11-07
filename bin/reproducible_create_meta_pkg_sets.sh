@@ -65,7 +65,6 @@ convert_from_deb822_into_source_packages_only() {
 update_target() {
 	mv $TMPFILE $TARGET
 	echo "$(date -u) - $TARGET updated."
-	echo "============================================================================="
 }
 
 update_if_similar() {
@@ -134,6 +133,7 @@ progress_info_begin() {
 progress_info_end() {
 	local table=$1
 	echo "$(date -u) - Done checking ${META_PKGSET[$table]}.pkgset for updates."
+	echo "============================================================================="
 }
 
 update_pkg_sets() {

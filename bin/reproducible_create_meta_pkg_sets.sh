@@ -132,7 +132,7 @@ progress_info_begin() {
 
 progress_info_end() {
 	local table=$1
-	echo "$(date -u) - work on${META_PKGSET[$table]}.pkgset done."
+	echo "$(date -u) - work on ${META_PKGSET[$table]}.pkgset done."
 	echo "============================================================================="
 }
 

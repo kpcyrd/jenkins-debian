@@ -13,7 +13,7 @@ else
 	exit 1
 fi
 
-if [ "$@" = "" ] ; then
+if [ -z "$@" ] ; then
 	PARAMS = "--help"
 else
 	PARAMS = "$@"

@@ -62,8 +62,9 @@ convert_from_deb822_into_source_packages_only() {
 }
 
 update_target() {
+	local MESSAGE="$1"
 	mv $TMPFILE $TARGET
-	echo "$(date -u) - $TARGET updated."
+	echo "$(date -u) - $TARGET updated. ($MESSAGE)"
 }
 
 update_if_similar() {
@@ -97,11 +98,11 @@ update_if_similar() {
 				echo
 				echo "============================================================================="
 			else
-				update_target
+				update_target "old: $LENGTH source packages, new: $NEWLEN"
 			fi
 		else
 			# target does not exist, create it
-			update_target
+			update_target "newly created"
 		fi
 	else
 		echo "$(date -u) - $TARGET not updated, $TMPFILE is empty."
@@ -126,12 +127,12 @@ get_installable_set() {
 
 progress_info_begin() {
 	local table=$1
-	echo "$(date -u) - Checking ${META_PKGSET[$table]}.pkgset for updates."
+	echo "$(date -u) - Checking ${META_PKGSET[$table]}.pkgset for updates in $SUITE."
 }
 
 progress_info_end() {
 	local table=$1
-	echo "$(date -u) - Done checking ${META_PKGSET[$table]}.pkgset for updates."
+	echo "$(date -u) - work on${META_PKGSET[$table]}.pkgset done."
 	echo "============================================================================="
 }
 

@@ -748,8 +748,7 @@ remote_build() {
 }
 
 filter_changes_files() {
-	# filters .buildinfo from .changes
-
+	# filter lines describing .buildinfo files from .changes file
 	sed -i -e '/^ [a-f0-9]\{32,64\} .*\.buildinfo$/d' b{1,2}/$CHANGES
 }
 

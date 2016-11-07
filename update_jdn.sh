@@ -366,7 +366,6 @@ if [ -f /etc/debian_version ] ; then
 				cron-apt 
 				csvtool 
 				dnsmasq-base 
-				dose-extra 
 				dstat 
 				figlet 
 				flex
@@ -461,7 +460,7 @@ if [ -f /etc/debian_version ] ; then
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports jenkins-job-builder || echo "this should only fail on the first install"
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports ffmpeg libav-tools python3-popcon jenkins-job-builder
+			$UP2DATE || sudo apt-get install -t jessie-backports ffmpeg libav-tools python3-popcon jenkins-job-builder dose-extra
 		fi
 		explain "packages installed."
 	else

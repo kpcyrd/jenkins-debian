@@ -453,7 +453,7 @@ update_pkg_sets() {
 	# tails
 	progress_info_begin 22
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[22]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[22]}.pkgset ] ; then
-		URL="http://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.build-manifest"
+		URL="https://nightly.tails.boum.org/build_Tails_ISO_devel/lastSuccessful/archive/latest.iso.build-manifest"
 		echo "Downloading $URL now."
 		curl $URL > $TMPFILE
 		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then

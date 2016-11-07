@@ -34,7 +34,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo
 	echo "$(date -u) - running $0 ($JOB_NAME) on $(hostname) now."
 	echo
-	echo "To learn to understand this, clone git.debian.org/git/qa/jenkins.debian.net.git"
+	echo "To learn to understand this, git clone https://anonscm.debian.org/git/qa/jenkins.debian.net.git"
 	echo "and then have a look at the files README, INSTALL, CONTRIBUTING and maybe TODO."
 	echo
 	echo "This invocation of this script, which is located in bin/$(basename $0),"

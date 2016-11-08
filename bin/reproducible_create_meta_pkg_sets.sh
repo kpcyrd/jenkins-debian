@@ -148,6 +148,9 @@ use_previous_sets_build_depends() {
 }
 
 update_pkg_set_specific() {
+	#
+	# bin/meta_pkgset.csv defines the names of the packages set and their ordering/numbering
+	#
 	case $index in
 		1)	# the essential package set
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE
@@ -435,7 +438,8 @@ update_pkg_set_specific() {
 }
 
 update_pkg_sets() {
-	for index in $(seq 1 $1) ; do
+	# loop through all defined package sets…
+	for index in $(seq 1 ${#META_PKGSET[@]}) ; do
 		progress_info_begin $index
 		if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[$index]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[$index]}.pkgset ] ; then
 			update_pkg_set_specific
@@ -481,8 +485,8 @@ for SUITE in $SUITES ; do
 	echo "============================================================================="
 	echo "$(date -u) - Creating meta package sets for $SUITE now."
 	echo "============================================================================="
-	# bin/meta_pkgset.csv defines the names of the packages set and their ordering
-	update_pkg_sets 45
+	update_pkg_sets
+
 	echo
 	echo "============================================================================="
 	echo "$(date -u) - Done updating all meta package sets for $SUITE."

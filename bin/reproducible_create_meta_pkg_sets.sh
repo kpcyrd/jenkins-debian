@@ -64,7 +64,7 @@ convert_from_deb822_into_source_packages_only() {
 update_target() {
 	local MESSAGE="$1"
 	mv $TMPFILE $TARGET
-	echo "$(date -u) - $TARGET updated. ($MESSAGE)"
+	echo "$(date -u) - $TARGET ($MESSAGE) updated."
 }
 
 update_if_similar() {

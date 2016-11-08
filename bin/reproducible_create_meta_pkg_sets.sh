@@ -149,18 +149,21 @@ use_previous_sets_build_depends() {
 
 update_pkg_set_specific() {
 	#
-	# bin/meta_pkgset.csv defines the names of the packages set and their ordering/numbering
+	# bin/meta_pkgset.csv defines the names of the packages set and their ordering
 	#
-	case $index in
-		1)	# the essential package set
+	case ${META_PKGSET[$index]} in
+		essential)
+			# the essential package set
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE
 			convert_from_deb822_into_source_packages_only
 			;;
-		2)	# the required package set
+		required)
+			# the required package set
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FPriority required > $TMPFILE
 			convert_from_deb822_into_source_packages_only
 			;;
-		3)	# build-essential
+		build-essential)
+			# build-essential
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
 			# here we want the installable set:
 			get_installable_set
@@ -168,7 +171,8 @@ update_pkg_set_specific() {
 				convert_from_deb822_into_source_packages_only
 			fi
 			;;
-		4)	# build-essential-depends
+		build-essential-depends)
+			# build-essential-depends
 			#
 			# This set is created using the following procedure:
 			#
@@ -200,7 +204,8 @@ update_pkg_set_specific() {
 				| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
 				| grep-dctrl --no-field-names --show-field=Package '' > $TMPFILE
 			;;
-		5)	# popcon top 1337 installed sources
+		popcon_top1337-installed-sources)
+			# popcon top 1337 installed sources
 			SQL_QUERY="SELECT popcon_src.source FROM popcon_src ORDER BY popcon_src.insts DESC LIMIT 1337;"
 			PGPASSWORD=public-udd-mirror \
 				psql -U public-udd-mirror \
@@ -208,7 +213,8 @@ update_pkg_set_specific() {
 				-t \
 				udd -c"${SQL_QUERY}" > $TMPFILE
 			;;
-		6)	# key packages (same for all suites)
+		key_packages)
+			# key packages (same for all suites)
 			SQL_QUERY="SELECT source FROM key_packages;"
 			PGPASSWORD=public-udd-mirror \
 				psql -U public-udd-mirror \
@@ -216,17 +222,20 @@ update_pkg_set_specific() {
 				-t \
 				udd -c"${SQL_QUERY}" > $TMPFILE
 			;;
-		7)	# installed on one or more .debian.org machines
+		installed_on_debian.org)
+			# installed on one or more .debian.org machines
 			# one day we will get a proper data provider from DSA...
 			# (so far it was a manual "dpkg --get-selections" on all machines
 			# converted into a list of source packages...)
 			cat /srv/jenkins/bin/reproducible_installed_on_debian.org > $TMPFILE
 			;;
-		8)	# packages which had a DSA
+		had_a_DSA)
+			# packages which had a DSA
 			svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
 			grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5 > $TMPFILE
 			;;
-		9)	# packages from the cii-census
+		cii-census)
+			# packages from the cii-census
 			CII=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
 			git clone --depth 1 https://github.com/linuxfoundation/cii-census.git $CII
 			csvtool -t ',' col 1 $CII/results.csv | grep -v "project_name" > $TMPFILE
@@ -240,7 +249,7 @@ update_pkg_set_specific() {
 			rm $CII -r
 			convert_from_deb822_into_source_packages_only
 			;;
-		10)	# gnome and everything it depends on
+		gnome)	# gnome and everything it depends on
 			#
 			# The build-depends of X tasks can be solved once dose-ceve is able to read
 			# Debian source packages (possible in dose3 git but needs a new dose3 release
@@ -256,10 +265,11 @@ update_pkg_set_specific() {
 				convert_from_deb822_into_source_packages_only
 			fi
 			;;
-		11)	# all build depends of gnome
+		*_build-depends)
+			# all build depends of the previous set (as defined in bin/meta_pkgset.csv)
 			use_previous_sets_build_depends
 			;;
-		12)	# kde and everything it depends on
+		kde)	# kde and everything it depends on
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full --or -FPackage kde-standard \) > ${TMPFILE2}
 			get_installable_set
 			if [ -f $TMPFILE ] ; then
@@ -270,10 +280,7 @@ update_pkg_set_specific() {
 				grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-kde-extras@lists.alioth.debian.org $SOURCES >> $TMPFILE
 			fi
 			;;
-		13)	# all build depends of kde
-			use_previous_sets_build_depends
-			;;
-		14)	# mate and everything it depends on
+		mate)	# mate and everything it depends on
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage mate-desktop-environment --or -FPackage mate-desktop-environment-extras \) > ${TMPFILE2}
 			get_installable_set
 			if [ -f $TMPFILE ] ; then
@@ -283,20 +290,15 @@ update_pkg_set_specific() {
 				grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-mate-team@lists.alioth.debian.org $SOURCES >> $TMPFILE
 			fi
 			;;
-		15)	# all build depends of mate
-			use_previous_sets_build_depends
-			;;
-		16)	# xfce and everything it depends on
+		xfce)	# xfce and everything it depends on
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage xfce4 \) > ${TMPFILE2}
 			get_installable_set
 			if [ -f $TMPFILE ] ; then
 				convert_from_deb822_into_source_packages_only
 			fi
 			;;
-		17)	# all build depends of xfce
-			use_previous_sets_build_depends
-			;;
-		18)	# Debian Edu
+		debian-edu)
+			# Debian Edu
 			# all recommends of the education-* packages
 			# (the Debian Edu metapackages don't use depends but recommends…)
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -n -sRecommends -r -FPackage education-*  |sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u > ${TMPFILE}
@@ -311,10 +313,8 @@ update_pkg_set_specific() {
 				convert_from_deb822_into_source_packages_only
 			fi
 			;;
-		19)	# all build depends of Debian Edu
-			use_previous_sets_build_depends
-			;;
-		20)	# freedombox-setup and plinth and everything they depend on
+		freedombox)
+			# freedombox-setup and plinth and everything they depend on
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
 			get_installable_set
 			if [ -f $TMPFILE ] ; then
@@ -327,10 +327,7 @@ update_pkg_set_specific() {
 				done
 			fi
 			;;
-		21)	# all build depends of freedombox-setup and plinth
-			use_previous_sets_build_depends
-			;;
-		22)	# grml
+		grml)	# grml
 			URL="http://grml.org/files/grml64-full_latest/dpkg.selections"
 			echo "Downloading $URL now."
 			curl $URL | cut -f1 > $TMPFILE
@@ -344,10 +341,7 @@ update_pkg_set_specific() {
 				ABORT=true
 			fi
 			;;
-		23)	# all build depends of grml
-			use_previous_sets_build_depends
-			;;
-		24)	# tails
+		tails)	# tails
 			URL="https://nightly.tails.boum.org/build_Tails_ISO_devel/lastSuccessful/archive/latest.iso.build-manifest"
 			echo "Downloading $URL now."
 			curl $URL > $TMPFILE
@@ -361,77 +355,90 @@ update_pkg_set_specific() {
 				ABORT=true
 			fi
 			;;
-		25)	# all build depends of tails
-			use_previous_sets_build_depends
-			;;
-		26)	# installed by Subgraph OS
+		subgraph_OS)
+			# installed by Subgraph OS
 			# one day we will get a proper data provider from Subgraph OSA...
 			# (so far it was a manual "dpkg -l")
 			cat /srv/jenkins/bin/reproducible_installed_by_subgraphos > $TMPFILE
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
 			;;
-		27)	# all build depends of Subgraph OS
-			use_previous_sets_build_depends
-			;;
-		28)	# debian-boot@l.d.o maintainers
+		maint_debian-boot)
+			# debian-boot@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
 			;;
-		29)	# Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+		maint_debian-med)
+			# Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-med-packaging@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		30)	# debian-ocaml-maint@l.d.o maintainers
+		maint_debian-ocaml)
+			# debian-ocaml-maint@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-ocaml-maint@lists.debian.org $SOURCES > $TMPFILE
 			;;
-		31)	# debian python maintainers
+		maint_debian-python)
+			# debian python maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders python-modules-team@lists.alioth.debian.org $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders python-apps-team@lists.alioth.debian.org $SOURCES >> $TMPFILE
 			;;
-		32)	# debian-qa maintainers
+		maint_debian-qa)
+			# debian-qa maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders packages@qa.debian.org $SOURCES > $TMPFILE
 			;;
-		33)	# Debian Science Team
+		maint_debian-science)
+			# Debian Science Team
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-science-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		34)	# debian-x@l.d.o maintainers
+		maint_debian-x)
+			# debian-x@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
 			;;
-		35)	# lua packages
+		maint_lua)
+			# lua packages
 			grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 			;;
-		36)	# pkg-fonts-devel
+		maint_pkg-fonts-devel)
+			# pkg-fonts-devel
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-fonts-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		37)	# pkg-games-devel
+		maint_pkg-games-devel)
+			# pkg-games-devel
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-games-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		38)	# pkg-golang-maintainers
+		maint_pkg-golang-maintainers)
+			# pkg-golang-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 			;;
-		39)	# pkg-haskell-maintainers
+		maint_pkg-haskell-maintainers)
+			# pkg-haskell-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FBuild-Depends ghc $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 			;;
-		40)	# pkg-java-maintainers
+		maint_pkg-java-maintainers)
+			# pkg-java-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-java-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders openjdk@lists.launchpad.net $SOURCES >> $TMPFILE
 			grep-dctrl -sPackage -n -FBuild-Depends default-jdk -o -FBuild-Depends-Indep default-jdk $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 			;;
-		41)	# pkg-javascript-devel
+		maint_pkg-javascript-devel)
+			# pkg-javascript-devel
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-javascript-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		42)	# pkg-multimedia-maintainers
+		maint_pkg-multimedia-maintainers)
+			# pkg-multimedia-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-multimedia-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		43)	# pkg-perl-maintainers
+		maint_pkg-perl-maintainers)
+			# pkg-perl-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-perl-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		44)	# pkg-php-pear
+		maint_pkg-php-pear)
+			# pkg-php-pear
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
-		45)	# pkg-ruby-extras-maintainers
+		maint_pkg-ruby-extras-maintainers)
+			# pkg-ruby-extras-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
 	esac

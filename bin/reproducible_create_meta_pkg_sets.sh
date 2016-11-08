@@ -148,7 +148,7 @@ use_previous_sets_build_depends() {
 }
 
 update_pkg_set_specific() {
-	case index in
+	case $index in
 		1)	# the essential package set
 			chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X -FEssential yes > $TMPFILE
 			convert_from_deb822_into_source_packages_only
@@ -435,7 +435,7 @@ update_pkg_set_specific() {
 }
 
 update_pkg_sets() {
-	for index in $(seq 0 $1) ; do
+	for index in $(seq 1 $1) ; do
 		progress_info_begin $index
 		if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[$index]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[$index]}.pkgset ] ; then
 			update_pkg_set_specific
@@ -446,9 +446,13 @@ update_pkg_sets() {
 	done
 }
 
+# define some global variables…
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
 TMPFILE2=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
 TMPFILE3=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
+index=0
+
+# loop through all suites
 for SUITE in $SUITES ; do
 	if [ "$SUITE" = "experimental" ] ; then
 		# no pkg sets in experimental
@@ -477,8 +481,7 @@ for SUITE in $SUITES ; do
 	echo "============================================================================="
 	echo "$(date -u) - Creating meta package sets for $SUITE now."
 	echo "============================================================================="
-	# finally
-	index=0
+	# bin/meta_pkgset.csv defines the names of the packages set and their ordering
 	update_pkg_sets 45
 	echo
 	echo "============================================================================="

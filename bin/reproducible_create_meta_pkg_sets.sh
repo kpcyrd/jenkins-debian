@@ -136,7 +136,7 @@ progress_info_end() {
 	echo "============================================================================="
 }
 
-update_all_build_depends() {
+use_previous_sets_build_depends() {
 	local src_set=$index
 	let src_srt-=1
 
@@ -254,7 +254,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		11) # all build depends of gnome
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		12) # kde and everything it depends on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full --or -FPackage kde-standard \) > ${TMPFILE2}
@@ -268,7 +268,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		13) # all build depends of kde
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		14) # mate and everything it depends on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage mate-desktop-environment --or -FPackage mate-desktop-environment-extras \) > ${TMPFILE2}
@@ -281,7 +281,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		15) # all build depends of mate
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		16) # xfce and everything it depends on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage xfce4 \) > ${TMPFILE2}
@@ -291,7 +291,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		17) # all build depends of xfce
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		18) # Debian Edu
 		# all recommends of the education-* packages
@@ -309,7 +309,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		19) # all build depends of Debian Edu
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		20) # freedombox-setup and plinth and everything they depend on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
@@ -325,7 +325,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		21) # all build depends of freedombox-setup and plinth
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		22) # grml
 		URL="http://grml.org/files/grml64-full_latest/dpkg.selections"
@@ -342,7 +342,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		23) # all build depends of grml
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		24) # tails
 		URL="https://nightly.tails.boum.org/build_Tails_ISO_devel/lastSuccessful/archive/latest.iso.build-manifest"
@@ -359,7 +359,7 @@ update_pkg_set_specific() {
 		fi
 		;;
 		25) # all build depends of tails
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		26) # installed by Subgraph OS
 		# one day we will get a proper data provider from Subgraph OSA...
@@ -369,7 +369,7 @@ update_pkg_set_specific() {
 		convert_from_deb822_into_source_packages_only
 		;;
 		27) # all build depends of Subgraph OS
-		update_all_build_depends
+		use_previous_sets_build_depends
 		;;
 		28) # debian-boot@l.d.o maintainers
 		grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE

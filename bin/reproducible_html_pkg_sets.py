@@ -220,14 +220,14 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
         ('unreproducible', 'bad', 'failed to build reproducibly'),
         ('FTBFS', 'ugly', 'failed to build from source'),
         ('rest', 'rest',
-         'are either blacklisted, not for us or cannot be downloaded'),
+         'are either in depwait state, blacklisted, not for us, or cannot be downloaded'),
         ('reproducible', 'good', 'successfully build reproducibly'),
     ]
 
     for (status, cutename, description) in status_cutename_descriptions:
         icon_html = ''
         if status == 'rest':
-            for s in ['not_for_us', 'blacklisted', '404']:
+            for s in ['depwait', 'blacklisted', 'not_for_us', '404']:
                 s, icon, spokenstatus = get_status_icon(s)
                 icon_html += gen_status_link_icon(s, None, icon, suite, arch)
         else:

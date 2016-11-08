@@ -390,8 +390,16 @@ update_pkg_sets() {
 	# Debian Edu
 	progress_info_begin 18
 	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[18]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[18]}.pkgset ] ; then
-		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FMaintainer debian-edu@lists.debian.org \) > ${TMPFILE2}
+		# all recommends of the education-* packages
+		# (the Debian Edu metapackages don't use depends but recommends…)
+		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -n -sRecommends -r -FPackage education-*  |sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u > ${TMPFILE}
+		packages_list_to_deb822
+		mv $TMPFILE ${TMPFILE3}
+		# required and maintained by Debian Edu
+		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME \( -FPriority required --or -FMaintainer debian-edu@lists.debian.org \) > ${TMPFILE2}
 		get_installable_set ${META_PKGSET[18]}.pkgset
+		mv $TMPFILE ${TMPFILE2}
+		cat ${TMPFILE2} ${TMPFILE3} > $TMPFILE
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 			update_if_similar ${META_PKGSET[18]}.pkgset
@@ -689,6 +697,7 @@ update_pkg_sets() {
 
 TMPFILE=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
 TMPFILE2=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
+TMPFILE3=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX)
 for SUITE in $SUITES ; do
 	if [ "$SUITE" = "experimental" ] ; then
 		# no pkg sets in experimental
@@ -724,7 +733,7 @@ for SUITE in $SUITES ; do
 	echo "$(date -u) - Done updating all meta package sets for $SUITE."
 done
 
-rm -f $TMPFILE ${TMPFILE2}
+rm -f $TMPFILE ${TMPFILE2} ${TMPFILE3}
 echo
 
 # abort the job if there are problems we cannot do anything about (except filing bugs! (but these are unrelated to reproducible builds...))

@@ -138,7 +138,7 @@ progress_info_end() {
 
 use_previous_sets_build_depends() {
 	local src_set=$index
-	let src_srt-=1
+	let src_set-=1
 
 	for PKG in $(cat $TPATH/${META_PKGSET[$src_set]}.pkgset) ; do
 		grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE

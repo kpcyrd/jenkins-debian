@@ -136,6 +136,21 @@ progress_info_end() {
 	echo "============================================================================="
 }
 
+update_all_build_depends() {
+	local index=$1
+	local src_set=$index
+	let src_srt-=1
+
+	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[$index]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[$index]}.pkgset ] ; then
+		for PKG in $(cat $TPATH/${META_PKGSET[$src_set]}.pkgset) ; do
+			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+		done
+		packages_list_to_deb822
+		convert_from_deb822_into_source_packages_only
+		update_if_similar ${META_PKGSET[$index]}.pkgset
+	fi
+}
+
 update_pkg_sets() {
 	# the essential package set
 	progress_info_begin 1
@@ -295,14 +310,7 @@ update_pkg_sets() {
 	# all build depends of gnome
 	rm -f $TMPFILE
 	progress_info_begin 11
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[11]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[11]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[10]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[11]}.pkgset
-	fi
+	update_all_build_depends 11
 	progress_info_end 11
 
 	# kde and everything it depends on
@@ -324,14 +332,7 @@ update_pkg_sets() {
 	# all build depends of kde
 	rm -f $TMPFILE
 	progress_info_begin 13
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[13]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[13]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[12]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[13]}.pkgset
-	fi
+	update_all_build_depends 13
 	progress_info_end 13
 
 	# mate and everything it depends on
@@ -352,14 +353,7 @@ update_pkg_sets() {
 	# all build depends of mate
 	progress_info_begin 15
 	rm -f $TMPFILE
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[15]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[15]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[14]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[15]}.pkgset
-	fi
+	update_all_build_depends 15
 	progress_info_end 15
 
 	# xfce and everything it depends on
@@ -377,14 +371,7 @@ update_pkg_sets() {
 	# all build depends of xfce
 	rm -f $TMPFILE
 	progress_info_begin 17
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[17]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[17]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[16]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[17]}.pkgset
-	fi
+	update_all_build_depends 17
 	progress_info_end 17
 
 	# Debian Edu
@@ -410,15 +397,7 @@ update_pkg_sets() {
 	# all build depends of Debian Edu
 	rm -f $TMPFILE
 	progress_info_begin 19
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[19]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[19]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[18]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		echo "parsing $TMPFILE now..."
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[19]}.pkgset
-	fi
+	update_all_build_depends 19
 	progress_info_end 19
 
 	# freedombox-setup and plinth and everything they depend on
@@ -442,14 +421,7 @@ update_pkg_sets() {
 	# all build depends of freedombox-setup and plinth
 	rm -f $TMPFILE
 	progress_info_begin 21
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[21]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[21]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[20]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[21]}.pkgset
-	fi
+	update_all_build_depends 21
 	progress_info_end 21
 
 	# grml
@@ -474,15 +446,7 @@ update_pkg_sets() {
 	# all build depends of grml
 	rm -f $TMPFILE
 	progress_info_begin 23
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[23]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[23]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[22]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		echo "parsing $TMPFILE now..."
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[23]}.pkgset
-	fi
+	update_all_build_depends 23
 	progress_info_end 23
 
 	# tails
@@ -507,15 +471,7 @@ update_pkg_sets() {
 	# all build depends of tails
 	rm -f $TMPFILE
 	progress_info_begin 25
-	if [ -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[25]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[25]}.pkgset ] ; then
-		for PKG in $(cat $TPATH/${META_PKGSET[24]}.pkgset) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		echo "parsing $TMPFILE now..."
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[25]}.pkgset
-	fi
+	update_all_build_depends 25
 	progress_info_end 25
 
 	# installed by Subgraph OS
@@ -533,14 +489,7 @@ update_pkg_sets() {
 	# all build depends of Subgraph OS
 	rm -f $TMPFILE
 	progress_info_begin 27
-	if [ ! -z $(find $TPATH -maxdepth 1 -mtime +0 -name ${META_PKGSET[27]}.pkgset) ] || [ ! -f $TPATH/${META_PKGSET[27]}.pkgset ] ; then
-		for PKG in $(cat /srv/jenkins/bin/reproducible_installed_by_subgraphos) ; do
-			grep-dctrl -sBuild-Depends -n -X -FPackage $PKG $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
-		done
-		packages_list_to_deb822
-		convert_from_deb822_into_source_packages_only
-		update_if_similar ${META_PKGSET[27]}.pkgset
-	fi
+	update_all_build_depends 27
 	progress_info_end 27
 
 	# debian-boot@l.d.o maintainers

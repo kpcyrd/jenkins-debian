@@ -20,7 +20,7 @@
       - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
-      numToKeep: 30
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -49,7 +49,7 @@
           cron: '{my_scmpoll}'
     logrotate:
       daysToKeep: 90
-      numToKeep: 20
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -160,7 +160,7 @@
       - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
-      numToKeep: 30
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -196,7 +196,7 @@
           cron: '*/6 * * * *'
     logrotate:
       daysToKeep: 90
-      numToKeep: 30
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -235,7 +235,7 @@
       - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
-      numToKeep: 30
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -271,7 +271,7 @@
       - timed: '{my_timed}'
     logrotate:
       daysToKeep: 90
-      numToKeep: 30
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:

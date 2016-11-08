@@ -111,7 +111,7 @@ update_if_similar() {
 
 get_installable_set() {
 	set +e
-	echo "$(date -u) - Calculating the installable set for $1"
+	echo "$(date -u) - Calculating the installable set for ${META_PKGSET[$index]}."
 	dose-deb-coinstall --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2} > $TMPFILE
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
@@ -160,7 +160,7 @@ update_pkg_set_specific() {
 		3) # build-essential
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FBuild-Essential yes --or -FPackage build-essential \) > ${TMPFILE2}
 		# here we want the installable set:
-		get_installable_set ${META_PKGSET[3]}.pkgset
+		get_installable_set
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 		fi
@@ -248,7 +248,7 @@ update_pkg_set_specific() {
 		#
 		# The current method also ignores Build-Depends-Indep and Build-Depends-Arch
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage gnome \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[10]}.pkgset
+		get_installable_set
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 		fi
@@ -258,7 +258,7 @@ update_pkg_set_specific() {
 		;;
 		12) # kde and everything it depends on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage kde-full --or -FPackage kde-standard \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[12]}.pkgset
+		get_installable_set
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 			# also add the packages maintained by those teams
@@ -272,7 +272,7 @@ update_pkg_set_specific() {
 		;;
 		14) # mate and everything it depends on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage mate-desktop-environment --or -FPackage mate-desktop-environment-extras \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[14]}.pkgset
+		get_installable_set
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 			# also add the packages maintained by the team
@@ -285,7 +285,7 @@ update_pkg_set_specific() {
 		;;
 		16) # xfce and everything it depends on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage xfce4 \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[16]}.pkgset
+		get_installable_set
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 		fi
@@ -301,7 +301,7 @@ update_pkg_set_specific() {
 		mv $TMPFILE ${TMPFILE3}
 		# required and maintained by Debian Edu
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME \( -FPriority required --or -FMaintainer debian-edu@lists.debian.org \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[18]}.pkgset
+		get_installable_set
 		mv $TMPFILE ${TMPFILE2}
 		cat ${TMPFILE2} ${TMPFILE3} > $TMPFILE
 		if [ -f $TMPFILE ] ; then
@@ -313,7 +313,7 @@ update_pkg_set_specific() {
 		;;
 		20) # freedombox-setup and plinth and everything they depend on
 		chdist --data-dir=$CHPATH grep-dctrl-packages $DISTNAME -X \( -FPriority required --or -FPackage freedombox-setup --or -FPackage plinth \) > ${TMPFILE2}
-		get_installable_set ${META_PKGSET[20]}.pkgset
+		get_installable_set
 		if [ -f $TMPFILE ] ; then
 			convert_from_deb822_into_source_packages_only
 			# hardcoded list of source packages

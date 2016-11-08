@@ -301,7 +301,7 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
@@ -309,15 +309,18 @@ write_build_performance_stats() {
 	local TIMESPAN_VERBOSE="4 weeks"
 	local TIMESPAN_RAW="28"
 	# Find stats for 28 days since yesterday, no stats exist for today
+
 	local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
-	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "$TIMESPAN days")
+	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
+
 	write_page "</tr><tr><td class=\"left\">average test duration (in the last $TIMESPAN_VERBOSE)</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT CAST(AVG(r.build_duration) AS INTEGER) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > '$TIMESPAN_DATE' AND s.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='' AND r.build_duration!='0' AND r.build_date > '$TIMESPAN_DATE' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
 	done
+
 	write_page "</tr><tr><td class=\"left\">packages tested on $DATE</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
@@ -338,7 +341,7 @@ write_build_performance_stats() {
 	local TIMESPAN_RAW="91"
 	# Find stats for 91 days since yesterday, no stats exist for today
 	local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
-	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "$TIMESPAN days")
+	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")

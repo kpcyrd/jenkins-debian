@@ -114,7 +114,7 @@ TABLE[9]=stats_bugs_sin_ftbfs_state
 while IFS=, read col1 col2 col3
 do
 	META_PKGSET[$col1]=$col3
-done < $BIN_PATH/meta_pkgset.csv
+done < $BIN_PATH/reproducible_pkgsets.csv
 
 # mustache templates
 PAGE_FOOTER_TEMPLATE=$TEMPLATE_PATH/default_page_footer.mustache

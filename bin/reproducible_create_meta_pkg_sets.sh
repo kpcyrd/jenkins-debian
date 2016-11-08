@@ -149,7 +149,7 @@ use_previous_sets_build_depends() {
 
 update_pkg_set_specific() {
 	#
-	# bin/meta_pkgset.csv defines the names of the packages set and their ordering
+	# bin/reproducible_pkgsets.csv defines the names of the packages set and their ordering
 	#
 	case ${META_PKGSET[$index]} in
 		essential)
@@ -266,7 +266,7 @@ update_pkg_set_specific() {
 			fi
 			;;
 		*_build-depends)
-			# all build depends of the previous set (as defined in bin/meta_pkgset.csv)
+			# all build depends of the previous set (as defined in bin/reproducible_pkgsets.csv)
 			use_previous_sets_build_depends
 			;;
 		kde)	# kde and everything it depends on

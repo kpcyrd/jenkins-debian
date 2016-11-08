@@ -331,7 +331,7 @@ update_pkg_set_specific() {
 		URL="http://grml.org/files/grml64-full_latest/dpkg.selections"
 		echo "Downloading $URL now."
 		curl $URL | cut -f1 > $TMPFILE
-		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+		if ! grep '404 Not Found' $TMPFILE ; then
 			echo "parsing $TMPFILE now..."
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
@@ -348,7 +348,7 @@ update_pkg_set_specific() {
 		URL="https://nightly.tails.boum.org/build_Tails_ISO_devel/lastSuccessful/archive/latest.iso.build-manifest"
 		echo "Downloading $URL now."
 		curl $URL > $TMPFILE
-		if ! grep '<title>404 Not Found</title>' $TMPFILE ; then
+		if ! grep '404 Not Found' $TMPFILE ; then
 			echo "parsing $TMPFILE now..."
 			tails_build_manifest_to_deb824 "$TMPFILE" "$PACKAGES"
 			convert_from_deb824_into_source_packages_only

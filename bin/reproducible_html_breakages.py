@@ -340,4 +340,4 @@ if __name__ == '__main__':
     left_nav_html = create_main_navigation(displayed_page='breakages')
     write_html_page(title, html, destfile, style_note=True,
                     left_nav_html=left_nav_html)
-    log.info('Breackages page created at ' + desturl)
+    log.info('Breakages page created at ' + desturl)

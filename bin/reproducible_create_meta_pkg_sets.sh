@@ -347,8 +347,8 @@ update_pkg_set_specific() {
 			curl $URL > $TMPFILE
 			if ! grep '404 Not Found' $TMPFILE ; then
 				echo "parsing $TMPFILE now..."
-				tails_build_manifest_to_deb824 "$TMPFILE" "$PACKAGES"
-				convert_from_deb824_into_source_packages_only
+				tails_build_manifest_to_deb822 "$TMPFILE" "$PACKAGES"
+				convert_from_deb822_into_source_packages_only
 			else
 				MESSAGE="Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
 				irc_message debian-reproducible $MESSAGE

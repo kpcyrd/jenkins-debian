@@ -392,7 +392,7 @@ update_pkg_set_specific() {
 			# debian-x@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
 			;;
-		maint_lua)
+		maint_debian-lua)
 			# lua packages
 			grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE

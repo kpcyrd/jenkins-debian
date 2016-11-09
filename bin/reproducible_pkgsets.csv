@@ -32,7 +32,7 @@
 32,maintenance team,maint_debian-qa
 33,maintenance team,maint_debian-science
 34,maintenance team,maint_debian-x
-35,maintenance team,maint_lua
+35,maintenance team,maint_debian-lua
 36,maintenance team,maint_pkg-fonts-devel
 37,maintenance team,maint_pkg-games-devel
 38,maintenance team,maint_pkg-golang-maintainers

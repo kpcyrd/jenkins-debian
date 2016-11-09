@@ -1,48 +1,48 @@
-1,Debian,essential
-2,Debian,required
-3,Debian,build-essential
-4,Debian,build-essential-depends
-5,Debian,popcon_top1337-installed-sources
-6,Debian,key_packages
-7,Debian,installed_on_debian.org
-8,Debian,had_a_DSA
-9,Debian,cii-census
-10,desktop,gnome
-11,desktop,gnome_build-depends
-12,desktop,kde
-13,desktop,kde_build-depends
-14,desktop,mate
-15,desktop,mate_build-depends
-16,desktop,xfce
-17,desktop,xfce_build-depends
-18,Debian distribution,debian-edu
-19,Debian distribution,debian-edu_build-depends
-20,Debian distribution,freedombox
-21,Debian distribution,freedombox_build-depends
-22,Debian distribution,grml
-23,Debian distribution,grml_build-depends
-24,Debian distribution,tails
-25,Debian distribution,tails_build-depends
-26,Debian distribution,subgraph_OS
-27,Debian distribution,subgraph_OS_build-depends
-28,maintenance team,maint_debian-accessibility
-29,maintenance team,maint_debian-boot
-30,maintenance team,maint_debian-med
-31,maintenance team,maint_debian-ocaml
-32,maintenance team,maint_debian-python
-33,maintenance team,maint_debian-qa
-34,maintenance team,maint_debian-science
-35,maintenance team,maint_debian-x
-36,maintenance team,maint_debian-lua
-37,maintenance team,maint_pkg-fonts-devel
-38,maintenance team,maint_pkg-games-devel
-39,maintenance team,maint_pkg-golang-maintainers
-40,maintenance team,maint_pkg-grass-devel
-41,maintenance team,maint_pkg-haskell-maintainers
-42,maintenance team,maint_pkg-java-maintainers
-43,maintenance team,maint_pkg-javascript-devel
-44,maintenance team,maint_pkg-multimedia-maintainers
-45,maintenance team,maint_pkg-perl-maintainers
-46,maintenance team,maint_pkg-php-pear
-47,maintenance team,maint_pkg-openstack
-48,maintenance team,maint_pkg-ruby-extras-maintainers
+Debian,essential
+Debian,required
+Debian,build-essential
+Debian,build-essential-depends
+Debian,popcon_top1337-installed-sources
+Debian,key_packages
+Debian,installed_on_debian.org
+Debian,had_a_DSA
+Debian,cii-census
+desktop,gnome
+desktop,gnome_build-depends
+desktop,kde
+desktop,kde_build-depends
+desktop,mate
+desktop,mate_build-depends
+desktop,xfce
+desktop,xfce_build-depends
+Debian distribution,debian-edu
+Debian distribution,debian-edu_build-depends
+Debian distribution,freedombox
+Debian distribution,freedombox_build-depends
+Debian distribution,grml
+Debian distribution,grml_build-depends
+Debian distribution,tails
+Debian distribution,tails_build-depends
+Debian distribution,subgraph_OS
+Debian distribution,subgraph_OS_build-depends
+maintenance team,maint_debian-accessibility
+maintenance team,maint_debian-boot
+maintenance team,maint_debian-med
+maintenance team,maint_debian-ocaml
+maintenance team,maint_debian-python
+maintenance team,maint_debian-qa
+maintenance team,maint_debian-science
+maintenance team,maint_debian-x
+maintenance team,maint_debian-lua
+maintenance team,maint_pkg-fonts-devel
+maintenance team,maint_pkg-games-devel
+maintenance team,maint_pkg-golang-maintainers
+maintenance team,maint_pkg-grass-devel
+maintenance team,maint_pkg-haskell-maintainers
+maintenance team,maint_pkg-java-maintainers
+maintenance team,maint_pkg-javascript-devel
+maintenance team,maint_pkg-multimedia-maintainers
+maintenance team,maint_pkg-perl-maintainers
+maintenance team,maint_pkg-php-pear
+maintenance team,maint_pkg-openstack
+maintenance team,maint_pkg-ruby-extras-maintainers

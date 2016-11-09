@@ -149,7 +149,7 @@
     my_weekday: '*'
     my_prefix: ' torbrowser-launcher'
     my_postfix: ''
-    my_recipients: 'holger@layer-acht.org'
+    my_recipients: 'u@451f.org, holger@layer-acht.org'
     my_node: ''
     jobs:
         - '{name}_setup_schroot_{dist}_amd64':

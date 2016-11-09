@@ -414,6 +414,10 @@ update_pkg_set_specific() {
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-golang-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 			grep-dctrl -sPackage -n -FBuild-Depends golang-go $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 			;;
+		maint_pkg-grass-devel)
+			# pkg-games-devel
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-grass-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+			;;
 		maint_pkg-haskell-maintainers)
 			# pkg-haskell-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-haskell-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE

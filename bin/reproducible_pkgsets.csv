@@ -27,13 +27,13 @@ Debian distribution,subgraph_OS
 Debian distribution,subgraph_OS_build-depends
 maintenance team,maint_debian-accessibility
 maintenance team,maint_debian-boot
+maintenance team,maint_debian-lua
 maintenance team,maint_debian-med
 maintenance team,maint_debian-ocaml
 maintenance team,maint_debian-python
 maintenance team,maint_debian-qa
 maintenance team,maint_debian-science
 maintenance team,maint_debian-x
-maintenance team,maint_debian-lua
 maintenance team,maint_pkg-fonts-devel
 maintenance team,maint_pkg-games-devel
 maintenance team,maint_pkg-golang-maintainers

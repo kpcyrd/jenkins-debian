@@ -371,6 +371,11 @@ update_pkg_set_specific() {
 			# debian-boot@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE
 			;;
+		maint_debian-lua)
+			# lua packages
+			grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
+			grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
+			;;
 		maint_debian-med)
 			# Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-med-packaging@lists.alioth.debian.org $SOURCES > $TMPFILE
@@ -395,11 +400,6 @@ update_pkg_set_specific() {
 		maint_debian-x)
 			# debian-x@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
-			;;
-		maint_debian-lua)
-			# lua packages
-			grep-dctrl -sPackage -n -FPackage -e ^lua.* $SOURCES > $TMPFILE
-			grep-dctrl -sPackage -n -FBuild-Depends dh-lua $SOURCES | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g" | sort -u >> $TMPFILE
 			;;
 		maint_pkg-fonts-devel)
 			# pkg-fonts-devel

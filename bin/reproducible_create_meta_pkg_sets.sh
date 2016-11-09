@@ -441,6 +441,10 @@ update_pkg_set_specific() {
 			# pkg-ruby-extras-maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-ruby-extras-maintainers@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
+		maint_pkg-openstack)
+			# pkg-openstack
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders openstack-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+			;;
 	esac
 }
 

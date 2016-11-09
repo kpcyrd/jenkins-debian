@@ -42,4 +42,5 @@
 42,maintenance team,maint_pkg-multimedia-maintainers
 43,maintenance team,maint_pkg-perl-maintainers
 44,maintenance team,maint_pkg-php-pear
-45,maintenance team,maint_pkg-ruby-extras-maintainers
+45,maintenance team,maint_pkg-openstack
+46,maintenance team,maint_pkg-ruby-extras-maintainers

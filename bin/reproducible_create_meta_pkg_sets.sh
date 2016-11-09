@@ -363,6 +363,10 @@ update_pkg_set_specific() {
 			packages_list_to_deb822
 			convert_from_deb822_into_source_packages_only
 			;;
+		maint_debian-accessibility)
+			# debian-accessibility@l.d.o maintainers
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-accessibility@lists.debian.org $SOURCES > $TMPFILE
+			;;
 		maint_debian-boot)
 			# debian-boot@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-boot@lists.debian.org $SOURCES > $TMPFILE

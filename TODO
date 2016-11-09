@@ -208,6 +208,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 ** vary the length of the build paths (/build/first vs /build/second), only once the unreproducibilities caused by different build paths are solved
 ** vary the init system: sysv and systemd
+** vary (with) usrmerge and without (needs debootstrap from jessie-backports)
 
 ==== reproducible Debian armhf
 

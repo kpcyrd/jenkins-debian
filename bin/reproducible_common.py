@@ -88,11 +88,13 @@ JENKINS_URL = 'https://jenkins.debian.net'
 
 # global package set definitions
 # META_PKGSET[pkgset_id] = (pkgset_name, pkgset_group)
-# csv file columns: (pkgset_id, pkgset_group, pkgset_name)
+# csv file columns: (pkgset_group, pkgset_name)
 META_PKGSET = {}
+pkgset_id = 0
 with open(os.path.join(BIN_PATH, './reproducible_pkgsets.csv'), newline='') as f:
     for line in csv.reader(f):
-        META_PKGSET[int(line[0])] = (line[2], line[1])
+        pkgset_id += 1
+        META_PKGSET[pkgset_id] = (line[1], line[0])
 
 # init the database data and connection
 DB_ENGINE = create_engine("sqlite:///" + REPRODUCIBLE_DB, connect_args={'timeout': 60})

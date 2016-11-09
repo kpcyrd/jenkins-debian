@@ -110,12 +110,12 @@ TABLE[8]=stats_bugs_sin_ftbfs
 TABLE[9]=stats_bugs_sin_ftbfs_state
 
 # package sets defined in meta_pkgsets.csv
-# csv file columns: (pkgset_id, pkgset_group, pkgset_name)
+# csv file columns: (pkgset_group, pkgset_name)
 colindex=0
-while IFS=, read col1 col2 col3
+while IFS=, read col1 col2
 do
 	let colindex+=1
-	META_PKGSET[$colindex]=$col3
+	META_PKGSET[$colindex]=$col2
 done < $BIN_PATH/reproducible_pkgsets.csv
 
 # mustache templates

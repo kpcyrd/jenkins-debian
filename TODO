@@ -209,6 +209,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** vary the length of the build paths (/build/first vs /build/second), only once the unreproducibilities caused by different build paths are solved
 ** vary the init system: sysv and systemd
 ** vary (with) usrmerge and without (needs debootstrap from jessie-backports)
+** vary SSD/HDD on i386?
 
 ==== reproducible Debian armhf
 

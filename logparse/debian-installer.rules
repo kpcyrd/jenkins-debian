@@ -5,6 +5,7 @@ ok /not really/
 # oh well
 ok /^dpkg-source: warning/
 ok /^dpkg-gencontrol: warning/
+ok /^dpkg-genbuildinfo: warning/
 ok /^dpkg-buildpackage: warning/
 
 # make get https://jenkins.debian.net/job/d-i_build_console-setup/ build nicely

@@ -117,9 +117,7 @@ def update_stats(suite, arch, stats, pkgset_name):
 def create_pkgset_navigation(suite, arch, view=None):
     # Group the package sets by section
     sections = OrderedDict()
-    for index in range(1, len(META_PKGSET)+1):
-        pkgset_name = META_PKGSET[index][0]
-        pkgset_section = META_PKGSET[index][1]
+    for pkgset_name, pkgset_section in META_PKGSET:
         pkgset = {
             'class': "active" if pkgset_name == view else "",
             'pkgset_name': pkgset_name,
@@ -302,8 +300,7 @@ for arch in ARCHS:
         if suite == 'experimental':
             continue
         create_index_page(suite, arch)
-        for index in META_PKGSET:
-            pkgset_name = META_PKGSET[index][0]
+        for pkgset_name, _ in META_PKGSET:
             stats = gather_meta_stats(suite, arch, pkgset_name)
             if (stats):
                 update_stats(suite, arch, stats, pkgset_name)

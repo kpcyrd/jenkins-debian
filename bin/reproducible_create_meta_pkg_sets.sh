@@ -342,7 +342,7 @@ update_pkg_set_specific() {
 			fi
 			;;
 		tails)	# tails
-			URL="https://nightly.tails.boum.org/build_Tails_ISO_devel/lastSuccessful/archive/latest.iso.build-manifest"
+			URL="https://nightly.tails.boum.org/build_Tails_ISO_feature-stretch/lastSuccessful/archive/latest.iso.build-manifest"
 			echo "Downloading $URL now."
 			curl $URL > $TMPFILE
 			if ! grep '404 Not Found' $TMPFILE ; then

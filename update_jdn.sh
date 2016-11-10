@@ -451,7 +451,7 @@ if [ -f /etc/debian_version ] ; then
 				|| echo "this should only fail on the first install"
 		fi
 		# for varying kernels
-		# we use bpo kernels on pb-build5+6+15+16 (and i386 kernel on pb-build2-i386)
+		# we use bpo kernels on pb-build5+6+15+16 (and the default i386 kernel on pb-build2+12-i386)
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ] || \
 		   [ "$HOSTNAME" = "profitbricks-build15-amd64" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"

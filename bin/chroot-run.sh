@@ -46,6 +46,7 @@ if [ -z "$CHROOT_TARGET" ]; then
 	echo "Could not create a directory to create the chroot in, aborting."
 	exit 1
 fi
+chmod 755 "$CHROOT_TARGET"
 
 export CURDIR=$(pwd)
 

@@ -77,7 +77,7 @@
                     my_iso: 'use_TRIGGERING_BRANCH'
                     my_opts: '--tags @preseed'
                 - 'debian-testing-daily-broken': 
-                    dist_name: 'Debian-Installer Testing (Daily) -- Broken Scenarios'
-                    my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
+                    dist_name: 'Debian-Installer Stretch alpha8 -- Broken Scenarios'
+                    my_iso: 'http://cdimage.debian.org/cdimage/stretch_di_alpha8/amd64/iso-cd/debian-stretch-DI-alpha8-amd64-netinst.iso'
                     my_time: 'H H * * H'
                     my_opts: '--tags @broken'

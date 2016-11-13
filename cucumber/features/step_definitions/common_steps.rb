@@ -277,7 +277,7 @@ end
 Given /^I select the install mode$/ do
   boot_timeout = 60
 
-  on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], boot_timeout * PATIENCE)
+  on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_graphical-default_9alpha.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], boot_timeout * PATIENCE)
   debug_log("debug: found '#{on_screen}' in the bootspash", :color => :blue)
   if "d-i_boot_miniiso.png" != on_screen
     if ("d-i_boot_text-default.png" == on_screen) == ("gui" == @ui_mode)
@@ -567,7 +567,7 @@ Given /^I allow reboot after the install is complete$/ do
 end
 
 Given /^I wait for the reboot$/ do
-  @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], 10 * 60 * PATIENCE)
+  @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_graphical-default_9alpha.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], 10 * 60 * PATIENCE)
 end
 
 Given /^I should see a ([a-zA-Z]*) Login prompt$/ do |style|

@@ -23,7 +23,7 @@ DEBUG=false
 HEADER=true
 VALID_MAIL=false
 MY_LINE=""
-while read line ; do
+while read -r line ; do
 	if [ "$HEADER" = "true" ] ; then
 		# check if email header ends
 		if [[ $line =~ ^$ ]] ; then
@@ -37,9 +37,9 @@ while read line ; do
 		if [[ $line =~ ^(Subject: .*) ]] ; then
 			SUBJECT=${line:9}
 			# the email-ext plugin sometimes sends multi line subjects..
-			NEXT=read line
-			if [ "${NEXT:0:1}" = " " ] ; then
-				SUBJECT="${SUBJECT}${NEXT}"
+			read -r NEXT
+			if [ "${NEXT:0:1}" = " " ] || [ "${NEXT:0:1}" = $'\t' ]; then
+				SUBJECT="${SUBJECT}${NEXT:1}"
 			fi
 		fi
 		# determine the channel to send notifications to
@@ -67,6 +67,9 @@ while read line ; do
 			MY_LINE=$(echo $line | tr -d \< | tr -d \> | cut -d " " -f1-2)
 			debug123 "#4" MY_LINE $MY_LINE
 		fi
+		# TODO: deal with quoted-printable continuation lines:
+		# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
+		# changing the '=' to a single space.
 	fi
 done
 # check that it's a valid job

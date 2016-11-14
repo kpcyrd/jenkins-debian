@@ -125,6 +125,16 @@ else
 	echo -n "Running '$real_command' on $HOSTS now."
 	real_command="$@ && echo '__reallyreally=ok__'"
 fi
+BG=""
+
+get_arch_color() {
+	case $1 in
+		*i386*)		BG=lightblue ;;
+		*amd64*)	BG=lightgreen ;;
+		*armhf*)	BG=lightyellow ;;
+		*)		BG=white ;;
+	esac
+}
 
 LOG=$(mktemp -u)
 for i in $HOSTS ; do
@@ -140,7 +150,8 @@ for i in $HOSTS ; do
 				;;
 		esac
 	fi
-	xterm -class deploy-jenkins -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
+	get_arch_color $i
+	xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
 done
 sleep 3
 COUNTER=0
@@ -173,7 +184,8 @@ for i in $HOSTS ; do
 		rm $LOG.$i $LOG.$i.done > /dev/null
 	else
 		echo "Problems on $i: $TAIL"
-		xterm -class deploy-jenkins -fa 'DejaVuSansMono' -fs 10 -e "less +G $LOG.$i ; rm $LOG.$i $LOG.$i.done" &
+		get_arch_color $i
+		xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "less +G $LOG.$i ; rm $LOG.$i $LOG.$i.done" &
 	fi
 done
 echo

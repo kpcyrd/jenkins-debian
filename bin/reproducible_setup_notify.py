@@ -6,7 +6,7 @@
 #
 # Depends: python3
 #
-# Choose which packages should trigger an email to the maintainer when the
+# Configure which packages should trigger an email to the maintainer when the
 # reproducibly status change
 
 import argparse

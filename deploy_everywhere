@@ -129,10 +129,11 @@ BG=""
 
 get_arch_color() {
 	case $1 in
-		*i386*)		BG=lightblue ;;
-		*amd64*)	BG=lightgreen ;;
-		*armhf*)	BG=lightyellow ;;
-		*)		BG=white ;;
+		*i386*)			BG=lightblue ;;
+		*amd64*)		BG=lightgreen ;;
+		*armhf*)		BG=lightyellow ;;
+		*jenkins.debian.*)	BG=yellow ;;
+		*)			BG=white ;;
 	esac
 }
 

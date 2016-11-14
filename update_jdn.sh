@@ -257,8 +257,8 @@ if [ -f /etc/debian_version ] ; then
 		# install squid everywhere except on the armhf nodes
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS
-				squid3"
-			   ;;
+				squid3
+				kgb-client" ;;
 			*) ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
@@ -640,7 +640,7 @@ fi
 #
 # generate the kgb-client configurations
 #
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] || [ "$HOSTNAME" = "profitbricks-build2-amd64" ; then
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then

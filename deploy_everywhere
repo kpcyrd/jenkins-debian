@@ -191,6 +191,7 @@ for i in $HOSTS ; do
 done
 echo
 
+echo "$(echo $HOSTS | sed -s "s# #\n#g" | wc -l) hosts updated."
 END=$(date +'%s')
 DURATION=$(( $END - $START ))
 HOUR=$(echo "$DURATION/3600"|bc)

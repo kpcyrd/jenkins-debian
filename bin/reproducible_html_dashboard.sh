@@ -463,6 +463,14 @@ write_meta_pkg_graphs_links () {
 	write_page "</center></p>"
 }
 
+write_global_graph() {
+	write_page " <a href=\"/debian/${TABLE[$i]}.png\"><img src=\"/debian/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
+	# redo pngs once a day
+	if [ ! -f $DEBIAN_BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[$i]}.png ] ; then
+		create_png_from_table $i ${TABLE[$i]}.png
+	fi
+}
+
 #
 # create dashboard page
 #
@@ -561,21 +569,37 @@ create_dashboard_page() {
 		write_page "<tr><td class=\"left\">&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	write_page "</table>"
-	# write bugs with usertags table
-	write_usertag_table
-	write_page "</p><p style=\"clear:both;\">"
-	# do other global graphs
-	for i in 8 9 3 7 4 5 ; do
-		write_page " <a href=\"/debian/${TABLE[$i]}.png\"><img src=\"/debian/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
-		# redo pngs once a day
-		if [ ! -f $DEBIAN_BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[$i]}.png ] ; then
-			create_png_from_table $i ${TABLE[$i]}.png
-		fi
+	write_page "<p style=\"clear:both;\">"
+	# show issue graphs
+	for i in 4 5 ; do
+		write_global_graph
 	done
 	write_page "</p>"
 	# the end
 	write_page_footer
 	cp $PAGE $DEBIAN_BASE/reproducible.html
+	publish_page debian
+}
+
+#
+# create bugs page
+#
+create_bugs_page() {
+	VIEW=bugs
+	PAGE=index_${VIEW}.html
+	ARCH="amd64"
+	SUITE="unstable"
+	echo "$(date -u) - starting to write $PAGE page."
+	write_page_header $VIEW "Bugs filed"
+	# write bugs with usertags table
+	write_usertag_table
+	write_page "<p style=\"clear:both;\">"
+	# show bug graphs
+	for i in 8 9 3 7 ; do
+		write_global_graph
+	done
+	write_page "</p>"
+	write_page_footer
 	publish_page debian
 }
 
@@ -650,5 +674,6 @@ for ARCH in ${ARCHS} ; do
 done
 create_performance_page
 create_variations_page
+create_bugs_page
 create_dashboard_page
 rm -f $DUMMY_FILE >/dev/null

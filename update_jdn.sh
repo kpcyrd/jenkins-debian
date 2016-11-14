@@ -258,7 +258,8 @@ if [ -f /etc/debian_version ] ; then
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS
 				squid3
-				kgb-client" ;;
+				kgb-client
+				python3-yaml" ;;
 			*) ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...

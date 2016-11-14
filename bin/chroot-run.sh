@@ -46,7 +46,6 @@ if [ -z "$CHROOT_TARGET" ]; then
 	echo "Could not create a directory to create the chroot in, aborting."
 	exit 1
 fi
-chmod 755 "$CHROOT_TARGET"
 
 export CURDIR=$(pwd)
 
@@ -57,7 +56,7 @@ bootstrap() {
 	local TMPLOG=$(mktemp -p $CHROOT_BASE/ chroot-run-$DISTRO.XXXXXXXXX)
 	echo "$(date -u ) - bootstraping $DISTRO into $CHROOT_TARGET now."
 	set +e
-	sudo debootstrap --no-merged-usr $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR | tee $TMPLOG
+	sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR | tee $TMPLOG
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true )
 	rm $TMPLOG
 	set -e
@@ -65,7 +64,7 @@ bootstrap() {
 	        echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
 	        sudo rm -rf --one-file-system $CHROOT_TARGET
 	        sleep 5m
-	        if ! sudo debootstrap --no-merged-usr $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR ; then
+	        if ! sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR ; then
 			SLEEPTIME="30m"
 			echo "$(date -u ) - debootstrap failed, slowing down, sleeping $SLEEPTIME now..."
 			sleep $SLEEPTIME

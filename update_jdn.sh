@@ -220,6 +220,7 @@ if [ -f /etc/debian_version ] ; then
 			bc
 			bsd-mailx
 			curl 
+			debootstrap 
 			devscripts
 			eatmydata
 			etckeeper
@@ -442,7 +443,6 @@ if [ -f /etc/debian_version ] ; then
 		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		$UP2DATE || sudo apt-get install -t jessie-backports \
-				debootstrap \
 				pbuilder lintian || echo "this should only fail on the first install"
 		#		botch
 		# we need mock from bpo to build current fedora

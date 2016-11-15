@@ -186,7 +186,7 @@ case $HOSTNAME in
 	*) ;;
 esac
 case $HOSTNAME in
-	jenkins|profitbricks-build10-amd64)
+	profitbricks-build10-amd64)
 		[ -d /srv/lvc/vm-pools ] || sudo mkdir -p /srv/lvc/vm-pools
 		if ! grep -q '^/dev/vdb\s\+/srv/lvc/vm-pools\s' /etc/fstab; then
 			echo "/dev/vdb	/srv/lvc/vm-pools ext4	errors=remount-ro	0	2" | sudo tee -a /etc/fstab >/dev/null  

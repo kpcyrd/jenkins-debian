@@ -4,7 +4,7 @@
   <currentMemory unit='KiB'>1310720</currentMemory>
   <vcpu>1</vcpu>
   <os>
-    <type arch='x86_64' machine='pc-0.15'>hvm</type>
+    <type arch='x86_64' machine='pc-i440fx-2.1'>hvm</type>
     <boot dev='cdrom'/>
   </os>
   <features>
@@ -12,7 +12,9 @@
     <apic/>
     <pae/>
   </features>
-  <cpu mode='host-model'/>
+  <cpu mode='custom' match='exact'>
+    <model fallback='allow'>kvm64</model>
+  </cpu>
   <clock offset='utc'/>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>

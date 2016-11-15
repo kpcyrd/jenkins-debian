@@ -185,6 +185,22 @@ case $HOSTNAME in
 		;;
 	*) ;;
 esac
+case $HOSTNAME in
+	jenkins|profitbricks-build10-amd64)
+		[ -d /srv/lvc/vm-pools ] || sudo mkdir -p /srv/lvc/vm-pools
+		if ! grep -q '^/dev/vdb\s\+/srv/lvc/vm-pools\s' /etc/fstab; then
+			echo "/dev/vdb	/srv/lvc/vm-pools ext4	errors=remount-ro	0	2" | sudo tee -a /etc/fstab >/dev/null  
+		fi
+		if ! mountpoint -q /srv/lvc/vm-pools; then
+			if test -z "$(ls -A /srv/lvc/vm-pools)"; then
+				sudo mount /srv/lvc/vm-pools
+			else
+				explain "WARNING: mountpoint /srv/lvc/vm-pools is non-empty."
+			fi
+		fi
+		;;
+	*) ;;
+esac
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
 for directory in /schroots /srv/reproducible-results /srv/d-i /srv/udebs /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do

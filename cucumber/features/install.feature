@@ -10,8 +10,8 @@ Feature: Doing variations on d-i installs
 
     Examples:
       | install_ui | target_ui | login |
-#      | gui        | Gnome     | Gnome |   #  FIXME -- X fails to start at present -- possibly related to "qxl too old" seen on flickering console, which seems like it might be something to do with 'spice'
       | gui        | minimal   | VT    |
+      | gui        | Gnome     | Gnome |
       | gui        | LXDE      | LXDE  |
       | gui        | XFCE      | XFCE  |
       | gui        | KDE       | KDE   |

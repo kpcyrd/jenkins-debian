@@ -106,17 +106,20 @@ setup_pbuilder() {
 		cat "$TMPFILE"
 	fi
 	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	
+	# FIXME: this code should be dropped it's just so new that a fixed dpkg is in testing as well… \o/
 	# finally, confirm things are as they should be
 	# (we only have modified dpkg left in testing…)
-	if [ "$SUITE" = "testing" ] ; then
-		echo
-		echo "Now let's see whether the correct packages where installed..."
-		for PKG in ${PACKAGES} ; do
-			egrep "http://reproducible.alioth.debian.org/debian(/|) ./ Packages" ${LOG} \
-				| grep -v grep | grep "${PKG} " \
-				|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $TMPFILE $LOG ; exit 1 )
-		done
-	fi
+	#if [ "$SUITE" = "testing" ] ; then
+	#	echo
+	#	echo "Now let's see whether the correct packages where installed..."
+	#	for PKG in ${PACKAGES} ; do
+	#		egrep "http://reproducible.alioth.debian.org/debian(/|) ./ Packages" ${LOG} \
+	#			| grep -v grep | grep "${PKG} " \
+	#			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $TMPFILE $LOG ; exit 1 )
+	#	done
+	#fi
+
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
 	# create stamp file to record initial creation date minus some hours so the file will be older than 24h when checked in <24h...
 	touch -d "$(date -u -d '6 hours ago' '+%Y-%m-%d %H:%M')" /var/log/jenkins/${NAME}.tgz.stamp

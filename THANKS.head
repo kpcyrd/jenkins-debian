@@ -17,7 +17,7 @@ Debian packages for t.r-b.o
  ** 16 cores and 48 GB memory for profitbricks-build15-amd64.debian.net used for building amd64 Debian packages for t.r-b.o, running in the future
  ** 9 cores and 36 GB memory for profitbricks-build16-i386.debian.net sed for building i386 Debian packages for t.r-b.o, running in the future
  ** 13 cores and 30 GB memory for profitbricks-build17-amd64.debian.net used by infinity0@debian.org for testing builds of gcc and glibc and other big packages
- ** 4 cores and 8 GB memory for profitbricks-build7-amd64.debian.net used for building F-Droid for t.r-b.o
+ ** 2 cores and 8 GB memory for profitbricks-build7-amd64.debian.net used for building F-Droid for t.r-b.o
  ** 5 cores and 10 GB memory for profitbricks-build9-amd64.debian.net used for rebootstrap jobs
  ** 4 cores and 12 GB memory for profitbricks-build10-amd64.debian.net used for lvc jobs
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net (also running on Profitbricks virtual hardware), used for building FreeBSD for t.r-b.o

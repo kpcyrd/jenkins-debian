@@ -10,6 +10,7 @@ BUILDDIR="${BUILDDIR:-/tmp/buildd}"
 #
 # doing variations for the 2nd builds:
 #
+REAL_HOSTNAME=$HOSTNAME
 
 echo "I: Changing host+domainname to test build reproducibility" >&2
 sed -e '/^127.0.0.1/s/$/ i-capture-the-hostname i-capture-the-hostname.i-capture-the-domain/' -i /etc/hosts
@@ -31,10 +32,14 @@ if [ -n "$BUILDUSERNAME" ] ; then
 fi
 
 # disable disorderfs due to #844498
-exit 0
-# use disorderfs on i386 only for now
-if [ "$(dpkg --print-architecture)" != "i386" ] ; then
+#exit 0
+# use disorderfs on armhf only for now
+if [ "$(dpkg --print-architecture)" != "armhf" ] ; then
 	exit 0
+elif [ "$REAL_HOSTNAME" != "bpi0" ] ; then
+	exit 0
+else
+	figlet bpi0, yay
 fi
 
 # use disorderfs

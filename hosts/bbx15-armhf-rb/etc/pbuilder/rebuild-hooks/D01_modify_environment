@@ -7,6 +7,10 @@ BUILDDIR="${BUILDDIR:-/tmp/buildd}"
 # exit if we are in the same UTS namespace as init ( != 2nd build )
 [ "$(readlink /proc/1/ns/uts)" = "$(readlink /proc/self/ns/uts)" ] && exit 0
 
+#
+# doing variations for the 2nd builds:
+#
+
 echo "I: Changing host+domainname to test build reproducibility" >&2
 sed -e '/^127.0.0.1/s/$/ i-capture-the-hostname i-capture-the-hostname.i-capture-the-domain/' -i /etc/hosts
 hostname i-capture-the-hostname
@@ -26,6 +30,8 @@ if [ -n "$BUILDUSERNAME" ] ; then
 	fi
 fi
 
+# disable disorderfs
+exit 0
 # use disorderfs on i386 only for now
 if [ "$(dpkg --print-architecture)" != "i386" ] ; then
 	exit 0

@@ -28,7 +28,7 @@
           description: The git branch that triggered the build that reulted in this subsequent build
     logrotate:
       daysToKeep: 90
-      numToKeep: 20
+      numToKeep: 60
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     publishers:

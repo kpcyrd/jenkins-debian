@@ -30,7 +30,7 @@ if [ -n "$BUILDUSERNAME" ] ; then
 	fi
 fi
 
-# disable disorderfs
+# disable disorderfs due to #844498
 exit 0
 # use disorderfs on i386 only for now
 if [ "$(dpkg --print-architecture)" != "i386" ] ; then

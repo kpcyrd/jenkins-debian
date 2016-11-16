@@ -429,7 +429,7 @@ write_variation_table() {
 		write_page "<tr><td>build path</td><td>/build/1st/\$pkg-\$ver <em>(not varied for stretch)</em></td><td>/build/\$pkg-\$ver/2nd <em>(not varied for stretch)</em></td></tr>"
 		write_page "<tr><td>user's login shell</td><td>/bin/sh</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>user's <a href="https://en.wikipedia.org/wiki/Gecos_field">GECOS</a></td><td>first user,first room,first work-phone,first home-phone,first other</td><td>second user,second room,second work-phone,second home-phone,second other</td></tr>"
-		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64 and i386: 18 or 17<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64 and i386: 17 or 18 (!= the first build)<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"
+		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64: 16 or 15<br />&nbsp;&nbsp;XXX on i386: 10 or 9<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64: 16 or 15 (!= the first build)<br />&nbsp;&nbsp;YYY on i386: 10 or 9 (!= the first build)<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
 	else
 		write_page "<tr><td>env USER</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"

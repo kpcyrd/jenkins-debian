@@ -609,22 +609,30 @@
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'i386'
             my_num:
-                -  '1': &bd_amd_2_6 { my_node1: 'profitbricks-build2', my_node2: 'profitbricks-build6' }
-                -  '2': &bd_amd_6_2 { my_node1: 'profitbricks-build6', my_node2: 'profitbricks-build2' }
-                -  '3': *bd_amd_2_6
-                -  '4': *bd_amd_6_2
-                -  '5': *bd_amd_2_6
-                -  '6': *bd_amd_6_2
-                -  '7': *bd_amd_2_6
-                -  '8': *bd_amd_6_2
+                -  '1': &bd_amd_2_6   { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build6'  }
+                -  '2': &bd_amd_6_2   { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build2'  }
+                -  '3': &bd_amd_2_16  { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build16' }
+                -  '4': &bd_amd_16_2  { my_node1: 'profitbricks-build16', my_node2: 'profitbricks-build2'  }
+                -  '5': &bd_amd_12_6  { my_node1: 'profitbricks-build12', my_node2: 'profitbricks-build6'  }
+                -  '6': &bd_amd_6_12  { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build12' }
+                -  '7': &bd_amd_12_16 { my_node1: 'profitbricks-build12', my_node2: 'profitbricks-build16' }
+                -  '8': &bd_amd_16_12 { my_node1: 'profitbricks-build16', my_node2: 'profitbricks-build12' }
                 -  '9': *bd_amd_2_6
                 - '10': *bd_amd_6_2
-                - '11': *bd_amd_2_6
-                - '12': *bd_amd_6_2
-                - '13': *bd_amd_2_6
-                - '14': *bd_amd_6_2
-                - '15': *bd_amd_2_6
-                - '16': *bd_amd_6_2
+                - '11': *bd_amd_2_16
+                - '12': *bd_amd_16_2
+                - '13': *bd_amd_12_6
+                - '14': *bd_amd_6_12
+                - '15': *bd_amd_12_16
+                - '16': *bd_amd_16_12
+                - '17': *bd_amd_2_6
+                - '18': *bd_amd_6_2
+                - '19': *bd_amd_2_16
+                - '20': *bd_amd_16_2
+                - '21': *bd_amd_12_6
+                - '22': *bd_amd_6_12
+                - '23': *bd_amd_12_16
+                - '24': *bd_amd_16_12
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

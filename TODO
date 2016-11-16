@@ -206,6 +206,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
+** vary order of $PATH entries, see #844500
 ** vary the length of the build paths (/build/first vs /build/second), only once the unreproducibilities caused by different build paths are solved
 ** vary the init system: sysv and systemd
 ** vary (with) usrmerge and without (needs debootstrap from jessie-backports) once #843073 is fixed (#810499 might be relevant as well)

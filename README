@@ -139,7 +139,7 @@ Installation tests inside chroot environments.
 
 * These builds on remote nodes run on very different hardware:
 ** for 'amd64' we are using four virtual machines, profitbricks-build(1+5+11+15)-amd64, which have 15 or 16 cores and 48gb ram each. These nodes are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
-** for 'i386' we are using two virtual machines, profitbricks-build(2+6)-i386, which have 18 or 17 cores and 48gb ram each. These nodes are also sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
+** for 'i386' we are also using four virtual machines, profitbricks-build(2+6+12+16)-i386, which have 10 or 9 cores and 36gb ram each. pb2+12 run AMD Opteron CPUs, pb6+16 Intel Xeon CPUs. These nodes are also sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
 ** To test 'armhf' we are using 22 small boards donated by vagrant@d.o:
 *** five quad-cores (cbxi4a, cbxi4b, and ff4a) with 4gb ram,
 *** three octo-cores (odxu4, odxu4b and odxu4c) with 2gb ram,

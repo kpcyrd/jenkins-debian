@@ -11,6 +11,7 @@ BUILDDIR="${BUILDDIR:-/tmp/buildd}"
 # doing variations for the 2nd builds:
 #
 REAL_HOSTNAME=$HOSTNAME
+echo "disorder-fs debug: Running on $REAL_HOSTNAME."
 
 echo "I: Changing host+domainname to test build reproducibility" >&2
 sed -e '/^127.0.0.1/s/$/ i-capture-the-hostname i-capture-the-hostname.i-capture-the-domain/' -i /etc/hosts

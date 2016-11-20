@@ -29,6 +29,7 @@ channels = [
     {'name': 'debian-reproducible-changes', 'id': 'debian-reproducible-changes'},
     {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
     {'name': 'debian-ruby', 'id': 'pkg-ruby-extras'},
+    {'name': 'debconf-video', 'id': 'jenkins-debconf-video'},
 ]
 
 template = """repo-id: '{repo_id}'

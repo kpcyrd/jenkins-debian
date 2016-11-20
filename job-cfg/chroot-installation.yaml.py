@@ -81,8 +81,8 @@ all_targets = [
 # not all packages are available in all distros
 #
 def is_target_in_distro(distro, target):
-         # qt5, education-desktop-mate and cinnamon weren't in wheezy
-         if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' or target == 'qt5' ):
+         # qt5, education-desktop-mate and cinnamon weren't in wheezy. debconf-video is not interested in wheezy anymore neither
+         if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' or target == 'qt5' or target == 'debconf-video' ):
              return False
          # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid - it's also not yet available in stretch again...
          if (distro == 'sid' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-desktop-sugar' ):

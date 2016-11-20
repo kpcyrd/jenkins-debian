@@ -168,6 +168,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** new page with packages which are orphaned but have a reproducible usertagged patch
 *** new page showing arch all packages which are cross-reproducible, and those which are not
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
+** new page: "open bugs with patches, sorted by maintainers" page and to the navigation, make those NMUable bugs visible
 ** improve ftbfs page: list packages without bugs and notes first
 ** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
@@ -452,6 +453,16 @@ correctly, Guix is ready for work.
 
 * openembedded.org!
 * Gentoo?
+
+==== current stuff for h01ger…
+
+* reenable disorderfs 
+* send mail to -devel to discuss mass-NMU of wishlist bugs with patches… and putting reproducibility in debian-policy, as a should. for stretch and sell it as marketing feature. our downstreams are loving it.
+* remove code related to our repo from bin/reproducible_setup_pbuilder.sh and elsewhere?
+* ask DSA for ppc64el hw or ask IBM (via ivo)
+
+
+
 
 === qa.debian.org*
 

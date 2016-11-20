@@ -255,6 +255,15 @@ if [ "$2" != "" ] ; then
 				;;
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
+		debconf-video)	case $1 in
+					jessie)		install_packages ffmpeg icecast2
+					;;
+					stretch)	install_packages ffmpeg icecast2 voctomix
+					;;
+					sid)		install_packages ffmpeg icecast2 voctomix voctomix-outcasts hdmi2usb-mode-switch
+					;;
+				esac
+				;;
 		education*)	install_packages "Debian Edu task" $2
 				;;
 		*)		echo "unsupported component."

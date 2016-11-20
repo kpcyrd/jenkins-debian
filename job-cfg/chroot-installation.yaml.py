@@ -44,6 +44,7 @@ all_targets = [
    'qt5',
    'haskell',
    'developer',
+   'debconf-video',
    'education-tasks',
    'education-menus',
    'education-astronomy',
@@ -98,6 +99,8 @@ def get_recipients(target):
         return 'jenkins+debian-qa pkg-gnome-maintainers@lists.alioth.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target == 'cinnamon':
         return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org qa-jenkins-scm@lists.alioth.debian.org'
+    elif target == 'debconf-video':
+        return 'jenkins+debconf-video qa-jenkins-scm@lists.alioth.debian.org'
     elif target[:3] == 'kde' or target[:2] == 'qt':
         return 'jenkins+debian-qa debian-qt-kde@lists.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target[:10] == 'education-':
@@ -134,6 +137,7 @@ spoken_names = {
     'full_desktop': 'four desktop environments and the most commonly used applications and packages',
     'haskell': 'all Haskell related packages',
     'developer': 'four desktop environments and the most commonly used applications and packages - and the build depends for all of these',
+    'debconf-video': 'all packages relevant for the DebConf videoteam',
     }
 def get_spoken_name(target):
     if target[:10] == 'education-':

@@ -19,6 +19,7 @@ with open(secrets) as fd:
     passwords = yaml.load(fd)
 
 channels = [
+    {'name': 'debconf-video', 'id': 'jenkins-debconf-video'},
     {'name': 'debian-boot', 'id': 'jenkins-debian-boot'},
     {'name': 'debian-bootstrap', 'id': 'jenkins-debian-bootstrap'},
     {'name': 'debian-cinnamon', 'id': 'jenkins-debian-cinnamon'},
@@ -27,9 +28,8 @@ channels = [
     {'name': 'debian-qa', 'id': 'jenkins-debian-qa'},
     {'name': 'debian-reproducible', 'id': 'jenkins-debian-reproducible'},
     {'name': 'debian-reproducible-changes', 'id': 'debian-reproducible-changes'},
-    {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
     {'name': 'debian-ruby', 'id': 'pkg-ruby-extras'},
-    {'name': 'debconf-video', 'id': 'jenkins-debconf-video'},
+    {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
 ]
 
 template = """repo-id: '{repo_id}'

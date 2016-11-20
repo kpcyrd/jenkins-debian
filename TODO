@@ -454,16 +454,6 @@ correctly, Guix is ready for work.
 * openembedded.org!
 * Gentoo?
 
-==== current stuff for h01ger…
-
-* reenable disorderfs 
-* send mail to -devel to discuss mass-NMU of wishlist bugs with patches… and putting reproducibility in debian-policy, as a should. for stretch and sell it as marketing feature. our downstreams are loving it.
-* remove code related to our repo from bin/reproducible_setup_pbuilder.sh and elsewhere?
-* ask DSA for ppc64el hw or ask IBM (via ivo)
-
-
-
-
 === qa.debian.org*
 
 * udd-versionskew: explain jobs in README

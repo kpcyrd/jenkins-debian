@@ -260,7 +260,7 @@ if [ "$2" != "" ] ; then
 					;;
 					stretch)	install_packages ffmpeg icecast2 voctomix
 					;;
-					sid)		install_packages ffmpeg icecast2 voctomix voctomix-outcasts # hdmi2usb-mode-switch
+					sid)		install_packages ffmpeg icecast2 voctomix voctomix-outcasts hdmi2usb-mode-switch
 					;;
 				esac
 				;;

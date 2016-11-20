@@ -256,11 +256,11 @@ if [ "$2" != "" ] ; then
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
 		debconf-video)	case $1 in
-					jessie)		install_packages ffmpeg icecast2
+					jessie)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu
 					;;
-					stretch)	install_packages ffmpeg icecast2 voctomix
+					stretch)	install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix
 					;;
-					sid)		install_packages ffmpeg icecast2 voctomix voctomix-outcasts # hdmi2usb-mode-switch
+					sid)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts # hdmi2usb-mode-switch hdmi2usb-udev
 					;;
 				esac
 				;;

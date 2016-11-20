@@ -19,7 +19,7 @@ with open(secrets) as fd:
     passwords = yaml.load(fd)
 
 channels = [
-    {'name': 'debconf-video', 'id': 'jenkins-debconf-video'},
+    {'name': 'debconf-video', 'id': 'debconf-video'},
     {'name': 'debian-boot', 'id': 'jenkins-debian-boot'},
     {'name': 'debian-bootstrap', 'id': 'jenkins-debian-bootstrap'},
     {'name': 'debian-cinnamon', 'id': 'jenkins-debian-cinnamon'},

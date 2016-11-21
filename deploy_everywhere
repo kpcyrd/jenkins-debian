@@ -177,14 +177,14 @@ PROBLEMS=""
 for i in $HOSTS ; do
 	HNAME1=$(echo $i | cut -d "@" -f2 | cut -d "." -f1|cut -d "-" -f1)	# pb nodes (h01ger)
 	HNAME2=$(echo $i | cut -d "@" -f2 | cut -d "." -f1)			# non -armhf ones (vagrant)
-	TAIL=$(tail -1 $LOG.$i)
+	TAIL=$(tail -1 $LOG.$i 2>/dev/null)
 	if [ "$i" = "root@jenkins.debian.net" ] ; then
 		if ! ( [[ "$TAIL" =~ "__$HNAME1=ok__" ]] || [[ "$TAIL" =~ "__$HNAME2=ok__" ]] || [[ "$TAIL" =~ "__reallyreally=ok__" ]] || [[ "$TAIL" =~ "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." ]] ) ; then
 			echo "Problems on $i:"
 		fi
 		cat $LOG.$i
 		rm $LOG.$i $LOG.$i.done > /dev/null
-	elif [[ "$TAIL" =~ "__$HNAME1=ok__" ]] || [[ "$TAIL" =~ "__$HNAME2=ok__" ]] || [[ "$TAIL" =~ "__reallyreally=ok__" ]] || [[ "$TAIL" =~ "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." ]] ; then
+	elif [[ "$TAIL" =~ "__$HNAME1=ok__" ]] || [[ "$TAIL" =~ "__$HNAME2=ok__" ]] || [[ "$TAIL" =~ "__reallyreally=ok__" ]] || [[ "$TAIL" =~ "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." ]] || [ ! -f $LOG.$i ] ; then
 		rm $LOG.$i $LOG.$i.done > /dev/null
 	else
 		echo "Problems on $i: $TAIL"

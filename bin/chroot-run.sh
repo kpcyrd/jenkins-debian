@@ -148,9 +148,6 @@ if [ -f debian/control ] ; then
 	# install build-depends
 	mk-build-deps -ir
 fi
-if [ "$1" = "gbp" ] ; then
-	git checkout master
-fi
 EOF
 	fi
 	echo "$*" >> $CHROOT_TARGET/tmp/chroot-testrun

@@ -149,7 +149,7 @@ if [ -f debian/control ] ; then
 	mk-build-deps -ir
 fi
 if [ "$1" = "gbp" ] ; then
-	git checkout -
+	git checkout master
 fi
 EOF
 	fi

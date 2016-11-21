@@ -739,9 +739,11 @@ case $HOSTNAME in
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	jenkins)
-		# notify irc
-		MESSAGE="jenkins.d.n updated to $(cd $BASEDIR ; git describe --always)."
-		kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
+		# notify irc on updates of jenkins.d.n
+		if ! $UP2DATE ; then
+			MESSAGE="jenkins.d.n updated to $(cd $BASEDIR ; git describe --always)."
+			kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
+		fi
 		;;
 	*)	;;
 esac

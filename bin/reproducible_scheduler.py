@@ -717,11 +717,11 @@ if __name__ == '__main__':
             continue
         log.info('%s packages already scheduled for %s, probably scheduling some '
                  'more...', overall, arch)
-        message += scheduler(arch)
+        message += scheduler(arch) + '\n'
         log.info('Arch %s scheduled at %s.', arch, datetime.now())
     if message != '':
         # build the kgb message text
-        message = 'Scheduled in ' + '+'.join(SUITES) + ':' + message
+        message = 'Scheduled in ' + '+'.join(SUITES) + ':\n' + message
         log.info(message)
         # irc_msg(message, channel='debian-reproducible-changes')
         # send mail instead of notifying via irc, less intrusive

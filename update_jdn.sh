@@ -743,6 +743,8 @@ case $HOSTNAME in
 		if ! $UP2DATE ; then
 			MESSAGE="jenkins.d.n updated to $(cd $BASEDIR ; git describe --always)."
 			kgb-client --conf /srv/jenkins/kgb/debian-qa.conf --relay-msg "$MESSAGE"
+		else
+			echo "Nothing changed, not informing IRC."
 		fi
 		;;
 	*)	;;

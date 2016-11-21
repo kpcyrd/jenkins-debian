@@ -173,6 +173,7 @@ for i in $HOSTS ; do
 done
 echo
 
+PROBLEMS=""
 for i in $HOSTS ; do
 	HNAME1=$(echo $i | cut -d "@" -f2 | cut -d "." -f1|cut -d "-" -f1)	# pb nodes (h01ger)
 	HNAME2=$(echo $i | cut -d "@" -f2 | cut -d "." -f1)			# non -armhf ones (vagrant)
@@ -187,6 +188,11 @@ for i in $HOSTS ; do
 		rm $LOG.$i $LOG.$i.done > /dev/null
 	else
 		echo "Problems on $i: $TAIL"
+		if [ -z "$PROBLEMS" ] ; then
+			PROBLEMS=" $i"
+		else
+			PROBLEMS=" $i\n$PROBLEMS"
+		fi
 		get_arch_color $i
 		xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "less +G $LOG.$i ; rm $LOG.$i $LOG.$i.done" &
 	fi
@@ -194,6 +200,11 @@ done
 echo
 
 echo "$(echo $HOSTS | sed -s "s# #\n#g" | wc -l) hosts updated."
+if [ ! -z "$PROBLEMS" ] ; then
+	echo "Problems on:"
+	echo -e "$PROBLEMS"
+	echo
+fi
 END=$(date +'%s')
 DURATION=$(( $END - $START ))
 HOUR=$(echo "$DURATION/3600"|bc)

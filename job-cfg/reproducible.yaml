@@ -809,7 +809,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/strip-nondeterminism.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage --git-upstream-branch=master'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'disorderfs_from_git_master':
                     my_description: 'Build disorderfs Debian package from git branch master.'
@@ -817,7 +817,7 @@
                     my_hname: ''
                     my_gitrepo: 'git://anonscm.debian.org/git/reproducible/disorderfs.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage --git-upstream-branch=master'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'builds_website':
                     my_description: 'Build https://reproducible-builds.org on every git commit to https://anonscm.debian.org/git/reproducible/reproducible-website.git with jekyll.'

@@ -14,9 +14,29 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == Fix user submitted bugs
 
-* There are  link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org%40packages.debian.org["bugs filed against the pseudopackage 'qa.debian.org' with usertag 'jenkins'"] in the BTS which would be nice to be fixed rather sooner than later, as some people actually care.
+* There are  link:https://bugs.debian.org/cgi-bin/pkgreport.cgi?tag=jenkins;users=qa.debian.org%40packages.debian.org["bugs filed against the pseudopackage 'qa.debian.org' with usertag 'jenkins'"] in the BTS which would be nice to be fixed rather sooner than later, as some people actually care to file bugs.
 
-=== move this setup to jenkins.d.o
+== meeting agenda for jenkins-qa meetings
+
+* next meeting: Wednesday, November 23th 2016, 18 UTC on #debian-qa on irc.debian.org
+* schedule: every 4th Wednesday of each month, at 18 UTC 
+
+=== reoccuring agenda
+
+* short intro, why are we here (individually)
+* jenkins.d.n status
+** OOMs - gone, or?
+* jenkins.d.o migration next steps (see below for details)
+* AOB
+* thanks to profitbricks for hosting
+
+=== old meetings
+
+* 2016-08-24: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-08-24-18.00.html
+* 2016-09-28: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-09-28-19.02.html
+* 2016-10: none
+
+== move this setup to jenkins.d.o
 
 ----
 
@@ -39,7 +59,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * then start with migrating a single job: self_maintenance
 ** add pb7 as a node to jenkins.d.o
 ** add fdroid job to jenkins.d.o 
-* nmigrate all the jobs
+* migrate all the jobs
 ** add all the nodes as nodes to jenkins.d.o
 ** disable job execution on jenkins.d.net(!)
 ** deploy this configuration on jenkins.d.o…(!) (we)
@@ -50,24 +70,6 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** redirect jenkins.debian.net to jenkins.debian.org - tests.reproducible-builds.org will stay where it is.
 * party!
 
-==== meeting agenda for jenkins-qa meetings
-
-* next meeting: Wednesday, October 26th 2016, 19 UTC on #debian-qa on irc.debian.org
-* schedule: every 4th Wednesday of each month, at 19 UTC (during European summer time, 20 UTC in winter time)
-
-===== reoccuring agenda
-
-* short intro, why are we here (individually)
-* jenkins.d.n status
-** OOMs
-* jenkins.d.o migration
-* AOB
-* thanks to profitbricks for hosting
-
-===== old meetings
-
-* 2016-08-24: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-08-24-18.00.html
-* 2016-09-28: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-09-28-19.02.html
 
 == General ToDo
 

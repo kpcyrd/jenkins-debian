@@ -23,6 +23,7 @@ DEBUG=false
 HEADER=true
 VALID_MAIL=false
 MY_LINE=""
+MY_2ND_LINE=""
 while read -r line ; do
 	if [ "$HEADER" = "true" ] ; then
 		# check if email header ends
@@ -58,18 +59,31 @@ while read -r line ; do
 	if [ "$HEADER" = "false" ] && [ -z "$MY_LINE" ] ; then
 		MY_LINE=$line
 		debug123 "#1" MY_LINE $MY_LINE
-		# if this is a multipart email it comes from the email extension plugin
-		if [ "${line:0:7}" = "------=" ] || [ "${line:0:9}" = "Content-T" ] ; then
-			debug123 "#2" line $line
-			MY_LINE=""
+		if [ ! -z "$MY_2ND_LINE" ] ; then
+			# if this is a multipart email it comes from the email extension plugin
+			if [ "${line:0:7}" = "------=" ] || [ "${line:0:9}" = "Content-T" ] ; then
+				debug123 "#2" line $line
+				MY_LINE=""
+			else
+				debug123 "#3" line $line
+				MY_LINE=$(echo $line | tr -d \< | tr -d \> | cut -d " " -f1-2)
+				debug123 "#4" MY_LINE $MY_LINE
+			fi
+			# deal with quoted-printable continuation lines: 1st line/time
+			# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
+			# changing the '=' to a single space.
+			if [[ $MY_LINE =~ ^(.*)=$ ]] ; then
+				MY_2ND_LINE=$MY_LINE
+				MY_LINE=""
+			fi
 		else
-			debug123 "#3" line $line
-			MY_LINE=$(echo $line | tr -d \< | tr -d \> | cut -d " " -f1-2)
-			debug123 "#4" MY_LINE $MY_LINE
+			# deal with quoted-printable continuation lines: 2nd line/time
+			# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
+			# TODO: changing the '=' to a single space.
+			MY_LINE="$MY_LINE $MY_2ND_LINE"
+			debug123 "#5" MY_LINE $MY_LINE
+			debug123 "#6" MY_2ND_LINE $MY_2ND_LINE
 		fi
-		# TODO: deal with quoted-printable continuation lines:
-		# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
-		# changing the '=' to a single space.
 	fi
 done
 # check that it's a valid job

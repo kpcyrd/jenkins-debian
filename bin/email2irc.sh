@@ -3,6 +3,14 @@
 # Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+# from IRC:
+#<h01ger> i think email2irc.sh should be thrown away and replaced
+#	  with a proper python or perl script. parsing email headers
+#	  with shell is insane.
+#<h01ger> but it really should just be rewritten from scratch
+#<h01ger> using something which has libraries to parse emails…
+
+
 #
 # called by ~jenkins/.procmailrc
 # to turn jenkins email notifications into irc announcements with kgb

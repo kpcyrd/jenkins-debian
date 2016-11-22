@@ -10,7 +10,7 @@ BUILDDIR="${BUILDDIR:-/tmp/buildd}"
 #
 # doing variations for the 2nd builds:
 #
-REAL_HOSTNAME=$HOSTNAME
+REAL_HOSTNAME=$(hostname)
 echo "disorder-fs debug: Running on $REAL_HOSTNAME."
 
 echo "I: Changing host+domainname to test build reproducibility" >&2

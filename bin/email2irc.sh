@@ -114,12 +114,12 @@ if [ "$VALID_MAIL" = "true" ] ; then
 	if [ ! -z $CHANNEL ] ; then
 		# format message
 		MESSAGE="$(echo $SUBJECT | cut -d ':' -f1) $MY_LINE"
-		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##g') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##g') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's# See ##g') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's# in Jenkins ##g') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's#Failure #Failed #g') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's#Build failed #Failed #g') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's# See ##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's# in Jenkins ##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#Failure #Failed #') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#Build failed #Failed #') "
 		# log message
 		echo "Notified #$CHANNEL with $MESSAGE" >> $LOGFILE
 		# notify kgb

@@ -87,7 +87,8 @@ while read -r line ; do
 		else
 			# deal with quoted-printable continuation lines: 2nd line/time
 			# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
-			# TODO: changing the '=' to a single space.
+			# changing the '=' to a single space.
+			MY_2ND_LINE=$(echo $MY_2ND_LINE | sed -s 's#=$# #')
 			MY_LINE="$MY_2ND_LINE $MY_LINE"
 			debug123 "#5" MY_LINE $MY_LINE
 			debug123 "#6" MY_2ND_LINE $MY_2ND_LINE

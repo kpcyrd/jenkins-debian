@@ -117,9 +117,8 @@ if [ "$VALID_MAIL" = "true" ] ; then
 		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's# See ##') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's# in Jenkins ##') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's#Failure #Failed #') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's#Build failed #Failed #') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#^Failure#Failed #') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#^Build failed in Jenkins#Failed #') "
 		# log message
 		echo "Notified #$CHANNEL with $MESSAGE" >> $LOGFILE
 		# notify kgb

@@ -114,7 +114,7 @@ if [ "$VALID_MAIL" = "true" ] ; then
 	if [ ! -z $CHANNEL ] ; then
 		# log message
 		MESSAGE="$(echo $SUBJECT | cut -d ':' -f1) $(echo $MY_LINE|sed -s 's#Changes:##g') "
-		echo "#$CHANNEL: $MESSAGE" >> $LOGFILE
+		echo "Notified #$CHANNEL with $MESSAGE" >> $LOGFILE
 		# notify kgb
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" && echo "kgb informed successfully." >> $LOGFILE
 		echo >> $LOGFILE

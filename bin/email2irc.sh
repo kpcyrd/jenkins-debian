@@ -98,7 +98,10 @@ done
 if [ -z $JENKINS_JOB ] ; then
 	VALID_MAIL=false
 fi	
-debug123 "#5" MY_LINE $MY_LINE
+debug123 "#7" MY_LINE $MY_LINE
+# remove bogus noise
+MY_LINE=$(echo $MY_LINE | sed -s "s#------------------------------------------##g")
+debug123 "#8" MY_LINE $MY_LINE
 
 # only send notifications for valid emails
 if [ "$VALID_MAIL" = "true" ] ; then

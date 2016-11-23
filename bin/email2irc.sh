@@ -113,7 +113,9 @@ if [ "$VALID_MAIL" = "true" ] ; then
 	# only notify if there is a channel to notify
 	if [ ! -z $CHANNEL ] ; then
 		# format message
-		MESSAGE="$(echo $SUBJECT | cut -d ':' -f1) $(echo $MY_LINE|sed -s 's#Changes:##g') "
+		MESSAGE="$(echo $SUBJECT | cut -d ':' -f1) $MY_LINE"
+		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##g') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##g') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's# See ##g') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's# in Jenkins ##g') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#Failure #Failed #g') "

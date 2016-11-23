@@ -67,7 +67,7 @@ while read -r line ; do
 	if [ "$HEADER" = "false" ] && [ -z "$MY_LINE" ] ; then
 		MY_LINE=$line
 		debug123 "#1" MY_LINE $MY_LINE
-		if [ ! -z "$MY_2ND_LINE" ] ; then
+		if [ -z "$MY_2ND_LINE" ] ; then
 			# if this is a multipart email it comes from the email extension plugin
 			if [ "${line:0:7}" = "------=" ] || [ "${line:0:9}" = "Content-T" ] ; then
 				debug123 "#2" line $line
@@ -81,14 +81,14 @@ while read -r line ; do
 			# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
 			# changing the '=' to a single space.
 			if [[ $MY_LINE =~ ^(.*)=$ ]] ; then
-				MY_2ND_LINE=$MY_LINE
+				MY_2ND_LINE="$MY_LINE"
 				MY_LINE=""
 			fi
 		else
 			# deal with quoted-printable continuation lines: 2nd line/time
 			# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
 			# TODO: changing the '=' to a single space.
-			MY_LINE="$MY_LINE $MY_2ND_LINE"
+			MY_LINE="$MY_2ND_LINE $MY_LINE"
 			debug123 "#5" MY_LINE $MY_LINE
 			debug123 "#6" MY_2ND_LINE $MY_2ND_LINE
 		fi

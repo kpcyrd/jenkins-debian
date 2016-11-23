@@ -116,7 +116,7 @@ if [ "$VALID_MAIL" = "true" ] ; then
 		MESSAGE="$(echo $SUBJECT | cut -d ':' -f1) $MY_LINE"
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Failure#Failed #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Build failed in Jenkins#Failed #') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's# See ##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's# See # #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##') "
 		# log message

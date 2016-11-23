@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012,2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012,2014,2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -10,7 +10,7 @@ common_init "$@"
 #
 # define some variables
 #
-URL="http://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co"
+URL="https://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co"
 FAIL=false
 DI_BUILD_JOB_PATTERN=d-i_build_
 DI_MANUAL_JOB_PATTERN=d-i_manual_

@@ -112,8 +112,13 @@ if [ "$VALID_MAIL" = "true" ] ; then
 	echo "My line: $MY_LINE" >> $LOGFILE
 	# only notify if there is a channel to notify
 	if [ ! -z $CHANNEL ] ; then
-		# log message
+		# format message
 		MESSAGE="$(echo $SUBJECT | cut -d ':' -f1) $(echo $MY_LINE|sed -s 's#Changes:##g') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's# See ##g') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's# in Jenkins ##g') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#Failure #Failed #g') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#Build failed #Failed #g') "
+		# log message
 		echo "Notified #$CHANNEL with $MESSAGE" >> $LOGFILE
 		# notify kgb
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE" && echo "kgb informed successfully." >> $LOGFILE

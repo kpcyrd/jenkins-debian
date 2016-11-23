@@ -100,30 +100,32 @@ setup_pbuilder() {
 	fi
 	# setup base.tgz
 	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
-	# apply further customisations, eg. install $PACKAGES from our repo
-	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
-	if [ "$DEBUG" = "true" ] ; then
-		cat "$TMPFILE"
+
+	# add repo only for experimental and sid - keep testing "real" (and sid progressive!)
+	if [ "$SUITE" != "testing" ] ; then
+		# apply further customisations, eg. install $PACKAGES from our repo
+		create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
+		if [ "$DEBUG" = "true" ] ; then
+			cat "$TMPFILE"
+		fi
+		sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+		rm ${TMPFILE}
+		if [ ! -z "$PACKAGES" ] ; then
+			# finally, confirm things are as they should be
+			echo
+			echo "Now let's see whether the correct packages where installed..."
+			for PKG in ${PACKAGES} ; do
+				egrep "http://reproducible.alioth.debian.org/debian(/|) ./ Packages" ${LOG} \
+					| grep -v grep | grep "${PKG} " \
+					|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $LOG ; exit 1 )
+			done
+		fi
 	fi
-	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
-	
-	# FIXME: this code should be dropped it's just so new that a fixed dpkg is in testing as well… \o/
-	# finally, confirm things are as they should be
-	# (we only have modified dpkg left in testing…)
-	#if [ "$SUITE" = "testing" ] ; then
-	#	echo
-	#	echo "Now let's see whether the correct packages where installed..."
-	#	for PKG in ${PACKAGES} ; do
-	#		egrep "http://reproducible.alioth.debian.org/debian(/|) ./ Packages" ${LOG} \
-	#			| grep -v grep | grep "${PKG} " \
-	#			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $TMPFILE $LOG ; exit 1 )
-	#	done
-	#fi
 
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
 	# create stamp file to record initial creation date minus some hours so the file will be older than 24h when checked in <24h...
 	touch -d "$(date -u -d '6 hours ago' '+%Y-%m-%d %H:%M')" /var/log/jenkins/${NAME}.tgz.stamp
-	rm ${TMPFILE} ${LOG}
+	rm ${LOG}
 }
 
 #
@@ -144,7 +146,7 @@ if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	else
 		echo "$BASETGZ outdated, creating a new one..."
 	fi
-	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev
+	setup_pbuilder $SUITE $SUITE-reproducible-base # list packages which must be installed from our repo here
 else
 	echo "$BASETGZ not old enough, doing nothing..."
 fi

@@ -100,18 +100,13 @@ setup_pbuilder() {
 	fi
 	# setup base.tgz
 	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
-
-	# TODO: add repo only for experimental and sid - keep testing "real" (and sid progressive!)
-	#       then ximin can upload :)
-	if [ "$SUITE" != "testing" ] ; then
-		# apply further customisations, eg. install $PACKAGES from our repo
-		create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
-		if [ "$DEBUG" = "true" ] ; then
-			cat "$TMPFILE"
-		fi
-		sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
-		rm ${TMPFILE}
+	# apply further customisations, eg. install $PACKAGES from our repo
+	create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
+	if [ "$DEBUG" = "true" ] ; then
+		cat "$TMPFILE"
 	fi
+	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	
 	# FIXME: this code should be dropped it's just so new that a fixed dpkg is in testing as well… \o/
 	# finally, confirm things are as they should be
 	# (we only have modified dpkg left in testing…)
@@ -121,14 +116,14 @@ setup_pbuilder() {
 	#	for PKG in ${PACKAGES} ; do
 	#		egrep "http://reproducible.alioth.debian.org/debian(/|) ./ Packages" ${LOG} \
 	#			| grep -v grep | grep "${PKG} " \
-	#			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $LOG ; exit 1 )
+	#			|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $TMPFILE $LOG ; exit 1 )
 	#	done
 	#fi
 
 	sudo mv /var/cache/pbuilder/${NAME}-new.tgz /var/cache/pbuilder/${NAME}.tgz
 	# create stamp file to record initial creation date minus some hours so the file will be older than 24h when checked in <24h...
 	touch -d "$(date -u -d '6 hours ago' '+%Y-%m-%d %H:%M')" /var/log/jenkins/${NAME}.tgz.stamp
-	rm ${LOG}
+	rm ${TMPFILE} ${LOG}
 }
 
 #

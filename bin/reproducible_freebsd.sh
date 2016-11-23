@@ -82,7 +82,7 @@ run_diffoscope_on_results() {
 #
 # main
 #
-#FREEBSD_TARGETS="master stable/11 release/11.0"
+#FREEBSD_TARGETS="master stable/10 release/10.3.0"
 # temporarily just build one branch…
 FREEBSD_TARGETS="master"
 # arrays to save results

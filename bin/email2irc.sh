@@ -120,6 +120,7 @@ if [ "$VALID_MAIL" = "true" ] ; then
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Jenkins build is back to normal#Fixed #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Jenkins build is back to stable#Fixed #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Jenkins build became#Became#') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#^Jenkins build is unstable#Unstable#') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Still Failing#Still failing#') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's# See # #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##') "

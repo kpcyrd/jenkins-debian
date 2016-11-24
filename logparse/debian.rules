@@ -7,6 +7,9 @@ ok /Error while decoding stream/
 # ignore images…
 ok /warning\.png/
 
+# suppress warnings from commit messages
+ok /HEAD is now at .+/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 

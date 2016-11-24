@@ -21,6 +21,9 @@ ok /test_no_warnings PASSED/
 ok /pytest-warning/
 ok /gbp:warning: Pristine-tar branch "pristine-tar" not found/
 
+# suppress warnings from commit messages
+ok /HEAD is now at .+/
+
 # list of warnings here...
 warning /[Ww]arning/
 warning /WARNING/

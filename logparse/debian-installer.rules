@@ -44,6 +44,9 @@ error /(?i)^error /
 ok /warning.+\[N\/y\/\?\] n/
 ok /warning.+\[Y\/n\/\?\] y/
 
+# suppress warnings from commit messages
+ok /HEAD is now at .+/
+
 # list of warnings here...
 warning /[Ww]arning/
 warning /WARNING/

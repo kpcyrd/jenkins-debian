@@ -3,6 +3,7 @@ Feature: Doing variations on d-i installs
   As a normal user
   I should be able to install Debian
 
+  @both-ui
   Scenario Outline: Install Debian, and boot to a login prompt
     Given I install a <target_ui> Debian system, in <install_ui> mode
     When I start the computer
@@ -11,11 +12,35 @@ Feature: Doing variations on d-i installs
     Examples:
       | install_ui | target_ui | login |
       | gui        | minimal   | VT    |
-      | gui        | Gnome     | Gnome |
-      | gui        | LXDE      | LXDE  |
-      | gui        | XFCE      | XFCE  |
-      | gui        | KDE       | KDE   |
-#      | text       | non-GUI   | VT    |
+      | text       | non-GUI   | VT    |
+      #| gui        | Gnome     | Gnome |
+      #| gui        | LXDE      | LXDE  |
+      #| gui        | XFCE      | XFCE  |
+      #| gui        | KDE       | KDE   |
+
+  @gui
+  Scenario Outline: Install Debian, and boot to a login prompt
+    Given I install a <target_ui> Debian system, in gui mode
+    When I start the computer
+    Then I should see a <login> Login prompt
+
+    Examples:
+      | target_ui | login |
+      | non-GUI   | VT    |
+      | LXDE      | LXDE  |
+      | KDE       | KDE   |
+
+  @text-ui
+  Scenario Outline: Install Debian, and boot to a login prompt
+    Given I install a <target_ui> Debian system, in text mode
+    When I start the computer
+    Then I should see a <login> Login prompt
+
+    Examples:
+      | target_ui | login |
+      | minimal   | VT    |
+      | Gnome     | Gnome |
+      | LXDE      | LXDE  |
 
   @broken
   Scenario: Attempt to Install Gnome, expecting it to fail because X doesn't start for some reason

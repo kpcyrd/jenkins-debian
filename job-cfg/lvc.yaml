@@ -56,7 +56,8 @@
     my_title: 'Cucumber: {dist_name}'
     my_time: '45 23 31 12 *'
     my_pngs: 'results/*.png'
-    my_opts: '--tags ~@broken --tags ~@trivial --tags ~@preseed'
+    my_opts: '--tags both-ui'
+    my_opts: '--tags ~@broken --tags ~@trivial --tags ~@preseed --tags ~@text-ui --tags ~@gui'
     my_description: 'Work in progress...'
     jobs:
         - '{name}_{distro}':
@@ -64,14 +65,21 @@
                 - 'debian-stable':
                     dist_name: 'Debian-Installer Stable'
                     my_iso: 'http://cdimage.debian.org/debian-cd/8.6.0/amd64/iso-cd/debian-8.6.0-amd64-netinst.iso'
+                    my_time: 'H H * * H'
                 - 'debian-testing-daily':
                     dist_name: 'Debian-Installer Testing (Daily)'
                     my_iso: 'http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-                    my_time: 'H */8 * * *'
-                - 'debian-testing-netboot-daily':
-                    dist_name: 'Debian-Installer Testing Netboot (Daily)'
+                    my_time: 'H H/8 * * *'
+                - 'debian-DI-miniiso-gui-daily':
+                    dist_name: 'Debian-Installer Testing GTK-miniiso (Daily)'
                     my_iso: 'https://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/mini.iso'
-                    my_time: 'H */8 * * *'
+                    my_time: 'H H/8 * * *'
+                    my_opts: '--tags @gui'
+                - 'debian-DI-miniiso-text-daily':
+                    dist_name: 'Debian-Installer Testing Text-miniiso (Daily)'
+                    my_iso: 'https://d-i.debian.org/daily-images/amd64/daily/netboot/mini.iso'
+                    my_time: 'H H/8 * * *'
+                    my_opts: '--tags @text-ui'
                 - 'debian-miniiso':
                     dist_name: 'Debian-Installer local mini.iso'
                     my_iso: 'use_TRIGGERING_BRANCH'

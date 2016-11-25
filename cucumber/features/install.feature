@@ -27,7 +27,7 @@ Feature: Doing variations on d-i installs
     Examples:
       | target_ui | login |
       | non-GUI   | VT    |
-      | LXDE      | LXDE  |
+      | XFCE      | XFCE  |
       | KDE       | KDE   |
 
   @text-ui

@@ -77,6 +77,8 @@ user_host_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
 user_host_groups['phil','profitbricks-build10-amd64']="$sudo_groups"
 user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
+user_host_groups['lynxis','profitbricks-build3-amd64']="$sudo_groups"
+user_host_groups['lynxis','profitbricks-build4-amd64']="$sudo_groups"
 
 
 u_shell['mattia']='/bin/zsh'

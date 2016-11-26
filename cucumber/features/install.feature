@@ -84,7 +84,7 @@ Feature: Doing variations on d-i installs
     Then I should see a LXDE Login prompt
 
   @debedu
-  Scenario: Install default Debedu
+  Scenario: Install default Debian-Edu
     Given a disk is created for Debian Edu tests
     And I intend to use gui mode
     And I intend to boot with options "url=hands.com/d-i/bug/edu-plymouth/preseed.cfg"

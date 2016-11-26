@@ -351,7 +351,6 @@ Given /^I set the password for "([^"]*)" to be "([^"]*)"$/ do |fullname,password
     @screen.type(Sikuli::Key.TAB) if on_screen == diui_png("ShowUserPassword")
   else
     @screen.type(Sikuli::Key.ENTER)
-    @screen.waitVanish(on_screen, 10 * PATIENCE)
   end
   @screen.type(password + Sikuli::Key.ENTER)
 end

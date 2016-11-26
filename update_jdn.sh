@@ -82,6 +82,7 @@ user_host_groups['lynxis','profitbricks-build4-amd64']="$sudo_groups"
 
 
 u_shell['mattia']='/bin/zsh'
+u_shell['mattia']='/bin/fish'
 u_shell['jenkins-adm']='/bin/bash'
 
 # get the users out of the user_host_groups array's index
@@ -293,6 +294,7 @@ if [ -f /etc/debian_version ] ; then
 				cmake
 				diffutils
 				findutils
+				fish
 				flex
 				g++
 				gawk

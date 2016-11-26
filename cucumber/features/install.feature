@@ -82,3 +82,24 @@ Feature: Doing variations on d-i installs
     When the computer is set to boot from ide drive
     And I start the computer
     Then I should see a LXDE Login prompt
+
+  @debedu
+  Scenario: Install default Debedu
+    Given a disk is created for Debian Installer tests
+    And I intend to use gui mode
+    And I start the computer
+    And I select the install mode
+    And I select British English
+    And I select Standalone Debian-Edu profile
+    And I use the Debian-Edu Automatic Partitioning
+    And I ignore Popcon
+    And I set the root password to "rootme"
+    And I set the password for "Philip Hands" to be "verysecret"
+    And I wait while the bulk of the packages are installed
+    And I install GRUB
+    And I allow reboot after the install is complete
+    And I wait for the reboot
+    And I power off the computer
+    And the computer is set to boot from ide drive
+    When I start the computer
+    Then I should see a Gnome Login prompt

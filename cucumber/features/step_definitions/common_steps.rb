@@ -459,6 +459,38 @@ Given /^I select the non-GUI task$/ do
   @screen.type(Sikuli::Key.ENTER)
 end
 
+Given /^I select Standalone Debian-Edu profile$/ do
+  @screen.wait(diui_png("Edu-Profile"), 2 * 60 * PATIENCE)
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.type(Sikuli::Key.DOWN)
+  @screen.type(Sikuli::Key.SPACE)
+
+  if "gui" == @ui_mode
+    @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
+    @screen.type(Sikuli::Key.TAB)
+    @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
+  end
+  @screen.type(Sikuli::Key.ENTER)
+end
+
+Given /^I use the Debian-Edu Automatic Partitioning$/ do
+  @screen.wait(diui_png("Edu-AutoPartition"), 10 * PATIENCE)
+  # prompt about Writing Partitions to disk:
+  @screen.wait(diui_png("No"), 10 * PATIENCE)
+  if "gui" == @ui_mode
+    @screen.type(Sikuli::Key.DOWN)
+  else
+    @screen.type(Sikuli::Key.TAB)
+  end
+  @screen.wait(diui_png("Yes"), 10 * PATIENCE)
+  @screen.type(Sikuli::Key.ENTER)
+end
+
 Given /^I select the minimal task$/ do
   @screen.wait(diui_png("DesktopTask_Yes"), 2 * 60 * PATIENCE)
 

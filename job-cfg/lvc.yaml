@@ -92,6 +92,7 @@
                     dist_name: 'Debian-Edu Testing Netinst'
                     my_iso: 'http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
                     my_time: 'H H * * H'
+                    my_opts: '--tags @debedu'
                 #- 'debian-testing-daily-broken':
                 #    dist_name: 'Debian-Installer Stretch alpha8 -- Broken Scenarios'
                 #    my_iso: 'http://cdimage.debian.org/cdimage/stretch_di_alpha8/amd64/iso-cd/debian-stretch-DI-alpha8-amd64-netinst.iso'

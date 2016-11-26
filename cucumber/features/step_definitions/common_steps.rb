@@ -566,9 +566,10 @@ Given /^I wait while the bulk of the packages are installed$/ do
       end
       debug_log("debug: typed F4, pausing...", :color => :blue)
       sleep(5)
-      debug_log("debug: slept 10", :color => :blue)
+      debug_log("debug: slept 5", :color => :blue)
       if diui_png("InstallationStepFailed") == hit
         failed = true
+        sleep(30*60) # pause for 30-mins, for debugging
       else
         if "gui" == @ui_mode
           @screen.type(Sikuli::Key.F5, Sikuli::KeyModifier.ALT)

@@ -87,7 +87,7 @@ Feature: Doing variations on d-i installs
   Scenario: Install default Debian-Edu
     Given a disk is created for Debian Edu tests
     And I intend to use gui mode
-    And I intend to boot with options: desktop=lxde tasksel/first="desktop, lxde-desktop" url=hands.com/d-i/bug/edu-plymouth/preseed.cfg
+    And I intend to boot with options: url=hands.com/d-i/bug/edu-plymouth/preseed.cfg partman-auto/choose_recipe=atomic desktop=xfce
     And I start the computer
     And I select the install mode
     And I select British English

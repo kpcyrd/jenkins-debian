@@ -458,6 +458,18 @@ Given /^I select the non-GUI task$/ do
   @screen.type(Sikuli::Key.ENTER)
 end
 
+Given /^I select Combi Debian-Edu profile$/ do
+  @screen.wait(diui_png("Edu-Profile"), 2 * 60 * PATIENCE)
+  # just acept the default combination
+
+  if "gui" == @ui_mode
+    @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)
+    @screen.type(Sikuli::Key.TAB)
+    @screen.wait(diui_png("CONTINUEselected"), 10 * PATIENCE)
+  end
+  @screen.type(Sikuli::Key.ENTER)
+end
+
 Given /^I select Standalone Debian-Edu profile$/ do
   @screen.wait(diui_png("Edu-Profile"), 2 * 60 * PATIENCE)
   @screen.type(Sikuli::Key.SPACE)

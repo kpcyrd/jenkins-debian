@@ -87,11 +87,11 @@ Feature: Doing variations on d-i installs
   Scenario: Install default Debian-Edu
     Given a disk is created for Debian Edu tests
     And I intend to use gui mode
-    And I intend to boot with options: url=hands.com/d-i/bug/edu-plymouth/preseed.cfg partman-auto/choose_recipe=atomic desktop=xfce
+    And I intend to boot with options: url=hands.com/d-i/bug/edu-plymouth/preseed.cfg
     And I start the computer
     And I select the install mode
     And I select British English
-    And I select Standalone Debian-Edu profile
+    And I select Combi Debian-Edu profile
     And I use the Debian-Edu Automatic Partitioning
     And I ignore Popcon
     And I set the root password to "rootme"

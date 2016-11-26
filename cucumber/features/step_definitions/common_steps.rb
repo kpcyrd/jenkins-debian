@@ -197,7 +197,7 @@ Given /^I capture all network traffic$/ do
   end
 end
 
-Given /^I intend to boot with options "([^"]*)"$/ do |options|
+Given /^I intend to boot with options: (.*)$/ do |options|
   @boot_options = options
 end
 

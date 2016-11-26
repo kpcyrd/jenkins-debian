@@ -73,7 +73,7 @@ Feature: Doing variations on d-i installs
   Scenario: Preseed using hands.com with checksum
     Given a disk is created for Debian Installer tests
     And I intend to use gui mode
-    And I intend to boot with options "auto=true priority=critical url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;partition/atomic;desktop/lxde hands-off/checksigs=true DEBCONF_DEBUG=5"
+    And I intend to boot with options: auto=true priority=critical url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;partition/atomic;desktop/lxde hands-off/checksigs=true DEBCONF_DEBUG=5
     And I start the computer
     And I select the install mode
     And I expect package installation to start
@@ -87,7 +87,7 @@ Feature: Doing variations on d-i installs
   Scenario: Install default Debian-Edu
     Given a disk is created for Debian Edu tests
     And I intend to use gui mode
-    And I intend to boot with options "desktop=lxde tasksel/first=desktop,lxde-desktop url=hands.com/d-i/bug/edu-plymouth/preseed.cfg"
+    And I intend to boot with options: desktop=lxde tasksel/first="desktop, lxde-desktop" url=hands.com/d-i/bug/edu-plymouth/preseed.cfg
     And I start the computer
     And I select the install mode
     And I select British English

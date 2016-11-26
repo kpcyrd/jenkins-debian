@@ -86,7 +86,7 @@ Feature: Doing variations on d-i installs
   @debedu
   Scenario: Install default Debedu
     Given a disk is created for Debian Edu tests
-    And I intend to use gui mode
+    And I intend to use text mode
     And I start the computer
     And I select the install mode
     And I select British English

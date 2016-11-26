@@ -95,6 +95,9 @@ Feature: Doing variations on d-i installs
     And I ignore Popcon
     And I set the root password to "rootme"
     And I set the password for "Philip Hands" to be "verysecret"
+    And I wait while the partitions are made
+    And I note that the Base system is being installed
+    And I wait patiently for the package installation to start
     And I wait while the bulk of the packages are installed
     And I install GRUB
     And I allow reboot after the install is complete

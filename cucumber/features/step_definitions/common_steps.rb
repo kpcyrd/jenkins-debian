@@ -532,6 +532,16 @@ Given /^I select the ([A-Z][[:alpha:]]*) task$/ do |desktop|
   @screen.waitVanish(diui_png(expected_result), 10 * PATIENCE)
 end
 
+Given /^I wait while the partitions are made$/ do
+  @screen.wait(diui_png("PartitionDisks"), 60)
+  debug_log("debug: we see PartitionDisks", :color => :blue)
+  @screen.waitVanish(diui_png("PartitionDisks"), 2 * 60)
+end
+
+Given /^I wait patiently for the package installation to start$/ do
+  @screen.wait(diui_png("InstallSoftware"), 10 * 60)
+end
+
 Given /^I wait while the bulk of the packages are installed$/ do
   @screen.wait(diui_png("InstallSoftware"), 10)
   debug_log("debug: we see InstallSoftware", :color => :blue)

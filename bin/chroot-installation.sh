@@ -258,7 +258,7 @@ if [ "$2" != "" ] ; then
 		debconf-video)	case $1 in
 					jessie)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu
 					;;
-					stretch)	install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix
+					stretch)	install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts
 					;;
 					sid)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts # hdmi2usb-mode-switch hdmi2usb-udev
 					;;

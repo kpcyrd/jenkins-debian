@@ -573,12 +573,12 @@ Given /^I wait while the bulk of the packages are installed$/ do
   @screen.wait(diui_png("InstallSoftware"), 10)
   debug_log("debug: we see InstallSoftware", :color => :blue)
   failed = false
-  try_for(180*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
+  try_for(180*60, :msg => "it seems that the install stalled (timing-out after 3 hours)") do
     found = false
     sleep(30)
     debug_log("debug: check for Install GRUB/Software", :color => :blue)
     if $vm.is_running?
-      hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallGRUB-heading"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware")], 10)
+      hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallGRUB-heading"),diui_png("InstallComplete"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware")], 10)
     else
       found = true
       hit = ''
@@ -607,7 +607,7 @@ Given /^I wait while the bulk of the packages are installed$/ do
         debug_log("debug: pressed F1", :color => :blue)
         sleep(20)
       end
-    when diui_png("InstallGRUB"), diui_png("InstallGRUB-heading")
+    when diui_png("InstallGRUB"), diui_png("InstallGRUB-heading"), diui_png("InstallComplete")
       found = true
     end
 

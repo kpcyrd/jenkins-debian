@@ -277,6 +277,8 @@ end
 Given /^I select the install mode$/ do
   boot_timeout = 60
 
+  debug_log("debug: CWD = " + Dir.getwd, :color => :blue)
+
   on_screen, _ = @screen.waitAny(["d-i_boot_graphical-default.png","d-i_boot_graphical-default_9alpha.png","d-i_boot_text-default.png","d-i_boot_miniiso.png"], boot_timeout * PATIENCE)
   debug_log("debug: found '#{on_screen}' in the bootspash", :color => :blue)
   if "d-i_boot_miniiso.png" != on_screen

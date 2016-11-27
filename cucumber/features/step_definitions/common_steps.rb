@@ -557,7 +557,7 @@ Given /^I wait while the bulk of the packages are installed$/ do
   @screen.wait(diui_png("InstallSoftware"), 10)
   debug_log("debug: we see InstallSoftware", :color => :blue)
   failed = false
-  try_for(120*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
+  try_for(180*60, :msg => "it seems that the install stalled (timing-out after 2 hours)") do
     found = false
     sleep(30)
     debug_log("debug: check for Install GRUB/Software", :color => :blue)

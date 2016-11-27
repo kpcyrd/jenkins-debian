@@ -229,12 +229,7 @@ openwrt_compile() {
 	echo "============================================================================="
 	echo "$(date -u) - Building $TYPE ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
-	ionice -c 3 $MAKE $OPTIONS target/compile
-	ionice -c 3 $MAKE $OPTIONS package/cleanup
-	ionice -c 3 $MAKE $OPTIONS package/compile || true # don't let some packages fail the whole build
-	ionice -c 3 $MAKE $OPTIONS package/install
-	ionice -c 3 $MAKE $OPTIONS target/install V=s || true
-	ionice -c 3 $MAKE $OPTIONS package/index || true # don't let some packages fail the whole build
+	ionice -c 3 $MAKE $OPTIONS
 }
 
 # called by openwrt_two_times

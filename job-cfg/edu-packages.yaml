@@ -22,7 +22,7 @@
       artifactNumToKeep: -1
     scm:
       - git:
-          url: 'git://git.debian.org/git/debian-edu/{my_package}.git'
+          url: '{my_url}'
           branches:
             - master
     builders:
@@ -43,6 +43,7 @@
 - project:
     name: edu-packages
     my_distro: 'sid'
+    my_url: 'git://git.debian.org/git/debian-edu/{my_package}.git'
     my_package:
         - 'debian-edu'
         - 'debian-edu-archive-keyring'
@@ -50,5 +51,6 @@
         - 'debian-edu-config'
         - 'debian-edu-doc'
         - 'debian-edu-install'
-        - 'sitesummary'
+        - 'sitesummary':
+           my_url: 'git://git.debian.org/git/debian-edu/upstream/{my_package}.git'
     jobs: ['{name}_{my_distro}_{my_package}']

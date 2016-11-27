@@ -50,4 +50,5 @@
         - 'debian-edu-config'
         - 'debian-edu-doc'
         - 'debian-edu-install'
+        - 'sitesummary'
     jobs: ['{name}_{my_distro}_{my_package}']

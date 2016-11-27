@@ -91,7 +91,7 @@ Feature: Doing variations on d-i installs
     And I start the computer
     And I select the install mode
     And I select British English
-    And I select Combi Debian-Edu profile
+    And I select Main Server Debian-Edu profile
     And I use the Debian-Edu Automatic Partitioning
     And I ignore Popcon
     And I set the root password to "rootme"

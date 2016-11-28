@@ -580,14 +580,14 @@ Given /^I wait while the bulk of the packages are installed$/ do
     sleep(30)
     debug_log("debug: check for Install GRUB/Software", :color => :blue)
     if $vm.is_running?
-      hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallGRUB-heading"),diui_png("InstallComplete"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware")], 10)
+      hit, _ = @screen.waitAny([diui_png("InstallGRUB"),diui_png("InstallGRUB-heading"),diui_png("InstallComplete"),diui_png("InstallationStepFailed"),diui_png("InstallSoftware"),diui_png("Edu-LTSPchroot")], 10)
     else
       found = true
       hit = ''
     end
     debug_log("debug: found #{hit}", :color => :blue)
     case hit
-    when diui_png("InstallSoftware"), diui_png("InstallationStepFailed")
+    when diui_png("InstallSoftware"), diui_png("Edu-LTSPchroot"), diui_png("InstallationStepFailed")
       debug_log("debug: so let's glance at tty4", :color => :blue)
       if "gui" == @ui_mode
         @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(

@@ -58,19 +58,14 @@
 42min :)
 
 a bit of history
-	of me
 	and jenkins
 
-specs
-	cores
-	ram
-	ips
-	SSD/HDD space
-	amd64 systems
-	i386 systems
-	armhf systems
 
 chroot-installations
+	some hundred jobs
+	wheezy, jessie, stretch, sid
+	upgrades and new installs
+
 g-i
 	edu
 	d-i
@@ -78,16 +73,20 @@ g-i
 	hurd
 	kfreebsd
 	lvc
+
 d-i
 	packages
 	manual
+
 lintian
 debhelper
 debconf-video
+
 debian-edu
 	images
 	packages
 	doc (!) 7 languages
+
 reproducible builds 
 	Debian, explain variations!
 	/who/
@@ -101,8 +100,6 @@ benefits for debian
 	countless bug reports
 		ie 2670 done ftbfs via reproducible…
 	early notifications of problems
-
-
 
 announce move to j.d.o
 announce new nodes by codethink
@@ -121,6 +118,58 @@ announce new nodes by codethink
           <br>
           Holger Levsen (h01ger)
         </h4>
+      </section>
+
+      <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
+        <h2>about me</h2>
+        <ul>
+          <li class="fragment">Debian user since 1995</li>
+          <li class="fragment">Debian contributor since 2001</li>
+          <li class="fragment">DebConf organizer, founded the DebConf video team in 2005</li>
+          <li class="fragment">Debian developer since 2007</li>
+          <li class="fragment">Debian-Edu (Debian for Education), since 2003</li>
+          <li class="fragment">Debian-QA</li>
+          <li class="fragment">Freelancer at Profitbricks from 2012-2015</li>
+        </ul>
+      </section>
+
+      <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
+        <h2>more about Debian QA and me</h2>
+        <ul>
+          <li class="fragment">https://piuparts.debian.org/ since 2009</li>
+          <li class="fragment">https://jenkins.debian.net/ since 2012</li>
+          <li class="fragment">https://reproducible.debian.net/ since 2014</li>
+          <li class="fragment">since 2015 funded by the Linux Foundation</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	Profitbricks ressources used by jenkins.debian.net
+	</h2>
+        <ul>
+          <li class="fragment">FIXME: check those numbers</li>
+          <li class="fragment">2 datacenters (KA + FRA)</li>
+          <li class="fragment">15 machines</li>
+          <li class="fragment">131 cores (20 Intel, 111 AMD)</li>
+          <li class="fragment">500 GB RAM</li>
+          <li class="fragment">3 TB HDD storage</li>
+          <li class="fragment">2 TB SDD storage</li>
+          <li class="fragment">no static IP addresses</li>
+        </ul>
+      </section>
+
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2>
+ 	 Ressources used by reproducible.debian.net, by architecture
+	</h2>
+        <ul>
+          <li class="fragment">FIXME: check those numbers, page is out of place here</li>
+          <li class="fragment">15 amd64 systems, sponsored by Profitbricks</li>
+          <li class="fragment">4 i386 systems, sponsored by Profitbricks</li>
+          <li class="fragment">22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
+          <li class="fragment">soon: 8 arm64 systems, sponsored by codethink.co.uk</li>
+        </ul>
       </section>
 
       <section data-background="images/install.jpg" data-background-size="80%" data-background-color="black">
@@ -214,61 +263,8 @@ announce new nodes by codethink
         &nbsp;
       </section>
 
-      <section data-background="images/unstable_status.png">
-        &nbsp;
-      </section>
       <section data-background="images/stats_bugs_sin_ftbfs_state.png">
         &nbsp;
-      </section>
-
-      <section>
-        <h2>Toolchain</h2>
-
-        <ul>
-          <li>Previously needed to use custom packages</li>
-          <li>Not needed since dpkg <code>1.18.11</code></li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Build paths</h2>
-
-        <ul>
-          <li class="fragment">Many builds embed path they are built from</li>
-          <li class="fragment">our test setup previously used same build path</li>
-          <li class="fragment">In unstable, we now vary the build path &rarr; lots of unreproducibility</li>
-          <li class="fragment">Work on general solutions ongoing (eg. <code>SOURCE_PREFIX_MAP</code> for GCC)</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2><code>.buildinfo</code> files (1/2)</h2>
-
-        <ul>
-          <li class="fragment">Definition of the environment used during a build</li>
-          <li class="fragment">Specificies:
-          <ul>
-            <li>Inputs: <code>.dsc</code>, <code>Build-Depends</code>, build path, etc.</li>
-            <li>Outputs: <code>.deb</code> checksums, etc.</li>
-          </ul>
-          <li class="fragment"><code>dak</code> needs to accept and forward them</li>
-          <li class="fragment">Will be signed by autobuilders, third-parties, etc.</li>
-          <li class="fragment">Experimental server at <a href="https://buildinfo.debian.net/">buildinfo.debian.net</a></li>
-        </ul>
-      </section>
-
-      <section>
-        <h2><code>.buildinfo</code> files (2/2)</h2>
-
-        <ul>
-          <li class="fragment">Outstanding questions:
-          <ul>
-            <li class="fragment">Filename scheme</li>
-            <li class="fragment">Time</li>
-            <li class="fragment">Environment variables</li>
-          </ul>
-          <li class="fragment">How to host 100,000s of files on <code>ftp-master.d.o</code></li>
-        </ul>
       </section>
 
       <section>
@@ -312,17 +308,9 @@ announce new nodes by codethink
         </ul>
       </section>
 
-      <section>
-        <h2>Getting involved</h2>
-        <ul class="fragment">
-          <li class="fragment">Check your own packages</li>
-          <li class="fragment">Visit <a href="https://reproducible-builds.org/"><code>reproducible-builds.org</a></code></li class="fragment">
-          <li class="fragment">Stop using dates (or use <tt><a href="https://reproducible-builds.org/specs/">SOURCE_DATE_EPOCH</a></tt>)</li>
-          <li class="fragment"><code>#reproducible-builds</code> on <code>irc.oftc.net</code></li>
-        </ul>
-      </section>
 
       <section data-background-color="white">
+        <h2>Usual thanks:</h2>
         <p>
           <img src="images/cii.png">
           <br>
@@ -334,6 +322,15 @@ announce new nodes by codethink
         </p>
       </section>
 
+      <section data-background="images/wholeworld.jpg" data-background-size="24%" data-background-position="90% 10%">
+        <h2>Todays special thanks:</h2>
+        <p>
+          <img src="images/profitbricks.jpg">
+	  <br>
+          from Debian and from all folks interested in Reproducible Builds!
+        </p>
+      </section>
+
       <section data-background="images/debian.jpg" data-background-color="black">
         <h2 style="text-align: center;">Questions?</h2>
 
@@ -341,14 +338,6 @@ announce new nodes by codethink
         <br>
 
         <table>
-        <tr>
-          <td>
-            <a href="mailto:lamby@debian.org">lamby@debian.org</a>
-          </td>
-          <td style="text-align: right;">
-            <code>C2FE 4BD2 71C1 39B8 6C53  3E46 1E95 3E27 D431 1E58</code>
-          </td>
-        </tr>
         <tr>
           <td>
             <a href="mailto:holger@debian.org">holger@debian.org</a>
@@ -362,9 +351,9 @@ announce new nodes by codethink
         <br>
 
         <p style="text-align: center;">
-          <a href="https://reproducible-builds.org/"><code>reproducible-builds.org</code></a>
+          <a href="https://jenkins.debian.net/"><code>https://jenkins.debian.net</code></a>
           <br>
-          <code>#reproducible-builds</code> on <code>irc.oftc.net</code>
+          <a href="https://reproducible-builds.org/"><code>https://reproducible-builds.org</code></a>
         </p>
       </section>
     </div>

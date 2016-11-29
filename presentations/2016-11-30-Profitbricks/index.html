@@ -255,24 +255,17 @@ smoothen + shorten reproducible slides
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	reproducible.debian.net
+ 	reproducible.debian.net / tests.reproducible-builds.org/debian/
 	</h2>
         <ul>
-          <li>created by 379 jobs on jenkins.debian.net</li>
+          <li>created by 379 / ~350 jobs on jenkins.debian.net</li>
+          <li class="fragment">it's not only about Debian anymore…</li>
         </ul>
       </section>
 
-      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
-        <h2>
- 	tests.reproducible-builds.org/debian/
-	</h2>
-        <ul>
-          <li>created by ~350 jobs on jenkins.debian.net </li>
-        </ul>
-      </section>
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>The problem: why do we need reproducible builds?</h2>
+        <h2>The problem: Can we trust the build process?</h2>
         <ul>
           <li class="fragment">One can inspect the source code of free software for flaws</li>
           <li class="fragment">But distributions provide binary/compiled packages</li>
@@ -280,7 +273,7 @@ smoothen + shorten reproducible slides
       </section>
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Can we trust this process?</h2>
+        <h2>The problem: nobody can trust any binary built anywhere anymore</h2>
 
         <ul>
           <li class="fragment">To get users, go after the developers</li>
@@ -302,7 +295,7 @@ smoothen + shorten reproducible slides
         <h2>The solution - FIXME wordings</h2>
 
         <ul class="fragment">
-          <li class="fragment">Ensure compilation always identical results</li>
+          <li class="fragment">Ensure compilation always bit by bit identical results</li>
           <li class="fragment">Multiple parties compare compilation results</li>
           <li class="fragment">Attacker needs to infect everybody simultaneously (or they are detected)</li>
         </ul>
@@ -359,7 +352,7 @@ smoothen + shorten reproducible slides
       </section>
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Technical advantages</h2>
+        <h2>Technical benefits</h2>
 
         <ul>
         <ul>

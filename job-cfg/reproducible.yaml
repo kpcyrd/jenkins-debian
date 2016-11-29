@@ -803,6 +803,14 @@
                     my_gitbranches: ':^(?!origin/master$).*'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
+                - 'reprotest_from_git_master':
+                    my_description: 'Build reprotest Debian package from git branch master.'
+                    my_timed: '42 23 1 1 *'
+                    my_hname: ''
+                    my_gitrepo: 'git://anonscm.debian.org/git/reproducible/reprotest.git'
+                    my_gitbranches: 'origin/master'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+                    my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'strip-nondeterminism_from_git_master':
                     my_description: 'Build strip-nondeterminism Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'

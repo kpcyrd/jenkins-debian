@@ -13,7 +13,7 @@ def checkpoints
     :description => "a disk is created for Debian Edu tests",
     :parent_checkpoint => nil,
     :steps => [
-      'I create a 70 GiB disk named "'+JOB_NAME+'"',
+      'I create a 64 GiB disk named "'+JOB_NAME+'"',
       'I plug ide drive "'+JOB_NAME+'"',
     ]
   }

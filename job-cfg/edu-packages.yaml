@@ -26,7 +26,7 @@
           branches:
             - master
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} debuild -b -uc -us'
+      - shell: '{my_shell}'
     triggers:
       - pollscm:
           cron: 'H/1 H/1 * * *'
@@ -43,6 +43,7 @@
 - project:
     name: edu-packages
     my_distro: 'sid'
+    my_shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} debuild -b -uc -us'
     my_url: 'git://git.debian.org/git/debian-edu/{my_package}.git'
     my_package:
         - 'debian-edu'
@@ -59,4 +60,5 @@
            my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
         - 'italc':
            my_url: 'git://git.debian.org/git/debian-edu/pkg-team/{my_package}.git'
+           my_shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} gbp buildpackage -uc -us'
     jobs: ['{name}_{my_distro}_{my_package}']

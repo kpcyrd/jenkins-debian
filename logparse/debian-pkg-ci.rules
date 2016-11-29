@@ -20,6 +20,8 @@ ok /warning: the authors of lintian do not recommend running it with root privil
 ok /test_no_warnings PASSED/
 ok /pytest-warning/
 ok /gbp:warning: Pristine-tar branch "pristine-tar" not found/
+ok /perl: warning: Please check that your locale settings:/
+ok /perl: warning: Falling back to the standard locale/
 
 # suppress warnings from commit messages
 ok /HEAD is now at .+/

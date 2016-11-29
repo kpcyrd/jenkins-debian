@@ -54,9 +54,9 @@
         - 'sitesummary':
            my_url: 'git://git.debian.org/git/debian-edu/upstream/{my_package}.git'
         - 'guacamole-client':
-           my_url: 'git://git.debian.org/git/debian-edu/pkg-team/{my_package}.git'
+           my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
         - 'guacamole-server':
-           my_url: 'git://git.debian.org/git/debian-edu/pkg-team/{my_package}.git'
+           my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
         - 'italc':
            my_url: 'git://git.debian.org/git/debian-edu/pkg-team/{my_package}.git'
     jobs: ['{name}_{my_distro}_{my_package}']

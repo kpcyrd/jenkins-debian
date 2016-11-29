@@ -112,7 +112,7 @@ smoothen + shorten reproducible slides
       <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
         <h2>more about Debian QA and me</h2>
         <ul class="fragment">
-          <li class="fragment"><code>https://piuparts.debian.org</code> since 2009 - today juggling with 624234 logs from 53158 packages in 28 suites with Andreas Beckmann</li>
+          <li class="fragment"><code>https://piuparts.debian.org</code> since 2009 - today juggling with 648988 logs from 53158 packages in 28 suites with Andreas Beckmann</li>
           <li class="fragment"><code>https://jenkins.debian.net</code> since 2012</li>
           <li class="fragment"><code>https://reproducible.debian.net</code> since 2014</li>
           <li class="fragment">since 2015 funded by the Linux Foundation for working on <code>https://reproducible-builds.org</code></li>
@@ -207,22 +207,22 @@ smoothen + shorten reproducible slides
  	more debian-installer related jobs on jenkins.debian.net:
 	</h2>
         <ul>
-                  <li>FIXME 78 packages (building udebs) triggered by commits to their git master branches</li>
-                  <li>manual in several/FIXME languages, also git triggered</li>
+                  <li>97 packages (building udebs) triggered by commits to their git master branches</li>
+                  <li>manual in 24 languages, also git triggered</li>
                   <li>lvc and d-i from proposed branches planned</li>
         </ul>
       </section>
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	$amount/FIXME debian-edu jobs on jenkins.debian.net:
+ 	35 debian-edu jobs on jenkins.debian.net:
 	</h2>
         <ul>
            <li>
-            g-i tests for jessie and stretch
+            28 g-i tests for jessie and stretch
            </li>
            <li>
-            six debian-edu packages build triggerd by commits on their git master branches
+            6 debian-edu packages build triggerd by commits on their git master branches
            </li>
            <li>
             very useful for debian-edu-doc which is published for 7 languages in HTML, PDF &amp; EPUB format.
@@ -285,17 +285,9 @@ smoothen + shorten reproducible slides
       </section>
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2 style="line-height: 130%;">
-          The motivation behind "reproducible" builds is to allow verification
-          that no flaws have been introduced during the compilation process.
-        </h2>
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>The solution - FIXME wordings</h2>
-
-        <ul class="fragment">
-          <li class="fragment">Ensure compilation always bit by bit identical results</li>
+        <h2>Our solution</h2>
+        <ul class="fragment"><small>(we are still at step 1)</small>
+          <li class="fragment">Ensure compilation of the same source always has bit by bit identical results</li>
           <li class="fragment">Multiple parties compare compilation results</li>
           <li class="fragment">Attacker needs to infect everybody simultaneously (or they are detected)</li>
         </ul>
@@ -308,6 +300,14 @@ smoothen + shorten reproducible slides
           <li class="fragment">We think this should become the norm for free software.</li>
         </ul>
       </section>
+
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2 style="line-height: 130%;">
+          The motivation behind "reproducible" builds is to allow verification
+          that no flaws have been introduced during the compilation process.
+        </h2>
+      </section>
+
 
       <section data-background="images/debian.jpg" data-background-color="black">
         <h2>Reproducible builds in Debian</h2>
@@ -390,9 +390,9 @@ smoothen + shorten reproducible slides
         <h2>Future work</h2>
 
         <ul>
-          <li><code>.buildinfo</code> files distribution unsolved</li>
-          <li>How to make it meaningful for end-users</li>
-          <li>Source code still vulnerable</li>
+          <li><code>.buildinfo</code> files distribution unsolved <small>(step 2)</small></li>
+          <li>How to make it meaningful for end-users <small>(step 3)</small></li>
+          <li class="fragment">Source code still vulnerable</li>
         </ul>
       </section>
 

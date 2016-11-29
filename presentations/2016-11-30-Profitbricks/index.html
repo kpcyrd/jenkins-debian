@@ -60,19 +60,10 @@
 a bit of history
 	and jenkins
 
+jenkins general:
+	irc / mail notifications
+	-> bugs are getting filed
 
-chroot-installations
-	some hundred jobs
-	wheezy, jessie, stretch, sid
-	upgrades and new installs
-
-g-i
-	edu
-	d-i
-	rescue
-	hurd
-	kfreebsd
-	lvc
 
 d-i
 	packages
@@ -95,6 +86,13 @@ reproducible builds
 rebootstrap
 
 jenkins team maintenance
+	helmut: rebootstrap
+	mapreri + spectranaut: reproducible Debian
+	fil: lvc
+	tnn: jenkins java support
+	sthibault: hurd + accessibility
+	steven chamberlain: kfreebsd
+	several: reproducible other than Debian
 
 benefits for debian
 	countless bug reports
@@ -156,6 +154,31 @@ announce new nodes by codethink
           <li class="fragment">3 TB HDD storage</li>
           <li class="fragment">2 TB SDD storage</li>
           <li class="fragment">no static IP addresses</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	Package (collection) installation tests
+	</h2>
+        <ul>
+          <li class="fragment">FIXME:some hundred jobs</li>
+          <li class="fragment">wheezy, jessie, stretch, sid</li>
+          <li class="fragment">upgrades and new installations tested</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	g-i-installation tests
+	</h2>
+        <ul>
+          <li class="fragment">tests Debian Installer (d-i) in graphical mode ("g-i") and text mode too</li>
+          <li class="fragment">creates videos and screenshots</li>
+          <li class="fragment">plain Debian (installations and rescue mode) and Debian Edu</li>
+          <li class="fragment">kfreebsd and hurd</li>
+          <li class="fragment">finally almost deprecated today</li>
+          <li class="fragment">replaced by lvc tests (libvirt-cucumber)</li>
         </ul>
       </section>
 

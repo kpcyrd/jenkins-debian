@@ -189,9 +189,9 @@ announce new nodes by codethink
  	Package (collection) installation tests
 	</h2>
         <ul>
-          <li class="fragment">338 jobs</li>
-          <li class="fragment">wheezy (98), jessie (147), stretch (153), sid (98)</li>
-          <li class="fragment">upgrades and new installations tested</li>
+          <li>338 jobs</li>
+          <li>wheezy (98), jessie (147), stretch (153), sid (98)</li>
+          <li>upgrades and new installations tested</li>
         </ul>
       </section>
 
@@ -200,37 +200,42 @@ announce new nodes by codethink
  	g-i-installation tests
 	</h2>
         <ul>
-          <li class="fragment">tests Debian Installer (d-i) in graphical mode ("g-i") and text mode too</li>
-          <li class="fragment">creates videos and screenshots</li>
-          <li class="fragment">plain Debian (installations and rescue mode) and Debian Edu</li>
-          <li class="fragment">kfreebsd and hurd</li>
-          <li class="fragment">finally almost deprecated today</li>
-          <li class="fragment">replaced by lvc tests (libvirt-cucumber)</li>
+          <li>tests Debian Installer (d-i) in graphical mode ("g-i") and text mode too</li>
+          <li>creates videos and screenshots</li>
+          <li>plain Debian (installations and rescue mode) and Debian Edu</li>
+          <li>kfreebsd and hurd</li>
+          <li>finally almost deprecated today</li>
+          <li>replaced by lvc tests (libvirt-cucumber)</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	reproducible.debian.net
+	</h2>
+        <ul>
+          <li>created by 379 jobs on jenkins.debian.net</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	tests.reproducible-builds.org/debian/
+	</h2>
+        <ul>
+          <li>created by ~350 jobs on jenkins.debian.net </li>
         </ul>
       </section>
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>
- 	 Ressources used by reproducible.debian.net, by architecture
-	</h2>
+        <h2>The problem: why do we need reproducible builds?</h2>
         <ul>
-          <li class="fragment">FIXME: page is out of place here</li>
-          <li class="fragment">13 amd64 systems, sponsored by Profitbricks</li>
-          <li class="fragment">4 i386 systems, sponsored by Profitbricks</li>
-          <li class="fragment">22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
-          <li class="fragment">soon: 8 arm64 systems, sponsored by codethink.co.uk</li>
-        </ul>
-      </section>
-
-      <section data-background="images/install.jpg" data-background-size="80%" data-background-color="black">
-        <h2>The problem</h2>
-        <ul>
-          <li class="fragment">Can inspect the source code of free software for flaws</li>
+          <li class="fragment">One can inspect the source code of free software for flaws</li>
           <li class="fragment">But distributions provide binary/compiled packages</li>
         </ul>
       </section>
 
-      <section>
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Can we trust this process?</h2>
 
         <ul>
@@ -242,51 +247,29 @@ announce new nodes by codethink
         </ul>
       </section>
 
-      <section>
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2 style="line-height: 130%;">
           The motivation behind "reproducible" builds is to allow verification
           that no flaws have been introduced during the compilation process.
         </h2>
       </section>
 
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
       <section>
         <h2>The solution</h2>
 
-        <ol>
+        <ol>FIXME wordings
           <li class="fragment">Ensure compilation always identical results</li>
           <li class="fragment">Multiple parties compare compilation results</li>
           <li class="fragment">Attacker needs to infect everybody simultaneously (or they are detected)</li>
         </ol>
       </section>
 
-      <section>
-        <h2>Challenges</h2>
-        <ul>
-        <ul>
-          <li class="fragment">Timestamps</li>
-          <li class="fragment">Timezones &amp; locales</li>
-          <li class="fragment">Non-deterministic file ordering</li>
-          <li class="fragment">Dictionary/hash key ordering</li>
-          <li class="fragment">Users, groups, <code>umask</code>, environment variables</li>
-          <li class="fragment">Build paths</li>
-          <li class="fragment">Specifying the environment</li>
-        </ul>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Technical advantages</h2>
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2>We call this <em>Reproducible Builds</em>.</h2>
 
         <ul>
-        <ul>
-          <li class="fragment">Faster to build; saves time, money &amp; the environment</li>
-          <li class="fragment">Easier to test changes/revisions</li>
-          <li class="fragment">Unsafe behaviour (eg. internet access)</li>
-          <li class="fragment">Unreliable / non-deterministic behaviours (eg. timing)</li>
-          <li class="fragment">Finds bugs in uncommon timezones or locales</li>
-          <li class="fragment">Detect corrupted build environments</li>
-          <li class="fragment">Find future build failures (eg. expired certificates)</li>
-        </ul>
+          <li class="fragment">We think this should become the norm for free software.</li>
         </ul>
       </section>
 
@@ -297,69 +280,138 @@ announce new nodes by codethink
 
         <ul class="fragment">
           <ul>
-            <li class="fragment">Time &amp; date</li>
-            <li class="fragment">Hostname &amp; domain name</li>
-            <li class="fragment">Filesystem (<code><strike>disorderfs</strike></code>)</li>
-            <li class="fragment">Timezone &amp; locale</li>
-            <li class="fragment"><code>uid</code> &amp; <code>gid</code></li>
-            <li class="fragment">GECOS information, the shell &amp; a bunch of environment variables  </li>
-            <li class="fragment">Kernel &amp; CPU type</li>
-            <li class="fragment">and more&hellip;</li>
+            <li>Time &amp; date</li>
+            <li>Hostname &amp; domain name</li>
+            <li>Filesystem (<code><strike>disorderfs</strike></code>)</li>
+            <li>Timezone &amp; locale</li>
+            <li><code>uid</code> &amp; <code>gid</code></li>
+            <li>GECOS information, the shell &amp; a bunch of environment variables  </li>
+            <li>Kernel &amp; CPU type</li>
+            <li>and more&hellip;</li>
           </ul>
         </ul>
       </section>
 
-      <section data-background="images/testing_status.png">
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2>Challenges</h2>
+        <ul>
+        <ul>
+          <li>Timestamps</li>
+          <li>Timezones &amp; locales</li>
+          <li>Non-deterministic file ordering</li>
+          <li>Dictionary/hash key ordering</li>
+          <li>Users, groups, <code>umask</code>, environment variables</li>
+          <li>Build paths</li>
+          <li>Specifying the environment</li>
+        </ul>
+        </ul>
+      </section>
+
+      <section data-background="images/unstable_status.png" data-background-size="70%">
         &nbsp;
       </section>
 
-      <section data-background="images/stats_bugs_sin_ftbfs_state.png">
+      <section data-background="images/testing_status.png" data-background-size="70%">
         &nbsp;
       </section>
 
-      <section>
-        <h2>2016 summit meeting</h2>
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2>Technical advantages</h2>
 
         <ul>
-          <li>Three-day workshop in Berlin, Germany</li>
-          <li>Follow-up to Athens 2015 event</li>
+        <ul>
+          <li>Faster to build; saves time, money &amp; the environment</li>
+          <li>Easier to test changes/revisions</li>
+          <li>Unsafe behaviour (eg. internet access)</li>
+          <li>Unreliable / non-deterministic behaviours (eg. timing)</li>
+          <li>Finds bugs in uncommon timezones or locales</li>
+          <li>Detect corrupted build environments</li>
+          <li>Find future build failures (eg. expired certificates)</li>
         </ul>
+        </ul>
+      </section>
 
-        <br>
-        <br>
+      <section data-background="images/diffoscope.png" data-background-size="75%" data-background-position="50% 75%">
+       <p><!-- FIXME: this is horrible… -->
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+        <h2><code>https://try.diffoscope.org</code></h2>
+       </p>
+      </section>
 
-        <p style="text-align: center;">
-          <a href="https://reproducible-builds.org/events/berlin2016/"><code>reproducible-builds.org/events/berlin2016/</code></a>
-        </p>
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2>Future work</h2>
+
+        <ul>
+          <li><code>.buildinfo</code> files distribution unsolved</li>
+          <li>How to make it meaningful for end-users</li>
+          <li>Source code still vulnerable</li>
+        </ul>
+      </section>
+
+      <section data-background="images/stats_bugs_sin_ftbfs_state.png" data-background-size="70%">
+        &nbsp;
       </section>
 
       <section>
         <h2>Beyond Debian&hellip;</h2>
+        <p>
+          <img src="images/logos/archlinux.png">
+          <img src="images/logos/baserock.png">
+          <img src="images/logos/bitcoin.png">
+          <img src="images/logos/coreboot.png">
+          <img src="images/logos/debian.png">
+          <img src="images/logos/electrobsd.png">
+          <img src="images/logos/f-droid.png">
+          <img src="images/logos/fedora.png">
+          <img src="images/logos/freebsd.png">
+          <img src="images/logos/google.png">
+          <img src="images/logos/guix.png">
+          <img src="images/logos/lede.png">
+          <img src="images/logos/netbsd.png">
+          <img src="images/logos/nixos.png">
+          <img src="images/logos/openSUSE.png">
+          <img src="images/logos/openwrt.png">
+          <img src="images/logos/tails.png">
+          <img src="images/logos/tor.png">
+          <img src="images/logos/webconverger.png">
+          <ul>
+           <li class="fragment">Reproducible Builds summits (Athens 2015, Berlin 2016)</li>
+          </ul>
+         </p>
+      </section>
+
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
+        <h2>
+ 	 Ressources used by reproducible.debian.net, by architecture &amp; sponsor
+	</h2>
         <ul>
-          <li class="fragment">coreboot, Fedora, LEDE, OpenWRT, NetBSD, FreeBSD, Arch, Qubes, F-Droid, NixOS, Guix, etc.</li>
-          <li class="fragment">Other projects now using "our" testing framework, <code>SOURCE_DATE_EPOCH</code>, <code>.buildinfo</code> file concept</li>
-          <li class="fragment">Reproducible Builds summits (Athens, Berlin)</li>
-          <li class="fragment">Some challenges moving from <code>debian-</code> prefixes, mailing lists, etc.</li>
-          <li class="fragment">Generic tools</li>
-        </ul>
-      </section>
-
-      <section data-background="images/diffoscope.png">
-        &nbsp;
-      </section>
-
-      <section>
-        <h2>Future work</h2>
-
-        <ul class="fragment">
-          <li class="fragment">dak (<code>.buildinfo</code> file support)</li>
-          <li class="fragment">How to make it meaningful for end-users</li>
-          <li class="fragment">Source code still vulnerable</li>
+          <li>13 amd64 systems, sponsored by Profitbricks</li>
+          <li>4 i386 systems, sponsored by Profitbricks</li>
+          <li>22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
+          <li>soon: 8 arm64 systems, sponsored by codethink.co.uk</li>
         </ul>
       </section>
 
 
-      <section data-background-color="white">
+      <section data-background-color="white" data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Usual thanks:</h2>
         <p>
           <img src="images/cii.png">
@@ -372,12 +424,14 @@ announce new nodes by codethink
         </p>
       </section>
 
-      <section data-background="images/wholeworld.jpg" data-background-size="24%" data-background-position="90% 10%">
+      <section data-background="images/wholeworld.jpg" data-background-size="24%" data-background-position="92% 45%">
         <h2>Todays special thanks:</h2>
         <p>
           <img src="images/profitbricks.jpg">
-	  <br>
-          from Debian and from all folks interested in Reproducible Builds!
+	  <ul>
+            <li>from Debian, jenkins.debian.net would not have been possible like this without <em>your support!</em></li>
+            <li>from many many folks interested in Reproducible Builds</li>
+          </ul>
         </p>
       </section>
 

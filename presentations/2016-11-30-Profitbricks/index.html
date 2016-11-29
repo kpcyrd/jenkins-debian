@@ -198,13 +198,13 @@ smoothen + shorten reproducible slides
           <li>plain Debian (installations and rescue mode) and Debian Edu</li>
           <li>jessie, stretch and sid</li>
           <li>linux, kfreebsd and hurd</li>
-          <li>finally almost deprecated today, will be replaced by lvc tests (libvirt-cucumber)</li>
+          <li>finally almost deprecated today, will be replaced by lvc tests (libvirt-cucumber) maintained by Phil Hands</li>
         </ul>
       </section>
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	more debian-installer related jobs on jenkins.debian.net:
+ 	more debian-installer related jobs:
 	</h2>
         <ul>
                   <li>97 packages (building udebs) triggered by commits to their git master branches</li>
@@ -286,7 +286,7 @@ smoothen + shorten reproducible slides
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Our solution</h2>
-        <ul class="fragment"><small>(we are still at step 1)</small>
+        <ul class="fragment"><small>(we are still at step 1 here)</small>
           <li class="fragment">Ensure compilation of the same source always has bit by bit identical results</li>
           <li class="fragment">Multiple parties compare compilation results</li>
           <li class="fragment">Attacker needs to infect everybody simultaneously (or they are detected)</li>
@@ -328,6 +328,25 @@ smoothen + shorten reproducible slides
         </ul>
       </section>
 
+      <section data-background="images/diffoscope.png" data-background-size="75%" data-background-position="50% 50%">
+       <p><!-- FIXME: this is horrible… -->
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+         &nbsp;<br />
+        <h2><code>https://try.diffoscope.org</code></h2>
+       </p>
+      </section>
+
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Challenges</h2>
         <ul>
@@ -367,24 +386,11 @@ smoothen + shorten reproducible slides
         </ul>
       </section>
 
-      <section data-background="images/diffoscope.png" data-background-size="75%" data-background-position="50% 50%">
-       <p><!-- FIXME: this is horrible… -->
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-        <h2><code>https://try.diffoscope.org</code></h2>
-       </p>
+
+      <section data-background="images/stats_bugs_sin_ftbfs_state.png" data-background-size="100%">
+        &nbsp;
       </section>
+
 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Future work</h2>
@@ -394,10 +400,6 @@ smoothen + shorten reproducible slides
           <li>How to make it meaningful for end-users <small>(step 3)</small></li>
           <li class="fragment">Source code still vulnerable</li>
         </ul>
-      </section>
-
-      <section data-background="images/stats_bugs_sin_ftbfs_state.png" data-background-size="100%">
-        &nbsp;
       </section>
 
       <section>

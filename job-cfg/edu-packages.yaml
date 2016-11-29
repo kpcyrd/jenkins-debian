@@ -58,7 +58,4 @@
            my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
         - 'guacamole-server':
            my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
-        - 'italc':
-           my_url: 'git://git.debian.org/git/debian-edu/pkg-team/{my_package}.git'
-           my_shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} gbp buildpackage -uc -us'
     jobs: ['{name}_{my_distro}_{my_package}']

@@ -67,49 +67,18 @@ jenkins general:
 	#debian-qa irc channel
 	debian-qa efforts "distributed"…
 
+benefits for debian
+	countless bug reports
+		ie 2670 done ftbfs via reproducible… (and 500 open…)
+	early notifications of problems
+	will become an offical service, jenkins.d.o
+
 other qa efforts
 	lintian.debian.org
 	ci.debian.net
 	periodic full archive rebuilds (amd64 only)
 
-d-i
-	packages
-	manual
-
-lintian
-debhelper
-debconf-video
-
-debian-edu
-	images
-	packages
-	doc (!) 7 languages
-
-reproducible builds 
-	Debian, explain variations!
-	/who/
-	and qa
-	and ximin (pb17)
-rebootstrap
-
-jenkins team maintenance
-	helmut: rebootstrap
-	mapreri + spectranaut: reproducible Debian
-	fil: lvc
-	tnn: jenkins java support
-	sthibault: hurd + accessibility
-	steven chamberlain: kfreebsd
-	several: reproducible other than Debian
-
-benefits for debian
-	countless bug reports
-		ie 2670 done ftbfs via reproducible…
-	early notifications of problems
-
-benefiting teams: haskell…
-
-announce move to j.d.o
-announce new nodes by codethink
+smoothen + shorten reproducible slides
 
 -->
 
@@ -119,25 +88,24 @@ announce new nodes by codethink
     <div class="slides" style="text-align: left;">
       <section data-background="images/debian_logo.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	jenkins.debian.net or what is Debian doing with all these ressources
+ 	about <code>jenkins.debian.net</code> - or what is Holger / Debian doing with all these ressources
 	</h2>
-	<p>(Automate all the tests!)</p>
+	<p>(Automating all the tests!)</p>
         <h4>
           <br>
-          Holger Levsen (h01ger)
+          Holger Levsen &lt;holger@debian.org&gt;
         </h4>
       </section>
 
       <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
         <h2>about me</h2>
         <ul class="fragment">
-          <li>Debian user since 1995</li>
-          <li>Debian contributor since 2001</li>
+          <li>Debian user since 1995, contributing since 2001</li>
+          <li>Debian-Edu (Debian for Education), since 2003</li>
           <li>DebConf organizer, founded the DebConf video team in 2005</li>
           <li>Debian developer since 2007, <code>holger@debian.og</code></li>
-          <li>Debian-Edu (Debian for Education), since 2003</li>
-          <li>Debian-QA</li>
-          <li>Freelancer at Profitbricks from 2012-2015</li>
+          <li>Freelancer since 2004, <code>holgerlevsen.de</code></li>
+          <li>Freelancer at Profitbricks from 2011-2013 and 2015</li>
         </ul>
       </section>
 
@@ -184,15 +152,16 @@ announce new nodes by codethink
  	jenkins.debian.net contributors:
 	</h2>
         <ul>
-           <li>Phil Hands: lvc</li>
+           <li>Mattia Rizzolo, Valerie Young and others: reproducible Debian</li>
            <li>Helmut Grohne: rebootstrap</li>
            <li>Samuel Thibault: hurd + accessibility</li>
            <li>Steven Chamberlain: kfreebsd</li>
+           <li>Phil Hands: lvc</li>
            <li>Tomasz Nitecki: jenkins java support</li>
-           <li>Mattia Rizzolo, Valerie Young and others: reproducible Debian</li>
 	   <li class="fragment">36 contributors to <code>jenkins.debian.net.git</code> in total</li>
         </ul>
       </section>
+
 
       <section data-background="images/debian.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -209,12 +178,13 @@ announce new nodes by codethink
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	Package (collection) installation tests
+ 	chroot-installation tests
 	</h2>
         <ul>
-          <li>338 jobs</li>
-          <li>wheezy (98), jessie (147), stretch (153), sid (98)</li>
-          <li>upgrades and new installations tested</li>
+          <li>338 jobs basically running <code>apt install $metapackages</code><br />
+           (gnome, kde, cinnamon, lxde, xfce, qt4, qt5, haskell, developer, debconf-video, debian-edu)</li>
+          <li>new installations and upgrades tested in <br />
+           wheezy (98), jessie (147), stretch (153), sid (98)</li>
         </ul>
       </section>
 
@@ -223,14 +193,65 @@ announce new nodes by codethink
  	g-i-installation tests
 	</h2>
         <ul>
-          <li>tests Debian Installer (d-i) in graphical mode ("g-i") and text mode too</li>
+          <li>tests Debian Installer (d-i) in graphical mode ("g-i") and text mode</li>
           <li>creates videos and screenshots</li>
           <li>plain Debian (installations and rescue mode) and Debian Edu</li>
-          <li>kfreebsd and hurd</li>
-          <li>finally almost deprecated today</li>
-          <li>replaced by lvc tests (libvirt-cucumber)</li>
+          <li>jessie, stretch and sid</li>
+          <li>linux, kfreebsd and hurd</li>
+          <li>finally almost deprecated today, will be replaced by lvc tests (libvirt-cucumber)</li>
         </ul>
       </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	more debian-installer related jobs on jenkins.debian.net:
+	</h2>
+        <ul>
+                  <li>FIXME 78 packages (building udebs) triggered by commits to their git master branches</li>
+                  <li>manual in several/FIXME languages, also git triggered</li>
+                  <li>lvc and d-i from proposed branches planned</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	$amount/FIXME debian-edu jobs on jenkins.debian.net:
+	</h2>
+        <ul>
+           <li>
+            g-i tests for jessie and stretch
+           </li>
+           <li>
+            six debian-edu packages build triggerd by commits on their git master branches
+           </li>
+           <li>
+            very useful for debian-edu-doc which is published for 7 languages in HTML, PDF &amp; EPUB format.
+           </li>
+        </ul>
+      </section>
+
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	more QA:
+	</h2>
+        <ul>
+          <li>debian-qa
+                <ul>
+		  <li>orphaned packages without bug</li>
+                  <li>dpkg trigger cycles</li> 
+                  <li>lintian, debhelper and piuparts are build on git commits in jessie, stretch and unstable</li>
+                </ul>
+           </li>
+           <li>
+                rebootstrap - Helmut Grohne files lots of cross-building and bootstrapping bugs
+           </li>
+           <li>
+         	reproducible-builds.org - "btw": over 2600 'FTBFS' bugs found and fixed so far, ~400 open…
+           </li>
+        </ul>
+      </section>
+
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -448,7 +469,7 @@ announce new nodes by codethink
 
       <section data-background-color="white" data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Usually I thank:</h2>
-        <p>
+        <p style="text-align: center;">
           <img src="images/cii.png">
           <br>
           <img src="images/lf.png">
@@ -461,7 +482,7 @@ announce new nodes by codethink
 
       <section data-background="images/wholeworld.jpg" data-background-size="28%" data-background-position="99% 2%">
         <h2>Todays special thanks:</h2>
-        <p>
+        <p style="text-align: center;">
           <img src="images/profitbricks.jpg">
 	  <ul>
             <li>from Debian, <code>jenkins.debian.net</code> would not have been possible like this without <em>your support!</em></li>

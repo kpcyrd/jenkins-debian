@@ -77,6 +77,10 @@ jenkins general:
 	#debian-qa irc channel
 	debian-qa efforts "distributed"…
 
+other qa efforts
+	lintian.debian.org
+	ci.debian.net
+	periodic full archive rebuilds (amd64 only)
 
 d-i
 	packages
@@ -112,6 +116,8 @@ benefits for debian
 		ie 2670 done ftbfs via reproducible…
 	early notifications of problems
 
+benefiting teams: haskell…
+
 announce move to j.d.o
 announce new nodes by codethink
 
@@ -125,6 +131,7 @@ announce new nodes by codethink
         <h2>
  	jenkins.debian.net or what is Debian doing with all these ressources
 	</h2>
+	<p>(Automate all the tests!)</p>
         <h4>
           <br>
           Holger Levsen (h01ger)
@@ -147,7 +154,7 @@ announce new nodes by codethink
       <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
         <h2>more about Debian QA and me</h2>
         <ul class="fragment">
-          <li class="fragment"><code>https://piuparts.debian.org</code> since 2009, has 42324234 logs from &gt;=53158 packages in 28 suites</li>
+          <li class="fragment"><code>https://piuparts.debian.org</code> since 2009, has 624234 logs from 53158 packages in 28 suites</li>
           <li class="fragment"><code>https://jenkins.debian.net</code> since 2012</li>
           <li class="fragment"><code>https://reproducible.debian.net</code> since 2014</li>
           <li class="fragment">since 2015 funded by the Linux Foundation for working on <code>https://reproducible-builds.org</code></li>
@@ -158,11 +165,27 @@ announce new nodes by codethink
         <h2>
  	about jenkins.debian.net
 	</h2>
+	<p>ressources sponsored by Profitbricks since 2012</p>
       </section>
 
       <section data-background="images/jenkins_jobs-year.png" data-background-size="60%">
         &nbsp;
       </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	Profitbricks ressources used by jenkins.debian.net
+	</h2>
+        <ul>
+          <li>17 machines (16*Debian, 1*FreeBSD, 13*64bit, 4*32bit)<br />
+          in 2 datacenters (FKB + FRA)</li>
+          <li>168 cores (148 AMD, 20 Intel) with 498/503 GB RAM</li>
+          <li>2.9/3.1 TB HDD and 1.9/2 TB SDD storage</li>
+          <li>no static IP addresses, no idea about traffic (500gb/month?)</li>
+          <li class="fragment">2 DCD users: Mattia Rizzolo and me</li>
+        </ul>
+      </section>
+
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -177,21 +200,6 @@ announce new nodes by codethink
            <li>Mattia Rizzolo, Valerie Young and others: reproducible Debian</li>
            <li>several: reproducible other than Debian</li>
 	   <li class="fragment">36 contributors to jenkins.debian.net.git in total</li>
-        </ul>
-      </section>
-
-      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
-        <h2>
- 	Profitbricks ressources used by jenkins.debian.net
-	</h2>
-        <ul>
-          <li>2 datacenters (FKB + FRA)</li>
-          <li>17 machines (16*Debian, 1*FreeBSD, 13*64bit, 4*32bit)</li>
-          <li>168 cores (148 AMD, 20 Intel)</li>
-          <li>498/503 GB RAM</li>
-          <li>2.9/3.1 TB HDD and 1.9/2 TB SDD storage</li>
-          <li>no static IP addresses</li>
-          <li class="fragment">2 DCD users: Mattia Rizzolo and me</li>
         </ul>
       </section>
 
@@ -399,6 +407,26 @@ announce new nodes by codethink
           <img src="images/logos/webconverger.png">
            <div class="fragment">Reproducible Builds summits (Athens 2015, Berlin 2016)</li>
           </div>
+         </p>
+      </section>
+
+      <section>
+        <h2>Projects using Profitbricks ressources via jenkins.debian.net</h2>
+        <p>works:
+          <img src="images/logos/coreboot.png">
+          <img src="images/logos/debian.png">
+          <img src="images/logos/freebsd.png">
+          <img src="images/logos/lede.png">
+          <img src="images/logos/netbsd.png">
+          <img src="images/logos/openwrt.png">
+         </p>
+        <p>worked:
+          <img src="images/logos/archlinux.png">
+          <img src="images/logos/fedora.png">
+         </p>
+        <p>work in progress:
+          <img src="images/logos/f-droid.png">
+          <img src="images/logos/guix.png">
          </p>
       </section>
 

@@ -243,14 +243,22 @@ other qa efforts
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
+	rebootstrap:
+	</h2>
+		<ul>
+			<li>Cross bootstrap Debian from scratch… </li>
+			<li> alpha arm64 arm64ilp32 armel armhf hppa hurd-amd64 hurd-i386 i386 kfreebsd-amd64 kfreebsd-armhf kfreebsd-i386 m68k mips mips64el mips64r6el mipsel mipsr6el musl-linux-arm64 musl-linux-armhf musl-linux-i386 musl-linux-mips musl-linux-mipsel nios2 powerpc powerpcel powerpcspe ppc64 ppc64el s390x sh4 sparc sparc64 tilegx x32</li>
+			<li> Helmut Grohne files lots of cross-building and bootstrapping bugs.</li>
+		</ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
  	more debian-qa related jobs:
 	</h2>
 		  <li>orphaned packages without bug</li>
                   <li>dpkg trigger cycles</li> 
                   <li>lintian, debhelper and piuparts are build on git commits in jessie, stretch and unstable</li>
-           <li>
-                rebootstrap - Helmut Grohne files lots of cross-building and bootstrapping bugs
-           </li>
            <li>
          	reproducible-builds.org - "btw": over 2600 'FTBFS' bugs found and fixed so far, ~400 open…
            </li>

@@ -105,11 +105,21 @@ queries = {
         ),
     "reproducible_last24h":
         select_sources.where(
-            results.c.build_date > timespan_date_map[24]
+            and_(
+                results.c.status == 'reproducible',
+                results.c.build_date > timespan_date_map[24],
+            )
+        ).order_by(
+            desc(results.c.build_date)
         ),
     "reproducible_last48h":
         select_sources.where(
-            results.c.build_date > timespan_date_map[48],
+            and_(
+                results.c.status == 'reproducible',
+                results.c.build_date > timespan_date_map[48],
+            )
+        ).order_by(
+            desc(results.c.build_date)
         ),
     "reproducible_all_abc":
         select_sources.where(

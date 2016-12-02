@@ -31,7 +31,7 @@ for i in reproducible unreproducible FTBFS other ; do
 done
 FIELDS[2]="datum, oldest"
 FIELDS[3]="datum "
-for STATE in open_ done_ ; do
+for STATE in done_ open_ ; do
 	for TAG in $USERTAGS ; do
 		# for this table (#3) bugs with ftbfs tags are ignored _now_…
 		if [ "$TAG" = "ftbfs" ] ; then
@@ -55,7 +55,7 @@ done
 SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
 FIELDS[8]="datum "
-for STATE in open_ done_ ; do
+for STATE in done_ open_ ; do
 	for TAG in $USERTAGS ; do
 		if [ "$TAG" = "ftbfs" ] ; then
 			continue

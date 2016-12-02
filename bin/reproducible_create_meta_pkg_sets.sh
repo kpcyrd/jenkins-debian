@@ -225,9 +225,10 @@ update_pkg_set_specific() {
 		installed_on_debian.org)
 			# installed on one or more .debian.org machines
 			# one day we will get a proper data provider from DSA...
-			# (so far it was a manual "dpkg --get-selections" on all machines
-			# converted into a list of source packages...)
+			# currently we get a manual "dpkg --get-selections" from all machines
 			cat /srv/jenkins/bin/reproducible_installed_on_debian.org > $TMPFILE
+			packages_list_to_deb822
+			convert_from_deb822_into_source_packages_only
 			;;
 		had_a_DSA)
 			# packages which had a DSA

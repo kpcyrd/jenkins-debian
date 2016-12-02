@@ -48,6 +48,11 @@
           #        format: csv
           #        # inclusion-flag: include-by-string
           #        # exclude: total
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     scm:
       - git:
           url: 'git://anonscm.debian.org/pkg-haskell/package-plan.git'

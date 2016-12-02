@@ -33,6 +33,11 @@
     publishers:
       - email:
           recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
 
 - job-template:

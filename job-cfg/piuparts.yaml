@@ -34,6 +34,11 @@
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - trigger:
           project: '{my_trigger}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -45,6 +50,11 @@
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - trigger:
           project: '{my_trigger}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -59,6 +69,11 @@
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - trigger:
           project: '{my_trigger}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -71,6 +86,11 @@
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
           latest-only: true
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -85,6 +105,11 @@
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
           latest-only: true
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
@@ -99,6 +124,11 @@
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
           latest-only: true
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 

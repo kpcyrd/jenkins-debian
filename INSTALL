@@ -43,6 +43,7 @@ We would prefer to run a jenkins package from jessie-backports.
 * Console Column Plugin
 * Priority Sorter Plugin
 * Throttle Concurrent Builds Plugin
+* Naginator Plugin
 * Next Executions
 * Parameterized Trigger plugin
 * Environment Injector Plugin

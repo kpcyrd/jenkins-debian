@@ -58,6 +58,11 @@
       - logparser: *logparse
       - email:
           recipients: '{my_recipients}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     scm:
       - git:
           url: '{my_gitrepo}'
@@ -208,6 +213,11 @@
           fail-on-error: 'true'
       - email:
           recipients: '{my_recipients}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     scm:
       - git:
           url: '{my_gitrepo}'

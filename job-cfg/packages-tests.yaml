@@ -33,7 +33,11 @@
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org {my_recipients}'
       - trigger:
           project: '{my_trigger}'
-
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
 - job-template:
     defaults: packages-tests

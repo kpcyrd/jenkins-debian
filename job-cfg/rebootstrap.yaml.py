@@ -80,6 +80,11 @@ print("""
     publishers:
       - email:
           recipients: 'jenkins+debian-bootstrap helmutg@debian.org'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     triggers:
       - pollscm:
           cron: '*/6 * * * *'

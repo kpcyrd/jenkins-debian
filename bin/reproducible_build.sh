@@ -100,7 +100,7 @@ save_artifacts() {
 }
 
 cleanup_all() {
-	log_info "Starting cleanup."
+	echo "Starting cleanup."
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts
 	elif [ ! -z "$NOTIFY" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
@@ -114,7 +114,7 @@ cleanup_all() {
 		cd
 		rm -r $TMPDIR || true
 	fi
-	log_info "All cleanup done."
+	echo "All cleanup done."
 }
 
 update_db_and_html() {

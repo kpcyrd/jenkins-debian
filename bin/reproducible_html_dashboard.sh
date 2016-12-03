@@ -62,7 +62,7 @@ for STATE in done_ open_ ; do
 		fi
 		FIELDS[8]="${FIELDS[8]}, ${STATE}$TAG"
 	done
-	FIELDS[8]="${FIELDS[8]}, ${STATE}ftbfs"
+	# ftbfs bugs are excluded from 8+9
 done
 FIELDS[9]="datum, done_bugs, open_bugs"
 REPRODUCIBLE_DONE="(0"

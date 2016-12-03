@@ -78,7 +78,7 @@ issue = scheduling_args.issue
 status = scheduling_args.status
 built_after = scheduling_args.after
 built_before = scheduling_args.before
-packages = set(x for x in scheduling_args.packages if x)
+packages = [x for x in scheduling_args.packages if x]
 artifacts = scheduling_args.keep_artifacts
 notify = scheduling_args.notify or scheduling_args.noisy
 notify_on_start = scheduling_args.noisy
@@ -163,7 +163,7 @@ query1 = """SELECT id FROM sources WHERE name='{pkg}' AND suite='{suite}'
 query2 = """SELECT p.date_build_started
             FROM sources AS s JOIN schedule as p ON p.package_id=s.id
             WHERE p.package_id='{id}'"""
-for pkg in packages:
+for pkg in set(packages):
     # test whether the package actually exists
     result = query_db(query1.format(pkg=pkg, suite=suite, arch=arch))
     # tests whether the package is already building

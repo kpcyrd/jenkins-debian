@@ -64,6 +64,7 @@ all_targets = [
    'education-language',
    'education-laptop',
    'education-logic-games',
+   'education-ltsp-server',
    'education-main-server',
    'education-mathematics',
    'education-misc',
@@ -85,7 +86,13 @@ def is_target_in_distro(distro, target):
          if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' or target == 'qt5' or target == 'debconf-video' ):
              return False
          # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid - it's also not yet available in stretch again...
-         if (distro == 'sid' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-desktop-sugar' ):
+         elif (distro == 'sid' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-desktop-sugar' ):
+             return False
+        # education-ltsp-server has just been introduced in sid…
+         elif (distro == 'wheezy' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-ltsp-server' ):
+             return False
+        # education-thin-client-server will become obsolete in stretch…
+         elif (distro == 'sid') and ( target == 'education-thin-client-server' ):
              return False
          return True
 

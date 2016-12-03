@@ -424,6 +424,11 @@ call_diffoscope_on_changes_files() {
 			dbd_timeout $TIMEOUT
 			;;
 		*)
+			# Process killed by signal exits with 128+${signal number}.
+			# 31 = SIGSYS = maximum signal number in signal(7)
+			if (( $RESULT > 128 )) && (( $RESULT <= 128+31 )); then
+				RESULT="$RESULT (SIG$(kill -l $(($RESULT - 128))))"
+			fi
 			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
 			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $RBUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;

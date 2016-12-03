@@ -67,7 +67,7 @@ report_old_directories() {
 		OLDSTUFF=$(find $1/* -maxdepth 0 -type d -mtime +$2 ! -path "$3*" -exec ls -lad {} \;)
 	fi
 	if [ ! -z "$OLDSTUFF" ] ; then
-		echo "Warning: old temp directories found in $REP_RESULTS"
+		echo "Warning: old temp directories found in $1"
 		echo
 		echo "$OLDSTUFF"
 		echo "Please cleanup manually."

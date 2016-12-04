@@ -126,6 +126,7 @@ if [ "$VALID_MAIL" = "true" ] ; then
 		MESSAGE="$(echo $MESSAGE | sed -s 's# See # #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#/changes$##') "
 		# log message
 		echo "Notified #$CHANNEL with $MESSAGE" >> $LOGFILE
 		# notify kgb

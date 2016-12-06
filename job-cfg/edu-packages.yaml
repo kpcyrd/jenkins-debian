@@ -57,6 +57,8 @@
         - 'debian-edu-config'
         - 'debian-edu-doc'
         - 'debian-edu-install'
+        - 'italc':
+           my_url: 'git://git.debian.org/git/debian-edu/pkg-team/{my_package}.git'
         - 'sitesummary':
            my_url: 'git://git.debian.org/git/debian-edu/upstream/{my_package}.git'
         - 'guacamole-client':

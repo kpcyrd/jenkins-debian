@@ -105,4 +105,4 @@ Feature: Doing variations on d-i installs
     And I power off the computer
     And the computer is set to boot from ide drive
     When I start the computer
-    Then I should see a Gnome Login prompt
+    Then I should see a VT_Edu Login prompt

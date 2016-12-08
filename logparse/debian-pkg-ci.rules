@@ -22,6 +22,7 @@ ok /pytest-warning/
 ok /gbp:warning: Pristine-tar branch "pristine-tar" not found/
 ok /perl: warning: Please check that your locale settings:/
 ok /perl: warning: Falling back to the standard locale/
+ok /perl: warning: Setting locale failed./
 
 # suppress warnings from commit messages
 ok /HEAD is now at .+/

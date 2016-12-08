@@ -727,6 +727,7 @@ check_nodes_are_up() {
 remote_build() {
 	local BUILDNR=$1
 	local NODE=$2
+	log_info "Preparing to do remote build '$BUILDNR' on $NODE."
 	get_node_ssh_port $NODE
 	# sleep 15min if first node is down
 	# but 1h if the 2nd node is down

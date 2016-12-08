@@ -553,6 +553,12 @@ get_source_package() {
 		fi
 	fi
 	VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
+
+	if [ "$MODE" != master -a "$VERSION" != "$EXPECTED_VERSION" ]; then
+		echo "Expected version $EXPECTED_VERSION for source package $SRCPACKAGE ($SUITE/$ARCH) but got $VERSION! Aborting."
+		exit 100
+	fi
+
 	EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION is too long
 	DBDREPORT="${SRCPACKAGE}_${EVERSION}.diffoscope.html"
 	DBDTXT="${SRCPACKAGE}_${EVERSION}.diffoscope.txt"
@@ -734,11 +740,17 @@ remote_build() {
 	local SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*15"|bc)
 	check_node_is_up $NODE $PORT $SLEEPTIME
 	set +e
-	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR}
+	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR} "$VERSION"
 	RESULT=$?
 	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
 	if [ $RESULT -eq 148 ] ; then
 		handle_404
+	elif [ $RESULT -eq 100 ] ; then
+		log_error "Version mismatch between main node and build $BUILDNR, aborting. Please upgrade the schroots..."
+		# reschedule the package for later and quit the build without saving anything
+		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL, date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
+		NOTIFY=""
+		exit 0
 	elif [ $RESULT -ne 0 ] ; then
 		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
 	fi
@@ -830,13 +842,7 @@ build_rebuild() {
 	mkdir b1 b2
 	log_info "Starting 1st build on remote node $NODE1."
 	remote_build 1 $NODE1
-	if [ ! -f b1/$CHANGES ] && [ -f b1/${SRCPACKAGE}_*_${ARCH}.changes ] ; then
-			log_error "Version mismatch between main node (${SRCPACKAGE}_${EVERSION}_${ARCH}.dsc expected) and first build node ($(ls b1/*dsc)) for $SUITE/$ARCH, aborting. Please upgrade the schroots..."
-			# reschedule the package for later and quit the build without saving anything
-			query_db "UPDATE schedule SET date_build_started = NULL, job = NULL, date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
-			NOTIFY=""
-			exit 0
-	elif [ -f b1/$CHANGES ] ; then
+	if [ -f b1/$CHANGES ] ; then
 		log_info "1st build successful. Starting 2nd build on remote node $NODE2."
 		remote_build 2 $NODE2
 		if [ -f b2/$CHANGES ] ; then
@@ -877,6 +883,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	ARCH="$(dpkg --print-architecture)"
 	SAVE_ARTIFACTS="0"
 	TMPDIR="$4"
+	EXPECTED_VERSION="$5"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	get_source_package

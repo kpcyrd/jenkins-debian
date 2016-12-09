@@ -17,7 +17,7 @@ REP_RESULTS=/srv/reproducible-results
 
 # query reproducible database, print output
 query_to_print() {
-	printf ".width 0 25 \n $@ ; " | sqlite3 -init $INIT -header -column ${PACKAGES_DB}
+	printf ".width 0 25 \n %s ; " "$1" | sqlite3 -init $INIT -header -column ${PACKAGES_DB}
 }
 
 # backup db

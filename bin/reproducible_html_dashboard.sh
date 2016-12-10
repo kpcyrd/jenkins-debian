@@ -86,7 +86,6 @@ COLOR[5]=1
 COLOR[7]=2
 COLOR[8]=30
 COLOR[9]=2
-MAINLABEL[1]="Amount of packages built each day"
 MAINLABEL[3]="Bugs (with all usertags) for user reproducible-builds@lists.alioth.debian.org"
 MAINLABEL[4]="Packages which have notes"
 MAINLABEL[5]="Identified issues"
@@ -620,6 +619,7 @@ create_performance_page() {
 	# arch performance stats
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
+		MAINLABEL[1]="Amount of packages built each day on '$ARCH'"
 		write_page " <a href=\"/debian/${TABLE[1]}_$ARCH.png\"><img src=\"/debian/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
 		if [ ! -f $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] ; then
 				create_png_from_table 1 ${TABLE[1]}_$ARCH.png

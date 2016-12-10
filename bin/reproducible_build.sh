@@ -258,7 +258,7 @@ handle_ftbfs() {
 		done
 		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
 		# ignore syslinux, which is a false positive…
-		if zgrep -e "No space left on device" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" && [ "SRCPACKAGE" != "syslinux" ] ; then
+		if zgrep -e "No space left on device" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" && [ "$SRCPACKAGE" != "syslinux" ] ; then
 			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue on $node. Please check, tune handle_ftbfs() and reschedule the package."
 			echo $MESSAGE | tee -a /var/log/jenkins/reproducible-diskspace-issues.log
 			irc_message debian-reproducible "$MESSAGE"

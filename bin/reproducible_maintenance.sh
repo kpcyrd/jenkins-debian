@@ -408,7 +408,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 		if [ -s $PROBLEM ] ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			mv $PROBLEM $TMPFILE
-			( echo "A few entries per day are normal, a few dozens or hundreds probably not." ; echo ; echo "$(cat $TMPFILE | wc -l) lines." ; cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
+			( echo "A few entries per day are normal, a few dozens or hundreds probably not." ; echo ; echo "$(grep -c https $TMPFILE || true) entries found." ; cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
 			rm -f $TMPFILE
 		fi
 	done

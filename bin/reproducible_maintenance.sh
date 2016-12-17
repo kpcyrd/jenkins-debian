@@ -409,7 +409,11 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			mv $PROBLEM $TMPFILE
 			( echo "A few entries per day are normal, a few dozens or hundreds probably not."
-			  echo "$(egrep -c '(https://|stale\ builds\ found)' $TMPFILE || true) entries found:"
+			  if grep -q https $TMPFILE ; then
+				  echo "$(grep -c https $TMPFILE) entries found:"
+			  else
+				  echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
+			  fi
 			  echo
 			  cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
 			rm -f $TMPFILE

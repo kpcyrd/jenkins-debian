@@ -8,6 +8,22 @@ common_cleanup() {
 	rm -f $TTT
 }
 
+abort_if_bug_is_still_open() {
+	local TMPFILE=$(mktemp --tmpdir=/tmp jenkins-bugcheck-XXXXXXX)
+	bts status $1 fields:done > $TMPFILE || true
+	# if we get a valid response…
+	if [ ! -z "$(grep done $TMPFILE)" ] ; then
+		# if the bug is not done (by some email address containing a @)
+		if [ -z "$(grep "@" $TMPFILE)" ] ; then
+			rm $TMPFILE
+			echo "https://bugs.debian.org/$1 is still open, aborting this job."
+			exec /srv/jenkins/bin/abort.sh
+			exit 0
+		fi
+	fi
+	rm $TMPFILE
+}
+
 #
 # run ourself with the same parameter as we are running
 # but run a copy from /tmp so that the source can be updated
@@ -23,6 +39,12 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		echo "Do not run this as root."
 		exit 1
 	fi
+	# abort certain jobs if we know they will fail due to certain bugs…
+	case $JOB_NAME in
+		edu-packages_sid*|lintian-tests_sid)
+			abort_if_bug_is_still_open 848422 ;;
+		*) ;;
+	esac
 	# mktemp some place for us...
 	TTT=$(mktemp --tmpdir=/tmp jenkins-script-XXXXXXXX)
 	# prepare cleanup

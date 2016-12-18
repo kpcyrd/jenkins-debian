@@ -53,6 +53,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	case $JOB_NAME in
 		lintian-tests_sid)
 			abort_if_bug_is_still_open 848422 ;;
+		haskell-package-plan)
+			abort_if_bug_is_still_open 848422 ;;
 		edu-packages_sid*)
 			abort_if_bug_is_still_open 848422 ;;
 		chroot-installation_sid_install_education*)

@@ -16,7 +16,15 @@ abort_if_bug_is_still_open() {
 		# if the bug is not done (by some email address containing a @)
 		if [ -z "$(grep "@" $TMPFILE)" ] ; then
 			rm $TMPFILE
-			echo "https://bugs.debian.org/$1 is still open, aborting this job."
+			echo "########################################################################"
+			echo "#                                                                      #"
+			echo "#  https://bugs.debian.org/$1 is still open, aborting this job.   #"
+			echo "#                                                                      #"
+			echo "########################################################################"
+			echo
+			echo
+			echo
+			echo
 			exec /srv/jenkins/bin/abort.sh
 			exit 0
 		fi

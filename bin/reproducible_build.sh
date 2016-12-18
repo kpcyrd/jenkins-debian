@@ -335,11 +335,11 @@ handle_remote_error() {
 
 handle_enospace() {
 	unregister_build
-	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 30m."
+	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 60m."
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$JOB on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
-	echo "Sleeping 2h before aborting the job."
-	sleep 2h
+	echo "Sleeping 60m before aborting the job."
+	sleep 60m
 	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }

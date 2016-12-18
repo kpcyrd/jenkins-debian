@@ -51,7 +51,13 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	fi
 	# abort certain jobs if we know they will fail due to certain bugs…
 	case $JOB_NAME in
-		edu-packages_sid*|chroot-installation_sid_install_education*|lintian-tests_sid)
+		lintian-tests_sid)
+			abort_if_bug_is_still_open 848422 ;;
+		edu-packages_sid*)
+			abort_if_bug_is_still_open 848422 ;;
+		chroot-installation_sid_install_education*)
+			abort_if_bug_is_still_open 848422 ;;
+		chroot-installation_stretch_install_education-*_upgrade_to_sid)
 			abort_if_bug_is_still_open 848422 ;;
 		*) ;;
 	esac

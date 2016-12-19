@@ -149,29 +149,29 @@
   <li {{#bugs}}class='active'{{/bugs}}>
     <a href="/debian/index_bugs.html">Bugs filed</a>
   </li>
-  <li {{#repositories}}class='active'{{/repositories}}>
-    <a href="/debian/index_repositories.html">
-      Repositories overview
-    </a>
+  <li {{#variations}}class='active'{{/variations}}>
+    <a href="/debian/index_variations.html">Variations tested</a>
   </li>
   <li {{#notify}}class='active'{{/notify}}>
     <a href="/debian/index_notify.html" title="notify icon">
       Packages with notifications enabled ⚑
  </a>
   </li>
-  <li {{#performance}}class='active'{{/performance}}>
-    <a href="/debian/index_performance.html">Performance stats</a>
-  </li>
-  <li {{#variations}}class='active'{{/variations}}>
-    <a href="/debian/index_variations.html">Variations tested</a>
-  </li>
-  <li {{#breakages}}class='active'{{/breakages}}>
-    <a href="/debian/index_breakages.html">Broken pieces</a>
+  <li {{#repositories}}class='active'{{/repositories}}>
+    <a href="/debian/index_repositories.html">
+      Repositories overview
+    </a>
   </li>
   <li {{#jenkins-docs}}class='active'{{/jenkins-docs}}>
     <a href="https://jenkins.debian.net/userContent/about.html#_reproducible_builds_jobs"
     target="_blank">Documentation for Jenkins backend</a><br />
     (eg. on manual scheduling)
+  </li>
+  <li {{#breakages}}class='active'{{/breakages}}>
+    <a href="/debian/index_breakages.html">Broken pieces</a>
+  </li>
+  <li {{#performance}}class='active'{{/performance}}>
+    <a href="/debian/index_performance.html">Performance stats</a>
   </li>
 </ul>
 {{{project_links_html}}}

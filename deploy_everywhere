@@ -14,9 +14,12 @@
 #   the HOSTS lists below is yet another code duplication…
 
 # useful things:
-# ./deploy_everywhere 		- will deploy on all nodes (and handle 398 days hosts properly)
-# ./deploy_everywhere only		- will deploy on jenkins only
-# ./deploy_everywhere only pb10	- will deploy on jenkins and pb10
+# ./deploy_everywhere all	- will deploy on all nodes (and handle 398 days hosts properly)
+# ./deploy_everywhere 		- will deploy on jenkins only
+# ./deploy_everywhere jenkins	- will deploy on jenkins only
+# ./deploy_everywhere jenkins pb10	- will deploy on jenkins and pb10
+# ./deploy_everywhere jenkins 10	- will deploy on jenkins and pb10
+# ./deploy_everywhere jenkins 4 5	- will deploy on jenkins and pb4 and pb5
 # ./deploy_everywhere upgrade	- will run "apt-get update && upgrade && clean" everywhere
 # ./deploy_everywhere upgradey	- will run "apt-get upgrade -y" everywhere
 # ./deploy_everywhere rmstamp	- will delete stamp files everywhere
@@ -81,7 +84,7 @@ fi
 ./update_jdn.sh
 EOF
 reset_clock=true
-if [ -z "$1" ] ; then
+if [ "$1" = "all" ] ; then
 	echo -n "Running j.d.n.git updates on $HOSTS now"
 	# reset_clock can be false as update_jdn.sh sets the time
 	reset_clock=false
@@ -103,25 +106,26 @@ elif [ "$1" = "check" ] ; then
 	real_command="pgrep -l -a -f _build.sh"
 	reset_clock=false
 	shift
-elif [ "$1" = "nojenkins" ]; then
-	HOSTS="$2"
-	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
-elif [ "$1" = "only" ] || [ "$1" = "jenkins" ] ; then
+elif [ "$1" = "" ] || [ "$1" = "jenkins" ] ; then
         export HOSTS="root@jenkins.debian.net"
-	case $2 in
-		1|pb1)	 HOSTS="$HOSTS profitbricks-build1-amd64.debian.net" ;;
-		2|pb2)	 HOSTS="$HOSTS profitbricks-build2-i386.debian.net" ;;
-		3|pb3)	 HOSTS="$HOSTS profitbricks-build3-amd64.debian.net" ;;
-		3+4|pb3+pb4|pb3+4) HOSTS="$HOSTS profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net" ;;
-		4|pb4)	 HOSTS="$HOSTS profitbricks-build4-amd64.debian.net" ;;
-		5|pb5)	 HOSTS="$HOSTS profitbricks-build5-amd64.debian.net" ;;
-		6|pb6)	 HOSTS="$HOSTS profitbricks-build6-i386.debian.net" ;;
-		7|pb7)	 HOSTS="$HOSTS profitbricks-build7-amd64.debian.net" ;;
-		9|pb9)	 HOSTS="$HOSTS profitbricks-build9-amd64.debian.net" ;;
-		10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
-		11|pb11) HOSTS="$HOSTS profitbricks-build11-amd64.debian.net" ;;
-		15|pb15) HOSTS="$HOSTS profitbricks-build15-amd64.debian.net" ;;
-	esac
+	shift
+	for i in $@ ; do
+		case $i in
+			1|pb1)	 HOSTS="$HOSTS profitbricks-build1-amd64.debian.net" ;;
+			2|pb2)	 HOSTS="$HOSTS profitbricks-build2-i386.debian.net" ;;
+			3|pb3)	 HOSTS="$HOSTS profitbricks-build3-amd64.debian.net" ;;
+			3+4|pb3+pb4|pb3+4) HOSTS="$HOSTS profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net" ;;
+			4|pb4)	 HOSTS="$HOSTS profitbricks-build4-amd64.debian.net" ;;
+			5|pb5)	 HOSTS="$HOSTS profitbricks-build5-amd64.debian.net" ;;
+			6|pb6)	 HOSTS="$HOSTS profitbricks-build6-i386.debian.net" ;;
+			7|pb7)	 HOSTS="$HOSTS profitbricks-build7-amd64.debian.net" ;;
+			9|pb9)	 HOSTS="$HOSTS profitbricks-build9-amd64.debian.net" ;;
+			10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
+			11|pb11) HOSTS="$HOSTS profitbricks-build11-amd64.debian.net" ;;
+			15|pb15) HOSTS="$HOSTS profitbricks-build15-amd64.debian.net" ;;
+			*) ;;
+		esac
+	done
 	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
 else
 	real_command="$@"

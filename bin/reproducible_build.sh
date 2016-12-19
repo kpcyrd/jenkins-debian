@@ -310,7 +310,7 @@ handle_reproducible() {
 
 unregister_build() {
 	# unregister this build so it will immeditiatly tried again
-	query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id='$SRCPKGID'"
+	query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id=$SRCPKGID"
 	NOTIFY=""
 }
 

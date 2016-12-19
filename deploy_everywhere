@@ -65,6 +65,8 @@ wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net
 root@jenkins.debian.net"
 
+ALL_HOSTS=$HOSTS
+
 echo
 echo -n "$(date) - "
 # real command, for running manually: cd ~jenkins-adm/jenkins.debian.net/ ; sudo -u jenkins-adm git pull ; ./update_jdn.sh
@@ -123,6 +125,7 @@ elif [ "$1" = "" ] || [ "$1" = "jenkins" ] ; then
 			10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
 			11|pb11) HOSTS="$HOSTS profitbricks-build11-amd64.debian.net" ;;
 			15|pb15) HOSTS="$HOSTS profitbricks-build15-amd64.debian.net" ;;
+			armhf|amd64|i386)	 HOSTS="$HOSTS $(echo $ALL_HOSTS | sed 's# #\n#g' | grep $i)" ;;
 			*) ;;
 		esac
 	done

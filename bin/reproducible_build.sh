@@ -491,6 +491,8 @@ choose_package() {
 	create_results_dirs
 	echo "============================================================================="
 	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
+	echo "1st build will be done on $NODE1."
+	echo "2nd build will be done on $NODE2."
 	echo "============================================================================="
 	# force debug mode for certain packages
 	case $SRCPACKAGE in
@@ -711,6 +713,7 @@ check_node_is_up() {
 	local PORT=$2
 	local SLEEPTIME=$3
 	set +e
+	echo "$(date -u) - checking if $NODE is up."
 	ssh -o "BatchMode = yes" -p $PORT $NODE 'rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)'
 	RESULT=$?
 	# abort job if host is down

@@ -23,7 +23,6 @@
 # ./deploy_everywhere upgrade		- run "apt-get update && upgrade && clean" everywhere
 # ./deploy_everywhere upgradey		- run "apt-get upgrade -y" everywhere
 # ./deploy_everywhere rmstamp		- delete stamp files everywhere
-# ./deploy_everywhere clean		- is probably not useful anymore… :)
 
 
 START=$(date +'%s')
@@ -98,10 +97,6 @@ elif [ "$1" = "upgradey" ] ; then
 	shift
 elif [ "$1" = "rmstamp" ] ; then
 	real_command="sudo rm /var/log/jenkins/*stamp"
-	reset_clock=false
-	shift
-elif [ "$1" = "clean" ] ; then
-	real_command="sudo apt-get clean"
 	reset_clock=false
 	shift
 elif [ "$1" = "check" ] ; then

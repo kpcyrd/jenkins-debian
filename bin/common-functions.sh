@@ -50,19 +50,20 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		exit 1
 	fi
 	# abort certain jobs if we know they will fail due to certain bugs…
+	BLOCKER=848422
 	case $JOB_NAME in
 		#lintian-tests_sid)
-		#	abort_if_bug_is_still_open 848422 ;;
+		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#haskell-package-plan)
-		#	abort_if_bug_is_still_open 848422 ;;
+		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#edu-packages_sid*)
-		#	abort_if_bug_is_still_open 848422 ;;
+		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#reproducible_*_from_git_master)
-		#	abort_if_bug_is_still_open 848422 ;;
+		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#chroot-installation_sid_install_education*)
-		#	abort_if_bug_is_still_open 848422 ;;
+		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#chroot-installation_stretch_install_education-*_upgrade_to_sid)
-		#	abort_if_bug_is_still_open 848422 ;;
+		#	abort_if_bug_is_still_open $BLOCKER ;;
 		*) ;;
 	esac
 	# mktemp some place for us...

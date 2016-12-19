@@ -413,7 +413,6 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				  echo "$(grep -c https $TMPFILE) entries found:"
 			  else
 				  echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
-				  echo debug
 			  fi
 			  echo
 			  cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org

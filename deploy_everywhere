@@ -91,7 +91,7 @@ if [ "$1" = "all" ] ; then
 	# reset_clock can be false as update_jdn.sh sets the time
 	reset_clock=false
 	shift
-	if [ -z "$1" ] ; then
+	if [ ! -z "$1" ] ; then
 		real_command="$@"
 		echo -n "Running '$real_command' on $HOSTS now."
 		real_command="$@ && echo '__reallyreally=ok__'"

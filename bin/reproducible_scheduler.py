@@ -14,7 +14,6 @@ import sys
 import lzma
 import deb822
 import aptsources.sourceslist
-import random
 import smtplib
 from subprocess import call
 from apt_pkg import version_compare
@@ -391,14 +390,17 @@ def add_up_numbers(packages, arch):
 
 def query_untested_packages(suite, arch, limit):
     criteria = 'not tested before, randomly sorted'
-    query = """SELECT DISTINCT sources.id, sources.name FROM sources
-               WHERE sources.suite='{suite}' AND sources.architecture='{arch}'
-               AND sources.id NOT IN
+    query = """SELECT DISTINCT *
+               FROM (
+                    SELECT sources.id, sources.name FROM sources
+                    WHERE sources.suite='{suite}' AND sources.architecture='{arch}'
+                    AND sources.id NOT IN
                        (SELECT schedule.package_id FROM schedule)
-               AND sources.id NOT IN
+                    AND sources.id NOT IN
                        (SELECT results.package_id FROM results)
-               ORDER BY random()
-               LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
+                    ORDER BY random()
+                ) AS tmp
+                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
     packages = query_db(query)
     print_schedule_result(suite, arch, criteria, packages)
     return packages

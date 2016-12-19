@@ -57,6 +57,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			abort_if_bug_is_still_open 848422 ;;
 		edu-packages_sid*)
 			abort_if_bug_is_still_open 848422 ;;
+		reproducible_*_from_git_master)
+			abort_if_bug_is_still_open 848422 ;;
 		chroot-installation_sid_install_education*)
 			abort_if_bug_is_still_open 848422 ;;
 		chroot-installation_stretch_install_education-*_upgrade_to_sid)

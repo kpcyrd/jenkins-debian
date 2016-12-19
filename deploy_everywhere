@@ -14,16 +14,16 @@
 #   the HOSTS lists below is yet another code duplication…
 
 # useful things:
-# ./deploy_everywhere all	- will deploy on all nodes (and handle 398 days hosts properly)
-# ./deploy_everywhere 		- will deploy on jenkins only
-# ./deploy_everywhere jenkins	- will deploy on jenkins only
-# ./deploy_everywhere jenkins pb10	- will deploy on jenkins and pb10
-# ./deploy_everywhere jenkins 10	- will deploy on jenkins and pb10
-# ./deploy_everywhere jenkins 4 5	- will deploy on jenkins and pb4 and pb5
-# ./deploy_everywhere upgrade	- will run "apt-get update && upgrade && clean" everywhere
-# ./deploy_everywhere upgradey	- will run "apt-get upgrade -y" everywhere
-# ./deploy_everywhere rmstamp	- will delete stamp files everywhere
-# ./deploy_everywhere clean	- is probably not useful anymore… :)
+# ./deploy_everywhere all		- deploy on all nodes (and handle 398 days hosts properly)
+# ./deploy_everywhere 			- deploy on jenkins only
+# ./deploy_everywhere jenkins		- deploy on jenkins only
+# ./deploy_everywhere jenkins pb10	- deploy on jenkins and pb10
+# ./deploy_everywhere jenkins 10	- deploy on jenkins and pb10
+# ./deploy_everywhere jenkins 4 5	- deploy on jenkins and pb4 and pb5
+# ./deploy_everywhere upgrade		- run "apt-get update && upgrade && clean" everywhere
+# ./deploy_everywhere upgradey		- run "apt-get upgrade -y" everywhere
+# ./deploy_everywhere rmstamp		- delete stamp files everywhere
+# ./deploy_everywhere clean		- is probably not useful anymore… :)
 
 
 START=$(date +'%s')

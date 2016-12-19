@@ -15,6 +15,7 @@
 
 # useful things:
 # ./deploy_everywhere all		- deploy on all nodes (and handle 398 days hosts properly)
+# ./deploy_everywhere all $foo		- run "$foo" on all nodes (and handle 398 days hosts properly)
 # ./deploy_everywhere 			- deploy on jenkins only
 # ./deploy_everywhere jenkins		- deploy on jenkins only
 # ./deploy_everywhere jenkins pb10	- deploy on jenkins and pb10
@@ -89,6 +90,12 @@ if [ "$1" = "all" ] ; then
 	echo -n "Running j.d.n.git updates on $HOSTS now"
 	# reset_clock can be false as update_jdn.sh sets the time
 	reset_clock=false
+	shift
+	if [ -z "$1" ] ; then
+		real_command="$@"
+		echo -n "Running '$real_command' on $HOSTS now."
+		real_command="$@ && echo '__reallyreally=ok__'"
+	fi
 elif [ "$1" = "upgrade" ] ; then
 	real_command="export LANG=C && sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade && sudo apt-get clean"
 	shift
@@ -125,10 +132,6 @@ elif [ "$1" = "" ] || [ "$1" = "jenkins" ] ; then
 		esac
 	done
 	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"
-else
-	real_command="$@"
-	echo -n "Running '$real_command' on $HOSTS now."
-	real_command="$@ && echo '__reallyreally=ok__'"
 fi
 BG=""
 

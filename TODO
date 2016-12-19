@@ -304,10 +304,10 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** chown -R jenkins:jenkins /srv/
 
 * system maintenance
-** upgraded the VM to FreeBSD 10.3
-*** done with: freebsd-update upgrade -r 10.2
-*** and with:  freebsd-update upgrade -r 10.3
-*** and with:  freebsd-update upgrade -r 11.0 in screen
+** upgraded the VM to FreeBSD 11.0
+*** done with: 'freebsd-update upgrade -r 10.2'
+*** and with:  'freebsd-update upgrade -r 10.3'
+*** and with:  'freebsd-update upgrade -r 11.0' in screen, followed by 'pkg-static install pkg ; pkg upgrade'
 
 ==== reproducible Fedora
 

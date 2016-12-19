@@ -52,7 +52,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins nodes, in the long term probably/maybe also maintained by DSA, on which we can use sudo as we need it.
 
-==== next steps for jenkins.d.o migration
+=== next steps for jenkins.d.o migration
 
 * The machine jerea.debian.org is setup, please go to https://jenkins.debian.org
 * login using link:https://sso.debian.org[Debian SSO]

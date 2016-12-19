@@ -923,7 +923,7 @@ fi
 exit_early_if_debian_is_broken
 check_nodes_are_up
 delay_start
-choose_package  # defines SUITE, PKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
+choose_package  # defines SUITE, SRCPKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
 get_source_package
 
 log_info "${SRCPACKAGE}_${EVERSION}.dsc"

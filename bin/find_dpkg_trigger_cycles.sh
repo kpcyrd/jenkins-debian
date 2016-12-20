@@ -324,7 +324,9 @@ This creates the cycle if the packages are installed in a fitting order.
 
 These problems could be fixed by either letting A no longer depend on C or by
 switching triggers to their -noawait variants. See the deb-triggers(5) man page
-for an explanation of the different trigger control directives.
+for an explanation of the different trigger control directives. You can also
+read /usr/share/doc/dpkg-dev/triggers.txt.gz for an in-depth documentation of
+dpkg triggers.
 END
 	cat $DIRECTORY/result-file
 fi
@@ -353,7 +355,9 @@ This creates the cycle if the packages are installed in a fitting order.
 
 These problems could be fixed by either letting A no longer depend on C or by
 switching triggers to their -noawait variants. See the deb-triggers(5) man page
-for an explanation of the different trigger control directives.
+for an explanation of the different trigger control directives. You can also
+read /usr/share/doc/dpkg-dev/triggers.txt.gz for an in-depth documentation of
+dpkg triggers.
 END
 	cat $DIRECTORY/result-explicit
 fi

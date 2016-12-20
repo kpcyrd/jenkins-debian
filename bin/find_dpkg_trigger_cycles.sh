@@ -300,32 +300,52 @@ if [ `wc -l < $DIRECTORY/result-explicit` -ne 0 ]; then
 	awk '{ print $1 }' $DIRECTORY/result-explicit | sort | uniq
 fi
 if [ `wc -l < $DIRECTORY/result-file` -ne 0 ]; then
-	echo ""
-	echo ""
-	echo "+----------------------------------------------------------+"
-	echo "|               file based trigger cycles                  |"
-	echo "+----------------------------------------------------------+"
-	echo ""
-	echo "# Associates binary packages with other binary packages they can form a file"
-	echo "# trigger cycle with. The first column is the binary package containing the file"
-	echo "# trigger, the second column is the file trigger, the third column is a binary"
-	echo "# package providing a path that triggers the binary package in the first column,"
-	echo "# the fourth column is the triggering path of provided by the binary package in"
-	echo "# the third column."
-	echo ""
+	cat << END
++----------------------------------------------------------+
+|               file based trigger cycles                  |
++----------------------------------------------------------+
+
+The following table has four columns A, B, C and D. The first column A shows a
+binary package which shows interested in a certain path. The second column B
+shows the path that A is interested in. The third column C is a binary package
+that A (directly or indirectly) depends on. The fourth column D shows the path
+that C provides and which is triggering A through its interest in B.
+
+The cycle is created because when C is put into the triggers-awaited state
+(because it triggers A), then it cannot satisfy dependencies until it leaves that
+state. But:
+
+ - for C to leave the triggers-awaited state, the trigger has to be resolved
+   by A, which cannot happen unless A gets configured
+ - to configure A, its dependency on C has to be resolved which cannot happen
+   unless C leaves the triggers-awaited state
+
+This creates the cycle if the packages are installed in a fitting order.
+END
 	cat $DIRECTORY/result-file
 fi
 if [ `wc -l < $DIRECTORY/result-explicit` -ne 0 ]; then
-	echo ""
-	echo ""
-	echo "+----------------------------------------------------------+"
-	echo "|               explicit trigger cycles                    |"
-	echo "+----------------------------------------------------------+"
-	echo ""
-	echo "# Associates binary packages with other binary packages they can form an explicit"
-	echo "# trigger cycle with. The first column is the binary package interested in the"
-	echo "# explicit trigger, the second column is the name of the explicit trigger, the"
-	echo "# third column is the binary package activating the trigger."
-	echo ""
+	cat << END
++----------------------------------------------------------+
+|               explicit trigger cycles                    |
++----------------------------------------------------------+
+
+The following table has three columns A, B and C. The first column A shows a
+binary package which shows interested in a certain trigger. The second column B
+shows the trigger that A is interested in. The third column C is a binary
+package that A (directly or indirectly) depends on and which explicitly
+activates the trigger from column B.
+
+The cycle is created because when C is put into the triggers-awaited state
+(because it triggers A), then it cannot satisfy dependencies until it leaves that
+state. But:
+
+ - for C to leave the triggers-awaited state, the trigger has to be resolved
+   by A, which cannot happen unless A gets configured
+ - to configure A, its dependency on C has to be resolved which cannot happen
+   unless C leaves the triggers-awaited state
+
+This creates the cycle if the packages are installed in a fitting order.
+END
 	cat $DIRECTORY/result-explicit
 fi

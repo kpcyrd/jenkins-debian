@@ -321,6 +321,10 @@ state. But:
    unless C leaves the triggers-awaited state
 
 This creates the cycle if the packages are installed in a fitting order.
+
+These problems could be fixed by either letting A no longer depend on C or by
+switching triggers to their -noawait variants. See the deb-triggers(5) man page
+for an explanation of the different trigger control directives.
 END
 	cat $DIRECTORY/result-file
 fi
@@ -346,6 +350,10 @@ state. But:
    unless C leaves the triggers-awaited state
 
 This creates the cycle if the packages are installed in a fitting order.
+
+These problems could be fixed by either letting A no longer depend on C or by
+switching triggers to their -noawait variants. See the deb-triggers(5) man page
+for an explanation of the different trigger control directives.
 END
 	cat $DIRECTORY/result-explicit
 fi

@@ -320,7 +320,7 @@ state. But:
  - to configure A, its dependency on C has to be resolved which cannot happen
    unless C leaves the triggers-awaited state
 
-This creates the cycle if the packages are installed in a fitting order.
+This creates the cycle if the packages are installed in a certain order.
 
 These problems could be fixed by either letting A no longer depend on C or by
 switching triggers to their -noawait variants. See the deb-triggers(5) man page
@@ -351,7 +351,7 @@ state. But:
  - to configure A, its dependency on C has to be resolved which cannot happen
    unless C leaves the triggers-awaited state
 
-This creates the cycle if the packages are installed in a fitting order.
+This creates the cycle if the packages are installed in a certain order.
 
 These problems could be fixed by either letting A no longer depend on C or by
 switching triggers to their -noawait variants. See the deb-triggers(5) man page

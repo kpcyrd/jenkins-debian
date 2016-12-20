@@ -405,10 +405,16 @@ fi
 # daily mails
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	# once a day, send mail about builder problems
-	for PROBLEM in /var/log/jenkins/reproducible-stale-builds.log /var/log/jenkins/reproducible-race-conditions.log /var/log/jenkins/reproducible-diskspace-issues.log /var/log/jenkins/reproducible-remote-error.log /var/log/jenkins/reproducible-env-changes.log ; do
+	for PROBLEM in /var/log/jenkins/reproducible-stale-builds.log /var/log/jenkins/reproducible-race-conditions.log /var/log/jenkins/reproducible-diskspace-issues.log /var/log/jenkins/reproducible-remote-error.log /var/log/jenkins/reproducible-env-changes.log /var/log/postgresql/postgresql-9.4-main.log ; do
 		if [ -s $PROBLEM ] ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
-			mv $PROBLEM $TMPFILE
+			if [ "$(dirname $PROBLEM)" = "/var/log/jenkins" ] ; then
+				# maybe we should use logrotate for our jenkins logs too…
+				mv $PROBLEM $TMPFILE
+			else
+				# regular logfile, logrotate is used (and the file aint owned by jenkins)
+				cp $PROBLEM $TMPFILE
+			fi
 			( echo "A few entries per day are normal, a few dozens or hundreds probably not."
 			  if grep -q https $TMPFILE ; then
 				  echo "$(grep -c https $TMPFILE) entries found:"

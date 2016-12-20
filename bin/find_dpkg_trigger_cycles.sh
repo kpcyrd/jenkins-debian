@@ -327,6 +327,7 @@ switching triggers to their -noawait variants. See the deb-triggers(5) man page
 for an explanation of the different trigger control directives. You can also
 read /usr/share/doc/dpkg-dev/triggers.txt.gz for an in-depth documentation of
 dpkg triggers.
+
 END
 	cat $DIRECTORY/result-file
 fi
@@ -358,6 +359,7 @@ switching triggers to their -noawait variants. See the deb-triggers(5) man page
 for an explanation of the different trigger control directives. You can also
 read /usr/share/doc/dpkg-dev/triggers.txt.gz for an in-depth documentation of
 dpkg triggers.
+
 END
 	cat $DIRECTORY/result-explicit
 fi

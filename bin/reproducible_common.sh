@@ -38,6 +38,7 @@ ARCHS="amd64 i386 armhf"
 
 # define Debian build nodes in use
 . /srv/jenkins/bin/jenkins_node_definitions.sh
+MAINNODE="jenkins" # used by reproducible_maintenance.sh only
 
 # variables on the nodes we are interested in
 BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL" # these also needs to be defined in bin/reproducible_info.sh

@@ -416,11 +416,15 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				# regular logfile, logrotate is used (and the file aint owned by jenkins)
 				cp $PROBLEM $TMPFILE
 			fi
-			( echo "A few entries per day are normal, a few dozens or hundreds probably not."
-			  if grep -q https $TMPFILE ; then
-				  echo "$(grep -c https $TMPFILE) entries found:"
+			( if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ; then 
+				echo "diskspace issues should always be investigated."
 			  else
-				  echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
+				echo "A few entries per day are normal, a few dozens or hundreds probably not."
+			  fi
+			  if grep -q https $TMPFILE ; then
+				echo "$(grep -c https $TMPFILE) entries found:"
+			  else
+				echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
 			  fi
 			  echo
 			  cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org

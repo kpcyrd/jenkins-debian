@@ -464,9 +464,12 @@ if [ -f /etc/debian_version ] ; then
 		fi
 		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
-		$UP2DATE || sudo apt-get install -t jessie-backports \
-				pbuilder lintian || echo "this should only fail on the first install"
-		#		botch
+		case $HOSTNAME in
+			codethink*) 	;;
+			*)		$UP2DATE || sudo apt-get install -t jessie-backports \
+						pbuilder lintian || echo "this should only fail on the first install"
+					;;
+		esac
 		# we need mock from bpo to build current fedora
 		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports mock \

@@ -711,7 +711,7 @@ EOF
 		explain "$(date) - Generated GPG key but could not parse key ID"
 	else
 		explain "$(date) - Generated GPG key $GPG_KEY_ID - submitting to keyserver"
-		sudo -u jenkins gpg --send-keys $GPG_KEY_ID
+		sudo -H -u jenkins gpg --send-keys $GPG_KEY_ID
 	fi
 fi
 

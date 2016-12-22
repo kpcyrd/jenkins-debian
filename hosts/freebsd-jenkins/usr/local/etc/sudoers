@@ -94,6 +94,7 @@ root ALL=(ALL) ALL
 # for reproducible builds:
 jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/bin/make -j ? buildkernel, \
+	/usr/bin/make -j ? PKG_VERSION=current packages, \
 	/usr/bin/make -j ? installworld, \
 	/usr/bin/make -j ? installkernel, \
 	/usr/bin/make -j ? distribution, \

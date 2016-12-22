@@ -123,7 +123,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	export LANG="en_GB.UTF-8"
-	NUM_CPU=4 # if someone could tell me how to determine this on FreeBSD, this would be neat
+	NUM_CPU=$(sysctl -n hw.ncpu)
 	# actually build everything
 	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel" && \

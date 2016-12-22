@@ -687,12 +687,12 @@ fi
 #
 # Create GPG key for jenkins user if they do not already exist (eg. to sign .buildinfo files)
 #
-if sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1 ; then
+if sudo -H -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | cut -d: -f1 | grep -qsFx 'sec' >/dev/null 2>&1 ; then
 	explain "$(date) - Not generating GPG key as one already exists for jenkins user."
 else
 	explain "$(date) - Generating GPG key for jenkins user."
 
-	sudo -u jenkins gpg --no-tty --batch --gen-key <<EOF
+	sudo -H -u jenkins gpg --no-tty --batch --gen-key <<EOF
 Key-Type: RSA
 Key-Length: 4096
 Key-Usage: sign
@@ -704,7 +704,7 @@ Expire-Date: 0
 %commit
 EOF
 
-	GPG_KEY_ID="$(sudo -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | grep '^sec' | cut -d: -f5 | tail -n1)"
+	GPG_KEY_ID="$(sudo -H -u jenkins gpg --with-colons --fixed-list-mode --list-secret-keys | grep '^sec' | cut -d: -f5 | tail -n1)"
 
 	if [ "$GPG_KEY_ID" = "" ]
 	then

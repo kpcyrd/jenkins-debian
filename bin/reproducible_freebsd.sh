@@ -34,6 +34,7 @@ save_freebsd_results() {
 	$RSSH "sudo find $TMPDIR -newer $TMPDIR -exec touch -d '$DUMMY_DATE' {} \;"
 	$RSSH "sudo find $TMPDIR -print0 | LC_ALL=C sort -z | sudo tar --no-recursion --null -T - -cJf $TMPDIR.tar.xz"
 	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN/$TARGET_NAME.tar.xz
+	$RSCP:/usr/obj/usr/src/repo $TMPDIR/$RUN/
 	$RSSH "sudo chflags -R noschg $TMPDIR ; sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
 }
 
@@ -127,6 +128,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	# actually build everything
 	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU PKG_VERSION=current packages" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU installkernel" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG DESTDIR=$TMPDIR sudo make -j $NUM_CPU distribution" ) ; then
@@ -156,6 +158,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	# actually build everything
 	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU PKG_VERSION=current packages" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution" ) ; then

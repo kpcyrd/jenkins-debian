@@ -386,6 +386,7 @@ call_diffoscope_on_changes_files() {
 		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
+			--profile=- \
 			$TMPDIR/b1/${CHANGES} \
 			$TMPDIR/b2/${CHANGES}" \
 	2>&1 ) >> $TMPLOG
@@ -402,6 +403,7 @@ call_diffoscope_on_changes_files() {
 			-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 				--html $TMPDIR/${DBDREPORT} \
 				--text $TMPDIR/$DBDTXT \
+				--profile=- \
 				$TMPDIR/b1/${CHANGES} \
 				$TMPDIR/b2/${CHANGES}" \
 		2>&1 ) >> $TMPLOG

@@ -124,7 +124,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "============================================================================="
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	export LANG="en_GB.UTF-8"
-	NUM_CPU=$(sysctl -n hw.ncpu)
+	NUM_CPU=$($RSSH sysctl -n hw.ncpu)
 	# actually build everything
 	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU buildkernel" && \

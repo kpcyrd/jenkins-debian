@@ -121,21 +121,26 @@ update_suite_arch_stats() {
 		OLDESTG=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status = 'reproducible' AND s.suite='$SUITE' AND s.architecture='$ARCH' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 		OLDESTB=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 		OLDESTU=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
-		DIFFG=$(query_db "SELECT (date '$DATE' - date '$OLDESTG');")
-		if [ -z $DIFFG ] ; then DIFFG=0 ; fi
-		DIFFB=$(query_db "SELECT (date '$DATE' - date '$OLDESTB');")
-		if [ -z $DIFFB ] ; then DIFFB=0 ; fi
-		DIFFU=$(query_db "SELECT (date '$DATE' - date '$OLDESTU');")
-		if [ -z $DIFFU ] ; then DIFFU=0 ; fi
+		# only if we have results…
+		if [ -n "$OLDESTG" ] ; then
+			DIFFG=$(query_db "SELECT (date '$DATE' - date '$OLDESTG');")
+			if [ -z $DIFFG ] ; then DIFFG=0 ; fi
+			DIFFB=$(query_db "SELECT (date '$DATE' - date '$OLDESTB');")
+			if [ -z $DIFFB ] ; then DIFFB=0 ; fi
+			DIFFU=$(query_db "SELECT (date '$DATE' - date '$OLDESTU');")
+			if [ -z $DIFFU ] ; then DIFFU=0 ; fi
+		fi
 		let "TOTAL=GOOD+BAD+UGLY+REST" || true # let FOO=0+0 returns error in bash...
 		if [ "$ALL" != "$TOTAL" ] ; then
 			let "UNTESTED=ALL-TOTAL"
 		else
 			UNTESTED=0
 		fi
-		query_db "INSERT INTO ${TABLE[0]} VALUES ('$DATE', '$SUITE', '$ARCH', $UNTESTED, $GOOD, $BAD, $UGLY, $REST)"
-		query_db "INSERT INTO ${TABLE[1]} VALUES ('$DATE', '$SUITE', '$ARCH', $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
-		query_db "INSERT INTO ${TABLE[2]} VALUES ('$DATE', '$SUITE', '$ARCH', '$DIFFG', '$DIFFB', '$DIFFU')"
+		if [ -n "$OLDESTG" ] ; then
+			query_db "INSERT INTO ${TABLE[0]} VALUES ('$DATE', '$SUITE', '$ARCH', $UNTESTED, $GOOD, $BAD, $UGLY, $REST)"
+			query_db "INSERT INTO ${TABLE[1]} VALUES ('$DATE', '$SUITE', '$ARCH', $GOOAY, $BAAY, $UGLDAY, $RESDAY)"
+			query_db "INSERT INTO ${TABLE[2]} VALUES ('$DATE', '$SUITE', '$ARCH', '$DIFFG', '$DIFFB', '$DIFFU')"
+		fi
 		# we do 3 later and 6 is special anyway...
 		for i in 0 1 2 4 5 ; do
 			PREFIX=""

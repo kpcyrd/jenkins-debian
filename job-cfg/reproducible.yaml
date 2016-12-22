@@ -396,6 +396,15 @@
                 - 'profitbricks12': { my_arch: 'i386'  }
                 - 'profitbricks15': { my_arch: 'amd64' }
                 - 'profitbricks16': { my_arch: 'i386'  }
+                - 'codethink9':     { my_arch: 'arm64' }
+                - 'codethink10':    { my_arch: 'arm64' }
+                - 'codethink11':    { my_arch: 'arm64' }
+                - 'codethink12':    { my_arch: 'arm64' }
+                - 'codethink13':    { my_arch: 'arm64' }
+                - 'codethink14':    { my_arch: 'arm64' }
+                - 'codethink15':    { my_arch: 'arm64' }
+                - 'codethink16':    { my_arch: 'arm64' }
+
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -449,6 +458,14 @@
                 - 'profitbricks12': { my_arch: 'i386'  }
                 - 'profitbricks15': { my_arch: 'amd64' }
                 - 'profitbricks16': { my_arch: 'i386'  }
+                - 'codethink9':     { my_arch: 'arm64' }
+                - 'codethink10':    { my_arch: 'arm64' }
+                - 'codethink11':    { my_arch: 'arm64' }
+                - 'codethink12':    { my_arch: 'arm64' }
+                - 'codethink13':    { my_arch: 'arm64' }
+                - 'codethink14':    { my_arch: 'arm64' }
+                - 'codethink15':    { my_arch: 'arm64' }
+                - 'codethink16':    { my_arch: 'arm64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
         - '{name}_setup_schroot_{my_distro}_{my_arch}_{my_hname}':

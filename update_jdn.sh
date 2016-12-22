@@ -12,6 +12,7 @@ TMPFILE=$(mktemp)
 # The $@ below means that command line args get passed on to j-j-b
 # which allows one to specify --flush-cache or --ignore-cache
 JJB="jenkins-job-builder $@"
+DPKG_ARCH="$(dpkg --print-architecture)"
 
 # so we can later run some commands only if $0 has been updated…
 if [ -f $STAMP ] && [ $STAMP -nt $BASEDIR/$0 ] ; then
@@ -90,7 +91,7 @@ users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)
 
 ( $UP2DATE && [ -z $(find authorized_keys -newer $0) ] ) || for user in ${users}; do
 	# -v is a bashism to check for set variables, used here to see if this user is active on this host
-	[ -v user_host_groups["$user","$HOSTNAME"] -o -v user_host_groups["$user",'*'] ] || continue
+	[ -v user_host_groups["$user","$HOSTNAME"] -o -v user_host_groups["$user",'*'] -o -v user_host_groups["$user", "$DPKG_ARCH"]  ] || continue
 
 	# create the user
 	if ! getent passwd $user > /dev/null ; then
@@ -98,7 +99,7 @@ users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)
 		sudo adduser --gecos "" --shell "${u_shell[$user]:-/bin/bash}" --disabled-password $user
 	fi
 	# add groups: first try the specific host, or if unset fall-back to default '*' setting
-	for h in "$HOSTNAME" '*' ; do
+	for h in "$HOSTNAME" "$DPKG_ARCH" '*' ; do
 		if [ -v user_host_groups["$user","$h"] ] ; then
 			sudo usermod -G "${user_host_groups["$user","$h"]}" $user
 			break

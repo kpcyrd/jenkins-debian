@@ -158,7 +158,7 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	# actually build everything
 	if ( $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU buildkernel" && \
-	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG sudo make -j $NUM_CPU PKG_VERSION=current packages" && \
+	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL sudo make -j $NEW_NUM_CPU PKG_VERSION=current packages" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installworld" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU installkernel" && \
 	  $RSSH "cd $TMPBUILDDIR ; TZ=$TZ LANG=$LANG LC_ALL=$LC_ALL DESTDIR=$TMPDIR sudo make -j $NEW_NUM_CPU distribution" ) ; then

@@ -122,6 +122,7 @@ get_node_ssh_port() {
 	    ;;
 	  profitbricks-build*)
 	    PORT=22
+	    ;;
 	  codethink-sled9*)
 	    PORT=10109
 	    ;;
@@ -149,6 +150,7 @@ get_node_ssh_port() {
 	  *)
 	    echo >&2 "Unknown node $NODE_NAME."
 	    exit 1
+	    ;;
 	esac
 }
 

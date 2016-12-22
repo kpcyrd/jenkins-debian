@@ -107,6 +107,8 @@ else
 				export MIRROR=http://ftp.de.debian.org/debian ;;
 			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*)
 				export MIRROR=http://ftp.us.debian.org/debian ;;
+			codethink*)
+				export MIRROR=http://ftp.uk.debian.org/debian ;;
 			spectrum)
 				export MIRROR=none ;;
 			*)
@@ -115,7 +117,7 @@ else
 	fi
 	if [ -z "$http_proxy" ]; then
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*)
+			jenkins|jenkins-test-vm|profitbricks-build*|codethink*)
 				export http_proxy="http://localhost:3128" ;;
 			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*)
 				export http_proxy="http://10.0.0.15:8000/" ;;

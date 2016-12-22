@@ -275,7 +275,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		# install squid everywhere except on the armhf nodes
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS
+			jenkins|jenkins-test-vm|profitbricks-build*|codethink*) DEBS="$DEBS
 				squid3
 				kgb-client
 				python3-yaml" ;;

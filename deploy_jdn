@@ -63,6 +63,14 @@ rpi2b-armhf-rb.debian.net
 rpi2c-armhf-rb.debian.net
 wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net
+codethink-sled9-arm64.debian.net
+codethink-sled10-arm64.debian.net
+codethink-sled11-arm64.debian.net
+codethink-sled12-arm64.debian.net
+codethink-sled13-arm64.debian.net
+codethink-sled14-arm64.debian.net
+codethink-sled15-arm64.debian.net
+codethink-sled16-arm64.debian.net
 root@jenkins.debian.net"
 
 ALL_HOSTS=$HOSTS
@@ -127,7 +135,15 @@ elif [ "$1" = "" ] || [ "$1" = "jenkins" ] ; then
 			10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
 			11|pb11) HOSTS="$HOSTS profitbricks-build11-amd64.debian.net" ;;
 			15|pb15) HOSTS="$HOSTS profitbricks-build15-amd64.debian.net" ;;
-			armhf|amd64|i386)	 HOSTS="$HOSTS $(echo $ALL_HOSTS | sed 's# #\n#g' | grep $i)" ;;
+			c9)      HOSTS="$HOSTS codethink-sled9-arm64.debian.net" ;;
+			c10)     HOSTS="$HOSTS codethink-sled10-arm64.debian.net" ;;
+			c11)     HOSTS="$HOSTS codethink-sled11-arm64.debian.net" ;;
+			c12)     HOSTS="$HOSTS codethink-sled12-arm64.debian.net" ;;
+			c13)     HOSTS="$HOSTS codethink-sled13-arm64.debian.net" ;;
+			c14)     HOSTS="$HOSTS codethink-sled14-arm64.debian.net" ;;
+			c15)     HOSTS="$HOSTS codethink-sled15-arm64.debian.net" ;;
+			c16)     HOSTS="$HOSTS codethink-sled16-arm64.debian.net" ;;
+			armhf|amd64|i386|arm64)	 HOSTS="$HOSTS $(echo $ALL_HOSTS | sed 's# #\n#g' | grep $i)" ;;
 			*) ;;
 		esac
 	done

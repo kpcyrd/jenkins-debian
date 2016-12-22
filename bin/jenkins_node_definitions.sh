@@ -40,7 +40,15 @@ ff4a-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
 opi2a-armhf-rb.debian.net
 opi2b-armhf-rb.debian.net
-opi2c-armhf-rb.debian.net"
+opi2c-armhf-rb.debian.net
+codethink-sled9-arm64.debian.net
+codethink-sled10-arm64.debian.net
+codethink-sled11-arm64.debian.net
+codethink-sled12-arm64.debian.net
+codethink-sled13-arm64.debian.net
+codethink-sled14-arm64.debian.net
+codethink-sled15-arm64.debian.net
+codethink-sled16-arm64.debian.net"
 
 # return the ports sshd is listening on
 get_node_ssh_port() {
@@ -114,6 +122,29 @@ get_node_ssh_port() {
 	    ;;
 	  profitbricks-build*)
 	    PORT=22
+	  codethink-sled9*)
+	    PORT=10109
+	    ;;
+	  codethink-sled10*)
+	    PORT=10110
+	    ;;
+	  codethink-sled11*)
+	    PORT=10111
+	    ;;
+	  codethink-sled12*)
+	    PORT=10112
+	    ;;
+	  codethink-sled13*)
+	    PORT=10113
+	    ;;
+	  codethink-sled14*)
+	    PORT=10114
+	    ;;
+	  codethink-sled15*)
+	    PORT=10115
+	    ;;
+	  codethink-sled16*)
+	    PORT=10116
 	    ;;
 	  *)
 	    echo >&2 "Unknown node $NODE_NAME."

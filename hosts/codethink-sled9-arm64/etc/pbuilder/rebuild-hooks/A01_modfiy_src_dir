@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+# exit if we are in the same UTS namespace as init ( != 2nd build )
+[ "$(readlink /proc/1/ns/uts)" = "$(readlink /proc/self/ns/uts)" ] && exit 0
+
+cd $BUILDDIR
+
+if [ "$PWD" == "/build" ]; then
+	# build path variation disabled, so do nothing
+	exit 0
+fi
+
+# There should be only one file, the source directory.
+src_dir=$(ls | head -n 1)
+
+mv $src_dir 2nd

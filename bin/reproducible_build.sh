@@ -588,7 +588,7 @@ check_suitability() {
 			break
 		fi
 		# special case arm…
-		if [ "$ARCH" = "armhf" ] && [ "$arch" = "any-arm" ] ; then
+		if ( [ "$ARCH" = "armhf" ] || "$ARCH" = "arm64" ] ) && [ "$arch" = "any-arm" ] ; then
 			SUITABLE=true
 			break
 		fi
@@ -656,6 +656,9 @@ second_build() {
 	case $ARCH in
 		armhf)	locale=it_CH
 			language=it
+			;;
+		arm64)	locale=nl_BE
+			language=nl
 			;;
 		i386)	locale=de_CH
 			language=de

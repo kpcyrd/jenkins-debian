@@ -432,7 +432,7 @@ create_suite_arch_stats_page() {
 	fi
 	set_icon not_for_us
 	write_icon
-	if [ "$ARCH" = "armhf" ] ; then
+	if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ]; then
 		ARMSPECIALARCH=" 'any-arm',"
 	fi
 	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be build here"

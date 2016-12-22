@@ -161,7 +161,7 @@ for i in * ; do
 		# for debugging #842250
 		if [ "$(basename $TMPDIR/b1/$i/$j)" = "base.tgz" ] ; then
 			for k in b1 b2 ; do
-				mkdir -p $BASE/netbsd/artifacts/$k/$i
+				mkdir -p $BASE/netbsd/artifacts/$k/$i/$(dirname $j)
 				cp $TMPDIR/$k/$i/$j $BASE/netbsd/artifacts/$k/$i/$j
 			done
 			echo "artifacts published for debugging #842250 in https://tests.reproducible-builds.org/netbsd/artifacts/ - please dont forget to delete this directory later…"

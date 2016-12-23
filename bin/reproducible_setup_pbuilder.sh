@@ -20,12 +20,33 @@ fi
 #
 # create script to configure a pbuilder chroot
 #
-create_setup_tmpfile() {
+create_customized_tmpfile ()
 	TMPFILE=$1
 	shift
 	cat >> $TMPFILE <<- EOF
 #
-# this script is run within the pbuilder environment to further customize it
+# this script is run within the pbuilder environment to further customize initially
+#
+echo
+echo "Configuring APT to ignore the Release file expiration"
+echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
+echo
+echo "Working around debootstrap bug https://bugs.debian.org/817236"
+if [ -L /dev/ptmx ]; then
+	rm /dev/ptmx
+	mknod -m 666 /dev/ptmx c 5 2
+fi
+echo ".. done"
+echo
+EOF
+}
+
+create_setup_our_repo_tmpfile() {
+	TMPFILE=$1
+	shift
+	cat >> $TMPFILE <<- EOF
+#
+# this script is run within the pbuilder environment to further customize once more
 #
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -57,16 +78,6 @@ peNsYNcna2Ca8Imozzc5L424lXN3MaiTql7Y1lZJFF5Y/wznbjUQj/5YXj3LVB3W
 =5CAZ
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
-echo
-echo "Configuring APT to ignore the Release file expiration"
-echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
-echo
-echo "Working around debootstrap bug https://bugs.debian.org/817236"
-if [ -L /dev/ptmx ]; then
-	rm /dev/ptmx
-	mknod -m 666 /dev/ptmx c 5 2
-fi
-echo ".. done"
 echo
 apt-get update
 apt-get -y upgrade
@@ -108,10 +119,18 @@ setup_pbuilder() {
 	# setup base.tgz
 	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
 
+	# customize pbuilder
+	create_customized_tmpfile ${TMPFILE}
+	if [ "$DEBUG" = "true" ] ; then
+		cat "$TMPFILE"
+	fi
+	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
+	rm ${TMPFILE}
+
 	# add repo only for experimental and sid - keep testing "real" (and sid progressive!)
 	if [ "$SUITE" != "testing" ] ; then
 		# apply further customisations, eg. install $PACKAGES from our repo
-		create_setup_tmpfile ${TMPFILE} "${PACKAGES}"
+		create_setup_our_repo_tmpfile ${TMPFILE} "${PACKAGES}"
 		if [ "$DEBUG" = "true" ] ; then
 			cat "$TMPFILE"
 		fi

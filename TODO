@@ -230,10 +230,11 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * remove unwanted users from buildnodes (accidently created due to buggy update_jdn)
 * deal with #817236 / #849168 - probably using 'rm /dev/ptmx && mknod -m 666 5 2 /dev/ptmx' somewhere
 * add arm64 to THANKS+README
+* update variations table
 * thank you tweet to codethink
 * squid is not used, we copy a /etc/squid3/squid3.conf but ubuntu uses /etc/squid/squid.conf
 * vary the kernel (with what ubuntu kernel?)
-* vary the time, run half the nodes in the future (needs new builder job distribution)
+* vary the time, run half the nodes in the future
 * fix regular munin warnings
 * remove ntp munin plugins
 * make systems send mail

@@ -596,38 +596,38 @@
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'amd64'
             my_num:
-                -  '1': &bd_amd_1_5   { my_node1: 'profitbricks-build1',  my_node2: 'profitbricks-build5'  }
-                -  '2': &bd_amd_5_1   { my_node1: 'profitbricks-build5',  my_node2: 'profitbricks-build1'  }
-                -  '3': &bd_amd_1_15  { my_node1: 'profitbricks-build1',  my_node2: 'profitbricks-build15' }
-                -  '4': &bd_amd_15_1  { my_node1: 'profitbricks-build15', my_node2: 'profitbricks-build1'  }
-                -  '5': &bd_amd_11_5  { my_node1: 'profitbricks-build11', my_node2: 'profitbricks-build5'  }
-                -  '6': &bd_amd_5_11  { my_node1: 'profitbricks-build5',  my_node2: 'profitbricks-build11' }
-                -  '7': &bd_amd_11_15 { my_node1: 'profitbricks-build11', my_node2: 'profitbricks-build15' }
-                -  '8': &bd_amd_15_11 { my_node1: 'profitbricks-build15', my_node2: 'profitbricks-build11' }
-                -  '9': *bd_amd_1_5
-                - '10': *bd_amd_5_1
-                - '11': *bd_amd_1_15
-                - '12': *bd_amd_15_1
-                - '13': *bd_amd_11_5
-                - '14': *bd_amd_5_11
-                - '15': *bd_amd_11_15
-                - '16': *bd_amd_15_11
-                - '17': *bd_amd_1_5
-                - '18': *bd_amd_5_1
-                - '19': *bd_amd_1_15
-                - '20': *bd_amd_15_1
-                - '21': *bd_amd_11_5
-                - '22': *bd_amd_5_11
-                - '23': *bd_amd_11_15
-                - '24': *bd_amd_15_11
-                - '25': *bd_amd_1_5
-                - '26': *bd_amd_5_1
-                - '27': *bd_amd_1_15
-                - '28': *bd_amd_15_1
-                - '29': *bd_amd_11_5
-                - '30': *bd_amd_5_11
-                - '31': *bd_amd_11_15
-                - '32': *bd_amd_15_11
+                -  '1': &builders_1_5   { my_node1: 'profitbricks-build1',  my_node2: 'profitbricks-build5'  }
+                -  '2': &builders_5_1   { my_node1: 'profitbricks-build5',  my_node2: 'profitbricks-build1'  }
+                -  '3': &builders_1_15  { my_node1: 'profitbricks-build1',  my_node2: 'profitbricks-build15' }
+                -  '4': &builders_15_1  { my_node1: 'profitbricks-build15', my_node2: 'profitbricks-build1'  }
+                -  '5': &builders_11_5  { my_node1: 'profitbricks-build11', my_node2: 'profitbricks-build5'  }
+                -  '6': &builders_5_11  { my_node1: 'profitbricks-build5',  my_node2: 'profitbricks-build11' }
+                -  '7': &builders_11_15 { my_node1: 'profitbricks-build11', my_node2: 'profitbricks-build15' }
+                -  '8': &builders_15_11 { my_node1: 'profitbricks-build15', my_node2: 'profitbricks-build11' }
+                -  '9': *builders_1_5
+                - '10': *builders_5_1
+                - '11': *builders_1_15
+                - '12': *builders_15_1
+                - '13': *builders_11_5
+                - '14': *builders_5_11
+                - '15': *builders_11_15
+                - '16': *builders_15_11
+                - '17': *builders_1_5
+                - '18': *builders_5_1
+                - '19': *builders_1_15
+                - '20': *builders_15_1
+                - '21': *builders_11_5
+                - '22': *builders_5_11
+                - '23': *builders_11_15
+                - '24': *builders_15_11
+                - '25': *builders_1_5
+                - '26': *builders_5_1
+                - '27': *builders_1_15
+                - '28': *builders_15_1
+                - '29': *builders_11_5
+                - '30': *builders_5_11
+                - '31': *builders_11_15
+                - '32': *builders_15_11
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''
@@ -636,30 +636,30 @@
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'i386'
             my_num:
-                -  '1': &bd_amd_2_6   { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build6'  }
-                -  '2': &bd_amd_6_2   { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build2'  }
-                -  '3': &bd_amd_2_16  { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build16' }
-                -  '4': &bd_amd_16_2  { my_node1: 'profitbricks-build16', my_node2: 'profitbricks-build2'  }
-                -  '5': &bd_amd_12_6  { my_node1: 'profitbricks-build12', my_node2: 'profitbricks-build6'  }
-                -  '6': &bd_amd_6_12  { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build12' }
-                -  '7': &bd_amd_12_16 { my_node1: 'profitbricks-build12', my_node2: 'profitbricks-build16' }
-                -  '8': &bd_amd_16_12 { my_node1: 'profitbricks-build16', my_node2: 'profitbricks-build12' }
-                -  '9': *bd_amd_2_6
-                - '10': *bd_amd_6_2
-                - '11': *bd_amd_2_16
-                - '12': *bd_amd_16_2
-                - '13': *bd_amd_12_6
-                - '14': *bd_amd_6_12
-                - '15': *bd_amd_12_16
-                - '16': *bd_amd_16_12
-                - '17': *bd_amd_2_6
-                - '18': *bd_amd_6_2
-                - '19': *bd_amd_2_16
-                - '20': *bd_amd_16_2
-                - '21': *bd_amd_12_6
-                - '22': *bd_amd_6_12
-                - '23': *bd_amd_12_16
-                - '24': *bd_amd_16_12
+                -  '1': &builders_2_6   { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build6'  }
+                -  '2': &builders_6_2   { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build2'  }
+                -  '3': &builders_2_16  { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build16' }
+                -  '4': &builders_16_2  { my_node1: 'profitbricks-build16', my_node2: 'profitbricks-build2'  }
+                -  '5': &builders_12_6  { my_node1: 'profitbricks-build12', my_node2: 'profitbricks-build6'  }
+                -  '6': &builders_6_12  { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build12' }
+                -  '7': &builders_12_16 { my_node1: 'profitbricks-build12', my_node2: 'profitbricks-build16' }
+                -  '8': &builders_16_12 { my_node1: 'profitbricks-build16', my_node2: 'profitbricks-build12' }
+                -  '9': *builders_2_6
+                - '10': *builders_6_2
+                - '11': *builders_2_16
+                - '12': *builders_16_2
+                - '13': *builders_12_6
+                - '14': *builders_6_12
+                - '15': *builders_12_16
+                - '16': *builders_16_12
+                - '17': *builders_2_6
+                - '18': *builders_6_2
+                - '19': *builders_2_16
+                - '20': *builders_16_2
+                - '21': *builders_12_6
+                - '22': *builders_6_12
+                - '23': *builders_12_16
+                - '24': *builders_16_12
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

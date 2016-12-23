@@ -82,8 +82,8 @@
       - priority-sorter:
           priority: '150'
       - throttle:
-          max-total: 58
-          max-per-node: 58
+          max-total: 180
+          max-per-node: 180
           enabled: true
           option: category
           categories:

@@ -588,7 +588,7 @@ check_suitability() {
 			break
 		fi
 		# special case arm…
-		if ( [ "$ARCH" = "armhf" ] || "$ARCH" = "arm64" ] ) && [ "$arch" = "any-arm" ] ; then
+		if ( [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ] ) && [ "$arch" = "any-arm" ] ; then
 			SUITABLE=true
 			break
 		fi

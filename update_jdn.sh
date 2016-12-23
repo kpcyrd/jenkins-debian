@@ -93,7 +93,9 @@ users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)
 
 ( $UP2DATE && [ -z $(find authorized_keys -newer $0) ] ) || for user in ${users}; do
 	# -v is a bashism to check for set variables, used here to see if this user is active on this host
-	[ -v user_host_groups["$user","$HOSTNAME"] -o -v user_host_groups["$user",'*'] -o -v user_host_groups["$user", "$DPKG_ARCH"]  ] || continue
+	if [ ! -v user_host_groups["$user","$HOSTNAME"] ] && [ ! -v user_host_groups["$user",'*'] ] && [ -v user_host_groups["$user", "$DPKG_ARCH"] ] ; then
+		continue
+	fi
 
 	# create the user
 	if ! getent passwd $user > /dev/null ; then

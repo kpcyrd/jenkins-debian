@@ -10,7 +10,7 @@ JAVA=/usr/bin/java
 #JAVA_ARGS="-Djava.awt.headless=true"  # Allow graphs etc. to work even when an X server is present
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
-JAVA_ARGS="-Djava.awt.headless=true -Xmx4096m -XX:MaxPermSize=384m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/lib/jenkins/heapDumps/"
+JAVA_ARGS="-Djava.awt.headless=true -Xms4G -Xmx8G -server -XX:+AlwaysPreTouch -XX:MaxPermSize=384m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/lib/jenkins/heapDumps/ -Xloggc:$JENKINS_HOME/gc-%t.log -XX:NumberOfGCLogFiles=5 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=20m -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 
 PIDFILE=/var/run/$NAME/$NAME.pid
 
@@ -38,7 +38,7 @@ JENKINS_LOG=/var/log/$NAME/$NAME.log
 #   this is on by default because http://github.com/jenkinsci/jenkins/commit/2fb288474e980d0e7ff9c4a3b768874835a3e92e
 #   reported that Ubuntu's PAM configuration doesn't include pam_limits.so, and as a result the # of file
 #   descriptors are forced to 1024 regardless of /etc/security/limits.conf
-MAXOPENFILES=32768
+MAXOPENFILES=65535
 
 # set the umask to control permission bits of files that Jenkins creates.
 #   027 makes files read-only for group and inaccessible for others, which some security sensitive users

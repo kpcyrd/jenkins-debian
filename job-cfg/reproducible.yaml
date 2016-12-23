@@ -642,18 +642,28 @@
             my_num:
                 -  '1': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled10'     }
                 -  '2': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled11'     }
-                - '10': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled12'     }
-                - '11': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled13'     }
-                - '19': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled14'     }
-                - '20': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled15'     }
-                - '28': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled16'     }
-                - '29': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled9'      }
-                - '37': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled10'     }
-                - '38': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled11'     }
-                - '46': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled12'     }
-                - '47': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled13'     }
-                - '55': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled14'     }
-                - '56': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled15'     }
+                -  '3': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled13'     }
+                -  '4': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled14'     }
+                -  '5': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled15'     }
+                -  '6': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled16'     }
+                -  '7': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled9'      }
+                -  '8': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled10'     }
+                -  '9': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled12'     }
+                - '10': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled13'     }
+                - '11': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled14'     }
+                - '12': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled15'     }
+                - '13': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled16'     }
+                - '14': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled9'      }
+                - '15': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled10'     }
+                - '16': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled11'     }
+                - '17': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled12'     }
+                - '18': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled13'     }
+                - '19': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled14'     }
+                - '20': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled16'     }
+                - '21': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled9'      }
+                - '22': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled15'     }
+                - '23': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled11'     }
+                - '24': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled12'     }
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

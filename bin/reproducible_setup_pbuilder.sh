@@ -20,7 +20,7 @@ fi
 #
 # create script to configure a pbuilder chroot
 #
-create_customized_tmpfile ()
+create_customized_tmpfile() {
 	TMPFILE=$1
 	shift
 	cat >> $TMPFILE <<- EOF

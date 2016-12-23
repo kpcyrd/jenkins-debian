@@ -64,9 +64,9 @@ LIMITS_404 defines how many packages with status 404 are rescheduled at max.
 
 """
 # only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 20, 'i386': 30, 'armhf': 30}
+MINIMUM_AGE = {'amd64': 20, 'i386': 30, 'arm64': 42, 'armhf':30 }
 # maximum queue size, see explainations above
-MAXIMA = {'amd64': 750, 'i386': 750, 'armhf': 750}
+MAXIMA = {'amd64': 750, 'i386': 750, 'arm64': 750, 'armhf': 750}
 # limits, see explainations above
 LIMITS = {
     'untested': {
@@ -76,6 +76,11 @@ LIMITS = {
             'experimental': {'*': 440},
         },
         'i386': {
+            'testing': {'*': 440},
+            'unstable': {'*': 440},
+            'experimental': {'*': 440},
+        },
+       'arm64': {
             'testing': {'*': 440},
             'unstable': {'*': 440},
             'experimental': {'*': 440},
@@ -97,6 +102,11 @@ LIMITS = {
             'unstable': {1: (100, 250), 2: (200, 200), '*': 150},
             'experimental': {1: (100, 250), 2: (200, 200), '*': 50},
         },
+        'arm64': {
+            'testing': {1: (100, 200), 2: (200, 200), '*': 50},
+            'unstable': {1: (100, 200), 2: (200, 200), '*': 75},
+            'experimental': {1: (100, 200), 2: (200, 200), '*': 25},
+        },
         'armhf': {
             'testing': {1: (100, 200), 2: (200, 200), '*': 50},
             'unstable': {1: (100, 200), 2: (200, 200), '*': 75},
@@ -114,6 +124,11 @@ LIMITS = {
             'unstable': {1: (700, 40), 2: (500, 20), '*': 5},
             'experimental': {1: (700, 40), 2: (500, 20), '*': 2},
         },
+        'arm64': {
+            'testing': {1: (575, 20), 2: (450, 10), '*': 5},
+            'unstable': {1: (575, 20), 2: (450, 10), '*': 5},
+            'experimental': {1: (575, 20), 2: (450, 10), '*': 2},
+        }
         'armhf': {
             'testing': {1: (575, 20), 2: (450, 10), '*': 5},
             'unstable': {1: (575, 20), 2: (450, 10), '*': 5},
@@ -131,6 +146,11 @@ LIMITS = {
             'unstable': {1: (700, 400), 2: (500, 200), '*': 50},
             'experimental': {1: (700, 400), 2: (500, 200), '*': 20},
         },
+        'arm64': {
+            'testing': {1: (575, 200), 2: (450, 100), '*': 50},
+            'unstable': {1: (575, 200), 2: (450, 100), '*': 50},
+            'experimental': {1: (575, 200), 2: (450, 100), '*': 20},
+        }
         'armhf': {
             'testing': {1: (575, 200), 2: (450, 100), '*': 50},
             'unstable': {1: (575, 200), 2: (450, 100), '*': 50},
@@ -148,6 +168,11 @@ LIMITS = {
             'unstable': {1: (300, 800), 2: (500, 500), '*': 0},
             'experimental': {1: (300, 70), 2: (500, 50), '*': 0},
         },
+        'arm64': {
+            'testing': {1: (300, 8), 2: (500, 5), '*': 0},
+            'unstable': {1: (300, 800), 2: (500, 500), '*': 0},
+            'experimental': {1: (300, 70), 2: (500, 50), '*': 0},
+        }
         'armhf': {
             'testing': {1: (300, 8), 2: (500, 5), '*': 0},
             'unstable': {1: (300, 800), 2: (500, 500), '*': 0},

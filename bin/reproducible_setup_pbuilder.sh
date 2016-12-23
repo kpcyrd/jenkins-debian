@@ -61,6 +61,13 @@ echo
 echo "Configuring APT to ignore the Release file expiration"
 echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
 echo
+echo "Working around debootstrap bug https://bugs.debian.org/817236"
+if [ -L /dev/ptmx ]
+	rm /dev/ptmx
+	mknod -m 666 /dev/ptmx c 5 2
+fi
+echo ".. done"
+echo
 apt-get update
 apt-get -y upgrade
 apt-get install -y $@

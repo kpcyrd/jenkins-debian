@@ -423,6 +423,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			  fi
 			  if grep -q https $TMPFILE ; then
 				echo "$(grep -c https $TMPFILE) entries found:"
+				for a in $ARCHS ; do
+						echo "- $(grep https $TMPFILE|grep -c $a) on $a."
+				done
 			  else
 				echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
 			  fi

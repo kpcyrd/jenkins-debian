@@ -111,7 +111,7 @@ elif [ "$1" = "upgradey" ] ; then
 	real_command="export LANG=C && sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get -y dist-upgrade && sudo apt-get clean"
 	shift
 elif [ "$1" = "rmstamp" ] ; then
-	real_command="sudo rm /var/log/jenkins/*stamp"
+	real_command="sudo rm -f /var/log/jenkins/*stamp && echo '__reallyreally=ok__'"
 	reset_clock=false
 	shift
 elif [ "$1" = "check" ] ; then

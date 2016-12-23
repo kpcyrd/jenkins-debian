@@ -134,9 +134,11 @@ setup_pbuilder() {
 BASETGZ=/var/cache/pbuilder/$SUITE-reproducible-base.tgz
 STAMP=/var/log/jenkins/$SUITE-reproducible-base.tgz.stamp
 
-if [ -f "$STAMP" -a $(stat -c %Y "$STAMP") -gt $(date +%s) ]; then
-	echo "stamp file has a timestamp from the future."
-	exit 1
+if [ -f "$STAMP" ] ; then
+	if [ -f "$STAMP" -a $(stat -c %Y "$STAMP") -gt $(date +%s) ]; then
+		echo "stamp file has a timestamp from the future."
+		exit 1
+	fi
 fi
 
 OLDSTAMP=$(find $STAMP -mtime +1 -exec ls -lad {} \; || echo "nostamp")

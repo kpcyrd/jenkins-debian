@@ -118,8 +118,8 @@
       - priority-sorter:
           priority: '150'
       - throttle:
-          max-total: 58
-          max-per-node: 58
+          max-total: 180
+          max-per-node: 180
           enabled: true
           option: category
           categories:
@@ -154,13 +154,6 @@
       - sidebar: *sb1
       - sidebar: *sb2
       - sidebar: *sb3
-      - throttle:
-          max-total: 9
-          max-per-node: 9
-          enabled: true
-          option: category
-          categories:
-            - reproducible      # no special category yet
     triggers:
       - timed: '{my_timed}'
     logrotate:
@@ -188,13 +181,6 @@
       - sidebar: *sb1
       - sidebar: *sb2
       - sidebar: *sb3
-      - throttle:
-          max-total: 9
-          max-per-node: 9
-          enabled: true
-          option: category
-          categories:
-            - reproducible      # no special category yet
     triggers:
       - timed: '{my_timed}'
       - pollscm:
@@ -234,13 +220,6 @@
       - sidebar: *sb1
       - sidebar: *sb2
       - sidebar: *sb3
-      - throttle:
-          max-total: 9
-          max-per-node: 9
-          enabled: true
-          option: category
-          categories:
-            - reproducible      # no special category yet
     triggers:
       - timed: '{my_timed}'
     logrotate:

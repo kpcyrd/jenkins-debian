@@ -638,7 +638,7 @@
 
         # always build on an odd numbered node and an even numbered node
         #
-        # for i in sled9 sled10 sled11 sled12 sled13 sled14 sled15 sled16 ; do echo "$i: " ; grep node1 job-cfg/reproducible.yaml | grep $i ; done
+        # for i in sled9 sled10 sled11 sled12 sled13 sled14 sled15 sled16 ; do echo "$i: " ; grep node1 job-cfg/reproducible.yaml | grep $i | grep -v grep ; done
         #
         - '{name}_builder_{my_arch}_{my_num}':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
@@ -668,6 +668,14 @@
                 - '22': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled15'     }
                 - '23': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled11'     }
                 - '24': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled16'     }
+                - '25': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled16'     }
+                - '26': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled9'      }
+                - '27': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled15'     }
+                - '28': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled10'     }
+                - '29': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled13'     }
+                - '30': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled12'     }
+                - '31': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled11'     }
+                - '32': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled14'     }
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

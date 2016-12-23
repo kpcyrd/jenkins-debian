@@ -636,34 +636,38 @@
             my_timed: '* * * * *'
             my_hname: ''
 
+        # always build on an odd numbered node and an even numbered node
+        #
+        # for i in sled9 sled10 sled11 sled12 sled13 sled14 sled15 sled16 ; do echo "$i: " ; grep node1 job-cfg/reproducible.yaml | grep $i ; done
+        #
         - '{name}_builder_{my_arch}_{my_num}':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'arm64'
             my_num:
                 -  '1': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled10'     }
-                -  '2': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled11'     }
-                -  '3': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled13'     }
-                -  '4': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled14'     }
-                -  '5': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled15'     }
-                -  '6': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled16'     }
-                -  '7': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled9'      }
-                -  '8': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled10'     }
-                -  '9': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled12'     }
-                - '10': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled13'     }
-                - '11': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled14'     }
-                - '12': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled15'     }
-                - '13': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled16'     }
-                - '14': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled9'      }
-                - '15': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled10'     }
-                - '16': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled11'     }
-                - '17': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled12'     }
-                - '18': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled13'     }
-                - '19': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled14'     }
-                - '20': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled16'     }
-                - '21': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled9'      }
+                -  '2': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled12'     }
+                -  '3': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled14'     }
+                -  '4': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled9'      }
+                -  '5': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled9'      }
+                -  '6': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled9'      }
+                -  '7': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled11'     }
+                -  '8': { my_node1: 'codethink-sled10',    my_node2: 'codethink-sled13'     }
+                -  '9': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled10'     }
+                - '10': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled10'     }
+                - '11': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled11'     }
+                - '12': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled14'     }
+                - '13': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled16'     }
+                - '14': { my_node1: 'codethink-sled11',    my_node2: 'codethink-sled12'     }
+                - '15': { my_node1: 'codethink-sled12',    my_node2: 'codethink-sled15'     }
+                - '16': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled16'     }
+                - '17': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled12'     }
+                - '18': { my_node1: 'codethink-sled13',    my_node2: 'codethink-sled14'     }
+                - '19': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled13'     }
+                - '20': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled13'     }
+                - '21': { my_node1: 'codethink-sled14',    my_node2: 'codethink-sled15'     }
                 - '22': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled15'     }
                 - '23': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled11'     }
-                - '24': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled12'     }
+                - '24': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled16'     }
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

@@ -241,7 +241,8 @@ if [ -f /etc/debian_version ] ; then
 			bash-completion 
 			bc
 			bsd-mailx
-			curl 
+			curl
+			debian-archive-keyring
 			debootstrap 
 			devscripts
 			eatmydata

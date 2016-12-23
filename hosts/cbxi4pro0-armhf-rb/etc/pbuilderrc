@@ -12,7 +12,7 @@ case $HOSTNAME in
 	codethink*)									MIRRORSITE=http://ftp.uk.debian.org/debian ;;
 	*)										echo "unsupported host, exiting." ; exit 1 ;;
 esac
-# only use eatmydata on armhf+i386 - on amd64 we build in tmpfs anyway - FIXME: decide about codethink hosts
+# only use eatmydata on armhf+i386 - on amd64+arm64 we build in tmpfs anyway
 case $HOSTNAME in
 	profitbricks-build*i386)
 		EATMYDATA=yes ;;

@@ -167,6 +167,10 @@ case $HOSTNAME in
 		TMPFSSIZE=200
 		TMPSIZE=15
 		;;
+	codethink*)
+		TMPFSSIZE=100
+		TMPSIZE=15
+		;;
 	*) ;;
 esac
 case $HOSTNAME in
@@ -176,7 +180,7 @@ case $HOSTNAME in
 			exit 1
 		fi
 		;;
-	jenkins|profitbricks-build*amd64)
+	jenkins|profitbricks-build*amd64|codethink*)
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
 		fi

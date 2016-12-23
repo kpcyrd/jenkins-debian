@@ -682,7 +682,7 @@
                 - '47': { my_node1: 'codethink-sled15',    my_node2: 'codethink-sled13'     }
                 - '55': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled14'     }
                 - '56': { my_node1: 'codethink-sled16',    my_node2: 'codethink-sled15'     }
-           my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
+            my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''
 

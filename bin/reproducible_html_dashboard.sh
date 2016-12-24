@@ -314,6 +314,7 @@ write_build_performance_stats() {
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
 		write_page "<td>$MIN minutes, $SEC seconds</td>"
 	done
+
 	local TIMESPAN_VERBOSE="4 weeks"
 	local TIMESPAN_RAW="28"
 	# Find stats for 28 days since yesterday, no stats exist for today
@@ -341,9 +342,19 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
+		if [ "$ARCH" = "arm64" ] ; then
+			TIMESPAN_RAW="7"
+			local ARM64_DISCLAIMER=" <span style=\"font-size:0.8em;\">(daily average in the last week)</span>"
+		else
+			TIMESPAN_RAW="28"
+			local ARM64_DISCLAIMER=""
+		fi
+		local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
+		local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
+
 		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-		write_page "<td>$RESULT</td>"
+		write_page "<td>$RESULT$ARM64_DISCLAIMER</td>"
 	done
 	local TIMESPAN_VERBOSE="3 months"
 	local TIMESPAN_RAW="91"
@@ -354,6 +365,9 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
+		if [ "$ARCH" = "arm64" ] ; then
+			RESULT="&nbsp;"
+		fi
 		write_page "<td>$RESULT</td>"
 	done
 	write_page "</tr></table>"

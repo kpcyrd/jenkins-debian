@@ -254,7 +254,7 @@ openwrt_download() {
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config $CONFIG
-	make download -j $NUM_CPU IGNORE_ERRORS=ym
+	make download -j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1
 }
 
 openwrt_get_banner() {

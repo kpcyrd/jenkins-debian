@@ -230,7 +230,6 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * squid is not used, we copy a /etc/squid3/squid3.conf but ubuntu uses /etc/squid/squid.conf
 * vary the time, run half the nodes in the future
 * fix regular munin warnings
-* remove ntp munin plugins
 * remove unwanted users from buildnodes (accidently created due to buggy update_jdn)
 * update variations table
 * add arm64 to THANKS+README

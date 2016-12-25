@@ -416,7 +416,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				# regular logfile, logrotate is used (and the file aint owned by jenkins)
 				cp $PROBLEM $TMPFILE
 			fi
-			( if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ; then 
+			( if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
 				echo "diskspace issues should always be investigated."
 			  else
 				echo "A few entries per day are normal, a few dozens or hundreds probably not."

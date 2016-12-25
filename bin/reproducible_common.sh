@@ -642,6 +642,9 @@ create_png_from_table() {
 	elif [ "$ARCH" = "i386" ] ; then
 		# i386 was only build since 2016-03-28
 		WHERE2_EXTRA="WHERE s.datum >= '2016-03-28'"
+	elif [ "$ARCH" = "arm64" ] ; then
+		# arm63 was only build since 2016-12-23
+		WHERE2_EXTRA="WHERE s.datum >= '2016-12-23'"
 	else
 		WHERE2_EXTRA=""
 	fi
@@ -661,6 +664,11 @@ create_png_from_table() {
 			if [ $1 -eq 2 ] ; then
 				# i386 was only build since 2016-03-28
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-03-28'"
+			fi
+		elif [ "$ARCH" = "arm64" ]  ; then
+			if [ $1 -eq 2 ] ; then
+				# arm64 was only build since 2016-12-23
+				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-12-23'"
 			fi
 		fi
 		# testing/amd64 was only build since...

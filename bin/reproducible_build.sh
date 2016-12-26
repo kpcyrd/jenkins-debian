@@ -797,7 +797,7 @@ check_installed_build_depends() {
 	RESULT=$?
 	set -e
 	if [ $RESULT -eq 1 ] ; then
-		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror updates. Doing the first build again, please check ${BUILD_URL}console for now..." >> /var/log/jenkins/reproducible-env-changes.log
+		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror updates. Doing the first build again, please check ${BUILD_URL}console for now...\n" >> /var/log/jenkins/reproducible-env-changes.log
 		echo
 		echo "============================================================================="
 		echo "$(date -u) - The installed build depends vary according to the two .buildinfo files, probably due to mirror updates. Doing the first build on $NODE1 again."

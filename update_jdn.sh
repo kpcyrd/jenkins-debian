@@ -42,6 +42,7 @@ case $HOSTNAME in
 		# set correct date
 		sudo service ntp stop
 		sudo ntpdate -b de.pool.ntp.org
+		;;
 	*)	;;
 esac
 

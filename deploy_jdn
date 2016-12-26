@@ -172,7 +172,7 @@ for i in $HOSTS ; do
 				#  set correct future date
 				command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
 				;;
-			codethink9*|codethink11*|codethink13*|codethink15*)
+			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*)
 				#  set correct future date
 				command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
 				;;

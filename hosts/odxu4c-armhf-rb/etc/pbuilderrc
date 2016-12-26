@@ -40,7 +40,9 @@ fi
 # needed to ignore failures due to running 398 days in the future…
 # (only on those 4 nodes running in the future…)
 if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ] || \
-   [ "$HOSTNAME" = "profitbricks-build15-amd64" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
+   [ "$HOSTNAME" = "profitbricks-build15-amd64" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] || \
+   [ "$HOSTNAME" = "codethink-sled9-arm64" ] || [ "$HOSTNAME" = "codethink-sled11-arm64" ] || \
+   [ "$HOSTNAME" = "codethink-sled13-arm64" ] || [ "$HOSTNAME" = "codethink-sled15-arm64" ] ; then
 	case "$PBUILDER_OPERATION" in
 		create)
 			APTGETOPT=(-o Acquire::Check-Valid-Until="false")

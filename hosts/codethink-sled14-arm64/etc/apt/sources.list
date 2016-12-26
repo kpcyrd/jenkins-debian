@@ -53,3 +53,6 @@ deb http://ports.ubuntu.com/ubuntu-ports xenial-security universe
 deb http://ports.ubuntu.com/ubuntu-ports xenial-security multiverse
 # deb-src http://ports.ubuntu.com/ubuntu-ports xenial-security multiverse
 
+# < mapreri> best would be for the backports team to accept my backport to xenial... (currently in the mod queue)
+deb http://ftp.de.debian.org/debian/ jessie-backports main contrib non-free
+

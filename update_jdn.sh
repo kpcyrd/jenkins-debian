@@ -263,6 +263,7 @@ if [ -f /etc/debian_version ] ; then
 			haveged
 			htop
 			less
+			lintian
 			locales-all
 			lsof
 			molly-guard
@@ -481,7 +482,7 @@ if [ -f /etc/debian_version ] ; then
 		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		case $HOSTNAME in
-			codethink*) 	$UP2DATE || sudo apt-get install pbuilder lintian
+			codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder
 					;;
 			*)		$UP2DATE || sudo apt-get install -t jessie-backports \
 						pbuilder lintian || echo "this should only fail on the first install"

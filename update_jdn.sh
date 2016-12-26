@@ -38,6 +38,10 @@ case $HOSTNAME in
 		sudo service ntp stop
 		sudo ntpdate -b de.pool.ntp.org
 		;;
+	codethink9*|codethink11*|codethink13*|codethink15*)
+		# set correct date
+		sudo service ntp stop
+		sudo ntpdate -b de.pool.ntp.org
 	*)	;;
 esac
 
@@ -294,6 +298,7 @@ if [ -f /etc/debian_version ] ; then
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
 			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) DEBS="$DEBS ntpdate" ;;
+			codethink9*|codethink11*|codethink13*|codethink15*) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/lede/netbsd/fedora jobs
@@ -755,6 +760,9 @@ explain "$(date) - finished deployment."
 case $HOSTNAME in
 	# set time back to the future
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
+		sudo date --set="+398 days +6 hours + 23 minutes"
+		;;
+	codethink9*|codethink11*|codethink13*|codethink15*)
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	jenkins)

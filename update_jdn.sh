@@ -479,7 +479,7 @@ if [ -f /etc/debian_version ] ; then
 		else
 			MASTERDEBS=""
 		fi
-		$UP2DATE || sudo apt-get update
+		$UP2DATE || ( sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/apt/sources.list /etc/apt ; sudo apt-get update )
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		case $HOSTNAME in
 			codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder

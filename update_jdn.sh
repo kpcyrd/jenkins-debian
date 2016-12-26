@@ -522,6 +522,7 @@ sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr/
 #
 sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenkins
 sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm
+[ -f /etc/mailname ] || ( echo $HOSTNAME.debian.net | sudo tee /etc/mailname )
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	if [ $BASEDIR/hosts/$HOSTNAME/etc/apache2 -nt $STAMP ] || [ ! -f $STAMP ] ; then

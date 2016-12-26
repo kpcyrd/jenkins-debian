@@ -10,9 +10,6 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
  
-# overwrite defaults as we need this order here
-ARCHS="amd64 i386 armhf"
-
 VIEW=repositories
 PAGE=index_${VIEW}.html
 SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)

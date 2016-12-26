@@ -10,7 +10,7 @@ Debian packages for t.r-b.o
  ** 8 cores and 16 GB memory for profitbricks-build3-amd64.debian.net used for building OpenWrt, LEDE, coreboot, Fedora, Archlinux and NetBSD for t.r-b.o
  ** 8 cores and 16 GB memory for profitbricks-build4-amd64.debian.net used for building OpenWrt, LEDE, coreboot, Fedora, Archlinux and NetBSD for t.r-b.o, running in the future
  ** 16 cores and 48 GB memory for profitbricks-build5-amd64.debian.net used for building amd64 Debian packages for t.r-b.o, running in the future
- ** 9 cores and 36 GB memory for profitbricks-build6-i386.debian.net sed for building i386 Debian packages for t.r-b.o, running in the future
+ ** 9 cores and 36 GB memory for profitbricks-build6-i386.debian.net used for building i386 Debian packages for t.r-b.o, running in the future
  ** 15 cores and 48 GB memory for profitbricks-build11-amd64.debian.net used for building amd64 Debian packages for tests.reproducible-builds.org (t.r-b.o)
  ** 10 cores and 36 GB memory for profitbricks-build12-i386.debian.net used for building i386
 Debian packages for t.r-b.o
@@ -28,6 +28,15 @@ Debian packages for t.r-b.o
  ** two dual-core with 2 GB RAM,
  ** two quad-cores with 1 GB RAM and
  ** three dual-cores with 1 GB RAM.
+ * link:https://codethink.co.uk has kindly offered access to 8 arm64 build nodes:
+ ** 8 cores and 64 GB memory for codethink-sled9-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future
+ ** 8 cores and 64 GB memory for codethink-sled10-arm64.debian.net used for building arm64 Debian packages for t.r-b.o
+ ** 8 cores and 64 GB memory for codethink-sled11-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future
+ ** 8 cores and 64 GB memory for codethink-sled12-arm64.debian.net used for building arm64 Debian packages for t.r-b.o
+ ** 8 cores and 64 GB memory for codethink-sled13-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future
+ ** 8 cores and 64 GB memory for codethink-sled14-arm64.debian.net used for building arm64 Debian packages for t.r-b.o
+ ** 8 cores and 64 GB memory for codethink-sled15-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future
+ ** 8 cores and 64 GB memory for codethink-sled16-arm64.debian.net used for building arm64 Debian packages for t.r-b.o
  * link:https://letsencrypt.org[Let's encrypt] provides free of charge SSL certificates for jenkins.debian.net, reproducible.debian.net and tests.reproducible-builds.org.
 
 ==== Past sponsors

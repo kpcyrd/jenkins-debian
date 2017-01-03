@@ -84,6 +84,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo "has been called using \"$@\" as arguments." 
 	echo
 	echo "Please send technical feedback about jenkins to qa-jenkins-dev@lists.alioth.debian.org,"
+	echo "or as a bug against the 'jenkins.debian.org' pseudo-package,"
 	echo "feedback about specific jobs result should go to their respective lists and/or the BTS."
 	echo 
 	echo "===================================================================================="

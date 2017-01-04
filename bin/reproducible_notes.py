@@ -55,8 +55,9 @@ def load_notes():
                                    'package with the name ' + pkg)
             try:
                 irc_msg("There is problem with the note for {} (it may "
-                    "have been removed from the archive). Please check {}".
-                    format(pkg, os.environ['BUILD_URL']))
+                    "have been removed from the archive). Please check {} and {}".
+                    format(pkg, os.environ['BUILD_URL'],
+                           "https://tracker.debian.org/pkg/" + pkg))
             except KeyError:
                 log.error('There is a problem with the note for %s - please '
                           'check.', pkg)

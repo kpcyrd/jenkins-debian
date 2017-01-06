@@ -300,7 +300,7 @@ if [ -f /etc/debian_version ] ; then
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
 			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) DEBS="$DEBS ntpdate" ;;
-			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) DEBS="$DEBS ntpdate" ;;
+			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) DEBS="$DEBS ntpdate fish" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/lede/netbsd/fedora jobs

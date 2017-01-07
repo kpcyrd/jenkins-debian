@@ -443,6 +443,12 @@ def purge_old_pages():
                     raise                    # directory' error (errno 17)
                 presents = []
             log.debug('page presents: ' + str(presents))
+
+            # get the existing packages
+            query = "SELECT name, suite, architecture FROM sources " + \
+                    "WHERE suite='{}' AND architecture='{}'".format(suite, arch)
+            cur_pkgs = set([(p.name, p.suite, p.architecture) for p in query_db(query)])
+
             for page in presents:
                 # When diffoscope results exist for a package, we create a page
                 # that displays the diffoscope results by default in the main iframe
@@ -450,13 +456,8 @@ def purge_old_pages():
                 if page == 'diffoscope-results':
                     continue
                 pkg = page.rsplit('.', 1)[0]
-                query = "SELECT s.name " + \
-                    "FROM sources AS s " + \
-                    "WHERE s.name='{name}' " + \
-                    "AND s.suite='{suite}' AND s.architecture='{arch}'"
-                query = query.format(name=pkg, suite=suite, arch=arch)
-                result = query_db(query)
-                if not result: # actually, the query produces no results
+
+                if (pkg, suite, arch) not in cur_pkgs:
                     log.info('There is no package named ' + pkg + ' from ' +
                              suite + '/' + arch + ' in the database. ' +
                              'Removing old page.')
@@ -476,13 +477,7 @@ def purge_old_pages():
             log.debug('diffoscope page presents: ' + str(presents))
             for page in presents:
                 pkg = page.rsplit('.', 1)[0]
-                query = "SELECT s.name " + \
-                    "FROM sources AS s " + \
-                    "WHERE s.name='{name}' " + \
-                    "AND s.suite='{suite}' AND s.architecture='{arch}'"
-                query = query.format(name=pkg, suite=suite, arch=arch)
-                result = query_db(query)
-                if not result: # actually, the query produces no results
+                if (pkg, suite, arch) not in cur_pkgs:
                     log.info('There is no package named ' + pkg + ' from ' +
                              suite + '/' + arch + '/diffoscope-results in ' + 
                              'the database. Removing old page.')

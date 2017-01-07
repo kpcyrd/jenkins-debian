@@ -205,7 +205,6 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** repo-comparison: check for binaries without source
 ** issues: currently only state of amd64 is shown. it would be better to display packages as unreproducible if they are unreproducible on any architecture.
 ** include diffoscope run time in log
-** install build deps before locale change to reduce noise between diff of b1 and b2 builds (needs a pbuilder type A hook)
 
 * missing variations:
 ** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user

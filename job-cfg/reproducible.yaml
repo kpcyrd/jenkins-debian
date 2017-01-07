@@ -1,6 +1,6 @@
 - defaults:
     name: reproducible
-    disabled: '{my_disabled}'
+    disabled: false
     project-type: freestyle
     properties:
       - sidebar: &sb1
@@ -796,7 +796,7 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
-                    my_disabled: true
+                    disabled: true
                 - 'setup_schroot_archlinux_profitbricks3':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'

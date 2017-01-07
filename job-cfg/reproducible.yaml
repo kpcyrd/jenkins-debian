@@ -1,6 +1,6 @@
 - defaults:
     name: reproducible
-    disabled: false
+    disabled: '{my_disabled}'
     project-type: freestyle
     properties:
       - sidebar: &sb1

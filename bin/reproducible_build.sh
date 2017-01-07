@@ -466,10 +466,9 @@ choose_package() {
 	if [ -s "$BAD_BUILDS" ] ; then
 		local STALELOG=/var/log/jenkins/reproducible-stale-builds.log
 		# reproducible-stale-builds.log is mailed once a day by reproducible_maintenance.sh
-		echo "$(date -u) - stale builds found, cleaning db from these:" | tee -a $STALELOG
+		echo -n "$(date -u) - stale builds found, cleaning db from these: " | tee -a $STALELOG
 		cat $BAD_BUILDS | tee -a $STALELOG
 		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE job LIKE '${JOB_PREFIX}%'"
-		echo >> $STALELOG
 	fi
 	rm -f $BAD_BUILDS
 	# mark build attempt, first test if none else marked a build attempt recently

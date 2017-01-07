@@ -428,6 +428,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				done
 			  else
 				echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
+				for a in $ARCHS ; do
+						echo "- $(grep -c '|${a}_' $TMPFILE) from $a."
+				done
 			  fi
 			  echo
 			  cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org

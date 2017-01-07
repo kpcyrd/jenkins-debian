@@ -57,6 +57,13 @@ if [ $? -ne 0 ] ; then
 	irc_message debian-reproducible "Proxy is down for $HOSTNAME, please tell the jenkins admins to fix this. (sudo service squid3 restart)"
 	exit 1
 fi
+# check for /dev/shm being mounted
+echo "$(date -u) - testing whether /dev/shm is mounted..."
+mount | grep -q "^tmpfs on /dev/shm"
+if [ $? -ne 0 ] ; then
+	irc_message debian-reproducible "/dev/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this. (by adding 'none /dev/shm tmpfs rw,nosuid,nodev,noexec 0 0' to /etc/fstab"
+	exit 1
+fi
 
 echo "$(date -u) - updating the schroots and pbuilder now..."
 # use host architecture (only)

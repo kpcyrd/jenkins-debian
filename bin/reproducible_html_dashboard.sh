@@ -343,8 +343,8 @@ write_build_performance_stats() {
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
 		if [ "$ARCH" = "arm64" ] ; then
-			TIMESPAN_RAW="7"
-			local ARM64_DISCLAIMER=" <span style=\"font-size:0.8em;\">(daily average in the last week)</span>"
+			TIMESPAN_RAW="14"
+			local ARM64_DISCLAIMER=" <span style=\"font-size:0.8em;\">(in the last 2 weeks)</span>"
 		else
 			TIMESPAN_RAW="28"
 			local ARM64_DISCLAIMER=""

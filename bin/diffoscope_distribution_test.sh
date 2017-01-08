@@ -10,6 +10,12 @@ common_init "$@"
 # common code (used for irc_message)
 . /srv/jenkins/bin/reproducible_common.sh
 
+send_irc_warning() {
+	local WARNING=$1
+	irc_message reproducible-builds "$WARNING"
+	echo "Warning: $WARNING"
+}
+
 check_pypi() {
 	TMPPYPI=$(mktemp -t diffoscope-distribution-XXXXXXXX)
 	# the following two lines are a bit fragile…
@@ -23,9 +29,7 @@ check_pypi() {
 	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_PYPI" ; then
 		echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "Fail: diffoscope in PyPI:   $DIFFOSCOPE_IN_PYPI"
-		WARNING="It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on PyPI, which only has $DIFFOSCOPE_IN_PYPI."
-		irc_message debian-reproducible "$WARNING"
-		echo "Warning: $WARNING"
+		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on PyPI, which only has $DIFFOSCOPE_IN_PYPI."
 		exit 0
 	else
 		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
@@ -47,9 +51,7 @@ check_whohas() {
 	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_WHOHAS" ; then
 		echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "Fail: diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
-		WARNING="It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available in $DISTRIBUTION, which only has $DIFFOSCOPE_IN_WHOHAS."
-		irc_message debian-reproducible "$WARNING"
-		echo "Warning: $WARNING"
+		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available in $DISTRIBUTION, which only has $DIFFOSCOPE_IN_WHOHAS."
 		exit 0
 	else
 		# FIXME: archlinux package version will be greater than Debian: 52-1 vs 52

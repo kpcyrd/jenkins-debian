@@ -433,7 +433,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				for a in $ARCHS archlinux fedora ; do
 						echo "- $(grep https $TMPFILE|grep -c _$a) from $a."
 				done
-			  else
+			  elif grep -q 'stale builds found' $TMPFILE ; then
 				echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
 				for a in $ARCHS ; do
 						echo "- $(grep -c ${a}_ $TMPFILE) from $a."

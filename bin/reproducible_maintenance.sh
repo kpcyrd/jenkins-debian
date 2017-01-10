@@ -420,8 +420,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				# maybe we should use logrotate for our jenkins logs too…
 				mv $PROBLEM $TMPFILE
 			else
-				# regular logfile, logrotate is used (and the file aint owned by jenkins)
-				cp $PROBLEM $TMPFILE
+				# regular logfile, logrotate is used (and the file ain't owned by jenkins)
+				# only care for yesterday's entries:
+				grep $(date -u -d "1 day ago" '+%Y-%m-%d') $PROBLEM > $TMPFILE || echo "no problems yesterday…" > $TMPFILE
 			fi
 			( if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
 				echo "diskspace issues should always be investigated."

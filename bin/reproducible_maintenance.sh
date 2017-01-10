@@ -45,6 +45,11 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 
 		# make the backup public
 		ln -s -f "$BACKUPFILE.xz" $BASE/reproducible.sql.xz
+
+		# recreate documentation of database
+		mkdir -p $BASE/schema
+		SCHEMAFILE="$BASE/schema/reproducibledb.html"
+		postgresql_autodoc -d $PGDATABASE -t html -f "$SCHEMAFILE"
 	fi
 fi
 

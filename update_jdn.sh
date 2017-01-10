@@ -438,6 +438,7 @@ if [ -f /etc/debian_version ] ; then
 				openjdk-7-jre 
 				pandoc
 				postgresql
+				postgresql-autodoc
 				postgresql-client-9.4 
 				poxml 
 				procmail 

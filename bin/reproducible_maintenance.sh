@@ -425,7 +425,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			fi
 			( if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
 				echo "diskspace issues should always be investigated."
-			  else
+			  elif [ "$(basename $PROBLEM)" != "postgresql-9.4-main.log " ]; then
 				echo "A few entries per day are normal, a few dozens or hundreds probably not."
 			  fi
 			  if grep -q https $TMPFILE ; then

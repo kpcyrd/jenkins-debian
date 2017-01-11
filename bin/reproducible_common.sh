@@ -157,7 +157,7 @@ write_icon() {
 
 write_page_header() {
 	# this is really quite uncomprehensible and should be killed
-	# the solution is to write all html pages with python…
+	# the solution is to write all HTML pages with python…
 	rm -f $PAGE
 	MAINVIEW="dashboard"
 	write_page "<!DOCTYPE html><html><head>"
@@ -513,7 +513,7 @@ gen_package_html() {
 	cd /srv/jenkins/bin
 	python3 -c "import reproducible_html_packages as rep
 pkg = rep.Package('$1', no_notes=True)
-rep.gen_packages_html([pkg], no_clean=True)" || echo "Warning: cannot update html pages for $1"
+rep.gen_packages_html([pkg], no_clean=True)" || echo "Warning: cannot update HTML pages for $1"
 	cd - > /dev/null
 }
 

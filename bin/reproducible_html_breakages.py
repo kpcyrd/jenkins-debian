@@ -39,7 +39,7 @@ def unrep_with_dbd_issues():
                 bad_dbd.append((pkg, version, suite, arch))
                 log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has '
                             'diffoscope output, but it does not seem to '
-                            'be an html page.')
+                            'be an HTML page.')
                 if pkg not in sources_without_dbd:
                     sources_without_dbd.append(pkg)
     return without_dbd, bad_dbd, sources_without_dbd

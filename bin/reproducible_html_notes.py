@@ -8,7 +8,7 @@
 #
 # Depends: python3 python3-yaml
 #
-# Build html pages based on the content of the notes.git repository
+# Build HTML pages based on the content of the notes.git repository
 
 import copy
 import yaml

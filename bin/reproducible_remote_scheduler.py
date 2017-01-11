@@ -298,4 +298,4 @@ if not (local and requester == "jenkins maintenance job") and len(ids) != 0:
     if not dry_run:
         irc_msg(message)
 
-generate_schedule(arch)  # update the html page
+generate_schedule(arch)  # update the HTML page

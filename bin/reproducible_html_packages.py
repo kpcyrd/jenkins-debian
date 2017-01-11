@@ -322,7 +322,7 @@ def gen_history_page(package, arch=None):
 
 def gen_packages_html(packages, no_clean=False):
     """
-    generate the /rb-pkg/package.html pages.
+    generate the /rb-pkg/package.HTML pages.
     packages should be a list of Package objects.
     """
     total = len(packages)

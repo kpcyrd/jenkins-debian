@@ -156,7 +156,7 @@ Installation tests inside chroot environments.
 ** old versions, already tested (at least two weeks ago)
 ** and also some old versions which failed to build (at least ten days ago), if no bug has been filed.
 
-* Several other jobs exist to build the html pages and to create two JSON files which can be downloaded from https://tests.reproducible-builds.org/reproducible.json and https://tests.reproducible-builds.org/reproducible-tracker.json. The 1st one has all the data (except history) and the 2nd has all the data we consider relevant to bother maintainers with, that is, some ftbfs isses are excluded.
+* Several other jobs exist to build the HTML pages and to create two JSON files which can be downloaded from https://tests.reproducible-builds.org/reproducible.json and https://tests.reproducible-builds.org/reproducible-tracker.json. The 1st one has all the data (except history) and the 2nd has all the data we consider relevant to bother maintainers with, that is, some ftbfs isses are excluded.
 
 * Information from https://anonscm.debian.org/git/reproducible/notes.git is incorporated on pushes to that git repo.
 

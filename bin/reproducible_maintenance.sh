@@ -421,36 +421,39 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 		if [ -s $PROBLEM ] ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			if [ "$(dirname $PROBLEM)" = "/var/log/jenkins" ] ; then
+				if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
+					echo "diskspace issues should always be investigated." > $TMPFILE
+				elif [ "$(basename $PROBLEM)" != "postgresql-9.4-main.log " ]; then
+					echo "A few entries per day are normal, a few dozens or hundreds probably not." > $TMPFILE
+				fi
+				if grep -q https $PROBLEM ; then
+					echo "$(grep -c https $PROBLEM) entries found:"
+					if [ "$(basename $PROBLEM)" != "reproducible-remote-error.log" ]; then
+						OTHERPROJECTS=""
+					else
+						OTHERPROJECTS="archlinux fedora"
+					fi
+					for a in $ARCHS $OTHERPROJECTS; do
+						echo "- $(grep https $PROBLEM|grep -c _$a) from $a." >> $TMPFILE
+					done
+				elif grep -q 'stale builds found' $PROBLEM ; then
+					echo "$(grep -c 'stale builds found' $PROBLEM || echo 0) entries found:" >> $TMPFILE
+					for a in $ARCHS ; do
+							echo "- $(grep -c ${a}_ $PROBLEM) from $a." >> $TMPFILE
+					done
+				fi
+				echo >> $TMPFILE
 				# maybe we should use logrotate for our jenkins logs too…
-				mv $PROBLEM $TMPFILE
+				cat $PROBLEM >> $TMPFILE
+				rm $PROBLEM
 			else
 				# regular logfile, logrotate is used (and the file ain't owned by jenkins)
 				# only care for yesterday's entries:
-				grep $(date -u -d "1 day ago" '+%Y-%m-%d') $PROBLEM > $TMPFILE || echo "no problems yesterday…" > $TMPFILE
+				( grep $(date -u -d "1 day ago" '+%Y-%m-%d') $PROBLEM || echo "no problems yesterday…" ) > $TMPFILE
 			fi
-			( if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
-				echo "diskspace issues should always be investigated."
-			  elif [ "$(basename $PROBLEM)" != "postgresql-9.4-main.log " ]; then
-				echo "A few entries per day are normal, a few dozens or hundreds probably not."
-			  fi
-			  if grep -q https $TMPFILE ; then
-				echo "$(grep -c https $TMPFILE) entries found:"
-				if [ "$(basename $PROBLEM)" != "reproducible-remote-error.log" ]; then
-					OTHERPROJECTS=""
-				else
-					OTHERPROJECTS="archlinux fedora"
-				fi
-				for a in $ARCHS $OTHERPROJECTS; do
-						echo "- $(grep https $TMPFILE|grep -c _$a) from $a."
-				done
-			  elif grep -q 'stale builds found' $TMPFILE ; then
-				echo "$(grep -c 'stale builds found' $TMPFILE || true) entries found:"
-				for a in $ARCHS ; do
-						echo "- $(grep -c ${a}_ $TMPFILE) from $a."
-				done
-			  fi
-			  echo
-			  cat $TMPFILE ) | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
+			if [ -s $TMPFILE ] ; then
+				cat $TMPFILE | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
+			fi
 			rm -f $TMPFILE
 		fi
 	done

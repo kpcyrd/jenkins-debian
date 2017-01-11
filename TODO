@@ -250,7 +250,6 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** fedora
 ** archlinux
 ** (fdroid)
-** (openwrt|lede-project)
 
 ==== reproducible coreboot
 

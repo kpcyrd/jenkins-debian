@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2016-2017 Holger Levsen <holger@layer-acht.org>
+#
 # Licensed under GPL-2
 #
 # Depends: python3

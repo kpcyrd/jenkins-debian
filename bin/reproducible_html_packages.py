@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2016-2017 Valerie R Young <spectranaut@riseup.net>
 # Based on reproducible_html_packages.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #

@@ -318,8 +318,8 @@ def gen_html():
     # TODO: graph this
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into a timeout ('
-    html += str(count_pkgs(without_dbd)) + ') or crashed ('
-    html += str(count_pkgs(bad_dbd)) + ').'
+    html += str(count_pkgs(bad_dbd)) + ') or crashed ('
+    html += str(count_pkgs(without_dbd)) + ').'
     html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
     # pbuilder-satisfydepends failed
     html += _gen_packages_html('failed to satisfy their build-dependencies:',

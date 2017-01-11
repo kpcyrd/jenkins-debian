@@ -435,7 +435,12 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			  fi
 			  if grep -q https $TMPFILE ; then
 				echo "$(grep -c https $TMPFILE) entries found:"
-				for a in $ARCHS archlinux fedora ; do
+				if [ "$(basename $PROBLEM)" != "reproducible-remote-error.log" ]; then
+					OTHERPROJECTS=""
+				else
+					OTHERPROJECTS="archlinux fedora"
+				fi
+				for a in $ARCHS $OTHERPROJECTS; do
 						echo "- $(grep https $TMPFILE|grep -c _$a) from $a."
 				done
 			  elif grep -q 'stale builds found' $TMPFILE ; then

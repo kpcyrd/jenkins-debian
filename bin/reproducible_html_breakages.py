@@ -44,6 +44,12 @@ def unrep_with_dbd_issues():
                     sources_without_dbd.append(pkg)
     return without_dbd, bad_dbd, sources_without_dbd
 
+def count_pkgs(pkgs_to_count=[]):
+    counted_pkgs = []
+    for pkg, version, suite, arch in pkgs_to_count:
+         if pkg not in counted_pkgs:
+             counted_pkgs.append(pkg)
+    return len(counted_pkgs)
 
 def not_unrep_with_dbd_file():
     log.info('running not_unrep_with_dbd_file check...')
@@ -312,8 +318,8 @@ def gen_html():
     # TODO: graph this
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into a timeout ('
-    html += str(len(without_dbd)) + ') or crashed ('
-    html += str(len(bad_dbd)) + ').'
+    html += str(count_pkgs(without_dbd)) + ') or crashed ('
+    html += str(count_pkgs(bad_dbd)) + ').'
     html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
     # pbuilder-satisfydepends failed
     html += _gen_packages_html('failed to satisfy their build-dependencies:',

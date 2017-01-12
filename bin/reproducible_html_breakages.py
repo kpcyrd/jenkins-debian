@@ -287,8 +287,8 @@ def _gen_files_html(header, entries):
         html += '</pre></p>\n'
     return html
 
-def create_breakages_graph():
-    png_file = os.path.join(DEBIAN_BASE, 'stats_breakages.png')
+def create_breakages_graph(png_file, main_label):
+    png_fullpath = os.path.join(DEBIAN_BASE, png_file)
     table = "stats_breakages"
     columns = ["datum", "diffoscope_timeouts", "diffoscope_crashes"]
     query = "SELECT {fields} FROM {table} ORDER BY datum".format(
@@ -304,10 +304,9 @@ def create_breakages_graph():
         f.flush()
 
         graph_command = os.path.join(BIN_PATH, "make_graph.py")
-        main_label = "source packages causing Diffoscope to timeout and crash"
         y_label = "Amount (packages)"
         log.info("Creating graph for stats_breakges.")
-        check_call([graph_command, csv_tmp_file, png_file, '2', main_label,
+        check_call([graph_command, csv_tmp_file, png_fullpath, '2', main_label,
                     y_label, '1920', '960'])
 
 
@@ -372,8 +371,11 @@ def gen_html():
     html += str(count_pkgs(without_dbd)) + ').'
     # gather stats and add graph
     update_stats_breakages(count_pkgs(bad_dbd), count_pkgs(without_dbd))
-    create_breakages_graph
-    html += '<br> <a href="/debian/stats_breakages.png"><img src="/debian/stats_breakages.png" alt="source packages causing Diffoscope to timeout and crash"></a>'
+    png_file = 'stats_breakages.png'
+    main_label = "source packages causing Diffoscope to timeout and crash"
+    create_breakages_graph(png_file, main_label)
+    html += '<br> <a href="/debian/' + png_file + '"><img src="/debian/'
+    html += png_file + '" alt="' + main_label + '"></a>'
     # link artifacts
     html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
 

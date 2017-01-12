@@ -593,12 +593,12 @@ schema_updates = {
     ],
 
     30: [ # Add new table to track diffoscope breake
-        "CREATE TABLE stats_breakage
-                     (datum TEXT NOT NULL,
+        '''CREATE TABLE stats_breakages
+                     (datum TEXT,
                       diffoscope_timeouts INTEGER,
                       diffoscope_crashes INTEGER,
-                      PRIMARY KEY (datum))",
-        "INSERT INTO rb_schema (version, date) VALUES (30, '" + now + "')"
+                      PRIMARY KEY (datum))''',
+        '''INSERT INTO rb_schema (version, date) VALUES (30, '" + now + "')'''
     ],
 }
 

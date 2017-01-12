@@ -311,13 +311,13 @@ def create_breakages_graph():
                     y_label, '1920', '960'])
 
 
-def update_stats_breakage(diffoscope_timeouts, diffoscope_crashes):
+def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
     # we only do stats up until yesterday
     YESTERDAY = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d')
 
     result = query_db("""
             SELECT datum, diffoscope_timeouts, diffoscope_crashes
-            FROM stats_breakage
+            FROM stats_breakages
             WHERE datum = '{date}'
         """.format(date=YESTERDAY))
 
@@ -326,10 +326,10 @@ def update_stats_breakage(diffoscope_timeouts, diffoscope_crashes):
         insert = "INSERT INTO stats_breakages VALUES ('{date}', " + \
                  "'{diffoscope_timeouts}', '{diffoscope_crashes}')"
         query_db(insert.format(date=YESTERDAY, diffoscope_timeouts=diffoscope_timeouts, diffoscope_crashes=diffoscope_crashes))
-        log.info("Updating db table stats_breakage on %s with %s timeouts and %s crashes.",
+        log.info("Updating db table stats_breakages on %s with %s timeouts and %s crashes.",
                  YESTERDAY, diffoscope_timeouts, diffoscope_crashes)
     else:
-        log.debug("Not updating db table stats_breakage as it already has data for %s.",
+        log.debug("Not updating db table stats_breakages as it already has data for %s.",
                  YESTERDAY)
 
 

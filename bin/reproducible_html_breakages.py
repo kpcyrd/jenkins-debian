@@ -354,6 +354,9 @@ def gen_html():
                          lack_rbuild())
     html += _gen_packages_html('have been built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
+    # pbuilder-satisfydepends failed
+    html += _gen_packages_html('failed to satisfy their build-dependencies:',
+                         pbuilder_dep_fail())
     # diffoscope troubles
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
     html += _gen_packages_html('are marked as unreproducible, but there is no ' +
@@ -367,14 +370,12 @@ def gen_html():
     html += ' source packages on which diffoscope ran into a timeout ('
     html += str(count_pkgs(bad_dbd)) + ') or crashed ('
     html += str(count_pkgs(without_dbd)) + ').'
-    html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
-    # pbuilder-satisfydepends failed
-    html += _gen_packages_html('failed to satisfy their build-dependencies:',
-                         pbuilder_dep_fail())
     # gather stats and add graph
     update_stats_breakages(count_pkgs(bad_dbd), count_pkgs(without_dbd))
     create_breakages_graph
     html += '<br> <a href="/debian/stats_breakages.png"><img src="/debian/stats_breakages.png" alt="source packages causing Diffoscope to timeout and crash"></a>'
+    # link artifacts
+    html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
 
     return html
 

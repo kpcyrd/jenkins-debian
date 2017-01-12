@@ -372,7 +372,7 @@ def gen_html():
     html += _gen_packages_html('failed to satisfy their build-dependencies:',
                          pbuilder_dep_fail())
     # gather stats and add graph
-    update_stats_breakage(count_pkgs(bad_dbd), count_pkgs(without_dbd))
+    update_stats_breakages(count_pkgs(bad_dbd), count_pkgs(without_dbd))
     create_breakages_graph
     html += '<br> <a href="/debian/stats_breakages.png><img src=/debian/stats_breakages.png" alt="source packages causing Diffoscope to timeout and crash"></a>'
 

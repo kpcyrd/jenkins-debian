@@ -287,6 +287,52 @@ def _gen_files_html(header, entries):
         html += '</pre></p>\n'
     return html
 
+def create_breakages_graph():
+    png_file = os.path.join(DEBIAN_BASE, 'stats_breakages.png')
+    table = "stats_breakages"
+    columns = ["datum", "diffoscope_timeouts", "diffoscope_crashes"]
+    query = "SELECT {fields} FROM {table} ORDER BY datum".format(
+        fields=", ".join(columns), table=table)
+    result = query_db(query)
+    result_rearranged = [dict(zip(columns, row)) for row in result]
+
+    with create_temp_file(mode='w') as f:
+        csv_tmp_file = f.name
+        csv_writer = csv.DictWriter(f, columns)
+        csv_writer.writeheader()
+        csv_writer.writerows(result_rearranged)
+        f.flush()
+
+        graph_command = os.path.join(BIN_PATH, "make_graph.py")
+        main_label = "source packages causing Diffoscope to timeout and crash"
+        y_label = "Amount (packages)"
+        log.info("Creating graph for stats_breakges.")
+        check_call([graph_command, csv_tmp_file, png_file, '2', main_label,
+                    y_label, '1920', '960'])
+
+
+def update_stats_breakage(diffoscope_timeouts, diffoscope_crashes):
+    # we only do stats up until yesterday
+    YESTERDAY = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d')
+
+    result = query_db("""
+            SELECT datum, diffoscope_timeouts, diffoscope_crashes
+            FROM stats_breakage
+            WHERE datum = '{date}'
+        """.format(date=YESTERDAY))
+
+    # if there is not a result for this day, add one
+    if not result:
+        insert = "INSERT INTO stats_breakages VALUES ('{date}', " + \
+                 "'{diffoscope_timeouts}', '{diffoscope_crashes}')"
+        query_db(insert.format(date=YESTERDAY, diffoscope_timeouts=diffoscope_timeouts, diffoscope_crashes=diffoscope_crashes))
+        log.info("Updating db table stats_breakage on %s with %s timeouts and %s crashes.",
+                 YESTERDAY, diffoscope_timeouts, diffoscope_crashes)
+    else:
+        log.debug("Not updating db table stats_breakage as it already has data for %s.",
+                 YESTERDAY)
+
+
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed package without cleanup)
@@ -317,7 +363,6 @@ def gen_html():
                          'diffoscope output does not seem to be an html ' +
                          'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
-    # TODO: graph this
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into a timeout ('
     html += str(count_pkgs(bad_dbd)) + ') or crashed ('
@@ -326,6 +371,11 @@ def gen_html():
     # pbuilder-satisfydepends failed
     html += _gen_packages_html('failed to satisfy their build-dependencies:',
                          pbuilder_dep_fail())
+    # gather stats and add graph
+    update_stats_breakage(count_pkgs(bad_dbd), count_pkgs(without_dbd))
+    create_breakages_graph
+    html += '<br> <a href="/debian/stats_breakages.png><img src=/debian/stats_breakages.png" alt="source packages causing Diffoscope to timeout and crash"></a>'
+
     return html
 
 

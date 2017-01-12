@@ -591,6 +591,15 @@ schema_updates = {
         "ALTER TABLE results ALTER id SET DEFAULT NEXTVAL('results_id_seq')",
         "INSERT INTO rb_schema (version, date) VALUES (29, '" + now + "')"
     ],
+
+    30: [ # Add new table to track diffoscope breake
+        "CREATE TABLE stats_breakage
+                     (datum TEXT NOT NULL,
+                      diffoscope_timeouts INTEGER,
+                      diffoscope_crashes INTEGER,
+                      PRIMARY KEY (datum))",
+        "INSERT INTO rb_schema (version, date) VALUES (30, '" + now + "')"
+    ],
 }
 
 

@@ -52,6 +52,17 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	fi
 fi
 
+show_fstab_and_mounts() {
+	echo "################################"
+	echo "/etc/fstab on $HOSTNAME"
+	echo "################################"
+	cat /etc/fstab
+	echo "################################"
+	echo "mount output on $HOSTNAME"
+	echo "################################"
+	mount
+}
+
 # for Debian, first run some checks…
 set +e
 # check for working proxy
@@ -61,12 +72,20 @@ if [ $? -ne 0 ] ; then
 	irc_message debian-reproducible "Proxy is down for $HOSTNAME, please tell the jenkins admins to fix this. (sudo service squid3 restart)"
 	exit 1
 fi
-# check for /(run|dev)/shm being mounted
-echo "$(date -u) - testing whether /(run|dev)/shm is mounted correctly..."
+# check for /dev/shm being mounted properly
+echo "$(date -u) - testing whether /dev/shm is mounted correctly..."
 mount | egrep -q "^tmpfs on /dev/shm" && test "$(stat -c %a -L /dev/shm)" = 1777
+if [ $? -ne 0 ] ; then
+	irc_message debian-reproducible "/dev/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
+	show_fstab_and_mounts
+	exit 1
+fi
+# check for /run/shm being mounted properly
+echo "$(date -u) - testing whether /run/shm is mounted correctly..."
 mount | egrep -q "^tmpfs on /run/shm" && test "$(stat -c %a -L /run/shm)" = 1777
 if [ $? -ne 0 ] ; then
-	irc_message debian-reproducible "/(run|dev)/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this. (by adding 'none /dev/shm tmpfs rw,nosuid,nodev,noexec 0 0' to /etc/fstab"
+	irc_message debian-reproducible "/run/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
+	show_fstab_and_mounts
 	exit 1
 fi
 

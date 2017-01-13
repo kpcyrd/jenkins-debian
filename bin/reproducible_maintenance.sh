@@ -76,17 +76,15 @@ fi
 echo "$(date -u) - testing whether /dev/shm is mounted correctly..."
 mount | egrep -q "^tmpfs on /dev/shm" && test "$(stat -c %a -L /dev/shm)" = 1777
 if [ $? -ne 0 ] ; then
-	irc_message debian-reproducible "/dev/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
+	irc_message debian-reproducible "Warning: /dev/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
-	exit 1
 fi
 # check for /run/shm being mounted properly
 echo "$(date -u) - testing whether /run/shm is mounted correctly..."
 mount | egrep -q "^tmpfs on /run/shm" && test "$(stat -c %a -L /run/shm)" = 1777
 if [ $? -ne 0 ] ; then
-	irc_message debian-reproducible "/run/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
+	irc_message debian-reproducible "Warning: /run/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
-	exit 1
 fi
 
 echo "$(date -u) - updating the schroots and pbuilder now..."

@@ -591,6 +591,14 @@
                 - '30': *builders_5_11
                 - '31': *builders_11_15
                 - '32': *builders_15_11
+                - '33': *builders_1_5
+                - '34': *builders_5_1
+                - '35': *builders_1_15
+                - '36': *builders_15_1
+                - '37': *builders_11_5
+                - '38': *builders_5_11
+                - '39': *builders_11_15
+                - '40': *builders_15_11
             my_shell: '/srv/jenkins/bin/reproducible_build.sh {my_node1}-{my_arch} {my_node2}-{my_arch}'
             my_timed: '* * * * *'
             my_hname: ''

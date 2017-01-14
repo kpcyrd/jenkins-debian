@@ -54,6 +54,10 @@ fi
 
 show_fstab_and_mounts() {
 	echo "################################"
+	echo "/dev/shm and /run/shm on $HOSTNAME"
+	echo "################################"
+	ls -lartd /run/shm /dev/shm/
+	echo "################################"
 	echo "/etc/fstab on $HOSTNAME"
 	echo "################################"
 	cat /etc/fstab
@@ -61,6 +65,7 @@ show_fstab_and_mounts() {
 	echo "mount output on $HOSTNAME"
 	echo "################################"
 	mount
+	echo "################################"
 }
 
 # for Debian, first run some checks…
@@ -79,11 +84,10 @@ if [ $? -ne 0 ] ; then
 	echo "Warning: /dev/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
 fi
-# check for /run/shm being mounted properly
-echo "$(date -u) - testing whether /run/shm is mounted correctly..."
-mount | egrep -q "^tmpfs on /run/shm" && test "$(stat -c %a -L /run/shm)" = 1777
-if [ $? -ne 0 ] ; then
-	echo "Warning: /run/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
+# check for /run/shm being a link to /dev/shm
+echo "$(date -u) - testing whether /run/shm is a link..."
+if ! test -L /run/shm || [ "$(readlink /run/shm)" != "/dev/shm" ] ; then
+	echo "Warning: /run/shm not a link or not pointing to /dev/shm on $HOSTNAME, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
 fi
 

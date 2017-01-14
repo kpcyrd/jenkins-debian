@@ -717,7 +717,7 @@ def scheduler(arch):
     total = [now_queued_here[x] for x in SUITES]
     message += 'for ' + str(sum(total))
     message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
-    message += ' packages in total.'
+    message += ' in total.'
     log.info('Scheduling for architecture ' + arch + ' done.')
     log.info('--------------------------------------------------------------')
     # only notifiy irc if there were packages scheduled in any suite

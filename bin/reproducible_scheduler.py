@@ -715,7 +715,7 @@ def scheduler(arch):
     if msg_old:
         message += msg_old + ', '
     total = [now_queued_here[x] for x in SUITES]
-    message += ' for ' + str(sum(total))
+    message += 'for ' + str(sum(total))
     message += ' or ' + '+'.join([str(now_queued_here[x]) for x in SUITES])
     message += ' packages in total.'
     log.info('Scheduling for architecture ' + arch + ' done.')

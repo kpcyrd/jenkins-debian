@@ -380,9 +380,9 @@ write_variation_table() {
 	fi
 	write_page "<tr><td>env TZ</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT+12\"</td><td>TZ=\"/usr/share/zoneinfo/Etc/GMT-14\"</td></tr>"
 	if [ "$1" = "debian" ]  ; then
-		write_page "<tr><td>env LANG</td><td>LANG=\"C\"</td><td>on amd64: LANG=\"fr_CH.UTF-8\"<br />on i386: LANG=\"de_CH.UTF-8\"<br />on armhf: LANG=\"it_CH.UTF-8\"</td></tr>"
-		write_page "<tr><td>env LANGUAGE</td><td>LANGUAGE=\"en_US:en\"</td><td>on amd64: LANGUAGE=\"fr_CH:fr\"<br />on i386: LANGUAGE=\"de_CH:de\"<br />on armhf: LANGUAGE=\"it_CH:it\"</td></tr>"
-		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>on amd64: LC_ALL=\"fr_CH.UTF-8\"<br />on i386: LC_ALL=\"de_CH.UTF-8\"<br />on armhf: LC_ALL=\"it_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANG</td><td>LANG=\"C\"</td><td>on amd64: LANG=\"fr_CH.UTF-8\"<br />on i386: LANG=\"de_CH.UTF-8\"<br />on arm64: LANG=\"nl_BE.UTF-8\"<br />on armhf: LANG=\"it_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANGUAGE</td><td>LANGUAGE=\"en_US:en\"</td><td>on amd64: LANGUAGE=\"fr_CH:fr\"<br />on i386: LANGUAGE=\"de_CH:de\"<br />on arm64: LANGUAGE=\"nl_BE:nl\"<br />on armhf: LANGUAGE=\"it_CH:it\"</td></tr>"
+		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>on amd64: LC_ALL=\"fr_CH.UTF-8\"<br />on i386: LC_ALL=\"de_CH.UTF-8\"<br />on arm64: LC_ALL=\"nl_BE.UTF-8\"<br />on armhf: LC_ALL=\"it_CH.UTF-8\"</td></tr>"
 	elif [ "$1" = "Arch Linux" ]  ; then
 		write_page "<tr><td>env LANG</td><td><em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
@@ -406,7 +406,7 @@ write_variation_table() {
 		write_page "<tr><td>build path</td><td>/build/1st/\$pkg-\$ver <em>(not varied for stretch)</em></td><td>/build/\$pkg-\$ver/2nd <em>(not varied for stretch)</em></td></tr>"
 		write_page "<tr><td>user's login shell</td><td>/bin/sh</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>user's <a href="https://en.wikipedia.org/wiki/Gecos_field">GECOS</a></td><td>first user,first room,first work-phone,first home-phone,first other</td><td>second user,second room,second work-phone,second home-phone,second other</td></tr>"
-		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64: 16 or 15<br />&nbsp;&nbsp;XXX on i386: 10 or 9<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64: 16 or 15 (!= the first build)<br />&nbsp;&nbsp;YYY on i386: 10 or 9 (!= the first build)<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"
+		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64: 16 or 15<br />&nbsp;&nbsp;XXX on i386: 10 or 9<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64: 16 or 15 (!= the first build)<br />&nbsp;&nbsp;YYY on i386: 10 or 9 (!= the first build)<br />&nbsp;&nbsp;YYY is the same as XXX on arm64<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
 	else
 		write_page "<tr><td>env USER</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
@@ -442,8 +442,8 @@ write_variation_table() {
 	fi
 	FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
 	if [ "$1" = "debian" ] ; then
-		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on i386: systematically varied (AMD or Intel CPU with different names & features)<br />on amd64: same for both builds<br />on armhf: sometimes varied (depending on the build job), but only the minor CPU revision</td></tr>"
-		write_page "<tr><td>year, month, date</td><td>today ($DATE) or (on amd64 and i386 only) also: $FUTURE</td><td>on amd64 and i386: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
+		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on i386: systematically varied (AMD or Intel CPU with different names & features)<br />on amd64: same for both builds<br />on arm64: always the same<br />on armhf: sometimes varied (depending on the build job), but only the minor CPU revision</td></tr>"
+		write_page "<tr><td>year, month, date</td><td>today ($DATE) or (on amd64, i386 and arm64 only) also: $FUTURE</td><td>on amd64, i386 and arm64: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
 		write_page "<tr><td>/bin/sh</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
@@ -455,7 +455,7 @@ write_variation_table() {
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
 		if [ "$1" = "debian" ] ; then
-			write_page "<tr><td>hour, minute</td><td>at least the minute will probably vary between two builds anyway...</td><td>on amd64 and i386 the \"future builds\" additionally run 6h and 23min ahead</td></tr>"
+			write_page "<tr><td>hour, minute</td><td>at least the minute will probably vary between two builds anyway...</td><td>on amd64, i386 and arm64 the \"future builds\" additionally run 6h and 23min ahead</td></tr>"
 		        write_page "<tr><td>filesystem</td><td>tmpfs</td><td><em>temporarily not</em> varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\"https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"
 		else
 			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"

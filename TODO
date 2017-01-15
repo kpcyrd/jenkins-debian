@@ -225,7 +225,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible Debian arm64
 
-* update variations table
+* very DEB_BUILD_OPTS?
 * squid is not used, we copy a /etc/squid3/squid3.conf but ubuntu uses /etc/squid/squid.conf
 * make systems send mail
 * thank you tweet to codethink

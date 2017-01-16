@@ -47,7 +47,7 @@ non_po_langs = [
     'cs',
     'de',
     'en',
-    'fr',
+    'eu',
     'it',
     'pt_BR',
 ]

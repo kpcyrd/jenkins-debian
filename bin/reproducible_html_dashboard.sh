@@ -302,9 +302,10 @@ _average_builds_per_day() {
 	for ARCH in ${ARCHS} ; do
 		local OLDEST_BUILD="$(query_db "SELECT build_date FROM stats_build WHERE architecture='$ARCH' ORDER BY build_date ASC LIMIT 1")"
 		local DAY_DIFFS="$(( ($(date -d "$DATE" +%s) - $(date -d "$OLDEST_BUILD" +%s)) / (60*60*24) ))"
+		local DISCLAIMER=""
 		if [ $DAY_DIFFS -lt $TIMESPAN_RAW ]; then
 			# this is a new architecture, there are fewer days to compare to.
-			local DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
+			DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
 			TIMESPAN_RAW=$DAY_DIFF
 		fi
 		if [ $DAY_DIFFS -ge $MIN_DAYS ]; then
@@ -319,7 +320,7 @@ _average_builds_per_day() {
 			# very new arch with too few resulsts to care about stats
 			RESULT="&nbsp;"
 		fi
-		write_page "<td>${RESULT}${DISCLAIMER:-}</td>"
+		write_page "<td>${RESULT}${DISCLAIMER}</td>"
 	done
 	write_page "</tr>"
 }

@@ -303,19 +303,20 @@ _average_builds_per_day() {
 		local OLDEST_BUILD="$(query_db "SELECT build_date FROM stats_build WHERE architecture='$ARCH' ORDER BY build_date ASC LIMIT 1")"
 		local DAY_DIFFS="$(( ($(date -d "$DATE" +%s) - $(date -d "$OLDEST_BUILD" +%s)) / (60*60*24) ))"
 		local DISCLAIMER=""
-		if [ $DAY_DIFFS -lt $TIMESPAN_RAW ]; then
+		local TIMESPAN="$TIMESTAN_RAW"
+		if [ $DAY_DIFFS -lt $TIMESPAN ]; then
 			# this is a new architecture, there are fewer days to compare to.
 			DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
-			TIMESPAN_RAW=$DAY_DIFF
+			TIMESPAN=$DAY_DIFF
 		fi
 		if [ $DAY_DIFFS -ge $MIN_DAYS ]; then
 			# find stats for since the day before $TIMESPAN_RAW days ago,
 			# since no stats exist for today yet.
-			local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
+			local TIMESPAN="$(echo $TIMESPAN-1|bc)"
 			local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
 
 			RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
-			RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
+			RESULT="$(echo $RESULT/$TIMESPAN|bc)"
 		else
 			# very new arch with too few resulsts to care about stats
 			RESULT="&nbsp;"

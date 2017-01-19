@@ -342,20 +342,22 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
 	for ARCH in ${ARCHS} ; do
-		if [ "$ARCH" = "arm64" ] ; then
-			TIMESPAN_RAW="14"
-			local ARM64_DISCLAIMER=" <span style=\"font-size:0.8em;\">(in the last 2 weeks)</span>"
-		else
-			TIMESPAN_RAW="28"
-			local ARM64_DISCLAIMER=""
+		local OLDEST_BUILD="$(query_db "SELECT build_date FROM stats_build WHERE architecture='$ARCH' ORDER BY build_date ASC LIMIT 1")"
+		local DAY_DIFFS="$(( ($(date -d "$DATE" +%s) - $(date -d "$OLDEST_BUILD" +%s)) / (60*60*24) ))"
+		if [ $DAY_DIFFS -lt $TIMESPAN_RAW ]; then
+			# this is a new architecture, there are fewer days to compare to.
+			local DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
+			TIMESPAN_RAW=$DAY_DIFF
 		fi
 		local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
 		local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
 
 		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
 		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-		write_page "<td>$RESULT$ARM64_DISCLAIMER</td>"
+		write_page "<td>${RESULT}${DISCLAIMER:-}</td>"
 	done
+
+
 	local TIMESPAN_VERBOSE="3 months"
 	local TIMESPAN_RAW="91"
 	# Find stats for 91 days since yesterday, no stats exist for today

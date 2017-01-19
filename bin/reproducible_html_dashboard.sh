@@ -294,6 +294,35 @@ write_usertag_table() {
 #
 # write build performance stats
 #
+_average_builds_per_day() {
+	local TIMESPAN_RAW="$1"
+	local TIMESPAN_VERBOSE="$2"
+	local MIN_DAYS="${3-0}"
+	write_page "<tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
+	for ARCH in ${ARCHS} ; do
+		local OLDEST_BUILD="$(query_db "SELECT build_date FROM stats_build WHERE architecture='$ARCH' ORDER BY build_date ASC LIMIT 1")"
+		local DAY_DIFFS="$(( ($(date -d "$DATE" +%s) - $(date -d "$OLDEST_BUILD" +%s)) / (60*60*24) ))"
+		if [ $DAY_DIFFS -lt $TIMESPAN_RAW ]; then
+			# this is a new architecture, there are fewer days to compare to.
+			local DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
+			TIMESPAN_RAW=$DAY_DIFF
+		fi
+		if [ $DAY_DIFFS -ge $MIN_DAYS ]; then
+			# find stats for since the day before $TIMESPAN_RAW days ago,
+			# since no stats exist for today yet.
+			local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
+			local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
+
+			RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
+			RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
+		else
+			# very new arch with too few resulsts to care about stats
+			RESULT="&nbsp;"
+		fi
+		write_page "<td>${RESULT}${DISCLAIMER:-}</td>"
+	done
+	write_page "</tr>"
+}
 write_build_performance_stats() {
 	local ARCH
 	write_page "<table class=\"main\"><tr><th>Architecture build statistics</th>"
@@ -340,39 +369,12 @@ write_build_performance_stats() {
 		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$(date '+%Y-%m-%d %H:%M' -d '-1 days')' AND r.architecture='$ARCH'")
 		write_page "<td>$RESULT</td>"
 	done
-	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
-	for ARCH in ${ARCHS} ; do
-		local OLDEST_BUILD="$(query_db "SELECT build_date FROM stats_build WHERE architecture='$ARCH' ORDER BY build_date ASC LIMIT 1")"
-		local DAY_DIFFS="$(( ($(date -d "$DATE" +%s) - $(date -d "$OLDEST_BUILD" +%s)) / (60*60*24) ))"
-		if [ $DAY_DIFFS -lt $TIMESPAN_RAW ]; then
-			# this is a new architecture, there are fewer days to compare to.
-			local DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
-			TIMESPAN_RAW=$DAY_DIFF
-		fi
-		local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
-		local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
+	write_page "</tr>"
 
-		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
-		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-		write_page "<td>${RESULT}${DISCLAIMER:-}</td>"
-	done
+	_average_builds_per_day "$TIMESTAMP_RAW" "$TIMESTAMP_VERBOSE"
+	_average_builds_per_day "91" "3 months" "30"
 
-
-	local TIMESPAN_VERBOSE="3 months"
-	local TIMESPAN_RAW="91"
-	# Find stats for 91 days since yesterday, no stats exist for today
-	local TIMESPAN="$(echo $TIMESPAN_RAW-1|bc)"
-	local TIMESPAN_DATE=$(date '+%Y-%m-%d %H:%M' -d "- $TIMESPAN days")
-	write_page "</tr><tr><td class=\"left\">packages tested on average per day in the last $TIMESPAN_VERBOSE</td>"
-	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM stats_build AS r WHERE r.build_date > '$TIMESPAN_DATE' AND r.architecture='$ARCH'")
-		RESULT="$(echo $RESULT/$TIMESPAN_RAW|bc)"
-		if [ "$ARCH" = "arm64" ] ; then
-			RESULT="&nbsp;"
-		fi
-		write_page "<td>$RESULT</td>"
-	done
-	write_page "</tr></table>"
+	write_page "</table>"
 }
 
 #

@@ -303,7 +303,7 @@ _average_builds_per_day() {
 		local OLDEST_BUILD="$(query_db "SELECT build_date FROM stats_build WHERE architecture='$ARCH' ORDER BY build_date ASC LIMIT 1")"
 		local DAY_DIFFS="$(( ($(date -d "$DATE" +%s) - $(date -d "$OLDEST_BUILD" +%s)) / (60*60*24) ))"
 		local DISCLAIMER=""
-		local TIMESPAN="$TIMESTAN_RAW"
+		local TIMESPAN="$TIMESPAN_RAW"
 		if [ $DAY_DIFFS -lt $TIMESPAN ]; then
 			# this is a new architecture, there are fewer days to compare to.
 			DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"

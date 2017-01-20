@@ -564,6 +564,7 @@ if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
 		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
 		sudo ln -s /usr/share/munin/plugins/loggrep jenkins_oom
 	fi
+	sudo service munin-node restart
 fi
 explain "packages configured."
 

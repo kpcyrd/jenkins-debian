@@ -162,7 +162,7 @@ STAMP=/var/log/jenkins/$SUITE-reproducible-base.tgz.stamp
 
 if [ -f "$STAMP" ] ; then
 	if [ -f "$STAMP" -a $(stat -c %Y "$STAMP") -gt $(date +%s) ]; then
-		if [ $(stat -c %Y "$STAMP") -gt $(date +%s -d "+ 6 months")] then
+		if [ $(stat -c %Y "$STAMP") -gt $(date +%s -d "+ 6 months")]; then
 			echo "Warning: stamp file is too far in the future, assuming something is wrong and deleting it"
 			rm -v "$STAMP"
 		else

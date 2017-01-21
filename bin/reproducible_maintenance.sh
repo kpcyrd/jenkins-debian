@@ -79,15 +79,23 @@ if [ $? -ne 0 ] ; then
 fi
 # check for /dev/shm being mounted properly
 echo "$(date -u) - testing whether /dev/shm is mounted correctly..."
-mount | egrep -q "^tmpfs on /dev/shm" && test "$(stat -c %a -L /dev/shm)" = 1777
+mount | egrep -q "^tmpfs on /dev/shm"
 if [ $? -ne 0 ] ; then
-	echo "Warning: /dev/shm is not mounted correctly on $HOSTNAME, please tell the jenkins admins to fix this."
+	echo "Warning: /dev/shm is not mounted correctly on $HOSTNAME, it should be a tmpfs, please tell the jenkins admins to fix this."
+	show_fstab_and_mounts
+fi
+test "$(stat -c %a -L /dev/shm)" = 1777
+if [ $? -ne 0 ] ; then
+	echo "Warning: /dev/shm is not mounted correctly on $HOSTNAME, it should be mounted with 1777 permissions, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
 fi
 # check for /run/shm being a link to /dev/shm
 echo "$(date -u) - testing whether /run/shm is a link..."
-if ! test -L /run/shm || [ "$(readlink /run/shm)" != "/dev/shm" ] ; then
-	echo "Warning: /run/shm not a link or not pointing to /dev/shm on $HOSTNAME, please tell the jenkins admins to fix this."
+if ! test -L /run/shm ; then
+	echo "Warning: /run/shm is not a link on $HOSTNAME, please tell the jenkins admins to fix this."
+	show_fstab_and_mounts
+elif [ "$(readlink /run/shm)" != "/dev/shm" ] ; then
+	echo "Warning: /run/shm is a link, but not pointing to /dev/shm on $HOSTNAME, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
 fi
 

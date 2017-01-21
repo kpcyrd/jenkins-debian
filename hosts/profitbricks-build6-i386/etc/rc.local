@@ -37,6 +37,11 @@ put_schroots_on_tmpfs() {
 	mkdir -p union/overlay union/underlay
 }
 
+fixup_shm() {
+	# this is always harmless
+	chmod 1777 /dev/shm
+}
+
 #
 # init, notify about reboots
 #
@@ -67,6 +72,11 @@ case $(hostname) in
 	profitbricks-build16*)	send_back_to_the_future ;;
 	*)			;;
 esac
+
+#
+# fixup /(dev|run)/shm if needed
+#
+fixup_shm
 
 #
 # put schroots on tmpfs for non debian hosts

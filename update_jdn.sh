@@ -26,7 +26,11 @@ explain() {
 	echo "$HOSTNAME: $1"
 }
 
-
+set_correct_date() {
+		# set correct date
+		sudo service ntp stop || true
+		sudo ntpdate -b de.pool.ntp.org
+}
 
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
@@ -35,13 +39,11 @@ explain "$(date) - begin deployment update."
 case $HOSTNAME in
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
 		# set correct date
-		sudo service ntp stop
-		sudo ntpdate -b de.pool.ntp.org
+		set_correct_date
 		;;
 	codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*)
 		# set correct date
-		sudo service ntp stop
-		sudo ntpdate -b de.pool.ntp.org
+		set_correct_date
 		;;
 	*)	;;
 esac

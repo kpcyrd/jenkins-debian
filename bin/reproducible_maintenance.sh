@@ -473,7 +473,8 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				# only care for yesterday's entries:
 				( grep $(date -u -d "1 day ago" '+%Y-%m-%d') $PROBLEM || echo "no problems yesterday…" ) > $TMPFILE
 			fi
-			if [ -s $TMPFILE ] ; then
+			# send mail if we found issues
+			if [ -s $TMPFILE ] && ! grep -q "no problems yesterday…" $TMPFILE ; then
 				cat $TMPFILE | mail -s "$(basename $PROBLEM) found" qa-jenkins-scm@lists.alioth.debian.org
 			fi
 			rm -f $TMPFILE

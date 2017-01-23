@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 set -e
@@ -545,6 +545,12 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		# for reproducible.d.n url rewriting:
 		[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 		sudo service apache2 reload
+	fi
+	if ! grep controlmaster ~jenkins/.ssh/config || ! grep controlpath ~jenkins/.ssh/config ; then
+		echo
+		echo "Please define controlmaster and controlpath in ~jenkins/.ssh/config manually, see https://debian-administration.org/article/290/Reusing_existing_OpenSSH_v4_connections"
+		echo
+		exit 1
 	fi
 fi
 

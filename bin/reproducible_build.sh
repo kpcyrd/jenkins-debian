@@ -776,6 +776,7 @@ remote_build() {
 		fi
 	fi
 	ls -lR $TMPDIR
+	log_info "Deleting \$TMPDIR on $NODE."
 	ssh -o "BatchMode = yes" -p $PORT $NODE "rm -r $TMPDIR"
 	set -e
 	if [ $BUILDNR -eq 1 ] ; then

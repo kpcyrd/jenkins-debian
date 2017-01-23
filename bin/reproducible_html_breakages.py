@@ -184,7 +184,7 @@ def alien_log(directory=None):
 
 
 def alien_buildinfo():
-    log.info('running alien_log check...')
+    log.info('running alien_buildinfo check...')
     query = '''SELECT r.version
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != '' AND s.name='{pkg}' AND s.suite='{suite}'
@@ -334,7 +334,7 @@ def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
 
 def gen_html():
     html = ''
-    # files that should not be there (e.g. removed package without cleanup)
+    # files that should not be there (e.g. removed packages without cleanup)
     html += _gen_files_html('log files that should not be there:',
                          entries=alien_log())
     html += _gen_files_html('diffoscope files that should not be there:',
@@ -345,7 +345,7 @@ def gen_html():
                          entries=alien_buildinfo())
     html += _gen_files_html('history pages that should not be there and thus have been removed:',
                          entries=alien_history())
-    # diffoscope report where it shouldn't be
+    # diffoscope reports where they shouldn't be
     html += _gen_packages_html('are not marked as unreproducible, but they ' +
                          'have a diffoscope file:', not_unrep_with_dbd_file())
     # missing files

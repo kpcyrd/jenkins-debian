@@ -173,11 +173,11 @@ def alien_log(directory=None):
             if strip_epoch(rversion) != version:
                 try:
                     if os.path.getmtime('/'.join([root, file]))<time.time()-86400:
-                        bad_files.append('/'.join([root, file]))
                         os.remove('/'.join([root, file]))
                         log.warning('/'.join([root, file]) + ' should not be there and and was older than a day so it was removed.')
                     else:
-                        log.info('ignoring ' + '/'.join([root, file]) + ' which should not be there, but is also less than 24h old and will probably soon be gone.')
+                        bad_files.append('/'.join([root, file]))
+                        log.info('/'.join([root, file]) + ' should not be there, but is also less than 24h old and will probably soon be gone.')
                 except FileNotFoundError:
                     pass  # that bad file is already gone.
     return bad_files

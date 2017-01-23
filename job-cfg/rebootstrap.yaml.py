@@ -21,7 +21,7 @@ mono_architectures = """
     musl-linux-mips musl-linux-mipsel
     nios2
     powerpcel powerpcspe ppc64el
-    sh4
+    sh3 sh4
     tilegx
     """.split()
 

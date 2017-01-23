@@ -335,6 +335,7 @@ def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed packages without cleanup)
+    html += '<h2>Trouble caused by jenkins.debian.net</h2>'
     html += _gen_files_html('log files that should not be there:',
                          entries=alien_log())
     html += _gen_files_html('diffoscope files that should not be there:',
@@ -354,17 +355,14 @@ def gen_html():
     html += _gen_packages_html('have been built but don\'t have a .buildinfo file:',
                          lack_buildinfo())
     # pbuilder-satisfydepends failed
-    html += _gen_packages_html('failed to satisfy their build-dependencies:',
-                         pbuilder_dep_fail())
+    broken_pkgs = pbuilder_dep_fail()
+    if broken_pkgs != []:
+        html += '<h3>Trouble caused by broken packages</h3>'
+        html += _gen_packages_html('failed to satisfy their build-dependencies:',
+                         broken_pkgs)
     # diffoscope troubles
+    html += '<h2>Trouble caused by diffscope</h2>'
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
-    html += _gen_packages_html('are marked as unreproducible, but there is no ' +
-                         'diffoscope output - so probably diffoscope ' +
-                         'crashed:', without_dbd)
-    html += _gen_packages_html('are marked as unreproducible, but their ' +
-                         'diffoscope output does not seem to be an html ' +
-                         'file - so probably diffoscope ran into a ' +
-                         'timeout:', bad_dbd)
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into a timeout ('
     html += str(count_pkgs(bad_dbd)) + ') or crashed ('
@@ -378,6 +376,14 @@ def gen_html():
     html += png_file + '" alt="' + main_label + '"></a>'
     # link artifacts
     html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
+
+    html += _gen_packages_html('are marked as unreproducible, but there is no ' +
+                         'diffoscope output - so probably diffoscope ' +
+                         'crashed:', without_dbd)
+    html += _gen_packages_html('are marked as unreproducible, but their ' +
+                         'diffoscope output does not seem to be an html ' +
+                         'file - so probably diffoscope ran into a ' +
+                         'timeout:', bad_dbd)
 
     return html
 

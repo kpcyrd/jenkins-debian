@@ -1,6 +1,7 @@
 def checkpoints
   cp = Hash.new
   cp['disk-for-d-i'] = {
+    :temporary => true,
     :description => "a disk is created for Debian Installer tests",
     :parent_checkpoint => nil,
     :steps => [
@@ -10,6 +11,7 @@ def checkpoints
   }
 
   cp['disk-for-deb-edu'] = {
+    :temporary => true,
     :description => "a disk is created for Debian Edu tests",
     :parent_checkpoint => nil,
     :steps => [
@@ -20,6 +22,7 @@ def checkpoints
 
   ['text', 'gui'].each do |m|
     cp["boot-d-i-#{m}-to-tasksel"] = {
+        :temporary => true,
         :description => "I have started Debian Installer in #{m} mode and stopped at the Tasksel prompt",
         :parent_checkpoint => 'disk-for-d-i',
         :steps => [
@@ -40,7 +43,7 @@ def checkpoints
 
     ['minimal', 'non-GUI', 'Gnome', 'XFCE', 'LXDE', 'KDE'].each do |de|
       cp["debian-#{m}-#{de}-install"] = {
-          :temporary => 'XFCE' != de,
+          :temporary => true,
           :description => "I install a #{de} Debian system, in #{m} mode",
           :parent_checkpoint => "boot-d-i-#{m}-to-tasksel",
           :steps => [

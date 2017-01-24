@@ -335,7 +335,7 @@ def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
 def gen_html():
     html = ''
     # files that should not be there (e.g. removed packages without cleanup)
-    html += '<h2>Trouble caused by jenkins.debian.net</h2>'
+    html += '<h2>Breakage caused by jenkins.debian.net</h2>'
     html += _gen_files_html('log files that should not be there:',
                          entries=alien_log())
     html += _gen_files_html('diffoscope files that should not be there:',
@@ -357,11 +357,11 @@ def gen_html():
     # pbuilder-satisfydepends failed
     broken_pkgs = pbuilder_dep_fail()
     if broken_pkgs != []:
-        html += '<h3>Trouble caused by broken packages</h3>'
+        html += '<h3>Breakage caused by broken packages</h3>'
         html += _gen_packages_html('failed to satisfy their build-dependencies:',
                          broken_pkgs)
     # diffoscope troubles
-    html += '<h2>Trouble caused by diffscope</h2>'
+    html += '<h2>Breakage caused by diffscope</h2>'
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into a timeout ('

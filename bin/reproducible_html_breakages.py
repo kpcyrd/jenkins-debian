@@ -209,8 +209,15 @@ def alien_buildinfo():
             except IndexError:  # that package is not known (or not yet tested)
                 rversion = ''   # continue towards the "bad file" path
             if strip_epoch(rversion) != version:
-                bad_files.append('/'.join([root, file]))
-                log.warning('/'.join([root, file]) + ' should not be there')
+                try:
+                    if os.path.getmtime('/'.join([root, file]))<time.time()-86400:
+                        os.remove('/'.join([root, file]))
+                        log.warning('/'.join([root, file]) + ' should not be there and and was older than a day so it was removed.')
+                    else:
+                        bad_files.append('/'.join([root, file]))
+                        log.info('/'.join([root, file]) + ' should not be there, but is also less than 24h old and will probably soon be gone.')
+                except FileNotFoundError:
+                    pass  # that bad file is already gone.
     return bad_files
 
 
@@ -336,13 +343,13 @@ def gen_html():
     html = ''
     # files that should not be there (e.g. removed packages without cleanup)
     html += '<h2>Breakage caused by jenkins.debian.net</h2>'
-    html += _gen_files_html('log files that should not be there:',
+    html += _gen_files_html('log files that should not be there (and which will be deleted once they are older than 24h):',
                          entries=alien_log())
     html += _gen_files_html('diffoscope files that should not be there:',
                          entries=alien_dbd())
     html += _gen_files_html('rb-pkg pages that should not be there:',
                          entries=alien_rbpkg())
-    html += _gen_files_html('buildinfo files that should not be there:',
+    html += _gen_files_html('buildinfo files that should not be there (and which will be deleted once they are older than 24h):',
                          entries=alien_buildinfo())
     html += _gen_files_html('history pages that should not be there and thus have been removed:',
                          entries=alien_history())

@@ -289,7 +289,7 @@ Given /^I select the install mode$/ do
 
   @screen.type(Sikuli::Key.TAB)
   @boot_options = "" if @boot_options.nil?
-  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i \'/XF86_Switch_VT_/s/ F\([0-9]\)/ XF86_Switch_VT_\1/\' /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1" blacklist=psmouse ' + @boot_options +
+  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i /XF86_Switch_VT_/s/F/XF86_Switch_VT_/ /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1" blacklist=psmouse ' + @boot_options +
                Sikuli::Key.ENTER)
   debug_log("debug: wait for the remote shell to respond...", :color => :blue)
   $vm.wait_until_remote_shell_is_up

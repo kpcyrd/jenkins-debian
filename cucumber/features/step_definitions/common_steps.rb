@@ -461,8 +461,17 @@ Given /^I select the non-GUI task$/ do
 end
 
 Given /^I select Combi Debian-Edu profile$/ do
-  @screen.wait(diui_png("Edu-Profile"), 2 * 60 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("Edu-Profile"),diui_png("NoKernelModules")], 2 * 60  * PATIENCE)
   # just acept the default combination
+  if on_screen == diui_png("NoKernelModules")
+    if "gui" == @ui_mode
+      @screen.type(Sikuli::Key.F4) # for this to work, we need to remap the keyboard -- CtrlAltF4 is apparently untypable :-(
+    else
+      @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+    end
+    sleep(10)
+    raise "No Kernel Modules Found (probably version skew between the .iso and the archive)"
+  end
 
   if "gui" == @ui_mode
     @screen.wait(diui_png("CONTINUEunselected"), 10 * PATIENCE)

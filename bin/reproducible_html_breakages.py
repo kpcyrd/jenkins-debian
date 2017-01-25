@@ -177,7 +177,7 @@ def alien_log(directory=None):
                         log.warning('/'.join([root, file]) + ' should not be there and and was older than a day so it was removed.')
                     else:
                         bad_files.append('/'.join([root, file]))
-                        log.info('/'.join([root, file]) + ' should not be there, but is also less than 24h old and will probably soon be gone.')
+                        log.info('/'.join([root, file]) + ' should not be there, but is also less than 24h old and will probably soon be gone. Probably diffoscope is running on that package right now.')
                 except FileNotFoundError:
                     pass  # that bad file is already gone.
     return bad_files

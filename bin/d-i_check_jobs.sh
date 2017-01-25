@@ -146,7 +146,7 @@ for DIRECTORY in * ; do
 			# Some languages are unsupported in PDF
 			if [ $FORMAT = pdf ] && 
 			   expr match ${NON_PDF_LANGS} ".*\b${$DIRECTORY}\b" >/dev/null ; then
-				continue ;;
+				continue
 			fi
 			# we add a _po2xml suffix for all but the NON_PO_LANGS
 			if ! expr match ${NON_PO_LANGS} ".*\b${$DIRECTORY}\b" >/dev/null ; then

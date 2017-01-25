@@ -397,7 +397,7 @@ Given /^I note that the Base system is being installed$/ do
 end
 
 Given /^I accept the default mirror$/ do
-  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("MirrorCountry")], 10 * 60 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("popcon"),diui_png("BadMirror"),diui_png("MirrorCountry"),diui_png("ScanCD")], 10 * 60 * PATIENCE)
   if diui_png("MirrorCountry") == on_screen
     @screen.wait(diui_png("MirrorCountry"), 10 * 60 * PATIENCE)
     @screen.type(Sikuli::Key.ENTER)
@@ -406,6 +406,9 @@ Given /^I accept the default mirror$/ do
     @screen.wait(diui_png("HttpProxy"), 5 * PATIENCE)
     @screen.type("http://local-http-proxy:3128/" + Sikuli::Key.ENTER)
     #@screen.type(Sikuli::Key.ENTER)
+  elsif diui_png("ScanCD") == on_screen
+    @screen.type(Sikuli::Key.ENTER)
+    step("I accept the default mirror")
   else
     step("I ignore Popcon")
   end

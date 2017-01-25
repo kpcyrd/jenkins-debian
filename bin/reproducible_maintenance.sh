@@ -472,8 +472,8 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 					else
 						OTHERPROJECTS="archlinux fedora"
 					fi
-					echo "$(grep -c https $PROBLEM || echo 0) entries found:" >> $TMPFILE
 					for a in $ARCHS $OTHERPROJECTS; do
+						echo "$(grep -c https $PROBLEM || echo 0) entries found:" >> $TMPFILE
 						echo "- $(grep https $PROBLEM|grep -c _$a) from $a." >> $TMPFILE
 					done
 				elif grep -q 'stale builds found' $PROBLEM ; then

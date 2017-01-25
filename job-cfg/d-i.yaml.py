@@ -395,7 +395,7 @@ data.append(
         'name': '{name}_check_jenkins_jobs',
         'description': 'Checks daily for missing jenkins jobs. {do_not_edit}',
         'triggers': [{'timed': '23 0 * * *'}],
-        'builders': [{'shell': '/srv/jenkins/bin/d-i_check_jobs.sh'}],
+        'builders': [{'shell': '{0} "{1}" "{2}"'.format('/srv/jenkins/bin/d-i_check_jobs.sh', ':'.join(non_po_langs), ':'.join(non_pdf_langs))}],
         'publishers': [
             {'logparser': {'parse-rules': '/srv/jenkins/logparse/debian.rules',
                            'unstable-on-warning': 'true',

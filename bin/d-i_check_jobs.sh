@@ -7,6 +7,11 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+# 1st param is a : separated list of the non_po_langs
+NON_PO_LANGS=$1 ; shift
+# 2nd param is a : separated list of the non_pdf_langs
+NON_PDF_LANGS=$1 ; shift
+
 #
 # define some variables
 #
@@ -138,11 +143,14 @@ for DIRECTORY in * ; do
 		continue
 	else
 		for FORMAT in pdf html ; do
-			if [ $FORMAT = pdf ] ; then
-				# Some languages are unsupported in PDF
-				case $DIRECTORY in
-					el|ja|vi|zh_CN|zh_TW) continue ;;
-				esac
+			# Some languages are unsupported in PDF
+			if [ $FORMAT = pdf ] && 
+			   expr match ${NON_PDF_LANGS} ".*\b${$DIRECTORY}\b" >/dev/null ; then
+				continue ;;
+			fi
+			# we add a _po2xml suffix for all but the NON_PO_LANGS
+			if ! expr match ${NON_PO_LANGS} ".*\b${$DIRECTORY}\b" >/dev/null ; then
+				FORMAT=${FORMAT}_po2xml
 			fi
 			if [ ! -d ~jenkins/jobs/${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT} ] ; then
 				echo "Warning: No build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."

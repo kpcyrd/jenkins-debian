@@ -142,24 +142,20 @@ else
         fetch_if_newer "$INITRD" "$URL/$INITRD"
 fi
 
-# discard any snapshots that are older than the inputs
-for dep in /srv/jenkins/cucumber /srv/jenkins/bin/lvc.sh /srv/jenkins/job-cfg/lvc.yaml $NETBOOT $PU_ISO ; do
-  if [ -e "$dep" ] ; then
-    LV_SNAP_DEPENDS="$LV_SNAP_DEPENDS $dep"
-  fi
-done
-discard_snapshots $LIBVIRT_DOMAIN_NAME $LV_SNAP_DEPENDS
-
-#  --keep-snapshots -- keeps the VM snapshots -- let's make life simple and not do that until we're using them to pass on state to the next jenkins job
+# discard any snapshots to ensure a clean run (we used to do this conditionally here, but that proved confusing)
+discard_snapshots $LIBVIRT_DOMAIN_NAME
 
 echo "Debug log available at runtime at https://jenkins.debian.net/view/lvc/job/$JOB_NAME/ws/results/debug.log"
 
 /srv/jenkins/cucumber/bin/run_test_suite --capture-all --keep-snapshots --vnc-server-only --iso $IMAGE --tmpdir $WORKSPACE --old-iso $IMAGE -- --format pretty --format pretty_debug --out $RESULTS/debug.log /srv/jenkins/cucumber/features/step_definitions /srv/jenkins/cucumber/features/support "${@}" || {
   RETVAL=$?
+  # it may make sense to keep snapshots on failure, so subsequent tests are quicker -- only if we stop discarding them above though
   discard_snapshots $LIBVIRT_DOMAIN_NAME
   exit $RETVAL
 }
 
+# FIXME -- decide here if we need to keep any snapshots, and put them somewhere safe for other jobs to find
+discard_snapshots $LIBVIRT_DOMAIN_NAME
 cleanup_all
 
 # don't cleanup twice

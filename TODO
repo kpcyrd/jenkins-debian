@@ -225,12 +225,9 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 ==== reproducible Debian arm64
 
-* very DEB_BUILD_OPTS?
+* vary DEB_BUILD_OPTS? (NUM_CPU)
 * squid is not used, we copy a /etc/squid3/squid3.conf but ubuntu uses /etc/squid/squid.conf
 * make systems send mail
-* thank you tweet to codethink
-* remove unwanted users from buildnodes (accidently created due to buggy update_jdn)
-* let's not vary the kernel yet
 
 ==== reproducible Debian installation
 

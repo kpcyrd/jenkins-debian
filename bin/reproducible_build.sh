@@ -79,7 +79,7 @@ save_artifacts() {
 		local URL="$DEBIAN_URL/$ARTIFACTS/"
 		local HEADER="$DEBIAN_BASE/$ARTIFACTS/.HEADER.html"
 		mkdir -p $DEBIAN_BASE/$ARTIFACTS
-		cp -r $TMPDIR/* $DEBIAN_BASE/$ARTIFACTS/
+		cp -r $TMPDIR/* $DEBIAN_BASE/$ARTIFACTS/ || true
 		local msg="Artifacts from this build have been preserved. They will be available for 24h only, so download them now.\n"
 		msg="${msg}WARNING: You shouldn't trust packages downloaded from this host, they can contain malware or the worst of your fears, packaged nicely in debian format.\n"
 		msg="${msg}If you are aware of this and just want to use these artifacts to investigate why $DIFFOSCOPE had issues, you can download the artifacts from the following location: $URL\n"

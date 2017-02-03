@@ -29,13 +29,12 @@ ok /perl: warning: Setting locale failed./
 # suppress warnings from commit messages
 ok /HEAD is now at .+/
 
-# list of warnings here...
-warning /[Ww]arning/
-warning /WARNING/
-
 # catch lintian warnings and errors
 warning /^W: /
 warning /^E: /
+# but supress things like 'N: 1 tag overridden (1 warning)'
+ok /N: \d+ tags? overridden \(\d+/
 
-
-
+# list of warnings here...
+warning /[Ww]arning/
+warning /WARNING/

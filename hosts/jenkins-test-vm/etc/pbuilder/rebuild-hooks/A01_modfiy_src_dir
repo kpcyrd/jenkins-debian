@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exit 0
+
 set -e
 
 # exit if we are in the same UTS namespace as init ( != 2nd build )

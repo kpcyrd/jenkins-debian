@@ -84,9 +84,9 @@
                     dist_name: 'Debian-Installer local mini.iso'
                     my_iso: 'use_TRIGGERING_BRANCH'
                     my_opts: '--tags @preseed'
-                - 'debian-stretch-DI-alpha':
-                    dist_name: 'Debian-Installer Stretch alpha8'
-                    my_iso: 'http://cdimage.debian.org/cdimage/stretch_di_alpha8/amd64/iso-cd/debian-stretch-DI-alpha8-amd64-netinst.iso'
+                - 'debian-stretch-DI':
+                    dist_name: 'Debian-Installer Stretch pre-release'
+                    my_iso: 'http://cdimage.debian.org/cdimage/stretch_di_rc2/amd64/iso-cd/debian-stretch-DI-rc2-amd64-netinst.iso'
                     my_time: 'H H * * H'
                 - 'debianedu-testing-netinst':
                     dist_name: 'Debian-Edu Testing Netinst'

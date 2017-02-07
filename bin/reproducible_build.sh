@@ -259,6 +259,7 @@ handle_ftbfs() {
 			'^zip I/O error: No space left on device' \
 			'^mkdir .*: No space left on device' \
 			'exceeds available storage space.*\(No space left on device\)$' \
+			'^dpkg-source: error: cannot create directory .* No space left on device$' \
 			; do
 			if zgrep -e "$NEEDLE" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 				handle_enospace $node

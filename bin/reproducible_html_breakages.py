@@ -369,9 +369,9 @@ def gen_html():
     html += '<h2>Breakage caused by diffscope</h2>'
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
     html += str(len(sources_without_dbd))
-    html += ' source packages on which diffoscope ran into a timeout ('
+    html += ' source packages on which diffoscope ran into timeouts ('
     html += str(count_pkgs(bad_dbd)) + ') or crashed ('
-    html += str(count_pkgs(without_dbd)) + ').'
+    html += str(count_pkgs(without_dbd)) + ') or sometimes both.'
     # gather stats and add graph
     update_stats_breakages(count_pkgs(bad_dbd), count_pkgs(without_dbd))
     png_file = 'stats_breakages.png'

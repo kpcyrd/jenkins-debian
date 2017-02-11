@@ -43,7 +43,6 @@ langs = [
 non_pdf_langs = [
 ]
 non_po_langs = [
-    'ca',
     'cs',
     'de',
     'en',

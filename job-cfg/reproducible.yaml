@@ -828,7 +828,7 @@
             otherproject_git:
                 - 'setup_fdroid_build_environment_profitbricks7':
                     my_description: 'Setup a build environment for F-Droid.'
-                    my_timed: '42 23 1 1 *'
+                    my_timed: '42 23 * * *'
                     my_hname: 'profitbricks7'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
                     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'

@@ -13,7 +13,8 @@ jenkins ALL=  \
 	/usr/bin/killall timeout, \
 	/usr/sbin/slay 1111, \
 	/usr/sbin/slay 2222, \
-	/usr/sbin/slay jenkins
+	/usr/sbin/slay jenkins, \
+	/bin/chmod -R a+rX /var/lib/libvirt/
 
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset

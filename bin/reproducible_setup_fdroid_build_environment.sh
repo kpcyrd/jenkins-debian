@@ -36,6 +36,9 @@ if systemd-detect-virt -q ; then
 else
         echo "No virtualization is used."
 fi
+sudo /bin/chmod -R a+rX /var/lib/libvirt/
+ls -ld /var/lib/libvirt
+ls -l /var/lib/libvirt || echo no access
 cat /etc/issue
 
 # the way we handle jenkins slaves doesn't copy the workspace to the slaves

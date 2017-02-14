@@ -525,6 +525,7 @@
                     my_description: 'Test whether PyPI has the latest diffoscope.'
                     my_timed: '23 23 * * *'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh PyPI'
+                    my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
                 - 'diffoscope_freebsd':
                     my_description: 'Test whether FreeBSD has the latest diffoscope.'
                     my_timed: '25 23 1 * *'

@@ -49,6 +49,9 @@ git clone https://gitlab.com/eighthave/fdroidserver.git
 cd fdroidserver
 git checkout jenkins # normally master too
 
+# set up Android SDK to use the Debian packages in stretch
+export ANDROID_HOME=/usr/lib/android-sdk
+
 # this script is maintained upstream and is also run on Guardian
 # Project's jenkins box
 ./jenkins-build-makebuildserver

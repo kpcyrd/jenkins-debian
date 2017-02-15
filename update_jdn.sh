@@ -345,6 +345,7 @@ if [ -f /etc/debian_version ] ; then
 		# needed to run fdroid jobs
 		case $HOSTNAME in
 			profitbricks-build7-amd64) DEBS="$DEBS
+				android-sdk
 				libvirt-clients
 				libvirt-daemon
 				libvirt-daemon-system

@@ -58,6 +58,13 @@ export ANDROID_HOME=/usr/lib/android-sdk
 # Project's jenkins box
 ./jenkins-build-makebuildserver
 
+# now build the whole archive
+cd $WORKSPACE
+git clone https://gitlab.com/fdroid/fdroiddata.git
+cd fdroiddata
+echo "build_server_always = True" > config.py
+$WORKSPACE/fdroidserver/fdroid build --verbose --latest --all
+
 # remove trap
 trap - INT TERM EXIT
 echo "$(date -u) - the end."

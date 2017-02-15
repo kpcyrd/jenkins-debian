@@ -58,6 +58,11 @@ export ANDROID_HOME=/usr/lib/android-sdk
 # Project's jenkins box
 ./jenkins-build-makebuildserver
 
+# ignore username/password prompt for non-existant repos
+git config --global url."https://fakeusername:fakepassword@github.com".insteadOf https://github.com
+git config --global url."https://fakeusername:fakepassword@gitlab.com".insteadOf https://gitlab.com
+git config --global url."https://fakeusername:fakepassword@bitbucket.org".insteadOf https://bitbucket.org
+
 # now build the whole archive
 cd $WORKSPACE
 git clone https://gitlab.com/fdroid/fdroiddata.git

@@ -181,12 +181,24 @@ fi
 set -e
 
 # delete old temp directories
+# (delete this by the end of Feb 2017 after there are no more stale dirs in
+# $REP_RESULTS and everything moved into $REP_RESULSTS/rbuild-debian/)
 echo "$(date -u) - Deleting temp directories, older than 3 days."
 OLDSTUFF=$(find $REP_RESULTS -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -mtime +2 -name "rbuild*" -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS"
 	find $REP_RESULTS -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -mtime +2 -name "rbuild*" -exec rm -rv {} \; || true
+	echo "These old directories have been deleted."
+	echo
+	DIRTY=true
+# delete old temp directories
+echo "$(date -u) - Deleting temp directories, older than 3 days."
+OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; || true)
+if [ ! -z "$OLDSTUFF" ] ; then
+	echo
+	echo "Old temp directories found in $REP_RESULTS/rbuild-debian"
+	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
@@ -348,6 +360,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	fi
 	rm $PACKAGES
 
+	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv {} \; || true
 	#
 	# delete jenkins html logs from reproducible_builder_* jobs as they are mostly redundant
 	# (they only provide the extended value of parsed console output, which we dont need here.)

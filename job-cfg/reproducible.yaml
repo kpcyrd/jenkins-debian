@@ -350,6 +350,8 @@
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
+                - 'p64b':           { my_arch: 'armhf' }
+                - 'p64c':           { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386'  }
                 - 'profitbricks3':  { my_arch: 'amd64' }
@@ -414,6 +416,8 @@
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
+                - 'p64b':           { my_arch: 'armhf' }
+                - 'p64c':           { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386'  }
                 - 'profitbricks5':  { my_arch: 'amd64' }

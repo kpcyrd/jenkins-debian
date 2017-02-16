@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # define Debian build nodes in use for tests.reproducible-builds.org/debian/
@@ -41,6 +41,8 @@ jtk1a-armhf-rb.debian.net
 opi2a-armhf-rb.debian.net
 opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net
+p64b-armhf-rb.debian.net
+p64c-armhf-rb.debian.net
 codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
 codethink-sled11-arm64.debian.net
@@ -119,6 +121,12 @@ get_node_ssh_port() {
 	    ;;
 	  jtk1a-armhf-rb.debian.net)
 	    PORT=2246
+	    ;;
+	  p64b-armhf-rb.debian.net)
+	    PORT=2247
+	    ;;
+	  p64c-armhf-rb.debian.net)
+	    PORT=2248
 	    ;;
 	  profitbricks-build*)
 	    PORT=22

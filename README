@@ -141,10 +141,10 @@ Installation tests inside chroot environments.
 ** for 'amd64' we are using four virtual machines, profitbricks-build(1+5+11+15)-amd64, which have 15 or 16 cores and 48gb ram each. These nodes are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
 ** for 'i386' we are also using four virtual machines, profitbricks-build(2+6+12+16)-i386, which have 10 or 9 cores and 36gb ram each. pb2+12 run emulated AMD Opteron CPUs and pb6+16 Intel Xeon CPUs. These nodes are also sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
 ** for 'amd64' we are using eight "moonshot" sleds, codethink-sled9-15-arm64, which have 8 cores and 64gb ram each. These nodes are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Codethink].
-** To test 'armhf' we are using 22 small boards donated by vagrant@d.o:
+** To test 'armhf' we are using 24 small boards donated by vagrant@d.o:
 *** five quad-cores (cbxi4a, cbxi4b, and ff4a) with 4gb ram,
 *** three octo-cores (odxu4, odxu4b and odxu4c) with 2gb ram,
-*** nine quad-cores (wbq0, cbxi4pro0, ff2a, ff2b, odu3a, opi2a, opi2b, opi2c and jtk1a) with 2gb ram, 
+*** eleven quad-cores (wbq0, cbxi4pro0, ff2a, ff2b, odu3a, opi2a, opi2b, opi2c, jtk1a, p64b and p64c) with 2gb ram, 
 *** two dual-core (bbx15 and cb3a) with 2gb ram and,
 *** two quad-cores (rpi2b and rpi2c) with 1gb ram and
 *** three dual-cores (bpi0, hb0 and wbd0) with 1gb ram, each. 

@@ -21,10 +21,10 @@ Debian packages for t.r-b.o
  ** 5 cores and 10 GB memory for profitbricks-build9-amd64.debian.net used for rebootstrap jobs
  ** 4 cores and 12 GB memory for profitbricks-build10-amd64.debian.net used for lvc jobs
  ** 3 cores and 6 GB memory for freebsd-jenkins.debian.net (also running on Profitbricks virtual hardware), used for building FreeBSD for t.r-b.o
- * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] provides and hosts 22 'armhf' systems, used for building armhf Debian packages for t.r-b.o:
+ * link:https://qa.debian.org/developer.php?login=vagrant%40debian.org[Vagrant] provides and hosts 24 'armhf' systems, used for building armhf Debian packages for t.r-b.o:
  ** three quad-cores with 4 GB RAM each,
  ** three octo-cores with 2 GB RAM each,
- ** nine quad-cores with 2 GB RAM each,
+ ** eleven quad-cores with 2 GB RAM each,
  ** two dual-core with 2 GB RAM,
  ** two quad-cores with 1 GB RAM and
  ** three dual-cores with 1 GB RAM.

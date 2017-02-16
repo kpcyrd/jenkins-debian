@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 common_cleanup() {
@@ -106,7 +106,7 @@ else
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*)
 				export MIRROR=http://ftp.de.debian.org/debian ;;
-			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*)
+			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*|p64*)
 				export MIRROR=http://ftp.us.debian.org/debian ;;
 			codethink*)
 				export MIRROR=http://ftp.uk.debian.org/debian ;;
@@ -120,7 +120,7 @@ else
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*|codethink*)
 				export http_proxy="http://localhost:3128" ;;
-			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*)
+			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*|p64*)
 				export http_proxy="http://10.0.0.15:8000/" ;;
 			spectrum)
 				export MIRROR=none ;;

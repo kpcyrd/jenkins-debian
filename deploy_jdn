@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 #
 # released under the GPLv=2
 #
@@ -59,6 +59,8 @@ odxu4c-armhf-rb.debian.net
 opi2a-armhf-rb.debian.net
 opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net
+p64b-armhf-rb.debian.net
+p64c-armhf-rb.debian.net
 rpi2b-armhf-rb.debian.net
 rpi2c-armhf-rb.debian.net
 wbd0-armhf-rb.debian.net

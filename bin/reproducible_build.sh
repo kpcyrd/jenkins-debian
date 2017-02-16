@@ -363,7 +363,7 @@ dbd_timeout() {
 	else
 		msg="$msg, but there is still $DEBIAN_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
-	SAVE_ARTIFACTS=1
+	SAVE_ARTIFACTS=0
 	NOTIFY="diffoscope"
 	handle_ftbr "$msg"
 }

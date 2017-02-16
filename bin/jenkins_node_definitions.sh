@@ -11,46 +11,46 @@
 #		- bin/reproducible_cleanup_nodes.sh where it would be
 #		  nice to also include pb-build3+4+7+9+10, to also cleanup
 #		  jobs there…
-BUILD_NODES="profitbricks-build1-amd64.debian.net
-profitbricks-build2-i386.debian.net
-profitbricks-build5-amd64.debian.net
-profitbricks-build6-i386.debian.net
-profitbricks-build11-amd64.debian.net
-profitbricks-build12-i386.debian.net
-profitbricks-build15-amd64.debian.net
-profitbricks-build16-i386.debian.net
-wbq0-armhf-rb.debian.net
+BUILD_NODES="bbx15-armhf-rb.debian.net
+bpi0-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
 cbxi4b-armhf-rb.debian.net
 cbxi4pro0-armhf-rb.debian.net
-bbx15-armhf-rb.debian.net
-bpi0-armhf-rb.debian.net
-hb0-armhf-rb.debian.net
-odu3a-armhf-rb.debian.net
-odxu4-armhf-rb.debian.net
-wbd0-armhf-rb.debian.net
-rpi2b-armhf-rb.debian.net
-rpi2c-armhf-rb.debian.net
-odxu4b-armhf-rb.debian.net
-odxu4c-armhf-rb.debian.net
-ff2a-armhf-rb.debian.net
-ff2b-armhf-rb.debian.net
-ff4a-armhf-rb.debian.net
-jtk1a-armhf-rb.debian.net
-opi2a-armhf-rb.debian.net
-opi2b-armhf-rb.debian.net
-opi2c-armhf-rb.debian.net
-p64b-armhf-rb.debian.net
-p64c-armhf-rb.debian.net
-codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
 codethink-sled11-arm64.debian.net
 codethink-sled12-arm64.debian.net
 codethink-sled13-arm64.debian.net
 codethink-sled14-arm64.debian.net
 codethink-sled15-arm64.debian.net
-codethink-sled16-arm64.debian.net"
+codethink-sled16-arm64.debian.net
+codethink-sled9-arm64.debian.net
+ff2a-armhf-rb.debian.net
+ff2b-armhf-rb.debian.net
+ff4a-armhf-rb.debian.net
+hb0-armhf-rb.debian.net
+jtk1a-armhf-rb.debian.net
+odu3a-armhf-rb.debian.net
+odxu4-armhf-rb.debian.net
+odxu4b-armhf-rb.debian.net
+odxu4c-armhf-rb.debian.net
+opi2a-armhf-rb.debian.net
+opi2b-armhf-rb.debian.net
+opi2c-armhf-rb.debian.net
+p64b-armhf-rb.debian.net
+p64c-armhf-rb.debian.net
+profitbricks-build11-amd64.debian.net
+profitbricks-build12-i386.debian.net
+profitbricks-build15-amd64.debian.net
+profitbricks-build16-i386.debian.net
+profitbricks-build1-amd64.debian.net
+profitbricks-build2-i386.debian.net
+profitbricks-build5-amd64.debian.net
+profitbricks-build6-i386.debian.net
+rpi2b-armhf-rb.debian.net
+rpi2c-armhf-rb.debian.net
+wbd0-armhf-rb.debian.net
+wbq0-armhf-rb.debian.net"
 
 # return the ports sshd is listening on
 get_node_ssh_port() {

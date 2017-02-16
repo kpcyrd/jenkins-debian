@@ -35,7 +35,7 @@ release_architectures = """
 
 architectures += mono_architectures
 
-gcc_versions = ("6",)
+gcc_versions = ("6", "7",)
 diffoscope_gcc_versions = ("6",)
 
 print("""

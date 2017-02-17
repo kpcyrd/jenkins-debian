@@ -842,7 +842,7 @@
                     my_timed: '42 23 * * *'
                     my_hname: 'profitbricks7'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
-                    my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@eds.org'
                 - 'diffoscope_from_git_master':
                     my_description: 'Build diffoscope Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'

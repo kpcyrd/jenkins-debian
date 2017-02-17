@@ -228,10 +228,13 @@ def publ_email(irc=None):
     return {'email': {'recipients': ' '.join(r)}}
 
 
-def publ(fmt=None, trigger=None, irc=None):
+def publ(fmt=None, trigger=None, irc=None, po=None):
     p = []
     if trigger is not None:
-        p = [{'trigger': {'project': 'd-i_manual_{lang}_pdf',
+        proj = ['d-i_manual_{lang}_pdf']
+        if po:
+          proj.append(po)
+        p = [{'trigger': {'project': '_'.join(proj),
                           'threshold': 'UNSTABLE'}}]
     p.extend([
         {'logparser': {
@@ -291,7 +294,7 @@ def jobspec_svn(key, name, desc, defaults=None,
          'properties': prop(priority=priority),
          'name': name}
     j['publishers'] = (publishers if publishers is not None
-                       else publ(fmt=fmt, trigger=trigger, irc='debian-boot'))
+                       else publ(fmt=fmt, trigger=trigger, irc='debian-boot', po=po))
 
     j['description'] = desc
     j['description'] += ' {do_not_edit}'
@@ -355,7 +358,7 @@ for f in ['html', 'pdf']:
                         lang='{lang}',
                         fmt=f,
                         po=po,
-                        trigger=('{trg}' if not (f == 'pdf' and po == '')
+                        trigger=('{trg}' if f == 'html'
                                  else None),
                         desc=desc_str[f],
                         logkeep=90))

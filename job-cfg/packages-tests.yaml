@@ -1,5 +1,7 @@
 - defaults:
     name: packages-tests
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     project-type: freestyle
     properties:
       - sidebar:
@@ -94,4 +96,4 @@
             my_trigger: '{name}_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'
-            disabled: true
+            my_disabled: true

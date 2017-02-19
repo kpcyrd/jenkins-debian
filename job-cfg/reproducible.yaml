@@ -1,7 +1,8 @@
 - defaults:
     name: reproducible
     project-type: freestyle
-    disabled: false
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     properties:
       - sidebar: &sb1
           url: https://jenkins.debian.net/userContent/about.html
@@ -37,6 +38,8 @@
 - defaults:
     name: reproducible_git
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     properties:
       - sidebar: *sb1
       - sidebar: *sb2
@@ -72,6 +75,8 @@
 - defaults:
     name: reproducible_builder
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     description: *desc
     properties:
       - sidebar: *sb1
@@ -107,6 +112,8 @@
 - defaults:
     name: reproducible_builder_trigger
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     description: *desc
     properties:
       - sidebar: *sb1
@@ -138,6 +145,8 @@
 - defaults:
     name: reproducible_other_projects
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     description: *desc
     properties:
       - sidebar: *sb1
@@ -164,6 +173,8 @@
 - defaults:
     name: reproducible_other_projects_git
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     description: *desc
     properties:
       - sidebar: *sb1
@@ -202,6 +213,8 @@
 - defaults:
     name: reproducible_other_projects_trigger
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     description: *desc
     properties:
       - sidebar: *sb1
@@ -230,6 +243,8 @@
 - defaults:
     name: reproducible_other_projects_artifacts
     project-type: freestyle
+    my_disabled:
+    disabled: '{obj:my_disabled}'
     description: *desc
     properties:
       - sidebar: *sb1
@@ -371,7 +386,6 @@
                 - 'codethink15':    { my_arch: 'arm64' }
                 - 'codethink16':    { my_arch: 'arm64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            disabled: true
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -806,32 +820,32 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
-                    disabled: true
+                    my_disabled: true
                 - 'setup_schroot_archlinux_profitbricks3':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks3'
-                    disabled: true
+                    my_disabled: true
                 - 'setup_schroot_archlinux_profitbricks4':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
-                    disabled: true
+                    my_disabled: true
                 - 'setup_mock_fedora-23_x86_64_jenkins':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64'
-                    disabled: true
+                    my_disabled: true
                 - 'setup_mock_fedora-23_x86_64_profitbricks3':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks3'
-                    disabled: true
+                    my_disabled: true
                 - 'setup_mock_fedora-23_x86_64_profitbricks4':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
-                    disabled: true
+                    my_disabled: true
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
 
@@ -901,21 +915,17 @@
                 - 'archlinux':
                     my_num: 1
                     op_descname: 'an Arch Linux'
-                    disabled: true
                 - 'archlinux':
                     my_num: 2
                     op_descname: 'an Arch Linux'
-                    disabled: true
                 - 'fedora-23_x86_64':
                     my_num: 1
                     op_descname: 'a Fedora 23'
                     my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
-                    disabled: true
                 - 'fedora-23_x86_64':
                     my_num: 2
                     op_descname: 'a Fedora 23'
                     my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
-                    disabled: true
                 # when you add another fedora builder here
                 # the loop in bin/reproducible_setup_mock.sh needs to be increased too
             my_description: 'Try to reproducibly build {op_descname} package.'
@@ -923,4 +933,5 @@
             my_timed: '* * * * *'
             my_trigger: 'reproducible_html_{otherproject}'
             my_hname: ''
+            my_disabled: true
 

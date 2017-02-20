@@ -433,37 +433,36 @@ create_suite_arch_stats_page() {
 	write_page "<p>"
 	set_icon reproducible
 	write_icon
-	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH."
+	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH.<br />"
 	set_icon unreproducible
 	write_icon
-	write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to build reproducibly."
+	write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to build reproducibly.<br />"
 	set_icon FTBFS
 	write_icon
-	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.</p>"
-	write_page "<p>"
+	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.<br /></p>"
 	if [ $COUNT_DEPWAIT -gt 0 ] ; then
 		write_page "For "
 		set_icon depwait
 		write_icon
-		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages the build-depends cannot be satisfied."
+		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages the build-depends cannot be satisfied.<br />"
 	fi
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
 		write_page "For "
 		set_icon 404
 		write_icon
-		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded,"
+		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded.<br />"
 	fi
 	set_icon not_for_us
 	write_icon
 	if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ]; then
 		ARMSPECIALARCH=" 'any-arm',"
 	fi
-	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be build here"
+	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be build here.<br />"
 	write_page "and those "
 	set_icon blacklisted
 	write_icon
-	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) blacklisted packages neither.</p>"
-	write_page "<p>"
+	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) packages have been blacklisted on $SUITE/$ARCH.<br />"
+	write_page "</p><p>"
 	write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" alt=\"${MAINLABEL[0]}\"></a>"
 	for i in 0 2 ; do
 		# recreate png once a day

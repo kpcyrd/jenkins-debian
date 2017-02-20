@@ -854,7 +854,7 @@ share_buildinfo() {
 		curl -s -X PUT --max-time 30 --data-binary @- "https://buildinfo.debian.net/api/submit" < ./${X}/$BUILDINFO_SIGNED > $TMPFILE || log_error "Could not submit buildinfo from ${X} to http://buildinfo.debian.net/api/submit"
 		cat $TMPFILE
 		if grep -q "500 Internal Server Error" $TMPFILE ; then
-			irc_message debian-reproducible "${BUILD_URL} got error code 500 from buildinfo.debian.net"
+			echo no irc_message debian-reproducible "${BUILD_URL} got error code 500 from buildinfo.debian.net"
 		fi
 		rm $TMPFILE
 	done

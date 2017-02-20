@@ -446,7 +446,6 @@ create_suite_arch_stats_page() {
 		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could nott be satisfied.<br />"
 	fi
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
-		write_page "For "
 		set_icon 404
 		write_icon
 		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded.<br />"

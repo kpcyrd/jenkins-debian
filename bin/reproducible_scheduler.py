@@ -64,7 +64,7 @@ LIMITS_404 defines how many packages with status 404 are rescheduled at max.
 
 """
 # only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 21, 'i386': 26, 'arm64': 14, 'armhf':27 }
+MINIMUM_AGE = {'amd64': 28, 'i386': 33, 'arm64': 21, 'armhf':32 }
 # maximum queue size, see explainations above
 MAXIMA = {'amd64': 750, 'i386': 750, 'arm64': 1000, 'armhf': 750}
 # limits, see explainations above

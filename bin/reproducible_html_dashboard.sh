@@ -406,7 +406,7 @@ write_suite_arch_table() {
 	for SUITE in $SUITES ; do
 		for ARCH in ${ARCHS} ; do
 			gather_suite_arch_stats
-			write_page "<tr><td class=\"left\">$SUITE/$ARCH</td><td>$AMOUNT"
+			write_page "<tr><td class=\"left\"><a href=\"/debian/$SUITE/$ARCH\">$SUITE/$ARCH</a></td><td>$AMOUNT"
 			if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 				write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 			fi

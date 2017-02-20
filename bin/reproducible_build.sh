@@ -842,8 +842,10 @@ share_buildinfo() {
 	log_info "Submitting .buildinfo files to external archives:"
 
 	# buildinfo.kfreebsd.eu administered by Steven Chamberlain <steven@pyro.eu.org>
-	mail -s "buildinfo from $NODE1" submit@buildinfo.kfreebsd.eu < ./b1/$BUILDINFO || log_error "Could not submit buildinfo from $NODE1 to submit@buildinfo.kfreebsd.eu."
-	mail -s "buildinfo from $NODE2" submit@buildinfo.kfreebsd.eu < ./b2/$BUILDINFO || log_error "Could not submit buildinfo from $NODE2 to submit@buildinfo.kfreebsd.eu"
+	for X in b1 b2
+	do
+		mail -s "${X}/$BUILDINFO_SIGNED" submit@buildinfo.kfreebsd.eu < ./${X}/$BUILDINFO_SIGNED || log_error "Could not submit ${X}/$BUILDINFO_SIGNED to submit@buildinfo.kfreebsd.eu."
+	done
 	log_info "Done submitting .buildinfo files to submit@buildinfo.kfreebsd.eu."
 
 	# buildinfo.debian.net administred by Chris Lamb <lamby@debian.org>
@@ -854,7 +856,7 @@ share_buildinfo() {
 		curl -s -X PUT --max-time 30 --data-binary @- "https://buildinfo.debian.net/api/submit" < ./${X}/$BUILDINFO_SIGNED > $TMPFILE || log_error "Could not submit buildinfo from ${X} to http://buildinfo.debian.net/api/submit"
 		cat $TMPFILE
 		if grep -q "500 Internal Server Error" $TMPFILE ; then
-			MESSAGE="$(date -u ) - ${BUILD_URL}console got error code 500 from buildinfo.debian.net"
+			MESSAGE="$(date -u ) - ${BUILD_URL}console got error code 500 from buildinfo.debian.net for $(du -h ${X}/$BUILDINFO_SIGNED)"
 			echo -e "$MESSAGE" | tee -a /var/log/jenkins/reproducible-submit2buildinfo.debian.net.log
 		fi
 		rm $TMPFILE

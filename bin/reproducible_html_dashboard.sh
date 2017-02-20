@@ -441,10 +441,9 @@ create_suite_arch_stats_page() {
 	write_icon
 	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.<br /></p>"
 	if [ $COUNT_DEPWAIT -gt 0 ] ; then
-		write_page "For "
 		set_icon depwait
 		write_icon
-		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages the build-depends cannot be satisfied.<br />"
+		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could nott be satisfied.<br />"
 	fi
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
 		write_page "For "
@@ -458,7 +457,6 @@ create_suite_arch_stats_page() {
 		ARMSPECIALARCH=" 'any-arm',"
 	fi
 	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be build here.<br />"
-	write_page "and those "
 	set_icon blacklisted
 	write_icon
 	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) packages have been blacklisted on $SUITE/$ARCH.<br />"

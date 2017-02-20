@@ -39,7 +39,7 @@ multiarch_versionskew() {
 				multi_arch='same' AND
 					architecture IN ('amd64', 'arm64', 'armel', 'armhf', 'i386',
 					'kfreebsd-amd64', 'kfreebsd-i386', 'mips', 'mipsel',
-					'powerpc', 'ppc64el', 's390x')
+					'mips64el', 'powerpc', 'ppc64el', 's390x')
 				ORDER BY source) AS all_versions
 				GROUP BY source, package
 				HAVING count(*) > 1

@@ -690,11 +690,11 @@ def scheduler(arch):
         now_queued_here[suite] = int(query_db(query)[0][0]) + \
             len(untested[suite]+new[suite]+old[suite])
         # schedule packages differently in the queue...
-        to_be_scheduled = queue_packages({}, untested[suite], datetime.now())
+        to_be_scheduled = queue_packages({}, untested[suite], datetime.now()+timedelta(minutes=-720))
         assert(isinstance(to_be_scheduled, dict))
-        to_be_scheduled = queue_packages(to_be_scheduled, new[suite], datetime.now()+timedelta(minutes=-720))
+        to_be_scheduled = queue_packages(to_be_scheduled, new[suite], datetime.now()+timedelta(minutes=-1440))
         to_be_scheduled = queue_packages(to_be_scheduled, old_ftbfs[suite], datetime.now()+timedelta(minutes=360))
-        to_be_scheduled = queue_packages(to_be_scheduled, old_depwait[suite], datetime.now()+timedelta(minutes=360))
+        to_be_scheduled = queue_packages(to_be_scheduled, old_depwait[suite], datetime.now()+timedelta(minutes=-360))
         to_be_scheduled = queue_packages(to_be_scheduled, old[suite], datetime.now()+timedelta(minutes=720))
         to_be_scheduled = queue_packages(to_be_scheduled, four04[suite], datetime.now())
         schedule_packages(to_be_scheduled)

@@ -125,6 +125,7 @@ if [ "$VALID_MAIL" = "true" ] ; then
 		MESSAGE="$(echo $MESSAGE | sed -s 's#^Still Failing#Still failing#') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's# See # #') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#Changes:##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#\?page=changes$##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/changes$##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#display/redirect$##') "

@@ -27,7 +27,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * short intro, why are we here (aka: say hi)
 * jenkins.d.n status
 * jenkins.d.o migration next steps (see below for details)
-* jenkins sprint in spring 2017 - probably march
+* jenkins sprint in 2017?
 * AOB
 * thanks to profitbricks for hosting
 
@@ -37,6 +37,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * 2016-09-28: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-09-28-19.02.html
 * 2016-10: none
 * 2016-11-23: http://meetbot.debian.net/debian-qa/2016/debian-qa.2016-11-23-18.06.html
+* 2016-12: canceled because of 33C3
+* 2017-01: none
+* 2017-02-22: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-02-22-18.04.html
+* 2017-03-23: next meeting!
 
 == move this setup to jenkins.d.o
 

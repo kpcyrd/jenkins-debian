@@ -47,6 +47,8 @@ Defaults     env_keep += "PKG_PATH PKG_DBDIR PKG_TMPDIR TMPDIR PACKAGEROOT PACKA
 Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
 # for reproducible builds:
 Defaults env_keep += "TZ DESTDIR"
+# for pkg base timestamps, until connected to the FreeBSD release build scripts:
+Defaults env_keep += "SOURCE_DATE_EPOCH"
 ##
 ## Run X applications through sudo; HOME is used to find the
 ## .Xauthority file.  Note that other programs use HOME to find   

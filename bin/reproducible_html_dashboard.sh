@@ -305,7 +305,7 @@ _average_builds_per_day() {
 		if [ $DAY_DIFFS -ge $MIN_DAYS ]; then
 			if [ $DAY_DIFFS -lt $TIMESPAN ]; then
 				# this is a new architecture, there are fewer days to compare to.
-				DISCLAIMER=" <span style=\"font-size: 0.8em;\">(in the last $DAY_DIFFS days)</span>"
+				DISCLAIMER=" <span style=\"font-size: 0.8em;\">(last $DAY_DIFFS days)</span>"
 				TIMESPAN=$DAY_DIFFS
 			fi
 			# find stats for since the day before $TIMESPAN_RAW days ago,
@@ -349,7 +349,7 @@ write_build_performance_stats() {
 		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
-		write_page "<td>$MIN minutes, $SEC seconds</td>"
+		write_page "<td>$MIN min., $SEC sec.</td>"
 	done
 
 	local TIMESPAN_VERBOSE="4 weeks"
@@ -364,7 +364,7 @@ write_build_performance_stats() {
 		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='0' AND r.build_date > '$TIMESPAN_DATE' AND s.architecture='$ARCH'")
 		MIN=$(echo $RESULT/60|bc)
 		SEC=$(echo "$RESULT-($MIN*60)"|bc)
-		write_page "<td>$MIN minutes, $SEC seconds</td>"
+		write_page "<td>$MIN min., $SEC sec.</td>"
 	done
 
 	write_page "</tr><tr><td class=\"left\">packages tested on $DATE</td>"

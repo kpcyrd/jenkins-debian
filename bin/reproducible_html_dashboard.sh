@@ -336,6 +336,14 @@ write_build_performance_stats() {
 		AGE_TESTING=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
 		write_page "<td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
+	write_page "</tr><tr><td class=\"left\">Build jobs configured</td>"
+	for ARCH in ${ARCHS} ; do
+		write_page "<td>$(ls /var/lib/jenkins/jobs/reproducible_builder_* -1d|grep -c $ARCH)</td>"
+	done
+	write_page "</tr><tr><td class=\"left\">Build jobs currently running</td>"
+	for ARCH in ${ARCHS} ; do
+		write_page "<td>$(ps fax|grep reproducible_build.sh|grep bash|grep -c $ARCH)</td>"
+	done
 	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")

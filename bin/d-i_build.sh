@@ -58,6 +58,7 @@ preserve_artifacts() {
 		if [ "$JOB_NAME" != "d-i_pu-triggered_debian-installer" ] ; then
 			mkdir -p $udeb_dir
 			cp ${RESULT_DIR}/*.udeb $udeb_dir
+			make -f /srv/jenkins/bin/repo.mak -C $udeb_dir Release
 		fi
 		# this is put into env.txt below, so that the variable(s) can be injected into the jenkins environment
 		ENV_TO_INJECT="OUR_BRANCH=$GIT_BRANCH"
@@ -136,7 +137,7 @@ pdebuild_package() {
 	# then grab the generated udebs.  FIXME -- we need to work out a way of cleaning up old branches
 	#
 	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $TRIGGERING_BRANCH) ; then
-		cp $udeb_dir/* build/localudebs
+		cp $udeb_dir/*.udeb build/localudebs
 	fi
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" --buildresult ${RESULT_DIR} -- --http-proxy $http_proxy
 	# cleanup

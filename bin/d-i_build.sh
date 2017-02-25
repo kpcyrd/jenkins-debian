@@ -52,7 +52,7 @@ iso_target() {
 
 preserve_artifacts() {
 	#
-	# Check is we're in a pu/* branch, and if so save the udebs
+	# Check if we're in a pu/* branch, and if so save the udebs
 	#
 	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $GIT_BRANCH) ; then
 		if [ "$JOB_NAME" != "d-i_pu-triggered_debian-installer" ] ; then
@@ -133,7 +133,7 @@ pdebuild_package() {
 	fi
 	#
 	# if we got a valid TRIGGERING_BRANCH passed in as a parameter from the triggering job
-	# then grab the generated udebs.  FIXME -- we need to work work out a way of cleaning up old branches
+	# then grab the generated udebs.  FIXME -- we need to work out a way of cleaning up old branches
 	#
 	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $TRIGGERING_BRANCH) ; then
 		cp $udeb_dir/* build/localudebs

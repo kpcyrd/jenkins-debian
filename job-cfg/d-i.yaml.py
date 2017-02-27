@@ -44,7 +44,6 @@ non_pdf_langs = [
 ]
 non_po_langs = [
     'cs',
-    'de',
     'en',
     'eu',
     'it',

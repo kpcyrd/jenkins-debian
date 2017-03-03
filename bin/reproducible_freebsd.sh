@@ -34,7 +34,8 @@ save_freebsd_results() {
 	$RSSH "sudo find $TMPDIR -newer $TMPDIR -exec touch -d '$DUMMY_DATE' {} \;"
 	$RSSH "sudo find $TMPDIR -print0 | LC_ALL=C sort -z | sudo tar --no-recursion --null -T - -cJf $TMPDIR.tar.xz"
 	$RSCP:$TMPDIR.tar.xz $TMPDIR/$RUN/$TARGET_NAME.tar.xz
-	$RSCP:/usr/obj/usr/src/repo $TMPDIR/$RUN/
+	# Copy packages back with a tar pipeline
+	$RSSH "sudo tar -C /usr/obj/usr/src -cf - repo" | tar -x -C $TMPDIR/$RUN/ -f -
 	$RSSH "sudo chflags -R noschg $TMPDIR ; sudo rm -r $TMPDIR $TMPDIR.tar.xz ; mkdir $TMPDIR"
 }
 

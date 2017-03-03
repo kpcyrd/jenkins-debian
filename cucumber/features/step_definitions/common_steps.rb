@@ -208,6 +208,11 @@ When /^I start the computer$/ do
   post_vm_start_hook
 end
 
+When /^I execute "([^"]*)"$/ do |cmd|
+  info_log($vm.execute(cmd))
+end
+
+
 Given /^I start Tails( from DVD)?( with network unplugged)?( and I login)?$/ do |dvd_boot, network_unplugged, do_login|
   step "the computer is set to boot from the Tails DVD" if dvd_boot
   if network_unplugged.nil?
@@ -289,7 +294,14 @@ Given /^I select the install mode$/ do
 
   @screen.type(Sikuli::Key.TAB)
   @boot_options = "" if @boot_options.nil?
-  @screen.type(' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank ; sed -i /XF86_Switch_VT_/s/F/XF86_Switch_VT_/ /usr/share/X11/xkb/symbols/srvr_ctrl ; echo ttyS0::askfirst:-/bin/sh>>/etc/inittab;kill -HUP 1" blacklist=psmouse ' + @boot_options +
+  initcmd = 'printf \\\\\\\\07; while read x; do printf \\\\\\\\02; eval $x 2>/tmp/.remcmd_stderr; printf \\\\\\\\03%%s\\\\\\\\037 $?; cat /tmp/.remcmd_stderr; printf \\\\\\\\00; done'.gsub(/([$\\;>])/, '\\\\\0')
+  inittab_line = ('ttyS0::respawn:-/bin/sh -c \\\\047' + initcmd + '\\\\047').gsub(/ /, '\\ ')
+  @screen.type( ' preseed/early_command="echo DPMS=-s\\\\ 0 > /lib/debian-installer.d/S61Xnoblank;' +
+		' sed -i /XF86_Switch_VT_/s/F/XF86_Switch_VT_/ /usr/share/X11/xkb/symbols/srvr_ctrl;' +
+		' set -x;' +
+		' { printf ' + inittab_line + ';echo;}>>/etc/inittab;' +
+		' kill -HUP 1" blacklist=psmouse ' +
+		@boot_options +
                Sikuli::Key.ENTER)
   debug_log("debug: wait for the remote shell to respond...", :color => :blue)
   $vm.wait_until_remote_shell_is_up

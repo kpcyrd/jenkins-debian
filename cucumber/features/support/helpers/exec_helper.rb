@@ -13,9 +13,8 @@ class VMCommand
 
   def VMCommand.wait_until_remote_shell_is_up(vm, timeout = 180)
     try_for(timeout, :msg => "Remote shell seems to be down") do
-    sleep(20)
-      Timeout::timeout(10) do
-        VMCommand.execute(vm, "echo 'true'")
+      Timeout::timeout(20) do
+        VMCommand.execute(vm, "echo 'hello?'")
       end
     end
   end
@@ -36,26 +35,38 @@ class VMCommand
     socket = TCPSocket.new("127.0.0.1", vm.get_remote_shell_port)
     debug_log("#{type}ing as #{options[:user]}: #{cmd}")
     begin
-      #socket.puts(JSON.dump([type, options[:user], cmd]))
-      socket.puts( "\n")
-      sleep(1)
-      socket.puts( "\003")
-      sleep(1)
-      socket.puts( cmd + "\n")
-      sleep(1)
+      sleep 0.5
       while socket.ready?
-        s = socket.readline(sep = "\n").chomp("\n")
-        debug_log("#{type} read: #{s}") if not(options[:spawn])
-        if ('true' == s) then
-          break
-        end
+        s = socket.recv(1024)
+        debug_log("#{type} pre-exit-debris: #{s}") if not(options[:spawn])
       end
+      socket.puts( "\nexit\n")
+      sleep 1
+      s = socket.readline(sep = "\007")
+      debug_log("#{type} post-exit-read: #{s}") if not(options[:spawn])
+      while socket.ready?
+        s = socket.recv(1024)
+        debug_log("#{type} post-exit-debris: #{s}") if not(options[:spawn])
+      end
+      socket.puts( cmd + "\n")
+      s = socket.readline(sep = "\000")
+      debug_log("#{type} post-cmd-read: #{s}") if not(options[:spawn])
+      s.chomp!("\000")
     ensure
+      debug_log("closing the remote-command socket") if not(options[:spawn])
       socket.close
     end
-    if ('true' == s)
-      return true
+    (s, s_err, x) = s.split("\037")
+    s_err = "" if s_err.nil?
+    (s, s_retcode, y) = s.split("\003")
+    (s, s_out, z) = s.split("\002")
+    s_out = "" if s_out.nil?
+
+    if (s_retcode.to_i.to_s == s_retcode.to_s && x.nil? && y.nil? && z.nil?) then
+      debug_log("returning [returncode=`#{s_retcode.to_i}`,\n\toutput=`#{s_out}`,\n\tstderr=`#{s_err}`]\nwhile discarding `#{s}`.") if not(options[:spawn])
+      return [s_retcode.to_i, s_out, s_err]
     else
+      debug_log("failed to parse results, retrying\n")
       return VMCommand.execute(vm, cmd, options)
     end
   end

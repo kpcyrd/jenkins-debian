@@ -90,7 +90,7 @@
                     my_time: 'H H * * H'
                 - 'debianedu-testing-netinst':
                     dist_name: 'Debian-Edu Testing Netinst'
-                    my_iso: 'http://ftp.skolelinux.org/cd-edu-testing-nolocal-netinst/debian-edu-amd64-i386-NETINST-1.iso'
+                    my_iso: 'http://ftp.skolelinux.org/cd-stretch-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
                     my_time: 'H H * * H'
                     my_opts: '--tags @debedu'
                 #- 'debian-testing-daily-broken':

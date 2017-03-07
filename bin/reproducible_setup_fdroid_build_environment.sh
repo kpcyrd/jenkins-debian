@@ -39,8 +39,8 @@ fi
 sudo /bin/chmod -R a+rX /var/lib/libvirt/images
 ls -ld /var/lib/libvirt/images
 ls -l /var/lib/libvirt/images || echo no access
-ls -lR ~/.vagrant.d/
-virsh --connect qemu:///system list --all
+ls -lR ~/.vagrant.d/ || echo no access
+virsh --connect qemu:///system list --all || echo cannot virsh list
 cat /etc/issue
 
 # the way we handle jenkins slaves doesn't copy the workspace to the slaves

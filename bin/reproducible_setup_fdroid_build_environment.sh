@@ -43,6 +43,10 @@ ls -lR ~/.vagrant.d/ || echo no access
 virsh --connect qemu:///system list --all || echo cannot virsh list
 cat /etc/issue
 
+# delete old libvirt instances, until the fdroid tools do it reliably
+virsh --connect qemu:///system undefine builder_default || echo nothing to undefine
+virsh --connect qemu:///system vol-delete /var/lib/libvirt/images/builder_default.img || echo nothing to delete
+
 # the way we handle jenkins slaves doesn't copy the workspace to the slaves
 # so we need to "manually" clone the git repo here…
 cd $WORKSPACE

@@ -47,9 +47,9 @@ cat /etc/issue
 # so we need to "manually" clone the git repo here…
 cd $WORKSPACE
 #git clone https://gitlab.com/fdroid/fdroidserver.git
-git clone https://gitlab.com/eighthave/fdroidserver.git
+git clone https://gitlab.com/uniqx/fdroidserver.git
 cd fdroidserver
-git checkout jenkins # normally master too
+git checkout jenkins.debian.net # normally master too
 
 # set up Android SDK to use the Debian packages in stretch
 export ANDROID_HOME=/usr/lib/android-sdk

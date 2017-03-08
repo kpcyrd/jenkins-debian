@@ -212,6 +212,11 @@ When /^I execute "([^"]*)"$/ do |cmd|
   info_log($vm.execute(cmd))
 end
 
+When /^running "([^"]*)" (.*)$/ do |cmd, outcome|
+  result = $vm.execute(cmd)
+  assert(result.success? == ('succeeds' == outcome),
+         "Attempting to run '#{cmd}' did not give the expected outcome of: #{outcome}\n" + result.to_s )
+end
 
 Given /^I start Tails( from DVD)?( with network unplugged)?( and I login)?$/ do |dvd_boot, network_unplugged, do_login|
   step "the computer is set to boot from the Tails DVD" if dvd_boot

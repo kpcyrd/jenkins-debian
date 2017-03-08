@@ -75,14 +75,48 @@ Feature: Doing variations on d-i installs
     And I intend to use gui mode
     And I intend to boot with options: auto=true priority=critical wibble.foo=bar url=hands.com classes=jenkins.debian.org/pb10;loc/gb;hands.com/general-tweaks;setup/users;partition/atomic;desktop/lxde hands-off/checksigs=true DEBCONF_DEBUG=5
     And I start the computer
-    And I select the install mode
     And I execute "grep wibble /proc/cmdline"
+    And I execute "ls /var/lib/register-module"
+    And I select the install mode
     And I expect package installation to start
     And I execute "ls /var/lib/register-module"
+    And I execute "grep wibble /target/etc/modprobe.d/local.conf"
     And I wait while the bulk of the packages are installed
+    And I execute "grep wibble /target/boot/grub/grub.cfg"
     And the VM shuts down within 20 minutes
     When the computer is set to boot from ide drive
     And I start the computer
+    Then I should see a LXDE Login prompt
+
+  @bugtest
+  Scenario: Preseed using hands.com with checksum
+    Given a disk is created for Debian Installer tests
+    And I intend to use gui mode
+    And I intend to boot with options: wibble.foo=bar fsck.bar=baz
+    And I start the computer
+    And I select the install mode
+    And I select British English
+    And running "grep wibble /proc/cmdline" succeeds
+    And running "cat /var/lib/register-module/wibble.params" succeeds
+    And I accept the hostname, using "example.com" as the domain
+    And I set the root password to "rootme"
+    And I set the password for "Philip Hands" to be "verysecret"
+    And I select full-disk, single-filesystem partitioning
+    And I note that the Base system is being installed
+    And I accept the default mirror
+    And I ignore Popcon
+    And we reach the Tasksel prompt
+    And I select the LXDE task
+    And running "grep wibble /target/etc/modprobe.d/local.conf" succeeds
+    And running "grep fsck /target/etc/modprobe.d/local.conf" fails
+    And I wait while the bulk of the packages are installed
+    And I install GRUB
+    And running "grep wibble /target/boot/grub/grub.cfg" succeeds
+    And I allow reboot after the install is complete
+    And I wait for the reboot
+    And I power off the computer
+    And the computer is set to boot from ide drive
+    When I start the computer
     Then I should see a LXDE Login prompt
 
   @debedu

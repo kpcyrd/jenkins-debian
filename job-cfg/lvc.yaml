@@ -83,7 +83,12 @@
                 - 'debian-miniiso':
                     dist_name: 'Debian-Installer local mini.iso'
                     my_iso: 'use_TRIGGERING_BRANCH'
-                    my_opts: '--tags @preseed'
+                    my_opts: '--tags @bugtest'
+                - 'debian-DI-miniiso-gui-daily-bugtest':
+                    dist_name: 'Debian-Installer Testing GTK-miniiso (Daily) bugtest'
+                    my_iso: 'https://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/mini.iso'
+                    my_time: 'H H/8 * * *'
+                    my_opts: '--tags @bugtest'
                 - 'debian-stretch-DI':
                     dist_name: 'Debian-Installer Stretch pre-release'
                     my_iso: 'http://cdimage.debian.org/cdimage/stretch_di_rc2/amd64/iso-cd/debian-stretch-DI-rc2-amd64-netinst.iso'

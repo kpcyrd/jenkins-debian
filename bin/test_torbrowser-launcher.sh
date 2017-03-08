@@ -215,6 +215,7 @@ __END__
 download_and_launch() {
 	echo
 	echo "$(date -u) - Test download_and_launch begins."
+	schroot --run-session -c $SESSION --directory /tmp -- dpkg -l torbrowser-launcher || true
 	echo "$(date -u ) - starting dbus service."
 	# yes, torbrowser needs dbus
 	schroot --run-session -c $SESSION --directory /tmp -u root -- service dbus start

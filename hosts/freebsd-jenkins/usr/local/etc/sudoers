@@ -110,7 +110,7 @@ jenkins ALL= NOPASSWD: /usr/bin/make -j ? buildworld, \
 	/usr/bin/find /srv/reproducible-results/* -newer /srv/reproducible-results/* -exec touch *, \
 	/usr/bin/find /srv/reproducible-results/* -print0, \
 	/usr/bin/tar --no-recursion --null -T - -cJf *.tar.xz, \
-	/usr/bin/tar -C /usr/obj/usr/src -cf - repo \
+	/usr/bin/tar -C /usr/obj/usr/src -cf - repo, \
 	/usr/sbin/service ntpd start, \
 	/usr/sbin/service ntpd stop, \
 	/usr/sbin/service ntpd status, \

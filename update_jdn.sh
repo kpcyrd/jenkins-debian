@@ -498,11 +498,13 @@ if [ -f /etc/debian_version ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports mock \
 				|| echo "this should only fail on the first install"
 		fi
-		# for varying kernels
-		# we use bpo kernels on pb-build5+6+15+16 (and the default i386 kernel on pb-build2+12-i386)
-		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build6-i386" ] || \
-		   [ "$HOSTNAME" = "profitbricks-build15-amd64" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
+		# for varying kernels:
+		# - we use bpo kernels on pb-build5+15 (and the default i386 kernel on pb-build2+12-i386)
+		# - we use the default amd64 kernel on pb-build1+11 (and the default amd64 kernel on pb-build6+16-i386)
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"
+		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
+			$UP2DATE || sudo apt-get install linux-image-amd64
 		fi
 		# only needed on the main node
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then

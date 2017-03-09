@@ -104,9 +104,9 @@ cleanup_all() {
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts
 	elif ( [ "$NOTIFY" = "1" ] || [ "$NOTIFY" = "2" ] ) && [ "$SAVE_ARTIFACTS" = "1" ] ; then
-		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
+		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
 	elif [ ! -z "$NOTIFY" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
-		irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
+		irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
 	fi
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "master" ] ; then

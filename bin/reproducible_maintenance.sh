@@ -493,11 +493,10 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			fi
 			# send mail if we found issues
 			if [ -s $TMPFILE ] && ! grep -q "no problems yesterday…" $TMPFILE ; then
-				local CC=""
 				if [ "$(basename $PROBLEM)" = "reproducible-submit2buildinfo.debian.net.log" ]; then
 					CC="-c lamby@debian.org"
 				fi
-				cat $TMPFILE | mail -s "$(basename $PROBLEM) found" $CC qa-jenkins-scm@lists.alioth.debian.org
+				cat $TMPFILE | mail -s "$(basename $PROBLEM) found" ${CC:-} qa-jenkins-scm@lists.alioth.debian.org
 			fi
 			rm -f $TMPFILE
 		fi

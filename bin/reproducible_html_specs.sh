@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
-# Copyright © 2015 Holger Levsen <holger@mapreri.org>
+# Copyright © 2015-2017 Holger Levsen <holger@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -13,7 +13,7 @@ common_init "$@"
 VERSION=$(git log -1 --pretty='%h')
 SPEC=$1
 TARGET="specs/$(basename $SPEC -spec)"
-make $SPEC.html all
+make all $SPEC.html
 mkdir -pv "$BASE/$TARGET"
 mv -v $SPEC.html "$BASE/$TARGET/index.html"
 irc_message debian-reproducible "$REPRODUCIBLE_DOT_ORG_URL/$TARGET/ updated to $VERSION"

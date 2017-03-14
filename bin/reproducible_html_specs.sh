@@ -13,7 +13,7 @@ common_init "$@"
 VERSION=$(git log -1 --pretty='%h')
 SPEC=$1
 TARGET="specs/$(basename $SPEC -spec)"
-make $SPEC.html
+make $SPEC.html all
 mkdir -pv "$BASE/$TARGET"
 mv -v $SPEC.html "$BASE/$TARGET/index.html"
 irc_message debian-reproducible "$REPRODUCIBLE_DOT_ORG_URL/$TARGET/ updated to $VERSION"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # from IRC:
@@ -128,7 +128,7 @@ if [ "$VALID_MAIL" = "true" ] ; then
 		MESSAGE="$(echo $MESSAGE | sed -s 's#\?page=changes$##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/console$##') "
 		MESSAGE="$(echo $MESSAGE | sed -s 's#/changes$##') "
-		MESSAGE="$(echo $MESSAGE | sed -s 's#display/redirect\>$##') "
+		MESSAGE="$(echo $MESSAGE | sed -s 's#display/redirect.*\>$##') "
 		# log message
 		echo "Notified #$CHANNEL with $MESSAGE" >> $LOGFILE
 		# notify kgb

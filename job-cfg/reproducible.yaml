@@ -572,6 +572,11 @@
                     my_timed: ''
                     my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh {my_reponame}'
                     my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+                - 'build-path-prefix-map-spec':
+                    my_description: 'Generate the HTML of the reproducible builds BUILD_PATH_PREFIX_MAP specification, triggered by changes to the <a href="https://anonscm.debian.org/git/reproducible/{my_reponame}.git" target="_blank">{my_reponame}.git</a> repository.'
+                    my_timed: ''
+                    my_shell: '/srv/jenkins/bin/reproducible_html_specs.sh {my_reponame}'
+                    my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
             my_gitrepo: 'git://git.debian.org/git/reproducible/{my_reponame}.git'
             my_hname: ''
 

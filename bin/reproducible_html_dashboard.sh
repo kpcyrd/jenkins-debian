@@ -451,7 +451,7 @@ create_suite_arch_stats_page() {
 	if [ $COUNT_DEPWAIT -gt 0 ] ; then
 		set_icon depwait
 		write_icon
-		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could nott be satisfied.<br />"
+		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could not be satisfied.<br />"
 	fi
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
 		set_icon 404

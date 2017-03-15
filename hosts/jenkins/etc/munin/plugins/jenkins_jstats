@@ -42,6 +42,8 @@ if [ -f $STATEFILE ] && [ "$1" = "" ] ; then
 fi
 
 JENKINS_PID=$(jps |grep jenkins.war|cut -d "j" -f1)
+if [ "$JENKINS_PID" = "" ] ; then exit 0 ; fi
+
 JOB_PREFIXES=$(for i in $(jstat -gc $JENKINS_PID | head -1) ; do echo -n "$i " ; done)
 if [ "$1" = "config" ]; then
 	echo 'graph_title jenkins.war jstat -gc (mostly KB shown)'

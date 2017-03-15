@@ -1,0 +1,84 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+jenkins_jstats - Plugin to measure jstat from jenkins.war
+
+=head1 AUTHOR
+
+Contributed by Holger Levsen
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+	exit 0
+fi
+
+STATEFILE=$MUNIN_PLUGSTATE/$(basename $0)
+
+# delete statefile if it's older than ${jenkins_update_interval} set in /etc/munin/plugin-conf.d/jenkins
+if test $(find $STATEFILE -mmin +${jenkins_update_interval} 2>/dev/null) ; then
+	rm -f $STATEFILE
+fi
+
+if [ -f $STATEFILE ] && [ "$1" = "" ] ; then
+	cat $STATEFILE
+	exit 0
+fi
+
+JENKINS_PID=$(jps |grep jenkins.war|cut -d "j" -f1)
+JOB_PREFIXES=$(for i in $(jstat -gc $JENKINS_PID | head -1) ; do echo -n "$i " ; done)
+if [ "$1" = "config" ]; then
+	echo 'graph_title jenkins.war jstat -gc (mostly KB shown)'
+	echo 'graph_args --base 1000 -l 0 '
+	echo 'graph_scale no'
+	echo 'graph_vlabel jenkins.war jstat -gc'
+	echo 'graph_category jenkins'
+	draw=AREA
+	for PREFIX in $JOB_PREFIXES ; do
+		echo "jenkins_jstats_$PREFIX.label $PREFIX"
+		case $PREFIX in
+			S0C)	INFO="Current survivor space 0 capacity (KB)" ;;
+			S1C)	INFO="Current survivor space 1 capacity (KB)" ;;
+			S0U)	INFO="Survivor space 0 utilization (KB)" ;;
+			S1U)	INFO="Survivor space 1 utilization (KB)" ;;
+			EC)	INFO="Current eden space capacity (KB)" ;;
+			EU)	INFO="Eden space utilization (KB)" ;;
+			OC)	INFO="Current old space capacity (KB)" ;;
+			OU)	INFO="Old space utilization (KB)" ;;
+			PC)	INFO="Current permanent space capacity (KB)" ;;
+			PU)	INFO="Permanent space utilization (KB)" ;;
+			YGC)	INFO="Number of young generation GC Events" ;;
+			YGCT)	INFO="Young generation garbage collection time" ;;
+			FGC)	INFO="Number of full GC events" ;;
+			FGCT)	INFO="Full garbage collection time" ;;
+			GCT)	INFO="Total garbage collection time" ;;
+			*)	;;
+		esac
+		echo "jenkins_jstats_$PREFIX.info $INFO"
+	done
+	exit 0
+fi
+
+COUNTER=1
+VALUES=$(jstat -gc $JENKINS_PID | tail -1)
+for PREFIX in $JOB_PREFIXES ; do
+	NR=$( (for i in $VALUES ; do echo $i ; done ) | head -$COUNTER | tail -1)
+	echo "jenkins_jstats_$PREFIX.value $NR" | tee -a $STATEFILE
+	COUNTER=$((COUNTER+1))
+done

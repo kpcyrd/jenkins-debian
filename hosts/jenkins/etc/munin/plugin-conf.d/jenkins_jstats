@@ -1,3 +1,4 @@
 [jenkins_jstats]
 user root
 group root
+env.jenkins_update_interval 5

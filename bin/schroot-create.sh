@@ -181,8 +181,14 @@ bootstrap() {
 		fi
 		robust_chroot_apt install -y --no-install-recommends sudo
 		robust_chroot_apt install -y --no-install-recommends $@
-		# always try to use diffoscope from unstable
-		if [ "$SUITE" = "testing" ] && [ "$1" = "diffoscope" ] ; then
+		# try to use diffoscope from experimental
+		if ([ "$SUITE" = "unstable" ] || [ "$SUITE" = "testing" ] ) && [ "$1" = "diffoscope" ] ; then
+			echo "deb $MIRROR experimental main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
+			robust_chroot_apt update
+			# install diffoscope from experimental without re-adding all recommends...
+			sudo chroot $SCHROOT_TARGET apt-get install -y -t experimental --no-install-recommends diffoscope || echo "Warning: diffoscope from experimental is uninstallable at the moment."
+		elif [ "$SUITE" = "testing" ] && [ "$1" = "diffoscope" ] ; then
+			# always try to use diffoscope from unstable on testing
 			echo "deb $MIRROR unstable main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
 			robust_chroot_apt update
 			# install diffoscope from unstable without re-adding all recommends...

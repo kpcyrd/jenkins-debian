@@ -69,7 +69,7 @@ check_whohas() {
 #
 for SUITE in 'experimental' 'unstable|sid'
 do
-	DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep "${SUITE}"| awk '{print $3}' || true)
+	DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep " ${SUITE} "| awk '{print $3}' || true)
 
 	if [ "$DIFFOSCOPE_IN_DEBIAN" != "" ] ; then
 		break

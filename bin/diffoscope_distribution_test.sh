@@ -67,7 +67,14 @@ check_whohas() {
 #
 # main
 #
-DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep '(unstable|sid)'| awk '{print $3}' || true)
+for SUITE in 'experimental' 'unstable|sid'
+do
+	DIFFOSCOPE_IN_DEBIAN=$(rmadison diffoscope|egrep "${SUITE}"| awk '{print $3}' || true)
+
+	if [ "$DIFFOSCOPE_IN_DEBIAN" != "" ] ; then
+		break
+	fi
+done
 
 case $1 in
 	PyPI)	check_pypi

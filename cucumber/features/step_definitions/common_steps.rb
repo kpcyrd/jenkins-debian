@@ -669,7 +669,7 @@ Given /^I install GRUB$/ do
 end
 
 Given /^I allow reboot after the install is complete$/ do
-  @screen.wait(diui_png("InstallComplete"), 4 * 60 * PATIENCE)
+  step('I see the "InstallComplete" screen, after at most 240 seconds')
   @screen.type(Sikuli::Key.ENTER)
 end
 
@@ -875,6 +875,15 @@ Then /^I (do not )?see "([^"]*)" after at most (\d+) seconds$/ do |negation, ima
   begin
     @screen.wait(image, time.to_i)
     raise "found '#{image}' while expecting not to" if negation
+  rescue FindFailed => e
+    raise e if not(negation)
+  end
+end
+
+Then /^I (do not )?see the "([^"]*)" screen, after at most (\d+) seconds$/ do |negation, image, time|
+  begin
+    @screen.wait(diui_png(image), time.to_i)
+    raise "found '" + diui_png(image) + "' while expecting not to" if negation
   rescue FindFailed => e
     raise e if not(negation)
   end

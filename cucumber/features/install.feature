@@ -111,6 +111,7 @@ Feature: Doing variations on d-i installs
     And running "grep fsck /target/etc/modprobe.d/local.conf" fails
     And I wait while the bulk of the packages are installed
     And I install GRUB
+    And I see the "InstallComplete" screen, after at most 240 seconds
     And running "grep wibble /target/boot/grub/grub.cfg" succeeds
     And I allow reboot after the install is complete
     And I wait for the reboot

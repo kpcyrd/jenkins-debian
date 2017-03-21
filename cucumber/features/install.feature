@@ -3,7 +3,7 @@ Feature: Doing variations on d-i installs
   As a normal user
   I should be able to install Debian
 
-  @both-ui
+  @default @both-ui
   Scenario Outline: Install Debian, and boot to a login prompt
     Given I install a <target_ui> Debian system, in <install_ui> mode
     When I start the computer

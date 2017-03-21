@@ -56,9 +56,8 @@
     my_title: 'Cucumber: {dist_name}'
     my_time: '45 23 01 11 *'
     my_pngs: 'results/*.png'
-    my_opts: '--tags both-ui'
-    my_opts: '--tags ~@broken --tags ~@trivial --tags ~@preseed --tags ~@text-ui --tags ~@gui --tags ~@debedu'
     my_description: 'Work in progress...'
+    my_opts: '--tags @default'
     jobs:
         - '{name}_{distro}':
             distro:

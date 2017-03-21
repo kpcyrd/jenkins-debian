@@ -450,7 +450,7 @@ call_diffoscope_on_changes_files() {
 				RESULT="$RESULT (SIG$(kill -l $(($RESULT - 128))))"
 			fi
 			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
-			irc_message debian-reproducible "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $RBUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
+			irc_message debian-reproducible-changes "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $RBUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
 }

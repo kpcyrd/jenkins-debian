@@ -449,8 +449,9 @@ call_diffoscope_on_changes_files() {
 			if (( $RESULT > 128 )) && (( $RESULT <= 128+31 )); then
 				RESULT="$RESULT (SIG$(kill -l $(($RESULT - 128))))"
 			fi
-			handle_ftbr "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
-			irc_message debian-reproducible-changes "Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it. Please check $RBUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
+			local MSG_PART1="Something weird happened when running $DIFFOSCOPE (which exited with $RESULT) and I don't know how to handle it"
+			handle_ftbr "$MSG_PART1"
+			irc_message debian-reproducible-changes "$MSG_PART1 Please check $RBUILDLOG and $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE"
 			;;
 	esac
 }

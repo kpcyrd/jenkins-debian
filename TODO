@@ -141,7 +141,6 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 === tests.reproducible-builds.org
 
 ==== General website
-* btw, www.reproducible-builds.org is 404…
 
 * install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
 ** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
@@ -177,13 +176,11 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.
 ** new page: "open bugs with patches, sorted by maintainers" page and to the navigation, make those NMUable bugs visible
 ** improve ftbfs page: list packages without bugs and notes first
-** mattia: .py scripts: UDD or any db connection errors should either be retried or cause an abort (not failure!) of the job
 ** bin/_html_indexes.py: bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 ** once firefox 48 is available: revert 1b4dc1b3191e3623a0eeb7cacef80be1ab71d0a2 / grep for _js and remove it…
 
 * lesser prio
 ** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
-** check that cleanup of old diffscope schroots on armhf+amd64 nodes works....
 ** check that /srv/workspace/pbuilder/ is cleaned up properly
 ** rewrite bin/schroot-create.sh from scratch, with little sudo.
 ** pkg sets related:
@@ -267,7 +264,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * explain status in plain english
 * use disorderfs for 2nd build
 
-==== reproducible OpenWrt
+==== reproducible LEDE / OpenWrt
 
 * add credit for logo/artwork
 * build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
@@ -514,8 +511,6 @@ These small changes are probably still worth doing anyway:
 
 * fix "schroot session cleanup loop" in _common.sh to ignore other schroots
 * test tbl in German
-* test tbl on i386
-* test alpha releases
 ** edit '~/.config/torbrowser/settings' file and modify the latest_version setting
 ** get version from '~/.cache/torbrowser/download/RecommendedTBBVersions'
 ** (warning: on update checks these files are written again…)

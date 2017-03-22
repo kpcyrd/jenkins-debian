@@ -18,8 +18,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 == meeting agenda for jenkins-qa meetings
 
-* next meeting: Wednesday, March 22th 2017, 18 UTC on #debian-qa on irc.debian.org
+* where: on #debian-qa on irc.oftc.net
 * schedule: every 4th Wednesday of each month, at 18 UTC 
+* next meeting: see below, at old meetings :)
 
 === reoccuring agenda
 
@@ -39,7 +40,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * 2016-12: canceled because of 33C3
 * 2017-01: none
 * 2017-02-22: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-02-22-18.04.html
-* 2017-03-22: next meeting!
+* 2017-03-22: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-03-22-18.01.html
+* 2017-04-26: next meeting!
 
 == move this setup to jenkins.d.o
 
@@ -61,6 +63,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * login using link:https://sso.debian.org[Debian SSO]
 * Jenkins and plugins are installed…
 * update_jdn.sh needs to be adapted for this new host… and for new path /srv/jenkins.debian.org/ )
+** it's probably simpler to rewrite update_jdo.sh from scratch and copy 5 lines from update_jdn…
 * then start with migrating a single job: self_maintenance
 ** add pb7 as a node to jenkins.d.o
 ** add fdroid job to jenkins.d.o 

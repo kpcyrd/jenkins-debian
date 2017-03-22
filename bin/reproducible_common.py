@@ -331,7 +331,7 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
 
 def write_html_page(title, body, destfile, no_header=False, style_note=False,
                     noendpage=False, refresh_every=None, displayed_page=None,
-                    left_nav_html=None, include_pkgset_js=None):
+                    left_nav_html=None):
     meta_refresh_html = '<meta http-equiv="refresh" content="%d"></meta>' % \
         refresh_every if refresh_every is not None else ''
     if style_note:
@@ -346,7 +346,6 @@ def write_html_page(title, body, destfile, no_header=False, style_note=False,
         'main_header': title if not no_header else "",
         'main_html': body,
         'style_dot_css_sha1sum': REPRODUCIBLE_STYLE_SHA1,
-        'include_pkgset_js': include_pkgset_js,
     }
     html = renderer.render(basic_page_template, context)
 

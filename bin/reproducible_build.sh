@@ -107,7 +107,7 @@ cleanup_all() {
 		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
 	elif [ ! -z "$NOTIFY" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
 		if [ "$NOTIFY" = "diffoscope" ] ; then
-			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed…"
+			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
 		else
 			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
 		fi

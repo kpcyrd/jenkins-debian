@@ -248,6 +248,7 @@ handle_ftbfs() {
 	for BUILD in "1" "2"; do
 		local nodevar="NODE$BUILD"
 		local node=""
+		# eval is needed here, because we want the value of $node1 or $node2
 		eval node=\$$nodevar
 		if [ ! -f "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
 			continue

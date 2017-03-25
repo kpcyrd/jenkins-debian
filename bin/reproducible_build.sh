@@ -246,7 +246,9 @@ handle_ftbfs() {
 	local BUILD
 	echo "${SRCPACKAGE} failed to build from source."
 	for BUILD in "1" "2"; do
-		local node="NODE$BUILD"
+		local nodevar="NODE$BUILD"
+		local node=""
+		eval node=\$$nodevar
 		if [ ! -f "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
 			continue
 		fi

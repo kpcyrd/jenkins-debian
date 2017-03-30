@@ -487,7 +487,7 @@ if [ -f /etc/debian_version ] ; then
 		$UP2DATE || ( sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/apt/sources.list /etc/apt ; sudo apt-get update )
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		# dont (re-)install pbuilder if it's on hold
-		if [ ! -n "$(dpkg -l pbuilder | egrep '^hi.*pbuilder')" ] ; then
+		if [ $(dpkg-query -W -f='${db:Status-Abbrev}\n' pbuilder) != hi ] ; then
 			case $HOSTNAME in
 				codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder
 						;;
@@ -497,7 +497,7 @@ if [ -f /etc/debian_version ] ; then
 			esac
 		fi
 		# remove unattended-upgrades if it's installed
-		if [ -n "$(dpkg -l unattended-upgrades 2>/dev/null|egrep 'ii.*unattended-upgrades')" ] ; then
+		if [ $(dpkg-query -W -f='${db:Status-Abbrev}\n' unattended-upgrades 2>/dev/null || true) = ii  ] ; then
 			 sudo apt-get -y purge unattended-upgrades
 		fi
 		# we need mock from bpo to build current fedora

@@ -42,6 +42,16 @@ fixup_shm() {
 	chmod 1777 /dev/shm
 }
 
+fixup_mtu() {
+	# only act on systems which have eth0
+	if ip link show eth0 >/dev/null 2>&1 ; then
+		# if MTU != 1500 set it to 1500
+		if [ "$(ip link show eth0 | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' )" != "1500" ] ; then
+			ip link set dev eth0 mtu 1500
+		fi
+	fi
+}
+
 #
 # init, notify about reboots
 #
@@ -77,6 +87,10 @@ esac
 # fixup /(dev|run)/shm if needed
 #
 fixup_shm
+
+#
+# fixup eth0's MTU if needed
+fixup_mtu
 
 #
 # put schroots on tmpfs for non debian hosts

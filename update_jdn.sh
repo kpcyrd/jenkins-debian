@@ -496,6 +496,10 @@ if [ -f /etc/debian_version ] ; then
 				;;
 			esac
 		fi
+		# remove unattended-upgrades if it's installed
+		if [ -n "$(dpkg -l unattended-upgrades 2>/dev/null|egrep 'ii.*unattended-upgrades')" ] ; then
+			 apt-get -y purge unattended-upgrades
+		fi
 		# we need mock from bpo to build current fedora
 		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 			$UP2DATE || sudo apt-get install -t jessie-backports mock \

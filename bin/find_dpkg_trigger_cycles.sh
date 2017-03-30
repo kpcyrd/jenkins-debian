@@ -226,7 +226,10 @@ cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any
 	# of the files they ship match one of the interested paths
-	dose-ceve -c $pkg -T cudf -t deb \
+	#
+	# We ignore the implicit dependencies on Essential:yes packages because
+	# they do not create trigger cycles.
+	dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
 		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
 		| awk '/^package:/ { print $2 }' \
 		| apt-file $APT_FILE_OPTS show -F --from-file - \
@@ -244,7 +247,10 @@ cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any
 	# of them activate a matching path
-	dose-ceve -c $pkg -T cudf -t deb \
+	#
+	# We ignore the implicit dependencies on Essential:yes packages because
+	# they do not create trigger cycles.
+	dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
 		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
 		| awk '/^package:/ { print $2 }' \
 		| while read dep; do
@@ -266,7 +272,10 @@ cat $DIRECTORY/interested-explicit | while read pkg ttype iname; do
 	echo "getting dependency closure..." >&2
 	# go through all packages in the dependency closure and check if any of
 	# them activate the trigger in which this package is interested
-	dose-ceve -c $pkg -T cudf -t deb \
+	#
+	# We ignore the implicit dependencies on Essential:yes packages because
+	# they do not create trigger cycles.
+	dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
 		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
 		| awk '/^package:/ { print $2 }' \
 		| while read dep; do

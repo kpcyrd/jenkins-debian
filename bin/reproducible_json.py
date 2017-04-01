@@ -14,6 +14,7 @@ from reproducible_common import *
 
 from apt_pkg import version_compare
 import aptsources.sourceslist
+import bz2
 import json
 import os
 import tempfile
@@ -105,19 +106,18 @@ for row in result:
 
 output4tracker = list(crossarch.values())
 
-# normal json
-tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_JSON))[1]
-with open(tmpfile, 'w') as fd:
-    json.dump(output, fd, indent=4, sort_keys=True)
-os.rename(tmpfile, REPRODUCIBLE_JSON)
-os.chmod(REPRODUCIBLE_JSON, 0o644)
+for data, fn, target in (
+    (output, open, REPRODUCIBLE_JSON),
+    (output, bz2.BZ2File, REPRODUCIBLE_JSON + '.bz2'),
 
-# json for tracker.d.o, thanks to #785531
-tmpfile = tempfile.mkstemp(dir=os.path.dirname(REPRODUCIBLE_TRACKER_JSON))[1]
-with open(tmpfile, 'w') as fd:
-    json.dump(output4tracker, fd, indent=4, sort_keys=True)
-os.rename(tmpfile, REPRODUCIBLE_TRACKER_JSON)
-os.chmod(REPRODUCIBLE_TRACKER_JSON, 0o644)
+    # json for tracker.d.o, thanks to #785531
+    (output4tracker, open, REPRODUCIBLE_TRACKER_JSON),
+    (output4tracker, bz2.BZ2File, REPRODUCIBLE_TRACKER_JSON + '.bz2'),
+):
+    tmpfile = tempfile.mkstemp()[1]
+    with fn(tmpfile, 'w') as fd:
+        json.dump(data, fd, indent=4, sort_keys=True)
+    os.rename(tmpfile, target)
+    os.chmod(target, 0o644)
 
-log.info(DEBIAN_URL + '/reproducible.json and /reproducible-tracker.json have been updated.')
-
+    log.info("%s/%s has been updated.", DEBIAN_URL, target)

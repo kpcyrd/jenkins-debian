@@ -14,9 +14,9 @@ from reproducible_common import *
 
 from apt_pkg import version_compare
 import aptsources.sourceslist
-import bz2
 import json
 import os
+import subprocess
 import tempfile
 
 
@@ -106,18 +106,23 @@ for row in result:
 
 output4tracker = list(crossarch.values())
 
-for data, fn, target in (
-    (output, open, REPRODUCIBLE_JSON),
-    (output, bz2.BZ2File, REPRODUCIBLE_JSON + '.bz2'),
-
+for data, target in (
+    (output, REPRODUCIBLE_JSON),
     # json for tracker.d.o, thanks to #785531
-    (output4tracker, open, REPRODUCIBLE_TRACKER_JSON),
-    (output4tracker, bz2.BZ2File, REPRODUCIBLE_TRACKER_JSON + '.bz2'),
+    (output4tracker, REPRODUCIBLE_TRACKER_JSON),
 ):
     tmpfile = tempfile.mkstemp(dir=os.path.dirname(target))[1]
-    with fn(tmpfile, 'w') as fd:
+    with open(tmpfile, 'w') as fd:
         json.dump(data, fd, indent=4, sort_keys=True)
     os.rename(tmpfile, target)
     os.chmod(target, 0o644)
+    log.info("%s/%s has been updated.", DEBIAN_URL, os.path.dirname(target))
 
-    log.info("%s/%s has been updated.", DEBIAN_URL, target)
+    # Write compressed version
+    compressed = '{}.bz2'.format(target)
+    tmpfile = tempfile.mkstemp(dir=os.path.dirname(compressed))[1]
+    with open(tmpfile, 'w') as fd:
+        subprocess.check_call(('bzip2', '-9c', target), stdout=fd)
+    os.rename(tmpfile, compressed)
+    os.chmod(compressed, 0o644)
+    log.info("%s/%s has been updated.", DEBIAN_URL, os.path.dirname(compressed))

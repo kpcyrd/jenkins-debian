@@ -114,7 +114,7 @@ for data, fn, target in (
     (output4tracker, open, REPRODUCIBLE_TRACKER_JSON),
     (output4tracker, bz2.BZ2File, REPRODUCIBLE_TRACKER_JSON + '.bz2'),
 ):
-    tmpfile = tempfile.mkstemp()[1]
+    tmpfile = tempfile.mkstemp(dir=os.path.dirname(target))[1]
     with fn(tmpfile, 'w') as fd:
         json.dump(data, fd, indent=4, sort_keys=True)
     os.rename(tmpfile, target)

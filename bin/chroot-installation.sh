@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=true
@@ -277,6 +277,19 @@ if [ "$3" != "" ] ; then
 		wheezy|jessie|stretch|sid)	upgrade2 $3;;
 		*)		echo "unsupported distro." ; exit 1 ;;
 	esac
+fi
+
+#
+# in sid: find and warn about transitional packages being installed
+#
+if [ "$DISTRO" = "sid" ] ; then
+	( sudo chroot $CHROOT_TARGET dpkg -l | grep -i "Transitional" 2>/dev/null ) > $TMPFILE
+	if [ -s $TMPFILE ] ; then
+		echo
+		echo "Warning: Transitional packages found:"
+		cat $TMPFILE
+	fi
+	rm -f $TMPFILE 2>/dev/null
 fi
 
 echo "Debug: Removing trap."

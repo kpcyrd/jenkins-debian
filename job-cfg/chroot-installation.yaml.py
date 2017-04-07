@@ -244,7 +244,9 @@ data.append(
                                                                'first-failure': True,
                                                                'fixed': True,
                                                                'recipients': '{my_recipients}',
-                                                               'subject': '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'}}],
+                                                               'subject': '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'}},
+                                          {   'logparser': {   'parse-rules': '/srv/jenkins/logparse/chroot-installation.rules',
+                                                               'unstable-on-warning': True,}}],
                         'triggers': [{   'timed': '{my_time}'}],
                         'wrappers': [{   'timeout': {   'timeout': 360}}]}})
 data.append(

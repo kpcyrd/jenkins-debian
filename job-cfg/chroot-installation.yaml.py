@@ -83,16 +83,16 @@ all_targets = [
 #
 def is_target_in_distro(distro, target):
          # qt5, education-desktop-mate and cinnamon weren't in wheezy. debconf-video is not interested in wheezy anymore neither
-         if distro == 'wheezy' and ( target == 'education-desktop-mate' or target == 'cinnamon' or target == 'qt5' or target == 'debconf-video' ):
+         if distro == 'wheezy' and target in ('education-desktop-mate', 'cinnamon', 'qt5', 'debconf-video'):
              return False
          # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid - it's also not yet available in stretch again...
-         elif (distro == 'sid' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-desktop-sugar' ):
+         elif distro in ('sid', 'jessie', 'stretch') and target == 'education-desktop-sugar':
              return False
         # education-ltsp-server has just been introduced in sid…
-         elif (distro == 'wheezy' or distro == 'jessie' or distro == 'stretch') and ( target == 'education-ltsp-server' ):
+         elif distro in ('wheezy', 'jessie', 'stretch') and target == 'education-ltsp-server':
              return False
         # education-thin-client-server will become obsolete in stretch…
-         elif (distro == 'sid') and ( target == 'education-thin-client-server' ):
+         elif distro == 'sid' and target == 'education-thin-client-server':
              return False
          return True
 

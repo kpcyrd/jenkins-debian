@@ -62,6 +62,16 @@ all_targets = [
    'education-geography',
    'education-graphics',
    'education-language',
+   'education-lang-da',
+   'education-lang-de',
+   'education-lang-es',
+   'education-lang-fr',
+   'education-lang-he',
+   'education-lang-it',
+   'education-lang-ja',
+   'education-lang-no',
+   'education-lang-se',
+   'education-lang-zh-tw',
    'education-laptop',
    'education-logic-games',
    'education-ltsp-server',
@@ -94,6 +104,9 @@ def is_target_in_distro(distro, target):
              return False
          # education-thin-client-server is obsolete since stretch…
          elif distro in ('sid', 'buster') and target == 'education-thin-client-server':
+             return False
+         # education-lang-* packages only exist since stretch
+         elif distro in ('wheezy', 'jessie') and target[:15] == 'education-lang-':
              return False
          return True
 

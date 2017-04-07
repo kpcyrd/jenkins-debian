@@ -264,6 +264,10 @@ if [ "$2" != "" ] ; then
 					;;
 				esac
 				;;
+		education-lang-se)	install_packages "Debian Edu task" $2
+				;;
+		education-lang-*)	install_packages "Debian Edu task" $2 $2-desktop $-desktop-kde
+				;;
 		education*)	install_packages "Debian Edu task" $2
 				;;
 		*)		echo "unsupported component."

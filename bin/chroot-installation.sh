@@ -294,7 +294,6 @@ if [ "$DISTRO" = "sid" ] ; then
 		echo "Warning: Transitional packages found:"
 		cat $TMPFILE
 	fi
-	rm -f $TMPFILE 2>/dev/null
 fi
 
 echo "Debug: Removing trap."

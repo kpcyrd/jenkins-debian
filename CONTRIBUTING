@@ -1,9 +1,9 @@
 === Contributing code to this project
 
 It's helpful to track fixes or new features via wishlist bugs against the
-'qa.debian.org' package, eg with the 'reportbug' tool ('devscripts' package).
+'jenkins.debian.org' package, eg with the 'reportbug' tool ('devscripts' package).
 The BTS will ensure the developers' mailing list
-   debian-qa@lists.debian.org
+   qa-jenkins-dev@lists.debian.org
 is notified.
 
 The code is available in the link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/[jenkins.debian.net.git repository].
@@ -24,7 +24,7 @@ One possible workflow:
   git commit -a
   git format-patch -M origin/master
 
-  reportbug qa.debian.org
+  reportbug jenkins.debian.org
   # <describe the issue, attach the patch>
 ----
 

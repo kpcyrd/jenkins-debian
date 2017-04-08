@@ -288,7 +288,7 @@ fi
 #
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
-	( sudo chroot $CHROOT_TARGET dpkg -l | grep -v multiarch-support | grep -i "Transitional" 2>/dev/null ) > $TMPFILE
+	( sudo chroot $CHROOT_TARGET dpkg -l | grep -v multiarch-support | grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo
 		echo "Warning: Transitional packages found:"

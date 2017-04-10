@@ -16,7 +16,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: &desc '{my_description}<br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://tests.reproducible-builds.org/">https://tests.reproducible-builds.org</a>.'
+    description: &desc '{my_description}<br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://tests.reproducible-builds.org/">https://tests.reproducible-builds.org</a>.'
     triggers:
       - timed: '{my_timed}'
     logrotate:

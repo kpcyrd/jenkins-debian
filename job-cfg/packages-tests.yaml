@@ -16,7 +16,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description} running on {my_distro}.<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
+    description: '{my_description} running on {my_distro}.<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30

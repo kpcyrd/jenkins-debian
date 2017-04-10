@@ -43,7 +43,7 @@
 
 - project:
     name: d-i
-    do_not_edit: '<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/d-i-overview.yaml.py">d-i-overview.yaml.py</a>.'
+    do_not_edit: '<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/d-i-overview.yaml.py">d-i-overview.yaml.py</a>.'
     arch:
       - amd64
       - arm64

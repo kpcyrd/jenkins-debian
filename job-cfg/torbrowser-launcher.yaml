@@ -17,7 +17,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description}<br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
+    description: '{my_description}<br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -53,7 +53,7 @@
           option: category
           categories:
             - torbrowser-launcher
-    description: '{my_description}<br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
+    description: '{my_description}<br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 20
@@ -106,7 +106,7 @@
           option: category
           categories:
             - torbrowser-launcher
-    description: '{my_description}<br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
+    description: '{my_description}<br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml">torbrowser-launcher.yaml</a>.<br>Results are available at <a href="https://torbrowser-launcher.debian.net/">https://torbrowser-launcher.debian.net</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 20

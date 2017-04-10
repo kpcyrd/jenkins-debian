@@ -483,7 +483,7 @@ data.append(
     {'project': {
         'name': 'd-i',
         'do_not_edit': (
-            '<br><br>Job configuration source is '
+            '<br><br>Job  configuration source is '
             '<a href="https://anonscm.debian.org/git/qa/'
             'jenkins.debian.net.git/tree/job-cfg/d-i.yaml.py">'
             'd-i.yaml.py</a>.'),

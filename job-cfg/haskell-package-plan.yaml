@@ -69,7 +69,7 @@
 
 - project:
     name: haskell-package-plan
-    do_not_edit: '<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/haskell-package-plan.yaml">haskell-package-plan.yaml</a>.'
+    do_not_edit: '<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/haskell-package-plan.yaml">haskell-package-plan.yaml</a>.'
     jobs:
         - '{name}':
             my_distro: 'sid'

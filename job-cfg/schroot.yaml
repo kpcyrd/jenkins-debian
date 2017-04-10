@@ -71,7 +71,7 @@
 
 - project:
         name: schroot
-        do_not_edit: '<br><br>Job configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/schroot.yaml">schroot.yaml</a>.'
+        do_not_edit: '<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/schroot.yaml">schroot.yaml</a>.'
         jobs:
                 - 'd-i_{name}-sid-create':
                         my_schroot: d-i-sid

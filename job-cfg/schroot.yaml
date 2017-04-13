@@ -6,8 +6,8 @@
                         text: About jenkins.debian.net
                         icon: /userContent/images/debian-swirl-24x24.png
                 - sidebar:
-                        url: https://jenkins.debian.net/view/schroot-maint/
-                        text: schroot maintenance jobs
+                        url: https://jenkins.debian.net/view/d-i_misc/
+                        text: misc d-i jobs
                         icon: /userContent/images/debian-jenkins-24x24.png
                 - sidebar:
                         url: http://www.profitbricks.co.uk
@@ -36,8 +36,8 @@
                         text: About jenkins.debian.net
                         icon: /userContent/images/debian-swirl-24x24.png
                 - sidebar:
-                        url: https://jenkins.debian.net/view/schroot-maint/
-                        text: schroot maintenance jobs
+                        url: https://jenkins.debian.net/view/d-i_misc/
+                        text: misc d-i jobs
                         icon: /userContent/images/debian-jenkins-24x24.png
                 - sidebar:
                         url: http://www.profitbricks.co.uk

@@ -5,8 +5,8 @@ Description=Build service for reproducible-builds jobs
 # Restart whenever the script exits, without rate limiting:
 Restart=always
 StartLimitInterval=0
-user=jenkins
-group=jenkins
+User=jenkins
+Group=jenkins
 ExecStart=/srv/jenkins/bin/reproducible_build_service.sh %I
 
 [Install]

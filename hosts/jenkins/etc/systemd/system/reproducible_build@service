@@ -1,0 +1,12 @@
+[Unit]
+Description=Build service for reproducible-builds jobs
+
+[Service]
+# Restart whenever the script exits, without rate limiting:
+Restart=always
+StartLimitInterval=0
+
+ExecStart=/srv/jenkins/bin/reproducible_build_service.sh %I
+
+[Install]
+WantedBy=multi-user.target

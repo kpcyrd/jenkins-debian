@@ -2,9 +2,13 @@
 
 # Copyright © 2017 Holger Levsen (holger@layer-acht.org)
 
+set -x
+
 echo $0
 echo $1
 export
+
+sleep 3
 
 BUILD_ID=$1
 BUILD_URL=https://jenkins.debian.net/userContent/build_service/$BUILD_ID

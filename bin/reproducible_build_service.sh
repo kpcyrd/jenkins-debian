@@ -20,9 +20,9 @@ set -x
 
 BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1
 BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
-mkdir -p $BUILD_BASE
 OLD_ID=$((ls -1rt $BUILD_BASE||echo 0)|tail -1)
 let BUILD_ID=OLD_ID+1
+mkdir -p $BUILD_BASE/$BUILD_ID
 
 case $1 in
 	arm64_builder1)		NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;

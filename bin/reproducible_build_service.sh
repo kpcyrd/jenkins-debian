@@ -1,22 +1,30 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright © 2017 Holger Levsen (holger@layer-acht.org)
+# released under the GPLv=2
 
+# normally defined by jenkins
+JENKINS_URL=https://jenkins.debian.net
+
+DEBUG=false
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
+
+# common code defining db access
+. /srv/jenkins/bin/reproducible_common.sh
+
+set -e
 set -x
+# sleep 1-23 secs to randomize start times
+/bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
 
-echo $0
-echo $1
-export
+BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1
+BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
+mkdir -p $BUILD_BASE
+OLD_ID=$((ls -1rt $BUILD_BASE||echo 0)|tail -1)
+let BUILD_ID=OLD_ID+1
 
-sleep 3
-
-sleep 5m
-exit 0
-
-BUILD_ID=$1
-BUILD_URL=https://jenkins.debian.net/userContent/build_service/$BUILD_ID
-
-case $BUILD_ID in
+case $1 in
 	arm64_builder1)		NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
 	*)			echo "Sleeping 60min" 
 				sleep 60m
@@ -24,12 +32,8 @@ case $BUILD_ID in
 				;;
 esac
 
-BS_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service
-mkdir -p $BS_BASE
-
-/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BS_BASE/$BUILD_ID 2>&1
+/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID.log 2>&1
 
 # <      h01ger> | we could still make the logs accessable to browsers
 # <      h01ger> | and we need maintenance to cleanup the log files eventually
 # <      h01ger> | and translate that yaml to crontab entries
-# a logic for real build_ids to have several logs

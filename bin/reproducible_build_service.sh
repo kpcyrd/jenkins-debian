@@ -32,8 +32,8 @@ case $1 in
 				;;
 esac
 
-/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID.log 2>&1
+/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1
 
-# <      h01ger> | we could still make the logs accessable to browsers
-# <      h01ger> | and we need maintenance to cleanup the log files eventually
-# <      h01ger> | and translate that yaml to crontab entries
+# < h01ger> | logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
+# < h01ger> | and we need maintenance to cleanup the log files eventually
+# < h01ger> | and translate that yaml to crontab entries, starting with i386

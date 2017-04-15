@@ -22,6 +22,7 @@ BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
 OLD_ID=$((ls -1rt $BUILD_BASE||echo 0)|tail -1)
 let BUILD_ID=OLD_ID+1
 mkdir -p $BUILD_BASE/$BUILD_ID
+ln -sf $BUILD_BASE/$BUILD_ID $BUILD_BASE/latest
 
 export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1
 export BUILD_ID
@@ -40,7 +41,5 @@ esac
 # < h01ger> | logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
 # < h01ger> | and we need maintenance to cleanup the log files eventually
 # < h01ger> | and translate that yaml to crontab entries, starting with i386
-# Sleeping 5m before aborting the job.
-# -> blocks stopping the service
 
 

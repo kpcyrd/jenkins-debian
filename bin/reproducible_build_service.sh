@@ -29,11 +29,35 @@ export BUILD_ID
 export JOB_NAME="reproducible_builder_$1"
 
 case $1 in
-	arm64_builder1)		NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
-	*)			echo "Sleeping 60min" 
-				sleep 60m
-				exit 0
-				;;
+	arm64_1)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
+	i386_1)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build6-i386 ;;
+	i386_2)		NODE1=profitbricks-build6-i386	NODE2=profitbricks-build2-i386 ;;
+	i386_3)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build16-i386 ;;
+	i386_4)		NODE1=profitbricks-build16-i386	NODE2=profitbricks-build2-i386 ;;
+	i386_5)		NODE1=profitbricks-build12-i386	NODE2=profitbricks-build6-i386 ;;
+	i386_6)		NODE1=profitbricks-build6-i386	NODE2=profitbricks-build12-i386 ;;
+	i386_7)		NODE1=profitbricks-build12-i386	NODE2=profitbricks-build16-i386 ;;
+	i386_8)		NODE1=profitbricks-build16-i386	NODE2=profitbricks-build12-i386 ;;
+	i386_9)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build6-i386 ;;
+	i386_10)	NODE1=profitbricks-build6-i386	NODE2=profitbricks-build2-i386 ;;
+	i386_11)	NODE1=profitbricks-build2-i386	NODE2=profitbricks-build16-i386 ;;
+	i386_12)	NODE1=profitbricks-build16-i386	NODE2=profitbricks-build2-i386 ;;
+	i386_13)	NODE1=profitbricks-build12-i386	NODE2=profitbricks-build6-i386 ;;
+	i386_14)	NODE1=profitbricks-build6-i386	NODE2=profitbricks-build12-i386 ;;
+	i386_15)	NODE1=profitbricks-build12-i386	NODE2=profitbricks-build16-i386 ;;
+	i386_16)	NODE1=profitbricks-build16-i386	NODE2=profitbricks-build12-i386 ;;
+	i386_17)	NODE1=profitbricks-build2-i386	NODE2=profitbricks-build6-i386 ;;
+	i386_18)	NODE1=profitbricks-build6-i386	NODE2=profitbricks-build2-i386 ;;
+	i386_19)	NODE1=profitbricks-build2-i386	NODE2=profitbricks-build16-i386 ;;
+	i386_20)	NODE1=profitbricks-build16-i386	NODE2=profitbricks-build2-i386 ;;
+	i386_21)	NODE1=profitbricks-build12-i386	NODE2=profitbricks-build6-i386 ;;
+	i386_22)	NODE1=profitbricks-build6-i386	NODE2=profitbricks-build12-i386 ;;
+	i386_23)	NODE1=profitbricks-build12-i386	NODE2=profitbricks-build16-i386 ;;
+	i386_24)	NODE1=profitbricks-build16-i386	NODE2=profitbricks-build12-i386 ;;
+	*)		echo "Sleeping 60min" 
+			sleep 60m
+			exit 0
+			;;
 esac
 
 /srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1

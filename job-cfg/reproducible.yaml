@@ -631,6 +631,7 @@
         - '{name}_builder_{my_arch}_{my_num}':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'i386'
+            my_disabled: true
             my_num:
                 -  '1': &builders_2_6   { my_node1: 'profitbricks-build2',  my_node2: 'profitbricks-build6'  }
                 -  '2': &builders_6_2   { my_node1: 'profitbricks-build6',  my_node2: 'profitbricks-build2'  }

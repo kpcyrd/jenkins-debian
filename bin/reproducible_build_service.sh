@@ -24,7 +24,8 @@ let BUILD_ID=OLD_ID+1
 mkdir -p $BUILD_BASE/$BUILD_ID
 
 export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1
-export JOB=$1/$BUILD_ID
+export BUILD_ID
+export JOB_NAME="reproducible_builder_$1"
 
 case $1 in
 	arm64_builder1)		NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
@@ -39,3 +40,7 @@ esac
 # < h01ger> | logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
 # < h01ger> | and we need maintenance to cleanup the log files eventually
 # < h01ger> | and translate that yaml to crontab entries, starting with i386
+# Sleeping 5m before aborting the job.
+# -> blocks stopping the service
+
+

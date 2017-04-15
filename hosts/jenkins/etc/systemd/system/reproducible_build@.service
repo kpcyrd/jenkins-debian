@@ -8,6 +8,7 @@ StartLimitInterval=0
 User=jenkins
 Group=jenkins
 ExecStart=/srv/jenkins/bin/reproducible_build_service.sh %I
+SendSIGHUP=yes
 
 [Install]
 WantedBy=multi-user.target

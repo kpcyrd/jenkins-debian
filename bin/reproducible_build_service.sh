@@ -19,13 +19,13 @@ set -x
 /bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
 
 BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
-OLD_ID=$(ls -1rt $BUILD_BASE|grep -v latest|tail -1)
+OLD_ID=$(ls -1rt $BUILD_BASE|grep -v latest|head -1)
 let BUILD_ID=OLD_ID+1
 mkdir -p $BUILD_BASE/$BUILD_ID
-ln -sf $BUILD_BASE/$BUILD_ID $BUILD_BASE/latest
+(cd $BUILD_BASE ; ln -sf $BUILD_ID latest)
 
 export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1
-export BUILD_ID
+export BUILD_ID=$BUILD_ID
 export JOB_NAME="reproducible_builder_$1"
 
 case $1 in

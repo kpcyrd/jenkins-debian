@@ -342,7 +342,7 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs currently running</td>"
 	for ARCH in ${ARCHS} ; do
-		write_page "<td>$(ps fax|grep reproducible_build.sh|grep bash|grep -c $ARCH)</td>"
+		write_page "<td>$(ps fax|egrep "(reproducible_build.sh|reproducible_build_service.sh)"|grep bash|grep -c $ARCH)</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do

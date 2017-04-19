@@ -288,11 +288,18 @@ fi
 #
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
-	( sudo chroot $CHROOT_TARGET dpkg -l | grep -v multiarch-support | grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
+	# ignore ttf-freefont, stretch is frozen…
+	( sudo chroot $CHROOT_TARGET dpkg -l \
+		| grep -v multiarch-support \
+		| grep -v ttf-freefont \
+		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo
 		echo "Warning: Transitional packages found:"
 		cat $TMPFILE
+	fi
+	if ! cat /etc/debian_version | grep -q ^8 ; then
+		echo "Warning: seems Stretch has been released, please revisit the list of transitional packages to ignore…"
 	fi
 fi
 

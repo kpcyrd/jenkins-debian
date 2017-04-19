@@ -289,9 +289,11 @@ fi
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
 	# ignore ttf-freefont, stretch is frozen…
+	# ignore transfig, stretch is frozen…
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
 		| grep -v ttf-freefont \
+		| grep -v transfig \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo

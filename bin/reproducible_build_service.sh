@@ -5,6 +5,10 @@
 
 # normally defined by jenkins
 JENKINS_URL=https://jenkins.debian.net
+set -e
+set -x
+# sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
+/bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
@@ -12,11 +16,6 @@ common_init "$@"
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
-
-set -e
-set -x
-# sleep 1-23 secs to randomize start times
-/bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
 
 BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
 OLD_ID=$(ls -1rt $BUILD_BASE|grep -v latest|sort -n|tail -1)

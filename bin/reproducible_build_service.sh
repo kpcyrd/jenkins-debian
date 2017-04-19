@@ -19,7 +19,7 @@ set -x
 /bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
 
 BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
-OLD_ID=$(ls -1rt $BUILD_BASE|grep -v latest|tail -1)
+OLD_ID=$(ls -1rt $BUILD_BASE|grep -v latest|sort -n|tail -1)
 let BUILD_ID=OLD_ID+1
 mkdir -p $BUILD_BASE/$BUILD_ID
 (cd $BUILD_BASE ; ln -sf $BUILD_ID latest)

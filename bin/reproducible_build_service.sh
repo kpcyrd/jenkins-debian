@@ -22,6 +22,7 @@ BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$1
 OLD_ID=$(ls -1rt $BUILD_BASE|grep -v latest|sort -n|tail -1)
 let BUILD_ID=OLD_ID+1
 mkdir -p $BUILD_BASE/$BUILD_ID
+rm -f $BUILD_BASE/latest
 ln -sf $BUILD_ID $BUILD_BASE/latest
 
 export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1/

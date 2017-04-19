@@ -27,6 +27,7 @@ ln -sf $BUILD_ID $BUILD_BASE/latest
 export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$1/
 export BUILD_ID=$BUILD_ID
 export JOB_NAME="reproducible_builder_$1"
+export
 
 case $1 in
 	arm64_1)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;

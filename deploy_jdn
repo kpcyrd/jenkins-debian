@@ -15,6 +15,7 @@
 
 # useful things:
 # ./deploy_jdn all		- deploy on all nodes (and handle 398 days hosts properly)
+# ./deploy_jdn $host		- deploy on $host and jenkins (and handle 398 days hosts properly)
 # ./deploy_jdn all $foo		- run "$foo" on all nodes (and handle 398 days hosts properly)
 # ./deploy_jdn 			- deploy on jenkins only
 # ./deploy_jdn jenkins		- deploy on jenkins only
@@ -148,7 +149,7 @@ elif [ "$1" = "jenkins" ] ; then
 			c15)     HOSTS="$HOSTS codethink-sled15-arm64.debian.net" ;;
 			c16)     HOSTS="$HOSTS codethink-sled16-arm64.debian.net" ;;
 			armhf|amd64|i386|arm64)	 HOSTS="$HOSTS $(echo $ALL_HOSTS | sed 's# #\n#g' | grep $i)" ;;
-			*) ;;
+			*) 	if ping -c 1 $i ; then HOSTS="$HOSTS $i" ; fi ;;
 		esac
 	done
 	echo -n "Running j.d.n.git ('$real_command') updates on $HOSTS now"

@@ -120,8 +120,10 @@ elif [ "$1" = "check" ] ; then
 	real_command="pgrep -l -a -f _build.sh"
 	reset_clock=false
 	shift
-elif [ "$1" = "" ] || [ "$1" = "jenkins" ] ; then
+elif [ "$1" = "" ] ; then
         export HOSTS="root@jenkins.debian.net"
+elif [ "$1" = "jenkins" ] ; then
+	export HOSTS="root@jenkins.debian.net"
 	shift
 	for i in $@ ; do
 		case $i in

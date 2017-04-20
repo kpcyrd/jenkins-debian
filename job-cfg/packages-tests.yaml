@@ -43,10 +43,6 @@
 
 - job-template:
     defaults: packages-tests
-    name: '{name}_wheezy'
-
-- job-template:
-    defaults: packages-tests
     name: '{name}_stretch'
 
 - job-template:
@@ -76,9 +72,6 @@
             my_trigger: '{name}_jessie'
         - '{name}_jessie':
             my_distro: 'jessie'
-            my_trigger: '{name}_wheezy'
-        - '{name}_wheezy':
-            my_distro: 'wheezy backports'
 
 - project:
     name: debhelper-tests

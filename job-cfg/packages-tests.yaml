@@ -33,6 +33,7 @@
     publishers:
       - email:
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org {my_recipients}'
+          send-to-individuals: true
       - trigger:
           project: '{my_trigger}'
       - naginator:

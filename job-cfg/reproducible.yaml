@@ -864,7 +864,7 @@
             otherproject_git:
                 - 'fdroid_build_apps':
                     my_description: 'Build all the latest apps for F-Droid.'
-                    my_timed: '42 7 * * *'
+                    my_timed: '42 7 * * 1'
                     my_hname: 'profitbricks7'
                     my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'

@@ -289,12 +289,12 @@ fi
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
 	# stretch is frozen, so for now we ignore:
-	#	ttf-freefont transfig libpango1.0-0 dh-systemd jadetex 
-	#	libkutils4 libpcap-dev netcat libav-tools libkf5akonadicore-bin
-	#	ttf-dejavu python-gobject gnupg2
+	#	dh-systemd gnupg2 jadetex libav-tools libkf5akonadicore-bin
+	#	libkutils4 libpango1.0-0 libpcap-dev netcat python-gobject
+	#	transfig ttf-dejavu ttf-freefont
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(ttf-freefont|transfig|libpango1.0-0|dh-systemd|jadetex|libkutils4|libpcap-dev|netcat|libav-tools|libkf5akonadicore-bin|ttf-dejavu|python-gobject|gnupg2)" \
+		| egrep -v "(dh-systemd|gnupg2|jadetex|libav-tools|libkf5akonadicore-bin|libkutils4|libpango1.0-0|libpcap-dev|netcat|python-gobject|transfig|ttf-dejavu|ttf-freefont)" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo

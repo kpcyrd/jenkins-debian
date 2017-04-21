@@ -94,7 +94,7 @@ else
 
     sudo -u jenkins-adm git pull $GIT_REPO
 fi
-./update_jdn.sh 2>&1 | tee -a /var/log/jenkins/update_jdn.log
+./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 EOF
 reset_clock=true
 if [ "$1" = "all" ] ; then

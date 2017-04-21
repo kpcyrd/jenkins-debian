@@ -63,8 +63,12 @@ esac
 
 /srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1
 
-# < h01ger> | logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
-# < h01ger> | and we need maintenance to cleanup the log files eventually
-# < h01ger> | and translate that yaml to crontab entries, starting with i386
-
+# TODO left:
+# * maintenance job needs to:
+#   - cleanup the log files eventually
+#   - check for running builds using systemctl show
+# * logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
+#   - there's an NPH solution pointed out by Xtaran
+# * translate yaml into a script or such to create those service files (done for i386 for now)
+# * have one service per arch, starting X build jobs instead?
 

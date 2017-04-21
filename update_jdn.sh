@@ -526,11 +526,11 @@ if [ -f /etc/debian_version ] ; then
 fi
 
 #
-# deploy package configuration in /etc and /usr/local/
+# deploy package configuration in /etc and /usr
 #
 cd $BASEDIR
 sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/* /etc
-sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr/
+sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr
 
 #
 # more configuration than a simple cp can do

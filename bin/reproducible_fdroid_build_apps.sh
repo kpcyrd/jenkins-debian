@@ -14,10 +14,23 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
-# define and clean work space (differently than jenkins would normally do as we run via ssh on a different node…)
+# define and clean work space on the machine actually running the
+# build. jenkins.debian.net does not use Jenkins slaves.  Instead
+# /srv/jenkins/bin/jenkins_master_wrapper.sh runs this script on the
+# slave using a directl call to ssh.
 WORKSPACE=$BASE/fdroid-build
-rm $WORKSPACE -rf
-mkdir -p $WORKSPACE
+if [ -e $WORKSPACE/.git ]; then
+    # reuse the git repo if possible, to keep all the setup in fdroiddata/
+    git clean -fdx
+    git reset --hard
+    git checkout master
+    git clean -fdx
+    git reset --hard
+else
+    rm -rf $WORKSPACE
+    git clone https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net.git $WORKSPACE
+fi
+cd $WORKSPACE
 
 cleanup_all() {
 	echo "$(date -u) - cleanup in progress..."

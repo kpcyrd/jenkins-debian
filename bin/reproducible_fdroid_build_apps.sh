@@ -22,11 +22,12 @@ export WORKSPACE=$BASE/fdroid-build
 if [ -e $WORKSPACE/.git ]; then
     # reuse the git repo if possible, to keep all the setup in fdroiddata/
     cd $WORKSPACE
+    git fetch --tags
     git clean -fdx
     git reset --hard
     git checkout master
+    git reset --hard origin/master
     git clean -fdx
-    git reset --hard
 else
     rm -rf $WORKSPACE
     git clone https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net.git $WORKSPACE

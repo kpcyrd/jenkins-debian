@@ -47,8 +47,8 @@ cat /etc/issue
 # these variables are actually set in fdroidserver/jenkins-build-makebuildserver
 SETUP_WORKSPACE=$BASE/fdroid
 export XDG_CONFIG_HOME=$SETUP_WORKSPACE
-export VBOX_USER_HOME=$WORKSPACE/VirtualBox
-export VAGRANT_HOME=$WORKSPACE/vagrant.d
+export VBOX_USER_HOME=$SETUP_WORKSPACE/VirtualBox
+export VAGRANT_HOME=$SETUP_WORKSPACE/vagrant.d
 
 # the way we handle jenkins slaves doesn't copy the workspace to the slaves
 # so we need to "manually" clone the git repo here…

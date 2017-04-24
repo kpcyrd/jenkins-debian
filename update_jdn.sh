@@ -87,6 +87,7 @@ user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
 user_host_groups['lynxis','profitbricks-build3-amd64']="$sudo_groups"
 user_host_groups['lynxis','profitbricks-build4-amd64']="$sudo_groups"
+user_host_groups['hans','profitbricks-build7-amd64']="$sudo_groups"
 user_host_groups['vagrant','armhf']="$sudo_groups"
 user_host_groups['vagrant','arm64']="$sudo_groups"
 

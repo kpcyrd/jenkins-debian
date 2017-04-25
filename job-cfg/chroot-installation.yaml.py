@@ -164,10 +164,11 @@ spoken_names = {
     'developer': 'four desktop environments and the most commonly used applications and packages - and the build depends for all of these',
     'debconf-video': 'all packages relevant for the DebConf videoteam',
     }
+
 def get_spoken_name(target):
     if target[:12] == 'parl-desktop':
          return 'the Debian Parl metapackage '+target
-    elif target[:13] == 'education-':
+    elif target[:10] == 'education-':
          return 'the Debian Edu metapackage '+target
     elif target in spoken_names:
          return spoken_names[target]

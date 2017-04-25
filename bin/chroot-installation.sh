@@ -270,6 +270,8 @@ if [ "$2" != "" ] ; then
 				;;
 		education*)	install_packages "Debian Edu task" $2
 				;;
+		parl-desktop*)	install_packages "Debian Parl package" $2
+				;;
 		*)		echo "unsupported component."
 				exit 1
 				;;

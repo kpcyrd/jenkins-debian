@@ -44,8 +44,7 @@ choose_node() {
 NODE1=""
 NODE2=""
 ARCH=i386
-# let's start with two workers only…
-for i in $(seq 1 2) ; do
+for i in $(seq 1 24) ; do
         # sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
         /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
 

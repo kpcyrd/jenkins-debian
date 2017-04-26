@@ -668,6 +668,7 @@
         - '{name}_builder_{my_arch}_{my_num}':
             my_description: 'Try to reproducibly build a scheduled package. This is one of several builder jobs.'
             my_arch: 'arm64'
+            my_disabled: true
             my_num:
                 -  '1': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled10'     }
                 -  '2': { my_node1: 'codethink-sled9',     my_node2: 'codethink-sled12'     }

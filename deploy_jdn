@@ -244,5 +244,4 @@ MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
 SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
 echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
 echo
-echo "the end."
 

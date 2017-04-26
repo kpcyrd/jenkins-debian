@@ -7,6 +7,46 @@ set -e
 
 choose_node() {
 	case $1 in
+		amd64_1)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
+		amd64_2)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build1-amd64 ;;
+		amd64_3)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build15-amd64 ;;
+		amd64_4)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build1-amd64 ;;
+		amd64_5)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build5-amd64 ;;
+		amd64_6)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build11-amd64 ;;
+		amd64_7)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build15-amd64 ;;
+		amd64_8)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build11-amd64 ;;
+		amd64_9)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
+		amd64_10)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build1-amd64 ;;
+		amd64_11)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build15-amd64 ;;
+		amd64_12)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build1-amd64 ;;
+		amd64_13)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build5-amd64 ;;
+		amd64_14)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build11-amd64 ;;
+		amd64_15)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build15-amd64 ;;
+		amd64_16)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build11-amd64 ;;
+		amd64_17)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
+		amd64_18)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build1-amd64 ;;
+		amd64_19)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build15-amd64 ;;
+		amd64_20)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build1-amd64 ;;
+		amd64_21)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build5-amd64 ;;
+		amd64_22)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build11-amd64 ;;
+		amd64_23)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build15-amd64 ;;
+		amd64_24)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build11-amd64 ;;
+		amd64_25)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
+		amd64_26)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build1-amd64 ;;
+		amd64_27)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build15-amd64 ;;
+		amd64_28)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build1-amd64 ;;
+		amd64_29)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build5-amd64 ;;
+		amd64_30)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build11-amd64 ;;
+		amd64_31)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build15-amd64 ;;
+		amd64_32)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build11-amd64 ;;
+		amd64_33)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
+		amd64_34)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build1-amd64 ;;
+		amd64_35)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build15-amd64 ;;
+		amd64_36)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build1-amd64 ;;
+		amd64_37)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build5-amd64 ;;
+		amd64_38)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build11-amd64 ;;
+		amd64_39)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build15-amd64 ;;
+		amd64_40)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build11-amd64 ;;
 		i386_1)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build6-i386 ;;
 		i386_2)		NODE1=profitbricks-build6-i386	NODE2=profitbricks-build2-i386 ;;
 		i386_3)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build16-i386 ;;
@@ -146,8 +186,9 @@ choose_node() {
 
 NODE1=""
 NODE2=""
-for ARCH in i386 arm64 armhf ; do
+for ARCH in imd64 386 arm64 armhf ; do
 	case $ARCH in
+		amd64)	MAX=40 ;;
 		i386)	MAX=24 ;;
 		arm64)	MAX=32 ;;
 		armhf)	MAX=66 ;;
@@ -169,8 +210,7 @@ done
 # keep running forever…
 while true ; do sleep 1337m ; done
 
-# TODO left:
-# * amd64!
+# FIXME: TODO left for _service.sh:
 # * enabling the service in update_jdn
 # * logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
 #   - there's an NPH solution pointed out by Xtaran

@@ -57,8 +57,8 @@ for i in $(seq 1 2) ; do
 	/srv/jenkins/bin/reproducible_build_service_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
 done
 
-# not sure if this is really needed…
-while true ; do sleep 5m ; done
+# keep running forever…
+while true ; do sleep 23m ; done
 
 # TODO left:
 # * maintenance job needs to:

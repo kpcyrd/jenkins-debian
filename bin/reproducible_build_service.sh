@@ -217,3 +217,4 @@ while true ; do sleep 1337m ; done
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax
 # * dashboard jobs need to count for running jobs in this script…
+# * document the new setup in README

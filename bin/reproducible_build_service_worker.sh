@@ -20,8 +20,17 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 while true ; do
-	# TODO
-	# - test here if the builder service is actually running…
+	RUNNING=$(ps fax|grep -v grep|grep "$0 $1 ")
+	if [ -z "$RUNNING" ] ; then
+		echo "$(date --utc) - '$0 $1' already running, thus stopping this."
+		break
+	fi
+	SERVICE="reproducible_build@startup.service"
+	RUNNING=$(systemctl show $SERVICE|grep ^SubState|cut -d "=" -f2)
+	if [ "$RUNNING" != "running" ] ; then
+		echo "$(date --utc) - '$SERVICE' not running, thus stopping this."
+		break
+	fi
 
 	# sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
 	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )

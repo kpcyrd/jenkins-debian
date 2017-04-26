@@ -94,7 +94,7 @@ for ARCH in i386 arm64 ; do
 done
 
 # keep running forever…
-while true ; do sleep 23m ; done
+while true ; do sleep 1337m ; done
 
 # TODO left:
 # * translate yaml into a script or such to create those service files (done for i386 for now)

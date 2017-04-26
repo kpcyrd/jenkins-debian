@@ -12,6 +12,7 @@ jenkins ALL=  \
 	/bin/rm -rf --one-file-system /schroots/*, \
 	/bin/rm -rf --one-file-system /srv/live-build/*, \
 	/bin/rm -rf --one-file-system /srv/workspace/pbuilder/*, \
+	/bin/rm -rf --one-file-system /var/lib/jenkins/userContent/reproducible/debian/build_service/*, \
 	/bin/cp -v *.iso /srv/live-build/results/*, \
 	/bin/mv /chroots/* /schroots/*, \
 	/bin/mv /schroots/* /schroots/*, \

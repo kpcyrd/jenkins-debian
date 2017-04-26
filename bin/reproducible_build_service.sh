@@ -162,7 +162,7 @@ for ARCH in i386 arm64 armhf ; do
 		BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
 		mkdir -p $BUILD_BASE
 		echo "$(date --utc) - Starting $WORKER_NAME"
-		/srv/jenkins/bin/reproducible_build_service_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+		/srv/jenkins/bin/reproducible_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
 	done
 done
 

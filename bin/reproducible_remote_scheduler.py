@@ -122,7 +122,7 @@ if issue or status or built_after or built_before:
             "AND s.architecture= '{arch}' " + \
             "AND s.suite = '{suite}' AND r.status != 'blacklisted' "
     if issue:
-        query += "AND n.package_id=s.id AND n.issues LIKE '%{issue}%' "
+        query += "AND n.package_id=s.id AND n.issues LIKE '%%{issue}%%' "
         formatter['issue'] = issue
         formatter['notes_table'] = "notes AS n,"
     if status:

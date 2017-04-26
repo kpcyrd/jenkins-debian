@@ -597,7 +597,7 @@ call_diffoscope() {
 			if (( $RESULT > 128 )) && (( $RESULT <= 128+31 )); then
 				RESULT="$RESULT (SIG$(kill -l $(($RESULT - 128))))"
 			fi
-			msg="$(date -u) - Something weird happened when running $DIFFOSCOPE on $1/$2 (which exited with $RESULT) and I don't know how to handle it."
+			msg="$(date -u) - Something weird happened, $DIFFOSCOPE on $1/$2 exited with $RESULT and I don't know how to handle it."
 			;;
 	esac
 	if [ ! -z "$msg" ] ; then

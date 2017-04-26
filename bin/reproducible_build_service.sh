@@ -178,4 +178,4 @@ while true ; do sleep 1337m ; done
 #   - there's an NPH solution pointed out by Xtaran
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax
-
+# * dashboard jobs need to count for running jobs in this script…

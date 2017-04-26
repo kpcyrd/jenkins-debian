@@ -186,7 +186,7 @@ choose_node() {
 
 NODE1=""
 NODE2=""
-for ARCH in imd64 386 arm64 armhf ; do
+for ARCH in amd64 i386 arm64 armhf ; do
 	case $ARCH in
 		amd64)	MAX=40 ;;
 		i386)	MAX=24 ;;

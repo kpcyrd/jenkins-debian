@@ -211,9 +211,10 @@ done
 while true ; do sleep 1337m ; done
 
 # FIXME: TODO left for _service.sh:
-# * enabling the service in update_jdn
+# * link to console.log in rbuild.log is broken
 # * logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
 #   - there's an NPH solution pointed out by Xtaran
+# * enabling the service in update_jdn
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax
 # * dashboard jobs need to count for running jobs in this script…

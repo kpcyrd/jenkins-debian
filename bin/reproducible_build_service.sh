@@ -9,7 +9,6 @@ set -x
 
 choose_node() {
 	case $1 in
-		arm64_1)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
 		i386_1)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build6-i386 ;;
 		i386_2)		NODE1=profitbricks-build6-i386	NODE2=profitbricks-build2-i386 ;;
 		i386_3)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build16-i386 ;;
@@ -34,6 +33,38 @@ choose_node() {
 		i386_22)	NODE1=profitbricks-build6-i386	NODE2=profitbricks-build12-i386 ;;
 		i386_23)	NODE1=profitbricks-build12-i386	NODE2=profitbricks-build16-i386 ;;
 		i386_24)	NODE1=profitbricks-build16-i386	NODE2=profitbricks-build12-i386 ;;
+                arm64_1)        NODE1=codethink-sled9           NODE2=codethink-sled10 ;;
+                arm64_2)        NODE1=codethink-sled9           NODE2=codethink-sled12 ;;
+                arm64_3)        NODE1=codethink-sled9           NODE2=codethink-sled14 ;;
+                arm64_4)        NODE1=codethink-sled10          NODE2=codethink-sled9 ;;
+                arm64_5)        NODE1=codethink-sled12          NODE2=codethink-sled9 ;;
+                arm64_6)        NODE1=codethink-sled14          NODE2=codethink-sled9 ;;
+                arm64_7)        NODE1=codethink-sled10          NODE2=codethink-sled11 ;;
+                arm64_8)        NODE1=codethink-sled10          NODE2=codethink-sled13 ;;
+                arm64_9)        NODE1=codethink-sled13          NODE2=codethink-sled10 ;;
+                arm64_10)       NODE1=codethink-sled15          NODE2=codethink-sled10 ;;
+                arm64_11)       NODE1=codethink-sled12          NODE2=codethink-sled11 ;;
+                arm64_12)       NODE1=codethink-sled11          NODE2=codethink-sled14 ;;
+                arm64_13)       NODE1=codethink-sled11          NODE2=codethink-sled16 ;;
+                arm64_14)       NODE1=codethink-sled11          NODE2=codethink-sled12 ;;
+                arm64_15)       NODE1=codethink-sled12          NODE2=codethink-sled15 ;;
+                arm64_16)       NODE1=codethink-sled15          NODE2=codethink-sled16 ;;
+                arm64_17)       NODE1=codethink-sled13          NODE2=codethink-sled12 ;;
+                arm64_18)       NODE1=codethink-sled13          NODE2=codethink-sled14 ;;
+                arm64_19)       NODE1=codethink-sled14          NODE2=codethink-sled13 ;;
+                arm64_20)       NODE1=codethink-sled16          NODE2=codethink-sled13 ;;
+                arm64_21)       NODE1=codethink-sled14          NODE2=codethink-sled15 ;;
+                arm64_22)       NODE1=codethink-sled16          NODE2=codethink-sled15 ;;
+                arm64_23)       NODE1=codethink-sled16          NODE2=codethink-sled11 ;;
+                arm64_24)       NODE1=codethink-sled15          NODE2=codethink-sled16 ;;
+                arm64_25)       NODE1=codethink-sled9           NODE2=codethink-sled16 ;;
+                arm64_26)       NODE1=codethink-sled16          NODE2=codethink-sled9 ;;
+                arm64_27)       NODE1=codethink-sled10          NODE2=codethink-sled15 ;;
+                arm64_28)       NODE1=codethink-sled11          NODE2=codethink-sled10 ;;
+                arm64_29)       NODE1=codethink-sled12          NODE2=codethink-sled13 ;;
+                arm64_30)       NODE1=codethink-sled15          NODE2=codethink-sled12 ;;
+                arm64_31)       NODE1=codethink-sled14          NODE2=codethink-sled11 ;;
+                arm64_32)       NODE1=codethink-sled13          NODE2=codethink-sled14 ;;
 		*)		echo "Sleeping 60min"
 				sleep 60m
 				exit 0
@@ -43,17 +74,23 @@ choose_node() {
 
 NODE1=""
 NODE2=""
-ARCH=i386
-for i in $(seq 1 24) ; do
-        # sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
-        /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
+for ARCH in i386 arm64 ; do
+	case $ARCH in
+		i386)	MAX=24 ;;
+		arm64)	MAX=32 ;;
+		*)	;;
+	esac
+	for i in $(seq 1 24) ; do
+	        # sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
+	        /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
 
-	WORKER_NAME=${ARCH}_$i
-	choose_node $WORKER_NAME
-	BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
-	mkdir -p $BUILD_BASE
-	echo "$(date --utc) - Starting $WORKER_NAME"
-	/srv/jenkins/bin/reproducible_build_service_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+		WORKER_NAME=${ARCH}_$i
+		choose_node $WORKER_NAME
+		BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
+		mkdir -p $BUILD_BASE
+		echo "$(date --utc) - Starting $WORKER_NAME"
+		/srv/jenkins/bin/reproducible_build_service_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+	done
 done
 
 # keep running forever…

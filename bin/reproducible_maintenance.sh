@@ -215,7 +215,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			echo
 			echo "Old logfiles cleaned in /var/lib/jenkins/userContent/reproducible/debian/build_service/"
 			echo -n "$OLDSTUFF"
-			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
+			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec rm -rf --one-file-system {} \; || true
 			echo
 		fi
 	fi

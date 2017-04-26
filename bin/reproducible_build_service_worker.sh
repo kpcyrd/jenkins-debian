@@ -6,7 +6,6 @@
 # normally defined by jenkins
 JENKINS_URL=https://jenkins.debian.net
 set -e
-set -x
 
 WORKER_NAME=$1
 NODE1=$2

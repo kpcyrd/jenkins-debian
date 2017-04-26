@@ -4,8 +4,6 @@
 # released under the GPLv=2
 
 set -e
-set -x
-
 
 choose_node() {
 	case $1 in

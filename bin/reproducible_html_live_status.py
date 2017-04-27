@@ -155,11 +155,7 @@ def generate_live_status_table(arch):
         html += '<td><code>' + link_package(pkg, suite, arch) + '</code></td>'
         html += '<td>' + str(row[4]) + '</td><td>' + str(row[5]) + '</td>'
         html += '<td>' + convert_into_status_html(str(row[6])) + '</td><td>' + duration + '</td><td>' + avg_duration + '</td>'
-        # we temporarily have two types of builders…
-        if arch in ('i386'):
-            html += '<td><a href="https://jenkins.debian.net/userContent/reproducible/debian/build_service/' + str(row[9]) + '/console">' + str(row[9]) + '</a></td>'
-        else:
-            html += '<td><a href="https://jenkins.debian.net/job/reproducible_builder_' + str(row[9]) + '/console">' + str(row[9]) + '</a></td>'
+        html += '<td><a href="https://jenkins.debian.net/userContent/reproducible/debian/build_service/' + str(row[9]) + '/console">' + str(row[9]) + '</a></td>'
         html += '</tr>\n'
     html += '</table></p>\n'
     return html

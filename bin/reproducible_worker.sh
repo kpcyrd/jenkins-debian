@@ -52,7 +52,7 @@ while true ; do
 	#
 	# prepare variables for export
 	#
-	export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$WORKER_NAME/
+	export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$WORKER_NAME/$BUILD_ID
 	export BUILD_ID=$BUILD_ID
 	export JOB_NAME="reproducible_builder_$WORKER_NAME"
 	export

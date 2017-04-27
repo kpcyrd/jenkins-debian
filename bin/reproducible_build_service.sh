@@ -257,7 +257,6 @@ while true ; do
 done
 
 # FIXME: TODO left for _service.sh:
-# * link to console.log in rbuild.log is broken
 # * logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
 #   - there's an NPH solution pointed out by Xtaran
 # * enabling the service in update_jdn

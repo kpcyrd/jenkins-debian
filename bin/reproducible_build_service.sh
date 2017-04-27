@@ -5,6 +5,10 @@
 
 set -e
 
+# those should be global variables
+NODE1=""
+NODE2=""
+
 choose_node() {
 	case $1 in
 		amd64_1)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
@@ -184,29 +188,33 @@ choose_node() {
 	esac
 }
 
-NODE1=""
-NODE2=""
-for ARCH in amd64 i386 arm64 armhf ; do
-	case $ARCH in
-		amd64)	MAX=40 ;;
-		i386)	MAX=24 ;;
-		arm64)	MAX=32 ;;
-		armhf)	MAX=66 ;;
-		*)	;;
-	esac
-	for i in $(seq 1 $MAX) ; do
-	        # sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
-	        /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
+startup_workers() {
+	for ARCH in amd64 i386 arm64 armhf ; do
+		case $ARCH in
+			amd64)	MAX=40 ;;
+			i386)	MAX=24 ;;
+			arm64)	MAX=32 ;;
+			armhf)	MAX=66 ;;
+			*)	;;
+		esac
+		for i in $(seq 1 $MAX) ; do
+		        # sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
+		        /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
 
-		WORKER_NAME=${ARCH}_$i
-		choose_node $WORKER_NAME
-		BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
-		mkdir -p $BUILD_BASE
-		echo "$(date --utc) - Starting $WORKER_NAME"
-		/srv/jenkins/bin/reproducible_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+			WORKER_NAME=${ARCH}_$i
+			choose_node $WORKER_NAME
+			BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
+			mkdir -p $BUILD_BASE
+			echo "$(date --utc) - Starting $WORKER_NAME"
+			/srv/jenkins/bin/reproducible_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+		done
 	done
-done
+}
 
+#
+# main
+#
+startup_workers
 # keep running forever…
 while true ; do sleep 1337m ; done
 

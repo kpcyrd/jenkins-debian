@@ -52,7 +52,7 @@ while true ; do
 	#
 	# prepare variables for export
 	#
-	export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$WORKER_NAME/$BUILD_ID
+	export BUILD_URL=https://jenkins.debian.net/userContent/build_service/$WORKER_NAME/$BUILD_ID/
 	export BUILD_ID=$BUILD_ID
 	export JOB_NAME="reproducible_builder_$WORKER_NAME"
 	export
@@ -60,5 +60,5 @@ while true ; do
 	#
 	# actually run reproducible_build.sh
 	#
-	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1
+	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console 2>&1
 done

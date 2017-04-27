@@ -125,12 +125,8 @@ cleanup_all() {
 
 update_db_and_html() {
 	#
-	# as we still experience problems with locked database, in this function
-	# each sqlite command is run as: command || command, thus doubling the chance
-	# each will succeed... (no further comment… it was probably not designed to
-	# accessed by 40 jobs…)
-	#
 	# save everything as status of this package in the db
+	#
 	STATUS="$@"
 	if [ -z "$VERSION" ] ; then
 		VERSION="None"

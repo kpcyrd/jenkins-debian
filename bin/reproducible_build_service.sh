@@ -264,7 +264,6 @@ done
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax
 #   - check if at least one build is running on a build node
-# * dashboard jobs need to count for running jobs in this script…
 # * drop jobs from repro.yaml
 # * use ExecStop to kill remote builds on shutdown
 #   - remove cleanup_nodes.sh once this works

@@ -9,8 +9,16 @@ set -e
 NODE1=""
 NODE2=""
 
-choose_node() {
+#
+# this function defines which builds take place on which nodes
+#
+choose_nodes() {
 	case $1 in
+		#
+		# amd64, i386 and arm64 nodes are chosen in a way that one build always runs
+		# on a node running in the future, the other on a node with correct date.
+		# armhf builds are distributed by the build capacity of the nodes, see below.
+		#
 		amd64_1)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build5-amd64 ;;
 		amd64_2)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build1-amd64 ;;
 		amd64_3)	NODE1=profitbricks-build1-amd64		NODE2=profitbricks-build15-amd64 ;;
@@ -189,6 +197,9 @@ choose_node() {
 }
 
 startup_workers() {
+	#
+	# loop through all archs
+	#
 	for ARCH in amd64 i386 arm64 armhf ; do
 		case $ARCH in
 			amd64)	MAX=40 ;;
@@ -197,12 +208,19 @@ startup_workers() {
 			armhf)	MAX=66 ;;
 			*)	;;
 		esac
+		#
+		# startup as many workers as defined above
+		#
 		for i in $(seq 1 $MAX) ; do
+			#
 		        # sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
+			#
 		        /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
 
+			#
+			# continue loop if the worker to be started is already running
+			#
 			WORKER_NAME=${ARCH}_$i
-
 			WORKER_BIN=/srv/jenkins/bin/reproducible_worker.sh
 			RUNNING=$(ps fax|grep -v grep|grep "$WORKER_BIN $WORKER_NAME")
 			if [ -z "$RUNNING" ] ; then
@@ -210,7 +228,10 @@ startup_workers() {
 				continue
 			fi
 
-			choose_node $WORKER_NAME
+			#
+			# actually start the worker
+			#
+			choose_nodes $WORKER_NAME
 			BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
 			mkdir -p $BUILD_BASE
 			echo "$(date --utc) - Starting $WORKER_NAME"

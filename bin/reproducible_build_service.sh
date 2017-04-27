@@ -223,7 +223,7 @@ startup_workers() {
 			WORKER_NAME=${ARCH}_$i
 			WORKER_BIN=/srv/jenkins/bin/reproducible_worker.sh
 			RUNNING=$(ps fax|grep -v grep|grep "$WORKER_BIN $WORKER_NAME")
-			if [ -z "$RUNNING" ] ; then
+			if [ ! -z "$RUNNING" ] ; then
 				echo "$(date --utc) - '$(basename $WORKER_BIN) $WORKER_NAME' already running, thus moving on to the next."
 				continue
 			fi

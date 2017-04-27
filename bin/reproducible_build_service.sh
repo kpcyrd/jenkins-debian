@@ -265,5 +265,6 @@ done
 #   - check if at least one build is running on a build node
 # * use ExecStop to kill remote builds on shutdown
 #   - remove cleanup_nodes.sh once this works
-# * add support for disabling archs and for shutdown+respan of workers
+#   - add support for disabling archs and for shutdown+respan of workers
+#   - add support for starting/stopping workers for specific archs
 # * document the new setup in README

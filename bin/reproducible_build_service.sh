@@ -241,11 +241,20 @@ startup_workers() {
 }
 
 #
-# main
+# main, keep running forever…
 #
-startup_workers
-# keep running forever…
-while true ; do sleep 1337m ; done
+while true ; do
+	#
+	# this is all we do
+	#
+	startup_workers
+	#
+	# now sleep, but allow wakeup calls
+	#
+	set +e
+	sleep 1337m
+	set -e
+done
 
 # FIXME: TODO left for _service.sh:
 # * link to console.log in rbuild.log is broken

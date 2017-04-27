@@ -60,5 +60,5 @@ while true ; do
 	#
 	# actually run reproducible_build.sh
 	#
-	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console 2>&1
+	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1
 done

@@ -273,7 +273,7 @@ handle_ftbfs() {
 		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
 		# ignore syslinux, which is a false positive…
 		if zgrep -e "No space left on device" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" && [ "$SRCPACKAGE" != "syslinux" ] ; then
-			MESSAGE="${BUILD_URL}console for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue on $node. Please check, tune handle_ftbfs() and reschedule the package."
+			MESSAGE="${BUILD_URL}console.log for ${SRCPACKAGE} (ftbfs in $SUITE/$ARCH) _probably_ had a diskspace issue on $node. Please check, tune handle_ftbfs() and reschedule the package."
 			echo $MESSAGE | tee -a /var/log/jenkins/reproducible-diskspace-issues.log
 			irc_message debian-reproducible "$MESSAGE"
 		fi
@@ -332,7 +332,7 @@ unregister_build() {
 
 handle_env_changes() {
 	unregister_build
-	MESSAGE="$(date -u ) - ${BUILD_URL}console encountered a problem: $1"
+	MESSAGE="$(date -u ) - ${BUILD_URL}console.log encountered a problem: $1"
 	echo -e "$MESSAGE" | tee -a /var/log/jenkins/reproducible-env-changes.log
 	# no need to slow down
 	exec /srv/jenkins/bin/abort.sh
@@ -341,7 +341,7 @@ handle_env_changes() {
 
 handle_remote_error() {
 	unregister_build
-	MESSAGE="${BUILD_URL}console got remote error $1"
+	MESSAGE="${BUILD_URL}console.log got remote error $1"
 	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
 	echo "Sleeping 5m before aborting the job."
 	sleep 5m
@@ -351,7 +351,7 @@ handle_remote_error() {
 
 handle_enospace() {
 	unregister_build
-	MESSAGE="${BUILD_URL}console hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 60m."
+	MESSAGE="${BUILD_URL}console.log hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 60m."
 	echo "$MESSAGE"
 	echo "$MESSAGE" | mail -s "$JOB on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	echo "Sleeping 60m before aborting the job."
@@ -517,17 +517,17 @@ choose_package() {
 		xxxxxxx)
 			export DEBUG=true
 			set -x
-			irc_message debian-reproducible "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
+			irc_message debian-reproducible "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console.log"
 			;;
 		*)      ;;
 	esac
 	if [ "$NOTIFY" = "2" ] ; then
-		irc_message debian-reproducible "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console"
+		irc_message debian-reproducible "$SRCPACKAGE/$SUITE/$ARCH started building at ${BUILD_URL}console.log"
 	elif [ "$NOTIFY" = "0" ] ; then  # the build script has a different idea of notify than the scheduler,
 		NOTIFY=''                  # the scheduler uses integers, build.sh uses strings.
 	fi
 	log_info "starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'"
-	log_info "The jenkins build log is/was available at ${BUILD_URL}console"
+	log_info "The jenkins build log is/was available at ${BUILD_URL}console.log"
 }
 
 download_source() {
@@ -815,7 +815,7 @@ check_installed_build_depends() {
 	RESULT=$?
 	set -e
 	if [ $RESULT -eq 1 ] ; then
-		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror updates. Doing the first build again, please check ${BUILD_URL}console for now...\n" >> /var/log/jenkins/reproducible-env-changes.log
+		printf "$(date -u) - $BUILDINFO in ${SUITE} on ${ARCH} varies, probably due to mirror updates. Doing the first build again, please check ${BUILD_URL}console.log for now...\n" >> /var/log/jenkins/reproducible-env-changes.log
 		echo
 		echo "============================================================================="
 		echo "$(date -u) - The installed build depends vary according to the two .buildinfo files, probably due to mirror updates. Doing the first build on $NODE1 again."
@@ -861,7 +861,7 @@ share_buildinfo() {
 		curl -s -X PUT --max-time 30 --data-binary @- "https://buildinfo.debian.net/api/submit" < ./${X}/$BUILDINFO_SIGNED > $TMPFILE || log_error "Could not submit buildinfo from ${X} to http://buildinfo.debian.net/api/submit"
 		cat $TMPFILE
 		if grep -q "500 Internal Server Error" $TMPFILE ; then
-			MESSAGE="$(date -u ) - ${BUILD_URL}console got error code 500 from buildinfo.debian.net for $(du -h ${X}/$BUILDINFO_SIGNED)"
+			MESSAGE="$(date -u ) - ${BUILD_URL}console.log got error code 500 from buildinfo.debian.net for $(du -h ${X}/$BUILDINFO_SIGNED)"
 			echo -e "$MESSAGE" | tee -a /var/log/jenkins/reproducible-submit2buildinfo.debian.net.log
 		fi
 		rm $TMPFILE

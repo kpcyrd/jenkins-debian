@@ -202,11 +202,19 @@ startup_workers() {
 		        /bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
 
 			WORKER_NAME=${ARCH}_$i
+
+			WORKER_BIN=/srv/jenkins/bin/reproducible_worker.sh
+			RUNNING=$(ps fax|grep -v grep|grep "$WORKER_BIN $WORKER_NAME")
+			if [ -z "$RUNNING" ] ; then
+				echo "$(date --utc) - '$(basename $WORKER_BIN) $WORKER_NAME' already running, thus moving on to the next."
+				continue
+			fi
+
 			choose_node $WORKER_NAME
 			BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
 			mkdir -p $BUILD_BASE
 			echo "$(date --utc) - Starting $WORKER_NAME"
-			/srv/jenkins/bin/reproducible_worker.sh $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+			$WORKER_BIN $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
 		done
 	done
 }

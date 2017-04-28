@@ -20,9 +20,6 @@ send_back_to_the_future() {
 	ntpdate -b de.pool.ntp.org
 	# set fake date
 	date --set="+398 days +6 hours + 23 minutes"
-	# disable check for outdated packages as in the future (like this)
-	# packages from security.d.o will appear outdated always…
-	ln -sf /bin/true /usr/local/bin/dsa-check-packages
 	# finally report success
 	echo "$(date -u) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
 }

@@ -32,6 +32,21 @@ set_correct_date() {
 		sudo ntpdate -b de.pool.ntp.org
 }
 
+disable_dsa_check_packages() {
+	# disable check for outdated packages as in the future (like this)
+	# packages from security.d.o will appear outdated always…
+	echo -e "#!/bin/sh\n# disabled dsa-check by update_jdn.sh\nexit 0" > /usr/local/bin/dsa-check-packages
+	chmod a+rx /usr/local/bin/dsa-check-packages
+
+	# FIXME: remove the repair of /bin/true when all hosts has been
+	# updated
+	# ln -s /bin/true /usr/local/bin/dsa-check-packages was used which
+	# broke /bin/true by overwriting it with the perl script dsa-check-packages
+	if grep -q '/usr/bin/perl' /bin/true ; then
+		apt-get install --reinstall coreutils
+	fi
+}
+
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
 
@@ -785,9 +800,11 @@ explain "$(date) - finished deployment."
 case $HOSTNAME in
 	# set time back to the future
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
+		disable_dsa_check_packages
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*)
+		disable_dsa_check_packages
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	jenkins)

@@ -19,16 +19,13 @@ node_debug() {
 # only called direct on a remote build node
 node_cleanup_tmpdirs() {
 	export TMPDIR=$1
-	local MESSAGE="Not cleaning up to make lynxis happy. Please notify lynxis he must clean up the tempdir $1 on $(hostname)."
-	echo $MESSAGE
-	irc_message reproducible-builds "$MESSAGE"
-	#cd
+	cd
 	# (very simple) check we are deleting the right stuff
-	#if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] ; then
-	#	echo "Something very strange with \$TMPDIR=$TMPDIR exiting instead of doing cleanup."
-	#	exit 1
-	#fi
-	#rm -rf $TMPDIR
+	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] ; then
+		echo "Something very strange with \$TMPDIR=$TMPDIR exiting instead of doing cleanup."
+		exit 1
+	fi
+	rm -rf $TMPDIR
 }
 
 node_create_tmpdirs() {

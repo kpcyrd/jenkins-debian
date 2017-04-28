@@ -237,6 +237,7 @@ openwrt_download() {
 	local TARGET=$1
 	local CONFIG=$2
 	local TMPDIR=$3
+	local tries=5
 
 	cd $TMPDIR/download
 
@@ -253,7 +254,15 @@ openwrt_download() {
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config $CONFIG
-	make download -j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1
+	while ! make download -j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1 ; do
+		tries=$((tries - 1))
+		if [ $tries -eq 0 ] ; then
+			echo "================================================================================"
+			echo "$(date -u) - Failed to download sources"
+			echo "================================================================================"
+			exit 1
+		fi
+	done
 }
 
 openwrt_get_banner() {

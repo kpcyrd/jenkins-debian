@@ -137,14 +137,8 @@ def generate_live_status_table(arch):
     html += '<th class=\"center\">previous build duration</th><th class=\"center\">average build duration</th><th class=\"center\">builder job</th>'
     html += '</tr>\n'
     counter = 0
-    # the path should probably not be hard coded here…
-    builders = len(glob.glob('/var/lib/jenkins/jobs/reproducible_builder_' + arch + '_*'))
     for row in rows:
         counter += 1
-        if counter > builders:
-             html += '<tr><td colspan="10">There are more builds marked as currently building in the database (' + str(counter) + ') than there are ' + arch + ' build jobs (' + str(builders) + '). This does not compute, please investigate and fix the cause.</td></tr>'
-        elif builders == 0:
-             html += '<tr><td colspan="10">0 build jobs for ' + arch + ' detected. This does not compute, please investigate and fix the cause.</td></tr>'
         suite = row[1]
         arch = row[2]
         pkg = row[3]

@@ -45,7 +45,7 @@ fixup_mtu() {
 	# only act on systems which have eth0
 	if ip link show eth0 >/dev/null 2>&1 ; then
 		# if MTU != 1500 set it to 1500
-		if [ "$(ip link show eth0 | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' )" != "1500" ] ; then
+		if [ -z "$(ip link show eth0 | grep 'eth0:' | grep 'mtu 1500 ' || true)" ] ; then
 			ip link set dev eth0 mtu 1500
 		fi
 	fi

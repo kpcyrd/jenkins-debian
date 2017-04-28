@@ -267,6 +267,4 @@ done
 #   - remove cleanup_nodes.sh once this works
 #   - add support for disabling archs and for shutdown+respan of workers
 #   - add support for starting/stopping workers for specific archs
-# * more jenkins jobs related:
-#   - maintenance job does cleanup of /var/lib/jenkins/jobs/reproducible_builder*/ too
 # * document the new setup in README

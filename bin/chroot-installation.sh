@@ -293,13 +293,13 @@ if [ "$DISTRO" = "sid" ] ; then
 	# stretch is frozen, so for now we ignore:
 	#	dh-systemd gnupg2 iceweasel jadetex khelpcenter4 libav-tools
 	#	libkf5akonadicore-bin libkutils4 libpango1.0-0 libpcap-dev
-	#	libqca2-plugin-ossl myspell-en-gb myspell-it myspell-lt myspell-sl
+	#	libqca2-plugin-ossl myspell-en-gb myspell-ca myspell-it myspell-lt myspell-sl
 	#	myspell-sv-se netcat python-gobject qml-module-org-kde-extensionplugin
 	#	qtpositioning5-doc qtpositioning5-examples
 	#	transfig ttf-dejavu ttf-freefont
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(dh-systemd|gnupg2|iceweasel|jadetex|khelpcenter4|libav-tools|libkf5akonadicore-bin|libkutils4|libpango1.0-0|libpcap-dev|libqca2-plugin-ossl|myspell-en-gb|myspell-it|myspell-lt|myspell-sl|myspell-sv-se|netcat|python-gobject|qml-module-org-kde-extensionplugin|qtpositioning5-doc|qtpositioning5-examples|transfig|ttf-dejavu|ttf-freefont)" \
+		| egrep -v "(dh-systemd|gnupg2|iceweasel|jadetex|khelpcenter4|libav-tools|libkf5akonadicore-bin|libkutils4|libpango1.0-0|libpcap-dev|libqca2-plugin-ossl|myspell-en-gb|myspell-ca|myspell-it|myspell-lt|myspell-sl|myspell-sv-se|netcat|python-gobject|qml-module-org-kde-extensionplugin|qtpositioning5-doc|qtpositioning5-examples|transfig|ttf-dejavu|ttf-freefont)" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo

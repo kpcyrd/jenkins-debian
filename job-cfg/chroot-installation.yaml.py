@@ -87,7 +87,6 @@ all_targets = [
    'education-thin-client-server',
    'education-roaming-workstation',
    'education-workstation',
-   'parl-desktop',
    'parl-desktop-eu',
    'parl-desktop-strict',
    'parl-desktop-world',

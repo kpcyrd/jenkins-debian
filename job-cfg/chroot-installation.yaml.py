@@ -90,6 +90,10 @@ all_targets = [
    'parl-desktop-eu',
    'parl-desktop-strict',
    'parl-desktop-world',
+   'design-desktop-animation',
+   'design-desktop-graphics',
+   'design-desktop-strict',
+   'design-desktop-web',
    ]
 
 #
@@ -108,8 +112,8 @@ def is_target_in_distro(distro, target):
          # education-thin-client-server is obsolete since stretch…
          elif distro in ('sid', 'buster') and target == 'education-thin-client-server':
              return False
-         # education-lang-* and parl-desktop* packages only exist since stretch
-         elif distro in ('wheezy', 'jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop'):
+         # education-lang-*, parl-desktop* and design-desktop* packages only exist since stretch
+         elif distro in ('wheezy', 'jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
              return False
          return True
 
@@ -166,6 +170,8 @@ spoken_names = {
 
 def get_spoken_name(target):
     if target[:12] == 'parl-desktop':
+         return 'the Debian Parl metapackage '+target
+    elif target[:14] == 'design-desktop':
          return 'the Debian Parl metapackage '+target
     elif target[:10] == 'education-':
          return 'the Debian Edu metapackage '+target

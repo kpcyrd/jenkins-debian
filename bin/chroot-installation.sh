@@ -272,6 +272,8 @@ if [ "$2" != "" ] ; then
 				;;
 		parl-desktop*)	install_packages "Debian Parl package" $2
 				;;
+		design-desktop*)	install_packages "Debian Design package" $2
+				;;
 		*)		echo "unsupported component."
 				exit 1
 				;;

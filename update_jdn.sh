@@ -42,7 +42,7 @@ disable_dsa_check_packages() {
 	# updated
 	# ln -s /bin/true /usr/local/bin/dsa-check-packages was used which
 	# broke /bin/true by overwriting it with the perl script dsa-check-packages
-	if grep -q '/usr/bin/perl' /bin/true ; then
+	if grep -q '/usr/bin/perl' /bin/true || grep -q '/usr/bin/perl' /bin/sh ; then
 		sudo apt-get install --reinstall coreutils
 	fi
 }

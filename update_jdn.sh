@@ -43,6 +43,14 @@ disable_dsa_check_packages() {
 echo "--------------------------------------------"
 explain "$(date) - begin deployment update."
 
+#
+# temporarily test to check which hosts don't use systemd
+#
+if [ -z "$(dpkg -l|grep systemd-sysv||true)" ] ; then 
+	echo "no systemd-sysv installed on $(hostname)"
+	read
+fi
+
 # some nodes need special treatment…
 case $HOSTNAME in
 	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)

@@ -352,7 +352,6 @@ if [ -f /etc/debian_version ] ; then
 				python3-requests
 				python3-yaml
 				subversion
-				sysvinit-core
 				tree
 				unzip
 				util-linux

@@ -168,6 +168,11 @@ get_arch_color() {
 }
 
 LOG=$(mktemp -u)
+STSOH=""
+for i in $HOSTS ; do
+	STSOH="$i $STSOH"
+done
+HOSTS=$STSOH
 for i in $HOSTS ; do
 	echo -n "."
        	command="$real_command"

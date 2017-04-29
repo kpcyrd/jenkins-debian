@@ -47,7 +47,7 @@ explain "$(date) - begin deployment update."
 # temporarily test to check which hosts don't use systemd
 #
 if [ -z "$(dpkg -l|grep systemd-sysv||true)" ] ; then 
-	echo "no systemd-sysv installed on $(hostname)"
+	echo "no systemd-sysv installed on $(hostname), please enter to continue…"
 	read
 fi
 
@@ -303,6 +303,7 @@ if [ -f /etc/debian_version ] ; then
 			stunnel
 			subversion 
 			subversion-tools 
+			systemd-sysv
 			sudo 
 			unzip 
 			vim 

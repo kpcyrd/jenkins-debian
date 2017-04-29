@@ -29,19 +29,27 @@
 
 START=$(date +'%s')
 GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"
-export HOSTS="profitbricks-build1-amd64.debian.net
+export HOSTS="codethink-sled9-arm64.debian.net
+codethink-sled10-arm64.debian.net
+codethink-sled11-arm64.debian.net
+codethink-sled12-arm64.debian.net
+codethink-sled13-arm64.debian.net
+codethink-sled14-arm64.debian.net
+codethink-sled15-arm64.debian.net
+codethink-sled16-arm64.debian.net
 profitbricks-build2-i386.debian.net
+profitbricks-build6-i386.debian.net
+profitbricks-build12-i386.debian.net
+profitbricks-build16-i386.debian.net
+profitbricks-build1-amd64.debian.net
 profitbricks-build3-amd64.debian.net
 profitbricks-build4-amd64.debian.net
 profitbricks-build5-amd64.debian.net
-profitbricks-build6-i386.debian.net
 profitbricks-build7-amd64.debian.net
 profitbricks-build9-amd64.debian.net
 profitbricks-build10-amd64.debian.net
 profitbricks-build11-amd64.debian.net
-profitbricks-build12-i386.debian.net
 profitbricks-build15-amd64.debian.net
-profitbricks-build16-i386.debian.net
 bbx15-armhf-rb.debian.net
 bpi0-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
@@ -66,14 +74,6 @@ rpi2b-armhf-rb.debian.net
 rpi2c-armhf-rb.debian.net
 wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net
-codethink-sled9-arm64.debian.net
-codethink-sled10-arm64.debian.net
-codethink-sled11-arm64.debian.net
-codethink-sled12-arm64.debian.net
-codethink-sled13-arm64.debian.net
-codethink-sled14-arm64.debian.net
-codethink-sled15-arm64.debian.net
-codethink-sled16-arm64.debian.net
 root@jenkins.debian.net"
 
 ALL_HOSTS=$HOSTS

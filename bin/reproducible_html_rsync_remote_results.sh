@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -16,21 +16,24 @@ rsync_remote_results() {
 		echo "$(date -u) - Starting to rsync results for '$PROJECT'."
 		local RESULTS=$(mktemp --tmpdir=$TEMPDIR -d reproducible-rsync-XXXXXXXXX)
 		# copy the new results from build node to webserver node
-		rsync -r -v -e "ssh -o 'Batchmode = yes'" profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS
-		chmod 775 $RESULTS
-		# move old results out of the way
-		if [ -d $BASE/$PROJECT ] ; then
-			mv $BASE/$PROJECT ${RESULTS}.tmp
-			# preserve images and css
-			for OBJECT in $(find ${RESULTS}.tmp -name "*css" -o -name "*png" -o -name "*jpg") ; do
-				cp -v $OBJECT $RESULTS/
-			done
-			# delete the old results
-			rm ${RESULTS}.tmp -r
+		if rsync -r -v -e "ssh -o 'Batchmode = yes'" profitbricks-build3-amd64.debian.net:$BASE/$PROJECT/ $RESULTS 2>/dev/null ; then
+			chmod 775 $RESULTS
+			# move old results out of the way
+			if [ -d $BASE/$PROJECT ] ; then
+				mv $BASE/$PROJECT ${RESULTS}.tmp
+				# preserve images and css
+				for OBJECT in $(find ${RESULTS}.tmp -name "*css" -o -name "*png" -o -name "*jpg") ; do
+					cp -v $OBJECT $RESULTS/
+				done
+				# delete the old results
+				rm ${RESULTS}.tmp -r
+			fi
+			# make the new results visible
+			mv $RESULTS $BASE/$PROJECT
+			echo "$(date -u) - $REPRODUCIBLE_URL/$PROJECT has been updated."
+		else
+			echo "$(date -u) - no new results for '$PROJECT' found."
 		fi
-		# make the new results visible
-		mv $RESULTS $BASE/$PROJECT
-		echo "$(date -u) - $REPRODUCIBLE_URL/$PROJECT has been updated."
 	done
 }
 

@@ -2,7 +2,7 @@
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
-#           2016 Alexander Couzens <lynxis@fe80.eu>
+#           2016-2017 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
 # configuration

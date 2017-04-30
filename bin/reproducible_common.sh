@@ -288,10 +288,14 @@ write_page_intro() {
 		write_page "        <p><em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice (without payloads), with a few varitations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="$1"
 		local PROJECTURL="https://review.coreboot.org/p/coreboot.git"
-	elif [ "$1" = "OpenWrt" ] ; then
-		write_page "        <p><em>Reproducible OpenWrt</em> is an effort to apply this to OpenWrt. Thus each OpenWrt target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. OpenWRT generates many different types of raw <code>.bin</code> files, and diffoscope does not know how to parse these. Thus the resulting diffoscope output is not nearly as clear as it could be - hopefully this limitation will be overcome eventually, but in the meanwhile the input components (uImage kernel file, rootfs.tar.gz, and/or rootfs squashfs) can be inspected. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
-		local PROJECTNAME="openwrt"
-		local PROJECTURL="git://git.openwrt.org/openwrt.git"
+	elif [ "$1" = "OpenWrt" ] || [ "$1" = "LEDE" ]; then
+		local PROJECTNAME="$1"
+		if [ "$PROJECTNAME" = "OpenWrt" ] ; then
+			local PROJECTURL="git://git.openwrt.org/openwrt.git"
+		else
+			local PROJECTURL="git://git.lede-project.org/source.git"
+		fi
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus each $PROJECTNAME target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. $PROJECTNAME generates many different types of raw <code>.bin</code> files, and diffoscope does not know how to parse these. Thus the resulting diffoscope output is not nearly as clear as it could be - hopefully this limitation will be overcome eventually, but in the meanwhile the input components (uImage kernel file, rootfs.tar.gz, and/or rootfs squashfs) can be inspected. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 	elif [ "$1" = "NetBSD" ] ; then
 		write_page "        <p><em>Reproducible NetBSD</em> is an effort to apply this to NetBSD. Thus each NetBSD target is build twice, with a few varitations added and then the resulting files from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="netbsd"

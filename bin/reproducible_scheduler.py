@@ -71,24 +71,24 @@ MAXIMA = {'amd64': 750, 'i386': 750, 'arm64': 1000, 'armhf': 750}
 LIMITS = {
     'untested': {
         'amd64': {
-            'testing': {'*': 600},
-            'unstable': {'*': 600},
-            'experimental': {'*': 440},
+            'testing': {'*': 100},
+            'unstable': {'*': 100},
+            'experimental': {'*': 100},
         },
         'i386': {
-            'testing': {'*': 440},
-            'unstable': {'*': 440},
-            'experimental': {'*': 440},
+            'testing': {'*': 100},
+            'unstable': {'*': 100},
+            'experimental': {'*': 100},
         },
        'arm64': {
-            'testing': {'*': 660},
-            'unstable': {'*': 660},
-            'experimental': {'*': 440},
+            'testing': {'*': 100},
+            'unstable': {'*': 100},
+            'experimental': {'*': 100},
         },
        'armhf': {
-            'testing': {'*': 440},
-            'unstable': {'*': 440},
-            'experimental': {'*': 440},
+            'testing': {'*': 100},
+            'unstable': {'*': 100},
+            'experimental': {'*': 100},
         },
     },
     'new': {

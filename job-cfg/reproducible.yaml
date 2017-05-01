@@ -542,7 +542,7 @@
                     my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 23 * * 2'
                     my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh master'
-            my_trigger: 'reproducible_html_rsync_remote_results'
+            my_trigger: ''
             my_hname: ''
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
 

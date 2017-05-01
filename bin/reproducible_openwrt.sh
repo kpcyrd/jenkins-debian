@@ -5,7 +5,7 @@
 #           2016 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
-OPENWRT_GIT_REPO=git://git.openwrt.org/openwrt.git
+OPENWRT_GIT_REPO=https://github.com/openwrt/openwrt.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh

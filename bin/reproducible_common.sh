@@ -291,7 +291,7 @@ write_page_intro() {
 	elif [ "$1" = "OpenWrt" ] || [ "$1" = "LEDE" ]; then
 		local PROJECTNAME="$1"
 		if [ "$PROJECTNAME" = "OpenWrt" ] ; then
-			local PROJECTURL="git://git.openwrt.org/openwrt.git"
+			local PROJECTURL="https://github.com/openwrt/openwrt.git"
 		else
 			local PROJECTURL="https://git.lede-project.org/source.git"
 		fi

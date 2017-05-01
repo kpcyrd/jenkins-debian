@@ -2,6 +2,23 @@
 # Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+# puppet / salt / ansible / fai / chef / deployme.app - dislaimer
+# (IOW: this script has been grown in almost 500 commits and it shows…)
+#
+# yes, we know… and: "it" should probably still be done.
+#
+# It just unclear, how/what, and what we have actually mostly works.
+#
+# Switching to jenkins.debian.org is probably an opportunity
+# to write (refactor this into) *yet another deployment script*
+# (interacting with the DSA machine setup which is in puppet…),
+# thus obsoleting this script gradually, though this is used on
+# 47 hosts currently (of which quite some were initially installed
+# manully…)
+#
+# so, yes, patches welcome. saying this is crap alone is not helpful,
+# nor is just suggesting some new or old technology. patches most welcome!
+
 set -e
 
 BASEDIR="$(dirname "$(readlink -e $0)")"

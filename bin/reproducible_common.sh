@@ -293,7 +293,7 @@ write_page_intro() {
 		if [ "$PROJECTNAME" = "OpenWrt" ] ; then
 			local PROJECTURL="git://git.openwrt.org/openwrt.git"
 		else
-			local PROJECTURL="git://git.lede-project.org/source.git"
+			local PROJECTURL="https://git.lede-project.org/source.git"
 		fi
 		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus each $PROJECTNAME target is build twice, with a few varitations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. $PROJECTNAME generates many different types of raw <code>.bin</code> files, and diffoscope does not know how to parse these. Thus the resulting diffoscope output is not nearly as clear as it could be - hopefully this limitation will be overcome eventually, but in the meanwhile the input components (uImage kernel file, rootfs.tar.gz, and/or rootfs squashfs) can be inspected. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 	elif [ "$1" = "NetBSD" ] ; then

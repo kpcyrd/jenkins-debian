@@ -12,7 +12,7 @@ common_init "$@"
 
 # that's all
 rsync_remote_results() {
-	for PROJECT in coreboot lede openwrt netbsd ; do
+	for PROJECT in coreboot netbsd ; do
 		echo "$(date -u) - Starting to rsync results for '$PROJECT'."
 		local RESULTS=$(mktemp --tmpdir=$TEMPDIR -d reproducible-rsync-XXXXXXXXX)
 		# copy the new results from build node to webserver node

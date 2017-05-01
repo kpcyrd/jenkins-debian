@@ -788,7 +788,6 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 		fi
 		echo
 	fi
-	rm -f $TMPFILE
 fi
 
 #
@@ -796,6 +795,7 @@ fi
 #
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 explain "$(date) - finished deployment."
+rm -f $TMPFILE
 
 # finally!
 case $HOSTNAME in

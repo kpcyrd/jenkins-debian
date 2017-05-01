@@ -2,7 +2,7 @@
 # Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-# puppet / salt / ansible / fai / chef / deployme.app - dislaimer
+# puppet / salt / ansible / fai / chef / deployme.app - disclaimer
 # (IOW: this script has been grown in almost 500 commits and it shows…)
 #
 # yes, we know… and: "it" should probably still be done.

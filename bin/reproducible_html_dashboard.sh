@@ -340,9 +340,9 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		write_page "<td>$(grep "MAX=" /srv/jenkins/bin/reproducible_build_service.sh |grep $ARCH|cut -d "=" -f2-|cut -d " " -f1)</td>"
 	done
-	write_page "</tr><tr><td class=\"left\">Build jobs currently running</td>"
+	write_page "</tr><tr><td class=\"left\">Build jobs currently running remotely</td>"
 	for ARCH in ${ARCHS} ; do
-		write_page "<td>$(ps fax|grep reproducible_build.sh|grep bash|grep -c $ARCH)</td>"
+		write_page "<td>$(ps fax|grep reproducible_build.sh|grep ssh|grep -c $ARCH)</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do

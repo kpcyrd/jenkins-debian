@@ -540,7 +540,7 @@ def schedule_untested_packages(arch, total):
                  many_untested, suite, arch)
         packages[suite] = query_untested_packages(suite, arch, many_untested)
         log.info('Received ' + str(len(packages[suite])) +
-                 ' untested packages in ' + suite + '/' + arch + 'to schedule.')
+                 ' untested packages in ' + suite + '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':

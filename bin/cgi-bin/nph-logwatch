@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Copyright © 2017 Holger Levsen (holger@layer-acht.org)
+# released under the GPLv=2
+
+set -e
+
+echo "HTTP/1.0 200 OK"
+echo "Connection: close"
+echo 'Content-type: text/plain; charset="utf-8"'
+echo ""
+
+TARGET=${QUERY_STRING}
+
+#
+# sanitize input
+#
+WORKER=$(basename $(dirname $TARGET))
+BUILD=$(basename $TARGET)
+
+#
+# we only work on known files…
+#
+DIR=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER
+FILE=$DIR/$BUILD/console.log
+
+# keep commented code for debugging…
+if [ ! -d $DIR ] ; then
+	echo "$DIR does not exist."
+	#echo "Wanted $TARGET but $DIR does not exist."
+	exit 0
+elif [ ! -f $FILE ] ; then
+	echo "$FILE does not exist."
+	#echo "Wanted $TARGET but $FILE does not exist."
+	exit 0
+fi
+
+#
+# this build exists, what about this one:
+#
+let NEW_BUILD=$BUILD+1
+
+#
+# if this ain't the latest build, just cat it's logfile
+#
+if [ -e $DIR/$NEW_BUILD/console.log ] ; then
+	cat $FILE
+#
+# if the worker ain't running, just cat the logfile
+#
+elif [ ! -z "$(ps fax|grep -v grep|grep 'reproducible_worker $WORKER.sh ')" ] ; then
+	cat $FILE
+#
+# FIXME: we should really just convert 'latest' into a number here and use the tail below… 
+#
+elif [ "$BUILD" = "latest" ] ; then
+	cat $FILE
+else
+	#
+	# else, we tail the logfile and kill the tail process, once the next build
+	# has been started
+	#
+	tail -c +0 -f $FILE &
+	TAILPID=$!
+	while ! test -f $DIR/$NEW_BUILD/console.log ; do
+		sleep 1
+	done
+	kill -9 $TAILPID
+fi
+echo 

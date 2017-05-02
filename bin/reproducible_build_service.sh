@@ -257,8 +257,8 @@ while true ; do
 done
 
 # FIXME: TODO left for _service.sh:
-# * logs should auto display in browser like with jenkins… (long-polling, meta-refresh, something)
-#   - there's an NPH solution pointed out by Xtaran
+# * logs should auto display in browser like with jenkins…
+#   - mostly done, except one needs to manually scroll down… (could probably be fixed with javascript…)
 # * enabling the service in update_jdn
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax

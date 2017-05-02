@@ -259,6 +259,8 @@ done
 # FIXME: TODO left for _service.sh:
 # * logs should auto display in browser like with jenkins…
 #   - mostly done, except one needs to manually scroll down… (could probably be fixed with javascript…)
+# * there's also https://jenkins.debian.net/userContent/reproducible/debian/build_service/amd64_1/worker.log (for all the workers…)
+#   - no automatic reload for that yet, though. and not linked anywhere
 # * enabling the service in update_jdn
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax

@@ -344,6 +344,10 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		write_page "<td>$(ps fax|grep reproducible_build.sh|grep ssh|grep -c $ARCH)</td>"
 	done
+	write_page "</tr><tr><td class=\"left\">Build jobs currently running diffoscope</td>"
+	for ARCH in ${ARCHS} ; do
+		write_page "<td>$(ps fax|grep "diffoscope --html /srv/reproducible-results/rbuild-debian"|grep -c $ARCH)</td>"
+	done
 	write_page "</tr><tr><td class=\"left\">average test duration (on $DATE)</td>"
 	for ARCH in ${ARCHS} ; do
 		RESULT=$(query_db "SELECT COALESCE(CAST(AVG(r.build_duration) AS INTEGER), 0) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_duration!='0' AND r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")

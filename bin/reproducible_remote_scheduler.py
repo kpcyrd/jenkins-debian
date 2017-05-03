@@ -212,7 +212,7 @@ date = (now - time_delta).strftime('%Y-%m-%d %H:%M')
 log.debug('date_scheduled = ' + date + ' time_delta = ' + str(time_delta))
 
 
-# a single person can't schedule more than 200 packages in the same day; this
+# a single person can't schedule more than 500 packages in the same day; this
 # is actually easy to bypass, but let's give some trust to the Debian people
 query = """SELECT count(*) FROM manual_scheduler
            WHERE requester = '{}' AND date_request > '{}'"""
@@ -221,7 +221,7 @@ try:
 except IndexError:
     amount = 0
 log.debug(requester + ' already scheduled ' + str(amount) + ' packages today')
-if amount + len(ids) > 200 and not local:
+if amount + len(ids) > 500 and not local:
     log.error(bcolors.FAIL + 'You have exceeded the maximum number of manual ' +
               'reschedulings allowed for a day. Please ask in ' +
               '#debian-reproducible if you need to schedule more packages.' +

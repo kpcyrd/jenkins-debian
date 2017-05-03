@@ -697,7 +697,7 @@ create_variations_page() {
 #
 # main
 #
-create_performance_page
+SUITE="unstable"
 update_bug_stats
 update_notes_stats
 for ARCH in ${ARCHS} ; do
@@ -707,7 +707,8 @@ for ARCH in ${ARCHS} ; do
 		create_suite_arch_stats_page
 	done
 done
+create_performance_page
+create_variations_page
 create_bugs_page
 create_dashboard_page
-create_variations_page
 rm -f $DUMMY_FILE >/dev/null

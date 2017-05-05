@@ -28,7 +28,7 @@ Debian packages for t.r-b.o
  ** two dual-core with 2 GB RAM,
  ** two quad-cores with 1 GB RAM and
  ** three dual-cores with 1 GB RAM.
- * In December 2016 link:https://codethink.co.uk has kindly offered access to 8 arm64 build nodes on link:http://www8.hp.com/us/en/hp-news/press-release.html?id=1800094#.VgQdelox1QI[HP moonshot hardware].
+ * In December 2016 link:https://codethink.co.uk[Codethink] has kindly offered access to 8 arm64 build nodes on link:http://www8.hp.com/us/en/hp-news/press-release.html?id=1800094#.VgQdelox1QI[HP moonshot hardware].
  ** 8 cores and 64 GB memory for codethink-sled9-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future
  ** 8 cores and 64 GB memory for codethink-sled10-arm64.debian.net used for building arm64 Debian packages for t.r-b.o
  ** 8 cores and 64 GB memory for codethink-sled11-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future

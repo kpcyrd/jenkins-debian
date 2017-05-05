@@ -57,7 +57,7 @@ def main():
         colors='1'
     r('v <- t[0:nrow(t),0:'+colors+']')
     # make graph since day 1
-    r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA)')
+    r('barplot(t(v),col = 1:'+columns+', main="'+mainlabel+'", xlab="", ylab="'+ylabel+'", space=0, border=NA, names.arg=rownames(t))')
     if int(colors) < 10:
         r('legend(x="bottom",legend=colnames(t), ncol=2,fill=1:'+columns+',xjust=0.5,yjust=0,bty="n")')
     elif int(colors) == 12:

@@ -28,6 +28,8 @@
           branches:
             - master
             - 'origin/smoke-me/**'
+    my_origin_triggers:
+    triggers: '{obj:my_origin_triggers}'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
     publishers:
@@ -45,7 +47,7 @@
 - job-template:
     defaults: packages-tests
     name: '{name}_sid'
-    triggers:
+    my_origin_triggers:
       - pollscm:
           cron: '* H/2 * * *'
 
@@ -109,3 +111,6 @@
             my_disabled: true
         - '{name}_jessie':
             my_distro: 'jessie'
+            my_origin_triggers:
+              - pollscm:
+                  cron: '* H/2 * * *'

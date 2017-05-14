@@ -91,3 +91,21 @@
         - '{name}_jessie':
             my_distro: 'jessie'
             my_disabled: true
+
+- project:
+    name: dak-tests
+    my_git_url: 'https://ftp-master.debian.org/git/dak.git'
+    my_recipients: 'debian-dak@lists.debian.org'
+    my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
+    my_description: 'DAK testsuite'
+    my_trigger:
+    jobs:
+    # DAK tests cannot be run in sid/stretch atm.
+        - '{name}_sid':
+            my_distro: 'sid'
+            my_disabled: true
+        - '{name}_stretch':
+            my_distro: 'stretch'
+            my_disabled: true
+        - '{name}_jessie':
+            my_distro: 'jessie'

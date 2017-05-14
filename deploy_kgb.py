@@ -24,6 +24,7 @@ channels = [
     {'name': 'debian-bootstrap', 'id': 'jenkins-debian-bootstrap'},
     {'name': 'debian-cinnamon', 'id': 'jenkins-debian-cinnamon'},
     {'name': 'debian-edu', 'id': 'jenkins-debian-edu'},
+    {'name': 'debian-ftp', 'id': 'jenkins-debian-ftp'},
     {'name': 'debian-haskell', 'id': 'jenkins-debian-haskell'},
     {'name': 'debian-qa', 'id': 'jenkins-debian-qa'},
     {'name': 'debian-reproducible', 'id': 'jenkins-debian-reproducible'},

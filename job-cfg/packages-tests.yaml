@@ -95,7 +95,7 @@
 - project:
     name: dak-tests
     my_git_url: 'https://ftp-master.debian.org/git/dak.git'
-    my_recipients: 'debian-dak@lists.debian.org'
+    my_recipients: 'jenkins+debian-ftp debian-dak@lists.debian.org'
     my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
     my_trigger:

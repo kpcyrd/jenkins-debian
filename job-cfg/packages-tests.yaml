@@ -44,18 +44,18 @@
 
 - job-template:
     defaults: packages-tests
+    name: '{name}_sid'
+    triggers:
+      - pollscm:
+          cron: '* H/2 * * *'
+
+- job-template:
+    defaults: packages-tests
     name: '{name}_stretch'
 
 - job-template:
     defaults: packages-tests
     name: '{name}_jessie'
-
-- job-template:
-    defaults: packages-tests
-    name: '{name}_sid'
-    triggers:
-      - pollscm:
-          cron: '* H/2 * * *'
 
 - project:
     name: lintian-tests

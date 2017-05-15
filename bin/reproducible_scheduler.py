@@ -250,10 +250,6 @@ def update_sources_db(suite, arch, sources):
     for src in deb822.Sources.iter_paragraphs(sources.split('\n')):
         pkg = (src['Package'], src['Version'], suite, arch)
 
-        if 'Extra-Source-Only' in src and src['Extra-Source-Only'] == 'yes':
-            log.debug('Ignoring {} due to Extra-Source-Only'.format(pkg))
-            continue
-
         # only keep the most recent version of a src for each package/suite/arch
         key = src['Package'] + suite + arch
         if key in newest_version:

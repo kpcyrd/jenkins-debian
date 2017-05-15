@@ -383,6 +383,7 @@ write_build_performance_stats() {
 	done
 	write_page "</tr>"
 
+	_average_builds_per_day "7" "week"
 	_average_builds_per_day "$TIMESPAN_RAW" "$TIMESPAN_VERBOSE"
 	_average_builds_per_day "91" "3 months" "30"
 

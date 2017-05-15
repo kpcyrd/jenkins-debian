@@ -130,9 +130,6 @@ update_db_and_html() {
 	# save everything as status of this package in the db
 	#
 	STATUS="$@"
-	if [ -z "$VERSION" ] ; then
-		VERSION="None"
-	fi
 	local OLD_STATUS=$(query_db "SELECT status FROM results WHERE package_id='${SRCPKGID}'" || \
 			   query_db "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# irc+mail notifications for changing status in unstable and experimental
@@ -209,7 +206,6 @@ handle_404() {
 	ls -l ${SRCPACKAGE}* | log_file -
 	log_warning "Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate. Sleeping 30m as this should not happen."
 	DURATION=0
-	EVERSION="None"
 	update_rbuildlog
 	update_db_and_html "404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
@@ -459,7 +455,7 @@ call_diffoscope_on_changes_files() {
 
 choose_package() {
 	local RESULT=$(query_db "
-		SELECT s.suite, s.id, s.name, sch.date_scheduled, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.message
+		SELECT s.suite, s.id, s.name, s.version, sch.save_artifacts, sch.notify, s.notify_maintainer, sch.message, sch.date_scheduled
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE sch.date_build_started is NULL
 		AND s.architecture='$ARCH'
@@ -472,6 +468,7 @@ choose_package() {
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
+	VERSION=$(echo $RESULT|cut -d "|" -f4)
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
@@ -533,14 +530,14 @@ choose_package() {
 }
 
 download_source() {
-	log_info "Downloading source for ${SUITE}/${SRCPACKAGE}"
+	log_info "Downloading source for ${SUITE}/${SRCPACKAGE}=${VERSION}"
 	set +e
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	if [ "$MODE" != "master" ] ; then
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE} 2>&1 | tee ${TMPLOG}
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE}=${VERSION} 2>&1 | tee ${TMPLOG}
 	else
 		# the build master only needs to the the .dsc file
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
+		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE}=${VERSION} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
 	fi
 	local ENGLISH_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
 	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
@@ -551,10 +548,10 @@ download_source() {
 }
 
 download_again_if_needed() {
-	if [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
+	if [ "$(ls ${SRCPACKAGE}_${EVERSION}.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		# sometimes apt-get cannot download a package for whatever reason.
 		# if so, wait some time and try again. only if that fails, give up.
-		log_error "Download of ${SRCPACKAGE} sources (for ${SUITE}) failed."
+		log_error "Download of ${SRCPACKAGE}=${VERSION} sources (for ${SUITE}) failed."
 		ls -l ${SRCPACKAGE}* | log_file -
 		log_error "Sleeping 5m before re-trying..."
 		sleep 5m
@@ -564,29 +561,23 @@ download_again_if_needed() {
 
 get_source_package() {
 	PARSED_RESULT=""
+	EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION is too long
+	DBDREPORT="${SRCPACKAGE}_${EVERSION}.diffoscope.html"
+	DBDTXT="${SRCPACKAGE}_${EVERSION}.diffoscope.txt"
+	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
+	BUILDINFO_SIGNED="${BUILDINFO}.asc"
+
 	download_source
 	download_again_if_needed
 	download_again_if_needed
 	download_again_if_needed # yes, this is called three times. this should really not happen
-	if [ "$(ls ${SRCPACKAGE}_*.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
+	if [ "$(ls ${SRCPACKAGE}_${EVERSION}.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		if [ "$MODE" = "master" ] ; then
 			handle_404
 		else
 			exit 404
 		fi
 	fi
-	VERSION="$(grep '^Version: ' ${SRCPACKAGE}_*.dsc| head -1 | egrep -v '(GnuPG v|GnuPG/MacGPG2)' | cut -d ' ' -f2-)"
-
-	if [ "$MODE" != master -a "$VERSION" != "$EXPECTED_VERSION" ]; then
-		echo "Expected version $EXPECTED_VERSION for source package $SRCPACKAGE ($SUITE/$ARCH) but got $VERSION! Aborting."
-		exit 100
-	fi
-
-	EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION is too long
-	DBDREPORT="${SRCPACKAGE}_${EVERSION}.diffoscope.html"
-	DBDTXT="${SRCPACKAGE}_${EVERSION}.diffoscope.txt"
-	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
-	BUILDINFO_SIGNED="${BUILDINFO}.asc"
 }
 
 check_suitability() {
@@ -923,7 +914,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	ARCH="$(dpkg --print-architecture)"
 	SAVE_ARTIFACTS="0"
 	TMPDIR="$4"
-	EXPECTED_VERSION="$5"
+	VERSION="$5"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	get_source_package
@@ -959,7 +950,7 @@ fi
 exit_early_if_debian_is_broken
 check_nodes_are_up
 delay_start
-choose_package  # defines SUITE, SRCPKGID, SRCPACKAGE, SAVE_ARTIFACTS, NOTIFY
+choose_package  # defines SUITE, SRCPKGID, SRCPACKAGE, VERSION, SAVE_ARTIFACTS, NOTIFY
 get_source_package
 
 log_info "${SRCPACKAGE}_${EVERSION}.dsc"

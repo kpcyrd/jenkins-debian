@@ -64,9 +64,9 @@ LIMITS_404 defines how many packages with status 404 are rescheduled at max.
 
 """
 # only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 10, 'i386': 14, 'arm64': 12, 'armhf':28 }
+MINIMUM_AGE = {'amd64': 9, 'i386': 12, 'arm64': 11, 'armhf':28 }
 # maximum queue size, see explainations above
-MAXIMA = {'amd64': 750, 'i386': 750, 'arm64': 1000, 'armhf': 750}
+MAXIMA = {'amd64': 1000, 'i386': 1000, 'arm64': 1000, 'armhf': 850}
 # limits, see explainations above
 LIMITS = {
     'untested': {
@@ -159,19 +159,19 @@ LIMITS = {
     },
     'old': {
         'amd64': {
-            'testing': {1: (500, 900), 2: (850, 750), '*': 0},
-            'unstable': {1: (500, 1100), 2: (850, 950), '*': 0},
-            'experimental': {1: (500, 70), 2: (850, 50), '*': 0},
+            'testing': {1: (600, 900), 2: (1000, 750), '*': 0},
+            'unstable': {1: (600, 1100), 2: (1000, 950), '*': 0},
+            'experimental': {1: (600, 70), 2: (1000, 50), '*': 0},
         },
         'i386': {
-            'testing': {1: (500, 900), 2: (850, 750), '*': 0},
-            'unstable': {1: (500, 1100), 2: (850, 950), '*': 0},
-            'experimental': {1: (500, 70), 2: (850, 50), '*': 0},
+            'testing': {1: (600, 900), 2: (1000, 750), '*': 0},
+            'unstable': {1: (600, 1100), 2: (1000, 950), '*': 0},
+            'experimental': {1: (600, 70), 2: (1000, 50), '*': 0},
         },
         'arm64': {
-            'testing': {1: (500, 900), 2: (850, 750), '*': 0},
-            'unstable': {1: (500, 1100), 2: (850, 950), '*': 0},
-            'experimental': {1: (500, 70), 2: (850, 50), '*': 0},
+            'testing': {1: (600, 900), 2: (1000, 750), '*': 0},
+            'unstable': {1: (600, 1100), 2: (1000, 950), '*': 0},
+            'experimental': {1: (600, 70), 2: (1000, 50), '*': 0},
         },
         'armhf': {
             'testing': {1: (500, 700), 2: (850, 400), '*': 0},

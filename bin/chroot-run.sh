@@ -8,6 +8,10 @@ DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
+EXPORTS_RESULTS=false
+# Inside chroot (for the job process)
+JENKINS_EXPORTS_DIR=/tmp/job-exports
+
 # cp artifacts back into workspace if this is set
 if [ "$ARTIFACTS" != "true" ] ; then
 	ARTIFACTS=false
@@ -17,7 +21,7 @@ fi
 # $2 $3 ... = command to run inside a clean chroot running the distro in $1
 
 if [ $# -lt 2 ]; then
-	echo "usage: $0 DISTRO [backports|minimal] CMD [ARG1 ARG2 ...]"
+	echo "usage: $0 DISTRO [backports|minimal] [--exports-results] CMD [ARG1 ARG2 ...]"
 	exit 1
 fi
 
@@ -34,6 +38,12 @@ if [ "$1" = "minimal" ] ; then
 	MINIMAL=yes
 	BOOTSTRAP_OPTIONS=--variant=minbase
 	shift
+fi
+
+if [ "$1" = "--exports-results" ]; then
+	   EXPORTS_RESULTS=true
+	   export JENKINS_EXPORTS_DIR
+	   shift
 fi
 
 if [ ! -d "$CHROOT_BASE" ]; then
@@ -73,6 +83,11 @@ bootstrap() {
 		fi
 	fi
 
+	if [ "$EXPORTS_RESULTS" = "true" ]; then
+		mkdir -p "$CHROOT_TARGET/$JENKINS_EXPORTS_DIR"
+	fi
+
+
 	cat > $CHROOT_TARGET/tmp/chroot-prepare <<-EOF
 $SCRIPT_HEADER
 mount /proc -t proc /proc
@@ -94,6 +109,15 @@ cleanup() {
 	if [ -e $CHROOT_TARGET/tmp/testrun/stats.csv ]
 	then
 		cp -v $CHROOT_TARGET/tmp/testrun/stats.csv $CURDIR
+	fi
+
+	if [ "${EXPORTS_RESULTS}" = "true" ]; then
+		mkdir -p "$WORKSPACE/job-exports"
+		if [ ! -z "$(ls -1A "$CHROOT_TARGET/$JENKINS_EXPORTS_DIR")" ]; then
+			cp -drv "$CHROOT_TARGET/$JENKINS_EXPORTS_DIR"/* "$WORKSPACE/job-exports/"
+		else
+			echo "W: No exported results found in $JENKINS_EXPORTS_DIR"
+		fi
 	fi
 
 	#

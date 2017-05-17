@@ -3,7 +3,7 @@
     project-type: freestyle
     my_disabled:
     disabled: '{obj:my_disabled}'
-    properties:
+    properties: &sidebar
       - sidebar: &sb1
           url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
@@ -40,11 +40,8 @@
     project-type: freestyle
     my_disabled:
     disabled: '{obj:my_disabled}'
-    properties:
-      - sidebar: *sb1
-      - sidebar: *sb2
-      - sidebar: *sb3
     description: *desc
+    properties: *sidebar
     triggers:
       - timed: '{my_timed}'
       - pollscm:
@@ -111,10 +108,7 @@
     my_disabled:
     disabled: '{obj:my_disabled}'
     description: *desc
-    properties:
-      - sidebar: *sb1
-      - sidebar: *sb2
-      - sidebar: *sb3
+    properties: *sidebar
     triggers:
       - timed: '{my_timed}'
     logrotate:
@@ -139,10 +133,7 @@
     my_disabled:
     disabled: '{obj:my_disabled}'
     description: *desc
-    properties:
-      - sidebar: *sb1
-      - sidebar: *sb2
-      - sidebar: *sb3
+    properties: *sidebar
     triggers:
       - timed: '{my_timed}'
       - pollscm:
@@ -179,10 +170,7 @@
     my_disabled:
     disabled: '{obj:my_disabled}'
     description: *desc
-    properties:
-      - sidebar: *sb1
-      - sidebar: *sb2
-      - sidebar: *sb3
+    properties: *sidebar
     triggers:
       - timed: '{my_timed}'
     logrotate:
@@ -209,10 +197,7 @@
     my_disabled:
     disabled: '{obj:my_disabled}'
     description: *desc
-    properties:
-      - sidebar: *sb1
-      - sidebar: *sb2
-      - sidebar: *sb3
+    properties: *sidebar
     triggers:
       - timed: '{my_timed}'
     logrotate:

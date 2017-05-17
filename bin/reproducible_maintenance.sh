@@ -514,6 +514,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 					CC="-c lamby@debian.org"
 				fi
 				cat $TMPFILE | mail -s "$(basename $PROBLEM) found" ${CC:-} qa-jenkins-scm@lists.alioth.debian.org
+				CC=""
 			fi
 			rm -f $TMPFILE
 		fi

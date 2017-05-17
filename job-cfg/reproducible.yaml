@@ -19,7 +19,7 @@
     description: &desc '{my_description}<br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/reproducible.yaml">reproducible.yaml</a>.<br>Results are available at <a href="https://tests.reproducible-builds.org/">https://tests.reproducible-builds.org</a>.'
     triggers:
       - timed: '{my_timed}'
-    logrotate:
+    logrotate: &logrotate
       daysToKeep: 90
       numToKeep: 150
       artifactDaysToKeep: -1
@@ -46,11 +46,7 @@
       - timed: '{my_timed}'
       - pollscm:
           cron: '{my_scmpoll}'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 150
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+    logrotate: *logrotate
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -111,11 +107,7 @@
     properties: *sidebar
     triggers:
       - timed: '{my_timed}'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 150
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+    logrotate: *logrotate
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -138,11 +130,7 @@
       - timed: '{my_timed}'
       - pollscm:
           cron: '*/6 * * * *'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 150
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+    logrotate: *logrotate
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -173,11 +161,7 @@
     properties: *sidebar
     triggers:
       - timed: '{my_timed}'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 150
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+    logrotate: *logrotate
     builders:
       - shell: '{my_shell}'
     publishers:
@@ -200,11 +184,7 @@
     properties: *sidebar
     triggers:
       - timed: '{my_timed}'
-    logrotate:
-      daysToKeep: 90
-      numToKeep: 150
-      artifactDaysToKeep: -1
-      artifactNumToKeep: -1
+    logrotate: *logrotate
     builders:
       - shell: '{my_shell}'
     publishers:

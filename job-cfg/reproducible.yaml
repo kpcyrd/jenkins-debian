@@ -111,6 +111,28 @@
 
 - defaults:
     <<: *DEFAULTS
+    name: reproducible_other_projects_git_junit_exports
+    triggers:
+      - timed: '{my_timed}'
+      - pollscm:
+          cron: '*/6 * * * *'
+    publishers:
+      - logparser:
+          <<: *logparser
+          parse-rules: '{my_parse_rules}'
+      - email: *email
+      - naginator: *naginator
+      - junit:
+          results: 'job-exports/test-results/*.xml'
+          allow-empty-results: 'true'
+    scm:
+      - git:
+          url: '{my_gitrepo}'
+          branches:
+            - '{my_gitbranches}'
+
+- defaults:
+    <<: *DEFAULTS
     name: reproducible_other_projects_trigger
     publishers:
       - logparser: *logparser-extra
@@ -154,6 +176,10 @@
 - job-template:
     defaults: reproducible_other_projects_git
     name: '{name}_{otherproject_git}'
+
+- job-template:
+    defaults: reproducible_other_projects_git_junit_exports
+    name: '{name}_{otherproject_git_junit_exports}'
 
 - job-template:
     defaults: reproducible_other_projects_trigger
@@ -507,22 +533,6 @@
                     my_hname: 'profitbricks7'
                     my_gitrepo: 'https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net.git'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
-                - 'diffoscope_from_git_master':
-                    my_description: 'Build diffoscope Debian package from git branch master.'
-                    my_timed: '42 23 1 1 *'
-                    my_hname: ''
-                    my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
-                    my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
-                    my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
-                - 'diffoscope_from_git_branches':
-                    my_description: 'Build diffoscope Debian package from git branches other than master.'
-                    my_timed: '42 23 1 1 *'
-                    my_hname: ''
-                    my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
-                    my_gitbranches: ':^(?!origin/master$).*'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
-                    my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'reprotest_from_git_master':
                     my_description: 'Build reprotest Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'
@@ -560,6 +570,20 @@
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
 
+        - '{name}_{otherproject_git_junit_exports}':
+            otherproject_git_junit_exports:
+             - 'diffoscope_from_git_master':
+                my_description: 'Build diffoscope Debian package from git branch master.'
+                my_gitbranches: 'origin/master'
+             - 'diffoscope_from_git_branches':
+                my_description: 'Build diffoscope Debian package from git branches other than master.'
+                my_gitbranches: ':^(?!origin/master$).*'
+            my_timed: '42 23 1 1 *'
+            my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
+            my_hname: ''
+            my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
+            my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
+            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_builder_{otherproject}_{my_num}':
             otherproject:
                 - 'archlinux':

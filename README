@@ -196,7 +196,7 @@ usage: reproducible_setup_notify.py [-h] [-o] [-p PACKAGES [PACKAGES ...]]
 
 * Job configuration is at the usual location for 'jenkins.debian.net': there's a 'job-cfg/reproducible.yaml' defining all the jobs and lots of scripts in 'bin/reproducible_*.(sh|py)', plus a few config files like for 'sudo' or 'apache2'.
 
-* Finally, there are also jobs testing the link:http://www.coreboot.org/[coreboot], link:https://openwrt.org/[OpenWrt], link:http://www.netbsd.org/[NetBSD] and https://www.freebsd.org/[FreeBSD] projects. The results of the tests can be seen respectively at https://tests.reproducible-builds.org/coreboot/, https://tests.reproducible-builds.org/openwrt/, https://tests.reproducible-builds.org/netbsd/ and https://tests.reproducible-builds.org/freebsd/.
+* Finally, there are also jobs testing the link:http://www.coreboot.org/[coreboot], link:https://lede-project.org/[LEDE], link:https://openwrt.org/[OpenWrt], link:http://www.netbsd.org/[NetBSD] and https://www.freebsd.org/[FreeBSD] projects. The results of the tests can be seen respectively at https://tests.reproducible-builds.org/coreboot/, https://tests.reproducible-builds.org/openwrt/, https://tests.reproducible-builds.org/netbsd/ and https://tests.reproducible-builds.org/freebsd/.
 
 === torbrowser-launcher jobs
 

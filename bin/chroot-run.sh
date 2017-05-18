@@ -175,6 +175,9 @@ if [ -f debian/control ] ; then
 fi
 EOF
 	fi
+	if [ "$EXPORTS_RESULTS" = "true" ]; then
+		echo "export JENKINS_EXPORTS_DIR=\"$JENKINS_EXPORTS_DIR\"" >> $CHROOT_TARGET/tmp/chroot-testrun
+	fi
 	echo "$*" >> $CHROOT_TARGET/tmp/chroot-testrun
 	chmod +x $CHROOT_TARGET/tmp/chroot-testrun
 	sudo chroot $CHROOT_TARGET /tmp/chroot-testrun

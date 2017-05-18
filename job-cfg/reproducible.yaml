@@ -581,7 +581,7 @@
             my_timed: '42 23 1 1 *'
             my_gitrepo: 'git://anonscm.debian.org/git/reproducible/diffoscope.git'
             my_hname: ''
-            my_shell: '/srv/jenkins/bin/chroot-run.sh sid --exports-results debuild -uc -us'
+            my_shell: '/srv/jenkins/bin/chroot-run.sh sid --exports-results debuild -e JENKINS_EXPORTS_DIR -uc -us'
             my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
             my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
         - '{name}_builder_{otherproject}_{my_num}':

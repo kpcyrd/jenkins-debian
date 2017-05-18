@@ -261,6 +261,7 @@ done
 #   - mostly done, except one needs to manually scroll down… (could probably be fixed with javascript…)
 # * there's also https://jenkins.debian.net/userContent/reproducible/debian/build_service/amd64_1/worker.log (for all the workers…)
 #   - no automatic reload for that yet, though. and not linked anywhere
+#   - probably together with build nodes graphs?
 # * enabling the service in update_jdn
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax
@@ -269,4 +270,3 @@ done
 #   - remove cleanup_nodes.sh once this works
 #   - add support for disabling archs and for shutdown+respan of workers
 #   - add support for starting/stopping workers for specific archs
-# * document the new setup in README

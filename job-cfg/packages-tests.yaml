@@ -34,12 +34,12 @@
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
     publishers:
-      - email:
+      - email: &email
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org {my_recipients}'
           send-to-individuals: true
-      - trigger:
+      - trigger: &trigger
           project: '{my_trigger}'
-      - naginator:
+      - naginator: &naginator
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
           max-failed-builds: 5
@@ -54,12 +54,25 @@
           my_trigger: '{name}_jessie'
       - jessie: &distro_defaults_jessie {}
 
+- defaults:
+    <<: *DEFAULTS
+    name: packages-tests-junit-exports
+    publishers:
+      - email: *email
+      - trigger: *trigger
+      - naginator: *naginator
+      - junit:
+          results: 'job-exports/test-results/*.xml'
 
 - job-template:
     defaults: packages-tests
     id: simple
     name: '{name}_{my_distro}'
 
+- job-template:
+    defaults: packages-tests-junit-exports
+    id: junit
+    name: '{name}_{my_distro}'
 
 - project:
     name: lintian-tests

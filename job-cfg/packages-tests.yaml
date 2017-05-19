@@ -136,7 +136,7 @@
       - pollscm:
           cron: '* H/2 * * *'
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh jessie timeout 1h dpkg-buildpackage -us -uc -tc'
+      - shell: '/srv/jenkins/bin/chroot-run.sh jessie --exports-results timeout 1h dpkg-buildpackage -us -uc -tc'
     publishers:
       - email:
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org jenkins+debian-ftp debian-dak@lists.debian.org'
@@ -144,3 +144,5 @@
       - trigger:
           project: None
       - naginator: *naginator
+      - junit:
+          results: 'job-exports/test-results/*.xml'

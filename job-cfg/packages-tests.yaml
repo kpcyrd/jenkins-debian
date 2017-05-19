@@ -69,10 +69,10 @@
     id: simple
     name: '{name}_{my_distro}'
 
-- job-template:
-    defaults: packages-tests-junit-exports
-    id: junit
-    name: '{name}_{my_distro}'
+#- job-template:
+#    defaults: packages-tests-junit-exports
+#    id: junit
+#    name: '{name}_{my_distro}'
 
 - project:
     name: lintian-tests
@@ -82,7 +82,7 @@
     my_description: 'Debian/Lintian testsuite'
     my_distro: *distros_defaults
     jobs:
-      - simple
+      - '{name}_{my_distro}'
 
 - project:
     name: debhelper-tests
@@ -96,7 +96,7 @@
       - jessie:
           my_disabled: true
     jobs:
-      - simple
+      - '{name}_{my_distro}'
 
 - project:
     name: dak-tests
@@ -115,4 +115,4 @@
             - pollscm:
                 cron: '* H/2 * * *'
     jobs:
-      - simple
+      - '{name}_{my_distro}'

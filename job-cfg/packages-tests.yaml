@@ -102,7 +102,7 @@
     name: dak-tests
     my_git_url: 'https://ftp-master.debian.org/git/dak.git'
     my_recipients: 'jenkins+debian-ftp debian-dak@lists.debian.org'
-    my_shell: '--exports-results timeout 1h dpkg-buildpackage -us -uc -tc'
+    my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
     my_distro:
     # DAK tests cannot be run in sid/stretch atm, but still create the jobs
@@ -115,4 +115,4 @@
             - pollscm:
                 cron: '* H/2 * * *'
     jobs:
-      - junit
+      - simple

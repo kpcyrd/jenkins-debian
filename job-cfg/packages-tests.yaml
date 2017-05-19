@@ -44,21 +44,22 @@
           progressive-delay-maximum: 15
           max-failed-builds: 5
           regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+    my_default_distro_matrix: &distros_defaults
+      - sid: &distro_defaults_sid
+          my_trigger: '{name}_stretch'
+          my_origin_triggers:
+            - pollscm:
+                cron: '* H/2 * * *'
+      - stretch: &distro_defaults_stretch
+          my_trigger: '{name}_jessie'
+      - jessie: &distro_defaults_jessie {}
+
 
 - job-template:
     defaults: packages-tests
-    name: '{name}_sid'
-    my_origin_triggers:
-      - pollscm:
-          cron: '* H/2 * * *'
+    id: simple
+    name: '{name}_{my_distro}'
 
-- job-template:
-    defaults: packages-tests
-    name: '{name}_stretch'
-
-- job-template:
-    defaults: packages-tests
-    name: '{name}_jessie'
 
 - project:
     name: lintian-tests
@@ -66,15 +67,9 @@
     my_recipients: 'jenkins+debian-qa lintian-maint@debian.org'
     my_shell: 'timeout 6h debian/rules runtests'
     my_description: 'Debian/Lintian testsuite'
+    my_distro: *distros_defaults
     jobs:
-        - '{name}_sid':
-            my_distro: 'sid'
-            my_trigger: '{name}_stretch'
-        - '{name}_stretch':
-            my_distro: 'stretch'
-            my_trigger: '{name}_jessie'
-        - '{name}_jessie':
-            my_distro: 'jessie'
+      - simple
 
 - project:
     name: debhelper-tests
@@ -82,16 +77,13 @@
     my_recipients: 'jenkins+debian-qa debhelper-devel@lists.alioth.debian.org'
     my_shell: 'timeout 6h dpkg-buildpackage -us -uc -tc'
     my_description: 'Debhelper testsuite'
+    my_distro:
+      - sid: *distro_defaults_sid
+      - stretch: *distro_defaults_stretch
+      - jessie:
+          my_disabled: true
     jobs:
-        - '{name}_sid':
-            my_distro: 'sid'
-            my_trigger: '{name}_stretch'
-        - '{name}_stretch':
-            my_distro: 'stretch'
-            my_trigger: '{name}_jessie'
-        - '{name}_jessie':
-            my_distro: 'jessie'
-            my_disabled: true
+      - simple
 
 - project:
     name: dak-tests
@@ -99,16 +91,15 @@
     my_recipients: 'jenkins+debian-ftp debian-dak@lists.debian.org'
     my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
+    my_distro:
+    # DAK tests cannot be run in sid/stretch atm, but still create the jobs
+      - sid:
+          my_disabled: true
+      - stretch:
+          my_disabled: true
+      - jessie:
+          my_origin_triggers:
+            - pollscm:
+                cron: '* H/2 * * *'
     jobs:
-    # DAK tests cannot be run in sid/stretch atm.
-        - '{name}_sid':
-            my_distro: 'sid'
-            my_disabled: true
-        - '{name}_stretch':
-            my_distro: 'stretch'
-            my_disabled: true
-        - '{name}_jessie':
-            my_distro: 'jessie'
-            my_origin_triggers:
-              - pollscm:
-                  cron: '* H/2 * * *'
+      - simple

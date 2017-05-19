@@ -1,7 +1,8 @@
-- defaults:
+- defaults: &DEFAULTS
     name: packages-tests
     my_disabled:
     disabled: '{obj:my_disabled}'
+    my_trigger:
     project-type: freestyle
     properties:
       - sidebar:
@@ -65,7 +66,6 @@
     my_recipients: 'jenkins+debian-qa lintian-maint@debian.org'
     my_shell: 'timeout 6h debian/rules runtests'
     my_description: 'Debian/Lintian testsuite'
-    my_trigger:
     jobs:
         - '{name}_sid':
             my_distro: 'sid'
@@ -82,7 +82,6 @@
     my_recipients: 'jenkins+debian-qa debhelper-devel@lists.alioth.debian.org'
     my_shell: 'timeout 6h dpkg-buildpackage -us -uc -tc'
     my_description: 'Debhelper testsuite'
-    my_trigger:
     jobs:
         - '{name}_sid':
             my_distro: 'sid'
@@ -100,7 +99,6 @@
     my_recipients: 'jenkins+debian-ftp debian-dak@lists.debian.org'
     my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
-    my_trigger:
     jobs:
     # DAK tests cannot be run in sid/stretch atm.
         - '{name}_sid':

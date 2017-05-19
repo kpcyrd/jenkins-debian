@@ -4,7 +4,7 @@
     disabled: '{obj:my_disabled}'
     my_trigger:
     project-type: freestyle
-    properties:
+    properties: &properties
       - sidebar:
           url: https://jenkins.debian.net/userContent/about.html
           text: About jenkins.debian.net
@@ -18,7 +18,7 @@
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
     description: '{my_description} running on {my_distro}.<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
-    logrotate:
+    logrotate: &logrotate
       daysToKeep: 90
       numToKeep: 30
       artifactDaysToKeep: -1
@@ -110,9 +110,37 @@
           my_disabled: true
       - stretch:
           my_disabled: true
-      - jessie:
-          my_origin_triggers:
-            - pollscm:
-                cron: '* H/2 * * *'
+#      - jessie:
+#          my_origin_triggers:
+#            - pollscm:
+#               cron: '* H/2 * * *'
     jobs:
       - '{name}_{my_distro}'
+
+# FIXME go back to delete the explicit dak-tests_jessie and uncomment above once
+# jenkins-job-builder 1.5.0 is available to our jenkins.  Also see commits
+# 0dc3de19105634060ee99fa60051f860e509dccc 5a7b8562671bec94e2c81a98fff66db2932100fb
+
+- job:
+    name: dak-tests_jessie
+    properties: *properties
+    logrotate: *logrotate
+    description: 'DAK testsuite running on jessie.<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
+    scm:
+      - git:
+          url: 'https://ftp-master.debian.org/git/dak.git'
+          branches:
+            - master
+            - 'origin/smoke-me/**'
+    triggers:
+      - pollscm:
+          cron: '* H/2 * * *'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh jessie timeout 1h dpkg-buildpackage -us -uc -tc'
+    publishers:
+      - email:
+          recipients: 'qa-jenkins-scm@lists.alioth.debian.org jenkins+debian-ftp debian-dak@lists.debian.org'
+          send-to-individuals: true
+      - trigger:
+          project: None
+      - naginator: *naginator

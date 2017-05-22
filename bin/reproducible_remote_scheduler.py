@@ -8,10 +8,23 @@
 #
 # A secure script to be called from remote hosts
 
+import os
 import sys
 import time
 import argparse
 from sqlalchemy import sql
+from reproducible_common import (
+    # Use an explicit list rather than a star import, because the previous code had
+    # a mysterious comment about not being able to do a star import prior to
+    # parsing the command line, & debugging the mystery via edit-compile-h01ger-run
+    # detours is not practical.
+    SUITES, ARCHS,
+    bcolors,
+    query_db, db_table, sql, conn_db,
+    datetime, timedelta,
+    irc_msg,
+)
+from reproducible_common import log
 
 def packages_matching_criteria(arch, suite, criteria):
     "Return a list of packages in (SUITE, ARCH) matching the given CRITERIA."
@@ -85,10 +98,6 @@ def parse_known_args():
     scheduling_args.packages = [x for x in scheduling_args.packages if x]
     if scheduling_args.noisy:
         scheduling_args.notify = True
-
-    # these are here as an hack to be able to parse the command line
-    from reproducible_common import *
-    from reproducible_html_live_status import generate_schedule
 
     # this variable is expected to come from the remote host
     try:
@@ -174,9 +183,6 @@ def parse_known_args():
     return scheduling_args, requester
 
 def rest(scheduling_args, requester):
-    # these are here as an hack to be able to parse the command line in parse_args()
-    from reproducible_common import *
-
     # Shorter names
     suite = scheduling_args.suite
     arch = scheduling_args.architecture
@@ -334,6 +340,7 @@ def rest(scheduling_args, requester):
         if not dry_run:
             irc_msg(message)
 
+    from reproducible_html_live_status import generate_schedule
     generate_schedule(arch)  # update the HTML page
 
 def main():

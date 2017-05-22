@@ -56,7 +56,7 @@ def packages_matching_criteria(arch, suite, criteria):
     log.info('Selected packages: ' + ' '.join(results))
     return results
 
-def parse_known_args():
+def parse_args():
     parser = argparse.ArgumentParser(
         description='Reschedule packages to re-test their reproducibility',
         epilog='The build results will be announced on the #debian-reproducible'

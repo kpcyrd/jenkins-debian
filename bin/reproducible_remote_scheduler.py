@@ -52,6 +52,9 @@ def main():
     scheduling_args = parser.parse_known_args()[0]
     if scheduling_args.null:
         scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))[0]
+    scheduling_args.packages = [x for x in scheduling_args.packages if x]
+    if scheduling_args.noisy:
+        scheduling_args.notify = True
 
     # these are here as an hack to be able to parse the command line
     from reproducible_common import *
@@ -72,6 +75,7 @@ def main():
     except KeyError:
         local = False
 
+    # Shorter names
     suite = scheduling_args.suite
     arch = scheduling_args.architecture
     reason = scheduling_args.message
@@ -79,9 +83,9 @@ def main():
     status = scheduling_args.status
     built_after = scheduling_args.after
     built_before = scheduling_args.before
-    packages = [x for x in scheduling_args.packages if x]
+    packages = scheduling_args.packages
     artifacts = scheduling_args.keep_artifacts
-    notify = scheduling_args.notify or scheduling_args.noisy
+    notify = scheduling_args.notify
     notify_on_start = scheduling_args.noisy
     dry_run = scheduling_args.dry_run
 

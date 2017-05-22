@@ -13,7 +13,7 @@ import time
 import argparse
 from sqlalchemy import sql
 
-def main():
+def parse_known_args():
     parser = argparse.ArgumentParser(
         description='Reschedule packages to re-test their reproducibility',
         epilog='The build results will be announced on the #debian-reproducible'
@@ -142,6 +142,8 @@ def main():
         results = query_db(query.format_map(formatter))
         results = [x for (x,) in results]
         log.info('Selected packages: ' + ' '.join(results))
+        # Note: this .extend() operation modifies scheduling_args.packages, which
+        #       is used by rest()
         packages.extend(results)
 
     if len(packages) > 50 and notify:
@@ -159,6 +161,26 @@ def main():
 
     if notify_on_start:
         log.info('The channel will be notified when the build starts')
+
+    return scheduling_args, requester
+
+def rest(scheduling_args, requester):
+    # these are here as an hack to be able to parse the command line in parse_args()
+    from reproducible_common import *
+
+    # Shorter names
+    suite = scheduling_args.suite
+    arch = scheduling_args.architecture
+    reason = scheduling_args.message
+    issue = scheduling_args.issue
+    status = scheduling_args.status
+    built_after = scheduling_args.after
+    built_before = scheduling_args.before
+    packages = scheduling_args.packages
+    artifacts = scheduling_args.keep_artifacts
+    notify = scheduling_args.notify
+    notify_on_start = scheduling_args.noisy
+    dry_run = scheduling_args.dry_run
 
     ids = []
     pkgs = []
@@ -304,6 +326,10 @@ def main():
             irc_msg(message)
 
     generate_schedule(arch)  # update the HTML page
+
+def main():
+    scheduling_args, requester = parse_args()
+    rest(scheduling_args, requester)
 
 if __name__ == '__main__':
     main()

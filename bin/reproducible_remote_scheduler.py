@@ -152,7 +152,7 @@ def parse_known_args():
         # Note: this .extend() operation modifies scheduling_args.packages, which
         #       is used by rest()
         packages.extend(
-          packages_matching_criteria(arch, suite, (issue, status, built_after, built_before)
+          packages_matching_criteria(arch, suite, (issue, status, built_after, built_before))
         )
 
     if len(packages) > 50 and notify:

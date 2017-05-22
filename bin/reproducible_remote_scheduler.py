@@ -180,9 +180,9 @@ def parse_args():
     if notify_on_start:
         log.info('The channel will be notified when the build starts')
 
-    return scheduling_args, requester
+    return scheduling_args, requester, local
 
-def rest(scheduling_args, requester):
+def rest(scheduling_args, requester, local):
     # Shorter names
     suite = scheduling_args.suite
     arch = scheduling_args.architecture
@@ -344,8 +344,8 @@ def rest(scheduling_args, requester):
     generate_schedule(arch)  # update the HTML page
 
 def main():
-    scheduling_args, requester = parse_args()
-    rest(scheduling_args, requester)
+    scheduling_args, requester, local = parse_args()
+    rest(scheduling_args, requester, local)
 
 if __name__ == '__main__':
     main()

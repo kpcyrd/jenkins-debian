@@ -13,6 +13,36 @@ import time
 import argparse
 from sqlalchemy import sql
 
+def packages_matching_criteria(arch, suite, criteria):
+    "Return a list of packages in (SUITE, ARCH) matching the given CRITERIA."
+    issue, status, built_after, built_before = criteria
+    del criteria
+
+    formatter = dict(suite=suite, arch=arch, notes_table='')
+    log.info('Querying packages with given issues/status...')
+    query = "SELECT s.name " + \
+            "FROM sources AS s, {notes_table} results AS r " + \
+            "WHERE r.package_id=s.id " + \
+            "AND s.architecture= '{arch}' " + \
+            "AND s.suite = '{suite}' AND r.status != 'blacklisted' "
+    if issue:
+        query += "AND n.package_id=s.id AND n.issues LIKE '%%{issue}%%' "
+        formatter['issue'] = issue
+        formatter['notes_table'] = "notes AS n,"
+    if status:
+        query += "AND r.status = '{status}'"
+        formatter['status'] = status
+    if built_after:
+        query += "AND r.build_date > '{built_after}' "
+        formatter['built_after'] = built_after
+    if built_before:
+        query += "AND r.build_date < '{built_before}' "
+        formatter['built_before'] = built_before
+    results = query_db(query.format_map(formatter))
+    results = [x for (x,) in results]
+    log.info('Selected packages: ' + ' '.join(results))
+    return results
+
 def parse_known_args():
     parser = argparse.ArgumentParser(
         description='Reschedule packages to re-test their reproducibility',
@@ -119,32 +149,11 @@ def parse_known_args():
         sys.exit(1)
 
     if issue or status or built_after or built_before:
-        formatter = dict(suite=suite, arch=arch, notes_table='')
-        log.info('Querying packages with given issues/status...')
-        query = "SELECT s.name " + \
-                "FROM sources AS s, {notes_table} results AS r " + \
-                "WHERE r.package_id=s.id " + \
-                "AND s.architecture= '{arch}' " + \
-                "AND s.suite = '{suite}' AND r.status != 'blacklisted' "
-        if issue:
-            query += "AND n.package_id=s.id AND n.issues LIKE '%%{issue}%%' "
-            formatter['issue'] = issue
-            formatter['notes_table'] = "notes AS n,"
-        if status:
-            query += "AND r.status = '{status}'"
-            formatter['status'] = status
-        if built_after:
-            query += "AND r.build_date > '{built_after}' "
-            formatter['built_after'] = built_after
-        if built_before:
-            query += "AND r.build_date < '{built_before}' "
-            formatter['built_before'] = built_before
-        results = query_db(query.format_map(formatter))
-        results = [x for (x,) in results]
-        log.info('Selected packages: ' + ' '.join(results))
         # Note: this .extend() operation modifies scheduling_args.packages, which
         #       is used by rest()
-        packages.extend(results)
+        packages.extend(
+          packages_matching_criteria(arch, suite, (issue, status, built_after, built_before)
+        )
 
     if len(packages) > 50 and notify:
         log.critical(bcolors.RED + bcolors.BOLD)

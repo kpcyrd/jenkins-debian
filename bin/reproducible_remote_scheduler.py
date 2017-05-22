@@ -28,6 +28,7 @@ from reproducible_common import log
 
 def packages_matching_criteria(arch, suite, criteria):
     "Return a list of packages in (SUITE, ARCH) matching the given CRITERIA."
+    # TODO: Rewrite this function to query all suites/archs in one go
     issue, status, built_after, built_before = criteria
     del criteria
 
@@ -89,7 +90,7 @@ def parse_args():
                         help='Specify the architecture to schedule for ' +
                         '(defaults to amd64).')
     parser.add_argument('-s', '--suite', required=False, default='unstable',
-                        help='Specify the suite to schedule in (defaults to unstable).')
+                        help="Specify the suites to schedule in (space or comma separated). Default: 'unstable'.")
     parser.add_argument('packages', metavar='package', nargs='*',
                         help='Space seperated list of packages to reschedule.')
     scheduling_args = parser.parse_known_args()[0]
@@ -115,7 +116,8 @@ def parse_args():
         local = False
 
     # Shorter names
-    suite = scheduling_args.suite
+    suites = [x.strip() for x in (scheduling_args.suite or "").split(', \t')]
+    suites = [x for x in suites if x]
     arch = scheduling_args.architecture
     reason = scheduling_args.message
     issue = scheduling_args.issue
@@ -139,16 +141,16 @@ def parse_args():
     log.debug('Status: ' + status if status else str(None))
     log.debug('Date: after ' + built_after if built_after else str(None) +
               ' before ' + built_before if built_before else str(None))
-    log.debug('Suite: ' + suite)
+    log.debug('Suites: ' + repr(suites))
     log.debug('Architecture: ' + arch)
     log.debug('Packages: ' + ' '.join(packages))
 
-    if not suite:
+    if not suites[0]:
         log.critical('You need to specify the suite name')
         sys.exit(1)
 
-    if suite not in SUITES:
-        log.critical('The specified suite is not being tested.')
+    if set(suites) - set(SUITES): # Some command-line suites don't exist.
+        log.critical('Some of the specified suites %r are not being tested.', suites)
         log.critical('Please choose between ' + ', '.join(SUITES))
         sys.exit(1)
 
@@ -160,9 +162,11 @@ def parse_args():
     if issue or status or built_after or built_before:
         # Note: this .extend() operation modifies scheduling_args.packages, which
         #       is used by rest()
-        packages.extend(
-          packages_matching_criteria(arch, suite, (issue, status, built_after, built_before))
-        )
+        for suite in suites:
+            packages.extend(
+              packages_matching_criteria(arch, suite, (issue, status, built_after, built_before))
+            )
+        del suite
 
     if len(packages) > 50 and notify:
         log.critical(bcolors.RED + bcolors.BOLD)
@@ -180,11 +184,12 @@ def parse_args():
     if notify_on_start:
         log.info('The channel will be notified when the build starts')
 
-    return scheduling_args, requester, local
+    return scheduling_args, requester, local, suites
 
-def rest(scheduling_args, requester, local):
+def rest(scheduling_args, requester, local, suite):
+    "Actually schedule a package for a single suite."
+
     # Shorter names
-    suite = scheduling_args.suite
     arch = scheduling_args.architecture
     reason = scheduling_args.message
     issue = scheduling_args.issue
@@ -196,6 +201,8 @@ def rest(scheduling_args, requester, local):
     notify = scheduling_args.notify
     notify_on_start = scheduling_args.noisy
     dry_run = scheduling_args.dry_run
+
+    log.info("Scheduling packages in %s/%s", arch, suite)
 
     ids = []
     pkgs = []
@@ -344,8 +351,10 @@ def rest(scheduling_args, requester, local):
     generate_schedule(arch)  # update the HTML page
 
 def main():
-    scheduling_args, requester, local = parse_args()
-    rest(scheduling_args, requester, local)
+    scheduling_args, requester, local, suites = parse_args()
+    for suite in suites:
+        rest(scheduling_args, requester, local, suite)
+    del suite
 
 if __name__ == '__main__':
     main()

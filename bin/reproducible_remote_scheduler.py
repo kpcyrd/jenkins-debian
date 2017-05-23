@@ -116,7 +116,7 @@ def parse_args():
         local = False
 
     # Shorter names
-    suites = [x.strip() for x in (scheduling_args.suite or "").split(', \t')]
+    suites = [x.strip() for x in re.compile(r'[, \t]').split(scheduling_args.suite or "")]
     suites = [x for x in suites if x]
     arch = scheduling_args.architecture
     reason = scheduling_args.message

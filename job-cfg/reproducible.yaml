@@ -92,6 +92,22 @@
 
 - defaults:
     <<: *DEFAULTS
+    name: reproducible_other_projects_blocked
+    publishers:
+      - logparser: &logparser-extra
+          <<: *logparser
+          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+      - email: *email
+    properties:
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
+      - build-blocker:
+          use-build-blocker: true
+          blocking-jobs: '{my_blocker}
+
+- defaults:
+    <<: *DEFAULTS
     name: reproducible_other_projects_git
     triggers:
       - timed: '{my_timed}'
@@ -108,6 +124,32 @@
           url: '{my_gitrepo}'
           branches:
             - '{my_gitbranches}'
+
+- defaults:
+    <<: *DEFAULTS
+    name: reproducible_other_projects_git_blocked
+    triggers:
+      - timed: '{my_timed}'
+      - pollscm:
+          cron: '*/6 * * * *'
+    publishers:
+      - logparser:
+          <<: *logparser
+          parse-rules: '{my_parse_rules}'
+      - email: *email
+      - naginator: *naginator
+    scm:
+      - git:
+          url: '{my_gitrepo}'
+          branches:
+            - '{my_gitbranches}'
+    properties:
+      - sidebar: *sb1
+      - sidebar: *sb2
+      - sidebar: *sb3
+      - build-blocker:
+          use-build-blocker: true
+          blocking-jobs: '{my_blocker}
 
 - defaults:
     <<: *DEFAULTS
@@ -174,8 +216,16 @@
     name: '{name}_{otherproject}'
 
 - job-template:
+    defaults: reproducible_other_projects_blocked
+    name: '{name}_{otherproject_blocked}'
+
+- job-template:
     defaults: reproducible_other_projects_git
     name: '{name}_{otherproject_git}'
+
+- job-template:
+    defaults: reproducible_other_projects_git_blocked
+    name: '{name}_{otherproject_git_blocked}'
 
 - job-template:
     defaults: reproducible_other_projects_git_junit_exports
@@ -517,13 +567,31 @@
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
                     my_disabled: true
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_hname: ''
+
+        - '{name}_{otherproject_blocked}':
+            otherproject_blocked:
                 - 'setup_fdroid_build_environment':
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 0 * * 1'
                     my_hname: 'profitbricks7'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
+                    my_blocker: '^reproducible.*fdroid.*'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_hname: ''
+
+        - '{name}_{otherproject_git_blocked}':
+            otherproject_git_blocked:
+                - 'fdroid_build_apps':
+                    my_description: 'Build all the latest apps for F-Droid.'
+                    my_timed: '42 7 * * 1'
+                    my_hname: 'profitbricks7'
+                    my_gitrepo: 'https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net.git'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
+                    my_blocker: '^reproducible.*fdroid.*'
+            my_gitbranches: 'master'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
 
         - '{name}_{otherproject_git}':
             otherproject_git:

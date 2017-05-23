@@ -94,7 +94,7 @@
     <<: *DEFAULTS
     name: reproducible_other_projects_blocked
     publishers:
-      - logparser: &logparser-extra
+      - logparser: *logparser-extra
           <<: *logparser
           parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
       - email: *email

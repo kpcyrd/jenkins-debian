@@ -95,8 +95,6 @@
     name: reproducible_other_projects_blocked
     publishers:
       - logparser: *logparser-extra
-          <<: *logparser
-          parse-rules: '/srv/jenkins/logparse/reproducible-extra.rules'
       - email: *email
     properties:
       - sidebar: *sb1
@@ -104,7 +102,8 @@
       - sidebar: *sb3
       - build-blocker:
           use-build-blocker: true
-          blocking-jobs: '{my_blocker}
+          blocking-jobs:
+            - '{my_blocker}'
 
 - defaults:
     <<: *DEFAULTS
@@ -149,7 +148,8 @@
       - sidebar: *sb3
       - build-blocker:
           use-build-blocker: true
-          blocking-jobs: '{my_blocker}
+          blocking-jobs:
+            - '{my_blocker}'
 
 - defaults:
     <<: *DEFAULTS
@@ -595,12 +595,6 @@
 
         - '{name}_{otherproject_git}':
             otherproject_git:
-                - 'fdroid_build_apps':
-                    my_description: 'Build all the latest apps for F-Droid.'
-                    my_timed: '42 7 * * 1'
-                    my_hname: 'profitbricks7'
-                    my_gitrepo: 'https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net.git'
-                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
                 - 'reprotest_from_git_master':
                     my_description: 'Build reprotest Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'

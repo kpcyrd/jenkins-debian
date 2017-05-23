@@ -8,10 +8,11 @@
 #
 # A secure script to be called from remote hosts
 
+import argparse
 import os
+import re
 import sys
 import time
-import argparse
 from sqlalchemy import sql
 from reproducible_common import (
     # Use an explicit list rather than a star import, because the previous code had

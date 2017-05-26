@@ -177,8 +177,8 @@
               #- experimental:   { my_hour: 1 }
               - unstable:   { my_hour: 2 }
               - unstable:   { my_hour: 2, opt_name: 'via_tor', my_opt_desc: ' (download via tor)', opt_arg: ' via_tor' }
-              - stretch:    { my_hour: 3 }
-              - stretch:    { my_hour: 3, opt_name: '_via_tor', my_opt_desc: ' (download via tor)', opt_arg: ' via_tor' }
+              #- stretch:    { my_hour: 3 }
+              #- stretch:    { my_hour: 3, opt_name: '_via_tor', my_opt_desc: ' (download via tor)', opt_arg: ' via_tor' }
               - jessie:     { my_hour: 4 }
               - jessie:     { my_hour: 4, opt_name: '_via_tor', my_opt_desc: ' (download via tor)', opt_arg: ' via_tor' }
               - jessie:     { my_hour: 4, my_wday: 2, opt_name: '_from_backports', opt_desc: 'backports', opt_arg: ' backports' }
@@ -186,7 +186,7 @@
               - stretch:    { my_hour: 3, my_wday: 2, opt_name: '_from_unstable',  opt_desc: 'unstable',  opt_arg: ' unstable'  }
               #- jessie:     { my_hour: 4, my_wday: 2, opt_name: '_from_experimental',  opt_desc: 'experimental',  opt_arg: ' experimental'  }
               - jessie:     { my_hour: 4, my_wday: 2, opt_name: '_from_unstable',  opt_desc: 'unstable',  opt_arg: ' unstable'  }
-              - jessie:     { my_hour: 4, my_wday: 2, opt_name: '_from_stretch',   opt_desc: 'stretch',   opt_arg: ' stretch'   }
+              #- jessie:     { my_hour: 4, my_wday: 2, opt_name: '_from_stretch',   opt_desc: 'stretch',   opt_arg: ' stretch'   }
             my_description: 'Test torbrowser-launcher from {opt_desc} on {dist}/amd64.'
             my_timed: '23 {my_hour} * * {my_wday}'
             my_shell: '/srv/jenkins/bin/test_torbrowser-launcher.sh {dist}{opt_arg}'

@@ -5,7 +5,7 @@
 #           2016-2017 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
-OPENWRT_GIT_REPO=https://git.lede-project.org/source.git
+OPENWRT_GIT_REPO=https://git.lede-project.org/lede/lynxis/staging.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh

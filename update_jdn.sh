@@ -28,7 +28,7 @@ STAMP=/var/log/jenkins/update-jenkins.stamp
 TMPFILE=$(mktemp)
 # The $@ below means that command line args get passed on to j-j-b
 # which allows one to specify --flush-cache or --ignore-cache
-JJB="jenkins-job-builder $@"
+JJB="jenkins-jobs $@"
 DPKG_ARCH="$(dpkg --print-architecture)"
 
 # so we can later run some commands only if $0 has been updated…

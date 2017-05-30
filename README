@@ -131,7 +131,7 @@ Installation tests inside chroot environments.
 
 * See https://wiki.debian.org/ReproducibleBuilds to learn more about "Reproducible Builds" in Debian and beyond.
 
-* Several jobs are being used to assemble the website https://tests.reproducible-builds.org which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in an SQLite database which can be downloaded from https://tests.reproducible-builds.org/reproducible.db. (That copy is updated every four hours.)
+* Several jobs are being used to assemble the website https://tests.reproducible-builds.org which is actually a collection of static html and log files (and very few images) being served from this host. Besides the logfiles data is stored in a database which can be downloaded from https://tests.reproducible-builds.org/reproducible.sql.xz. (That copy is updated daily.)
 
 * The (current) purpose of https://tests.reproducible-builds.org is to show the potential of reproducible builds for Debian - and six other projects currently. This is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project for Debian!
 
@@ -150,7 +150,7 @@ Installation tests inside chroot environments.
 *** three dual-cores (bpi0, hb0 and wbd0) with 1gb ram, each. 
 * We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!
 
-* Packages to be build are scheduled in the SQLite database via a scheduler job, which runs every hour and if the queue is below a certain threshold schedules four types of packages:
+* Packages to be build are scheduled in the database via a scheduler job, which runs every hour and if the queue is below a certain threshold schedules four types of packages:
 ** new untested packages (either uploaded to 'unstable' or 'experimental' or migrated to 'testing'),
 ** new versions of existing packages, which were already tested - these are always scheduled, no matter how full the queue is
 ** old versions, already tested (at least two weeks ago)

@@ -31,17 +31,11 @@ sudo adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenki
 sudo usermod -G jenkins jenkins-adm
 sudo mkdir /home/jenkins-adm
 sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
-
 cd ~jenkins-adm
-if [ ! -d jenkins.debian.net ]; then
-    [ -x /usr/bin/git ] || sudo apt-get install -y git
-    sudo -u jenkins-adm git clone $GIT_REPO
-    cd jenkins.debian.net
-else
-    cd jenkins.debian.net
-
-    sudo -u jenkins-adm git pull $GIT_REPO
-fi
+[ -x /usr/bin/git ] || sudo apt-get install -y git
+sudo -u jenkins-adm git clone $GIT_REPO
+cd jenkins.debian.net
+sudo mkdir -p /var/log/jenkins/
 ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 
 END=$(date +'%s')

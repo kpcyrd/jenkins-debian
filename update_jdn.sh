@@ -18,6 +18,8 @@
 #
 # so, yes, patches welcome. saying this is crap alone is not helpful,
 # nor is just suggesting some new or old technology. patches most welcome!
+#
+# that said, there's a new one: init_node ;)
 
 set -e
 
@@ -84,25 +86,7 @@ esac
 #
 # set up users and groups
 #
-if ! getent passwd jenkins > /dev/null ; then
-	sudo addgroup --system jenkins
-	sudo adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
-fi
-if ! getent group jenkins-adm > /dev/null ; then
-	sudo addgroup --system jenkins-adm
-fi
-if ! getent passwd jenkins-adm > /dev/null  ; then
-	sudo adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
-	sudo usermod -G jenkins jenkins-adm
-fi
-if [ ! -d /home/jenkins-adm ]; then
-    sudo mkdir /home/jenkins-adm
-    sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
-fi
-
-
 declare -A user_host_groups u_shell
-
 sudo_groups='jenkins,jenkins-adm,sudo,adm'
 
 # if there's a need for host groups, a case statement on $HOSTNAME here that sets $GROUPNAME, say, should do the trick

@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+#
+# released under the GPLv=2
+#
+# initial setup for new build nodes
+
+START=$(date +'%s')
+GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"
+
+echo
+echo -n "$(date) - "
+set -e
+export LANG=C
+sudo addgroup --system jenkins
+sudo adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
+sudo addgroup --system jenkins-adm
+sudo adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
+sudo usermod -G jenkins jenkins-adm
+sudo mkdir /home/jenkins-adm
+sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
+
+cd ~jenkins-adm
+if [ ! -d jenkins.debian.net ]; then
+    [ -x /usr/bin/git ] || sudo apt-get install -y git
+    sudo -u jenkins-adm git clone $GIT_REPO
+    cd jenkins.debian.net
+else
+    cd jenkins.debian.net
+
+    sudo -u jenkins-adm git pull $GIT_REPO
+fi
+./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
+
+END=$(date +'%s')
+DURATION=$(( $END - $START ))
+HOUR=$(echo "$DURATION/3600"|bc)
+MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
+SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
+echo "$(date) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
+echo
+

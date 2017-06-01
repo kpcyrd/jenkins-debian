@@ -17,10 +17,11 @@ mono_architectures = """
     hppa
     hurd-i386 musl-linux-i386
     m68k
-    mips64r6el mipsr6el
+    mips64 mips64r6el mipsr6el
     musl-linux-mips musl-linux-mipsel
     nios2
     powerpcel powerpcspe ppc64el
+    riscv64
     sh3 sh4
     tilegx
     """.split()

@@ -5,6 +5,17 @@
 # released under the GPLv=2
 #
 # initial setup for new build nodes
+# - this script assumes that the user running it has unlimited sudo powers…
+
+# let's check our assumptions first…
+if [ $(sudo id -u) -ne 0 ] ; then
+	echo we need sudo… exiting.
+	exit 1
+elif [ $(id -u) -eq 0 ] ; then
+	echo please dont run this as root… exiting.
+	exit 1
+fi
+
 
 START=$(date +'%s')
 GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"

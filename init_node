@@ -39,6 +39,7 @@ cd jenkins.debian.net
 sudo mkdir -p /var/log/jenkins/
 sudo chown jenkins.jenkins /var/log/jenkins/
 set +x
+set +e
 ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 
 END=$(date +'%s')
@@ -48,4 +49,6 @@ MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
 SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
 echo "$(date -u) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
 echo
-
+echo "Now log out and log in again (to aquire new group memberships) and run:"
+echo "        cd ~jenkins-adm/jenkins.debian.net/"
+echo "        ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log"

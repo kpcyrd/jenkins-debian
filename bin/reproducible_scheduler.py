@@ -66,7 +66,7 @@ LIMITS_404 defines how many packages with status 404 are rescheduled at max.
 # only old packages older than this will be rescheduled
 MINIMUM_AGE = {'amd64': 9, 'i386': 12, 'arm64': 11, 'armhf':25 }
 # maximum queue size, see explainations above
-MAXIMA = {'amd64': 1400, 'i386': 1200, 'arm64': 1400, 'armhf': 850}
+MAXIMA = {'amd64': 1600, 'i386': 1500, 'arm64': 1500, 'armhf': 1000}
 # limits, see explainations above
 LIMITS = {
     'untested': {
@@ -159,24 +159,24 @@ LIMITS = {
     },
     'old': {
         'amd64': {
-            'testing': {1: (600, 900), 2: (1000, 750), '*': 0},
-            'unstable': {1: (600, 1100), 2: (1000, 950), '*': 0},
-            'experimental': {1: (600, 70), 2: (1000, 50), '*': 0},
+            'testing': {1: (700, 1000), 2: (1100, 850), '*': 0},
+            'unstable': {1: (700, 1200), 2: (1100, 1050), '*': 0},
+            'experimental': {1: (700, 70), 2: (1100, 50), '*': 0},
         },
         'i386': {
-            'testing': {1: (600, 900), 2: (1000, 750), '*': 0},
-            'unstable': {1: (600, 1100), 2: (1000, 950), '*': 0},
-            'experimental': {1: (600, 70), 2: (1000, 50), '*': 0},
+            'testing': {1: (700, 1000), 2: (1100, 850), '*': 0},
+            'unstable': {1: (700, 1200), 2: (1100, 1050), '*': 0},
+            'experimental': {1: (700, 70), 2: (1100, 50), '*': 0},
         },
         'arm64': {
-            'testing': {1: (600, 900), 2: (1000, 750), '*': 0},
-            'unstable': {1: (600, 1100), 2: (1000, 950), '*': 0},
-            'experimental': {1: (600, 70), 2: (1000, 50), '*': 0},
+            'testing': {1: (700, 1000), 2: (1100, 850), '*': 0},
+            'unstable': {1: (700, 1200), 2: (1100, 1050), '*': 0},
+            'experimental': {1: (700, 70), 2: (1100, 50), '*': 0},
         },
         'armhf': {
-            'testing': {1: (500, 700), 2: (850, 400), '*': 0},
-            'unstable': {1: (500, 900), 2: (850, 600), '*': 0},
-            'experimental': {1: (500, 70), 2: (850, 50), '*': 0},
+            'testing': {1: (600, 800), 2: (850, 500), '*': 0},
+            'unstable': {1: (600, 1000), 2: (850, 700), '*': 0},
+            'experimental': {1: (600, 70), 2: (850, 50), '*': 0},
         }
     }
 }

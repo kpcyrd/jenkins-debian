@@ -25,18 +25,19 @@ echo
 echo -n "$(date) - "
 set -e
 export LANG=C
+set -x
 sudo addgroup --system jenkins
 sudo adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
 sudo addgroup --system jenkins-adm
 sudo adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
 sudo usermod -G jenkins jenkins-adm
-sudo mkdir /home/jenkins-adm
 sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
 cd ~jenkins-adm
 [ -x /usr/bin/git ] || sudo apt-get install -y git
 sudo -u jenkins-adm git clone $GIT_REPO
 cd jenkins.debian.net
 sudo mkdir -p /var/log/jenkins/
+set +x
 ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 
 END=$(date +'%s')

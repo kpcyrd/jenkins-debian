@@ -166,7 +166,7 @@ All webpages will be served out of /var/lib/jenkins/userContent/reproducible and
 Before running, create the following directories and files:
 ----
 sudo mkdir /srv/reproducible-results/node-information/
-for i in i386 amd64 armhf ; do touch /srv/reproducible-results/node-information/dummy_$i ; done
+for i in i386 amd64 arm64 armhf ; do touch /srv/reproducible-results/node-information/dummy_$i ; done
 ----
 
 And run the following script as user jenkins:

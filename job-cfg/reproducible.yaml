@@ -274,9 +274,11 @@
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
+                - 'ff64a':          { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'jtk1a':          { my_arch: 'armhf' }
-                - 'wbq0':           { my_arch: 'armhf' }
+                - 'jtx1a':          { my_arch: 'armhf' }
+                - 'odc2a':          { my_arch: 'armhf' }
                 - 'odxu4':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
                 - 'odxu4c':         { my_arch: 'armhf' }
@@ -284,11 +286,12 @@
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
                 - 'opi2c':          { my_arch: 'armhf' }
-                - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
                 - 'p64b':           { my_arch: 'armhf' }
                 - 'p64c':           { my_arch: 'armhf' }
+                - 'wbd0':           { my_arch: 'armhf' }
+                - 'wbq0':           { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386'  }
                 - 'profitbricks3':  { my_arch: 'amd64' }
@@ -339,9 +342,11 @@
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
+                - 'ff64a':          { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'jtk1a':          { my_arch: 'armhf' }
-                - 'wbq0':           { my_arch: 'armhf' }
+                - 'jtx1a':          { my_arch: 'armhf' }
+                - 'odc2a':          { my_arch: 'armhf' }
                 - 'odxu4':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
                 - 'odxu4c':         { my_arch: 'armhf' }
@@ -349,11 +354,12 @@
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
                 - 'opi2c':          { my_arch: 'armhf' }
-                - 'wbd0':           { my_arch: 'armhf' }
                 - 'rpi2b':          { my_arch: 'armhf' }
                 - 'rpi2c':          { my_arch: 'armhf' }
                 - 'p64b':           { my_arch: 'armhf' }
                 - 'p64c':           { my_arch: 'armhf' }
+                - 'wbd0':           { my_arch: 'armhf' }
+                - 'wbq0':           { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386'  }
                 - 'profitbricks5':  { my_arch: 'amd64' }

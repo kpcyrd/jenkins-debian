@@ -9,7 +9,8 @@
 case $HOSTNAME in
 	jenkins|jenkins-test-vm|profitbricks-build*)
 			MIRRORSITE=http://ftp.de.debian.org/debian ;;
-	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*|p64*)
+	bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|odc*|wbd0|rpi2*|ff*|ff4*|opi2*|jt?1*|p64*)
+
 			MIRRORSITE=http://ftp.us.debian.org/debian ;;
 	codethink*)
 			MIRRORSITE=http://ftp.uk.debian.org/debian ;;
@@ -20,7 +21,7 @@ esac
 case $HOSTNAME in
 	profitbricks-build*i386)
 		EATMYDATA=yes ;;
-	bbx15|bpi0|cbxi4*|cb3*|hb0|wbq0|odxu4*|odu3*|wbd0|rpi2*|ff2*|ff4*|opi2*|jtk1*|p64*)
+	bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|odc*|wbd0|rpi2*|ff*|ff4*|opi2*|jt?1*|p64*)
 		EATMYDATA=yes ;;
 	*)	;;
 esac

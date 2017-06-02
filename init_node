@@ -34,7 +34,7 @@ sudo usermod -G jenkins jenkins-adm
 sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
 cd ~jenkins-adm
 [ -x /usr/bin/git ] || sudo apt-get install -y git
-sudo -u jenkins-adm git clone $GIT_REPO
+sudo su jenkins-adm -l -c "git clone $GIT_REPO"
 cd jenkins.debian.net
 sudo mkdir -p /var/log/jenkins/
 set +x

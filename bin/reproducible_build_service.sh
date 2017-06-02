@@ -219,7 +219,7 @@ startup_workers() {
 			amd64)	MAX=40 ;;
 			i386)	MAX=24 ;;
 			arm64)	MAX=32 ;;
-			armhf)	MAX=66 ;;
+			armhf)	MAX=76 ;;
 			*)	;;
 		esac
 		#

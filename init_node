@@ -37,6 +37,7 @@ cd ~jenkins-adm
 sudo su jenkins-adm -l -c "git clone $GIT_REPO"
 cd jenkins.debian.net
 sudo mkdir -p /var/log/jenkins/
+sudo chown jenkins.jenkins /var/log/jenkins/
 set +x
 ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 

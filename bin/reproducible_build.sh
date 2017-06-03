@@ -735,7 +735,7 @@ check_node_is_up() {
 	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		unregister_build
-		sleep ${SLEEPTIME}m
+		sleep ${SLEEPTIME}.1337m
 		exec /srv/jenkins/bin/abort.sh
 	fi
 	set -e

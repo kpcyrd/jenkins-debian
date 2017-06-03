@@ -346,7 +346,7 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs currently down due to remote node problems</td>"
 	for ARCH in ${ARCHS} ; do
-		write_page "<td>$(ps fax|egrep -B 1 "sleep .*\.1337m"|grep -c $ARCH)</td>"
+		write_page "<td>$(ps fax|egrep -B 1 'sleep .*\.1337m'|grep -c $ARCH)</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs currently running diffoscope</td>"
 	for ARCH in ${ARCHS} ; do

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -19,15 +19,14 @@ elif [ "$(whoami)" != "jenkins" ] ; then
 	exit 1
 fi
 
-# deny running this if jenkins is still running
-if [ "$1" != "--force" ] ; then
-	RESULT=$(ps fax|grep '/usr/share/jenkins/jenkins.war'|grep -v grep||true)
-	if [ -n "$RESULT" ] ; then
-		echo "jenkins is still running, aborting."
-		exit 1
-	else
-		echo "jenkins is not running, ok, let's go."
-	fi
+# deny running this if build service is still running
+SERVICE="reproducible_build@startup.service"
+RESULT=$(systemctl show $SERVICE|grep  ^ActiveState=active||true)
+if [ -n "$RESULT" ] ; then
+	echo "$SERVICE is still running, aborting."
+	exit 1
+else
+	echo "$SERVICE is not running, ok, let's go."
 fi
 
 # simple confirmation needed
@@ -46,13 +45,5 @@ for NODE in $BUILD_NODES ; do
 	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_slay.sh &
 done
 
-sleep 15
-echo "killing all ssh and sleep processes now. (press enter || ctrl-c)"
-read
-set +e
-killall ssh
-killall sleep
-killall -9 ssh
-killall -9 sleep
-echo "$(date -u) - slaughtering done. Happy rebooting or whatever you plan to do."
+echo "$(date -u) - slaughtering done."
 

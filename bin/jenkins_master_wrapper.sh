@@ -60,7 +60,7 @@ if [ $RESULT -ne 0 ] ; then
 	# this somehow doesnt work anymore, rather error out to see the breakage…
 	#
 	#echo "$(date -u) - $NODE_NAME seems to be down, sleeping 15min before aborting this job."
-	echo "$(date -u) - $NODE_NAME seems to be down, exiting with error."
+	echo "$(date -u) - $NODE_NAME seems to be down, sleeping 15min before exiting with error."
 	sleep 15m
 	exit 1
 	#exec /srv/jenkins/bin/abort.sh

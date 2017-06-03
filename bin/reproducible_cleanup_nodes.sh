@@ -45,5 +45,7 @@ for NODE in $BUILD_NODES ; do
 	/srv/jenkins/bin/jenkins_master_wrapper.sh /srv/jenkins/bin/reproducible_slay.sh &
 done
 
+ps fax|grep sleep
+
 echo "$(date -u) - slaughtering done."
 

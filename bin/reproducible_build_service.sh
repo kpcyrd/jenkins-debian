@@ -203,8 +203,7 @@ choose_nodes() {
 #                armhf_75)	NODE1=odc2a-armhf-rb		NODE2=cbxi4pro0-armhf-rb ;;
 #                armhf_76)	NODE1=odc2a-armhf-rb		NODE2=odxu4-armhf-rb ;;
 
-		*)		echo "Sleeping 60min"
-				sleep 60m
+		*)		NODE1=undefined
 				;;
 	esac
 }
@@ -245,10 +244,12 @@ startup_workers() {
 			# actually start the worker
 			#
 			choose_nodes $WORKER_NAME
-			BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
-			mkdir -p $BUILD_BASE
-			echo "$(date --utc) - Starting $WORKER_NAME"
-			$WORKER_BIN $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+			if [ "$NODE1" != "undefined" ] ; then
+				BUILD_BASE=/var/lib/jenkins/userContent/reproducible/debian/build_service/$WORKER_NAME
+				mkdir -p $BUILD_BASE
+				echo "$(date --utc) - Starting $WORKER_NAME"
+				$WORKER_BIN $WORKER_NAME $NODE1 $NODE2 >$BUILD_BASE/worker.log 2>&1 &
+			fi
 		done
 	done
 }

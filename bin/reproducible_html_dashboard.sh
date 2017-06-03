@@ -338,7 +338,7 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs configured</td>"
 	for ARCH in ${ARCHS} ; do
-		write_page "<td>$(grep "MAX=" /srv/jenkins/bin/reproducible_build_service.sh |grep $ARCH|cut -d "=" -f2-|cut -d " " -f1)</td>"
+		write_page "<td>$(grep NODE1= /srv/jenkins/bin/reproducible_build_service.sh | grep -v \# | grep -c $ARCH)</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs currently running remotely</td>"
 	for ARCH in ${ARCHS} ; do

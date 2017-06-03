@@ -205,7 +205,6 @@ choose_nodes() {
 
 		*)		echo "Sleeping 60min"
 				sleep 60m
-				exit 0
 				;;
 	esac
 }

@@ -362,7 +362,7 @@ def main():
     scheduling_args, requester, local, suites, archs = parse_args()
     for suite in suites:
         for arch in archs:
-            rest(scheduling_args, requester, local, suite)
+            rest(scheduling_args, requester, local, suite, arch)
         del arch
     del suite
 

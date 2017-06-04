@@ -152,7 +152,7 @@ def parse_args():
 
     if set(suites) - set(SUITES): # Some command-line suites don't exist.
         log.critical('Some of the specified suites %r are not being tested.', suites)
-        log.critical('Please choose between ' + ', '.join(SUITES))
+        log.critical('Please choose among ' + ', '.join(SUITES) + '.')
         sys.exit(1)
 
     if arch not in ARCHS:

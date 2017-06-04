@@ -145,7 +145,7 @@ def parse_args():
     log.debug('Date: after ' + built_after if built_after else str(None) +
               ' before ' + built_before if built_before else str(None))
     log.debug('Suites: ' + repr(suites))
-    log.debug('Architectures: ' + archs)
+    log.debug('Architectures: ' + repr(archs))
     log.debug('Packages: ' + ' '.join(packages))
 
     if not suites[0]:

@@ -88,8 +88,9 @@ def parse_args():
     parser.add_argument('-b', '--before', required=False,
                         help='Schedule all packages built before this date.')
     parser.add_argument('-a', '--architecture', required=False, default='amd64',
-                        help='Specify the architecture to schedule for ' +
-                        '(defaults to amd64).')
+                        help='Specify the architectures to schedule in ' +
+                        '(space or comma separated).' +
+                        "Default: 'amd64'.")
     parser.add_argument('-s', '--suite', required=False, default='unstable',
                         help="Specify the suites to schedule in (space or comma separated). Default: 'unstable'.")
     parser.add_argument('packages', metavar='package', nargs='*',
@@ -119,7 +120,8 @@ def parse_args():
     # Shorter names
     suites = [x.strip() for x in re.compile(r'[, \t]').split(scheduling_args.suite or "")]
     suites = [x for x in suites if x]
-    arch = scheduling_args.architecture
+    archs = [x.strip() for x in re.compile(r'[, \t]').split(scheduling_args.architecture or "")]
+    archs = [x for x in archs if x]
     reason = scheduling_args.message
     issue = scheduling_args.issue
     status = scheduling_args.status
@@ -143,7 +145,7 @@ def parse_args():
     log.debug('Date: after ' + built_after if built_after else str(None) +
               ' before ' + built_before if built_before else str(None))
     log.debug('Suites: ' + repr(suites))
-    log.debug('Architecture: ' + arch)
+    log.debug('Architectures: ' + archs)
     log.debug('Packages: ' + ' '.join(packages))
 
     if not suites[0]:
@@ -155,18 +157,24 @@ def parse_args():
         log.critical('Please choose among ' + ', '.join(SUITES) + '.')
         sys.exit(1)
 
-    if arch not in ARCHS:
-        log.critical('The specified architecture is not being tested.')
-        log.critical('Please choose between ' + ', '.join(ARCHS))
+    if set(archs) - set(ARCHS): # Some command-line archs don't exist.
+        log.critical('Some of the specified archs %r are not being tested.', archs)
+        log.critical('Please choose among' + ', '.join(ARCHS) + '.')
         sys.exit(1)
 
     if issue or status or built_after or built_before:
         # Note: this .extend() operation modifies scheduling_args.packages, which
         #       is used by rest()
         for suite in suites:
-            packages.extend(
-              packages_matching_criteria(arch, suite, (issue, status, built_after, built_before))
-            )
+            for arch in archs:
+                packages.extend(
+                  packages_matching_criteria(
+                    arch,
+                    suite,
+                    (issue, status, built_after, built_before),
+                  )
+                )
+            del arch
         del suite
 
     if len(packages) > 50 and notify:
@@ -185,13 +193,12 @@ def parse_args():
     if notify_on_start:
         log.info('The channel will be notified when the build starts')
 
-    return scheduling_args, requester, local, suites
+    return scheduling_args, requester, local, suites, archs
 
-def rest(scheduling_args, requester, local, suite):
-    "Actually schedule a package for a single suite."
+def rest(scheduling_args, requester, local, suite, arch):
+    "Actually schedule a package for a single suite on a single arch."
 
     # Shorter names
-    arch = scheduling_args.architecture
     reason = scheduling_args.message
     issue = scheduling_args.issue
     status = scheduling_args.status
@@ -352,9 +359,11 @@ def rest(scheduling_args, requester, local, suite):
     generate_schedule(arch)  # update the HTML page
 
 def main():
-    scheduling_args, requester, local, suites = parse_args()
+    scheduling_args, requester, local, suites, archs = parse_args()
     for suite in suites:
-        rest(scheduling_args, requester, local, suite)
+        for arch in archs:
+            rest(scheduling_args, requester, local, suite)
+        del arch
     del suite
 
 if __name__ == '__main__':

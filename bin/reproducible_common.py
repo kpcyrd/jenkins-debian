@@ -113,7 +113,7 @@ if args.quiet or QUIET:
 log = logging.getLogger(__name__)
 log.setLevel(log_level)
 sh = logging.StreamHandler()
-sh.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s'))
+sh.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
 log.addHandler(sh)
 
 started_at = datetime.now()

@@ -242,18 +242,22 @@ def rest(scheduling_args, requester, local, suite, arch):
             ids.append(result[0][0])
             pkgs.append(pkg)
 
-    blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
-    packages_txt = str(len(ids)) + ' packages ' if len(pkgs) > 1 else ''
-    trailing = ' - artifacts will be preserved' if artifacts else ''
-    trailing += ' - with irc notification' if notify else ''
-    trailing += ' - notify on start too' if notify_on_start else ''
+    def compose_irc_message():
+        "One-shot closure to limit scope of the following local variables."
+        blablabla = '✂…' if len(' '.join(pkgs)) > 257 else ''
+        packages_txt = str(len(ids)) + ' packages ' if len(pkgs) > 1 else ''
+        trailing = ' - artifacts will be preserved' if artifacts else ''
+        trailing += ' - with irc notification' if notify else ''
+        trailing += ' - notify on start too' if notify_on_start else ''
 
-    message = requester + ' scheduled ' + packages_txt + \
-        'in ' + suite + '/' + arch
-    if reason:
-        message += ', reason: \'' + reason + '\''
-    message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing
-
+        message = requester + ' scheduled ' + packages_txt + \
+            'in ' + suite + '/' + arch
+        if reason:
+            message += ', reason: \'' + reason + '\''
+        message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing
+        return message
+    message = compose_irc_message()
+    del compose_irc_message
 
     # these packages are manually scheduled, so should have high priority,
     # so schedule them in the past, so they are picked earlier :)

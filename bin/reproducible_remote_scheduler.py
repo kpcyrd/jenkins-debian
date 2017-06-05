@@ -256,7 +256,7 @@ def rest(scheduling_args, requester, local, suite, arch):
             message += ', reason: \'' + reason + '\''
         message += ': ' + ' '.join(pkgs)[0:256] + blablabla + trailing
         return message
-    message = compose_irc_message()
+    info_msg = compose_irc_message()
     del compose_irc_message
 
     # these packages are manually scheduled, so should have high priority,
@@ -354,10 +354,10 @@ def rest(scheduling_args, requester, local, suite, arch):
     else:
         log.info('Ran with --dry-run, scheduled nothing')
 
-    log.info(bcolors.GOOD + message + bcolors.ENDC)
+    log.info(bcolors.GOOD + info_msg + bcolors.ENDC)
     if not (local and requester == "jenkins maintenance job") and len(ids) != 0:
         if not dry_run:
-            irc_msg(message)
+            irc_msg(info_msg)
 
     from reproducible_html_live_status import generate_schedule
     generate_schedule(arch)  # update the HTML page

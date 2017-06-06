@@ -28,13 +28,14 @@ jenkins ALL=  \
 	/usr/bin/qemu-system-x86_64 *, \
 	/usr/bin/qemu-img *, \
 	/sbin/lvcreate *, /sbin/lvremove *, \
+	/usr/bin/virsh -q snapshot-list *, /usr/bin/virsh snapshot-delete *, \
 	/bin/mkdir -p /media/*, \
 	/usr/bin/guestmount *, \
 	/bin/cp -rv /media/*, \
 	/bin/chown -R jenkins\:jenkins /var/lib/jenkins/jobs/*,\
 	SETENV: NOPASSWD: /usr/sbin/pbuilder *, \
 	SETENV: NOPASSWD: /usr/bin/timeout -k ??.?h ??h /usr/bin/ionice -c 3 /usr/bin/nice /usr/sbin/pbuilder *, \
-	SETENV: NOPASSWD: /usr/bin/timeout -k ??.?h ??h /usr/bin/ionice -c 3 /usr/bin/nice -n 11 /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
+	SETENV: NOPASSWD: /usr/bin/timeout -k ??.?h ??h /usr/bin/ionice -c 3 /usr/bin/nice /usr/bin/unshare --uts -- /usr/sbin/pbuilder *, \
 	/bin/mv /var/cache/pbuilder/*base*.tgz /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm /var/cache/pbuilder/*base*.tgz, \
 	/bin/rm -v /var/cache/pbuilder/*base*.tgz, \

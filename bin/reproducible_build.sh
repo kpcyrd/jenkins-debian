@@ -701,7 +701,7 @@ EOF
 	# remember to change the sudoers setting if you change the following command
 	# (the 2nd build gets a longer timeout trying to make sure the first build
 	# aint wasted when then 2nd happens on a highly loaded node)
-	sudo timeout -k 24.1h 24h /usr/bin/ionice -c 3 /usr/bin/nice -n 11 \
+	sudo timeout -k 24.1h 24h /usr/bin/ionice -c 3 /usr/bin/nice \
 		/usr/bin/unshare --uts -- \
 		/usr/sbin/pbuilder --build \
 			--configfile $TMPCFG \

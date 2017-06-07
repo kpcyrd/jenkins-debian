@@ -61,7 +61,7 @@ disable_dsa_check_packages() {
 	fi
 
 	if [ -L /usr/local/bin/dsa-check-packages ] ; then
-		rm /usr/local/bin/dsa-check-packages
+		sudo rm /usr/local/bin/dsa-check-packages
 	fi
 
 	# disable check for outdated packages as in the future (like this)

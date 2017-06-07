@@ -19,7 +19,7 @@ common_init "$@"
 # /srv/jenkins/bin/jenkins_master_wrapper.sh runs this script on the
 # slave using a directly call to ssh, so this script has to do all
 # of the workspace setup.
-export WORKSPACE=$BASE/`basename $0 | sed 's,\.sh,,'`
+export WORKSPACE=$BASE/reproducible_setup_fdroid_build_environment
 if [ -e $WORKSPACE/.git ]; then
     # reuse the git repo if possible, to keep all the setup in fdroiddata/
     cd $WORKSPACE

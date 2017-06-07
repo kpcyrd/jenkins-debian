@@ -52,11 +52,22 @@ set_correct_date() {
 }
 
 disable_dsa_check_packages() {
+	# FIXME: remove the repair of /bin/true when all hosts has been
+	# updated
+	# ln -s /bin/true /usr/local/bin/dsa-check-packages was used which
+	# broke /bin/true by overwriting it with the perl script dsa-check-packages
+	if grep -q '/usr/bin/perl' /bin/true || grep -q '/bin/sh' /bin/true ; then
+		sudo apt-get install --reinstall coreutils
+	fi
+
+	if [ -L /usr/local/bin/dsa-check-packages ] ; then
+		rm /usr/local/bin/dsa-check-packages
+	fi
+
 	# disable check for outdated packages as in the future (like this)
 	# packages from security.d.o will appear outdated always…
 	echo -e "#!/bin/sh\n# disabled dsa-check by update_jdn.sh\nexit 0" | sudo tee /usr/local/bin/dsa-check-packages
 	sudo chmod a+rx /usr/local/bin/dsa-check-packages
-
 }
 
 echo "--------------------------------------------"

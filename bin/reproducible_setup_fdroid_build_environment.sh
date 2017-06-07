@@ -14,10 +14,26 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
-# define and clean work space (differently than jenkins would normally do as we run via ssh on a different node…)
-WORKSPACE=$BASE/fdroid
-rm $WORKSPACE -rf
-mkdir -p $WORKSPACE
+# define and clean work space on the machine actually running the
+# build. jenkins.debian.net does not use Jenkins slaves.  Instead
+# /srv/jenkins/bin/jenkins_master_wrapper.sh runs this script on the
+# slave using a directly call to ssh, so this script has to do all
+# of the workspace setup.
+export WORKSPACE=$BASE/`basename $0 | sed 's,\.sh,,'`
+if [ -e $WORKSPACE/.git ]; then
+    # reuse the git repo if possible, to keep all the setup in fdroiddata/
+    cd $WORKSPACE
+    git fetch --tags
+    git clean -fdx
+    git reset --hard
+    git checkout master
+    git reset --hard origin/master
+    git clean -fdx
+else
+    rm -rf $WORKSPACE
+    git clone https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net $WORKSPACE
+    cd $WORKSPACE
+fi
 
 cleanup_all() {
 	echo "$(date -u) - cleanup in progress..."
@@ -46,14 +62,6 @@ cat /etc/issue
 # delete old libvirt instances, until the fdroid tools do it reliably
 virsh --connect qemu:///system undefine builder_default || echo nothing to undefine
 virsh --connect qemu:///system vol-delete --pool default /var/lib/libvirt/images/builder_default.img || echo nothing to delete
-
-# the way we handle jenkins slaves doesn't copy the workspace to the slaves
-# so we need to "manually" clone the git repo here…
-cd $WORKSPACE
-#git clone https://gitlab.com/fdroid/fdroidserver.git
-git clone https://gitlab.com/uniqx/fdroidserver.git
-cd fdroidserver
-git checkout jenkins.debian.net # normally master too
 
 # set up Android SDK to use the Debian packages in stretch
 export ANDROID_HOME=/usr/lib/android-sdk

@@ -17,8 +17,9 @@ common_init "$@"
 # define and clean work space on the machine actually running the
 # build. jenkins.debian.net does not use Jenkins slaves.  Instead
 # /srv/jenkins/bin/jenkins_master_wrapper.sh runs this script on the
-# slave using a directl call to ssh.
-export WORKSPACE=$BASE/fdroid-build
+# slave using a directly call to ssh, so this script has to do all
+# of the workspace setup.
+export WORKSPACE=$BASE/`basename $0 | sed 's,\.sh,,'`
 if [ -e $WORKSPACE/.git ]; then
     # reuse the git repo if possible, to keep all the setup in fdroiddata/
     cd $WORKSPACE
@@ -30,7 +31,7 @@ if [ -e $WORKSPACE/.git ]; then
     git clean -fdx
 else
     rm -rf $WORKSPACE
-    git clone https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net.git $WORKSPACE
+    git clone https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net $WORKSPACE
     cd $WORKSPACE
 fi
 

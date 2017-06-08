@@ -233,6 +233,37 @@ openwrt_compile() {
 	ionice -c 3 $MAKE $OPTIONS
 }
 
+openwrt_create_signing_keys() {
+	echo "============================================================================="
+	cat <<- EOF
+# LEDE signs the release with a signing key, but generate the signing key if not
+# present. To have a reproducible release we need to take care of signing keys.
+
+# LEDE will also put the key-build.pub into the resulting image (pkg: base-files)!
+# At the end of the build it will use the key-build to sign the Packages repo list.
+# Use a workaround this problem:
+
+# key-build.pub contains the pubkey of LEDE buildbot
+# key-build     contains our build key
+
+# Meaning only signed files will be different but not the images.
+# Packages.sig is unreproducible.
+
+# here is our random signing key
+# chosen by fair dice roll.
+# guaranteed to be random.
+
+# private key
+EOF
+	echo -e 'untrusted comment: Local build key\nRWRCSwAAAAB12EzgExgKPrR4LMduadFAw1Z8teYQAbg/EgKaN9SUNrgteVb81/bjFcvfnKF7jS1WU8cDdT2VjWE4Cp4cxoxJNrZoBnlXI+ISUeHMbUaFmOzzBR7B9u/LhX3KAmLsrPc=' | tee key-build
+	echo "\n# public key"
+	echo -e 'untrusted comment: Local build key\nRWQ/EgKaN9SUNja2aAZ5VyPiElHhzG1GhZjs8wUewfbvy4V9ygJi7Kz3' | tee key-build.pub
+
+	echo "# override the pubkey with 'LEDE usign key for unattended build jobs' to have the same base-files pkg and images"
+	echo -e 'untrusted comment: LEDE usign key for unattended build jobs\nRWS1BD5w+adc3j2Hqg9+b66CvLR7NlHbsj7wjNVj0XGt/othDgIAOJS+' | tee key-build.pub
+	echo "============================================================================="
+}
+
 # called by openwrt_two_times
 # ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
 openwrt_download() {
@@ -249,6 +280,9 @@ openwrt_download() {
 	echo "================================================================================"
 	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO source
 	cd source
+
+	# otherwise LEDE will generate new release keys every build
+	openwrt_create_signing_keys
 
 	# update feeds
 	./scripts/feeds update

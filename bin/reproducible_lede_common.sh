@@ -254,7 +254,7 @@ openwrt_download() {
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config $CONFIG
-	while ! make download -j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1 ; do
+	while ! make tools/tar/compile download -j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1 ; do
 		tries=$((tries - 1))
 		if [ $tries -eq 0 ] ; then
 			echo "================================================================================"

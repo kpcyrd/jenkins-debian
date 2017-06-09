@@ -194,7 +194,8 @@ openwrt_config() {
 	CONFIG=$1
 
 	printf "$CONFIG" > .config
-	printf "CONFIG_ALL=y\n" >> .config
+	# don't build all packages to improve development speed
+	# printf "CONFIG_ALL=y\n" >> .config
 	printf "CONFIG_AUTOREMOVE=y\n" >> .config
 	printf "CONFIG_CLEAN_IPKG=y\n" >> .config
 	printf "CONFIG_TARGET_ROOTFS_TARGZ=y\n" >> .config

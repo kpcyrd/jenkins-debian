@@ -64,7 +64,7 @@ cd $TMPBUILDDIR
 
 create_results_dirs lede
 
-build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_ARCHERC7=y\n"
+build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx=y\nCONFIG_TARGET_ar71xx_generic=y\nCONFIG_TARGET_ar71xx_generic_DEVICE_archer-c7-v1=y\n"
 
 # for now we only build one architecture until it's at most reproducible
 #build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"

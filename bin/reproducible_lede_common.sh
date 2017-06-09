@@ -306,9 +306,8 @@ openwrt_get_banner() {
 	TYPE=$2
 	cd $TMPDIR/build/source
 	echo "===bannerbegin==="
-	find build_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null
+	find staging_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null
 	echo "===bannerend==="
-
 }
 
 # openwrt_build is run on a remote host

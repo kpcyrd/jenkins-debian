@@ -55,5 +55,7 @@ with the console; think this is a limitation of the way "cereal"
 interacts with screen. "cereal l" lists the available systems, and
 "cereal f XXX" would connect to "XXX" and tail it's console logs.
 
+There's a pad too, where we maintain notes about the stati of the nodes. The URL
+for this pad is available upon request.
 
 // vim: set filetype=asciidoc:

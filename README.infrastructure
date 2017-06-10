@@ -1,0 +1,32 @@
+About the nodes used for jenkins.debian.net
+===========================================
+:Author:           Holger Levsen
+:Authorinitials:   holger
+:EMail:            holger@layer-acht.org
+:Status:           working, in progress
+:lang:             en
+:Doctype:          article
+:License:          GPLv2
+
+== Scope
+
+This README is about all the nodes used for jenkins.debian.net and tests.reproducible-builds.org
+
+=== amd64 and i386 nodes
+
+amd64 and i386 nodes run as VMs in the Profitbricks cloud. Mattia and Holger have "physical"
+access including remote console and BIOS access.
+
+=== arm64 nodes
+
+We have 8 arm64 nodes running on moonshot hardware kindly given access to us by Codethink.
+Holger has access to a nine node acting as console server.
+
+(Technically some of the armhf nodes below are also arm64 systems.)
+
+=== armhf nodes
+
+Vagrant hosts a fantastic zoo of over 23 armhf boards in his basement, to which besides him also
+Mattia and Holger have access via a console server.
+
+// vim: set filetype=asciidoc:

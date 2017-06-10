@@ -10,7 +10,10 @@ About the nodes used for jenkins.debian.net
 
 == Scope
 
-This README is about all the nodes used for jenkins.debian.net and tests.reproducible-builds.org
+This README is about all the nodes used for jenkins.debian.net and tests.reproducible-builds.org.
+
+All nodes run Debian stable, except for the amd64 moonshot nodes, which run Ubuntu 16.04.
+
 
 === amd64 and i386 nodes
 

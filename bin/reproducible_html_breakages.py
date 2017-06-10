@@ -339,26 +339,6 @@ def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
 
 def gen_html():
     html = ''
-    # files that should not be there (e.g. removed packages without cleanup)
-    html += '<h2>Breakage on jenkins.debian.net</h2>'
-    html += _gen_files_html('log files that should not be there (and which will be deleted once they are older than 24h):',
-                         entries=alien_log())
-    html += _gen_files_html('diffoscope files that should not be there:',
-                         entries=alien_dbd())
-    html += _gen_files_html('rb-pkg pages that should not be there:',
-                         entries=alien_rbpkg())
-    html += _gen_files_html('buildinfo files that should not be there (and which will be deleted once they are older than 24h):',
-                         entries=alien_buildinfo())
-    html += _gen_files_html('history pages that should not be there and thus have been removed:',
-                         entries=alien_history())
-    # diffoscope reports where they shouldn't be
-    html += _gen_packages_html('are not marked as unreproducible, but they ' +
-                         'have a diffoscope file:', not_unrep_with_dbd_file())
-    # missing files
-    html += _gen_packages_html('have been built but don\'t have a buildlog:',
-                         lack_rbuild())
-    html += _gen_packages_html('have been built but don\'t have a .buildinfo file:',
-                         lack_buildinfo())
     # pbuilder-satisfydepends failed
     broken_pkgs = pbuilder_dep_fail()
     if broken_pkgs != []:
@@ -389,7 +369,26 @@ def gen_html():
                          'diffoscope output does not seem to be an html ' +
                          'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
-
+    # files that should not be there (e.g. removed packages without cleanup)
+    html += '<h2>Breakage on jenkins.debian.net</h2>'
+    html += _gen_files_html('log files that should not be there (and which will be deleted once they are older than 24h):',
+                         entries=alien_log())
+    html += _gen_files_html('diffoscope files that should not be there:',
+                         entries=alien_dbd())
+    html += _gen_files_html('rb-pkg pages that should not be there:',
+                         entries=alien_rbpkg())
+    html += _gen_files_html('buildinfo files that should not be there (and which will be deleted once they are older than 24h):',
+                         entries=alien_buildinfo())
+    html += _gen_files_html('history pages that should not be there and thus have been removed:',
+                         entries=alien_history())
+    # diffoscope reports where they shouldn't be
+    html += _gen_packages_html('are not marked as unreproducible, but they ' +
+                         'have a diffoscope file:', not_unrep_with_dbd_file())
+    # missing files
+    html += _gen_packages_html('have been built but don\'t have a buildlog:',
+                         lack_rbuild())
+    html += _gen_packages_html('have been built but don\'t have a .buildinfo file:',
+                         lack_buildinfo())
     return html
 
 

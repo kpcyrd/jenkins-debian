@@ -517,9 +517,9 @@ def query_old_versions(suite, arch, limit):
     return packages
 
 def query_404_versions(suite, arch, limit):
-    criteria = """tested at least a day ago, status 404,
+    criteria = """tested at least 12h ago, status 404,
                sorted by last build date"""
-    date = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d %H:%M')
+    date = (datetime.now()-timedelta(days=0.5)).strftime('%Y-%m-%d %H:%M')
     query = """SELECT s.id, s.name, max(r.build_date) max_date
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'

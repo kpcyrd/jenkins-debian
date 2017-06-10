@@ -29,4 +29,31 @@ Holger has access to a nine node acting as console server.
 Vagrant hosts a fantastic zoo of over 23 armhf boards in his basement, to which besides him also
 Mattia and Holger have access via a console server.
 
+There'a script to trigger the power on/off/cycle if needed, from hbi1 on Vagrant's local network:
+
+  localhost$ ssh -p 2227 hbi1.dyn.aikidev.net
+	# ssh key fingerprints:
+	# 2048 f5:03:59:fa:a9:f6:97:b0:80:9c:0c:3c:dc:9e:38:59 /etc/ssh/ssh_host_rsa_key.pub (RSA)
+	# 256 38:e8:16:bb:13:d1:5b:28:39:85:73:11:f2:1f:29:81 /etc/ssh/ssh_host_ecdsa_key.pub (ECDSA)
+	# 256 16:cc:1f:0e:39:80:37:64:f7:23:dc:18:3f:58:d3:52 /etc/ssh/ssh_host_ed25519_key.pub (ED25519)
+	# It's advertising an ipv6 address, but it's actually only ipv4 for the
+	# forseeable future and I just need to fix DNS.
+
+  hbi1$ cd /srv/rb/ ; ./remote-power NAME on|off|ccl
+	# ccl means powercycling…
+
+There are at least two machines, bbx15 and jtk1a, that don't tend to
+come up after power cycling, but sometimes even those work too, so it's
+worth a try.
+
+A small number of the names listed in cereal differ slightly from
+the names used natively... partly due to bugs in cereal. They should be
+fairly obvious (e.g. odxu4a vs. odxu4).
+
+The serial console access is still read-only, not actually interacting
+with the console; think this is a limitation of the way "cereal"
+interacts with screen. "cereal l" lists the available systems, and
+"cereal f XXX" would connect to "XXX" and tail it's console logs.
+
+
 // vim: set filetype=asciidoc:

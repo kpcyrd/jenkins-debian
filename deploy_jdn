@@ -22,9 +22,9 @@
 # ./deploy_jdn jenkins pb10	- deploy on jenkins and pb10
 # ./deploy_jdn jenkins 10	- deploy on jenkins and pb10
 # ./deploy_jdn jenkins 4 5	- deploy on jenkins and pb4 and pb5
-# ./deploy_jdn all upgrade	- run "apt-get update && upgrade && clean" everywhere
-# ./deploy_jdn all upgradey	- run "apt-get upgrade -y" everywhere
-# ./deploy_jdn all rmstamp	- delete stamp files everywhere
+# ./deploy_jdn upgrade		- run "apt-get update && upgrade && clean" everywhere
+# ./deploy_jdn upgradey		- run "apt-get upgrade -y" everywhere
+# ./deploy_jdn rmstamp		- delete stamp files everywhere
 
 
 START=$(date +'%s')

@@ -64,6 +64,7 @@ for i in $BUILD_NODES ; do
 	echo "$l builds/day ($j/$k) on $i" >> $TMPFILE2
 	DATE=$(date '+%Y-%m-%d %H:%M' -d "-1 days")
 	m=$(query_db "SELECT count(build_date) FROM stats_build AS r WHERE ( r.node1='$i' OR r.node2='$i' ) AND r.build_date > '$DATE' " 2>/dev/null)
+	if [ "$m" = "" ] ; then m=0 ; fi
 	echo "$m builds in the last 24h on $i" >> $TMPFILE3
 done
 rm $TMPFILE1 >/dev/null

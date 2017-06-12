@@ -651,7 +651,7 @@ create_performance_page() {
 	ARCH="amd64"
 	SUITE="unstable"
 	echo "$(date -u) - starting to write $PAGE page."
-	write_page_header $VIEW "Build node performance stats"
+	write_page_header $VIEW "Build network performance stats"
 	# arch performance stats
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do

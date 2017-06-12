@@ -23,7 +23,7 @@ PAGE=index_${VIEW}.html
 ARCH=amd64
 SUITE=unstable
 echo "$(date -u) - starting to write $PAGE page."
-write_page_header $VIEW "Build nodes health overview"
+write_page_header $VIEW "Nodes health overview"
 write_page "<p>This page is still under development. Please provide feedback, which other information (be it from munin or elsewhere) should be displayed and how this page should be split further, eg, the graphs could all be on another page and/or we should split this page into four for the four architectures being tested…</p>"
 # FIXME: Also either $0 and its job needs to be renamed to include 'html' or the code needs to be moved elsewhere
 write_page "<p style=\"clear:both;\">"
@@ -103,7 +103,7 @@ for TYPE in daily weekly ; do
 	ARCH=amd64
 	SUITE=unstable
 	echo "$(date -u) - starting to write $PAGE page."
-	write_page_header $VIEW "Build nodes $TYPE graphs"
+	write_page_header $VIEW "Nodes $TYPE graphs"
 	write_page "<p>This page is still under development. Please provide feedback, which other information (be it from munin or elsewhere) should be displayed and how this page should be split further, eg, the graphs could all be on another page and/or we should split this page into four for the four architectures being tested…</p>"
 	# FIXME: Also either $0 and its job needs to be renamed to include 'html' or the code needs to be moved elsewhere
 	write_page "<p style=\"clear:both;\">"

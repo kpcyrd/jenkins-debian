@@ -95,7 +95,6 @@ done
 write_page "</p>"
 write_page_footer
 publish_page debian
-exit 0
 
 #
 # collect node information

@@ -378,11 +378,11 @@
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
-                - 'setup_pbuilder_testing':
-                    my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                - 'setup_pbuilder_stretch':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from stretch as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '23 7 * * *'
                 - 'setup_pbuilder_unstable':
-                    my_description: 'Setup pbuilder for reproducible builds of packages from testing as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '42 7 * * *'
                 - 'setup_pbuilder_experimental':
                     my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
@@ -390,8 +390,8 @@
                 - 'setup_schroot_unstable':
                     my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
                     my_timed: '20 1 * * *'
-                - 'setup_schroot_testing':
-                    my_description: 'Setup testing schroot for fetching source packages for the builder jobs.'
+                - 'setup_schroot_stretch':
+                    my_description: 'Setup stretch schroot for fetching source packages for the builder jobs.'
                     my_timed: '0 1 * * *'
                 - 'setup_schroot_experimental':
                     my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
@@ -448,14 +448,14 @@
                     my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '42 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
-                - 'testing_diffoscope':
-                    my_description: 'Setup schroot for running diffoscope in a testing environment (this is needed to be able to correctly investigate haskell binaries...)'
+                - 'stretch_diffoscope':
+                    my_description: 'Setup schroot for running diffoscope in a stretch environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '23 0 * * *'
-                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing-diffoscope testing diffoscope locales-all'
+                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-stretch-diffoscope stretch diffoscope locales-all'
                 - 'unstable':
                     my_timed: '42 1 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro} botch'
-                - 'testing':
+                - 'stretch':
                     my_timed: '42 1 * * *'
                 - 'experimental':
                     my_timed: '33 1 * * *'

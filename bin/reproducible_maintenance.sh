@@ -419,7 +419,7 @@ fi
 
 # find + chmod files with bad permissions
 echo "$(date -u) - Checking for files with bad permissions."
-BADPERMS=$(find $DEBIAN_BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,testing,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
+BADPERMS=$(find $DEBIAN_BASE/{buildinfo,dbd,rbuild,artifacts,unstable,experimental,stretch,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo

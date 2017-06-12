@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
-# Copyright © 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_json.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
@@ -48,8 +48,8 @@ for row in result:
     log.debug(pkg)
     output.append(pkg)
 
-    # tracker.d.o should only care about results in testing
-    if pkg['suite'] == 'testing':
+    # tracker.d.o should only care about results in stretch
+    if pkg['suite'] == 'stretch':
 
         package = pkg['package']
         if package in crossarch:

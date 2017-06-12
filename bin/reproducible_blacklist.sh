@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
@@ -74,7 +74,7 @@ case $SUITE in
 	sid) 	echo "WARNING: sid has been renamed to unstable."
 		SUITE=unstable
 		;;
-	testing|unstable|experimental) ;;
+	stretch|unstable|experimental) ;;
 	*)	echo "$SUITE is not a valid suite".
 		explain_syntax
 		exit 1

@@ -329,12 +329,12 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		write_page " <th>$ARCH</th>"
 	done
-	write_page "</tr><tr><td class=\"left\">oldest build result in testing / unstable / experimental</td>"
+	write_page "</tr><tr><td class=\"left\">oldest build result in stretch / unstable / experimental</td>"
 	for ARCH in ${ARCHS} ; do
 		AGE_UNSTABLE=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_EXPERIMENTAL=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_TESTING=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='testing' AND architecture='$ARCH' AND datum='$DATE'")
-		write_page "<td>$AGE_TESTING / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
+		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
+		write_page "<td>$AGE_STRETCH / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs configured</td>"
 	for ARCH in ${ARCHS} ; do
@@ -553,10 +553,10 @@ create_dashboard_page() {
 	local TD_PKG_SID_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
 	local TD_PKG_SID_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
 	local TD_PKG_SID_ISSUES="<tr><td class=\"left\">packages in unstable which need to be fixed</td><td></td>"
-	local TD_PKG_TESTING_NOISSUES="<tr><td class=\"left\">packages in testing with issues but without identified ones</td><td></td>"
-	local TD_PKG_TESTING_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
-	local TD_PKG_TESTING_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
-	local TD_PKG_TESTING_ISSUES="<tr><td class=\"left\">packages in testing which need to be fixed</td><td></td>"
+	local TD_PKG_STRETCH_NOISSUES="<tr><td class=\"left\">packages in stretch with issues but without identified ones</td><td></td>"
+	local TD_PKG_STRETCH_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
+	local TD_PKG_STRETCH_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
+	local TD_PKG_STRETCH_ISSUES="<tr><td class=\"left\">packages in stretch which need to be fixed</td><td></td>"
 	for ARCH in ${ARCHS} ; do
 		SUITE="unstable"
 		gather_suite_arch_stats
@@ -569,24 +569,24 @@ create_dashboard_page() {
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_FTBFS="$TD_PKG_SID_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 
-		SUITE="testing"
+		SUITE="stretch"
 		gather_suite_arch_stats
-		TD_PKG_TESTING_ISSUES="$TD_PKG_TESTING_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+		TD_PKG_STRETCH_ISSUES="$TD_PKG_STRETCH_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
-		TD_PKG_TESTING_NOISSUES="$TD_PKG_TESTING_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_STRETCH_NOISSUES="$TD_PKG_STRETCH_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
-		TD_PKG_TESTING_FTBR="$TD_PKG_TESTING_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_STRETCH_FTBR="$TD_PKG_STRETCH_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
-		TD_PKG_TESTING_FTBFS="$TD_PKG_TESTING_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_STRETCH_FTBFS="$TD_PKG_STRETCH_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 	done
 	write_page "$TD_PKG_SID_NOISSUES</tr>"
 	write_page "$TD_PKG_SID_FTBR</tr>"
 	write_page "$TD_PKG_SID_FTBFS</tr>"
 	write_page "$TD_PKG_SID_ISSUES</tr>"
-	write_page "$TD_PKG_TESTING_NOISSUES</tr>"
-	write_page "$TD_PKG_TESTING_FTBR</tr>"
-	write_page "$TD_PKG_TESTING_FTBFS</tr>"
-	write_page "$TD_PKG_TESTING_ISSUES</tr>"
+	write_page "$TD_PKG_STRETCH_NOISSUES</tr>"
+	write_page "$TD_PKG_STRETCH_FTBR</tr>"
+	write_page "$TD_PKG_STRETCH_FTBFS</tr>"
+	write_page "$TD_PKG_STRETCH_ISSUES</tr>"
 	ARCH="amd64"
 	SUITE="unstable"
 

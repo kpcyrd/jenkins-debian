@@ -32,7 +32,7 @@ BIN_PATH=/srv/jenkins/bin
 TEMPLATE_PATH=/srv/jenkins/mustache-templates/reproducible
 
 # Debian suites being tested
-SUITES="testing unstable experimental"
+SUITES="stretch unstable experimental"
 # Debian architectures being tested
 ARCHS="amd64 i386 arm64 armhf"
 
@@ -670,7 +670,7 @@ create_png_from_table() {
 		WHERE_EXTRA="$WHERE_EXTRA AND architecture = '$ARCH'"
 		if [ "$ARCH" = "armhf" ]  ; then
 			if [ $1 -eq 2 ] ; then
-				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19 and testing/armhf since 2016-01-01)
+				# unstable/armhf was only build since 2015-08-30 (and experimental/armhf since 2015-12-19 and stretch/armhf since 2016-01-01)
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2015-08-30'"
 			fi
 		elif [ "$ARCH" = "i386" ]  ; then
@@ -684,7 +684,7 @@ create_png_from_table() {
 				WHERE_EXTRA="$WHERE_EXTRA AND datum >= '2016-12-23'"
 			fi
 		fi
-		# testing/amd64 was only build since...
+		# stretch/amd64 was only build since...
 		# WHERE2_EXTRA="WHERE s.datum >= '2015-03-08'"
 		# experimental/amd64 was only build since...
 		# WHERE2_EXTRA="WHERE s.datum >= '2015-02-28'"
@@ -697,29 +697,29 @@ create_png_from_table() {
 		# This query becomes much more obnoxious when gaining
 		# compatibility with postgres
 		query_to_csv "SELECT stats.datum,
-			 COALESCE(reproducible_testing,0) AS reproducible_testing,
+			 COALESCE(reproducible_stretch,0) AS reproducible_stretch,
 			 COALESCE(reproducible_unstable,0) AS reproducible_unstable,
 			 COALESCE(reproducible_experimental,0) AS reproducible_experimental,
-			 COALESCE(unreproducible_testing,0) AS unreproducible_testing,
+			 COALESCE(unreproducible_stretch,0) AS unreproducible_stretch,
 			 COALESCE(unreproducible_unstable,0) AS unreproducible_unstable,
 			 COALESCE(unreproducible_experimental,0) AS unreproducible_experimental,
-			 COALESCE(FTBFS_testing,0) AS FTBFS_testing,
+			 COALESCE(FTBFS_stretch,0) AS FTBFS_stretch,
 			 COALESCE(FTBFS_unstable,0) AS FTBFS_unstable,
 			 COALESCE(FTBFS_experimental,0) AS FTBFS_experimental,
-			 COALESCE(other_testing,0) AS other_testing,
+			 COALESCE(other_stretch,0) AS other_stretch,
 			 COALESCE(other_unstable,0) AS other_unstable,
 			 COALESCE(other_experimental,0) AS other_experimental
 			FROM (SELECT s.datum,
-			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA),0) AS reproducible_testing,
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA),0) AS reproducible_stretch,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS reproducible_unstable,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS reproducible_experimental,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA) AS unreproducible_testing,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS unreproducible_stretch,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS unreproducible_unstable,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS unreproducible_experimental,
-			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA) AS FTBFS_testing,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS FTBFS_stretch,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS FTBFS_unstable,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS FTBFS_experimental,
-			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='testing' $WHERE_EXTRA) AS other_testing,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS other_stretch,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS other_unstable,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS other_experimental
 			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum) as stats
@@ -741,7 +741,7 @@ create_png_from_table() {
 	COLORS=${COLOR[$1]}
 	if [ $1 -eq 2 ] ; then
 		case "$SUITE" in
-			testing)	COLORS=40 ;;
+			stretch)	COLORS=40 ;;
 			unstable)	COLORS=41 ;;
 			experimental)	COLORS=42 ;;
 		esac

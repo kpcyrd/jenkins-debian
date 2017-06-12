@@ -27,7 +27,7 @@ def load_notes():
     { 'package_name': [
         {'suite': 'unstable', 'version': '0.0', 'comments': None,
          'bugs': [1234, 5678], 'issues': ['blalba','auauau']},
-        {'suite': 'testing', 'version': None, 'comments': 'strstr',
+        {'suite': 'stretch', 'version': None, 'comments': 'strstr',
           'bugs': [], 'issues': []}],
       'package_name':<etc> }
     """

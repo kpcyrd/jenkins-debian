@@ -1,0 +1,38 @@
+special deployement needed for this:
+------------------------------------
+stop workers (cleanup nodes) and build_service
+prepare jenkins shutdown in gui
+do run update_jdn.sh
+rename dirs in the filesystem as needed, FIXME: proper mv commands…
+	root@jenkins:/var/lib/jenkins/userContent# find . -type d -name "*testing*"
+	./reproducible/debian/issues/testing
+	./reproducible/debian/logs/testing
+	./reproducible/debian/rb-pkg/testing
+	./reproducible/debian/logdiffs/testing
+	./reproducible/debian/buildinfo/testing
+	./reproducible/debian/dbdtxt/testing
+	./reproducible/debian/rbuild/testing
+	./reproducible/debian/dbd/testing
+	./reproducible/debian/testing
+	./reproducible/rpms/fedora-23/x86_64/gnome-desktop-testing
+	root@jenkins:/var/lib/jenkins/userContent#
+	root@jenkins:/srv/reproducible-results# find . -type d -name "*testing*"
+	./meta_pkgsets-testing
+	./chdist-testing
+	./chdist-testing/testing-amd64
+	root@jenkins:/srv/reproducible-results# 
+run reproducible_db_maintenance
+reenable job execution
+do run update_jdn.sh again
+remove all jobs which match reproducible*testing*
+
+changes not to be done
+----------------------
+hosts/jenkins/etc/apache2/sites-available/jenkins.debian.net.conf has no (new) redirects from testing to stretch, I think that's good enough
+
+changes not yet prepared in git
+-------------------------------
+db changes
+prepare to add buster on 2017-06-17
+finally, remove this file again.
+

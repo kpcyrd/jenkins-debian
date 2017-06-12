@@ -174,7 +174,7 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 *** new page with notes that doesnt make sense: a.) packages which are reproducible but should not, packages that build but shouldn't, etc.
 *** new page with packages which are reproducible on one arch and unreproducible on another arch (in the same suite, so unstable only atm)
 *** new page with packages which ftbfs on one arch and build fine on another arch (in the same suite, so unstable only atm)
-*** new page with packages which ftbfs in testing but build fine on sid
+*** new page with packages which ftbfs in stretch but build fine on sid
 *** new page with packages which are orphaned but have a reproducible usertagged patch
 *** new page showing arch all packages which are cross-reproducible, and those which are not
 ** new pages: r.d.n/$maintainer-email redirecting to r.d.n/maintainers/unstable/${maintainer-email}.html, showing the unreproducible packages for that address. and a sunny "yay, thank you"-summary for those with only reproducible packages.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2009, 2010, 2012, 2015 Peter Palfrader
-#               2015-2016 Holger Levsen
+#               2015-2017 Holger Levsen
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -103,8 +103,8 @@ elif [[ "$*" =~ ^rm\ -r\ /var/lib/jenkins/jobs/.*/workspace/results ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_pbuilder_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh unstable ; croak "Exec failed";
-elif [[ "$*" =~ ^reproducible_setup_pbuilder_testing_.*_.* ]] ; then
-	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh testing ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_setup_pbuilder_stretch_.*_.* ]] ; then
+	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh stretch ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_pbuilder_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_maintenance_.*_.* ]] ; then
@@ -115,8 +115,8 @@ elif [[ "$*" =~ ^reproducible_setup_schroot_unstable_diffoscope_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_schroot_unstable_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable unstable botch ; croak "Exec failed";
-elif [[ "$*" =~ ^reproducible_setup_schroot_testing_.*_.* ]] ; then
-	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-testing testing ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_setup_schroot_stretch_.*_.* ]] ; then
+	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-stretch stretch ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_schroot_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-experimental experimental ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_coreboot ]] ; then

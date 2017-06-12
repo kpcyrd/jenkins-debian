@@ -173,8 +173,13 @@
   <li {{#breakages}}class='active'{{/breakages}}>
     <a href="/debian/index_breakages.html">Broken pieces</a>
   </li>
-  <li {{#nodes_health}}class='active'{{/nodes_health}}>
-    <a href="/debian/index_nodes_health.html">Build nodes health overview</a>
-  </li>
+  <li><ul>Build nodes health
+    <li {{#nodes_health}}class='active'{{/nodes_health}}>
+      <a href="/debian/index_nodes_health.html">overview</a>
+    </li>
+    <li {{#nodes_graphs}}class='active'{{/nodes_graphs}}>
+      <a href="/debian/index_nodes_graphs.html">graphs</a>
+    </li>
+  </ul></li>
 </ul>
 {{{project_links_html}}}

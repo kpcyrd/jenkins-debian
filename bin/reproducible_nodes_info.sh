@@ -16,7 +16,7 @@ TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
 
 #
-# build a static webpage
+# build static webpages
 #
 VIEW=nodes_health
 PAGE=index_${VIEW}.html
@@ -77,16 +77,50 @@ for ARCH in ${ARCHS} ; do
 			fi
 		done
 		write_page "</tr>"
-		write_page "<tr><td></td>"
-		for GRAPH in jenkins_reproducible_builds cpu memory df ; do
+	done
+	write_page "</table>"
+done
+write_page "</p>"
+write_page_footer
+publish_page debian
+
+VIEW=nodes_graphs
+PAGE=index_${VIEW}.html
+echo "$(date -u) - starting to write $PAGE page."
+write_page_header $VIEW "Build nodes health graphs"
+write_page "<p>This page is still under development. Please provide feedback, which other information (be it from munin or elsewhere) should be displayed and how this page should be split further, eg, the graphs could all be on another page and/or we should split this page into four for the four architectures being tested…</p>"
+# FIXME: Also either $0 and its job needs to be renamed to include 'html' or the code needs to be moved elsewhere
+write_page "<p style=\"clear:both;\">"
+for ARCH in ${ARCHS} ; do
+	write_page "<h3>$ARCH nodes</h3>"
+	write_page "<table>"
+	write_page "<tr><th>Name</th><th colspan='6'></th>"
+	write_page "</tr>"
+	for NODE in jenkins $BUILD_NODES ; do
+		if [ -z "$(echo $NODE | grep $ARCH || true)" ] && [ "$NODE" != "jenkins" ] ; then
+			continue
+		elif [ "$NODE" = "jenkins" ] && [ "$ARCH" != "amd64" ] ; then
+			continue
+		fi
+		if [ "$NODE" = "jenkins" ] ; then
+			JENKINS_NODENAME=jenkins
+			NODE="jenkins.debian.net"
+		else
+			case $ARCH in
+				amd64|i386) 	JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1-2|sed 's#-build##' ) ;;
+				arm64) 		JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1-2|sed 's#-sled##' ) ;;
+				armhf) 		JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1) ;;
+			esac
+		fi
+		write_page "<tr><td>$JENKINS_NODENAME</td>"
+		for GRAPH in jenkins_reproducible_builds cpu memory df swap load ; do
 			if [ "$JENKINS_NODENAME" = "jenkins" ] && [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
 				write_page "<td></td>"
 			else
 				write_page "<td><a href='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH.html'>"
-				write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH-day.png' width='150' /></a></td>"
+				write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH-week.png' width='150' /></a></td>"
 			fi
 		done
-		write_page "<td colspan='2'></td>"
 		write_page "</tr>"
 		
 	done

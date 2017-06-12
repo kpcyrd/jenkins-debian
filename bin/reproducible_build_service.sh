@@ -266,7 +266,7 @@ while true ; do
 	# now sleep, but allow wakeup calls
 	#
 	set +e
-	sleep 1337m
+	sleep 133.7m
 	set -e
 done
 

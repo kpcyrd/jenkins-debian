@@ -157,7 +157,7 @@ Keep the database (or a symlink of it) in /var/lib/jenkins/reproducible.db and g
 
 ==== Websites scripts
 
-The $JENKINSGIT/bin/reproducible_html_*.py and $JENKINSGIT/bin/reproducible_html_*.sh scripts produce the debian testing pages and you probably want to run all of them at least once. Below are the requirements for some scripts.
+The $JENKINSGIT/bin/reproducible_html_*.py and $JENKINSGIT/bin/reproducible_html_*.sh scripts produce the debian pages and you probably want to run all of them at least once. Below are the requirements for some scripts.
 
 All webpages will be served out of /var/lib/jenkins/userContent/reproducible and you need to point a webserver to this directory. Build the reproducible dashboard for debian with the $JENKINSGIT/bin/reproducible_html_dashboard.sh, and navigate to <host>/debian/reproducible.html in your browser.
 

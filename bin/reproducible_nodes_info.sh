@@ -28,7 +28,7 @@ write_page "<p style=\"clear:both;\">"
 for ARCH in ${ARCHS} ; do
 	write_page "<h3>$ARCH nodes</h3>"
 	write_page "<table>"
-	write_page "<tr><th>Name</th><th>maintenance</th>"
+	write_page "<tr><th>Name</th><th>maintenance</th><th>worker.log links</th>"
 		for SUITE in ${SUITES} ; do
 			if [ "$SUITE" = "experimental" ] ; then
 				continue
@@ -59,6 +59,17 @@ for ARCH in ${ARCHS} ; do
 		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_maintenance_${ARCH}_${JENKINS_NODENAME}"
 		BADGE="$URL/badge/icon"
 		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+		if [ "$JENKINS_NODENAME" = "jenkins" ] ; then
+			write_page "<td></td>"
+		else
+			write_page "<td>"
+			SHORTNAME=$(echo $NODE | cut -d '.' -f1)
+			for WORKER in $(grep "${ARCH}_" /srv/jenkins/bin/reproducible_build_service.sh | grep -v \# |grep $SHORTNAME | cut -d ')' -f1) ; do
+				write_page "<a href='https://jenkins.debian.net/userContent/reproducible/debian/build_service/${WORKER}/worker.log'>"
+				write_page "$(echo $WORKER |cut -d '_' -f2)</a> "
+			done
+			write_page "</td>"
+		fi
 		for SUITE in ${SUITES} ; do
 			if [ "$SUITE" = "experimental" ] ; then
 				continue

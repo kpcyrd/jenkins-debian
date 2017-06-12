@@ -116,93 +116,68 @@ choose_nodes() {
                 arm64_31)       NODE1=codethink-sled14-arm64	NODE2=codethink-sled11-arm64 ;;
                 arm64_32)       NODE1=codethink-sled13-arm64	NODE2=codethink-sled14-arm64 ;;
 		# to choose new armhf jobs:
-	        #       for i in cb3a hb0 rpi2b rpi2c wbd0 bpi0        bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a odc2a odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0        cbxi4a cbxi4b ff4a jtx1a ; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
-	        #       8 jobs for quad-cores with 4 gb ram
-	        #       6 jobs for octo-cores with 2 gb ram
-	        #       6 jobs for hexa-cores with 2 gb ram
-	        #       6 jobs for quad-cores with 2 gb ram
-	        #       3 jobs for dual-cores with 1 gb ram
-	        #       3 jobs for quad-cores with 1 gb ram
+            #   for i in cb3a hb0 rpi2b rpi2c wbd0 bpi0 bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0 cbxi4a cbxi4b ff4a jtx1a ; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
+	        #       6 jobs for quad-cores with 4 gb ram
+	        #       4 jobs for octo-cores with 2 gb ram
+	        #       4 jobs for hexa-cores with 2 gb ram
+	        #       4 jobs for quad-cores with 2 gb ram
+	        #       4 jobs for dual-cores with 2 gb ram
+	        #       2 jobs for dual-cores with 1 gb ram
+	        #       2 jobs for quad-cores with 1 gb ram
 		#
 		# Don't forget to update README with the number of builders…!
 		#
-                armhf_1)	NODE1=bbx15-armhf-rb		NODE2=odxu4-armhf-rb ;;
-                armhf_2)	NODE1=wbq0-armhf-rb		NODE2=p64c-armhf-rb ;;
-                armhf_3)	NODE1=hb0-armhf-rb		NODE2=p64b-armhf-rb ;;
-                armhf_4)	NODE1=ff4a-armhf-rb		NODE2=wbq0-armhf-rb ;;
-                armhf_5)	NODE1=cbxi4pro0-armhf-rb	NODE2=bpi0-armhf-rb ;;
-                armhf_6)	NODE1=ff4a-armhf-rb		NODE2=cbxi4pro0-armhf-rb ;;
-                armhf_7)	NODE1=wbq0-armhf-rb		NODE2=odxu4-armhf-rb ;;
-                armhf_8)	NODE1=hb0-armhf-rb		NODE2=wbq0-armhf-rb ;;
-                armhf_9)	NODE1=ff4a-armhf-rb		NODE2=bpi0-armhf-rb ;;
-                armhf_10)	NODE1=odxu4-armhf-rb		NODE2=rpi2b-armhf-rb ;;
-                armhf_11)	NODE1=odxu4-armhf-rb		NODE2=wbd0-armhf-rb ;;
-                armhf_12)	NODE1=wbd0-armhf-rb		NODE2=cbxi4pro0-armhf-rb ;;
-                armhf_13)	NODE1=cbxi4pro0-armhf-rb	NODE2=rpi2b-armhf-rb ;;
-                armhf_14)	NODE1=cbxi4a-armhf-rb		NODE2=odxu4b-armhf-rb ;;
-                armhf_15)	NODE1=rpi2b-armhf-rb		NODE2=odxu4c-armhf-rb ;;
-                armhf_16)	NODE1=odxu4b-armhf-rb		NODE2=wbd0-armhf-rb ;;
-                armhf_17)	NODE1=odxu4c-armhf-rb		NODE2=hb0-armhf-rb ;;
-                armhf_18)	NODE1=odxu4b-armhf-rb		NODE2=odu3a-armhf-rb ;;
-                armhf_19)	NODE1=odxu4c-armhf-rb		NODE2=opi2c-armhf-rb ;;
-                armhf_20)	NODE1=opi2b-armhf-rb		NODE2=odxu4b-armhf-rb ;;
-                armhf_21)	NODE1=ff2a-armhf-rb		NODE2=odxu4c-armhf-rb ;;
-                armhf_22)	NODE1=ff2a-armhf-rb		NODE2=rpi2c-armhf-rb ;;
-                armhf_23)	NODE1=rpi2c-armhf-rb		NODE2=odxu4b-armhf-rb ;;
-                armhf_24)	NODE1=rpi2c-armhf-rb		NODE2=odxu4c-armhf-rb ;;
-                armhf_25)	NODE1=odxu4b-armhf-rb		NODE2=ff2b-armhf-rb ;;
-                armhf_26)	NODE1=jtk1a-armhf-rb		NODE2=ff2a-armhf-rb ;;
-                armhf_27)	NODE1=odxu4c-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
-                armhf_28)	NODE1=jtk1a-armhf-rb		NODE2=ff2b-armhf-rb ;;
-                armhf_29)	NODE1=ff2b-armhf-rb		NODE2=jtk1a-armhf-rb ;;
-                armhf_30)	NODE1=ff2b-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
-                armhf_31)	NODE1=ff2b-armhf-rb		NODE2=opi2b-armhf-rb ;;
-                armhf_32)	NODE1=jtk1a-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
-                armhf_33)	NODE1=ff2a-armhf-rb		NODE2=opi2b-armhf-rb ;;
-                armhf_34)	NODE1=cbxi4a-armhf-rb		NODE2=opi2b-armhf-rb ;;
-                armhf_35)	NODE1=opi2a-armhf-rb		NODE2=ff2b-armhf-rb ;;
-                armhf_36)	NODE1=opi2a-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
-                armhf_37)	NODE1=opi2a-armhf-rb		NODE2=wbq0-armhf-rb ;;
-                armhf_38)	NODE1=cbxi4b-armhf-rb		NODE2=jtk1a-armhf-rb ;;
-                armhf_39)	NODE1=cbxi4b-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
-                armhf_40)	NODE1=opi2b-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
-                armhf_41)	NODE1=opi2b-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
-                armhf_42)	NODE1=cbxi4b-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
-                armhf_43)	NODE1=cbxi4a-armhf-rb		NODE2=opi2c-armhf-rb ;;
-                armhf_44)	NODE1=bbx15-armhf-rb		NODE2=ff4a-armhf-rb ;;
-                armhf_45)	NODE1=ff4a-armhf-rb		NODE2=p64b-armhf-rb ;;
-                armhf_46)	NODE1=wbq0-armhf-rb		NODE2=bbx15-armhf-rb ;;
-                armhf_47)	NODE1=cbxi4pro0-armhf-rb	NODE2=bbx15-armhf-rb ;;
-                armhf_48)	NODE1=bbx15-armhf-rb		NODE2=p64c-armhf-rb ;;
-                armhf_49)	NODE1=bpi0-armhf-rb		NODE2=ff4a-armhf-rb ;;
-                armhf_50)	NODE1=odxu4-armhf-rb		NODE2=odu3a-armhf-rb ;;
-                armhf_51)	NODE1=odu3a-armhf-rb		NODE2=cb3a-armhf-rb ;;
-                armhf_52)	NODE1=opi2c-armhf-rb		NODE2=cb3a-armhf-rb ;;
-                armhf_53)	NODE1=cb3a-armhf-rb		NODE2=ff4a-armhf-rb ;;
-                armhf_54)	NODE1=odu3a-armhf-rb		NODE2=opi2c-armhf-rb ;;
-                armhf_55)	NODE1=opi2c-armhf-rb		NODE2=odu3a-armhf-rb ;;
-                armhf_56)	NODE1=odu3a-armhf-rb		NODE2=ff2a-armhf-rb ;;
-                armhf_57)	NODE1=opi2c-armhf-rb		NODE2=ff64a-armhf-rb ;;
-                armhf_58)	NODE1=cbxi4a-armhf-rb		NODE2=ff64a-armhf-rb ;;
-                armhf_59)	NODE1=jtk1a-armhf-rb		NODE2=ff64a-armhf-rb ;;
-                armhf_60)	NODE1=cbxi4b-armhf-rb		NODE2=jtx1a-armhf-rb ;;
-                armhf_61)	NODE1=p64c-armhf-rb		NODE2=jtx1a-armhf-rb ;;
-                armhf_62)	NODE1=p64b-armhf-rb		NODE2=jtx1a-armhf-rb ;;
-                armhf_63)	NODE1=p64b-armhf-rb		NODE2=jtx1a-armhf-rb ;;
-#                armhf_64)	NODE1=p64c-armhf-rb		NODE2=odc2a-armhf-rb ;;
-#                armhf_65)	NODE1=p64b-armhf-rb		NODE2=odc2a-armhf-rb ;;
-#                armhf_66)	NODE1=p64c-armhf-rb		NODE2=odc2a-armhf-rb ;;
-                armhf_67)	NODE1=ff64a-armhf-rb		NODE2=ff2a-armhf-rb ;;
-                armhf_68)	NODE1=ff64a-armhf-rb		NODE2=p64b-armhf-rb ;;
-                armhf_69)	NODE1=ff64a-armhf-rb		NODE2=p64c-armhf-rb ;;
-                armhf_70)	NODE1=jtx1a-armhf-rb		NODE2=opi2a-armhf-rb ;;
-                armhf_71)	NODE1=jtx1a-armhf-rb		NODE2=opi2a-armhf-rb ;;
-                armhf_72)	NODE1=jtx1a-armhf-rb		NODE2=opi2a-armhf-rb ;;
-                armhf_73)	NODE1=jtx1a-armhf-rb		NODE2=ff4a-armhf-rb ;;
-#                armhf_74)	NODE1=odc2a-armhf-rb		NODE2=bbx15-armhf-rb ;;
-#                armhf_75)	NODE1=odc2a-armhf-rb		NODE2=cbxi4pro0-armhf-rb ;;
-#                armhf_76)	NODE1=odc2a-armhf-rb		NODE2=odxu4-armhf-rb ;;
-
+                armhf_1)	NODE1=bbx15-armhf-rb		NODE2=jtx1a-armhf-rb ;;
+                armhf_2)	NODE1=bbx15-armhf-rb		NODE2=rpi2b-armhf-rb ;;
+                armhf_3)	NODE1=cb3a-armhf-rb		NODE2=bbx15-armhf-rb ;;
+                armhf_4)	NODE1=cb3a-armhf-rb		NODE2=bbx15-armhf-rb ;;
+                armhf_5)	NODE1=hb0-armhf-rb		NODE2=cb3a-armhf-rb ;;
+                armhf_6)	NODE1=rpi2b-armhf-rb		NODE2=cb3a-armhf-rb ;;
+                armhf_7)	NODE1=rpi2c-armhf-rb		NODE2=wbd0-armhf-rb ;;
+                armhf_8)	NODE1=wbd0-armhf-rb		NODE2=rpi2c-armhf-rb ;;
+                armhf_9)	NODE1=bpi0-armhf-rb		NODE2=cbxi4pro0-armhf-rb ;;
+                armhf_10)	NODE1=cbxi4pro0-armhf-rb	NODE2=bpi0-armhf-rb ;;
+                armhf_11)	NODE1=cbxi4pro0-armhf-rb	NODE2=ff2a-armhf-rb ;;
+                armhf_12)	NODE1=ff2a-armhf-rb		NODE2=cbxi4pro0-armhf-rb ;;
+                armhf_13)	NODE1=ff2a-armhf-rb		NODE2=ff2b-armhf-rb ;;
+                armhf_14)	NODE1=ff2b-armhf-rb		NODE2=ff2a-armhf-rb ;;
+                armhf_15)	NODE1=ff2b-armhf-rb		NODE2=ff64a-armhf-rb ;;
+                armhf_16)	NODE1=ff64a-armhf-rb		NODE2=ff2b-armhf-rb ;;
+                armhf_17)	NODE1=ff64a-armhf-rb		NODE2=jtk1a-armhf-rb ;;
+                armhf_18)	NODE1=jtk1a-armhf-rb		NODE2=ff64a-armhf-rb ;;
+                armhf_19)	NODE1=jtk1a-armhf-rb		NODE2=odxu4-armhf-rb ;;
+                armhf_20)	NODE1=odxu4-armhf-rb		NODE2=jtk1a-armhf-rb ;;
+                armhf_21)	NODE1=odxu4-armhf-rb		NODE2=odxu4b-armhf-rb ;;
+                armhf_22)	NODE1=odxu4b-armhf-rb		NODE2=odxu4-armhf-rb ;;
+                armhf_23)	NODE1=odxu4b-armhf-rb		NODE2=odxu4c-armhf-rb ;;
+                armhf_24)	NODE1=odxu4c-armhf-rb		NODE2=odxu4b-armhf-rb ;;
+                armhf_25)	NODE1=odxu4c-armhf-rb		NODE2=odu3a-armhf-rb ;;
+                armhf_26)	NODE1=odu3a-armhf-rb		NODE2=odxu4c-armhf-rb ;;
+                armhf_27)	NODE1=odu3a-armhf-rb		NODE2=opi2a-armhf-rb ;;
+                armhf_28)	NODE1=opi2a-armhf-rb		NODE2=odu3a-armhf-rb ;;
+                armhf_29)	NODE1=opi2a-armhf-rb		NODE2=opi2b-armhf-rb ;;
+                armhf_30)	NODE1=opi2b-armhf-rb		NODE2=opi2a-armhf-rb ;;
+                armhf_31)	NODE1=opi2b-armhf-rb		NODE2=opi2c-armhf-rb ;;
+                armhf_32)	NODE1=opi2c-armhf-rb		NODE2=opi2b-armhf-rb ;;
+                armhf_33)	NODE1=opi2c-armhf-rb		NODE2=p64b-armhf-rb ;;
+                armhf_34)	NODE1=p64b-armhf-rb		NODE2=opi2c-armhf-rb ;;
+                armhf_35)	NODE1=p64b-armhf-rb		NODE2=p64c-armhf-rb ;;
+                armhf_36)	NODE1=p64c-armhf-rb		NODE2=p64b-armhf-rb ;;
+                armhf_37)	NODE1=p64c-armhf-rb		NODE2=wbq0-armhf-rb ;;
+                armhf_38)	NODE1=wbq0-armhf-rb		NODE2=p64c-armhf-rb ;;
+                armhf_39)	NODE1=wbq0-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
+                armhf_40)	NODE1=cbxi4a-armhf-rb		NODE2=wbq0-armhf-rb ;;
+                armhf_41)	NODE1=cbxi4a-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
+                armhf_42)	NODE1=cbxi4a-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
+                armhf_43)	NODE1=cbxi4b-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
+                armhf_44)	NODE1=cbxi4b-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
+                armhf_45)	NODE1=cbxi4b-armhf-rb		NODE2=ff4a-armhf-rb ;;
+                armhf_46)	NODE1=ff4a-armhf-rb		NODE2=cbxi4b-armhf-rb ;;
+                armhf_47)	NODE1=ff4a-armhf-rb		NODE2=jtx1a-armhf-rb ;;
+                armhf_48)	NODE1=ff4a-armhf-rb		NODE2=jtx1a-armhf-rb ;;
+                armhf_49)	NODE1=jtx1a-armhf-rb		NODE2=ff4a-armhf-rb ;;
+                armhf_50)	NODE1=jtx1a-armhf-rb		NODE2=ff4a-armhf-rb ;;
+                armhf_51)	NODE1=jtx1a-armhf-rb		NODE2=hb0-armhf-rb ;;
 		*)		NODE1=undefined
 				;;
 	esac

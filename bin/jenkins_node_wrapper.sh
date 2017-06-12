@@ -109,6 +109,8 @@ elif [[ "$*" =~ ^reproducible_setup_pbuilder_experimental_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_pbuilder.sh experimental ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_maintenance_.*_.* ]] ; then
 	exec /srv/jenkins/bin/reproducible_maintenance.sh ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_node_health_check_.*_.* ]] ; then
+	exec /srv/jenkins/bin/reproducible_node_health_check.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_schroot_unstable_diffoscope_.*_.* ]] ; then
 	exec /srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_schroot_unstable_.*_.* ]] ; then

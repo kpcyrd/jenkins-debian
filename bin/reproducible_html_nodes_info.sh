@@ -30,7 +30,7 @@ write_page "<p style=\"clear:both;\">"
 for ARCH in ${ARCHS} ; do
 	write_page "<h3>$ARCH nodes</h3>"
 	write_page "<table>"
-	write_page "<tr><th>Name</th><th>maintenance</th><th>worker.log links</th>"
+	write_page "<tr><th>Name</th><th>health check</th><th>maintenance</th><th>worker.log links</th>"
 		for SUITE in ${SUITES} ; do
 			if [ "$SUITE" = "experimental" ] ; then
 				continue
@@ -58,6 +58,9 @@ for ARCH in ${ARCHS} ; do
 			esac
 		fi
 		write_page "<tr><td>$JENKINS_NODENAME</td>"
+		URL="https://jenkins.debian.net/view/reproducible/view/Node_node_health_check/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
+		BADGE="$URL/badge/icon"
+		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_maintenance_${ARCH}_${JENKINS_NODENAME}"
 		BADGE="$URL/badge/icon"
 		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"

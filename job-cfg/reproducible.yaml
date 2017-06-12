@@ -258,12 +258,72 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
+            my_task:
+                - 'node_health_check':
+                    my_description: 'Do some health checks.'
+                    my_timed: '3 * * * *'
+            my_shell: '/srv/jenkins/bin/reproducible_node_health_check.sh'
+            my_hname:
+                - 'jenkins':        { my_arch: 'amd64' }
+            my_node: ''
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
                 - 'maintenance':
                     my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
                     my_timed: '5 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
+            my_hname:
+                - 'bbx15':          { my_arch: 'armhf' }
+                - 'bpi0':           { my_arch: 'armhf' }
+                - 'cbxi4a':         { my_arch: 'armhf' }
+                - 'cbxi4b':         { my_arch: 'armhf' }
+                - 'cbxi4pro0':      { my_arch: 'armhf' }
+                - 'cb3a':           { my_arch: 'armhf' }
+                - 'ff2a':           { my_arch: 'armhf' }
+                - 'ff2b':           { my_arch: 'armhf' }
+                - 'ff4a':           { my_arch: 'armhf' }
+                - 'ff64a':          { my_arch: 'armhf' }
+                - 'hb0':            { my_arch: 'armhf' }
+                - 'jtk1a':          { my_arch: 'armhf' }
+                - 'jtx1a':          { my_arch: 'armhf' }
+                - 'odc2a':          { my_arch: 'armhf' }
+                - 'odxu4':          { my_arch: 'armhf' }
+                - 'odxu4b':         { my_arch: 'armhf' }
+                - 'odxu4c':         { my_arch: 'armhf' }
+                - 'odu3a':          { my_arch: 'armhf' }
+                - 'opi2a':          { my_arch: 'armhf' }
+                - 'opi2b':          { my_arch: 'armhf' }
+                - 'opi2c':          { my_arch: 'armhf' }
+                - 'rpi2b':          { my_arch: 'armhf' }
+                - 'rpi2c':          { my_arch: 'armhf' }
+                - 'p64b':           { my_arch: 'armhf' }
+                - 'p64c':           { my_arch: 'armhf' }
+                - 'wbd0':           { my_arch: 'armhf' }
+                - 'wbq0':           { my_arch: 'armhf' }
+                - 'profitbricks1':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'i386'  }
+                - 'profitbricks3':  { my_arch: 'amd64' }
+                - 'profitbricks4':  { my_arch: 'amd64' }
+                - 'profitbricks5':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'i386'  }
+                - 'profitbricks11': { my_arch: 'amd64' }
+                - 'profitbricks12': { my_arch: 'i386'  }
+                - 'profitbricks15': { my_arch: 'amd64' }
+                - 'profitbricks16': { my_arch: 'i386'  }
+                - 'codethink9':     { my_arch: 'arm64' }
+                - 'codethink10':    { my_arch: 'arm64' }
+                - 'codethink11':    { my_arch: 'arm64' }
+                - 'codethink12':    { my_arch: 'arm64' }
+                - 'codethink13':    { my_arch: 'arm64' }
+                - 'codethink14':    { my_arch: 'arm64' }
+                - 'codethink15':    { my_arch: 'arm64' }
+                - 'codethink16':    { my_arch: 'arm64' }
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+        - '{name}_{my_task}_{my_arch}_{my_hname}':
+            my_task:
+                - 'node_health_check':
+                    my_description: 'Do some health checks'
+                    my_timed: '3 * * * *'
             my_hname:
                 - 'bbx15':          { my_arch: 'armhf' }
                 - 'bpi0':           { my_arch: 'armhf' }

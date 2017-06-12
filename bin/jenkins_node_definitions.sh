@@ -5,7 +5,7 @@
 
 # define Debian build nodes in use for tests.reproducible-builds.org/debian/
 # 	FIXME: this is used differently in two places,
-#		- bin/reproducible_nodes_info.sh
+#		- bin/reproducible_html_nodes_info.sh
 #		  where it *must* only contain the Debian nodes as it's used
 #		  to generate the variations… and
 #		- bin/reproducible_cleanup_nodes.sh where it would be

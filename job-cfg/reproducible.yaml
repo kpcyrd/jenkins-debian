@@ -450,12 +450,12 @@
                     my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
                     my_timed: 'H/6 * * * *'
                     my_shellext: ".py"
+                - 'html_nodes_info':
+                    my_description: 'Collect various information from build nodes used for reproducible builds and generate static HTML pages with various information about nodes.'
+                    my_timed: '0 0 * * *'
                 - 'create_meta_pkg_sets':
                     my_description: 'Create meta package sets for later consumption when generating HTML stats.'
                     my_timed: '0 6 * * H/3'
-                - 'nodes_info':
-                    my_description: 'Collect various information from build nodes used for reproducible builds.'
-                    my_timed: '0 0 * * *'
                 - 'json':
                     my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
                     my_timed: '1 * * * *'

@@ -676,7 +676,7 @@ create_performance_page() {
 		write_page "</p><p style=\"clear:both;\">"
 	done
 	# the end
-	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_nodes_info/lastBuild/console\">individual build node performance stats</a> are available as well as oldest results for"
+	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_html_nodes_info/lastBuild/console\">individual build node performance stats</a> are available as well as oldest results for"
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/debian/index_${ARCH}_oldies.html\">$ARCH</a>"
 	done

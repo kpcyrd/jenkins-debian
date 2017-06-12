@@ -17,6 +17,7 @@ cb3a-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
 cbxi4b-armhf-rb.debian.net
 cbxi4pro0-armhf-rb.debian.net
+codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
 codethink-sled11-arm64.debian.net
 codethink-sled12-arm64.debian.net
@@ -24,7 +25,6 @@ codethink-sled13-arm64.debian.net
 codethink-sled14-arm64.debian.net
 codethink-sled15-arm64.debian.net
 codethink-sled16-arm64.debian.net
-codethink-sled9-arm64.debian.net
 ff2a-armhf-rb.debian.net
 ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
@@ -42,14 +42,14 @@ opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net
 p64b-armhf-rb.debian.net
 p64c-armhf-rb.debian.net
-profitbricks-build11-amd64.debian.net
-profitbricks-build12-i386.debian.net
-profitbricks-build15-amd64.debian.net
-profitbricks-build16-i386.debian.net
 profitbricks-build1-amd64.debian.net
 profitbricks-build2-i386.debian.net
 profitbricks-build5-amd64.debian.net
 profitbricks-build6-i386.debian.net
+profitbricks-build11-amd64.debian.net
+profitbricks-build12-i386.debian.net
+profitbricks-build15-amd64.debian.net
+profitbricks-build16-i386.debian.net
 rpi2b-armhf-rb.debian.net
 rpi2c-armhf-rb.debian.net
 wbd0-armhf-rb.debian.net

@@ -15,6 +15,91 @@ mkdir -p $TARGET_DIR
 TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
 
+#
+# build a static webpage
+#
+VIEW=nodes_health
+PAGE=index_${VIEW}.html
+echo "$(date -u) - starting to write $PAGE page."
+write_page_header $VIEW "Build nodes health overview"
+write_page "<p>This page is still under development. Please provide feedback, which other information (be it from munin or elsewhere) should be displayed and how this page should be split further, eg, the graphs could all be on another page and/or we should split this page into four for the four architectures being tested…</p>"
+# FIXME: Also either $0 and its job needs to be renamed to include 'html' or the code needs to be moved elsewhere
+write_page "<p style=\"clear:both;\">"
+for ARCH in ${ARCHS} ; do
+	write_page "<h3>$ARCH nodes</h3>"
+	write_page "<table>"
+	write_page "<tr><th>Name</th><th>maintenance</th>"
+		for SUITE in ${SUITES} ; do
+			if [ "$SUITE" = "experimental" ] ; then
+				continue
+			fi
+			write_page "<th>schroot setup $SUITE</th>"
+		done
+		for SUITE in ${SUITES} ; do
+			write_page "<th>pbuilder setup $SUITE</th>"
+		done
+	write_page "</tr>"
+	for NODE in jenkins $BUILD_NODES ; do
+		if [ -z "$(echo $NODE | grep $ARCH || true)" ] && [ "$NODE" != "jenkins" ] ; then
+			continue
+		elif [ "$NODE" = "jenkins" ] && [ "$ARCH" != "amd64" ] ; then
+			continue
+		fi
+		if [ "$NODE" = "jenkins" ] ; then
+			JENKINS_NODENAME=jenkins
+			NODE="jenkins.debian.net"
+		else
+			case $ARCH in
+				amd64|i386) 	JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1-2|sed 's#-build##' ) ;;
+				arm64) 		JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1-2|sed 's#-sled##' ) ;;
+				armhf) 		JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1) ;;
+			esac
+		fi
+		write_page "<tr><td>$JENKINS_NODENAME</td>"
+		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_maintenance_${ARCH}_${JENKINS_NODENAME}"
+		BADGE="$URL/badge/icon"
+		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+		for SUITE in ${SUITES} ; do
+			if [ "$SUITE" = "experimental" ] ; then
+				continue
+			fi
+			URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
+			BADGE="$URL/badge/icon"
+			write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+		done
+		for SUITE in ${SUITES} ; do
+			if [ "$JENKINS_NODENAME" = "jenkins" ] ; then
+				write_page "<td colspan='3'></td>"
+			else
+				URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_pbuilder_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
+				BADGE="$URL/badge/icon"
+				write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+			fi
+		done
+		write_page "</tr>"
+		write_page "<tr><td></td>"
+		for GRAPH in jenkins_reproducible_builds cpu memory df ; do
+			if [ "$JENKINS_NODENAME" = "jenkins" ] && [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
+				write_page "<td></td>"
+			else
+				write_page "<td><a href='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH.html'>"
+				write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH-day.png' width='150' /></a></td>"
+			fi
+		done
+		write_page "<td colspan='2'></td>"
+		write_page "</tr>"
+		
+	done
+	write_page "</table>"
+done
+write_page "</p>"
+write_page_footer
+publish_page debian
+exit 0
+
+#
+# collect node information
+#
 echo "$(date -u) - Collecting information from nodes"
 for NODE in $BUILD_NODES jenkins.debian.net ; do
 	if [ "$NODE" = "jenkins.debian.net" ] ; then

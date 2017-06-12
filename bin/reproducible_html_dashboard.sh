@@ -348,6 +348,10 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		write_page "<td>$(ps fax|egrep -B 1 'sleep .*\.1337m'|grep -c $ARCH)</td>"
 	done
+	write_page "</tr><tr><td class=\"left\">Build jobs currently down due to local problems</td>"
+	for ARCH in ${ARCHS} ; do
+		write_page "<td>$(rgrep -l 'Failed to get properties: Connection timed out' $DEBIAN_BASE/build_service/${ARCH}_*/worker.log | wc -l)</td>"
+	done
 	write_page "</tr><tr><td class=\"left\">Build jobs currently running diffoscope</td>"
 	for ARCH in ${ARCHS} ; do
 		write_page "<td>$(ps fax|grep "diffoscope --html /srv/reproducible-results/rbuild-debian"|grep -c $ARCH)</td>"

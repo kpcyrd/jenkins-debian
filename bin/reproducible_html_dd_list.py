@@ -18,7 +18,7 @@ from reproducible_common import *
 
 
 arch = 'amd64' # the arch is only relevant for link targets here
-mirror = 'http://ftp.de.debian.org/debian'
+mirror = 'http://deb.debian.org/debian'
 
 bugs = get_bugs()
 

@@ -105,11 +105,11 @@ else
 	if [ -z "$MIRROR" ]; then
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*)
-				export MIRROR=http://ftp.de.debian.org/debian ;;
+				export MIRROR=http://deb.debian.org/debian ;;
 			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|odc*|wbd0|rpi2*|ff*|ff4*|opi2*|jt?1*|p64*)
-				export MIRROR=http://ftp.us.debian.org/debian ;;
+				export MIRROR=http://deb.debian.org/debian ;;
 			codethink*)
-				export MIRROR=http://ftp.uk.debian.org/debian ;;
+				export MIRROR=http://deb.debian.org/debian ;;
 			spectrum)
 				export MIRROR=none ;;
 			*)

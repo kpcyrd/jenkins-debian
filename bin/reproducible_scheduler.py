@@ -232,7 +232,7 @@ class Limit:
 
 def update_sources(suite):
     # download the sources file for this suite
-    mirror = 'http://ftp.de.debian.org/debian'
+    mirror = 'http://deb.debian.org/debian'
     remotefile = mirror + '/dists/' + suite + '/main/source/Sources.xz'
     log.info('Downloading sources file for %s: %s', suite, remotefile)
     sources = lzma.decompress(urlopen(remotefile).read()).decode('utf8')

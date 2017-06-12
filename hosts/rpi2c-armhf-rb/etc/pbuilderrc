@@ -8,12 +8,12 @@
 # cater for different locations
 case $HOSTNAME in
 	jenkins|jenkins-test-vm|profitbricks-build*)
-			MIRRORSITE=http://ftp.de.debian.org/debian ;;
+			MIRRORSITE=http://deb.debian.org/debian ;;
 	bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|odc*|wbd0|rpi2*|ff*|ff4*|opi2*|jt?1*|p64*)
 
-			MIRRORSITE=http://ftp.us.debian.org/debian ;;
+			MIRRORSITE=http://deb.debian.org/debian ;;
 	codethink*)
-			MIRRORSITE=http://ftp.uk.debian.org/debian ;;
+			MIRRORSITE=http://deb.debian.org/debian ;;
 	*)
 			echo "unsupported host, exiting." ; exit 1 ;;
 esac

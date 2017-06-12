@@ -32,8 +32,13 @@ while true ; do
 	SERVICE="reproducible_build@startup.service"
 	RUNNING=$(systemctl show $SERVICE|grep ^SubState|cut -d "=" -f2)
 	if [ "$RUNNING" != "running" ] ; then
-		echo "$(date --utc) - '$SERVICE' not running, thus stopping this."
-		break
+		# sometimes systemctl requests time out… handle that gracefully
+		sleep 23
+		RUNNING=$(systemctl show $SERVICE|grep ^SubState|cut -d "=" -f2)
+		if [ "$RUNNING" != "running" ] ; then
+			echo "$(date --utc) - '$SERVICE' not running, thus stopping this."
+			break
+		fi
 	fi
 
 	# sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)

@@ -58,7 +58,7 @@ for ARCH in ${ARCHS} ; do
 			esac
 		fi
 		write_page "<tr><td>$JENKINS_NODENAME</td>"
-		URL="https://jenkins.debian.net/view/reproducible/view/Node_node_health_check/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
+		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
 		BADGE="$URL/badge/icon"
 		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_maintenance_${ARCH}_${JENKINS_NODENAME}"

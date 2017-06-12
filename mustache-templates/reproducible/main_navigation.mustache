@@ -174,12 +174,17 @@
     <li {{#performance}}class='active'{{/performance}}>
       <a href="/debian/index_performance.html">Performance stats</a>
     </li>
-    <li {{#nodes_health}}class='active'{{/nodes_health}}>
-      <a href="/debian/index_nodes_health.html">Nodes health overview</a>
-    </li>
-    <li {{#nodes_graphs}}class='active'{{/nodes_graphs}}>
-      <a href="/debian/index_nodes_graphs.html">Nodes health graphs</a>
-    </li>
+    <li><ul>Nodes health
+      <li {{#nodes_health}}class='active'{{/nodes_health}}>
+        <a href="/debian/index_nodes_health.html">overview</a>
+      </li>
+      <li {{#nodes_daily_graphs}}class='active'{{/nodes_daily_graphs}}>
+        <a href="/debian/index_nodes_daily_graphs.html">daily graphs</a>
+      </li>
+      <li {{#nodes_weekly_graphs}}class='active'{{/nodes_weekly_graphs}}>
+        <a href="/debian/index_nodes_weekly_graphs.html">weekly graphs</a>
+      </li>
+    </ul></li>
   </ul></li>
 </ul>
 {{{project_links_html}}}

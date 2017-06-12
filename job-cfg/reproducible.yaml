@@ -261,7 +261,7 @@
             my_task:
                 - 'node_health_check':
                     my_description: 'Do some health checks.'
-                    my_timed: '3 * * * *'
+                    my_timed: 'H/15 * * * *'
             my_shell: '/srv/jenkins/bin/reproducible_node_health_check.sh'
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
@@ -323,7 +323,7 @@
             my_task:
                 - 'node_health_check':
                     my_description: 'Do some health checks'
-                    my_timed: '3 * * * *'
+                    my_timed: 'H/15 * * * *'
             my_hname:
                 - 'bbx15':          { my_arch: 'armhf' }
                 - 'bpi0':           { my_arch: 'armhf' }

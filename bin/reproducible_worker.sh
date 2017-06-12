@@ -30,7 +30,8 @@ while true ; do
 		break
 	fi
 	SERVICE="reproducible_build@startup.service"
-	RUNNING=$(systemctl show $SERVICE|grep ^SubState|cut -d "=" -f2)
+	# try systemctl twice, but only output and thus log the 2nd attempt…
+	RUNNING=$(systemctl show $SERVICE 2>/dev/null |grep ^SubState|cut -d "=" -f2)
 	if [ "$RUNNING" != "running" ] ; then
 		# sometimes systemctl requests time out… handle that gracefully
 		sleep 23

@@ -63,7 +63,7 @@ while true ; do
 	echo
 	echo "================================================================================================"
 	echo "$(date --utc) - running build #$BUILD_ID for $WORKER_NAME on $NODE1 and $NODE2."
-	echo "                              see https://tests.reproducible-builds.org/cgi-bin/nph-logwatch?$WORKER_NAME/$BUILD_ID"
+	echo "                               see https://tests.reproducible-builds.org/cgi-bin/nph-logwatch?$WORKER_NAME/$BUILD_ID"
 	echo "================================================================================================"
 	echo
 	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1

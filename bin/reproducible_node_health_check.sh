@@ -41,7 +41,7 @@ set -e
 # is the filesystem writetable?
 #
 echo "$(date -u) - testing whether /tmp is writable..."
-$TEST=$(mktemp --tmpdir=/tmp rwtest-XXXXXX)
+TEST=$(mktemp --tmpdir=/tmp rwtest-XXXXXX)
 if [ -z "$TEST" ] ; then
 	echo "Failure to write a file in /tmp, assuming read-only filesystem."
 	exit 1

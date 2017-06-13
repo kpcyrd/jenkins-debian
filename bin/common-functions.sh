@@ -68,6 +68,10 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	esac
 	# mktemp some place for us...
 	TTT=$(mktemp --tmpdir=/tmp jenkins-script-XXXXXXXX)
+	if [ -z "$TTT" ] ; then
+		echo "Failed to create tmpfile, aborting. (Probably due to read-only filesystem…)"
+		exit 1
+	fi
 	# prepare cleanup
 	trap common_cleanup INT TERM EXIT
 	# cp $0 to /tmp and run it from there

@@ -182,7 +182,15 @@ write_page_header() {
 	fi
 
 	# Used to highlight the link for the current page
-	if [ "$1" = "dashboard" ] || [ "$1" = "performance" ] || [ "$1" = "repositories" ] || [ "$1" = "variations" ] || [ "$1" = "suite_arch_stats" ] || [ "$1" = "bugs" ] || [ "$1" = "nodes_health" ] || [ "$1" = "nodes_weekly_graphs" ] || [ "$1" = "nodes_daily_graphs" ] ; then
+	if [ "$1" = "dashboard" ] \
+		|| [ "$1" = "performance" ] \
+		|| [ "$1" = "repositories" ] \
+		|| [ "$1" = "variations" ] \
+		|| [ "$1" = "suite_arch_stats" ] \
+		|| [ "$1" = "bugs" ] \
+		|| [ "$1" = "nodes_health" ] \
+		|| [ "$1" = "nodes_weekly_graphs" ] \
+		|| [ "$1" = "nodes_daily_graphs" ] ; then
 		displayed_page="\"$1\": \"true\""
 	else
 		displayed_page=''

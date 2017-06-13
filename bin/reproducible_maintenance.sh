@@ -52,6 +52,21 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	fi
 fi
 
+#
+# we fail hard
+#
+set +e
+
+#
+# check for working proxy
+#
+echo "$(date -u) - testing whether the proxy works..."
+curl http://www.debian.org > /dev/null
+if [ $? -ne 0 ] ; then
+	echo "Warning: curl http://www.debian.org failed, probably the proxy is down for $HOSTNAME…"
+	DIRTY=true
+fi
+
 echo "$(date -u) - updating the schroots and pbuilder now..."
 # use host architecture (only)
 ARCH=$(dpkg --print-architecture)

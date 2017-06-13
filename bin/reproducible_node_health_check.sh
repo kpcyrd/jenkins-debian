@@ -38,16 +38,6 @@ show_fstab_and_mounts() {
 set +e
 
 #
-# check for working proxy
-#
-echo "$(date -u) - testing whether the proxy works..."
-curl http://www.debian.org > /dev/null
-if [ $? -ne 0 ] ; then
-	echo "Warning: curl http://www.debian.org failed, probably the proxy is down for $HOSTNAME…"
-	DIRTY=true
-fi
-
-#
 # check for /dev/shm being mounted properly
 #
 echo "$(date -u) - testing whether /dev/shm is mounted correctly..."

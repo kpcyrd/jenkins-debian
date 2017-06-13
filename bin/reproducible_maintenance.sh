@@ -55,7 +55,7 @@ fi
 #
 # we fail hard
 #
-set +e
+set -e
 
 #
 # check for working proxy

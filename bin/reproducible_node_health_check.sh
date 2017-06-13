@@ -35,7 +35,7 @@ show_fstab_and_mounts() {
 #
 # we fail hard
 #
-set +e
+set -e
 
 #
 # check for /dev/shm being mounted properly

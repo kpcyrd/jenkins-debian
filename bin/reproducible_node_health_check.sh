@@ -38,6 +38,17 @@ show_fstab_and_mounts() {
 set -e
 
 #
+# is the filesystem writetable?
+#
+echo "$(date -u) - testing whether /tmp is writable..."
+$TEST=$(mktemp --tmpdir=/tmp rwtest-XXXXXX)
+if [ -z "$TEST" ] ; then
+	echo "Failure to write a file in /tmp, assuming read-only filesystem."
+	exit 1
+fi
+rm $TEST > /dev/null
+
+#
 # check for /dev/shm being mounted properly
 #
 echo "$(date -u) - testing whether /dev/shm is mounted correctly..."

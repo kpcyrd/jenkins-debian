@@ -70,6 +70,19 @@ if [ "$(ip link | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' | sort 
 	irc_message debian-reproducible "$HOSTNAME has wrong MTU, please tell the jenkins admins to fix this.  (sudo ifconfig eth0 mtu 1500)"
 	exit 1
 fi
+
+#
+# check for correct future
+#
+# (yes this is hardcoded but meh…)
+if [ "$(date +%Y)" = "2019" ] ; then
+	echo "Warning, today is the wrong future: $(date -u)"
+elif [ "$(date +%Y)" = "2018" ] ; then
+	echo "Good, today is the right future: $(date -u)"
+else
+	echo "Cherrish today, $(date -u)"
+fi
+
 if ! $DIRTY ; then
 	echo "$(date -u ) - Everything seems to be fine."
 	echo

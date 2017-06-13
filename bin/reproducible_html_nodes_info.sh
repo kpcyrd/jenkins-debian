@@ -32,9 +32,6 @@ for ARCH in ${ARCHS} ; do
 	write_page "<table>"
 	write_page "<tr><th>Name</th><th>health check</th><th>maintenance</th><th>worker.log links</th>"
 		for SUITE in ${SUITES} ; do
-			if [ "$SUITE" = "experimental" ] ; then
-				continue
-			fi
 			write_page "<th>schroot setup $SUITE</th>"
 		done
 		for SUITE in ${SUITES} ; do
@@ -76,9 +73,6 @@ for ARCH in ${ARCHS} ; do
 			write_page "</td>"
 		fi
 		for SUITE in ${SUITES} ; do
-			if [ "$SUITE" = "experimental" ] ; then
-				continue
-			fi
 			URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
 			BADGE="$URL/badge/icon"
 			write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"

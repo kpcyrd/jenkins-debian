@@ -43,8 +43,7 @@ set +e
 echo "$(date -u) - testing whether the proxy works..."
 curl http://www.debian.org > /dev/null
 if [ $? -ne 0 ] ; then
-	irc_message debian-reproducible "Proxy is down for $HOSTNAME, please tell the jenkins admins to fix this. (sudo service squid3 restart)"
-	exit 1
+	echo "Warning: curl http://www.debian.org failed, probably the proxy is down for $HOSTNAME…"
 fi
 
 #

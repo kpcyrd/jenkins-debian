@@ -44,6 +44,7 @@ echo "$(date -u) - testing whether the proxy works..."
 curl http://www.debian.org > /dev/null
 if [ $? -ne 0 ] ; then
 	echo "Warning: curl http://www.debian.org failed, probably the proxy is down for $HOSTNAME…"
+	DIRTY=true
 fi
 
 #
@@ -91,6 +92,7 @@ fi
 echo "$(date -u) - testing whether the time is right..."
 if [ "$(date +%Y)" = "2019" ] ; then
 	echo "Warning, today is the wrong future: $(date -u)."
+	DIRTY=true
 elif [ "$(date +%Y)" = "2018" ] ; then
 	echo "Good, today is the right future: $(date -u)."
 else

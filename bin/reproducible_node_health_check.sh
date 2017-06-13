@@ -11,6 +11,7 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+# some defaults
 DIRTY=false
 REP_RESULTS=/srv/reproducible-results
 
@@ -31,16 +32,24 @@ show_fstab_and_mounts() {
 	DIRTY=true
 }
 
-# for Debian, first run some checks…
+#
+# we fail hard
+#
 set +e
+
+#
 # check for working proxy
+#
 echo "$(date -u) - testing whether the proxy works..."
 curl http://www.debian.org > /dev/null
 if [ $? -ne 0 ] ; then
 	irc_message debian-reproducible "Proxy is down for $HOSTNAME, please tell the jenkins admins to fix this. (sudo service squid3 restart)"
 	exit 1
 fi
+
+#
 # check for /dev/shm being mounted properly
+#
 echo "$(date -u) - testing whether /dev/shm is mounted correctly..."
 mount | egrep -q "^tmpfs on /dev/shm"
 if [ $? -ne 0 ] ; then
@@ -52,7 +61,9 @@ if [ $? -ne 0 ] ; then
 	echo "Warning: /dev/shm is not mounted correctly on $HOSTNAME, it should be mounted with 1777 permissions, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
 fi
+#
 # check for /run/shm being a link to /dev/shm
+#
 echo "$(date -u) - testing whether /run/shm is a link..."
 if ! test -L /run/shm ; then
 	echo "Warning: /run/shm is not a link on $HOSTNAME, please tell the jenkins admins to fix this."
@@ -61,7 +72,10 @@ elif [ "$(readlink /run/shm)" != "/dev/shm" ] ; then
 	echo "Warning: /run/shm is a link, but not pointing to /dev/shm on $HOSTNAME, please tell the jenkins admins to fix this."
 	show_fstab_and_mounts
 fi
+
+#
 # check for correct MTU
+#
 echo "$(date -u) - testing whether the network interfaces MTU is 1500..."
 if [ "$(ip link | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' | sort -u)" != "1500" ] ; then
 	ip link
@@ -75,14 +89,18 @@ fi
 # check for correct future
 #
 # (yes this is hardcoded but meh…)
+echo "$(date -u) - testing whether the time is right..."
 if [ "$(date +%Y)" = "2019" ] ; then
-	echo "Warning, today is the wrong future: $(date -u)"
+	echo "Warning, today is the wrong future: $(date -u)."
 elif [ "$(date +%Y)" = "2018" ] ; then
-	echo "Good, today is the right future: $(date -u)"
+	echo "Good, today is the right future: $(date -u)."
 else
-	echo "Cherrish today, $(date -u)"
+	echo "Cherrish today, $(date -u)."
 fi
 
+#
+# finally
+#
 if ! $DIRTY ; then
 	echo "$(date -u ) - Everything seems to be fine."
 	echo

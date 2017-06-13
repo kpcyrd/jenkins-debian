@@ -195,8 +195,7 @@ openwrt_config() {
 	CONFIG=$1
 
 	printf "$CONFIG" > .config
-	# don't build all packages to improve development speed
-	# printf "CONFIG_ALL=y\n" >> .config
+	printf "CONFIG_ALL=y\n" >> .config
 	printf "CONFIG_AUTOREMOVE=y\n" >> .config
 	printf "CONFIG_CLEAN_IPKG=y\n" >> .config
 	printf "CONFIG_TARGET_ROOTFS_TARGZ=y\n" >> .config
@@ -288,8 +287,8 @@ openwrt_download() {
 	openwrt_create_signing_keys
 
 	# update feeds
-	./scripts/feeds update
-	./scripts/feeds install -a
+	#./scripts/feeds update
+	#./scripts/feeds install -a
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config $CONFIG

@@ -27,12 +27,16 @@ access including remote console and BIOS access.
 We have 8 arm64 nodes running on moonshot hardware kindly given access to us by Codethink.
 Holger has access to a 9th node acting as console server.
 
-(Technically some of the armhf nodes below are also arm64 systems.)
+Axel Becker is currently in the process of setting up 8 LeMaker HiKey960 boards
+(http://www.96boards.org/product/hikey960/). These boards were sponsored by Hewlett Packard Enterprise
+(https://www.hpe.com/) and will be hosted by the students association
+SOSETH (https://sos.ethz.ch/) at ETH Zurich (https://www.ethz.ch/).
+
 
 === armhf nodes
 
 Vagrant hosts a fantastic zoo of over 23 armhf boards in his basement, to which besides him also
-Mattia and Holger have access via a console server.
+Mattia and Holger have access via a console server. (Technically some of these armhf nodes are also arm64 systems.)
 
 There'a script to trigger the power on/off/cycle if needed, from hbi1 on Vagrant's local network:
 

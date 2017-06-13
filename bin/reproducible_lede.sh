@@ -141,7 +141,11 @@ for target in * ; do
 				rm -f $BASE/lede/dbd/targets/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
 				continue
 			fi
-			call_diffoscope targets/$target/$subtarget $image
+			# lets do a short sha256sum here, if not equal call diffoscope
+			if [ "$(sha256sum "$TMPDIR/b1/targets/$target/$subtarget/$image" "$TMPDIR/b2/targets/$target/$subtarget/$image" \
+				| cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
+				call_diffoscope targets/$target/$subtarget $image
+			fi
 			get_filesize $image
 			if [ -f $TMPDIR/targets/$target/$subtarget/$image.html ] ; then
 				mkdir -p $BASE/lede/dbd/targets/$target/$subtarget

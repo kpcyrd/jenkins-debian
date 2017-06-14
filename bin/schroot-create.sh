@@ -106,6 +106,7 @@ KzXCKzHjI89kJT5+7GBHd/nLG1z/3yw/TBzH5zSTgwC+3/EHNMH7WrY2DOzdEZTF
 peNsYNcna2Ca8Imozzc5L424lXN3MaiTql7Y1lZJFF5Y/wznbjUQj/5YXj3LVB3W
 =5CAZ
 -----END PGP PUBLIC KEY BLOCK-----" | apt-key add -
+apt-key list
 echo
 echo "Configuring APT to ignore the Release file expiration"
 echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future

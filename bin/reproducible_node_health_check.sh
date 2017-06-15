@@ -101,6 +101,20 @@ else
 fi
 
 #
+# check for cleaned up kernels
+# (on Ubuntu systems only, as those have free spaces issues on /boot frequently)
+#
+if [ "$(lsb_release -si)" = "Ubuntu" ] ; then
+	echo "$(date -u) - testing whether only one kernel is installed..."
+	if [ "$(ls /boot/vmlinuz-*|wc -l)" != "1" ] ; then
+		echo "Warning, more than one kernel in /boot:"
+		ls -lart /boot/vmlinuz-*
+		df -h /boot
+		DIRTY=true
+	fi
+fi
+
+#
 # finally
 #
 if ! $DIRTY ; then

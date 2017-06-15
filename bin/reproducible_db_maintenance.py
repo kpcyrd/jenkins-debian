@@ -574,7 +574,7 @@ schema_updates = {
         '''ALTER TABLE stats_meta_pkg_state_tmp RENAME TO stats_meta_pkg_state;''',
         "INSERT INTO rb_schema (version, date) VALUES (28, '" + now + "')"],
 
-    # THE FOLLOWING UPDATE CAN ONLY BE PREFORMED ON POSTGRES DATABASE
+    # THE FOLLOWING UPDATES CAN ONLY BE PREFORMED ON POSTGRES DATABASE
 
     29: [ # Add auto incrementing to the id columns of some tables
         "CREATE SEQUENCE schedule_id_seq",
@@ -598,7 +598,13 @@ schema_updates = {
                       diffoscope_timeouts INTEGER,
                       diffoscope_crashes INTEGER,
                       PRIMARY KEY (datum))''',
-        '''INSERT INTO rb_schema (version, date) VALUES (30, '" + now + "')'''
+        "INSERT INTO rb_schema (version, date) VALUES (30, '" + now + "')"
+    ],
+    31: # rename the 'testing' suite into 'stretch'
+        [ "UPDATE {} SET suite='stretch' WHERE suite='testing'".format(t)
+            for t in ("sources", "stats_pkg_state", "stats_builds_per_day",
+                "stats_builds_age", "stats_meta_pkg_state", "stats_build")] + [
+        "INSERT INTO rb_schema (version, date) VALUES (31, '" + now + "')"
     ],
 }
 

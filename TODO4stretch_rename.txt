@@ -1,30 +1,33 @@
 special deployement needed for this:
 ------------------------------------
-stop workers (cleanup nodes) and build_service
-prepare jenkins shutdown in gui
-do run update_jdn.sh
-rename dirs in the filesystem as needed, FIXME: proper mv commands…
-	root@jenkins:/var/lib/jenkins/userContent# find . -type d -name "*testing*"
-	./reproducible/debian/issues/testing
-	./reproducible/debian/logs/testing
-	./reproducible/debian/rb-pkg/testing
-	./reproducible/debian/logdiffs/testing
-	./reproducible/debian/buildinfo/testing
-	./reproducible/debian/dbdtxt/testing
-	./reproducible/debian/rbuild/testing
-	./reproducible/debian/dbd/testing
-	./reproducible/debian/testing
-	./reproducible/rpms/fedora-23/x86_64/gnome-desktop-testing
-	root@jenkins:/var/lib/jenkins/userContent#
-	root@jenkins:/srv/reproducible-results# find . -type d -name "*testing*"
-	./meta_pkgsets-testing
-	./chdist-testing
-	./chdist-testing/testing-amd64
-	root@jenkins:/srv/reproducible-results# 
-run reproducible_db_maintenance
-reenable job execution
-do run update_jdn.sh again
-remove all jobs which match reproducible*testing*
+ * stop workers  # FIXME -command?
+ $ sudo -u jenkins /srv/jenkins/bin/reproducible_cleanup_nodes.sh
+ $ sudo -u jenkins /srv/jenkins/bin/reproducible_cleanup_nodes.sh
+ * https://jenkins.debian.net/quietDown
+ $ cd ~jenkins-adm/jenkins.debian.net
+ $ sudo update_jdn.sh
+ $ sudo -u jenkins -i
+ // as jenkins user:
+ $ cd /var/lib/jenkins/userContent/reproducible/debian
+ $ for i in issues logs rb-pkg logdiffs buildinfo dbdtxt rbuild dbd ; do
+     mv $i/testing $i/stretch
+   done
+ $ mv testing stretch
+ $ cd /srv/reproducible-results
+ // job will take care of recreating this one appropriately, won't it?
+ $ rm -rf --one-file-system meta_pkgsets-testing chdist-testing
+ $ /srv/jenkins/bin/reproducible_db_maintenance.py
+ $ exit
+ * https://jenkins.debian.net/cancelQuietDown
+ $ cd ~jenkins-adm/jenkins.debian.net
+ $ sudo update_jdn.sh
+ * remove all jobs which match reproducible*testing*
+ // hit all new jobs (to create chroots, etc) in:
+ * https://jenkins.debian.net/view/reproducible/view/Debian_setup_amd64/
+ * https://jenkins.debian.net/view/reproducible/view/Debian_setup_arm64/
+ * https://jenkins.debian.net/view/reproducible/view/Debian_setup_armhf/
+ * https://jenkins.debian.net/view/reproducible/view/Debian_setup_i386/
+ * restart workers  # FIXME -command?
 
 changes not yet prepared in git
 -------------------------------

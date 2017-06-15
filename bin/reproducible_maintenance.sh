@@ -40,7 +40,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	if [ ! -f $BACKUPFILE.xz ] ; then
 		# make the backup
 		DATE=$(date '+%Y-%m-%d')
-		pg_dump -O --column-inserts $PGDATABASE > "$BACKUPFILE"
+		pg_dump -x -O --column-inserts $PGDATABASE > "$BACKUPFILE"
 		xz "$BACKUPFILE"
 
 		# make the backup public

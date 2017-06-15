@@ -26,13 +26,9 @@ reenable job execution
 do run update_jdn.sh again
 remove all jobs which match reproducible*testing*
 
-changes not to be done
-----------------------
-hosts/jenkins/etc/apache2/sites-available/jenkins.debian.net.conf has no (new) redirects from testing to stretch, I think that's good enough
-
 changes not yet prepared in git
 -------------------------------
 db changes
 prepare to add buster on 2017-06-17
+(including changing the apache redirect testing→stretch to testing→buster)
 finally, remove this file again.
-

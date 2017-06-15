@@ -130,7 +130,7 @@ for TYPE in daily weekly ; do
 		write_page "<table>"
 		write_page "<tr><th>Name</th><th colspan='6'></th>"
 		write_page "</tr>"
-		for NODE in jenkins $BUILD_NODES ; do
+		for NODE in $REPRODUCIBLE_NODES ; do
 			if [ -z "$(echo $NODE | grep $ARCH || true)" ] && [ "$NODE" != "jenkins" ] ; then
 				continue
 			elif [ "$NODE" = "jenkins" ] && [ "$ARCH" != "amd64" ] ; then
@@ -148,17 +148,22 @@ for TYPE in daily weekly ; do
 			fi
 			write_page "<tr><td>$JENKINS_NODENAME</td>"
 			for GRAPH in jenkins_reproducible_builds cpu memory df swap load ; do
-				if [ "$JENKINS_NODENAME" = "jenkins" ] && [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
-					write_page "<td></td>"
-				else
-					write_page "<td><a href='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH.html'>"
-					if [ "$TYPE" = "daily" ] ; then
-						IMG=day.png
-					else
-						IMG=week.png
-					fi
-					write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/${GRAPH}-${IMG}' width='150' /></a></td>"
+				if [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
+					case $JENKINS_NODENAME in
+						jenkins)	write_page "<td></td>" ; continue ;;
+						profitbricks3)	write_page "<td></td>" ; continue ;;
+						profitbricks4)	write_page "<td></td>" ; continue ;;
+						profitbricks7)	write_page "<td></td>" ; continue ;;
+						*)		;;
+					esac
 				fi
+				write_page "<td><a href='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH.html'>"
+				if [ "$TYPE" = "daily" ] ; then
+					IMG=day.png
+				else
+					IMG=week.png
+				fi
+				write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/${GRAPH}-${IMG}' width='150' /></a></td>"
 			done
 			write_page "</tr>"
 			

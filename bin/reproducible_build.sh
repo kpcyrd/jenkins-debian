@@ -133,7 +133,7 @@ update_db_and_html() {
 	local OLD_STATUS=$(query_db "SELECT status FROM results WHERE package_id='${SRCPKGID}'" || \
 			   query_db "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# irc+mail notifications for changing status in unstable and experimental
-	if [ "$SUITE" != "stretch" ] ; then
+	if [ "$SUITE" = "unstable" ] || [ "$SUITE" = "experimental" ] ; then
 		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
 		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
 			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
@@ -626,8 +626,8 @@ export LANG="C"
 unset LC_ALL
 export LANGUAGE="en_US:en"
 EOF
-	# build path is not yet varied on stretch
-	if [ "${SUITE}" != "stretch" ]; then
+	# build path is only varied on unstable and experimental
+	if [ "${SUITE}" = "unstable" ] || [ "$SUITE" = "experimental" ]; then
 		echo "BUILDDIR=/build/1st" >> "$TMPCFG"
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
@@ -689,8 +689,8 @@ export LC_ALL="$locale.UTF-8"
 export LANGUAGE="$locale:$language"
 umask 0002
 EOF
-	# build path is not yet varied on stretch
-	if [ "${SUITE}" != "stretch" ]; then
+	# build path is only varied on unstable and experimental
+	if [ "${SUITE}" = "unstable" ] || [ "$SUITE" = "experimental" ]; then
 		local src_dir_name="$(perl -mDpkg::Source::Package -e '$_ = Dpkg::Source::Package->new(filename => $ARGV[0])->get_basename; s/_/-/g; print' -- "${SRCPACKAGE}_${EVERSION}.dsc")"
 		echo "BUILDDIR=/build/$src_dir_name" >> "$TMPCFG"
 		echo "BUILDSUBDIR=2nd" >> "$TMPCFG"

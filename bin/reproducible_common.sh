@@ -32,7 +32,7 @@ BIN_PATH=/srv/jenkins/bin
 TEMPLATE_PATH=/srv/jenkins/mustache-templates/reproducible
 
 # Debian suites being tested
-SUITES="stretch unstable experimental"
+SUITES="buster unstable stretch experimental"
 # Debian architectures being tested
 ARCHS="amd64 i386 arm64 armhf"
 
@@ -416,7 +416,7 @@ write_variation_table() {
 		write_page "<tr><td>uid</td><td>uid=1111</td><td>uid=2222</td></tr>"
 		write_page "<tr><td>gid</td><td>gid=1111</td><td>gid=2222</td></tr>"
 		write_page "<tr><td>/bin/sh</td><td>/bin/dash</td><td>/bin/bash</td></tr>"
-		write_page "<tr><td>build path</td><td>/build/1st/\$pkg-\$ver <em>(not varied for stretch)</em></td><td>/build/\$pkg-\$ver/2nd <em>(not varied for stretch)</em></td></tr>"
+		write_page "<tr><td>build path</td><td>/build/1st/\$pkg-\$ver <em>(not varied for stretch/buster)</em></td><td>/build/\$pkg-\$ver/2nd <em>(not varied for stretch/buster)</em></td></tr>"
 		write_page "<tr><td>user's login shell</td><td>/bin/sh</td><td>/bin/bash</td></tr>"
 		write_page "<tr><td>user's <a href="https://en.wikipedia.org/wiki/Gecos_field">GECOS</a></td><td>first user,first room,first work-phone,first home-phone,first other</td><td>second user,second room,second work-phone,second home-phone,second other</td></tr>"
 		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64: 16 or 15<br />&nbsp;&nbsp;XXX on i386: 10 or 9<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64: 16 or 15 (!= the first build)<br />&nbsp;&nbsp;YYY on i386: 10 or 9 (!= the first build)<br />&nbsp;&nbsp;YYY is the same as XXX on arm64<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"

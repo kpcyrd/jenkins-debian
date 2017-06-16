@@ -41,7 +41,7 @@ packages are already scheduled in that category, in a 3 steps process.
 
 Only when scheduling old versions MINIMUM_AGE is respected.
 
-
+(
 Let's go by an example:
     'unstable': {1: (250, 40), 2: (350, 20), '*': 5},
 is translated to:
@@ -72,21 +72,25 @@ LIMITS = {
     'untested': {
         'amd64': {
             'stretch': {'*': 100},
+            'buster': {'*': 100},
             'unstable': {'*': 100},
             'experimental': {'*': 100},
         },
         'i386': {
             'stretch': {'*': 100},
+            'buster': {'*': 100},
             'unstable': {'*': 100},
             'experimental': {'*': 100},
         },
        'arm64': {
             'stretch': {'*': 100},
+            'buster': {'*': 100},
             'unstable': {'*': 100},
             'experimental': {'*': 100},
         },
        'armhf': {
             'stretch': {'*': 100},
+            'buster': {'*': 100},
             'unstable': {'*': 100},
             'experimental': {'*': 100},
         },
@@ -94,21 +98,25 @@ LIMITS = {
     'new': {
         'amd64': {
             'stretch': {1: (100, 250), 2: (200, 200), '*': 100},
+            'buster': {1: (100, 250), 2: (200, 200), '*': 100},
             'unstable': {1: (100, 250), 2: (200, 200), '*': 150},
             'experimental': {1: (100, 250), 2: (200, 200), '*': 50},
         },
         'i386': {
             'stretch': {1: (100, 250), 2: (200, 200), '*': 100},
+            'buster': {1: (100, 250), 2: (200, 200), '*': 100},
             'unstable': {1: (100, 250), 2: (200, 200), '*': 150},
             'experimental': {1: (100, 250), 2: (200, 200), '*': 50},
         },
         'arm64': {
             'stretch': {1: (100, 250), 2: (200, 200), '*': 50},
+            'buster': {1: (100, 250), 2: (200, 200), '*': 50},
             'unstable': {1: (100, 250), 2: (200, 200), '*': 75},
             'experimental': {1: (100, 200), 2: (200, 200), '*': 25},
         },
         'armhf': {
             'stretch': {1: (100, 200), 2: (200, 200), '*': 50},
+            'buster': {1: (100, 200), 2: (200, 200), '*': 50},
             'unstable': {1: (100, 200), 2: (200, 200), '*': 75},
             'experimental': {1: (100, 200), 2: (200, 200), '*': 25},
         },
@@ -116,21 +124,25 @@ LIMITS = {
     'ftbfs': {
         'amd64': {
             'stretch': {1: (700, 40), 2: (500, 20), '*': 5},
+            'buster': {1: (700, 40), 2: (500, 20), '*': 5},
             'unstable': {1: (700, 40), 2: (500, 20), '*': 5},
             'experimental': {1: (700, 40), 2: (500, 20), '*': 2},
         },
         'i386': {
             'stretch': {1: (700, 40), 2: (500, 20), '*': 5},
+            'buster': {1: (700, 40), 2: (500, 20), '*': 5},
             'unstable': {1: (700, 40), 2: (500, 20), '*': 5},
             'experimental': {1: (700, 40), 2: (500, 20), '*': 2},
         },
         'arm64': {
             'stretch': {1: (700, 40), 2: (500, 20), '*': 5},
+            'buster': {1: (700, 40), 2: (500, 20), '*': 5},
             'unstable': {1: (700, 40), 2: (500, 20), '*': 5},
             'experimental': {1: (700, 40), 2: (500, 20), '*': 2},
         },
         'armhf': {
             'stretch': {1: (575, 20), 2: (450, 10), '*': 5},
+            'buster': {1: (575, 20), 2: (450, 10), '*': 5},
             'unstable': {1: (575, 20), 2: (450, 10), '*': 5},
             'experimental': {1: (575, 20), 2: (450, 10), '*': 2},
         }
@@ -138,21 +150,25 @@ LIMITS = {
     'depwait': {
         'amd64': {
             'stretch': {1: (700, 400), 2: (500, 200), '*': 50},
+            'buster': {1: (700, 400), 2: (500, 200), '*': 50},
             'unstable': {1: (700, 400), 2: (500, 200), '*': 50},
             'experimental': {1: (700, 400), 2: (500, 200), '*': 20},
         },
         'i386': {
             'stretch': {1: (700, 400), 2: (500, 200), '*': 50},
+            'buster': {1: (700, 400), 2: (500, 200), '*': 50},
             'unstable': {1: (700, 400), 2: (500, 200), '*': 50},
             'experimental': {1: (700, 400), 2: (500, 200), '*': 20},
         },
         'arm64': {
             'stretch': {1: (700, 400), 2: (500, 200), '*': 50},
+            'buster': {1: (700, 400), 2: (500, 200), '*': 50},
             'unstable': {1: (700, 400), 2: (500, 200), '*': 50},
             'experimental': {1: (700, 400), 2: (500, 200), '*': 20},
         },
         'armhf': {
             'stretch': {1: (575, 200), 2: (450, 100), '*': 50},
+            'buster': {1: (575, 200), 2: (450, 100), '*': 50},
             'unstable': {1: (575, 200), 2: (450, 100), '*': 50},
             'experimental': {1: (575, 200), 2: (450, 100), '*': 20},
         }
@@ -160,21 +176,25 @@ LIMITS = {
     'old': {
         'amd64': {
             'stretch': {1: (700, 1000), 2: (1100, 850), '*': 0},
+            'buster': {1: (700, 1000), 2: (1100, 850), '*': 0},
             'unstable': {1: (700, 1200), 2: (1100, 1050), '*': 0},
             'experimental': {1: (700, 70), 2: (1100, 50), '*': 0},
         },
         'i386': {
             'stretch': {1: (700, 1000), 2: (1100, 850), '*': 0},
+            'buster': {1: (700, 1000), 2: (1100, 850), '*': 0},
             'unstable': {1: (700, 1200), 2: (1100, 1050), '*': 0},
             'experimental': {1: (700, 70), 2: (1100, 50), '*': 0},
         },
         'arm64': {
             'stretch': {1: (700, 1000), 2: (1100, 850), '*': 0},
+            'buster': {1: (700, 1000), 2: (1100, 850), '*': 0},
             'unstable': {1: (700, 1200), 2: (1100, 1050), '*': 0},
             'experimental': {1: (700, 70), 2: (1100, 50), '*': 0},
         },
         'armhf': {
             'stretch': {1: (600, 800), 2: (850, 500), '*': 0},
+            'buster': {1: (600, 800), 2: (850, 500), '*': 0},
             'unstable': {1: (600, 1000), 2: (850, 700), '*': 0},
             'experimental': {1: (600, 70), 2: (850, 50), '*': 0},
         }
@@ -449,7 +469,7 @@ def query_new_versions(suite, arch, limit):
                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
     pkgs = query_db(query)
     # the next line avoids constant rescheduling of packages:
-    # packages in our repository != sid or stretch,
+    # packages in our repository != official repo,
     # so they will always be selected by the query above
     # so we only accept them if there version is greater than the already tested one
     packages = [(x[0], x[1]) for x in pkgs if version_compare(x[2], x[3]) > 0]

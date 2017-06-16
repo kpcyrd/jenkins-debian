@@ -39,7 +39,7 @@ if os.uname()[1] == 'jenkins-test-vm':
     sys.exit()
 
 # tested suites
-SUITES = ['stretch', 'unstable', 'experimental']
+SUITES = ['buster', 'unstable', 'stretch', 'experimental']
 # tested architectures
 ARCHS = ['amd64', 'i386', 'arm64', 'armhf']
 # defaults

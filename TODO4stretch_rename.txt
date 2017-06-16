@@ -4,6 +4,9 @@ special deployement needed for this:
 
 changes not yet prepared in git
 -------------------------------
-completly prepare to add buster on 2017-06-17
-(including changing the apache redirect testing→stretch to testing→buster)
+missing bits for the buster coming:
+ * _common.sh
+ * _dashboard.sh
+ * _repository_comparison.sh
+ * create the needed jenkins jobs
 finally, remove this file again.

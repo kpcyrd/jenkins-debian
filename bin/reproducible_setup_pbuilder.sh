@@ -127,8 +127,8 @@ setup_pbuilder() {
 	sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec --basetgz /var/cache/pbuilder/${NAME}-new.tgz -- ${TMPFILE} | tee ${LOG}
 	rm ${TMPFILE}
 
-	# add repo only for experimental and sid - keep stretch "real" (and sid progressive!)
-	if [ "$SUITE" != "stretch" ] ; then
+	# add repo only for experimental and unstable - keep stretch/buster "real" (and sid progressive!)
+	if [ "$SUITE" = "unstable" ] || [ "$SUITE" = "experimental" ]; then
 		# apply further customisations, eg. install $PACKAGES from our repo
 		create_setup_our_repo_tmpfile ${TMPFILE} "${PACKAGES}"
 		if [ "$DEBUG" = "true" ] ; then

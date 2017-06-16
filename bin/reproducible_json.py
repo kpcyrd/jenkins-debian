@@ -48,8 +48,8 @@ for row in result:
     log.debug(pkg)
     output.append(pkg)
 
-    # tracker.d.o should only care about results in stretch
-    if pkg['suite'] == 'stretch':
+    # tracker.d.o should only care about results in testing
+    if pkg['suite'] == 'buster':
 
         package = pkg['package']
         if package in crossarch:

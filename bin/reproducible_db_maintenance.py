@@ -606,6 +606,26 @@ schema_updates = {
                 "stats_builds_age", "stats_meta_pkg_state", "stats_build")] + [
         "INSERT INTO rb_schema (version, date) VALUES (31, '" + now + "')"
     ],
+    32: [ # copy stretch packages (includng results) in buster
+        """INSERT INTO sources (name, version, suite, architecture, notify_maintainer)
+            SELECT name, version, 'buster', architecture, notify_maintainer
+            FROM sources
+            WHERE suite = 'stretch'"""
+        """WITH buster AS (
+                SELECT id, name, suite, architecture, version
+                FROM sources WHERE suite = 'buster'),
+            sr AS (
+                SELECT s.name, s.architecture, r.id, r.version, r.status,
+                    r.build_date, r.build_duration, r.node1, r.node2, r.job
+                FROM sources AS s JOIN results AS r ON s.id=r.package_id
+                WHERE s.suite = 'stretch')
+            INSERT INTO results (package_id, version, status, build_date,
+                    build_duration, node1, node2, job)
+                SELECT b.id, sr.version, sr.status, sr.build_date,
+                    sr.build_duration, sr.node1, sr.node2, sr.job
+                FROM buster AS b JOIN sr ON b.name=sr.name
+                    AND b.architecture=sr.architecture""",
+        "INSERT INTO rb_schema (version, date) VALUES (32, '" + now + "')"
 }
 
 

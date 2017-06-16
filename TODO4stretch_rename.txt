@@ -1,26 +1,7 @@
 special deployement needed for this:
 ------------------------------------
- $ sudo systemctl stop reproducible_build@startup.service
- $ sudo -u jenkins /srv/jenkins/bin/reproducible_cleanup_nodes.sh
- $ sudo -u jenkins /srv/jenkins/bin/reproducible_cleanup_nodes.sh
- * https://jenkins.debian.net/quietDown
- $ cd ~jenkins-adm/jenkins.debian.net
- $ sudo update_jdn.sh
- $ sudo -u jenkins -i
- // as jenkins user:
- $ cd /var/lib/jenkins/userContent/reproducible/debian
- $ for i in issues logs rb-pkg logdiffs buildinfo dbdtxt rbuild dbd ; do
-     mv $i/testing $i/stretch
-   done
- $ mv testing stretch
- $ cd /srv/reproducible-results
- $ mv meta_pkgsets-testing meta_pkgsets-stretch
- $ rm -rf --one-file-system chdist-testing
- $ /srv/jenkins/bin/reproducible_db_maintenance.py
- $ exit
- * https://jenkins.debian.net/cancelQuietDown
- $ cd ~jenkins-adm/jenkins.debian.net
- $ sudo update_jdn.sh
+ $ sudo systemctl stop reproducible_build@startup.service >> document this in README or INSTALL
+
  * remove all jobs which match reproducible*testing*
  // hit all new jobs (to create chroots, etc) in:
  * https://jenkins.debian.net/view/reproducible/view/Debian_setup_amd64/

@@ -31,7 +31,6 @@ special deployement needed for this:
 
 changes not yet prepared in git
 -------------------------------
-db changes
 prepare to add buster on 2017-06-17
 (including changing the apache redirect testing→stretch to testing→buster)
 finally, remove this file again.

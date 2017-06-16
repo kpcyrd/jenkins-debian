@@ -14,8 +14,8 @@ special deployement needed for this:
    done
  $ mv testing stretch
  $ cd /srv/reproducible-results
- // job will take care of recreating this one appropriately, won't it?
- $ rm -rf --one-file-system meta_pkgsets-testing chdist-testing
+ $ mv meta_pkgsets-testing meta_pkgsets-stretch
+ $ rm -rf --one-file-system chdist-testing
  $ /srv/jenkins/bin/reproducible_db_maintenance.py
  $ exit
  * https://jenkins.debian.net/cancelQuietDown
@@ -31,6 +31,6 @@ special deployement needed for this:
 
 changes not yet prepared in git
 -------------------------------
-prepare to add buster on 2017-06-17
+completly prepare to add buster on 2017-06-17
 (including changing the apache redirect testing→stretch to testing→buster)
 finally, remove this file again.

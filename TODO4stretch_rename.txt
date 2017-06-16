@@ -2,14 +2,6 @@ special deployement needed for this:
 ------------------------------------
  $ sudo systemctl stop reproducible_build@startup.service >> document this in README or INSTALL
 
- * remove all jobs which match reproducible*testing*
- // hit all new jobs (to create chroots, etc) in:
- * https://jenkins.debian.net/view/reproducible/view/Debian_setup_amd64/
- * https://jenkins.debian.net/view/reproducible/view/Debian_setup_arm64/
- * https://jenkins.debian.net/view/reproducible/view/Debian_setup_armhf/
- * https://jenkins.debian.net/view/reproducible/view/Debian_setup_i386/
- $ sudo systemctl start reproducible_build@startup.service
-
 changes not yet prepared in git
 -------------------------------
 completly prepare to add buster on 2017-06-17

@@ -1,6 +1,6 @@
 special deployement needed for this:
 ------------------------------------
- * stop workers  # FIXME -command?
+ $ sudo systemctl stop reproducible_build@startup.service
  $ sudo -u jenkins /srv/jenkins/bin/reproducible_cleanup_nodes.sh
  $ sudo -u jenkins /srv/jenkins/bin/reproducible_cleanup_nodes.sh
  * https://jenkins.debian.net/quietDown
@@ -27,7 +27,7 @@ special deployement needed for this:
  * https://jenkins.debian.net/view/reproducible/view/Debian_setup_arm64/
  * https://jenkins.debian.net/view/reproducible/view/Debian_setup_armhf/
  * https://jenkins.debian.net/view/reproducible/view/Debian_setup_i386/
- * restart workers  # FIXME -command?
+ $ sudo systemctl start reproducible_build@startup.service
 
 changes not yet prepared in git
 -------------------------------

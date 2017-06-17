@@ -381,6 +381,9 @@
                 - 'setup_pbuilder_stretch':
                     my_description: 'Setup pbuilder for reproducible builds of packages from stretch as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '23 7 * * *'
+                - 'setup_pbuilder_buster':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from buster as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '23 8 * * *'
                 - 'setup_pbuilder_unstable':
                     my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '42 7 * * *'
@@ -393,6 +396,9 @@
                 - 'setup_schroot_stretch':
                     my_description: 'Setup stretch schroot for fetching source packages for the builder jobs.'
                     my_timed: '0 1 * * *'
+                - 'setup_schroot_buster':
+                    my_description: 'Setup buster schroot for fetching source packages for the builder jobs.'
+                    my_timed: '0 2 * * *'
                 - 'setup_schroot_experimental':
                     my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
                     my_timed: '40 1 * * *'
@@ -452,11 +458,17 @@
                     my_description: 'Setup schroot for running diffoscope in a stretch environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '23 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-stretch-diffoscope stretch diffoscope locales-all'
+                - 'buster_diffoscope':
+                    my_description: 'Setup schroot for running diffoscope in a buster environment (this is needed to be able to correctly investigate haskell binaries...)'
+                    my_timed: '23 0 * * *'
+                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-buster-diffoscope buster diffoscope locales-all'
                 - 'unstable':
                     my_timed: '42 1 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro} botch'
                 - 'stretch':
                     my_timed: '42 1 * * *'
+                - 'buster':
+                    my_timed: '42 2 * * *'
                 - 'experimental':
                     my_timed: '33 1 * * *'
             my_description: 'Setup {my_distro} schroot for fetching source packages for the builder jobs.'

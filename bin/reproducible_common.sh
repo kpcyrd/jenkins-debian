@@ -32,7 +32,7 @@ BIN_PATH=/srv/jenkins/bin
 TEMPLATE_PATH=/srv/jenkins/mustache-templates/reproducible
 
 # Debian suites being tested
-SUITES="buster unstable stretch experimental"
+SUITES="stretch buster unstable experimental"
 # Debian architectures being tested
 ARCHS="amd64 i386 arm64 armhf"
 

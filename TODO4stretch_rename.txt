@@ -5,9 +5,7 @@ special deployement needed for this:
 changes not yet prepared in git
 -------------------------------
 missing bits for the buster coming:
- * README
  * _common.sh
  * _dashboard.sh
  * _repository_comparison.sh
- * create the needed jenkins jobs
 finally, remove this file again.

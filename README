@@ -135,7 +135,7 @@ Installation tests inside chroot environments.
 
 * The (current) purpose of https://tests.reproducible-builds.org is to show the potential of reproducible builds for Debian - and six other projects currently. This is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project for Debian!
 
-* For Debian, three suites, 'stretch', 'unstable' and 'experimental', are tested on four architectures: 'amd64', 'i386', 'arm64' and 'armhf'. The tests are done using 'pbuilder' through several concurrent workers: 40 for 'amd64', 24 for 'i386', 32 for 'arm64' and 51 for 'armhf', which are each constantly testing packages and saving the results of these tests. There's a single link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_build_service.sh[systemd service] starting all of these link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_worker.sh[workers] which in turn launch the actual link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_build.sh[build script]. (So the actual builds and tests are happening outside the jenkins service.)
+* For Debian, four suites, 'stretch', 'buster', 'unstable' and 'experimental', are tested on four architectures: 'amd64', 'i386', 'arm64' and 'armhf'. The tests are done using 'pbuilder' through several concurrent workers: 40 for 'amd64', 24 for 'i386', 32 for 'arm64' and 51 for 'armhf', which are each constantly testing packages and saving the results of these tests. There's a single link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_build_service.sh[systemd service] starting all of these link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_worker.sh[workers] which in turn launch the actual link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_build.sh[build script]. (So the actual builds and tests are happening outside the jenkins service.)
 
 * These builds on remote nodes run on very different hardware:
 ** for 'amd64' we are using four virtual machines, profitbricks-build(1+5+11+15)-amd64, which have 15 or 16 cores and 48gb ram each. These nodes are sponsored by link:https://jenkins.debian.net/userContent/thanks.html[Profitbricks].
@@ -152,7 +152,7 @@ Installation tests inside chroot environments.
 * We would love to have more or more powerful ARM hardware in the future, if you can help, please talk to us!
 
 * Packages to be build are scheduled in the database via a scheduler job, which runs every hour and if the queue is below a certain threshold schedules four types of packages:
-** new untested packages (either uploaded to 'unstable' or 'experimental' or migrated to 'stretch'),
+** new untested packages (either uploaded to 'unstable' or 'experimental' or migrated to 'buster' or 'stretch'),
 ** new versions of existing packages, which were already tested - these are always scheduled, no matter how full the queue is
 ** old versions, already tested (at least two weeks ago)
 ** and also some old versions which failed to build (at least ten days ago), if no bug has been filed.

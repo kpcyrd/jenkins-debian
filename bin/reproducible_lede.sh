@@ -121,11 +121,6 @@ for target in * ; do
 				rm -f $BASE/lede/dbd/targets/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
 				continue
 			fi
-			# lets do a short sha256sum here, if not equal call diffoscope
-			echo "debug sha256: \"$TMPDIR/b1/targets/$target/$subtarget/$image\" \"$TMPDIR/b2/targets/$target/$subtarget/$image\""
-			sha256sum "$TMPDIR/b1/targets/$target/$subtarget/$image" "$TMPDIR/b2/targets/$target/$subtarget/$image"
-			echo "$(sha256sum "$TMPDIR/b1/targets/$target/$subtarget/$image" "$TMPDIR/b2/targets/$target/$subtarget/$image" \
-				| cut -f 1 -d ' ' | uniq -c  | wc -l)" '!=' "1"
 
 			if [ "$(sha256sum "$TMPDIR/b1/targets/$target/$subtarget/$image" "$TMPDIR/b2/targets/$target/$subtarget/$image" \
 				| cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then

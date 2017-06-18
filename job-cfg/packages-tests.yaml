@@ -118,7 +118,6 @@
           my_origin_triggers:
             - pollscm:
                cron: '* H/2 * * *'
-          my_trigger:
-            - '{name}_stretch'
+          my_trigger: '{name}_stretch'
     jobs:
       - junit

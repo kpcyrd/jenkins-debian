@@ -130,6 +130,8 @@ for target in * ; do
 			if [ "$(sha256sum "$TMPDIR/b1/targets/$target/$subtarget/$image" "$TMPDIR/b2/targets/$target/$subtarget/$image" \
 				| cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
 				call_diffoscope targets/$target/$subtarget $image
+			else
+				echo "$(date -u) - targets/$target/$subtarget/$image is reproducible, yip!"
 			fi
 			get_filesize $image
 			if [ -f $TMPDIR/targets/$target/$subtarget/$image.html ] ; then
@@ -169,7 +171,12 @@ for i in * ; do
 			rm -f $BASE/lede/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
-		call_diffoscope $i $j
+
+		if [ "$(sha256sum $i $j | cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
+			call_diffoscope $i $j
+		else
+			echo "$(date -u) - $i/$j is reproducible, yip!"
+		fi
 		get_filesize $j
 		if [ -f $TMPDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/lede/dbd/$i/$(dirname $j)

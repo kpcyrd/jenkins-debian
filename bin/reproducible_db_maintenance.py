@@ -610,7 +610,7 @@ schema_updates = {
         """INSERT INTO sources (name, version, suite, architecture, notify_maintainer)
             SELECT name, version, 'buster', architecture, notify_maintainer
             FROM sources
-            WHERE suite = 'stretch'"""
+            WHERE suite = 'stretch'""",
         """WITH buster AS (
                 SELECT id, name, suite, architecture, version
                 FROM sources WHERE suite = 'buster'),
@@ -626,6 +626,7 @@ schema_updates = {
                 FROM buster AS b JOIN sr ON b.name=sr.name
                     AND b.architecture=sr.architecture""",
         "INSERT INTO rb_schema (version, date) VALUES (32, '" + now + "')"
+    ],
 }
 
 

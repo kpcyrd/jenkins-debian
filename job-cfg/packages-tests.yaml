@@ -46,10 +46,12 @@
           regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     my_default_distro_matrix: &distros_defaults
       - sid: &distro_defaults_sid
-          my_trigger: '{name}_stretch'
+          my_trigger: '{name}_buster'
           my_origin_triggers:
             - pollscm:
                 cron: '* H/2 * * *'
+      - buster: &distro_defaults_buster
+          my_trigger: '{name}_stretch'
       - stretch: &distro_defaults_stretch
           my_trigger: '{name}_jessie'
       - jessie: &distro_defaults_jessie {}
@@ -92,6 +94,7 @@
     my_description: 'Debhelper testsuite'
     my_distro:
       - sid: *distro_defaults_sid
+      - buster: *distro_defaults_buster
       - stretch: *distro_defaults_stretch
       - jessie:
           my_disabled: true
@@ -105,14 +108,17 @@
     my_shell: '--exports-results timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
     my_distro:
-    # DAK tests cannot be run in sid/stretch atm, but still create the jobs
+    # DAK tests cannot be run in sid/buster atm, but still create the jobs
       - sid:
           my_disabled: true
-      - stretch:
+      - buster:
           my_disabled: true
+      - stretch: {}
       - jessie:
           my_origin_triggers:
             - pollscm:
                cron: '* H/2 * * *'
+          my_trigger:
+            - '{name}_stretch'
     jobs:
       - junit

@@ -617,6 +617,11 @@ fi
 explain "packages configured."
 
 #
+# teach jessie and ubuntu 16.04 how to debootstrap buster
+#
+[ -L /usr/share/debootstrap/scripts/buster ] || ( cd /usr/share/debootstrap/scripts/buster ; ln -s sid buster )
+
+#
 # install the heart of jenkins.debian.net
 #
 cd $BASEDIR

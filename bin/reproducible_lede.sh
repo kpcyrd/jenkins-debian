@@ -76,29 +76,9 @@ build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx=y\nCONFIG_TAR
 echo "============================================================================="
 echo "$(date -u) - Creating Documentation HTML"
 echo "============================================================================="
-TOOLCHAIN_HTML=$(mktemp --tmpdir=$TMPDIR)
-echo "<table><tr><th>Target toolchains built</th></tr>" > $TOOLCHAIN_HTML
-for i in $(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo) ; do
-	echo " <tr><td><code>$i</code></td></tr>" >> $TOOLCHAIN_HTML
-done
-echo "</table>" >> $TOOLCHAIN_HTML
-echo "<table><tr><th>Contents of <code>build_dir/host/</code></th></tr>" >> $TOOLCHAIN_HTML
-for i in $(ls -1 build_dir/host/) ; do
-	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
-done
-echo "</table>" >> $TOOLCHAIN_HTML
-echo "<table><tr><th>Downloaded software</th></tr>" >> $TOOLCHAIN_HTML
-for i in $(ls -1 dl/) ; do
-	echo " <tr><td>$i</td></tr>" >> $TOOLCHAIN_HTML
-done
-echo "</table>" >> $TOOLCHAIN_HTML
-echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
-for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
-	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
-	dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $TOOLCHAIN_HTML
-	echo " </td></tr>" >> $TOOLCHAIN_HTML
-done
-echo "</table>" >> $TOOLCHAIN_HTML
+
+# created & copied by build_two_times()
+TOOLCHAIN_HTML=$TMPDIR/toolchain.html
 
 # clean up builddir to save space on tmpfs
 rm -rf $TMPBUILDDIR/lede

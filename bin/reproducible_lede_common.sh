@@ -74,6 +74,35 @@ create_results_dirs() {
 	mkdir -p $BASE/$project/dbd
 }
 
+node_document_environment() {
+	local tmpdir=$1
+	local toolchain_html=$tmpdir/toolchain.html
+
+	cd $tmpdir/build
+	echo "<table><tr><th>Target toolchains built</th></tr>" > $toolchain_html
+	for i in $(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo) ; do
+		echo " <tr><td><code>$i</code></td></tr>" >> $toolchain_html
+	done
+	echo "</table>" >> $toolchain_html
+	echo "<table><tr><th>Contents of <code>build_dir/host/</code></th></tr>" >> $toolchain_html
+	for i in $(ls -1 build_dir/host/) ; do
+		echo " <tr><td>$i</td></tr>" >> $toolchain_html
+	done
+	echo "</table>" >> $toolchain_html
+	echo "<table><tr><th>Downloaded software</th></tr>" >> $toolchain_html
+	for i in $(ls -1 dl/) ; do
+		echo " <tr><td>$i</td></tr>" >> $toolchain_html
+	done
+	echo "</table>" >> $toolchain_html
+	echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $toolchain_html
+	for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
+		echo " <tr><td>$i</td><td>" >> $toolchain_html
+		dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $toolchain_html
+		echo " </td></tr>" >> $toolchain_html
+	done
+	echo "</table>" >> $toolchain_html
+}
+
 # node_save_logs can be called over ssh OR called within openwrt_build
 node_save_logs() {
 	local tmpdir=$1
@@ -89,6 +118,8 @@ node_save_logs() {
 	else
 		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/source" ./logs
 	fi
+
+	node_document_environment $tmpdir
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
@@ -388,6 +419,7 @@ build_two_times() {
 	# rsync back logs and images
 	rsync -av $GENERIC_NODE1:$TMPDIR/$RUN/ $TMPDIR/$RUN/
 	rsync -av $GENERIC_NODE1:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz
+	rsync -av $GENERIC_NODE1:$TMPDIR/toolchain.html $TMPDIR/toolchain.html
 	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
 
 	## second run

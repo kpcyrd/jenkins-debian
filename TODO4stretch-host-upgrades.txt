@@ -21,4 +21,8 @@ had to do "sudo apt install linux-image-686-pae", to get kernel upgraded… huh?
 todo for upgrades
 -----------------
 test jenkins-test-vm upgrade before doing jenkins
-resolve issues on pb2 :)
+resolve issues on pb2+6+12+16 :)
+
+done for upgrades
+-----------------
+base upgrade of all i386 nodes, still need finishing touches as described above

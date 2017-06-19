@@ -20,13 +20,14 @@ had to do "sudo apt install linux-image-686-pae", to get kernel upgraded… huh?
 
 problems
 --------
-no amd64 kernel for i386?
+no amd64 kernel for i386? manually done, needs to go into update_jdn
 pb6+16 are not running in the future anymore
 
 todo for upgrades
 -----------------
 test jenkins-test-vm upgrade before doing jenkins
 resolve issues on pb2+6+12+16 :)
+wait with upgrading armhf nodes until next week as vagrant has no time until then
 
 done for upgrades
 -----------------

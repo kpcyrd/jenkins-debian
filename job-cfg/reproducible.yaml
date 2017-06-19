@@ -498,11 +498,11 @@
                     my_timed: '*/10 * * * *'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
-                    my_timed: '*/15 * * * *'
+                    my_timed: '*/30 * * * *'
                     my_shellext: ".py"
                 - 'html_indexes':
                     my_description: 'Generate HTML results (indexes) for reproducible builds.'
-                    my_timed: '*/15 * * * *'
+                    my_timed: '*/30 * * * *'
                     my_shellext: ".py"
                 - 'html_dd_list':
                     my_description: 'Generate HTML results (dd-list) for reproducible builds.'

@@ -167,7 +167,7 @@ for i in * ; do
 			continue
 		fi
 
-		if [ "$(sha256sum $i $j | cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
+		if [ "$(sha256sum $TMPDIR/b1/$i/$j $TMPDIR/b2/$i/$j | cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
 			call_diffoscope $i $j
 		else
 			echo "$(date -u) - $i/$j is reproducible, yip!"

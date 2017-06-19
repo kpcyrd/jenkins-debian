@@ -13,9 +13,17 @@ seem sufficient anymore…
 +env.critical 98
 +env.exclude_re ^/run/user
 
-
 had to do "sudo apt install linux-image-686-pae", to get kernel upgraded… huh? :)
 -> add multiarch, needs to be added to update_jdn still…
+
+squid
+-----
+It seems the squid configuration moved from /etc/squid3 to /etc/squid.  postinst
+script takes care of moving the files, but we should eventually:
+1) move them in our git repo too
+2) delete /etc/squid3 from the hosts
+3) install squid instead of squid3 in update_jdn (once all hosts are upgraded) - that's going to mark the package as manually installed
+4) apt purge squid3
 
 problems
 --------
@@ -27,7 +35,6 @@ todo for upgrades
 test jenkins-test-vm upgrade before doing jenkins
 	-> cucumber problems reported by fil
 resolve issues on pb2+6+12+16 :)
-replace squid3 in update_jdn with squid - once all nodes run stretch
 wait with upgrading armhf nodes until next week as vagrant has no time until then
 
 done for upgrades

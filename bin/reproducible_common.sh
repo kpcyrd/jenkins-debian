@@ -698,28 +698,36 @@ create_png_from_table() {
 		# compatibility with postgres
 		query_to_csv "SELECT stats.datum,
 			 COALESCE(reproducible_stretch,0) AS reproducible_stretch,
+			 COALESCE(reproducible_buster,0) AS reproducible_buster,
 			 COALESCE(reproducible_unstable,0) AS reproducible_unstable,
 			 COALESCE(reproducible_experimental,0) AS reproducible_experimental,
 			 COALESCE(unreproducible_stretch,0) AS unreproducible_stretch,
+			 COALESCE(unreproducible_buster,0) AS unreproducible_buster,
 			 COALESCE(unreproducible_unstable,0) AS unreproducible_unstable,
 			 COALESCE(unreproducible_experimental,0) AS unreproducible_experimental,
 			 COALESCE(FTBFS_stretch,0) AS FTBFS_stretch,
+			 COALESCE(FTBFS_buster,0) AS FTBFS_buster,
 			 COALESCE(FTBFS_unstable,0) AS FTBFS_unstable,
 			 COALESCE(FTBFS_experimental,0) AS FTBFS_experimental,
 			 COALESCE(other_stretch,0) AS other_stretch,
+			 COALESCE(other_buster,0) AS other_buster,
 			 COALESCE(other_unstable,0) AS other_unstable,
 			 COALESCE(other_experimental,0) AS other_experimental
 			FROM (SELECT s.datum,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA),0) AS reproducible_stretch,
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA),0) AS reproducible_buster,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS reproducible_unstable,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS reproducible_experimental,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS unreproducible_stretch,
+			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS unreproducible_buster,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS unreproducible_unstable,
 			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS unreproducible_experimental,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS FTBFS_stretch,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS FTBFS_buster,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS FTBFS_unstable,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS FTBFS_experimental,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS other_stretch,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS other_buster,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS other_unstable,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS other_experimental
 			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum) as stats
@@ -742,8 +750,9 @@ create_png_from_table() {
 	if [ $1 -eq 2 ] ; then
 		case "$SUITE" in
 			stretch)	COLORS=40 ;;
-			unstable)	COLORS=41 ;;
-			experimental)	COLORS=42 ;;
+			buster)		COLORS=41 ;;
+			unstable)	COLORS=42 ;;
+			experimental)	COLORS=43 ;;
 		esac
 	fi
 	local WIDTH=1920

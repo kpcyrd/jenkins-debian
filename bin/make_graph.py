@@ -49,8 +49,10 @@ def main():
     elif int(colors) == 40:
         r('palette(c("#4e9a06", "#000000"))')
     elif int(colors) == 41:
-        r('palette(c("#73d216", "#000000"))')
+        r('palette(c("#57a231", "#000000"))')
     elif int(colors) == 42:
+        r('palette(c("#73d216", "#000000"))')
+    elif int(colors) == 43:
         r('palette(c("#8ae234", "#000000"))')
     # "revert the hack" (it's still a hack :)
     if int(colors) >= 40:

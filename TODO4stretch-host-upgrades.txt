@@ -3,15 +3,6 @@ rough notes from upgrading pb-build2:
 check for changes in /etc/ssh/sshd_config - the currently running one is the one from jessie which doesnt 
 seem sufficient anymore… 
 
-+++ /etc/munin/plugin-conf.d/munin-node.dpkg-new        2017-03-03 23:44:55.000000000 +0100
-@@ -33,6 +33,11 @@
- [cps*]
- user root
- 
-+[df*]
-+env.warning 92
-+env.critical 98
-+env.exclude_re ^/run/user
 
 had to do "sudo apt install linux-image-686-pae", to get kernel upgraded… huh? :)
 -> add multiarch, needs to be added to update_jdn still…

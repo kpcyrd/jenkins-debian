@@ -6,6 +6,5 @@ changes not yet prepared in git
 -------------------------------
 missing bits for the buster coming:
  * _common.sh (only partly done so far…)
- * _dashboard.sh
  * _repository_comparison.sh
 finally, remove this file again.

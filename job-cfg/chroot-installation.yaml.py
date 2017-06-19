@@ -12,23 +12,23 @@ except ImportError:
 
 
 base_distros = [
-    'wheezy',
     'jessie',
     'stretch',
+    'buster',
     'sid',
     ]
 
 distro_upgrades = {
-    'wheezy':  'jessie',
     'jessie':  'stretch',
-    'stretch': 'sid',
+    'stretch':  'buster',
+    'buster': 'sid',
     }
 
 # deb.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = {
-    'wheezy':  '30 16 1 * *',
-    'jessie':  '30 10 * * 5',
-    'stretch': '30 10 */2 * *',
+    'jessie':  '30 16 1 * *',
+    'stretch':  '30 10 * * 5',
+    'buster': '30 10 */2 * *',
     'sid':     '30 4 * * *',
     }
 
@@ -100,20 +100,17 @@ all_targets = [
 # not all packages are available in all distros
 #
 def is_target_in_distro(distro, target):
-         # qt5, education-desktop-mate and cinnamon weren't in wheezy. debconf-video is not interested in wheezy anymore neither
-         if distro == 'wheezy' and target in ('education-desktop-mate', 'cinnamon', 'qt5', 'debconf-video'):
-             return False
          # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid...
-         elif distro in ('sid', 'jessie', 'stretch') and target == 'education-desktop-sugar':
+         if distro in ('sid', 'jessie', 'stretch') and target == 'education-desktop-sugar':
              return False
          # education-ltsp-server and education-roaming-workstation are only availble since stretch…
-         elif distro in ('wheezy', 'jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
+         elif distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
              return False
          # education-thin-client-server is obsolete since stretch…
          elif distro in ('sid', 'buster') and target == 'education-thin-client-server':
              return False
          # education-lang-*, parl-desktop* and design-desktop* packages only exist since stretch
-         elif distro in ('wheezy', 'jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
+         elif distro in ('jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
              return False
          return True
 
@@ -143,7 +140,7 @@ def get_view(target, distro):
     if target == 'haskell':
         return 'haskell'
     elif target[:10] == 'education-':
-        if distro in ('wheezy', 'jessie'):
+        if distro in ('jessie', 'stretch'):
             return 'edu_stable'
         else:
             return 'edu_devel'

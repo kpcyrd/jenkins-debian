@@ -58,7 +58,7 @@ for PKG in $SOURCEPKGS ; do
 	CRUFT=""
 	BET=""
 	OBSOLETE_IN_SID=false
-	OBSOLETE_IN_STRETCH=false
+	OBSOLETE_IN_BUSTER=false
 	OBSOLETE_IN_EXP=false
 	#
 	# gather versions of a package
@@ -77,23 +77,23 @@ for PKG in $SOURCEPKGS ; do
 			CRUFT="$CRUFT ${VERSION}"
 		fi
 	done
-	STRETCH=$(rmadison -s stretch $PKG | egrep -v '^(debian|new):' | cut -d "|" -f2|xargs echo)
+	BUSTER=$(rmadison -s buster $PKG | egrep -v '^(debian|new):' | cut -d "|" -f2|xargs echo)
 	EXPERIMENTAL=$(rmadison -s experimental $PKG | egrep -v '^(debian|new):' | cut -d "|" -f2|xargs echo)
 	#
 	# format output
 	#
 	CSID=""
-	CSTRETCH=""
+	CBUSTER=""
 	CEXP=""
-	if [ ! -z "$STRETCH" ] ; then
-		for i in $STRETCH ; do
+	if [ ! -z "$BUSTER" ] ; then
+		for i in $BUSTER ; do
 			if dpkg --compare-versions "$i" gt "$BET" ; then
-				CSTRETCH="$CSTRETCH<span class=\"green\">$i</span><br />"
-				OBSOLETE_IN_STRETCH=true
+				CBUSTER="$CBUSTER<span class=\"green\">$i</span><br />"
+				OBSOLETE_IN_BUSTER=true
 				OBSOLETE_IN_SID=true
 				OBSOLETE_IN_EXP=true
 			else
-				CSTRETCH="$CSTRETCH$i<br />"
+				CBUSTER="$CBUSTER$i<br />"
 			fi
 		done
 	fi
@@ -179,8 +179,8 @@ for PKG in $SOURCEPKGS ; do
 		else
 			write_row "<a href=\"$URL\">$GIT</a>"
 			MERGEINFO=""
-			if $OBSOLETE_IN_STRETCH ; then
-				MERGEINFO=" and available in stretch and unstable"
+			if $OBSOLETE_IN_BUSTER ; then
+				MERGEINFO=" and available in buster and unstable"
 			elif $OBSOLETE_IN_SID ; then
 				MERGEINFO=" and available in unstable"
 			elif $OBSOLETE_IN_EXP ; then
@@ -191,14 +191,14 @@ for PKG in $SOURCEPKGS ; do
 	else
 		write_row "<a href=\"$URL\">$GIT</a>"
 		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] && [ "$PKG" != "debbindiff" ] && [ "$PKG" != "disorderfs" ] ; then
-			if $OBSOLETE_IN_STRETCH && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
+			if $OBSOLETE_IN_BUSTER && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
 				write_row "<br />(unused?"
 				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>)"
 			elif $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
-				write_row "<br />(only used in stretch, fixed in sid,"
+				write_row "<br />(only used in buster, fixed in sid,"
 				write_row "<br /><span class=\"purple\">branch probably either should be renamed to <em>merged/reproducible_builds</em> or a new upload to our repo is needed?</span>)"
 			elif $OBSOLETE_IN_EXP ; then
-				write_row "<br />(only used in stretch and unstable, fixed in experimental)"
+				write_row "<br />(only used in buster and unstable, fixed in experimental)"
 			fi
 		elif [ "$PKG" = "disorderfs" ] ; then
 			write_row "<br />(only used to modify the build environment in the 2nd build)"
@@ -221,7 +221,7 @@ for PKG in $SOURCEPKGS ; do
 	write_row " <td><a href=\"$URL\">bugs</a></td>"
 	write_row " <td>$CRUFT</td>"
 	write_row " <td>$BET $CBINARIES</td>"
-	write_row " <td>$CSTRETCH</td>"
+	write_row " <td>$CBUSTER</td>"
 	write_row " <td>$CSID</td>"
 	write_row " <td>$CEXP</td>"
 	write_row "</tr>"
@@ -229,14 +229,14 @@ for PKG in $SOURCEPKGS ; do
 	echo
 done
 if [ -s $TABLE_TODO ] ; then
-	write_page "<p><table><tr><th class=\"center\">package</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old versions in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'stretch'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+	write_page "<p><table><tr><th class=\"center\">package</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old versions in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'buster'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
 	cat $TABLE_TODO >> $PAGE
 	write_page "</table></p>"
 else
 	write_page "<p>Congratulations! There are no modified packages in our repository compared to unstable. (Yes, that means our repository is obsolete now.)"
 fi
 if [ -s $TABLE_DONE ] ; then
-	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'stretch'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'buster'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
 	cat $TABLE_DONE >> $PAGE
 	write_page "</table></p>"
 fi

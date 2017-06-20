@@ -279,4 +279,7 @@ export RUBYOPT="-r $RUBY_STDOUT_SYNC"
 
 unset http_proxy
 
+echo "PWD = $(pwd)"
+[ -e features ] || ln -s /srv/jenkins/cucumber/features
+
 cucumber ${@}

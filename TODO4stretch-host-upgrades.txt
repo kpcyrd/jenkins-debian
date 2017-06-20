@@ -3,7 +3,7 @@
 
 problems
 --------
-- none known
+- dsa-check-packages points to /bin/true on hosts running in the future
 
 todo for upgrades
 -----------------

@@ -1,7 +1,0 @@
-special deployement needed for this:
-------------------------------------
- $ sudo systemctl stop reproducible_build@startup.service >> document this in README or INSTALL
-
-changes not yet prepared in git
--------------------------------
-finally, remove this file again.

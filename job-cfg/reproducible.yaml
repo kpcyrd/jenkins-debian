@@ -448,7 +448,7 @@
                 - 'codethink15':    { my_arch: 'arm64' }
                 - 'codethink16':    { my_arch: 'arm64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_naginator_regex: '^E: Couldn't download .*/Packages'
+            my_naginator_regex: '^E: Couldn.t download .*/Packages'
 
         - '{name}_setup_schroot_{my_distro}_{my_arch}_{my_hname}':
             my_distro:
@@ -478,7 +478,7 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
-            my_naginator_regex: '^E: Couldn't download .*/Packages'
+            my_naginator_regex: '^E: Couldn.t download .*/Packages'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -488,7 +488,7 @@
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname:
                 - 'profitbricks3':  { my_arch: 'amd64' }
-            my_naginator_regex: '^E: Couldn't download .*/Packages'
+            my_naginator_regex: '^E: Couldn.t download .*/Packages'
 
         - '{name}_{my_task}':
             my_task:

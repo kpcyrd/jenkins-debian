@@ -249,6 +249,7 @@
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_node: '{my_hname}'
     my_scmpoll: '*/6 * * * *'
+    my_naginator_regex: 'dummyshouldneverhappen'
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -268,7 +269,6 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
-            my_naginator_regex: 'dummyshouldneverhappen'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:

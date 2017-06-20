@@ -58,6 +58,36 @@ fi
 set -e
 
 #
+# delete old temp directories
+#
+echo "$(date -u) - Deleting temp directories, older than 3 days."
+OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; || true)
+if [ ! -z "$OLDSTUFF" ] ; then
+	echo
+	echo "Old temp directories found in $REP_RESULTS/rbuild-debian"
+	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv {} \; || true
+	echo "These old directories have been deleted."
+	echo
+	DIRTY=true
+fi
+
+#
+# delete old pbuilder build directories
+#
+if [ -d /srv/workspace/pbuilder/ ] ; then
+	echo "$(date -u) - Deleting pbuilder build directories, older than 3 days."
+	OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec ls -lad {} \; || true)
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo
+		echo "Old pbuilder build directories found in /srv/workspace/pbuilder/"
+		echo -n "$OLDSTUFF"
+		find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
+		echo
+		DIRTY=true
+	fi
+fi
+
+#
 # check for working proxy
 #
 echo "$(date -u) - testing whether the proxy works..."
@@ -138,32 +168,6 @@ if [ "$HOSTNAME" = "${ARCHLINUX_BUILD_NODE}" ] ; then
 	fi
 fi
 set -e
-
-# delete old temp directories
-echo "$(date -u) - Deleting temp directories, older than 3 days."
-OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; || true)
-if [ ! -z "$OLDSTUFF" ] ; then
-	echo
-	echo "Old temp directories found in $REP_RESULTS/rbuild-debian"
-	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv {} \; || true
-	echo "These old directories have been deleted."
-	echo
-	DIRTY=true
-fi
-
-# delete old pbuilder build directories
-if [ -d /srv/workspace/pbuilder/ ] ; then
-	echo "$(date -u) - Deleting pbuilder build directories, older than 3 days."
-	OLDSTUFF=$(find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec ls -lad {} \; || true)
-	if [ ! -z "$OLDSTUFF" ] ; then
-		echo
-		echo "Old pbuilder build directories found in /srv/workspace/pbuilder/"
-		echo -n "$OLDSTUFF"
-		find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
-		echo
-		DIRTY=true
-	fi
-fi
 
 # delete build services logfiles
 if [ "$HOSTNAME" = "$MAINNODE" ] ; then

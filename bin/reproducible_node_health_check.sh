@@ -78,7 +78,7 @@ fi
 # check for hanging mounts
 #
 echo "$(date -u) - testing whether running 'mount' takes forever..."
-timeout 15 mount
+timeout 15 mount > /dev/null
 TIMEOUT=$?
 if [ $TIMEOUT -ne 0 ] ; then
 	echo "$(date -u) - running 'mount' takes forever, giving up."

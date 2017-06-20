@@ -432,7 +432,7 @@ def schedule_packages(packages):
 
 def add_up_numbers(packages, arch):
     packages_sum = '+'.join([str(len(packages[x])) for x in SUITES])
-    if packages_sum == '0+0+0':
+    if packages_sum == '0+0+0+0':
         packages_sum = '0'
     return packages_sum
 

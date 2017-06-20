@@ -37,7 +37,7 @@
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
           max-failed-builds: 5
-          regular-expression: '^E: Couldn't download .*/Packages'
+          regular-expression: '{my_naginator_regex}'
     node: '{my_node}'
 
 - defaults:
@@ -50,11 +50,7 @@
     publishers:
       - logparser: *logparser
       - email: *email
-      - naginator: &naginator
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+      - naginator: *naginator
     scm:
       - git:
           url: '{my_gitrepo}'
@@ -452,6 +448,7 @@
                 - 'codethink15':    { my_arch: 'arm64' }
                 - 'codethink16':    { my_arch: 'arm64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_naginator_regex: '^E: Couldn't download .*/Packages'
 
         - '{name}_setup_schroot_{my_distro}_{my_arch}_{my_hname}':
             my_distro:
@@ -481,6 +478,7 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
+            my_naginator_regex: '^E: Couldn't download .*/Packages'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -490,6 +488,7 @@
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname:
                 - 'profitbricks3':  { my_arch: 'amd64' }
+            my_naginator_regex: '^E: Couldn't download .*/Packages'
 
         - '{name}_{my_task}':
             my_task:
@@ -588,6 +587,7 @@
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
             my_gitrepo: 'git://git.debian.org/git/reproducible/{my_reponame}.git'
             my_hname: ''
+            my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
         - '{name}_{otherproject_artifacts}':
             otherproject_artifacts:
@@ -679,6 +679,7 @@
             my_gitbranches: 'master'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+            my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
         - '{name}_{otherproject_git}':
             otherproject_git:
@@ -718,6 +719,7 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
+            my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
         - '{name}_{otherproject_git_junit_exports}':
             otherproject_git_junit_exports:

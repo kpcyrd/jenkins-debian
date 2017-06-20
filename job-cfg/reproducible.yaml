@@ -33,6 +33,11 @@
           fail-on-error: 'true'
       - email: &email
           recipients: '{my_recipients}'
+      - naginator: &naginator
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: '^E: Couldn't download .*/Packages'
     node: '{my_node}'
 
 - defaults:

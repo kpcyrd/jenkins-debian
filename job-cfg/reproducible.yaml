@@ -36,7 +36,7 @@
       - naginator: &naginator
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
-          max-failed-builds: 5
+          max-failed-builds: 3
           regular-expression: '{my_naginator_regex}'
     node: '{my_node}'
 
@@ -268,6 +268,7 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
+            my_naginator_regex: 'dummyshouldneverhappen'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:

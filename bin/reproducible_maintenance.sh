@@ -81,7 +81,7 @@ if [ -d /srv/workspace/pbuilder/ ] ; then
 		echo
 		echo "Old pbuilder build directories found in /srv/workspace/pbuilder/"
 		echo -n "$OLDSTUFF"
-		find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
+		( find /srv/workspace/pbuilder/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +2 -exec sudo rm -rf --one-file-system {} \; ) || true
 		echo
 		DIRTY=true
 	fi

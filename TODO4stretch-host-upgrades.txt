@@ -1,17 +1,19 @@
 
 
 
-problems
---------
+open problems
+-------------
 - dsa-check-packages points to /bin/true on hosts running in the future
+- resolve issues on pb2+6+12+16:
+	no amd64 kernel for i386? manually done, needs to go into update_jdn
+	compare sshd_config from stretch with the one we're using (from jessie)
+- on pb9 I had to do: sudo apt install linux-image-amd64
+
 
 todo for upgrades
 -----------------
 test jenkins-test-vm upgrade before doing jenkins
 	-> cucumber problems reported by fil
-resolve issues on pb2+6+12+16:
-	no amd64 kernel for i386? manually done, needs to go into update_jdn
-	compare sshd_config from stretch with the one we're using (from jessie)
 wait with upgrading armhf nodes until next week as vagrant has no time until then
 
 
@@ -32,4 +34,5 @@ to be done once all hosts run stretch: sshd_config
 done for upgrades
 -----------------
 upgrade of all i386 nodes
+upgrade of pb9-amd64
 upgrade of jenkins-test-vm in progress

@@ -75,6 +75,16 @@ elif [ "$(readlink /run/shm)" != "/dev/shm" ] ; then
 fi
 
 #
+# check for hanging mounts
+#
+echo "$(date -u) - testing whether running 'mount' takes forever..."
+TIMEOUT=$(timeout 15 mount)
+if [ $TIMEOUT -ne 0 ] ; then
+	echo "$(date -u) - running 'mount' takes forever, giving up."
+	exit 1
+fi
+
+#
 # check for correct MTU
 #
 echo "$(date -u) - testing whether the network interfaces MTU is 1500..."

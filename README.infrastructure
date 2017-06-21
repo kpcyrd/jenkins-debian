@@ -27,7 +27,7 @@ access including remote console and BIOS access.
 We have 8 arm64 nodes running on moonshot hardware kindly given access to us by Codethink.
 Holger has access to a 9th node acting as console server.
 
-Axel Becker is currently in the process of setting up 8 LeMaker HiKey960 boards
+Axel Beckert is currently in the process of setting up 8 LeMaker HiKey960 boards
 (http://www.96boards.org/product/hikey960/). These boards were sponsored by Hewlett Packard Enterprise
 (https://www.hpe.com/) and will be hosted by the students association
 SOSETH (https://sos.ethz.ch/) at ETH Zurich (https://www.ethz.ch/).

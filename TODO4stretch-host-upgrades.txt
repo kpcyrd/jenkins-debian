@@ -3,13 +3,13 @@
 
 open problems
 -------------
-- future hosts dont run in the future cause ntpd is running
 - dsa-check-packages points to /bin/true on hosts running in the future
 - resolve issues on pb2+6+12+16:
 	no amd64 kernel for i386? manually done, needs to go into update_jdn
 	compare sshd_config from stretch with the one we're using (from jessie)
 - on pb3+4+9 I had to do: sudo apt install linux-image-amd64
-
+- check "systemctl -a" for "not found" and failed services, like haveged…
+	haveged not running on pb3+4+12, while running fine on 2+6+16 ?!???
 
 todo for upgrades
 -----------------

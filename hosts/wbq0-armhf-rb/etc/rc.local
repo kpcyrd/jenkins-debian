@@ -46,6 +46,7 @@ fixup_mtu() {
 			ip link set dev eth0 mtu 1500
 		fi
 	fi
+	ip link show eth0
 }
 
 #

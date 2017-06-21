@@ -14,8 +14,10 @@ send_back_to_the_future() {
 	# disable systemd date services (and don't fail if systemd ain't running)
 	systemctl disable systemd-timesyncd || true
 	systemctl disable systemd-timedated || true
+	systemctl disable ntp.service || true
 	systemctl stop systemd-timesyncd || true
 	systemctl stop systemd-timedated || true
+	systemctl stop ntp.service || true
 	# set correct date
 	ntpdate -b de.pool.ntp.org
 	# set fake date

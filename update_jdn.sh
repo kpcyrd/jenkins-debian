@@ -560,6 +560,8 @@ fi
 cd $BASEDIR
 sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/* /etc
 sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr
+# we ship one or two service files…
+sudo systemctl daemon-reload &
 
 #
 # more configuration than a simple cp can do

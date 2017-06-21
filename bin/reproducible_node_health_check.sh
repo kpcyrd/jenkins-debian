@@ -126,6 +126,17 @@ if [ "$(lsb_release -si)" = "Ubuntu" ] ; then
 fi
 
 #
+# check for haveged running
+#
+echo "$(date -u) - testing 'haveged' is running..."
+HAVEGED="$(ps fax | grep '/usr/sbin/haveged' | grep -v grep || true)"
+if [ -z "$HAVEGED" ] ; then
+	echo "$(date -u) - haveged ain't running, giving up."
+	systemctl status haveged
+	exit 1
+fi
+
+#
 # finally
 #
 if ! $DIRTY ; then

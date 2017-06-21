@@ -204,13 +204,13 @@ upgrade2() {
 trap cleanup_all INT TERM EXIT
 
 case $1 in
-	wheezy)		DISTRO="wheezy"
-			SPECIFIC="libreoffice virtualbox mplayer chromium"
-			;;
 	jessie)		DISTRO="jessie"
 			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			;;
 	stretch)	DISTRO="stretch"
+			SPECIFIC="libreoffice virt-manager mplayer chromium"
+			;;
+	buster)		DISTRO="buster"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
 			;;
 	sid)		DISTRO="sid"
@@ -282,7 +282,7 @@ fi
 
 if [ "$3" != "" ] ; then
 	case $3 in
-		wheezy|jessie|stretch|sid)	upgrade2 $3;;
+		jessie|stretch|buster|sid)	upgrade2 $3;;
 		*)		echo "unsupported distro." ; exit 1 ;;
 	esac
 fi

@@ -55,7 +55,6 @@ all_targets = [
    'education-desktop-lxde',
    'education-desktop-mate',
    'education-desktop-other',
-   'education-desktop-sugar',
    'education-desktop-xfce',
    'education-development',
    'education-electronics',
@@ -100,11 +99,8 @@ all_targets = [
 # not all packages are available in all distros
 #
 def is_target_in_distro(distro, target):
-         # sugar has been removed from jessie and thus education-desktop-sugar has been removed from jessie and sid...
-         if distro in ('sid', 'jessie', 'stretch') and target == 'education-desktop-sugar':
-             return False
          # education-ltsp-server and education-roaming-workstation are only availble since stretch…
-         elif distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
+         if distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
              return False
          # education-thin-client-server is obsolete since stretch…
          elif distro in ('sid', 'buster') and target == 'education-thin-client-server':

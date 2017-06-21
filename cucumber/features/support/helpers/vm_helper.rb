@@ -77,7 +77,7 @@ class VM
     rexml.elements['domain'].add_element('name')
     rexml.elements['domain/name'].text = @domain_name
     begin
-      old_domain = @virt.lookup_domain_by_name(LIBVIRT_DOMAIN_NAME)
+      old_domain = @virt.lookup_domain_by_name(@domain_name)
       rexml.elements['domain'].add_element('uuid')
       rexml.elements['domain/uuid'].text = old_domain.uuid
       old_domain.undefine
@@ -460,8 +460,13 @@ class VM
     return execute(cmd, options)
   end
 
-  def wait_until_remote_shell_is_up(timeout = 180)
-    VMCommand.wait_until_remote_shell_is_up(self, timeout)
+  def wait_until_remote_shell_is_up(timeout = 90)
+    msg = 'hello?'
+    try_for(timeout, :msg => "Remote shell seems to be down") do
+      Timeout::timeout(3) do
+        execute_successfully("echo '#{msg}'").stdout.chomp == msg
+      end
+    end
   end
 
   def host_to_guest_time_sync
@@ -527,22 +532,24 @@ class VM
     execute("test -d '#{directory}'").success?
   end
 
-  def file_content(file, user = 'root')
-    # We don't quote #{file} on purpose: we sometimes pass environment variables
-    # or globs that we want to be interpreted by the shell.
-    cmd = execute("cat #{file}", :user => user)
-    assert(cmd.success?,
-           "Could not cat '#{file}':\n#{cmd.stdout}\n#{cmd.stderr}")
-    return cmd.stdout
+  def file_open(path)
+    f = RemoteShell::File.new(self, path)
+    yield f if block_given?
+    return f
   end
 
-  def file_append(file, lines, user = 'root')
-    lines = lines.split("\n") if lines.class == String
-    lines.each do |line|
-      cmd = execute("echo '#{line}' >> '#{file}'", :user => user)
-      assert(cmd.success?,
-             "Could not append to '#{file}':\n#{cmd.stdout}\n#{cmd.stderr}")
-    end
+  def file_content(path)
+    file_open(path) { |f| return f.read() }
+  end
+
+  def file_overwrite(path, lines)
+    lines = lines.join("\n") if lines.class == Array
+    file_open(path) { |f| return f.write(lines) }
+  end
+
+  def file_append(path, lines)
+    lines = lines.join("\n") if lines.class == Array
+    file_open(path) { |f| return f.append(lines) }
   end
 
   def set_clipboard(text)

@@ -3,4 +3,4 @@
 ok /not really/
 
 warning /Warning: Transitional packages found:/
-warning /Warning: seems Stretch has been released.+/
+warning /Warning: It seems .+ has been released.+/

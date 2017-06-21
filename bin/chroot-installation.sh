@@ -309,7 +309,7 @@ if [ "$DISTRO" = "sid" ] ; then
 		cat $TMPFILE
 	fi
 	if ! cat /etc/debian_version | grep -q ^8 ; then
-		echo "Warning: seems Stretch has been released, please revisit the list of transitional packages to ignore…"
+		echo "Warning: It seems Stretch has been released, please revisit the list of transitional packages to ignore…"
 	fi
 fi
 

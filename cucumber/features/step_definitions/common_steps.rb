@@ -224,7 +224,8 @@ Given /^I select the install mode$/ do
 		@boot_options +
                Sikuli::Key.ENTER)
   debug_log("debug: wait for the remote shell to respond...", :color => :blue)
-  $vm.wait_until_remote_shell_is_up
+  #$vm.wait_until_remote_shell_is_up
+  sleep(60)
 end
 
 Given /^I expect package installation to start$/ do

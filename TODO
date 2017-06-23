@@ -268,10 +268,15 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 * explain status in plain english
 * use disorderfs for 2nd build
 
-==== reproducible LEDE / OpenWrt
+==== reproducible LEDE 
+
+* build path variation
+* use disorderfs for 2nd build
+
+==== reproducible OpenWrt
 
 * add credit for logo/artwork
-* build more archs (http://downloads.openwrt.org/chaos_calmer/15.05-rc1/ lists many to choose from)
+* build path variation
 * incorporate popular third-party ("external feeds") packages?
 * explain status in plain english
 * use disorderfs for 2nd build

@@ -468,7 +468,8 @@ if [ -f /etc/debian_version ] ; then
 				ntp 
 				openbios-ppc 
 				openbios-sparc 
-				openjdk-7-jre 
+				openjdk-8-jdk
+				openjdk-8-jre 
 				pandoc
 				postgresql
 				postgresql-autodoc

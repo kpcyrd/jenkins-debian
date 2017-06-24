@@ -8,6 +8,8 @@
 OPENWRT_GIT_REPO=https://git.lede-project.org/lede/lynxis/staging.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=false
+CONFIG=
+
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -44,6 +46,7 @@ case $1 in
 	;;
 	master)
 		# master code following
+		CONFIG=$2
 	;;
 	*)
 		echo "Unsupported mode $1. Arguments are $@"
@@ -66,7 +69,8 @@ cd $TMPBUILDDIR
 
 create_results_dirs lede
 
-build_two_times lede ar71xx_generic_ARCHERC7 "CONFIG_TARGET_ar71xx=y\nCONFIG_TARGET_ar71xx_generic=y\n"
+# FIXME: remove first argument (TARGET). The TARGET is only used in log messages
+build_two_times lede "$CONFIG" "$CONFIG"
 
 # for now we only build one architecture until it's at most reproducible
 #build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"

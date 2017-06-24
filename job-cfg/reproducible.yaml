@@ -500,7 +500,7 @@
                     my_shellext: ".py"
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
-                    my_timed: '*/10 * * * *'
+                    my_timed: '*/15 * * * *'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
                     my_timed: '*/30 * * * *'
@@ -511,7 +511,7 @@
                     my_shellext: ".py"
                 - 'html_dd_list':
                     my_description: 'Generate HTML results (dd-list) for reproducible builds.'
-                    my_timed: '55 */2 * * *'
+                    my_timed: '55 */4 * * *'
                     my_shellext: ".py"
                 - 'html_all_packages':
                     my_description: 'Generate HTML results (for all packages) for reproducible builds. This job is rather redudant and just run to give a fuzzy warm feeling all pages are good.'
@@ -529,7 +529,7 @@
                     my_timed: ''
                 - 'html_live_status':
                     my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
-                    my_timed: 'H/6 * * * *'
+                    my_timed: 'H/10 * * * *'
                     my_shellext: ".py"
                 - 'html_nodes_info':
                     my_description: 'Collect various information from build nodes used for reproducible builds and generate static HTML pages with various information about nodes.'
@@ -539,7 +539,7 @@
                     my_timed: '0 6 * * H/3'
                 - 'json':
                     my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
-                    my_timed: '1 * * * *'
+                    my_timed: '1 H/2 * * *'
                     my_shellext: ".py"
                 - 'html_archlinux':
                     my_description: 'Build a simple webpage for Arch Linux reproducibility tests'

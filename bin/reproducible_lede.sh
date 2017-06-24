@@ -28,6 +28,7 @@ case $1 in
 			openwrt_build |\
 			openwrt_download |\
 			openwrt_get_banner |\
+			openwrt_get_commit |\
 			node_create_tmpdirs |\
 			node_debug |\
 			node_save_logs |\
@@ -58,6 +59,7 @@ START=$(date +'%s')
 TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-${DATE}-XXXXXXXX)  # used to build on tmpfs
 TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-lede-results-XXXXXXXX)  # accessable in schroots, used to compare results
 BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
+GIT_COMMIT=$(mktemp --tmpdir=$TMPDIR)
 trap master_cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
@@ -232,13 +234,13 @@ write_page "        These tests were last run on $DATE for version ${OPENWRT_VER
 write_variation_table LEDE
 cat $DBD_HTML >> $PAGE
 write_page "     <table><tr><th>git commit built</th></tr><tr><td><code>"
-echo -n "$OPENWRT" >> $PAGE
+cat $GIT_COMMIT >> $PAGE
 write_page "     </code></td></tr></table>"
 cat $TOOLCHAIN_HTML >> $PAGE
 write_page "    </div>"
 write_page_footer LEDE
 publish_page
-rm -f $DBD_HTML $DBD_GOOD_PKGS_HTML $DBD_BAD_PKGS_HTML $TOOLCHAIN_HTML $BANNER_HTML
+rm -f $DBD_HTML $DBD_GOOD_PKGS_HTML $DBD_BAD_PKGS_HTML $TOOLCHAIN_HTML $BANNER_HTML $GIT_COMMIT
 
 # the end
 calculate_build_duration

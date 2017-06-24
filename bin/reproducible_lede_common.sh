@@ -78,7 +78,7 @@ node_document_environment() {
 	local tmpdir=$1
 	local toolchain_html=$tmpdir/toolchain.html
 
-	cd $tmpdir/build
+	cd $tmpdir/build/source
 	echo "<table><tr><th>Target toolchains built</th></tr>" > $toolchain_html
 	for i in $(ls -1d staging_dir/toolchain*|cut -d "-" -f2-|xargs echo) ; do
 		echo " <tr><td><code>$i</code></td></tr>" >> $toolchain_html
@@ -101,6 +101,7 @@ node_document_environment() {
 		echo " </td></tr>" >> $toolchain_html
 	done
 	echo "</table>" >> $toolchain_html
+	cd -
 }
 
 # node_save_logs can be called over ssh OR called within openwrt_build

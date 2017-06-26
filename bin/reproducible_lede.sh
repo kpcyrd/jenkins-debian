@@ -8,7 +8,8 @@
 OPENWRT_GIT_REPO=https://git.lede-project.org/lede/lynxis/staging.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=false
-CONFIG=
+LEDE_CONFIG=
+LEDE_TARGET=
 
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
@@ -46,7 +47,8 @@ case $1 in
 	;;
 	master)
 		# master code following
-		CONFIG=$2
+		LEDE_TARGET=$2
+		LEDE_CONFIG=$3
 	;;
 	*)
 		echo "Unsupported mode $1. Arguments are $@"
@@ -69,8 +71,7 @@ cd $TMPBUILDDIR
 
 create_results_dirs lede
 
-# FIXME: remove first argument (TARGET). The TARGET is only used in log messages
-build_two_times lede "$CONFIG" "$CONFIG"
+build_two_times lede "$LEDE_TARGET" "$LEDE_CONFIG"
 
 # for now we only build one architecture until it's at most reproducible
 #build_two_times x86_64 "CONFIG_TARGET_x86=y\nCONFIG_TARGET_x86_64=y\n"
@@ -210,7 +211,7 @@ fi
 #  finally create the webpage
 #
 cd $TMPDIR ; mkdir lede
-PAGE=lede/lede.html
+PAGE=lede/lede_$LEDE_TARGET.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">
@@ -249,7 +250,7 @@ rm -f $DBD_HTML $DBD_GOOD_PKGS_HTML $DBD_BAD_PKGS_HTML $TOOLCHAIN_HTML $BANNER_H
 # the end
 calculate_build_duration
 print_out_duration
-irc_message reproducible-builds "$REPRODUCIBLE_URL/lede/ has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% packages reproducible)"
+irc_message reproducible-builds "$REPRODUCIBLE_URL/$PAGE has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% packages reproducible)"
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

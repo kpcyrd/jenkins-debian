@@ -47,8 +47,8 @@ fixup_mtu() {
 		if [ -z "$(ip link show eth0 | grep 'eth0:' | grep 'mtu 1500 ' || true)" ] ; then
 			ip link set dev eth0 mtu 1500
 		fi
+		ip link show eth0
 	fi
-	ip link show eth0
 }
 
 #

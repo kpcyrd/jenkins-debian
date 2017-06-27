@@ -195,6 +195,7 @@
       - email: *email
       - trigger:
           project: '{my_trigger}'
+    properties:
       - build-blocker:
           use-build-blocker: true
           blocking-jobs:

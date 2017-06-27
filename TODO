@@ -272,6 +272,10 @@ The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are ma
 
 * build path variation
 * use disorderfs for 2nd build
+* html: build variations are wrong
+* html: git commit output includes garbage
+* html: css: add some space on the left side
+* html: css: make it more look like https://lede-project.org/
 
 ==== reproducible OpenWrt
 

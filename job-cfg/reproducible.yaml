@@ -185,7 +185,7 @@
 
 - defaults:
     <<: *DEFAULTS
-    name: reproducible_other_projects_artifacts_blocked
+    name: reproducible_other_projects_artifacts
     publishers:
       - logparser: *logparser-extra
       - archive:
@@ -241,8 +241,8 @@
     name: '{name}_{otherproject_triggering}'
 
 - job-template:
-    defaults: reproducible_other_projects_artifacts_blocked
-    name: '{name}_{otherproject_artifacts_blocked}'
+    defaults: reproducible_other_projects_artifacts
+    name: '{name}_{otherproject_artifacts}'
 
 - job-template:
     defaults: reproducible_builder_trigger
@@ -594,8 +594,8 @@
             my_hname: ''
             my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
-        - '{name}_{otherproject_artifacts_blocked}':
-            otherproject_artifacts_blocked:
+        - '{name}_{otherproject_artifacts}':
+            otherproject_artifacts:
                 - 'lede-target-ar71xx':
                     my_timed: '42 21 * * 4'
                     my_lede_config: 'CONFIG_TARGET_ar71xx=y'

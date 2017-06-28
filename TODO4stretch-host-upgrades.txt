@@ -4,18 +4,21 @@
 open problems
 -------------
 - dsa-check-packages points to /bin/true on hosts running in the future
-- resolve issues on pb2+6+12+16:
-	no amd64 kernel for i386? manually done, needs to go into update_jdn
-	compare sshd_config from stretch with the one we're using (from jessie)
-- on pb3+4+9 I had to do: sudo apt install linux-image-amd64
+- compare sshd_config from stretch with the one we're using (from jessie)
 - check "systemctl -a" for "not found" and failed services, like haveged…
 	haveged not running on pb3+4+12, while running fine on 2+6+16 ?!???
+
+no i386 kernels on i386
+-----------------------
+because of:
+#866314: linux-image-4.9.0-3-686-pae: 100+ times slower disk writes on 4.x+/i386/16+RAM, compared to 3.x
+amd64 kernel was manually installed with multiarch, should go into update_jdn
+also on pb3+4+9 I had to do: sudo apt install linux-image-amd64
 
 todo for upgrades
 -----------------
 test jenkins-test-vm upgrade before doing jenkins
 	-> cucumber problems reported by fil
-wait with upgrading armhf nodes until next week as vagrant has no time until then
 
 
 to be done once all hosts run stretch: squid
@@ -34,6 +37,5 @@ to be done once all hosts run stretch: sshd_config
 
 done for upgrades
 -----------------
-upgrade of all i386 nodes
-upgrade of pb3+4+9-amd64
-upgrade of jenkins-test-vm in progress
+all i386+armhf nodes
+all amd64 nodes except jenkins and am64

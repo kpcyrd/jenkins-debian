@@ -24,4 +24,5 @@ warning /Warning: /.../shm.+please tell the jenkins admins to fix this./
 warning /Warning, today is the wrong future:.+/
 warning /Warning: curl http:..www.debian.org failed, probably the proxy is down for.+/
 warning /Warning, more than one kernel in.+/
+warning /Warning, rise of the jenkins job zombies.+/
 

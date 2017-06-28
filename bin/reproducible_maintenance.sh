@@ -336,6 +336,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		echo "Removed $OLDSTUFF jenkins html logs."
 		echo
 	fi
+
 fi
 
 # find+terminate processes which should not be there

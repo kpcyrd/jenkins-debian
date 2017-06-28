@@ -149,7 +149,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	if [ ! -z "$ZOMBIES" ] ; then
 		echo "Warning, rise of the jenkins job zombies has started again, these jobs should not exist:"
 		echo -e "$ZOMBIES"
-		DIRTY=TRUE
+		DIRTY=true
 		echo
 	fi
 fi

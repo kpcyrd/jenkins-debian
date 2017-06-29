@@ -35,10 +35,6 @@ Then /^the shipped (?:Debian repository key|OpenPGP key ([A-Z0-9]+)) will be val
   end
 end
 
-Then /^I double-click the Report an Error launcher on the desktop$/ do
-  @screen.wait_and_double_click('DesktopReportAnError.png', 30)
-end
-
 Then /^the live user has been setup by live\-boot$/ do
   assert($vm.execute("test -e /var/lib/live/config/user-setup").success?,
          "live-boot failed its user-setup")
@@ -69,20 +65,12 @@ Then /^the live user owns its home dir and it has normal permissions$/ do
 end
 
 Then /^no unexpected services are listening for network connections$/ do
-  netstat_cmd = $vm.execute("netstat -ltupn")
-  assert netstat_cmd.success?
-  for line in netstat_cmd.stdout.chomp.split("\n") do
+  for line in $vm.execute_successfully("ss -ltupn").stdout.chomp.split("\n") do
     splitted = line.split(/[[:blank:]]+/)
     proto = splitted[0]
-    if proto == "tcp"
-      proc_index = 6
-    elsif proto == "udp"
-      proc_index = 5
-    else
-      next
-    end
-    laddr, lport = splitted[3].split(":")
-    proc = splitted[proc_index].split("/")[1]
+    next unless ['tcp', 'udp'].include?(proto)
+    laddr, lport = splitted[4].split(":")
+    proc = /users:\(\("([^"]+)"/.match(splitted[6])[1]
     # Services listening on loopback is not a threat
     if /127(\.[[:digit:]]{1,3}){3}/.match(laddr).nil?
       if SERVICES_EXPECTED_ON_ALL_IFACES.include? [proc, laddr, lport] or
@@ -101,60 +89,57 @@ When /^Tails has booted a 64-bit kernel$/ do
          "Tails has not booted a 64-bit kernel.")
 end
 
-Then /^there is no screenshot in the live user's Pictures directory$/ do
-  pictures_directory = "/home/#{LIVE_USER}/Pictures"
-  assert($vm.execute(
-          "find '#{pictures_directory}' -name 'Screenshot*.png' -maxdepth 1"
-        ).stdout.empty?,
-         "Existing screenshots were found in the live user's Pictures directory.")
-end
-
-Then /^a screenshot is saved to the live user's Pictures directory$/ do
-  pictures_directory = "/home/#{LIVE_USER}/Pictures"
-  try_for(10, :msg=> "No screenshot was created in #{pictures_directory}") do
-    !$vm.execute(
-      "find '#{pictures_directory}' -name 'Screenshot*.png' -maxdepth 1"
-    ).stdout.empty?
-  end
-end
-
 Then /^the VirtualBox guest modules are available$/ do
   assert($vm.execute("modinfo vboxguest").success?,
          "The vboxguest module is not available.")
 end
 
-Given /^I setup a filesystem share containing a sample PDF$/ do
-  shared_pdf_dir_on_host = "#{$config["TMPDIR"]}/shared_pdf_dir"
-  @shared_pdf_dir_on_guest = "/tmp/shared_pdf_dir"
-  FileUtils.mkdir_p(shared_pdf_dir_on_host)
-  Dir.glob("#{MISC_FILES_DIR}/*.pdf") do |pdf_file|
-    FileUtils.cp(pdf_file, shared_pdf_dir_on_host)
-  end
-  add_after_scenario_hook { FileUtils.rm_r(shared_pdf_dir_on_host) }
-  $vm.add_share(shared_pdf_dir_on_host, @shared_pdf_dir_on_guest)
-end
-
 Then /^the support documentation page opens in Tor Browser$/ do
-  @screen.wait("SupportDocumentation#{@language}.png", 120)
+  if @language == 'German'
+    expected_title = 'Tails - Hilfe & Support'
+    expected_heading = 'Die Dokumentation durchsuchen'
+  else
+    expected_title = 'Tails - Support'
+    expected_heading = 'Search the documentation'
+  end
+  step "\"#{expected_title}\" has loaded in the Tor Browser"
+  headings = @torbrowser
+             .child(expected_title, roleName: 'document frame')
+             .children(roleName: 'heading')
+  assert(
+    headings.any? { |heading| heading.text == expected_heading }
+  )
 end
 
-Then /^MAT can clean some sample PDF file$/ do
-  for pdf_on_host in Dir.glob("#{MISC_FILES_DIR}/*.pdf") do
-    pdf_name = File.basename(pdf_on_host)
-    pdf_on_guest = "/home/#{LIVE_USER}/#{pdf_name}"
-    step "I copy \"#{@shared_pdf_dir_on_guest}/#{pdf_name}\" to \"#{pdf_on_guest}\" as user \"#{LIVE_USER}\""
-    check_before = $vm.execute_successfully("mat --check '#{pdf_on_guest}'",
+Given /^I plug and mount a USB drive containing a sample PNG$/ do
+  @png_dir = share_host_files(Dir.glob("#{MISC_FILES_DIR}/*.png"))
+end
+
+Then /^MAT can clean some sample PNG file$/ do
+  for png_on_host in Dir.glob("#{MISC_FILES_DIR}/*.png") do
+    png_name = File.basename(png_on_host)
+    png_on_guest = "/home/#{LIVE_USER}/#{png_name}"
+    step "I copy \"#{@png_dir}/#{png_name}\" to \"#{png_on_guest}\" as user \"#{LIVE_USER}\""
+    raw_check_cmd = "grep --quiet --fixed-strings --text " +
+                    "'Created with GIMP' '#{png_on_guest}'"
+    assert($vm.execute(raw_check_cmd, user: LIVE_USER).success?,
+           'The comment is not present in the PNG')
+    check_before = $vm.execute_successfully("mat --check '#{png_on_guest}'",
                                             :user => LIVE_USER).stdout
-    assert(check_before.include?("#{pdf_on_guest} is not clean"),
-           "MAT failed to see that '#{pdf_on_host}' is dirty")
-    $vm.execute_successfully("mat '#{pdf_on_guest}'", :user => LIVE_USER)
-    check_after = $vm.execute_successfully("mat --check '#{pdf_on_guest}'",
+    assert(check_before.include?("#{png_on_guest} is not clean"),
+           "MAT failed to see that '#{png_on_host}' is dirty")
+    $vm.execute_successfully("mat '#{png_on_guest}'", :user => LIVE_USER)
+    check_after = $vm.execute_successfully("mat --check '#{png_on_guest}'",
                                            :user => LIVE_USER).stdout
-    assert(check_after.include?("#{pdf_on_guest} is clean"),
-           "MAT failed to clean '#{pdf_on_host}'")
-    $vm.execute_successfully("rm '#{pdf_on_guest}'")
+    assert(check_after.include?("#{png_on_guest} is clean"),
+           "MAT failed to clean '#{png_on_host}'")
+    assert($vm.execute(raw_check_cmd, user: LIVE_USER).failure?,
+           'The comment is still present in the PNG')
+    $vm.execute_successfully("rm '#{png_on_guest}'")
   end
 end
+
+
 
 Then /^AppArmor is enabled$/ do
   assert($vm.execute("aa-status").success?, "AppArmor is not enabled")
@@ -184,13 +169,8 @@ def get_apparmor_status(pid)
 end
 
 Then /^the running process "(.+)" is confined with AppArmor in (complain|enforce) mode$/ do |process, mode|
-  if process == 'i2p'
-    $vm.execute_successfully('service i2p status')
-    pid = $vm.file_content('/run/i2p/i2p.pid').chomp
-  else
-    assert($vm.has_process?(process), "Process #{process} not running.")
-    pid = $vm.pidof(process)[0]
-  end
+  assert($vm.has_process?(process), "Process #{process} not running.")
+  pid = $vm.pidof(process)[0]
   assert_equal(mode, get_apparmor_status(pid))
 end
 
@@ -238,12 +218,10 @@ Then /^tails-debugging-info is not susceptible to symlink attacks$/ do
 end
 
 When /^I disable all networking in the Tails Greeter$/ do
-  begin
-    @screen.click('TailsGreeterDisableAllNetworking.png')
-  rescue FindFailed
-    @screen.type(Sikuli::Key.PAGE_DOWN)
-    @screen.click('TailsGreeterDisableAllNetworking.png')
-  end
+  open_greeter_additional_settings()
+  @screen.wait_and_click('TailsGreeterNetworkConnection.png', 30)
+  @screen.wait_and_click('TailsGreeterDisableAllNetworking.png', 10)
+  @screen.wait_and_click("TailsGreeterAdditionalSettingsAdd.png", 10)
 end
 
 Then /^the Tor Status icon tells me that Tor is( not)? usable$/ do |not_usable|

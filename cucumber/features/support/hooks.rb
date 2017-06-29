@@ -14,18 +14,23 @@ AfterConfiguration do |config|
   prioritized_features = [
     # Features not using snapshots but using large amounts of scratch
     # space for other reasons:
-    'features/erase_memory.feature',
     'features/untrusted_partitions.feature',
     # Features using temporary snapshots:
     'features/apt.feature',
-    'features/i2p.feature',
     'features/root_access_control.feature',
     'features/time_syncing.feature',
     'features/tor_bridges.feature',
+    # Features using large amounts of scratch space for other reasons:
+    'features/erase_memory.feature',
     # This feature needs the almost biggest snapshot (USB install,
     # excluding persistence) and will create yet another disk and
     # install Tails on it. This should be the peak of disk usage.
     'features/usb_install.feature',
+    # This feature needs a copy of the ISO and creates a new disk.
+    'features/usb_upgrade.feature',
+    # This feature needs a very big snapshot (USB install with persistence)
+    # and another, network-enabled snapshot.
+    'features/emergency_shutdown.feature',
   ]
   feature_files = config.feature_files
   # The &-intersection is specified to keep the element ordering of
@@ -127,6 +132,21 @@ def save_failure_artifact(type, path)
   $failure_artifacts << [type, path]
 end
 
+# Due to Tails' Tor enforcement, we only allow contacting hosts that
+# are Tor nodes or located on the LAN. However, when we try
+# to verify that only such hosts are contacted we have a problem --
+# we run all Tor nodes (via Chutney) *and* LAN hosts (used on some
+# tests) on the same host, the one running the test suite. Hence we
+# need to always explicitly track which nodes are LAN or not.
+#
+# Warning: when a host is added via this function, it is only added
+# for the current scenario. As such, if this is done before saving a
+# snapshot, it will not remain after the snapshot is loaded.
+def add_lan_host(ipaddr, port)
+  @lan_hosts ||= []
+  @lan_hosts << { address: ipaddr, port: port }
+end
+
 BeforeFeature('@product') do |feature|
   if TAILS_ISO.nil?
     raise "No ISO image specified, and none could be found in the " +
@@ -159,6 +179,7 @@ BeforeFeature('@product') do |feature|
     $vmstorage = VMStorage.new($virt, VM_XML_PATH)
     $started_first_product_feature = true
   end
+  ensure_chutney_is_running
 end
 
 AfterFeature('@product') do
@@ -168,6 +189,10 @@ AfterFeature('@product') do
         VM.remove_snapshot(name)
       end
     end
+  end
+  $vmstorage.list_volumes.each do |vol_name|
+    next if vol_name == '__internal'
+    $vmstorage.delete_volume(vol_name)
   end
 end
 
@@ -198,6 +223,8 @@ Before('@product') do |scenario|
   @os_loader = "MBR"
   @sudo_password = "asdf"
   @persistence_password = "asdf"
+  # See comment for add_lan_host() above.
+  @lan_hosts ||= []
 end
 
 # Cucumber After hooks are executed in the *reverse* order they are
@@ -224,6 +251,11 @@ After('@product') do |scenario|
     info_log("Scenario failed at time #{elapsed}")
     screen_capture = @screen.capture
     save_failure_artifact("Screenshot", screen_capture.getFilename)
+    if scenario.exception.kind_of?(FirewallAssertionFailedError)
+      Dir.glob("#{$config["TMPDIR"]}/*.pcap").each do |pcap_file|
+        save_failure_artifact("Network capture", pcap_file)
+      end
+    end
     $failure_artifacts.sort!
     $failure_artifacts.each do |type, file|
       artifact_name = sanitize_filename("#{elapsed}_#{scenario.name}#{File.extname(file)}")
@@ -233,7 +265,12 @@ After('@product') do |scenario|
       info_log
       info_log_artifact_location(type, artifact_path)
     end
-    pause("Scenario failed") if $config["PAUSE_ON_FAIL"]
+    if $config["INTERACTIVE_DEBUGGING"]
+      pause(
+        "Scenario failed: #{scenario.name}. " +
+        "The error was: #{scenario.exception.class.name}: #{scenario.exception}"
+      )
+    end
   else
     if @video_path && File.exist?(@video_path) && not($config['CAPTURE_ALL'])
       FileUtils.rm(@video_path)
@@ -252,14 +289,10 @@ end
 After('@product', '@check_tor_leaks') do |scenario|
   @tor_leaks_sniffer.stop
   if scenario.passed?
-    if @bridge_hosts.nil?
-      expected_tor_nodes = get_all_tor_nodes
-    else
-      expected_tor_nodes = @bridge_hosts
+    allowed_nodes = @bridge_hosts ? @bridge_hosts : allowed_hosts_under_tor_enforcement
+    assert_all_connections(@tor_leaks_sniffer.pcap_file) do |c|
+      allowed_nodes.include?({ address: c.daddr, port: c.dport })
     end
-    leaks = FirewallLeakCheck.new(@tor_leaks_sniffer.pcap_file,
-                                  :accepted_hosts => expected_tor_nodes)
-    leaks.assert_no_leaks
   end
 end
 

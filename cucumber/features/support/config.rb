@@ -74,25 +74,11 @@ LIBVIRT_REMOTE_SHELL_PORT = 13370 + Integer($executor_number)
 MISC_FILES_DIR = "/srv/jenkins/cucumber/features/misc_files"
 SERVICES_EXPECTED_ON_ALL_IFACES =
   [
-   ["cupsd",    "0.0.0.0", "631"],
-   ["dhclient", "0.0.0.0", "*"]
+   ["cupsd",    "*", "631"],
+   ["dhclient", "*", "*"]
   ]
 # OpenDNS
 SOME_DNS_SERVER = "208.67.222.222"
-TOR_AUTHORITIES =
-  # List grabbed from Tor's sources, src/or/config.c:~750.
-  [
-   "86.59.21.38",
-   "128.31.0.39",
-   "194.109.206.212",
-   "82.94.251.203",
-   "199.254.238.52",
-   "131.188.40.189",
-   "193.23.244.244",
-   "208.83.223.34",
-   "171.25.193.9",
-   "154.35.175.225",
-  ]
 VM_XML_PATH = "/srv/jenkins/cucumber/features/domains"
 
 #TAILS_SIGNING_KEY = cmd_helper(". #{Dir.pwd}/config/amnesia; echo ${AMNESIA_DEV_KEYID}").tr(' ', '').chomp

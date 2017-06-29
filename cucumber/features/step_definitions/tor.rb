@@ -90,7 +90,7 @@ Then /^the firewall is configured to only allow the (.+) users? to connect direc
                "The following rule has an unexpected destination:\n" +
                rule.to_s)
         state_cond = try_xml_element_text(rule, "conditions/state/state")
-        next if state_cond == "RELATED,ESTABLISHED"
+        next if state_cond == "ESTABLISHED"
         assert_not_nil(rule.elements['conditions/owner/uid-owner'])
         rule.elements.each('conditions/owner/uid-owner') do |owner|
           uid = owner.text.to_i
@@ -184,7 +184,7 @@ def firewall_has_dropped_packet_to?(proto, host, port)
   $vm.execute("journalctl --dmesg --output=cat | grep -qP '#{regex}'").success?
 end
 
-When /^I open an untorified (TCP|UDP|ICMP) connections to (\S*)(?: on port (\d+))? that is expected to fail$/ do |proto, host, port|
+When /^I open an untorified (TCP|UDP|ICMP) connection to (\S*)(?: on port (\d+))?$/ do |proto, host, port|
   assert(!firewall_has_dropped_packet_to?(proto, host, port),
          "A #{proto} packet to #{host}" +
          (port.nil? ? "" : ":#{port}") +
@@ -195,11 +195,11 @@ When /^I open an untorified (TCP|UDP|ICMP) connections to (\S*)(?: on port (\d+)
   case proto
   when "TCP"
     assert_not_nil(port)
-    cmd = "echo | netcat #{host} #{port}"
+    cmd = "echo | nc.traditional #{host} #{port}"
     user = LIVE_USER
   when "UDP"
     assert_not_nil(port)
-    cmd = "echo | netcat -u #{host} #{port}"
+    cmd = "echo | nc.traditional -u #{host} #{port}"
     user = LIVE_USER
   when "ICMP"
     cmd = "ping -c 5 #{host}"
@@ -243,34 +243,38 @@ def stream_isolation_info(application)
   case application
   when "htpdate"
     {
-      :grep_monitor_expr => '/curl\>',
+      :grep_monitor_expr => 'users:(("curl"',
       :socksport => 9062
     }
-  when "tails-security-check", "tails-upgrade-frontend-wrapper"
-    # We only grep connections with ESTABLISHED state since `perl`
-    # is also used by monkeysphere's validation agent, which LISTENs
+  when "tails-security-check"
     {
-      :grep_monitor_expr => '\<ESTABLISHED\>.\+/perl\>',
+      :grep_monitor_expr => 'users:(("tails-security-"',
+      :socksport => 9062
+    }
+  when "tails-upgrade-frontend-wrapper"
+    {
+      :grep_monitor_expr => 'users:(("tails-iuk-get-u"',
       :socksport => 9062
     }
   when "Tor Browser"
     {
-      :grep_monitor_expr => '/firefox\>',
-      :socksport => 9150
+      :grep_monitor_expr => 'users:(("firefox"',
+      :socksport => 9150,
+      :controller => true,
     }
   when "Gobby"
     {
-      :grep_monitor_expr => '/gobby\>',
+      :grep_monitor_expr => 'users:(("gobby-0.5"',
       :socksport => 9050
     }
   when "SSH"
     {
-      :grep_monitor_expr => '/\(connect-proxy\|ssh\)\>',
+      :grep_monitor_expr => 'users:(("\(nc\|ssh\)"',
       :socksport => 9050
     }
   when "whois"
     {
-      :grep_monitor_expr => '/whois\>',
+      :grep_monitor_expr => 'users:(("whois"',
       :socksport => 9050
     }
   else
@@ -279,26 +283,28 @@ def stream_isolation_info(application)
 end
 
 When /^I monitor the network connections of (.*)$/ do |application|
-  @process_monitor_log = "/tmp/netstat.log"
+  @process_monitor_log = "/tmp/ss.log"
   info = stream_isolation_info(application)
   $vm.spawn("while true; do " +
-            "  netstat -taupen | grep \"#{info[:grep_monitor_expr]}\"; " +
+            "  ss -taupen | grep '#{info[:grep_monitor_expr]}'; " +
             "  sleep 0.1; " +
             "done > #{@process_monitor_log}")
 end
 
 Then /^I see that (.+) is properly stream isolated$/ do |application|
-  expected_port = stream_isolation_info(application)[:socksport]
+  info = stream_isolation_info(application)
+  expected_ports = [info[:socksport]]
+  expected_ports << 9051 if info[:controller]
   assert_not_nil(@process_monitor_log)
   log_lines = $vm.file_content(@process_monitor_log).split("\n")
   assert(log_lines.size > 0,
          "Couldn't see any connection made by #{application} so " \
          "something is wrong")
   log_lines.each do |line|
-    addr_port = line.split(/\s+/)[4]
-    assert_equal("127.0.0.1:#{expected_port}", addr_port,
-                 "#{application} should use SocksPort #{expected_port} but " \
-                 "was seen connecting to #{addr_port}")
+    ip_port = line.split(/\s+/)[5]
+    assert(expected_ports.map { |port| "127.0.0.1:#{port}" }.include?(ip_port),
+           "#{application} should only connect to #{expected_ports} but " \
+           "was seen connecting to #{ip_port}")
   end
 end
 
@@ -308,7 +314,7 @@ end
 
 And /^I re-run htpdate$/ do
   $vm.execute_successfully("service htpdate stop && " \
-                           "rm -f /var/run/htpdate/* && " \
+                           "rm -f /run/htpdate/* && " \
                            "systemctl --no-block start htpdate.service")
   step "the time has synced"
 end
@@ -318,18 +324,22 @@ And /^I re-run tails-upgrade-frontend-wrapper$/ do
 end
 
 When /^I connect Gobby to "([^"]+)"$/ do |host|
-  @screen.wait("GobbyWindow.png", 30)
-  @screen.wait("GobbyWelcomePrompt.png", 10)
-  @screen.click("GnomeCloseButton.png")
-  @screen.wait("GobbyWindow.png", 10)
+  gobby = Dogtail::Application.new('gobby-0.5')
+  gobby.child('Welcome to Gobby', roleName: 'label')
+  gobby.button('Close').click
   # This indicates that Gobby has finished initializing itself
   # (generating DH parameters, etc.) -- before, the UI is not responsive
   # and our CTRL-t is lost.
-  @screen.wait("GobbyFailedToShareDocuments.png", 30)
+  gobby.child('Failed to share documents', roleName: 'label')
+  gobby.menu('File').click
+  gobby.menuItem('Connect to Server...').click
   @screen.type("t", Sikuli::KeyModifier.CTRL)
-  @screen.wait("GobbyConnectPrompt.png", 10)
-  @screen.type(host + Sikuli::Key.ENTER)
-  @screen.wait("GobbyConnectionComplete.png", 60)
+  connect_dialog = gobby.dialog('Connect to Server')
+  connect_dialog.child('', roleName: 'text').typeText(host)
+  connect_dialog.button('Connect').click
+  # This looks for the live user's presence entry in the chat, which
+  # will only be shown if the connection succeeded.
+  try_for(60) { gobby.child(LIVE_USER, roleName: 'table cell'); true }
 end
 
 When /^the Tor Launcher autostarts$/ do
@@ -337,35 +347,47 @@ When /^the Tor Launcher autostarts$/ do
 end
 
 When /^I configure some (\w+) pluggable transports in Tor Launcher$/ do |bridge_type|
-  bridge_type.downcase!
-  bridge_type.capitalize!
-  begin
-    @bridges = $config["Tor"]["Transports"][bridge_type]
-    assert_not_nil(@bridges)
-    assert(!@bridges.empty?)
-  rescue NoMethodError, Test::Unit::AssertionFailedError
-    raise(
-<<EOF
-It seems no '#{bridge_type}' pluggable transports are defined in your local configuration file (#{LOCAL_CONFIG_FILE}). See wiki/src/contribute/release_process/test/usage.mdwn for the format.
-EOF
-)
-  end
-  @bridge_hosts = []
-  for bridge in @bridges do
-    @bridge_hosts << bridge["ipv4_address"]
-  end
-
   @screen.wait_and_click('TorLauncherConfigureButton.png', 10)
   @screen.wait('TorLauncherBridgePrompt.png', 10)
   @screen.wait_and_click('TorLauncherYesRadioOption.png', 10)
   @screen.wait_and_click('TorLauncherNextButton.png', 10)
   @screen.wait_and_click('TorLauncherBridgeList.png', 10)
-  for bridge in @bridges do
-    bridge_line = bridge_type.downcase   + " " +
-                  bridge["ipv4_address"] + ":" +
-                  bridge["ipv4_port"].to_s
-    bridge_line += " " + bridge["fingerprint"].to_s if bridge["fingerprint"]
-    bridge_line += " " + bridge["extra"].to_s if bridge["extra"]
+  @bridge_hosts = []
+  chutney_src_dir = "#{GIT_DIR}/submodules/chutney"
+  bridge_dirs = Dir.glob(
+    "#{$config['TMPDIR']}/chutney-data/nodes/*#{bridge_type}/"
+  )
+  bridge_dirs.each do |bridge_dir|
+    address = $vmnet.bridge_ip_addr
+    port = nil
+    fingerprint = nil
+    extra = nil
+    if bridge_type == 'bridge'
+      open(bridge_dir + "/torrc") do |f|
+        port = f.grep(/^OrPort\b/).first.split.last
+      end
+    else
+      # This is the pluggable transport case. While we could set a
+      # static port via ServerTransportListenAddr we instead let it be
+      # picked randomly so an already used port is not picked --
+      # Chutney already has issues with that for OrPort selection.
+      pt_re = /Registered server transport '#{bridge_type}' at '[^']*:(\d+)'/
+      open(bridge_dir + "/notice.log") do |f|
+        pt_lines = f.grep(pt_re)
+        port = pt_lines.last.match(pt_re)[1]
+      end
+      if bridge_type == 'obfs4'
+        open(bridge_dir + "/pt_state/obfs4_bridgeline.txt") do |f|
+          extra = f.readlines.last.chomp.sub(/^.* cert=/, 'cert=')
+        end
+      end
+    end
+    open(bridge_dir + "/fingerprint") do |f|
+      fingerprint = f.read.chomp.split.last
+    end
+    @bridge_hosts << { address: address, port: port.to_i }
+    bridge_line = bridge_type + " " + address + ":" + port
+    [fingerprint, extra].each { |e| bridge_line += " " + e.to_s if e }
     @screen.type(bridge_line + Sikuli::Key.ENTER)
   end
   @screen.wait_and_click('TorLauncherNextButton.png', 10)
@@ -378,25 +400,7 @@ end
 When /^all Internet traffic has only flowed through the configured pluggable transports$/ do
   assert_not_nil(@bridge_hosts, "No bridges has been configured via the " +
                  "'I configure some ... bridges in Tor Launcher' step")
-  leaks = FirewallLeakCheck.new(@sniffer.pcap_file,
-                                :accepted_hosts => @bridge_hosts)
-  leaks.assert_no_leaks
-end
-
-Then /^the Tor binary is configured to use the expected Tor authorities$/ do
-  tor_auths = Set.new
-  tor_binary_orport_strings = $vm.execute_successfully(
-    "strings /usr/bin/tor | grep -E 'orport=[0-9]+'").stdout.chomp.split("\n")
-  tor_binary_orport_strings.each do |potential_auth_string|
-    auth_regex = /^\S+ orport=\d+( bridge)?( no-v2)?( v3ident=[A-Z0-9]{40})? ([0-9\.]+):\d+( [A-Z0-9]{4}){10}$/
-    m = auth_regex.match(potential_auth_string)
-    if m
-      auth_ipv4_addr = m[4]
-      tor_auths << auth_ipv4_addr
-    end
+  assert_all_connections(@sniffer.pcap_file) do |c|
+    @bridge_hosts.include?({ address: c.daddr, port: c.dport })
   end
-  expected_tor_auths = Set.new(TOR_AUTHORITIES)
-  assert_equal(expected_tor_auths, tor_auths,
-               "The Tor binary does not have the expected Tor authorities " +
-               "configured")
 end

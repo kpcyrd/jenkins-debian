@@ -28,24 +28,24 @@ def wait_and_focus(img, time = 10, window)
 end
 
 def focus_pidgin_irc_conversation_window(account)
-  if account == 'I2P'
-    # After connecting to Irc2P messages are sent from services. Most of the
-    # time the services will send their messages right away. If there's lag we
-    # may in fact join the channel _before_ the message is received. We'll look
-    # for a message from InfoServ first then default to looking for '#i2p'
-    try_for(20) do
-      begin
-        $vm.focus_window('InfoServ')
-      rescue ExecutionFailedInVM
-        $vm.focus_window('#i2p')
-      end
-    end
-  else
-    account = account.sub(/^irc\./, '')
-    try_for(20) do
-      $vm.focus_window(".*#{Regexp.escape(account)}$")
-    end
+  account = account.sub(/^irc\./, '')
+  try_for(20) do
+    $vm.focus_window(".*#{Regexp.escape(account)}$")
   end
+end
+
+def pidgin_dbus_call(method, *args)
+  dbus_send(
+    'im.pidgin.purple.PurpleService',
+    '/im/pidgin/purple/PurpleObject',
+    "im.pidgin.purple.PurpleInterface.#{method}",
+    *args, user: LIVE_USER
+  )
+end
+
+def pidgin_account_connected?(account, prpl_protocol)
+  account_id = pidgin_dbus_call('PurpleAccountsFind', account, prpl_protocol)
+  pidgin_dbus_call('PurpleAccountIsConnected', account_id) == 1
 end
 
 When /^I create my XMPP account$/ do
@@ -74,6 +74,11 @@ When /^I create my XMPP account$/ do
 end
 
 Then /^Pidgin automatically enables my XMPP account$/ do
+  account = xmpp_account("Tails_account")
+  jid = account["username"] + '@' + account["domain"]
+  try_for(3*60) do
+    pidgin_account_connected?(jid, 'prpl-jabber')
+  end
   $vm.focus_window('Buddy List')
   @screen.wait("PidginAvailableStatus.png", 60*3)
 end
@@ -109,8 +114,9 @@ When /^I start a conversation with my friend$/ do
   @screen.wait("PidginConversationWindowMenuBar.png", 10)
 end
 
-And /^I say something to my friend( in the multi-user chat)?$/ do |multi_chat|
-  msg = "ping" + Sikuli::Key.ENTER
+And /^I say (.*) to my friend( in the multi-user chat)?$/ do |msg, multi_chat|
+  msg = "ping" if msg == "something"
+  msg = msg + Sikuli::Key.ENTER
   if multi_chat
     $vm.focus_window(@chat_room_jid.split("@").first)
     msg = @friend_name + ": " + msg
@@ -126,7 +132,12 @@ Then /^I receive a response from my friend( in the multi-user chat)?$/ do |multi
   else
     $vm.focus_window(@friend_name)
   end
-  @screen.wait("PidginFriendExpectedAnswer.png", 20)
+  try_for(60) do
+    if @screen.exists('PidginServerMessage.png')
+      @screen.click('PidginDialogCloseButton.png')
+    end
+    @screen.find('PidginFriendExpectedAnswer.png')
+  end
 end
 
 When /^I start an OTR session with my friend$/ do
@@ -203,15 +214,26 @@ end
 
 def configured_pidgin_accounts
   accounts = Hash.new
-  xml = REXML::Document.new($vm.file_content('$HOME/.purple/accounts.xml',
-                                             LIVE_USER))
+  xml = REXML::Document.new(
+    $vm.file_content("/home/#{LIVE_USER}/.purple/accounts.xml")
+  )
   xml.elements.each("account/account") do |e|
     account   = e.elements["name"].text
     account_name, network = account.split("@")
     protocol  = e.elements["protocol"].text
     port      = e.elements["settings/setting[@name='port']"].text
-    nickname  = e.elements["settings/setting[@name='username']"].text
-    real_name = e.elements["settings/setting[@name='realname']"].text
+    username_element  = e.elements["settings/setting[@name='username']"]
+    realname_elemenet = e.elements["settings/setting[@name='realname']"]
+    if username_element
+      nickname  = username_element.text
+    else
+      nickname  = nil
+    end
+    if realname_elemenet
+      real_name = realname_elemenet.text
+    else
+      real_name = nil
+    end
     accounts[network] = {
       'name'      => account_name,
       'network'   => network,
@@ -227,34 +249,25 @@ end
 
 def chan_image (account, channel, image)
   images = {
-    'irc.oftc.net' => {
-      '#tails' => {
-        'roster'           => 'PidginTailsChannelEntry',
+    'conference.riseup.net' => {
+      'tails' => {
         'conversation_tab' => 'PidginTailsConversationTab',
         'welcome'          => 'PidginTailsChannelWelcome',
       }
     },
-    'I2P' => {
-      '#i2p'    => {
-        'roster'           => 'PidginI2PChannelEntry',
-        'conversation_tab' => 'PidginI2PConversationTab',
-        'welcome'          => 'PidginI2PChannelWelcome',
-      }
-    }
   }
   return images[account][channel][image] + ".png"
 end
 
 def default_chan (account)
   chans = {
-    'irc.oftc.net' => '#tails',
-    'I2P'          => '#i2p',
+    'conference.riseup.net' => 'tails',
   }
   return chans[account]
 end
 
 def pidgin_otr_keys
-  return $vm.file_content('$HOME/.purple/otr.private_key', LIVE_USER)
+  return $vm.file_content("/home/#{LIVE_USER}/.purple/otr.private_key")
 end
 
 Given /^Pidgin has the expected accounts configured with random nicknames$/ do
@@ -278,10 +291,6 @@ Given /^Pidgin has the expected accounts configured with random nicknames$/ do
          "#{expected}")
 end
 
-When /^I start Pidgin through the GNOME menu$/ do
-  step 'I start "Pidgin" via the GNOME "Internet" applications menu'
-end
-
 When /^I open Pidgin's account manager window$/ do
   @screen.wait_and_click('PidginMenuAccounts.png', 20)
   @screen.wait_and_click('PidginMenuManageAccounts.png', 20)
@@ -293,7 +302,13 @@ When /^I see Pidgin's account manager window$/ do
 end
 
 When /^I close Pidgin's account manager window$/ do
-  @screen.wait_and_click("PidginAccountManagerCloseButton.png", 10)
+  @screen.wait_and_click("PidginDialogCloseButton.png", 10)
+end
+
+When /^I close Pidgin$/ do
+  $vm.focus_window('Buddy List')
+  @screen.type("q", Sikuli::KeyModifier.CTRL)
+  @screen.waitVanish('PidginAvailableStatus.png', 10)
 end
 
 When /^I (de)?activate the "([^"]+)" Pidgin account$/ do |deactivate, account|
@@ -331,8 +346,7 @@ Then /^Pidgin successfully connects to the "([^"]+)" account$/ do |account|
       deactivate_and_activate_pidgin_account(account)
     end
   end
-  retrier_method = account == 'I2P' ? method(:retry_i2p) : method(:retry_tor)
-  retrier_method.call(recovery_on_failure) do
+  retry_tor(recovery_on_failure) do
     begin
       $vm.focus_window('Buddy List')
     rescue ExecutionFailedInVM
@@ -363,10 +377,22 @@ Then /^the "([^"]*)" account only responds to PING and VERSION CTCP requests$/ d
   ctcp_check.verify_ctcp_responses
 end
 
-Then /^I can join the "([^"]+)" channel on "([^"]+)"$/ do |channel, account|
-  @screen.doubleClick(   chan_image(account, channel, 'roster'))
+Then /^I can join the( pre-configured)? "([^"]+)" channel on "([^"]+)"$/ do |preconfigured, channel, account|
+  if preconfigured
+    @screen.doubleClick(chan_image(account, channel, 'roster'))
+    focus_pidgin_irc_conversation_window(account)
+  else
+    $vm.focus_window('Buddy List')
+    @screen.wait_and_click("PidginBuddiesMenu.png", 20)
+    @screen.wait_and_click("PidginBuddiesMenuJoinChat.png", 10)
+    @screen.wait_and_click("PidginJoinChatWindow.png", 10)
+    @screen.click_mid_right_edge("PidginJoinChatRoomLabel.png")
+    @screen.type(channel)
+    @screen.click("PidginJoinChatButton.png")
+    @chat_room_jid = channel + "@" + account
+    $vm.focus_window(@chat_room_jid)
+  end
   @screen.hide_cursor
-  focus_pidgin_irc_conversation_window(account)
   try_for(60) do
     begin
       @screen.wait_and_click(chan_image(account, channel, 'conversation_tab'), 5)
@@ -405,7 +431,7 @@ end
 
 def pidgin_add_certificate_from (cert_file)
   # Here, we need a certificate that is not already in the NSS database
-  step "I copy \"/usr/share/ca-certificates/spi-inc.org/spi-cacert-2008.crt\" to \"#{cert_file}\" as user \"amnesia\""
+  step "I copy \"/usr/share/ca-certificates/mozilla/CNNIC_ROOT.crt\" to \"#{cert_file}\" as user \"amnesia\""
 
   $vm.focus_window('Buddy List')
   @screen.wait_and_click('PidginToolsMenu.png', 10)
@@ -453,6 +479,9 @@ end
 
 When /^I see the Tails roadmap URL$/ do
   try_for(60) do
+    if @screen.exists('PidginServerMessage.png')
+      @screen.click('PidginDialogCloseButton.png')
+    end
     begin
       @screen.find('PidginTailsRoadmapUrl.png')
     rescue FindFailed => e
@@ -464,4 +493,5 @@ end
 
 When /^I click on the Tails roadmap URL$/ do
   @screen.click('PidginTailsRoadmapUrl.png')
+  try_for(60) { @torbrowser = Dogtail::Application.new('Firefox') }
 end

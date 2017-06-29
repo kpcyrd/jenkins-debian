@@ -1,3 +1,5 @@
+require 'resolv'
+
 class OpenPGPKeyserverCommunicationError < StandardError
 end
 
@@ -20,7 +22,7 @@ def start_or_restart_seahorse
   if @withgpgapplet
     seahorse_menu_click_helper('GpgAppletIconNormal.png', 'GpgAppletManageKeys.png')
   else
-    step 'I start "Seahorse" via the GNOME "Utilities" applications menu'
+    step 'I start "Passwords and Keys" via GNOME Activities Overview'
   end
   step 'Seahorse has opened'
 end
@@ -43,6 +45,18 @@ When /^the "([^"]+)" OpenPGP key is not in the live user's public keyring$/ do |
          "The '#{keyid}' key is in the live user's public keyring.")
 end
 
+def setup_onion_keyserver
+  resolver = Resolv::DNS.new
+  keyservers = resolver.getaddresses('pool.sks-keyservers.net').select do |addr|
+    addr.class == Resolv::IPv4
+  end
+  onion_keyserver_address = keyservers.sample
+  hkp_port = 11371
+  @onion_keyserver_job = chutney_onionservice_redir(
+    onion_keyserver_address, hkp_port
+  )
+end
+
 When /^I fetch the "([^"]+)" OpenPGP key using the GnuPG CLI( without any signatures)?$/ do |keyid, without|
   # Make keyid an instance variable so we can reference it in the Seahorse
   # keysyncing step.
@@ -52,7 +66,7 @@ When /^I fetch the "([^"]+)" OpenPGP key using the GnuPG CLI( without any signat
   else
     importopts = ''
   end
-  retry_tor do
+  retry_tor(Proc.new { setup_onion_keyserver }) do
     @gnupg_recv_key_res = $vm.execute_successfully(
       "timeout 120 gpg --batch #{importopts} --recv-key '#{@fetched_openpgp_keyid}'",
       :user => LIVE_USER)
@@ -74,11 +88,6 @@ When /^the Seahorse operation is successful$/ do
   $vm.has_process?('seahorse')
 end
 
-When /^GnuPG uses the configured keyserver$/ do
-  assert(@gnupg_recv_key_res.stderr[CONFIGURED_KEYSERVER_HOSTNAME],
-         "GnuPG's stderr did not mention keyserver #{CONFIGURED_KEYSERVER_HOSTNAME}")
-end
-
 When /^the "([^"]+)" key is in the live user's public keyring(?: after at most (\d) seconds)?$/ do |keyid, delay|
   delay = 10 unless delay
   try_for(delay.to_i, :msg => "The '#{keyid}' key is not in the live user's public keyring") {
@@ -87,7 +96,7 @@ When /^the "([^"]+)" key is in the live user's public keyring(?: after at most (
   }
 end
 
-When /^I start Seahorse( via the Tails OpenPGP Applet)?$/ do |withgpgapplet|
+When /^I start Seahorse( via the OpenPGP Applet)?$/ do |withgpgapplet|
   @withgpgapplet = !!withgpgapplet
   start_or_restart_seahorse
 end
@@ -108,7 +117,8 @@ end
 
 Then /^I synchronize keys in Seahorse$/ do
   recovery_proc = Proc.new do
-    # The versions of Seahorse in Wheezy and Jessie will abort with a
+    setup_onion_keyserver
+    # The version of Seahorse in Jessie will abort with a
     # segmentation fault whenever there's any sort of network error while
     # syncing keys. This will usually happens after clicking away the error
     # message. This does not appear to be a problem in Stretch.
@@ -151,7 +161,7 @@ Then /^I synchronize keys in Seahorse$/ do
    end
 end
 
-When /^I fetch the "([^"]+)" OpenPGP key using Seahorse( via the Tails OpenPGP Applet)?$/ do |keyid, withgpgapplet|
+When /^I fetch the "([^"]+)" OpenPGP key using Seahorse( via the OpenPGP Applet)?$/ do |keyid, withgpgapplet|
   step "I start Seahorse#{withgpgapplet}"
 
   def change_of_status?(keyid)
@@ -166,6 +176,7 @@ When /^I fetch the "([^"]+)" OpenPGP key using Seahorse( via the Tails OpenPGP A
   end
 
   recovery_proc = Proc.new do
+    setup_onion_keyserver
     @screen.click('GnomeCloseButton.png') if @screen.exists('GnomeCloseButton.png')
     @screen.type("w", Sikuli::KeyModifier.CTRL)
   end
@@ -198,11 +209,55 @@ When /^I fetch the "([^"]+)" OpenPGP key using Seahorse( via the Tails OpenPGP A
   end
 end
 
-Then /^Seahorse is configured to use the correct keyserver$/ do
-  @gnome_keyservers = YAML.load($vm.execute_successfully('gsettings get org.gnome.crypto.pgp keyservers',
-                                                         :user => LIVE_USER).stdout)
-  assert_equal(1, @gnome_keyservers.count, 'Seahorse should only have one keyserver configured.')
-  # Seahorse doesn't support hkps so that part of the domain is stripped out.
-  # We also insert hkp:// to the beginning of the domain.
-  assert_equal(CONFIGURED_KEYSERVER_HOSTNAME.sub('hkps.', 'hkp://'), @gnome_keyservers[0])
+Given /^(GnuPG|Seahorse) is configured to use Chutney's onion keyserver$/ do |app|
+  setup_onion_keyserver unless @onion_keyserver_job
+  _, _, onion_address, onion_port = chutney_onionservice_info
+  case app
+  when 'GnuPG'
+    # Validate the shipped configuration ...
+    server = /keyserver\s+(\S+)$/.match($vm.file_content("/home/#{LIVE_USER}/.gnupg/dirmngr.conf"))[1]
+    assert_equal(
+      "hkp://#{CONFIGURED_KEYSERVER_HOSTNAME}", server,
+      "GnuPG's dirmngr does not use the correct keyserver"
+    )
+    # ... before replacing it
+    $vm.execute_successfully(
+      "sed -i 's/#{CONFIGURED_KEYSERVER_HOSTNAME}/#{onion_address}:#{onion_port}/' " +
+      "'/home/#{LIVE_USER}/.gnupg/dirmngr.conf'"
+    )
+  when 'Seahorse'
+    # Validate the shipped configuration ...
+    @gnome_keyservers = YAML.load(
+      $vm.execute_successfully(
+        'gsettings get org.gnome.crypto.pgp keyservers',
+        user: LIVE_USER
+      ).stdout
+    )
+    assert_equal(1, @gnome_keyservers.count,
+                 'Seahorse should only have one keyserver configured.')
+    assert_equal(
+      'hkp://' + CONFIGURED_KEYSERVER_HOSTNAME, @gnome_keyservers[0],
+      "GnuPG's dirmngr does not use the correct keyserver"
+    )
+    # ... before replacing it
+    $vm.execute_successfully(
+      "gsettings set org.gnome.crypto.pgp keyservers \"['hkp://#{onion_address}:#{onion_port}']\"",
+      user: LIVE_USER
+    )
+  end
+end
+
+Then /^GnuPG's dirmngr uses the configured keyserver$/ do
+  _, _, onion_keyserver_address, _ = chutney_onionservice_info
+  dirmngr_request = $vm.execute_successfully(
+    'gpg-connect-agent --dirmngr "keyserver --hosttable" /bye', user: LIVE_USER
+  )
+  server = dirmngr_request.stdout.chomp.lines[1].split[4]
+  server = /keyserver\s+(\S+)$/.match(
+    $vm.file_content("/home/#{LIVE_USER}/.gnupg/dirmngr.conf")
+  )[1]
+  assert_equal(
+    "hkp://#{onion_keyserver_address}:5858", server,
+    "GnuPG's dirmngr does not use the correct keyserver"
+  )
 end

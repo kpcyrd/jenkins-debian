@@ -23,16 +23,16 @@ Given /^I generate an OpenPGP key named "([^"]+)" with password "([^"]+)"$/ do |
      Passphrase: #{pwd}
      %commit
 EOF
-  gpg_key_recipie.split("\n").each do |line|
-    $vm.execute("echo '#{line}' >> /tmp/gpg_key_recipie", :user => LIVE_USER)
-  end
-  c = $vm.execute("gpg --batch --gen-key < /tmp/gpg_key_recipie",
+  recipe_path = '/tmp/gpg_key_recipe'
+  $vm.file_overwrite(recipe_path, gpg_key_recipie)
+  $vm.execute("chown #{LIVE_USER}:#{LIVE_USER} #{recipe_path}")
+  c = $vm.execute("gpg --batch --gen-key < #{recipe_path}",
                   :user => LIVE_USER)
   assert(c.success?, "Failed to generate OpenPGP key:\n#{c.stderr}")
 end
 
 When /^I type a message into gedit$/ do
-  step 'I start "Gedit" via the GNOME "Accessories" applications menu'
+  step 'I start "gedit" via GNOME Activities Overview'
   @screen.wait_and_click("GeditWindow.png", 20)
   # We don't have a good visual indicator for when we can continue. Without the
   # sleep we may start typing in the gedit window far too soon, causing
@@ -60,7 +60,7 @@ def gedit_copy_all_text
   context_menu_helper('GeditWindow.png', 'GeditStatusBar.png', 'GeditCopy.png')
 end
 
-def paste_into_a_new_tab
+def gedit_paste_into_a_new_tab
   @screen.wait_and_click("GeditNewTab.png", 20)
   context_menu_helper('GeditWindow.png', 'GeditStatusBar.png', 'GeditPaste.png')
 end
@@ -74,7 +74,7 @@ def encrypt_sign_helper
   sleep 5
   yield
   maybe_deal_with_pinentry
-  paste_into_a_new_tab
+  gedit_paste_into_a_new_tab
 end
 
 def decrypt_verify_helper(icon)
@@ -129,5 +129,5 @@ When /^I symmetrically encrypt the message with password "([^"]+)"$/ do |pwd|
   seahorse_menu_click_helper('GpgAppletIconNormal.png', 'GpgAppletEncryptPassphrase.png')
   maybe_deal_with_pinentry # enter password
   maybe_deal_with_pinentry # confirm password
-  paste_into_a_new_tab
+  gedit_paste_into_a_new_tab
 end

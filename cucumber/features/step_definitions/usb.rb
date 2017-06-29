@@ -48,6 +48,14 @@ def persistent_volumes_mountpoints
   $vm.execute("ls -1 -d /live/persistence/*_unlocked/").stdout.chomp.split
 end
 
+def recover_from_upgrader_failure
+    $vm.execute('killall tails-upgrade-frontend tails-upgrade-frontend-wrapper zenity')
+    # Remove unnecessary sleep for retry
+    $vm.execute_successfully('sed -i "/^sleep 30$/d" ' +
+                             '/usr/local/bin/tails-upgrade-frontend-wrapper')
+    $vm.spawn('tails-upgrade-frontend-wrapper', user: LIVE_USER)
+end
+
 Given /^I clone USB drive "([^"]+)" to a new USB drive "([^"]+)"$/ do |from, to|
   $vm.storage.clone_to_new_disk(from, to)
 end
@@ -65,102 +73,126 @@ Given /^the computer is set to boot in UEFI mode$/ do
   @os_loader = 'UEFI'
 end
 
+def tails_installer_selected_device
+  @installer.child('Target Device:', roleName: 'label').parent
+    .child('', roleName: 'combo box', recursive: false).name
+end
+
+def tails_installer_is_device_selected?(name)
+  device = $vm.disk_dev(name)
+  tails_installer_selected_device[/#{device}\d*$/]
+end
+
+def tails_installer_match_status(pattern)
+  @installer.child('', roleName: 'text').text[pattern]
+end
+
 class UpgradeNotSupported < StandardError
 end
 
 def usb_install_helper(name)
-  @screen.wait('USBTailsLogo.png', 10)
-  if @screen.exists("USBCannotUpgrade.png")
+  if tails_installer_match_status(/It is impossible to upgrade the device .+ #{$vm.disk_dev(name)}\d* /)
     raise UpgradeNotSupported
   end
-  @screen.wait_and_click('USBCreateLiveUSB.png', 10)
-  @screen.wait('USBCreateLiveUSBConfirmWindow.png', 10)
-  @screen.wait_and_click('USBCreateLiveUSBConfirmYes.png', 10)
-  @screen.wait('USBInstallationComplete.png', 30*60)
-end
-
-When /^I start Tails Installer$/ do
-  step 'I start "TailsInstaller" via the GNOME "Tails" applications menu'
-  @screen.wait('USBCloneAndInstall.png', 30)
+  assert(tails_installer_is_device_selected?(name))
+  begin
+    @installer.button('Install Tails').click
+    @installer.child('Question', roleName: 'alert').button('Yes').click
+    try_for(30*60) do
+      @installer
+        .child('Information', roleName: 'alert')
+        .child('Installation complete!', roleName: 'label')
+      true
+    end
+  rescue FindFailed => e
+    path = $vm.execute_successfully('ls -1 /tmp/tails-installer-*').stdout.chomp
+    debug_log("Tails Installer debug log:\n" + $vm.file_content(path))
+    raise e
+  end
 end
 
 When /^I start Tails Installer in "([^"]+)" mode$/ do |mode|
-  step 'I start Tails Installer'
-  case mode
-  when 'Clone & Install'
-    @screen.wait_and_click('USBCloneAndInstall.png', 10)
-  when 'Clone & Upgrade'
-    @screen.wait_and_click('USBCloneAndUpgrade.png', 10)
-  when 'Upgrade from ISO'
-    @screen.wait_and_click('USBUpgradeFromISO.png', 10)
-  else
-    raise "Unsupported mode '#{mode}'"
-  end
+  step 'I run "export DEBUG=1 ; tails-installer-launcher" in GNOME Terminal'
+  installer_launcher = Dogtail::Application.new('tails-installer-launcher')
+                         .child('Tails Installer', roleName: 'frame')
+  # Sometimes Dogtail will find the button and click it before it is
+  # shown (searchShowingOnly is not perfect) which generally means
+  # clicking somewhere on the Terminal => the click is lost *and* the
+  # installer does no go to the foreground. So let's wait a bit extra.
+  sleep 3
+  installer_launcher.button(mode).click
+  @installer = Dogtail::Application.new('tails-installer')
+  @installer.child('Tails Installer', roleName: 'frame')
+  # ... and something similar (for consecutive steps) again.
+  sleep 3
+  $vm.focus_window('Tails Installer')
 end
 
 Then /^Tails Installer detects that a device is too small$/ do
-  @screen.wait('TailsInstallerTooSmallDevice.png', 10)
-end
-
-When /^I "Clone & Install" Tails to USB drive "([^"]+)"$/ do |name|
-  step 'I start Tails Installer in "Clone & Install" mode'
-  usb_install_helper(name)
-end
-
-When /^I "Clone & Upgrade" Tails to USB drive "([^"]+)"$/ do |name|
-  step 'I start Tails Installer in "Clone & Upgrade" mode'
-  usb_install_helper(name)
-end
-
-When /^I try a "Clone & Upgrade" Tails to USB drive "([^"]+)"$/ do |name|
-  begin
-    step "I \"Clone & Upgrade\" Tails to USB drive \"#{name}\""
-  rescue UpgradeNotSupported
-    # this is what we expect
-  else
-    raise "The USB installer should not succeed"
+  try_for(10) do
+    tails_installer_match_status(/^The device .* is too small to install Tails/)
   end
-end
-
-When /^I try to "Upgrade from ISO" USB drive "([^"]+)"$/ do |name|
-  begin
-    step "I do a \"Upgrade from ISO\" on USB drive \"#{name}\""
-  rescue UpgradeNotSupported
-    # this is what we expect
-  else
-    raise "The USB installer should not succeed"
-  end
-end
-
-When /^I am suggested to do a "Clone & Install"$/ do
-  @screen.find("USBCannotUpgrade.png")
 end
 
 When /^I am told that the destination device cannot be upgraded$/ do
-  @screen.find("USBCannotUpgrade.png")
+  try_for(10) do
+    tails_installer_match_status(/^It is impossible to upgrade the device/)
+  end
 end
 
-Given /^I setup a filesystem share containing the Tails ISO$/ do
-  shared_iso_dir_on_host = "#{$config["TMPDIR"]}/shared_iso_dir"
-  @shared_iso_dir_on_guest = "/tmp/shared_iso_dir"
-  FileUtils.mkdir_p(shared_iso_dir_on_host)
-  FileUtils.cp(TAILS_ISO, shared_iso_dir_on_host)
-  add_after_scenario_hook { FileUtils.rm_r(shared_iso_dir_on_host) }
-  $vm.add_share(shared_iso_dir_on_host, @shared_iso_dir_on_guest)
+When /^I am suggested to do a "Install by cloning"$/ do
+  try_for(10) do
+    tails_installer_match_status(
+      /You should instead use "Install by cloning" to upgrade Tails/
+    )
+  end
+end
+
+Then /^a suitable USB device is (?:still )?not found$/ do
+  @installer.child(
+    'No device suitable to install Tails could be found', roleName: 'label'
+  )
+end
+
+Then /^(no|the "([^"]+)") USB drive is selected$/ do |mode, name|
+  try_for(30) do
+    if mode == 'no'
+      tails_installer_selected_device == ''
+    else
+      tails_installer_is_device_selected?(name)
+    end
+  end
+end
+
+When /^I "([^"]*)" Tails to USB drive "([^"]+)"$/ do |mode, name|
+  step "I start Tails Installer in \"#{mode}\" mode"
+  usb_install_helper(name)
+end
+
+When /^I fail to "([^"]*)" Tails to USB drive "([^"]+)"$/ do |mode, name|
+  begin
+    step "I \"#{mode}\" Tails to USB drive \"#{name}\""
+  rescue UpgradeNotSupported
+    # this is what we expect
+  else
+    raise "The USB installer should not succeed"
+  end
+end
+
+Given /^I plug and mount a USB drive containing the Tails ISO$/ do
+  iso_dir = share_host_files(TAILS_ISO)
+  @iso_path = "#{iso_dir}/#{File.basename(TAILS_ISO)}"
 end
 
 When /^I do a "Upgrade from ISO" on USB drive "([^"]+)"$/ do |name|
   step 'I start Tails Installer in "Upgrade from ISO" mode'
-  @screen.wait('USBUseLiveSystemISO.png', 10)
-  match = @screen.find('USBUseLiveSystemISO.png')
-  @screen.click(match.getCenter.offset(0, match.h*2))
-  @screen.wait('USBSelectISO.png', 10)
-  @screen.wait_and_click('GnomeFileDiagHome.png', 10)
+  @installer.child('Use existing Live system ISO:', roleName: 'label')
+    .parent.button('(None)').click
+  file_chooser = @installer.child('Select a File', roleName: 'file chooser')
   @screen.type("l", Sikuli::KeyModifier.CTRL)
-  @screen.wait('GnomeFileDiagTypeFilename.png', 10)
-  iso = "#{@shared_iso_dir_on_guest}/#{File.basename(TAILS_ISO)}"
-  @screen.type(iso)
-  @screen.wait_and_click('GnomeFileDiagOpenButton.png', 10)
+  # The only visible text element will be the path entry
+  file_chooser.child(roleName: 'text').typeText(@iso_path + '\n')
+  file_chooser.button('Open').click
   usb_install_helper(name)
 end
 
@@ -174,13 +206,22 @@ Given /^I enable all persistence presets$/ do
     @screen.type(Sikuli::Key.TAB + Sikuli::Key.SPACE)
   end
   @screen.wait_and_click('PersistenceWizardSave.png', 10)
+  @screen.wait('PersistenceWizardDone.png', 60)
+  @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
+end
+
+When /^I disable the first persistence preset$/ do
+  step 'I start "Configure persistent volume" via GNOME Activities Overview'
+  @screen.wait('PersistenceWizardPresets.png', 300)
+  @screen.type(Sikuli::Key.SPACE)
+  @screen.wait_and_click('PersistenceWizardSave.png', 10)
   @screen.wait('PersistenceWizardDone.png', 30)
   @screen.type(Sikuli::Key.F4, Sikuli::KeyModifier.ALT)
 end
 
 Given /^I create a persistent partition$/ do
-  step 'I start "ConfigurePersistentVolume" via the GNOME "Tails" applications menu'
-  @screen.wait('PersistenceWizardStart.png', 20)
+  step 'I start "Configure persistent volume" via GNOME Activities Overview'
+  @screen.wait('PersistenceWizardStart.png', 60)
   @screen.type(@persistence_password + "\t" + @persistence_password + Sikuli::Key.ENTER)
   @screen.wait('PersistenceWizardPresets.png', 300)
   step "I enable all persistence presets"
@@ -254,10 +295,9 @@ Then /^the running Tails is installed on USB drive "([^"]+)"$/ do |target_name|
 end
 
 Then /^the ISO's Tails is installed on USB drive "([^"]+)"$/ do |target_name|
-  iso = "#{@shared_iso_dir_on_guest}/#{File.basename(TAILS_ISO)}"
   iso_root = "/mnt/iso"
   $vm.execute("mkdir -p #{iso_root}")
-  $vm.execute("mount -o loop #{iso} #{iso_root}")
+  $vm.execute("mount -o loop #{@iso_path} #{iso_root}")
   tails_is_installed_helper(target_name, iso_root, "isolinux")
   $vm.execute("umount #{iso_root}")
 end
@@ -274,10 +314,10 @@ Then /^a Tails persistence partition exists on USB drive "([^"]+)"$/ do |name|
 
   # The LUKS container may already be opened, e.g. by udisks after
   # we've run tails-persistence-setup.
-  c = $vm.execute("ls -1 /dev/mapper/")
+  c = $vm.execute("ls -1 --hide 'control' /dev/mapper/")
   if c.success?
     for candidate in c.stdout.split("\n")
-      luks_info = $vm.execute("cryptsetup status #{candidate}")
+      luks_info = $vm.execute("cryptsetup status '#{candidate}'")
       if luks_info.success? and luks_info.stdout.match("^\s+device:\s+#{dev}$")
         luks_dev = "/dev/mapper/#{candidate}"
         break
@@ -300,7 +340,7 @@ Then /^a Tails persistence partition exists on USB drive "([^"]+)"$/ do |name|
 
   mount_dir = "/mnt/#{name}"
   $vm.execute("mkdir -p #{mount_dir}")
-  c = $vm.execute("mount #{luks_dev} #{mount_dir}")
+  c = $vm.execute("mount '#{luks_dev}' #{mount_dir}")
   assert(c.success?,
          "Couldn't mount opened LUKS device '#{dev}' on drive '#{name}'")
 
@@ -310,12 +350,9 @@ Then /^a Tails persistence partition exists on USB drive "([^"]+)"$/ do |name|
 end
 
 Given /^I enable persistence$/ do
-  @screen.wait('TailsGreeterPersistence.png', 10)
-  @screen.type(Sikuli::Key.SPACE)
-  @screen.wait('TailsGreeterPersistencePassphrase.png', 10)
-  match = @screen.find('TailsGreeterPersistencePassphrase.png')
-  @screen.click(match.getCenter.offset(match.w*2, match.h/2))
-  @screen.type(@persistence_password)
+  @screen.wait_and_click('TailsGreeterPersistencePassphrase.png', 10)
+  @screen.type(@persistence_password + Sikuli::Key.ENTER)
+  @screen.wait('TailsGreeterPersistenceUnlocked.png', 30)
 end
 
 def tails_persistence_enabled?
@@ -325,13 +362,21 @@ def tails_persistence_enabled?
                      'test "$TAILS_PERSISTENCE_ENABLED" = true').success?
 end
 
-Given /^all persistence presets(| from the old Tails version) are enabled$/ do |old_tails|
+Given /^all persistence presets(| from the old Tails version)(| but the first one) are enabled$/ do |old_tails, except_first|
+  assert(old_tails.empty? || except_first.empty?, "Unsupported case.")
   try_for(120, :msg => "Persistence is disabled") do
     tails_persistence_enabled?
   end
+  unexpected_mounts = Array.new
   # Check that all persistent directories are mounted
   if old_tails.empty?
     expected_mounts = persistent_mounts
+    if ! except_first.empty?
+      first_expected_mount_source      = expected_mounts.keys[0]
+      first_expected_mount_destination = expected_mounts[first_expected_mount_source]
+      expected_mounts.delete(first_expected_mount_source)
+      unexpected_mounts = [first_expected_mount_destination]
+    end
   else
     assert_not_nil($remembered_persistence_mounts)
     expected_mounts = $remembered_persistence_mounts
@@ -341,15 +386,14 @@ Given /^all persistence presets(| from the old Tails version) are enabled$/ do |
     assert(mount.include?("on #{dir} "),
            "Persistent directory '#{dir}' is not mounted")
   end
+  for dir in unexpected_mounts do
+    assert(! mount.include?("on #{dir} "),
+           "Persistent directory '#{dir}' is mounted")
+  end
 end
 
 Given /^persistence is disabled$/ do
   assert(!tails_persistence_enabled?, "Persistence is enabled")
-end
-
-Given /^I enable read-only persistence$/ do
-  step "I enable persistence"
-  @screen.wait_and_click('TailsGreeterPersistenceReadOnly.png', 10)
 end
 
 def boot_device
@@ -374,23 +418,21 @@ end
 Then /^Tails is running from (.*) drive "([^"]+)"$/ do |bus, name|
   bus = bus.downcase
   case bus
-  when "ide"
+  when "sata"
     expected_bus = "ata"
   else
     expected_bus = bus
   end
   assert_equal(expected_bus, boot_device_type)
   actual_dev = boot_device
-  # The boot partition differs between a "normal" install using the
-  # USB installer and isohybrid installations
-  expected_dev_normal = $vm.disk_dev(name) + "1"
-  expected_dev_isohybrid = $vm.disk_dev(name) + "4"
-  assert(actual_dev == expected_dev_normal ||
-         actual_dev == expected_dev_isohybrid,
+  # The boot partition differs between an using Tails installer and
+  # isohybrids. There's also a strange case isohybrids are thought to
+  # be booting from the "raw" device, and not a partition of it
+  # (#10504).
+  expected_devs = ['', '1', '4'].map { |e| $vm.disk_dev(name) + e }
+  assert(expected_devs.include?(actual_dev),
          "We are running from device #{actual_dev}, but for #{bus} drive " +
-         "'#{name}' we expected to run from either device " +
-         "#{expected_dev_normal} (when installed via the USB installer) " +
-         "or #{expected_dev_isohybrid} (when installed from an isohybrid)")
+         "'#{name}' we expected to run from one of #{expected_devs}")
 end
 
 Then /^the boot device has safe access rights$/ do
@@ -493,6 +535,12 @@ When /^I write some files expected to persist$/ do
   end
 end
 
+When /^I write some dotfile expected to persist$/ do
+  assert($vm.execute("touch /live/persistence/TailsData_unlocked/dotfiles/.XXX_persist",
+                     :user => LIVE_USER).success?,
+         "Could not create a file in the dotfiles persistence.")
+end
+
 When /^I remove some files expected to persist$/ do
   persistent_mounts.each do |_, dir|
     owner = $vm.execute("stat -c %U #{dir}").stdout.chomp
@@ -527,6 +575,14 @@ Then /^the expected persistent files(| created with the old Tails version) are p
     assert(!$vm.execute("test -e #{dir}/XXX_gone").success?,
            "Found file that should not have persisted in persistent directory #{dir}")
   end
+end
+
+Then /^the expected persistent dotfile is present in the filesystem$/ do
+  expected_dirs = persistent_dirs
+  assert($vm.execute("test -L #{expected_dirs['dotfiles']}/.XXX_persist").success?,
+         "Could not find expected persistent dotfile link.")
+  assert($vm.execute("test -e $(readlink -f #{expected_dirs['dotfiles']}/.XXX_persist)").success?,
+           "Could not find expected persistent dotfile link target.")
 end
 
 Then /^only the expected files are present on the persistence partition on USB drive "([^"]+)"$/ do |name|
@@ -568,8 +624,8 @@ Then /^only the expected files are present on the persistence partition on USB d
 end
 
 When /^I delete the persistent partition$/ do
-  step 'I start "DeletePersistentVolume" via the GNOME "Tails" applications menu'
-  @screen.wait("PersistenceWizardDeletionStart.png", 20)
+  step 'I start "Delete persistent volume" via GNOME Activities Overview'
+  @screen.wait("PersistenceWizardDeletionStart.png", 120)
   @screen.type(" ")
   @screen.wait("PersistenceWizardDone.png", 120)
 end
@@ -583,14 +639,109 @@ Given /^I create a ([[:alpha:]]+) label on disk "([^"]+)"$/ do |type, name|
   $vm.storage.disk_mklabel(name, type)
 end
 
-Then /^a suitable USB device is (?:still )?not found$/ do
-  @screen.wait("TailsInstallerNoQEMUHardDisk.png", 30)
+Given /^the file system changes introduced in version (.+) are (not )?present(?: in the (\S+) Browser's chroot)?$/ do |version, not_present, chroot_browser|
+  assert_equal('1.1~test', version)
+  upgrade_applied = not_present.nil?
+  chroot_browser = "#{chroot_browser.downcase}-browser" if chroot_browser
+  changes = [
+    {
+      filesystem: :rootfs,
+      path: 'some_new_file',
+      status: :added,
+      new_content: <<-EOF
+Some content
+      EOF
+    },
+    {
+      filesystem: :rootfs,
+      path: 'etc/amnesia/version',
+      status: :modified,
+      new_content: <<-EOF
+#{version} - 20380119
+ffffffffffffffffffffffffffffffffffffffff
+live-build: 3.0.5+really+is+2.0.12-0.tails2
+live-boot: 4.0.2-1
+live-config: 4.0.4-1
+      EOF
+    },
+    {
+      filesystem: :rootfs,
+      path: 'etc/os-release',
+      status: :modified,
+      new_content: <<-EOF
+TAILS_PRODUCT_NAME="Tails"
+TAILS_VERSION_ID="#{version}"
+      EOF
+    },
+    {
+      filesystem: :rootfs,
+      path: 'usr/share/common-licenses/BSD',
+      status: :removed
+    },
+    {
+      filesystem: :medium,
+      path: 'utils/linux/syslinux',
+      status: :removed
+    },
+  ]
+  changes.each do |change|
+    case change[:filesystem]
+    when :rootfs
+      path = '/'
+      path += "var/lib/#{chroot_browser}/chroot/" if chroot_browser
+      path += change[:path]
+    when :medium
+      path = '/lib/live/mount/medium/' + change[:path]
+    else
+      raise "Unknown filesysten '#{change[:filesystem]}'"
+    end
+    case change[:status]
+    when :removed
+      assert_equal(!upgrade_applied, $vm.file_exist?(path))
+    when :added
+      assert_equal(upgrade_applied, $vm.file_exist?(path))
+      if upgrade_applied && change[:new_content]
+        assert_equal(change[:new_content], $vm.file_content(path))
+      end
+    when :modified
+      assert($vm.file_exist?(path))
+      if upgrade_applied
+        assert_not_nil(change[:new_content])
+        assert_equal(change[:new_content], $vm.file_content(path))
+      end
+    else
+      raise "Unknown status '#{change[:status]}'"
+    end
+  end
 end
 
-Then /^the "(?:[^"]+)" USB drive is selected$/ do
-  @screen.wait("TailsInstallerQEMUHardDisk.png", 30)
+Then /^I am proposed to install an incremental upgrade to version (.+)$/ do |version|
+  recovery_proc = Proc.new do
+    recover_from_upgrader_failure
+  end
+  failure_pic = 'TailsUpgraderFailure.png'
+  success_pic = "TailsUpgraderUpgradeTo#{version}.png"
+  retry_tor(recovery_proc) do
+    match, _ = @screen.waitAny([success_pic, failure_pic], 2*60)
+    assert_equal(success_pic, match)
+  end
 end
 
-Then /^no USB drive is selected$/ do
-  @screen.wait("TailsInstallerNoQEMUHardDisk.png", 30)
+When /^I agree to install the incremental upgrade$/ do
+  @screen.click('TailsUpgraderUpgradeNowButton.png')
+end
+
+Then /^I can successfully install the incremental upgrade to version (.+)$/ do |version|
+  step 'I agree to install the incremental upgrade'
+  recovery_proc = Proc.new do
+    recover_from_upgrader_failure
+    step "I am proposed to install an incremental upgrade to version #{version}"
+    step 'I agree to install the incremental upgrade'
+  end
+  failure_pic = 'TailsUpgraderFailure.png'
+  success_pic = "TailsUpgraderDone.png"
+  retry_tor(recovery_proc) do
+    match, _ = @screen.waitAny([success_pic, failure_pic], 2*60)
+    assert_equal(success_pic, match)
+  end
 end

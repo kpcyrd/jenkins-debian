@@ -1,3 +1,4 @@
+require 'ipaddr'
 require 'libvirt'
 require 'rexml/document'
 
@@ -55,11 +56,6 @@ class VMNet
     IPAddr.new(net_xml.elements['network/ip'].attributes['address']).to_s
   end
 
-  def guest_real_mac
-    net_xml = REXML::Document.new(@net.xml_desc)
-    net_xml.elements['network/ip/dhcp/host/'].attributes['mac']
-  end
-
   def bridge_mac
     File.open("/sys/class/net/#{bridge_name}/address", "rb").read.chomp
   end
@@ -68,7 +64,7 @@ end
 
 class VM
 
-  attr_reader :domain, :display, :vmnet, :storage
+  attr_reader :domain, :domain_name, :display, :vmnet, :storage
 
   def initialize(virt, xml_path, vmnet, storage, x_display)
     @virt = virt
@@ -114,8 +110,20 @@ class VM
     end
   end
 
-  def real_mac
-    @vmnet.guest_real_mac
+  def real_mac(alias_name)
+    REXML::Document.new(@domain.xml_desc)
+      .elements["domain/devices/interface[@type='network']/" +
+                "alias[@name='#{alias_name}']"]
+      .parent.elements['mac'].attributes['address'].to_s
+  end
+
+  def all_real_macs
+    macs = []
+    REXML::Document.new(@domain.xml_desc)
+      .elements.each("domain/devices/interface[@type='network']") do |nic|
+      macs << nic.elements['mac'].attributes['address'].to_s
+    end
+    macs
   end
 
   def set_hardware_clock(time)
@@ -129,6 +137,11 @@ class VM
                                        'basis' => 'utc',
                                        'adjustment' => adjustment.to_s)
     update(domain_rexml.to_s)
+  end
+
+  def network_link_state
+    REXML::Document.new(@domain.xml_desc)
+      .elements['domain/devices/interface/link'].attributes['state']
   end
 
   def set_network_link_state(state)
@@ -158,30 +171,44 @@ class VM
     update(domain_xml.to_s)
   end
 
-  def set_cdrom_image(image)
-    image = nil if image == ''
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    domain_xml.elements.each('domain/devices/disk') do |e|
-      if e.attribute('device').to_s == "cdrom"
-        if image.nil?
-          e.elements.delete('source')
-        else
-          if ! e.elements['source']
-            e.add_element('source')
-          end
-          e.elements['source'].attributes['file'] = image
-        end
-        if is_running?
-          @domain.update_device(e.to_s)
-        else
-          update(domain_xml.to_s)
-        end
-      end
+  def add_cdrom_device
+    if is_running?
+      raise "Can't attach a CDROM device to a running domain"
     end
+    domain_rexml = REXML::Document.new(@domain.xml_desc)
+    if domain_rexml.elements["domain/devices/disk[@device='cdrom']"]
+      raise "A CDROM device already exists"
+    end
+    cdrom_rexml = REXML::Document.new(File.read("#{@xml_path}/cdrom.xml")).root
+    domain_rexml.elements['domain/devices'].add_element(cdrom_rexml)
+    update(domain_rexml.to_s)
   end
 
-  def remove_cdrom
-    set_cdrom_image(nil)
+  def remove_cdrom_device
+    if is_running?
+      raise "Can't detach a CDROM device to a running domain"
+    end
+    domain_rexml = REXML::Document.new(@domain.xml_desc)
+    cdrom_el = domain_rexml.elements["domain/devices/disk[@device='cdrom']"]
+    if cdrom_el.nil?
+      raise "No CDROM device is present"
+    end
+    domain_rexml.elements["domain/devices"].delete_element(cdrom_el)
+    update(domain_rexml.to_s)
+  end
+
+  def eject_cdrom
+    execute_successfully('/usr/bin/eject -m')
+  end
+
+  def remove_cdrom_image
+    domain_rexml = REXML::Document.new(@domain.xml_desc)
+    cdrom_el = domain_rexml.elements["domain/devices/disk[@device='cdrom']"]
+    if cdrom_el.nil?
+      raise "No CDROM device is present"
+    end
+    cdrom_el.delete_element('source')
+    update(domain_rexml.to_s)
   rescue Libvirt::Error => e
     # While the CD-ROM is removed successfully we still get this
     # error, so let's ignore it.
@@ -192,12 +219,27 @@ class VM
     raise e if not(Regexp.new(acceptable_error).match(e.to_s))
   end
 
+  def set_cdrom_image(image)
+    if image.nil? or image == ''
+      raise "Can't set cdrom image to an empty string"
+    end
+    remove_cdrom_image
+    domain_rexml = REXML::Document.new(@domain.xml_desc)
+    cdrom_el = domain_rexml.elements["domain/devices/disk[@device='cdrom']"]
+    cdrom_el.add_element('source', { 'file' => image })
+    update(domain_rexml.to_s)
+  end
+
   def set_cdrom_boot(image)
     if is_running?
       raise "boot settings can only be set for inactive vms"
     end
-    set_boot_device('cdrom')
+    domain_rexml = REXML::Document.new(@domain.xml_desc)
+    if not domain_rexml.elements["domain/devices/disk[@device='cdrom']"]
+      add_cdrom_device
+    end
     set_cdrom_image(image)
+    set_boot_device('cdrom')
   end
 
   def list_disk_devs
@@ -207,6 +249,16 @@ class VM
       ret << e.elements['target'].attribute('dev').to_s
     end
     return ret
+  end
+
+  def plug_device(xml)
+    if is_running?
+      @domain.attach_device(xml.to_s)
+    else
+      domain_xml = REXML::Document.new(@domain.xml_desc)
+      domain_xml.elements['domain/devices'].add_element(xml)
+      update(domain_xml.to_s)
+    end
   end
 
   def plug_drive(name, type)
@@ -238,13 +290,7 @@ class VM
     xml.elements['disk/target'].attributes['bus'] = type
     xml.elements['disk/target'].attributes['removable'] = removable_usb if removable_usb
 
-    if is_running?
-      @domain.attach_device(xml.to_s)
-    else
-      domain_xml = REXML::Document.new(@domain.xml_desc)
-      domain_xml.elements['domain/devices'].add_element(xml)
-      update(domain_xml.to_s)
-    end
+    plug_device(xml)
   end
 
   def disk_xml_desc(name)
@@ -320,9 +366,16 @@ class VM
     end
     plug_drive(name, type) if not(disk_plugged?(name))
     set_boot_device('hd')
-    # For some reason setting the boot device doesn't prevent cdrom
-    # boot unless it's empty
-    remove_cdrom
+    # XXX:Stretch: since our isotesters upgraded QEMU from
+    # 2.5+dfsg-4~bpo8+1 to 2.6+dfsg-3.1~bpo8+1 it seems we must remove
+    # the CDROM device to allow disk boot. This is not the case with the same
+    # version on Debian Sid. Let's hope we can remove this ugly
+    # workaround when we only support running the automated test suite
+    # on Stretch.
+    domain_rexml = REXML::Document.new(@domain.xml_desc)
+    if domain_rexml.elements["domain/devices/disk[@device='cdrom']"]
+      remove_cdrom_device
+    end
   end
 
   # XXX-9p: Shares don't work together with snapshot save+restore. See
@@ -353,59 +406,6 @@ class VM
     return list
   end
 
-  def set_ram_size(size, unit = "KiB")
-    raise "System memory can only be added to inactive vms" if is_running?
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    domain_xml.elements['domain/memory'].text = size
-    domain_xml.elements['domain/memory'].attributes['unit'] = unit
-    domain_xml.elements['domain/currentMemory'].text = size
-    domain_xml.elements['domain/currentMemory'].attributes['unit'] = unit
-    update(domain_xml.to_s)
-  end
-
-  def get_ram_size_in_bytes
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    unit = domain_xml.elements['domain/memory'].attribute('unit').to_s
-    size = domain_xml.elements['domain/memory'].text.to_i
-    return convert_to_bytes(size, unit)
-  end
-
-  def set_arch(arch)
-    raise "System architecture can only be set to inactive vms" if is_running?
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    domain_xml.elements['domain/os/type'].attributes['arch'] = arch
-    update(domain_xml.to_s)
-  end
-
-  def add_hypervisor_feature(feature)
-    raise "Hypervisor features can only be added to inactive vms" if is_running?
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    domain_xml.elements['domain/features'].add_element(feature)
-    update(domain_xml.to_s)
-  end
-
-  def drop_hypervisor_feature(feature)
-    raise "Hypervisor features can only be fropped from inactive vms" if is_running?
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    domain_xml.elements['domain/features'].delete_element(feature)
-    update(domain_xml.to_s)
-  end
-
-  def disable_pae_workaround
-    # add_hypervisor_feature("nonpae") results in a libvirt error, and
-    # drop_hypervisor_feature("pae") alone won't disable pae. Hence we
-    # use this workaround.
-    xml = <<EOF
-  <qemu:commandline xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-    <qemu:arg value='-cpu'/>
-    <qemu:arg value='qemu32,-pae'/>
-  </qemu:commandline>
-EOF
-    domain_xml = REXML::Document.new(@domain.xml_desc)
-    domain_xml.elements['domain'].add_element(REXML::Document.new(xml))
-    update(domain_xml.to_s)
-  end
-
   def set_os_loader(type)
     if is_running?
       raise "boot settings can only be set for inactive vms"
@@ -431,7 +431,7 @@ EOF
 
   def execute(cmd, options = {})
     options[:user] ||= "root"
-    options[:spawn] ||= false
+    options[:spawn] = false unless options.has_key?(:spawn)
     if options[:libs]
       libs = options[:libs]
       options.delete(:libs)
@@ -442,7 +442,7 @@ EOF
       cmds << cmd
       cmd = cmds.join(" && ")
     end
-    return VMCommand.new(self, cmd, options)
+    return RemoteShell::ShellCommand.new(self, cmd, options)
   end
 
   def execute_successfully(*args)
@@ -470,7 +470,9 @@ EOF
   end
 
   def has_network?
-    return execute("/sbin/ifconfig eth0 | grep -q 'inet addr'").success?
+    nmcli_info = execute('nmcli device show eth0').stdout
+    has_ipv4_addr = /^IP4.ADDRESS(\[\d+\])?:\s*([0-9.\/]+)$/.match(nmcli_info)
+    network_link_state == 'up' && has_ipv4_addr
   end
 
   def has_process?(process)
@@ -483,7 +485,7 @@ EOF
 
   def select_virtual_desktop(desktop_number, user = LIVE_USER)
     assert(desktop_number >= 0 && desktop_number <=3,
-           "Only values between 0 and 3 are valid virtual desktop numbers")
+           "Only values between 0 and 1 are valid virtual desktop numbers")
     execute_successfully(
       "xdotool set_desktop '#{desktop_number}'",
       :user => user
@@ -504,11 +506,17 @@ EOF
       # Often when xdotool fails to focus a window it'll work when retried
       # after redrawing the screen.  Switching to a new virtual desktop then
       # back seems to be a reliable way to handle this.
-      select_virtual_desktop(3)
+      # Sadly we have to rely on a lot of sleep() here since there's
+      # little on the screen etc that we truly can rely on.
+      sleep 5
+      select_virtual_desktop(1)
+      sleep 5
       select_virtual_desktop(0)
-      sleep 5 # there aren't any visual indicators which can be used here
+      sleep 5
       do_focus(window_title, user)
     end
+  rescue
+    # noop
   end
 
   def file_exist?(file)

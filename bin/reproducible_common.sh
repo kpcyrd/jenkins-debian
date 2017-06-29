@@ -58,6 +58,9 @@ RPM_PKGS=/srv/reproducible-results/.rpm_pkgs
 # number of cores to be used
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 
+# diffoscope memory limit in kilobytes
+DIFFOSCOPE_VIRT_LIMIT=$((10*1024*1024))
+
 # we only this array for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
 
@@ -560,7 +563,8 @@ call_diffoscope() {
 	local msg=""
 	set +e
 	# remember to also modify the retry diffoscope call 15 lines below
-	( timeout $TIMEOUT nice schroot \
+	( ulimit -v "$DIFFOSCOPE_VIRT_LIMIT"
+	  timeout "$TIMEOUT" nice schroot \
 		--directory $TMPDIR \
 		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
 		diffoscope -- \
@@ -575,7 +579,8 @@ call_diffoscope() {
 		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
 		# remember to also modify the retry diffoscope call 15 lines above
-		( timeout $TIMEOUT nice schroot \
+		( ulimit -v "$DIFFOSCOPE_VIRT_LIMIT"
+		  timeout "$TIMEOUT" nice schroot \
 			--directory $TMPDIR \
 			-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
 			diffoscope -- \

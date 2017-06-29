@@ -64,7 +64,7 @@
             distro:
                 - 'debian-stable':
                     dist_name: 'Debian-Installer Stable'
-                    my_iso: 'http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-8.7.1-amd64-netinst.iso'
+                    my_iso: 'http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.0.0-amd64-netinst.iso'
                     my_time: 'H H * * H'
                 - 'debian-testing-daily':
                     dist_name: 'Debian-Installer Testing (Daily)'

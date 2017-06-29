@@ -463,9 +463,9 @@ if [ -f /etc/debian_version ] ; then
 				mtr-tiny 
 				munin 
 				ntp 
+				obfs4proxy
 				openbios-ppc 
 				openbios-sparc 
-				openjdk-8-jdk
 				openjdk-8-jre 
 				pandoc
 				postgresql
@@ -492,6 +492,7 @@ if [ -f /etc/debian_version ] ; then
 				qemu-system-x86 
 				qemu-user-static 
 				radvd 
+				redir
 				ruby-json 
 				ruby-rspec 
 				seabios 

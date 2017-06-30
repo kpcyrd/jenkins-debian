@@ -437,7 +437,7 @@ fi
 # daily mails
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	# once a day, send mail about builder problems
-	for PROBLEM in /var/log/jenkins/reproducible-stale-builds.log /var/log/jenkins/reproducible-race-conditions.log /var/log/jenkins/reproducible-diskspace-issues.log /var/log/jenkins/reproducible-remote-error.log /var/log/jenkins/reproducible-env-changes.log /var/log/jenkins/reproducible-submit2buildinfo.debian.net.log /var/log/postgresql/postgresql-9.4-main.log ; do
+	for PROBLEM in /var/log/jenkins/reproducible-stale-builds.log /var/log/jenkins/reproducible-race-conditions.log /var/log/jenkins/reproducible-diskspace-issues.log /var/log/jenkins/reproducible-remote-error.log /var/log/jenkins/reproducible-env-changes.log /var/log/jenkins/reproducible-submit2buildinfo.debian.net.log /var/log/postgresql/postgresql-9.6-main.log ; do
 		if [ -s $PROBLEM ] ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			if [ "$(dirname $PROBLEM)" = "/var/log/jenkins" ] ; then

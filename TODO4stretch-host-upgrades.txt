@@ -1,10 +1,20 @@
 things to look at on jenkins.d.n. after the upgrade
 ---------------------------------------------------
-Configuration file '/etc/default/shorewall'
-Configuration file '/etc/shorewall/shorewall.conf'
-Configuration file '/etc/shorewall6/shorewall6.conf'
-Configuration file '/etc/calamaris/calamaris.conf'
-Configuration file '/etc/apache2/conf-available/security.conf'
+rescheduling now fails:
+[11:05] < bunk> 03:24:05> rescheduling fails with error: http://paste.debian.net/974010/
+[11:05] < bunk> 03:24:25> psycopg2.OperationalError: could not connect to server: No such file or directory
+
+failing jobs:
+	https://jenkins.debian.net/job/reproducible_scheduler/
+	https://jenkins.debian.net/job/reproducible_json/
+
+kept the jessie versions:
+	Configuration file '/etc/default/shorewall'
+	Configuration file '/etc/shorewall/shorewall.conf'
+	Configuration file '/etc/shorewall6/shorewall6.conf'
+	Configuration file '/etc/calamaris/calamaris.conf'
+	Configuration file '/etc/apache2/conf-available/security.conf'
+
 
    │ Obsolete major version 9.4                                                                         
    │                                                                                                    
@@ -39,9 +49,7 @@ E: Package 'postgresql-client-9.4' has no installation candidate
 on shutdown lots of:
 	umounting /run/schroot/moznt/jenkins-reproducible-*
 
-rescheduling now fails:
-[11:05] < bunk> 03:24:05> rescheduling fails with error: http://paste.debian.net/974010/
-[11:05] < bunk> 03:24:25> psycopg2.OperationalError: could not connect to server: No such file or directory
+
 
 
 pb10

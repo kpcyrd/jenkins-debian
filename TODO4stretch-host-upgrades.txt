@@ -23,9 +23,37 @@ Configuration file '/etc/apache2/conf-available/security.conf'
 
 -> didnt cleanup installed packages on jenkins just yet
 
+when running update_jdn on jenkins
+----------------------------------
+Package libvirt-bin is not available, but is referred to by another package.
+This may mean that the package is missing, has been obsoleted, or
+is only available from another source
+However the following packages replace it:
+  libvirt-daemon-system libvirt-dev libvirt-clients
+
+E: Unable to locate package libapache2-mod-macro
+E: Package 'libvirt-bin' has no installation candidate
+E: Unable to locate package libvpx1
+E: Package 'postgresql-client-9.4' has no installation candidate
+
+on shutdown lots of:
+	umounting /run/schroot/moznt/jenkins-reproducible-*
+
+rescheduling now fails:
+[11:05] < bunk> 03:24:05> rescheduling fails with error: http://paste.debian.net/974010/
+[11:05] < bunk> 03:24:25> psycopg2.OperationalError: could not connect to server: No such file or directory
+
+
 pb10
 ----
 had to apt install linux-image-amd64 should go in update_jdn and why is that even neccessary?
+
+update_jdn on pb10:
+Problems on profitbricks-build10-amd64.debian.net: adduser: The group `libvirt' does not exist.
+
+update_jdn on pb16:
+Problems on profitbricks-build16-i386.debian.net: 30 Jun 11:34:16 ntpdate[5788]: the NTP socket is in use, exiting
+
 
 update_jdn.sh
 -------------

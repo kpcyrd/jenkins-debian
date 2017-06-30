@@ -17,14 +17,10 @@ However the following packages replace it:
   libvirt-daemon-system libvirt-dev libvirt-clients
 
 E: Unable to locate package libapache2-mod-macro
-E: Package 'libvirt-bin' has no installation candidate
 E: Unable to locate package libvpx1
-E: Package 'postgresql-client-9.4' has no installation candidate
 
 on shutdown lots of:
 	umounting /run/schroot/moznt/jenkins-reproducible-*
-
-
 
 
 pb10
@@ -47,8 +43,8 @@ open problems
 -------------
 - dsa-check-packages points to /bin/true on hosts running in the future
 - compare sshd_config from stretch with the one we're using (from jessie)
-- check "systemctl -a" for "not found" and failed services, like haveged…
-	haveged not running on pb3+4+12, while running fine on 2+6+16 ?!???
+- check "systemctl -a" for "not found" and failed services, there are more than just haveged
+	haveged not running on most i386 and amd64 nodes… (#866513)
 
 no i386 kernels on i386
 -----------------------
@@ -72,6 +68,3 @@ to be done once all hosts run stretch: sshd_config
 /etc/ssh/sshd_config - the currently running one is the one from jessie, we should update_jdn to the one from stretch
 
 
-done for upgrades
------------------
-all i386+armhf+amd64 nodes

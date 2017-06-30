@@ -1,17 +1,5 @@
 things to look at on jenkins.d.n. after the upgrade
 ---------------------------------------------------
-rescheduling now fails:
-[11:05] < bunk> 03:24:05> rescheduling fails with error: http://paste.debian.net/974010/
-[11:05] < bunk> 03:24:25> psycopg2.OperationalError: could not connect to server: No such file or directory
-
-failing jobs:
-	https://jenkins.debian.net/job/reproducible_scheduler/
-	https://jenkins.debian.net/job/reproducible_json/
-	https://jenkins.debian.net/job/reproducible_html_live_status/
-	https://jenkins.debian.net/job/reproducible_html_pkg_sets
-	https://jenkins.debian.net/job/reproducible_html_dashboard
-	https://jenkins.debian.net/job/reproducible_html_notes
-
 kept the jessie versions:
 	Configuration file '/etc/default/shorewall'
 	Configuration file '/etc/shorewall/shorewall.conf'
@@ -19,23 +7,6 @@ kept the jessie versions:
 	Configuration file '/etc/calamaris/calamaris.conf'
 	Configuration file '/etc/apache2/conf-available/security.conf'
 
-
-   │ Obsolete major version 9.4                                                                         
-   │                                                                                                    
-   │ The PostgreSQL version 9.4 is obsolete, but the server or client packages are still installed.     
-   │ Please install the latest packages (postgresql-9.6 and postgresql-client-9.6) and upgrade the      
-   │ existing  clusters with pg_upgradecluster (see manpage).                                           
-   │                                                                                                    
-  │ Please be aware that the installation of postgresql-9.6 will automatically create a default        
-   │ cluster 9.6/main. If you want to upgrade the 9.4/main cluster, you need to remove the already      
-   │ existing 9.6 cluster (pg_dropcluster --stop 9.6 main, see manpage for details).                    
-   │                                                                                                    
-   │ The old server and client packages are no longer supported. After the existing clusters are        
-   │ upgraded, the postgresql-9.4 and postgresql-client-9.4 packages should be removed.    
-
-   │ Please see /usr/share/doc/postgresql-common/README.Debian.gz for details.                          
-
--> didnt cleanup installed packages on jenkins just yet
 
 when running update_jdn on jenkins
 ----------------------------------

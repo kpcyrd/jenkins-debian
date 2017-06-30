@@ -473,7 +473,7 @@ if [ -f /etc/debian_version ] ; then
 				pandoc
 				postgresql
 				postgresql-autodoc
-				postgresql-client-9.4 
+				postgresql-client-9.6 
 				poxml 
 				procmail 
 				python3-debian 

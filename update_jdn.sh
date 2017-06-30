@@ -521,8 +521,7 @@ if [ -f /etc/debian_version ] ; then
 			case $HOSTNAME in
 				codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder
 						;;
-				*)		$UP2DATE || sudo apt-get install -t jessie-backports \
-							pbuilder lintian || echo "this should only fail on the first install"
+				*)		$UP2DATE || sudo apt-get install pbuilder lintian
 				;;
 			esac
 		fi
@@ -530,24 +529,23 @@ if [ -f /etc/debian_version ] ; then
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' unattended-upgrades 2>/dev/null || true)" = "ii "  ] ; then
 			 sudo apt-get -y purge unattended-upgrades
 		fi
-		# we need mock from bpo to build current fedora
+		# we need mock to build fedora
 		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports mock \
-				|| echo "this should only fail on the first install"
+			$UP2DATE || sudo apt-get install mock
 		fi
 		# for varying kernels:
 		# - we use bpo kernels on pb-build5+15 (and the default i386 kernel on pb-build2+12-i386)
 		# - we use the default amd64 kernel on pb-build1+11 (and the default amd64 kernel on pb-build6+16-i386)
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports linux-image-amd64 || echo "this should only fail on the first install"
+			$UP2DATE || sudo apt-get install linux-image-amd64
 		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
 			$UP2DATE || sudo apt-get install linux-image-amd64
 		fi
-		# only needed on the main node
+		# only needed on the main nodes # FIXME this is redundant
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports jenkins-job-builder || echo "this should only fail on the first install"
+			$UP2DATE || sudo apt-get install jenkins-job-builder
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install -t jessie-backports ffmpeg libav-tools python3-popcon jenkins-job-builder dose-extra
+			$UP2DATE || sudo apt-get install ffmpeg libav-tools python3-popcon jenkins-job-builder dose-extra
 		fi
 		explain "packages installed."
 	else

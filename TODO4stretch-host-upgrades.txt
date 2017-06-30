@@ -1,4 +1,35 @@
+things to look at on jenkins.d.n. after the upgrade
+---------------------------------------------------
+Configuration file '/etc/default/shorewall'
+Configuration file '/etc/shorewall/shorewall.conf'
+Configuration file '/etc/shorewall6/shorewall6.conf'
+Configuration file '/etc/calamaris/calamaris.conf'
+Configuration file '/etc/apache2/conf-available/security.conf'
 
+   │ Obsolete major version 9.4                                                                         
+   │                                                                                                    
+   │ The PostgreSQL version 9.4 is obsolete, but the server or client packages are still installed.     
+   │ Please install the latest packages (postgresql-9.6 and postgresql-client-9.6) and upgrade the      
+   │ existing  clusters with pg_upgradecluster (see manpage).                                           
+   │                                                                                                    
+  │ Please be aware that the installation of postgresql-9.6 will automatically create a default        
+   │ cluster 9.6/main. If you want to upgrade the 9.4/main cluster, you need to remove the already      
+   │ existing 9.6 cluster (pg_dropcluster --stop 9.6 main, see manpage for details).                    
+   │                                                                                                    
+   │ The old server and client packages are no longer supported. After the existing clusters are        
+   │ upgraded, the postgresql-9.4 and postgresql-client-9.4 packages should be removed.    
+
+   │ Please see /usr/share/doc/postgresql-common/README.Debian.gz for details.                          
+
+-> didnt cleanup installed packages on jenkins just yet
+
+pb10
+----
+had to apt install linux-image-amd64 should go in update_jdn and why is that even neccessary?
+
+update_jdn.sh
+-------------
+refactor some apt-get install calls away (which used to be needed because of jessie-backports…)
 
 
 open problems
@@ -14,11 +45,6 @@ because of:
 #866314: linux-image-4.9.0-3-686-pae: 100+ times slower disk writes on 4.x+/i386/16+RAM, compared to 3.x
 amd64 kernel was manually installed with multiarch, should go into update_jdn
 also on pb3+4+9 I had to do: sudo apt install linux-image-amd64
-
-todo for upgrades
------------------
-test jenkins-test-vm upgrade before doing jenkins
-	-> cucumber problems reported by fil
 
 
 to be done once all hosts run stretch: squid
@@ -37,5 +63,4 @@ to be done once all hosts run stretch: sshd_config
 
 done for upgrades
 -----------------
-all i386+armhf nodes
-all amd64 nodes except jenkins and am64
+all i386+armhf+amd64 nodes

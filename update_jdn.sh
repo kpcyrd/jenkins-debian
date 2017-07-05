@@ -456,9 +456,6 @@ if [ -f /etc/debian_version ] ; then
 				libguestfs-tools 
 				libjson-rpc-perl 
 				libsoap-lite-perl 
-				libvirt-clients
-				libvirt-daemon
-				libvirt-daemon-system
 				libxslt1-dev 
 				linux-image-amd64
 				moreutils 

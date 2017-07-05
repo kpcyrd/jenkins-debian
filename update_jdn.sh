@@ -459,7 +459,6 @@ if [ -f /etc/debian_version ] ; then
 				libvirt-clients
 				libvirt-daemon
 				libvirt-daemon-system
-				libvpx1 
 				libxslt1-dev 
 				linux-image-amd64
 				moreutils 

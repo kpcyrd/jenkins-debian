@@ -10,14 +10,6 @@ kept the jessie versions:
 
 when running update_jdn on jenkins
 ----------------------------------
-Package libvirt-bin is not available, but is referred to by another package.
-This may mean that the package is missing, has been obsoleted, or
-is only available from another source
-However the following packages replace it:
-  libvirt-daemon-system libvirt-dev libvirt-clients
-
-E: Unable to locate package libvpx1
-
 on shutdown lots of:
 	umounting /run/schroot/moznt/jenkins-reproducible-*
 

@@ -397,8 +397,9 @@ if [ -f /etc/debian_version ] ; then
 				imagemagick
 				libav-tools
 				libsikuli-script-java
-				libvirt-bin
-				libvirt-dev
+				libvirt-clients
+				libvirt-daemon
+				libvirt-daemon-system
 				ovmf
 				python-jabberbot
 				python-potr
@@ -455,8 +456,9 @@ if [ -f /etc/debian_version ] ; then
 				libguestfs-tools 
 				libjson-rpc-perl 
 				libsoap-lite-perl 
-				libvirt0 
-				libvirt-bin 
+				libvirt-clients
+				libvirt-daemon
+				libvirt-daemon-system
 				libvpx1 
 				libxslt1-dev 
 				linux-image-amd64

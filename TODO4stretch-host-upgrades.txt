@@ -16,7 +16,6 @@ is only available from another source
 However the following packages replace it:
   libvirt-daemon-system libvirt-dev libvirt-clients
 
-E: Unable to locate package libapache2-mod-macro
 E: Unable to locate package libvpx1
 
 on shutdown lots of:

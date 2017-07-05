@@ -450,7 +450,6 @@ if [ -f /etc/debian_version ] ; then
 				ip2host
 				jekyll
 				kgb-client
-				libapache2-mod-macro 
 				libcap2-bin 
 				libfile-touch-perl 
 				libguestfs-tools 

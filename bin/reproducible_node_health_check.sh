@@ -155,12 +155,12 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	#
 	# /var/log/jenkins/jenkins.log sometimes grows very fast
 	# and we don't yet know why, so let's monitor this for now.
-	JENKINSLOG="find /var/log/jenkins -name jenkins.log -size +42G"
+	JENKINSLOG="$(find /var/log/jenkins -name jenkins.log -size +42G)"
 	if [ -z "JENKINSLOG" ] ; then
 		echo "Warning, jenkins.log is larger than 42G, please fix, erroring out now."
 		exit 1
 	else
-		JENKINSLOG="find /var/log/jenkins -name jenkins.log -size +23G"
+		JENKINSLOG="$(find /var/log/jenkins -name jenkins.log -size +23G)"
 		if [ -z "JENKINSLOG" ] ; then
 			echo "Warning, jenkins.log is larger than 23G, please do something…"
 			DIRTY=true

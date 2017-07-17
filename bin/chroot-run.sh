@@ -68,7 +68,7 @@ bootstrap() {
 	echo "$(date -u ) - bootstraping $DISTRO into $CHROOT_TARGET now."
 	set +e
 	sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR | tee $TMPLOG
-	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true )
+	local RESULT=$(egrep "E: (Couldn't download (packages|dists)|Invalid Release signature)" $TMPLOG || true )
 	rm $TMPLOG
 	set -e
 	if [ ! -z "$RESULT" ] ; then

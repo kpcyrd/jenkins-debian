@@ -47,7 +47,7 @@
     my_default_distro_matrix: &distros_defaults
       - sid: &distro_defaults_sid
           my_trigger: '{name}_buster'
-          my_origin_triggers:
+          my_origin_triggers: &default_git_triggers
             - pollscm:
                 cron: '* H/2 * * *'
       - buster: &distro_defaults_buster
@@ -117,9 +117,7 @@
       - stretch:
           my_trigger: '{name}_buster'
       - jessie:
-          my_origin_triggers:
-            - pollscm:
-               cron: '* H/2 * * *'
+          my_origin_triggers: *default_git_triggers
           my_trigger: '{name}_stretch'
     jobs:
       - junit

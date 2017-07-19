@@ -3,6 +3,7 @@
     my_disabled:
     disabled: '{obj:my_disabled}'
     my_trigger:
+    my_exports: ''
     project-type: freestyle
     properties: &properties
       - sidebar:
@@ -32,7 +33,7 @@
     my_origin_triggers:
     triggers: '{obj:my_origin_triggers}'
     builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_exports} {my_shell}'
     publishers:
       - email: &email
           recipients: 'qa-jenkins-scm@lists.alioth.debian.org {my_recipients}'
@@ -59,6 +60,7 @@
 - defaults:
     <<: *DEFAULTS
     name: packages-tests-junit-exports
+    my_exports: '--exports-results'
     publishers:
       - email: *email
       - trigger: *trigger
@@ -105,7 +107,7 @@
     name: dak-tests
     my_git_url: 'https://ftp-master.debian.org/git/dak.git'
     my_recipients: 'jenkins+debian-ftp debian-dak@lists.debian.org'
-    my_shell: '--exports-results timeout 1h dpkg-buildpackage -us -uc -tc'
+    my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
     my_distro:
     # DAK tests cannot be run in sid/buster atm, but still create the jobs

@@ -148,7 +148,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep '(reproducible_builder_amd64|reproducible_builder_i386|reproducible_builder_armhf|reproducible_builder_arm64|chroot-installation_wheezy)' || true)
 	if [ ! -z "$ZOMBIES" ] ; then
 		echo "Warning, rise of the jenkins job zombies has started again, these jobs should not exist:"
-		echo -e "$ZOMBIES"
+		for z in $ZOMBIES ; do
+			echo $(basename $z)
+		done
 		DIRTY=true
 		echo
 	fi

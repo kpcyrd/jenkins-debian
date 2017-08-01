@@ -337,7 +337,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run coreboot/openwrt/lede/netbsd/fedora jobs
 		case $HOSTNAME in
-			profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
+		profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
 				bison
 				ca-certificates
 				cmake
@@ -407,6 +407,7 @@ if [ -f /etc/debian_version ] ; then
 				python3-yaml
 				redir
 				ruby-guestfs
+				ruby-json
 				ruby-libvirt
 				ruby-net-irc
 				ruby-packetfu
@@ -494,7 +495,6 @@ if [ -f /etc/debian_version ] ; then
 				qemu-system-x86 
 				qemu-user-static 
 				radvd 
-				ruby-json 
 				ruby-rspec 
 				seabios 
 				shorewall 

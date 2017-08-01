@@ -405,6 +405,7 @@ if [ -f /etc/debian_version ] ; then
 				python-jabberbot
 				python-potr
 				python3-yaml
+				redir
 				ruby-guestfs
 				ruby-libvirt
 				ruby-net-irc
@@ -493,7 +494,6 @@ if [ -f /etc/debian_version ] ; then
 				qemu-system-x86 
 				qemu-user-static 
 				radvd 
-				redir
 				ruby-json 
 				ruby-rspec 
 				seabios 

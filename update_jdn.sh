@@ -401,6 +401,7 @@ if [ -f /etc/debian_version ] ; then
 				libvirt-daemon
 				libvirt-daemon-system
 				ovmf
+				pry
 				python-jabberbot
 				python-potr
 				python3-yaml

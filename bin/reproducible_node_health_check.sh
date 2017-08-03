@@ -145,7 +145,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# and we dont know why and when that happens,
 	# so just report those zombies here.
 	#
-	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep '(reproducible_builder_amd64|reproducible_builder_i386|reproducible_builder_armhf|reproducible_builder_arm64|chroot-installation_wheezy)' || true)
+	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep '(reproducible_builder_amd64|reproducible_builder_i386|reproducible_builder_armhf|reproducible_builder_arm64|chroot-installation_wheezy|ff64a|jtk1a)' || true)
 	if [ ! -z "$ZOMBIES" ] ; then
 		echo "Warning, rise of the jenkins job zombies has started again, these jobs should not exist:"
 		for z in $ZOMBIES ; do

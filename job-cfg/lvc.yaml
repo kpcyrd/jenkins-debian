@@ -88,10 +88,6 @@
                     my_iso: 'https://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/mini.iso'
                     my_time: 'H H/8 * * *'
                     my_opts: '--tags @bugtest'
-                - 'debian-stretch-DI':
-                    dist_name: 'Debian-Installer Stretch pre-release'
-                    my_iso: 'http://cdimage.debian.org/cdimage/stretch_di_rc2/amd64/iso-cd/debian-stretch-DI-rc2-amd64-netinst.iso'
-                    my_time: 'H H * * H'
                 - 'debianedu-testing-netinst':
                     dist_name: 'Debian-Edu Testing Netinst'
                     my_iso: 'http://ftp.skolelinux.org/cd-stretch-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'

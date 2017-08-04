@@ -254,12 +254,12 @@ end
 
 Given /^I set the root password to "([^"]*)"$/ do |rootpw|
 # Root Password, twice
-  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword"),diui_png("MirrorCountry")], 30 * PATIENCE)
-  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword"),diui_png("MirrorCountry")], 30 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword"),diui_png("MirrorCountry")], 60 * PATIENCE)
+  on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword"),diui_png("MirrorCountry")], 60 * PATIENCE)
   if diui_png("MirrorCountry") == on_screen
     step("I accept the default mirror")
-    on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
-    on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 30 * PATIENCE)
+    on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 60 * PATIENCE)
+    on_screen, _ = @screen.waitAny([diui_png("ShowRootPassword"),diui_png("RootPassword")], 60 * PATIENCE)
   end
   @screen.type(rootpw)
   if "gui" == @ui_mode

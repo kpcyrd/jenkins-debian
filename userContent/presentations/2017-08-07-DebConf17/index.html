@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>jenkins.debian.net or what is Debian doing with all these resources</title>
+  <title>let's maintain jenkins.debian.org as a team</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -72,14 +72,13 @@ torbrowser-launcher
     <div class="slides" style="text-align: left;">
       <section data-background="images/debian_logo.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	about <code>jenkins.debian.net</code> - or what Holger / Debian is doing with all these resources
+ 	let's maintain jenkins.debian.org as a team
 	</h2>
-	<p>(Automating all the tests!)</p>
         <h4>
           <br>
           Holger Levsen &lt;holger@debian.org&gt;
         </h4>
-	<p><small>Profitbricks Office, 2016-11-30, Berlin, Germany</small></p>
+	<p><small>DebConf17, 2017-08-07, Montreal, Canada</small></p>
       </section>
 
       <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
@@ -89,8 +88,7 @@ torbrowser-launcher
           <li>Debian-Edu (Debian for Education), since 2003</li>
           <li>DebConf organizer, founded the DebConf video team in 2005</li>
           <li>Debian developer since 2007, <code>holger@debian.og</code></li>
-          <li>Freelancer since 2004, <code>holgerlevsen.de</code></li>
-          <li>Freelancer at Profitbricks from 2011-2013 and 2015</li>
+          <li>Freelancer since 2004</li>
         </ul>
       </section>
 
@@ -154,23 +152,11 @@ torbrowser-launcher
            <li>Steven Chamberlain: kfreebsd</li>
            <li>Phil Hands: lvc</li>
            <li>Tomasz Nitecki: jenkins java support</li>
-	   <li class="fragment">36 contributors to <code>jenkins.debian.net.git</code> in total</li>
+	   <li class="fragment">36 contributors to <code>jenkins.debian.net.git</code> in total, also committers from Arch Linux, openSUSE, LEDE, coreboot, Guix, FreeBSD and NetBSD </li>
         </ul>
       </section>
 
 
-      <section data-background="images/debian.jpg" data-background-color="black">
-        <h2>
- 	A quick detour about Debian release names
-	</h2>
-        <ul class="fragment">
-          <li>wheezy (Debian 7) = oldstable</li>
-          <li>jessie (8) = stable</li>
-          <li>stretch (9 =  testing</li>
-          <li>sid = unstable</li>
-          <li>experimental</li>
-        </ul>
-      </section>
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -283,212 +269,27 @@ torbrowser-launcher
  	reproducible.debian.net / tests.reproducible-builds.org/debian/
 	</h2>
         <ul>
-          <li>created by 379 / ~350 jobs on jenkins.debian.net</li>
+          <li>created by 357 jobs on jenkins.debian.net</li>
           <li class="fragment">it's not only about Debian anymore…</li>
         </ul>
       </section>
-
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>The problem: Can we trust the build process?</h2>
-        <ul>
-          <li class="fragment">One can inspect the source code of free software for flaws</li>
-          <li class="fragment">But distributions provide binary/compiled packages</li>
-        </ul>
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>The problem: nobody can trust any binary built anywhere anymore</h2>
-
-        <ul>
-          <li class="fragment">To get users, go after the developers</li>
-          <li class="fragment">Financial incentives to crack developer machines / build infrastructure</li>
-          <li class="fragment"><code>CVE-2002-0083</code>: Remote root exploit in OpenSSH (single bit difference in binary)</li>
-          <li class="fragment">Kernel module modifying source code when "viewed" by GCC only (see <code>media.ccc.de</code>)</li>
-          <li class="fragment">Compromised Apple iOS SDK, <em>Xcodeghost</em>, etc.</li>
-        </ul>
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Our solution</h2>
-        <ul class="fragment"><small>(we are still at step 1 here)</small>
-          <li class="fragment">Ensure compilation of the same source always has bit by bit identical results</li>
-          <li class="fragment">Multiple parties compare compilation results</li>
-          <li class="fragment">Attacker needs to infect everybody simultaneously (or they are detected)</li>
-        </ul>
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>We call this <em>Reproducible Builds</em>.</h2>
-
-        <ul class="fragment">
-          <li class="fragment">We think this should become the norm for free software.</li>
-        </ul>
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2 style="line-height: 130%;">
-          The motivation behind "reproducible" builds is to allow verification
-          that no flaws have been introduced during the compilation process.
-        </h2>
-      </section>
-
-
-      <section data-background="images/debian.jpg" data-background-color="black">
-        <h2>Reproducible builds in Debian</h2>
-
-        <p>Continuously build every package twice, varying:</p>
-
-        <ul>
-          <ul>
-            <li>Time &amp; date</li>
-            <li>Hostname &amp; domain name</li>
-            <li>Filesystem (<code><strike>disorderfs</strike></code>)</li>
-            <li>Timezone &amp; locale</li>
-            <li><code>uid</code> &amp; <code>gid</code></li>
-            <li>GECOS information, the shell &amp; a bunch of environment variables  </li>
-            <li>Kernel &amp; CPU type</li>
-            <li>and more&hellip;</li>
-          </ul>
-        </ul>
-      </section>
-
-      <section data-background="images/diffoscope.png" data-background-size="75%" data-background-position="50% 50%">
-       <p><!-- worked for me but this is horrible… -->
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-         &nbsp;<br />
-        <h2><code>https://try.diffoscope.org</code></h2>
-       </p>
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Challenges</h2>
-        <ul>
-        <ul>
-          <li>Timestamps</li>
-          <li>Timezones &amp; locales</li>
-          <li>Non-deterministic file ordering</li>
-          <li>Dictionary/hash key ordering</li>
-          <li>Users, groups, <code>umask</code>, environment variables</li>
-          <li>Build paths</li>
-          <li>Specifying the environment</li>
-        </ul>
-        </ul>
-      </section>
-
-      <section data-background="images/unstable_status.png" data-background-size="100%">
-        &nbsp;
-      </section>
-
-      <section data-background="images/testing_status.png" data-background-size="100%">
-        &nbsp;
-      </section>
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Other technical benefits</h2>
-
-        <ul>
-        <ul>
-          <li>Faster to build; saves time, money &amp; the environment</li>
-          <li>Easier to test changes/revisions</li>
-          <li>Unsafe behaviour (eg. internet access)</li>
-          <li>Unreliable / non-deterministic behaviours (eg. timing)</li>
-          <li>Finds bugs in uncommon timezones or locales</li>
-          <li>Detect corrupted build environments</li>
-          <li>Find future build failures (eg. expired certificates)</li>
-        </ul>
-        </ul>
-      </section>
-
-
-      <section data-background="images/stats_bugs_sin_ftbfs_state.png" data-background-size="100%">
-        &nbsp;
-      </section>
-
-
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Future work</h2>
-
-        <ul>
-          <li><code>.buildinfo</code> files distribution unsolved <small>(step 2)</small></li>
-          <li>How to make it meaningful for end-users <small>(step 3)</small></li>
-          <li class="fragment">Source code still vulnerable</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Beyond Debian&hellip;</h2>
-        <p>
-          <img src="images/logos/archlinux.png">
-          <!-- img src="images/logos/baserock.png" -->
-          <img src="images/logos/bitcoin.png">
-          <img src="images/logos/coreboot.png">
-          <img src="images/logos/debian.png">
-          <img src="images/logos/electrobsd.png">
-          <img src="images/logos/f-droid.png">
-          <img src="images/logos/fedora.png">
-          <img src="images/logos/freebsd.png">
-          <img src="images/logos/google.png">
-          <img src="images/logos/guix.png">
-          <img src="images/logos/lede.png">
-          <img src="images/logos/netbsd.png">
-          <img src="images/logos/nixos.png">
-          <img src="images/logos/openSUSE.png">
-          <img src="images/logos/openwrt.png">
-          <img src="images/logos/tails.png">
-          <img src="images/logos/tor.png">
-          <img src="images/logos/webconverger.png">
-           <div class="fragment">Reproducible Builds summits (Athens 2015, Berlin 2016)</li>
-          </div>
-         </p>
-      </section>
-
-      <section>
-        <h2>Projects using Profitbricks resources via jenkins.debian.net</h2>
-        <p>works:
-          <img src="images/logos/coreboot.png">
-          <img src="images/logos/debian.png">
-          <img src="images/logos/freebsd.png">
-          <img src="images/logos/lede.png">
-          <img src="images/logos/netbsd.png">
-          <img src="images/logos/openwrt.png">
-         </p>
-        <p>worked:
-          <img src="images/logos/archlinux.png">
-          <img src="images/logos/fedora.png">
-         </p>
-        <p>work in progress:
-          <img src="images/logos/f-droid.png">
-          <img src="images/logos/guix.png">
-         </p>
-      </section>
-
+ 
       <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>
  	 Resources used for reproducibility testing on jenkins.debian.net, by architecture &amp; sponsor
 	</h2>
+	FIXME: total jenkins numbers
         <ul>
           <li>13 amd64 systems, sponsored by Profitbricks</li>
           <li>4 i386 systems, sponsored by Profitbricks</li>
           <li>22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
-          <li>soon: 8 arm64 systems, sponsored by codethink.co.uk</li>
+          <li>8 arm64 systems, sponsored by codethink.co.uk</li>
         </ul>
       </section>
 
 
       <section data-background-color="white" data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>Usually I thank:</h2>
+        <h2>Thanks:</h2>
         <p style="text-align: center;">
           <img src="images/cii.png">
           <br>
@@ -497,18 +298,7 @@ torbrowser-launcher
           <img src="images/profitbricks.jpg">
           <br>
           <img src="images/debian_logo.png">
-        </p>
-      </section>
-
-      <section data-background="images/wholeworld.jpg" data-background-size="28%" data-background-position="99% 2%">
-        <h2>Todays special thanks:</h2>
-        <p style="text-align: center;">
-          <img src="images/profitbricks.jpg">
-	  <ul>
-            <li>from Debian, <code>jenkins.debian.net</code> would not have been possible like this without <em>your support!</em></li>
-            <li>from many many folks interested in Reproducible Builds!</li><!-- thanks to <em>you</em> <code>reproducible.debian.net</code>
-             could grow into <code>tests.reproducible-builds.org</code> so smoothly!</li> -->
-          </ul>
+	FIXME: codethink logo
         </p>
       </section>
 
@@ -534,7 +324,7 @@ torbrowser-launcher
         <p style="text-align: center;">
           <a href="https://jenkins.debian.net/"><code>https://jenkins.debian.net</code></a>
           <br>
-          <a href="https://reproducible-builds.org/"><code>https://reproducible-builds.org</code></a>
+          <a href="https://git.debian.org/git/qa/jenkins.debian.net.git"><code>git.debian.org/git/qa/jenkins.debian.net.git</code></a>
  	 <br />
 	 <br />
 	 <br />

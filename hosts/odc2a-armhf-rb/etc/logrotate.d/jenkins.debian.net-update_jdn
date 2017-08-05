@@ -1,9 +1,0 @@
-/var/log/jenkins/update_jdn.log {
-        daily
-        copytruncate
-        missingok
-        rotate 7
-        compress
-        delaycompress
-        notifempty
-}

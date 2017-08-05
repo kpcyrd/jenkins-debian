@@ -1,2 +1,0 @@
-Acquire::http::Proxy "http://10.0.0.15:8000/";
-

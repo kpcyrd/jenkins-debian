@@ -1,6 +1,0 @@
-[df*]
-env.exclude none unknown iso9660 squashfs udf romfs ramfs debugfs devtmpfs sysfs
-env.exclude_re /srv/workspace/pbuilder /run /dev/disk/by /var/lib/schroot/mount /srv/workspace/varlibschroot /dev/shm /sys/fs/cgroup
-env.warning 92
-env.critical 98
-

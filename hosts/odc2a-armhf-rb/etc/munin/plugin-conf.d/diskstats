@@ -1,4 +1,0 @@
-[diskstats]
-env.trim_labels yes
-env.include_only /dev/sda
-

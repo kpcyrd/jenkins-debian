@@ -265,7 +265,11 @@ data.append(
                                                                'recipients': '{my_recipients}',
                                                                'subject': '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'}},
                                           {   'logparser': {   'parse-rules': '/srv/jenkins/logparse/chroot-installation.rules',
-                                                               'unstable-on-warning': True,}}],
+                                                               'unstable-on-warning': True,}},
+                                          {   'naginator': {   'progressive-delay-increment': 5,
+                                                               'progressive-delay-maximum': 15,
+                                                               'max-failed-builds': 3,
+                                                               'regular-expression': '^E:     Couldn.t     download     .*/Packages'}}],
                         'triggers': [{   'timed': '{my_time}'}],
                         'wrappers': [{   'timeout': {   'timeout': 360}}]}})
 data.append(

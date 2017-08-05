@@ -137,18 +137,11 @@ echo "set +x" >> $CTMPFILE
 }
 
 prepare_upgrade2() {
-	# support _aptdpkg_first type upgrade jobs...
-	if [ "${JOB_NAME: -14}" = "_aptdpkg_first" ] ; then
-		APTDPKGFIRST="apt-get -y install dpkg apt"
-	else
-		APTDPKGFIRST=""
-	fi
 	cat >> $CTMPFILE <<-EOF
 echo "deb $MIRROR $1 main" > /etc/apt/sources.list.d/$1.list
 $SCRIPT_HEADER
 set -x
 apt-get update
-$APTDPKGFIRST
 apt-get -y upgrade
 apt-get clean
 apt-get -yf dist-upgrade

@@ -195,13 +195,6 @@ jobspecs = [
       'distfilter': (lambda d: tuple(set(d) & set(distro_upgrades))),
       'skiptaryet': (lambda t: False)
     },
-    { 'j_ext': '_upgrade_to_{dist2}_aptdpkg_first',
-      'd_ext': ', then upgrade apt and dpkg to {dist2} and then everything else',
-      's_ext': ' {dist2}',
-      'dist_func': (lambda d: [{dist: {'dist2': distro_upgrades[dist]}} for dist in d]),
-      'distfilter': (lambda d: tuple((set(d) & set(distro_upgrades)))),
-      'skiptaryet': (lambda t: t[:10] == 'education-')
-    },
 ]
 
 # some functions first…
@@ -284,13 +277,6 @@ data.append(
 data.append(
     {   'job-template': {   'defaults': 'chroot-installation',
                             'name': '{name}_{dist}_install_{target}_upgrade_to_{dist2}'}})
-data.append(
-    {   'job-template': {   'defaults': 'chroot-installation',
-                            'name': '{name}_{dist}_{action}_upgrade_to_{dist2}_aptdpkg_first'}})
-data.append(
-    {   'job-template': {   'defaults': 'chroot-installation',
-                            'name': '{name}_{dist}_install_{target}_upgrade_to_{dist2}_aptdpkg_first'}})
-
 # maintenance jobs
 maint_distros = []
 for base_distro in sorted(base_distros):
@@ -299,7 +285,7 @@ for base_distro in sorted(base_distros):
         trigger = 'chroot-installation_{dist}_bootstrap'
         for item in distro_upgrades.items():
             if item[1]==base_distro and base_distro in distro_upgrades:
-                trigger = trigger+', chroot-installation_{dist}_bootstrap_upgrade_to_{dist2}, chroot-installation_{dist}_bootstrap_upgrade_to_{dist2}_aptdpkg_first'
+                trigger = trigger+', chroot-installation_{dist}_bootstrap_upgrade_to_{dist2}'
                 dist2 = distro_upgrades[base_distro]
     else:
         trigger = 'chroot-installation_{dist}_bootstrap_upgrade_to_{dist2}'

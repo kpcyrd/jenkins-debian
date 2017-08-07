@@ -285,12 +285,10 @@ fi
 #
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
-	# buster is frozen, so for now we ignore:
-	#   <nothing yet!> (add the following in the pipeline below listing the
-	# ignored packages)
-	# | egrep -v "(pkg1|pkg2)" \
+	# ignore jadetex because #871021
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
+		| egrep -v "(jadetex)" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo

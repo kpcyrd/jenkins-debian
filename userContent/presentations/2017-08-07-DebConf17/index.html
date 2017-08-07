@@ -94,13 +94,50 @@ torbrowser-launcher
 
       <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
         <h2>more about Debian QA and me</h2>
-        <ul class="fragment">
-          <li class="fragment"><code>https://piuparts.debian.org</code> since 2009 - today juggling with 648988 logs from 53158 packages in 28 suites with Andreas Beckmann</li>
+        <ul>
+          <li class="fragment"><code>https://piuparts.debian.org</code> since 2009 - today (Nov 2016) juggling with 648988 logs from 53158 packages in 28 suites with Andreas Beckmann</li>
           <li class="fragment"><code>https://jenkins.debian.net</code> since 2012</li>
           <li class="fragment"><code>https://reproducible.debian.net</code> since 2014</li>
           <li class="fragment">since 2015 funded by the Linux Foundation for working on <code>https://reproducible-builds.org</code></li>
         </ul>
       </section>
+
+      <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
+        <h2>I'm busy.</h2>
+        <ul>
+          <li class="fragment">so I merge patches very easily, just looking whether it's safe to apply and at most only breaks your stuff.</li>
+          <li class="fragment">code base grown since 2012 by 40 people, it's a mess. please send patches! either to clean up some parts or to add the next little island…</li>
+	<li class="fragment">"I don't care."</li>
+        </ul>
+      </section>
+
+
+
+      <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
+        <h2>I do care.</h2>
+        <ul class="fragment">
+          <li class="fragment">I really want to maintain this as a team and there is a team already.</li>
+      	  <li class="fragment">But there is 'just' Mattia (who is awesome) who has some overview about the whole setup.</li>
+	  <li class="fragment">There is jenkins.debian.org.</li>
+	  <li class="fragment">Let's go there. This is my outline, please hack it and send patches!</li>
+  </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	jenkins.debian.net contributors:
+	</h2>
+        <ul>
+           <li>Mattia Rizzolo, Valerie Young and others: reproducible Debian</li>
+           <li>Helmut Grohne: rebootstrap</li>
+           <li>Samuel Thibault: hurd + accessibility</li>
+           <li>Steven Chamberlain: kfreebsd</li>
+           <li>Phil Hands: lvc</li>
+           <li>Tomasz Nitecki: jenkins java support</li>
+	   <li class="fragment">36 contributors to <code>jenkins.debian.net.git</code> in total, also committers from Arch Linux, openSUSE, LEDE, coreboot, Guix, FreeBSD and NetBSD </li>
+        </ul>
+      </section>
+
 
       <section data-background="images/debian.jpg" data-background-color="black">
         <h2>other Debian QA efforts elsewhere</h2>
@@ -108,9 +145,18 @@ torbrowser-launcher
 	<li><code>lintian.debian.org</code></li>
 	<li><code>ci.debian.net</code></li>
 	<li>periodic full archive rebuilds (amd64 only)</li>
+	<li>...</li>
         </ul>
       </section>
 
+      <section data-background="images/debian.jpg" data-background-color="black">
+        <h2>Who are you?</h2>
+        <ul>
+          <li class="fragment">Who uses jenkins.d.n regularily?</li>
+	  <li class="fragment">Who wants to contribute/control (more) jobs on jenkins.d.o?</li>
+      	  <li class="fragment">Who thinks current jenkins is too noisy?</li>
+  </ul>
+      </section>
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -140,19 +186,16 @@ torbrowser-launcher
         </ul>
       </section>
 
-
-      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>
- 	jenkins.debian.net contributors:
+ 	 Resources used for reproducibility testing on jenkins.debian.net, by architecture &amp; sponsor
 	</h2>
+	FIXME: total jenkins numbers
         <ul>
-           <li>Mattia Rizzolo, Valerie Young and others: reproducible Debian</li>
-           <li>Helmut Grohne: rebootstrap</li>
-           <li>Samuel Thibault: hurd + accessibility</li>
-           <li>Steven Chamberlain: kfreebsd</li>
-           <li>Phil Hands: lvc</li>
-           <li>Tomasz Nitecki: jenkins java support</li>
-	   <li class="fragment">36 contributors to <code>jenkins.debian.net.git</code> in total, also committers from Arch Linux, openSUSE, LEDE, coreboot, Guix, FreeBSD and NetBSD </li>
+          <li>13 amd64 systems, sponsored by Profitbricks</li>
+          <li>4 i386 systems, sponsored by Profitbricks</li>
+          <li>22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
+          <li>8 arm64 systems, sponsored by codethink.co.uk</li>
         </ul>
       </section>
 
@@ -172,11 +215,23 @@ torbrowser-launcher
 	<li>
 	 Countless bug reports,	ie 2670 done ftbfs via reproducible… (and 500 open…)
 	</li>
+        </ul>
+      </section>
+ 
+     <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+	 Benefits for you?
+	</h2>
+        <ul class="fragment">
 	<li>
-	 <code>jenkins.debian.net</code> will become an offical service, <code>jenkins.debian.org</code>
+	 The following is a quick summary of the &gt;1000 jobs jenkins is running. Nobody except Mattia and me are expected to remember them all…
+	</li>
+	<li>
+	 Please yell if there is a job (notification) annoying you.
 	</li>
         </ul>
       </section>
+
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -271,22 +326,10 @@ torbrowser-launcher
         <ul>
           <li>created by 357 jobs on jenkins.debian.net</li>
           <li class="fragment">it's not only about Debian anymore…</li>
+          <li class="fragment">though let's rather talk about jenkins.debian.org now…</li>
         </ul>
       </section>
  
-      <section data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
-        <h2>
- 	 Resources used for reproducibility testing on jenkins.debian.net, by architecture &amp; sponsor
-	</h2>
-	FIXME: total jenkins numbers
-        <ul>
-          <li>13 amd64 systems, sponsored by Profitbricks</li>
-          <li>4 i386 systems, sponsored by Profitbricks</li>
-          <li>22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
-          <li>8 arm64 systems, sponsored by codethink.co.uk</li>
-        </ul>
-      </section>
-
 
       <section data-background-color="white" data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Thanks:</h2>

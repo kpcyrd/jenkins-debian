@@ -115,9 +115,8 @@ torbrowser-launcher
 
       <section data-background="images/h01ger.png" data-background-size="15%" data-background-color="black">
         <h2>I do care.</h2>
-        <ul class="fragment">
-          <li class="fragment">I really want to maintain this as a team and there is a team already.</li>
-      	  <li class="fragment">But there is 'just' Mattia (who is awesome) who has some overview about the whole setup.</li>
+        <ul>
+          <li class="fragment">I really want to maintain this as a team and there is a team already. But it's still too much my setup…</li>
 	  <li class="fragment">There is jenkins.debian.org.</li>
 	  <li class="fragment">Let's go there. This is my outline, please hack it and send patches!</li>
   </ul>
@@ -125,10 +124,20 @@ torbrowser-launcher
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
- 	jenkins.debian.net contributors:
+ 	jenkins.debian.net contributor #1
 	</h2>
         <ul>
-           <li>Mattia Rizzolo, Valerie Young and others: reproducible Debian</li>
+           <li>Mattia Rizzolo, the only other person having an overview about the whole thing. Has access to everything I have.</li>
+        </ul>
+       <img src="images/mattia.png" />
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	jenkins.debian.net contributors
+	</h2>
+        <ul>
+           <li>Valerie Young and others: reproducible Debian</li>
            <li>Helmut Grohne: rebootstrap</li>
            <li>Samuel Thibault: hurd + accessibility</li>
            <li>Steven Chamberlain: kfreebsd</li>
@@ -149,6 +158,7 @@ torbrowser-launcher
         </ul>
       </section>
 
+
       <section data-background="images/debian.jpg" data-background-color="black">
         <h2>Who are you?</h2>
         <ul>
@@ -157,6 +167,16 @@ torbrowser-launcher
       	  <li class="fragment">Who thinks current jenkins is too noisy?</li>
   </ul>
       </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	What is jenkins?
+	</h2>
+        <ul>
+           <li>to me: mostly a cron scheduler with a web UI and notifications.</li>
+       </ul>
+      </section>
+
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
@@ -179,8 +199,8 @@ torbrowser-launcher
         <ul>
           <li>17 machines (16*Debian, 1*FreeBSD, 13*64bit, 4*32bit)<br />
           in 2 datacenters (FKB + FRA)</li>
-          <li>168 cores (148 AMD, 20 Intel) with 498/503 GB RAM</li>
-          <li>2.9/3.1 TB HDD and 1.9/2 TB SDD storage</li>
+          <li>168 cores (144 AMD, 24 Intel) with 498  GB RAM</li>
+          <li>3 TB HDD and 2 TB SDD storage</li>
           <li>no static IP addresses, no idea about traffic (500gb/month?)</li>
           <li class="fragment">2 DCD users: Mattia Rizzolo and me</li>
         </ul>
@@ -190,15 +210,27 @@ torbrowser-launcher
         <h2>
  	 Resources used for reproducibility testing on jenkins.debian.net, by architecture &amp; sponsor
 	</h2>
-	FIXME: total jenkins numbers
         <ul>
           <li>13 amd64 systems, sponsored by Profitbricks</li>
           <li>4 i386 systems, sponsored by Profitbricks</li>
-          <li>22 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
+          <li>26 armhf systems, sponsored by vagrant@d.o, Debian &amp; other donations</li>
           <li>8 arm64 systems, sponsored by codethink.co.uk</li>
         </ul>
       </section>
 
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	about jenkins.debian.net continued…
+	</h2>
+	<ul>
+          <li><a href="https://git.debian.org/git/qa/jenkins.debian.net.git"><code>git clone ssh://git.debian.org/git/qa/jenkins.debian.net.git</code></a></li>
+	  <li>INSTALL, README, job-cfg/*, bin/*</li>
+	  <li>code base grown in 5 years by 40 people…</li>
+	  <li>ansible, builds with sbuild or jenkins-debian-glue, namespaces, you name it, please send patches</li>
+	  <li>views so far were configured manually, but it's now possible with jenkins-job-builder too - please send patches!</li>
+        </ul>
+      </section>
 
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
@@ -207,13 +239,13 @@ torbrowser-launcher
 	</h2>
         <ul class="fragment">
 	<li>
-	 IRC / mail notifications, #debian-qa IRC channel and 11 other channels, more mailinglists
+	 IRC / mail / web notifications, #debian-qa IRC channel and 11 other channels, more mailinglists
 	</li>
 	<li>
 	 Early notifications of problems - though bugs still need to be filed manually
 	</li>
 	<li>
-	 Countless bug reports,	ie 2670 done ftbfs via reproducible… (and 500 open…)
+	 Countless bug reports,	ie 2670 done ftbfs via reproducible… 
 	</li>
         </ul>
       </section>
@@ -232,17 +264,27 @@ torbrowser-launcher
         </ul>
       </section>
 
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	misc debian-qa related jobs:
+	</h2>
+		  <li>orphaned packages without bug</li>
+                  <li>dpkg trigger cycles</li> 
+                  <li>debhelper, debsums, lintian and piuparts are build on git commits in jessie, stretch and unstable</li>
+           <li>multiarch versionskew</li>
+        </ul>
+      </section>
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
         <h2>
  	chroot-installation tests
 	</h2>
         <ul>
-          <li>338 jobs basically running <code>apt install $metapackages</code><br />
-           (gnome, kde, cinnamon, lxde, xfce, qt4, qt5, haskell, developer, debconf-video, debian-edu)</li>
+          <li>453 jobs basically running <code>apt install $metapackages</code><br />
+           (gnome, kde, cinnamon, lxde, xfce, qt4, qt5, haskell, developer, debconf-video, debian-edu, debian-parl, debian-design)</li>
           <li>new installations and upgrades tested in <br />
-           wheezy (98), jessie (147), stretch (153), sid (98)</li>
-          <li>wheezy monthly, jessie weekly, stretch every other day, sid daily</li>
+           jessie (85), stretch (226), buster (182), sid (184)</li>
+          <li>jessie monthly, stretch weekly, buster every other day, sid daily</li>
         </ul>
       </section>
 
@@ -262,6 +304,19 @@ torbrowser-launcher
 
       <section data-background="images/g-i.png" data-background-size="100%">
         &nbsp;
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	lvc = libvirt cucumber
+	</h2>
+        <ul>
+          <li>lvc tests are work in progress by Phil Hands</li>
+	  <li>taken from Tails</li>
+	  <li>now I've heard Tails wants to push us using those to improve the quality of Debian to improve the quality of Tails</li>
+	  <li>not there yet, but they've started to get useful</li>
+	  <li>should fully replace g-i-installation.sh at the end of the year?</li>
+        </ul>
       </section>
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
@@ -304,19 +359,6 @@ torbrowser-launcher
 		</ul>
       </section>
 
-      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
-        <h2>
- 	more debian-qa related jobs:
-	</h2>
-		  <li>orphaned packages without bug</li>
-                  <li>dpkg trigger cycles</li> 
-                  <li>debhelper, debsums, lintian and piuparts are build on git commits in jessie, stretch and unstable</li>
-           <li>multiarch versionskew</li>
-           <li>
-         	reproducible-builds.org - "btw": over 2600 'FTBFS' bugs found and fixed so far, ~400 open…
-           </li>
-        </ul>
-      </section>
 
 
       <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
@@ -324,24 +366,61 @@ torbrowser-launcher
  	reproducible.debian.net / tests.reproducible-builds.org/debian/
 	</h2>
         <ul>
-          <li>created by 357 jobs on jenkins.debian.net</li>
+          <li>created by 483 jobs on jenkins.debian.net</li>
+          <li>we had 151 more jobs but those now run via a systemd service written in shell…/</li>
           <li class="fragment">it's not only about Debian anymore…</li>
           <li class="fragment">though let's rather talk about jenkins.debian.org now…</li>
         </ul>
       </section>
  
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	So, about the to migration jenkins.debian.org
+	</h2>
+        <ul>
+          <li class="fragment">jerea.debian.org is ready and jenkins.debian.org is a CNAME pointing to it - thanks to DSA!</li>
+          <li class="fragment">next: create another small script, to deploy (and only deploy) job-cfg/self.yaml</li>
+          <li class="fragment">then: move on to the next yaml file, eg. piuparts.yaml or whatever. Then: rinse, repeat, until all are moved</li>
+	  <li class="fragment">jenkins.debian.net will become profitbricks-build0 and keep running the actual jobs (and the reproducible webpages) for now…</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	Ways to contribute
+	</h2>
+        <ul>
+	  <li>please file bugs about all the issues jenkins finds</li>
+          <li>please file bugs about all the noise jenkins is doing</li>
+	  <li class="fragment">please send patches</li>
+          <li class="fragment"> we have ressources "for anything": write a useful test - and maintain it - and we will happily run it - and don't worry, noone has a test setup except Phil ;-)</li>
+        </ul>
+      </section>
+
+      <section data-background="images/debian-jenkins.png" data-background-size="10%" data-background-position="90% 10%">
+        <h2>
+ 	Contact us
+	</h2>
+        <ul>
+	  <li>IRC: #debian-qa on irc.oftc.net</li>
+          <li>Bugs: bugs.debian.org/jenkins.debian.org</li>
+	  <li>Lists: jenkins-dev@lists.alioth.debian.org</li>
+        </ul>
+      </section>
+
 
       <section data-background-color="white" data-background="images/rbo.png" data-background-size="25%" data-background-position="90% 10%">
         <h2>Thanks:</h2>
         <p style="text-align: center;">
+ 	  <img src="images/lf.png">
+	  &nbsp; &nbsp;
           <img src="images/cii.png">
-          <br>
-          <img src="images/lf.png">
           <br>
           <img src="images/profitbricks.jpg">
           <br>
+          <img src="images/codethink.png">
+          <br>
           <img src="images/debian_logo.png">
-	FIXME: codethink logo
         </p>
       </section>
 

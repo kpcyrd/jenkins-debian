@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # released under the GPLv=2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

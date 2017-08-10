@@ -134,9 +134,9 @@ update_db_and_html() {
 			   query_db "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# irc+mail notifications for changing status in unstable and experimental
 	if [ "$SUITE" = "unstable" ] || [ "$SUITE" = "experimental" ] ; then
-		if [ "${OLD_STATUS}" = "reproducible" ] && [ "$STATUS" != "depwait" ] && \
-		  ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] ) ; then
-			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : reproducible ➤ ${STATUS}"
+		if ([ "$OLD_STATUS" = "reproducible" ] && ( [ "$STATUS" = "unreproducible" ] || [ "$STATUS" = "FTBFS" ] )) || \
+			([ "$OLD_STATUS" = "unreproducible" ] && [ "$STATUS" = "FTBFS" ] ); then
+			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : ${OLD_STATUS} ➤ ${STATUS}"
 			log_info "$MESSAGE"
 			irc_message debian-reproducible-changes "$MESSAGE"
 		fi

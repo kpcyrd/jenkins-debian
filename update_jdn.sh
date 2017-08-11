@@ -569,7 +569,7 @@ sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/
 [ -f /etc/mailname ] || ( echo $HOSTNAME.debian.net | sudo tee /etc/mailname )
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
-	if [ $BASEDIR/hosts/$HOSTNAME/etc/apache2 -nt $STAMP ] || [ ! -f $STAMP ] ; then
+	if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/apache2 -nt $STAMP ]  ; then
 		if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 			sudo a2enmod proxy
 			sudo a2enmod proxy_http
@@ -594,7 +594,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	fi
 fi
 
-if [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] || [ ! -f $STAMP ] ; then
+if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] ; then
 	cd /etc/munin/plugins
 	sudo rm -f postfix_* open_inodes interrupts irqstats threads proc_pri vmstat if_err_* exim_* netstat fw_forwarded_local fw_packets forks open_files users nfs* iostat_ios ntp* 2>/dev/null
 	case $HOSTNAME in

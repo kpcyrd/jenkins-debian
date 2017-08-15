@@ -287,9 +287,10 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
 	# ignore jadetex because #871021
 	# ignore dh-systemd because #871312
+	# ignore libpcap-dev because #872265
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev)" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo

@@ -288,9 +288,11 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore jadetex because #871021
 	# ignore dh-systemd because #871312
 	# ignore libpcap-dev because #872265
+	# ignore "dummy transitional library" because it really is what it says it is…
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
 		| egrep -v "(jadetex|dh-systemd|libpcap-dev)" \
+		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then
 		echo

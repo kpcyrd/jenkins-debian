@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
-#         © 2015 Mattia Rizzolo <mattia@mapreri.org>
+#         © 2015-2017 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -47,8 +47,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		ln -s -f "$BACKUPFILE.xz" $BASE/reproducible.sql.xz
 
 		# recreate documentation of database
-		SCHEMAFILE="$BASE/reproducibledb.html"
-		postgresql_autodoc -d $PGDATABASE -t html -f "$SCHEMAFILE"
+		postgresql_autodoc -d $PGDATABASE -t html -f "$BASE/reproducibledb"
 	fi
 fi
 

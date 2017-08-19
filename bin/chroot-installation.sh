@@ -288,13 +288,14 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore jadetex because #871021
 	# ignore dh-systemd because #871312
 	# ignore libpcap-dev because #872265
+	# ignore transfig because #872627
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev
 	# - texlive-htmlxml
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

@@ -25,6 +25,7 @@ echo "Sleeping $SLEEP seconds to randomize start times and parallel runs."
 sleep $SLEEP
 
 export CHROOT_TARGET=$(mktemp -d -p /chroots/ chroot-installation-$1.XXXXXXXXX)
+sudo chmod +x $CHROOT_TARGET # workaround #844220 / #872812
 export TMPFILE=$(mktemp -u)
 export CTMPFILE=$CHROOT_TARGET/$TMPFILE
 export TMPLOG=$(mktemp)

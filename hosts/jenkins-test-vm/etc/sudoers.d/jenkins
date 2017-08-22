@@ -4,6 +4,7 @@ jenkins ALL=  \
 	/usr/bin/tee -a /schroots/*, \
 	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \
 	/bin/chmod +x /schroots/*, \
+	/bin/chmod +x /chroots/*, \
 	/usr/sbin/chroot /schroots/*, \
 	/usr/sbin/chroot /chroots/*, \
 	/usr/sbin/chroot /media/*, \

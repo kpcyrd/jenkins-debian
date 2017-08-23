@@ -27,7 +27,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * short intro, why are we here (aka: say hi)
 * jenkins.d.n status
 * jenkins.d.o migration next steps (see below for details)
-* jenkins sprint in 2017? in october maybe?
+* jenkins sprint in spring 2018? or before or after RWS3
 * AOB
 * thanks to profitbricks for hosting
 
@@ -42,7 +42,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * 2017-02-22: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-02-22-18.04.html
 * 2017-03-22: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-03-22-18.01.html
 * 2017-04-26: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-04-26-18.14.html
-* 2017-05-24: next meeting!
+* 2017-08-21: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-08-23-18.30.html
 
 == move this setup to jenkins.d.o
 

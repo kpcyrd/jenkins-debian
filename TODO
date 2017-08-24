@@ -43,42 +43,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * 2017-03-22: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-03-22-18.01.html
 * 2017-04-26: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-04-26-18.14.html
 * 2017-08-21: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-08-23-18.30.html
-
-== move this setup to jenkins.d.o
-
-----
-
- SWITCH TO jenkins.debian.org !! 
-
- Start doing that… first with a few jobs and then… more… and then we are done and have a better & cleaner setup.
-
- see below for status
-
-----
-
-The idea is to run a jenkins.d.o host, which is maintained by DSA, but we are maintaining jenkins on it (so we can install any plugins we like etc). then we also setup several jenkins nodes, in the long term probably/maybe also maintained by DSA, on which we can use sudo as we need it.
-
-=== next steps for jenkins.d.o migration
-
-* The machine jerea.debian.org is setup, please go to https://jenkins.debian.org
-* login using link:https://sso.debian.org[Debian SSO]
-* Jenkins and plugins are installed…
-* update_jdn.sh needs to be adapted for this new host… and for new path /srv/jenkins.debian.org/ )
-** it's probably simpler to rewrite update_jdo.sh from scratch and copy 5 lines from update_jdn…
-* then start with migrating a single job: self_maintenance
-** add pb7 as a node to jenkins.d.o
-** add fdroid job to jenkins.d.o 
-* migrate all the jobs
-** add all the nodes as nodes to jenkins.d.o
-** disable job execution on jenkins.d.net(!)
-** deploy this configuration on jenkins.d.o…(!) (we)
-*** make update_jdn.sh warn if things are missing on .debian.org systems
-*** as we dont want irc nor mail notifications for this during the migration, we should disable those with an easily revertable commit before actual deployment
-*** then rename jenkins.debian.net to profitbricks-build0-amd64 - and switch all the jobs which used to run on the master node on that node, which already has the right sudoers, usercontent/reproducible/ and reproducible.db
-*** some authorized_keys will also need to be adopted for the change of IP address from jenkins.d.n to jenkins.d.o
-*** redirect jenkins.debian.net to jenkins.debian.org - tests.reproducible-builds.org will stay where it is.
-* party!
-
+* next: 2017-09-26 18 UTC
 
 == General ToDo
 

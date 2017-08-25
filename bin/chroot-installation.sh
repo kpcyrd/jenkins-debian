@@ -293,13 +293,16 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore myspell-it because #872706
 	# ignore python-gobject because #872707
 	# ignore ttf-dejavu* because #872809
+	# ignore libav-tools because #873182
+	# ignnore netcat because #873184
+	# ignore gnupg2 because #873186
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev
 	# - texlive-htmlxml
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

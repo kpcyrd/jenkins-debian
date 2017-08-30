@@ -53,6 +53,7 @@ all_targets = [
    'education-desktop-gnome',
    'education-desktop-kde',
    'education-desktop-lxde',
+   'education-desktop-lxqt',
    'education-desktop-mate',
    'education-desktop-other',
    'education-desktop-xfce',
@@ -80,11 +81,13 @@ all_targets = [
    'education-music',
    'education-networked',
    'education-physics',
+   'education-primaryschool',
    'education-services',
    'education-standalone',
    'education-thin-client',
    'education-thin-client-server',
    'education-roaming-workstation',
+   'education-video',
    'education-workstation',
    'parl-desktop-eu',
    'parl-desktop-strict',
@@ -103,10 +106,13 @@ def is_target_in_distro(distro, target):
          if distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
              return False
          # education-thin-client-server is obsolete since stretch…
-         elif distro in ('sid', 'buster') and target == 'education-thin-client-server':
+         elif distro in ('sid', 'buster', 'stretch') and target == 'education-thin-client-server':
              return False
          # education-lang-*, parl-desktop* and design-desktop* packages only exist since stretch
          elif distro in ('jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
+             return False
+         # education-desktop-lxqt, education-primaryschool and education-video packages only exist since buster
+         elif distro in ('jessie', 'stretch') and target in ('education-desktop-lxqt', 'education-primaryschool', 'education-video'):
              return False
          return True
 

@@ -296,14 +296,17 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore libav-tools because #873182
 	# ignnore netcat because #873184
 	# ignore gnupg2 because #873186
+	# ignore libkf5akonadicore-bin because #873932
+	# ignore qml-module-org-kde-extensionplugin because #873933
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev
 	# - texlive-htmlxml
+	# - gnome-user-guide
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2)" \
-		| egrep -v "(libidn2-0-dev|texlive-htmlxml)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin)" \
+		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then

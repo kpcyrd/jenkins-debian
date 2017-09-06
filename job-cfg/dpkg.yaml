@@ -34,7 +34,7 @@
 
 - job-template:
     defaults: dpkg
-    name: '{name}_stretch_find_trigger_cycles'
+    name: '{name}_buster_find_trigger_cycles'
 
 - job-template:
     defaults: dpkg
@@ -43,10 +43,10 @@
 - project:
     name: dpkg
     jobs:
-       - '{name}_stretch_find_trigger_cycles':
-           my_description: 'Find dpkg trigger cycles in Debian stretch.'
+       - '{name}_buster_find_trigger_cycles':
+           my_description: 'Find dpkg trigger cycles in Debian buster.'
            my_time: '0 10 * * 2'
-           my_shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh stretch'
+           my_shell: '/srv/jenkins/bin/find_dpkg_trigger_cycles.sh buster'
        - '{name}_sid_find_trigger_cycles':
            my_description: 'Find dpkg trigger cycles in Debian sid.'
            my_time: '0 12 * * 2'

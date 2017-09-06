@@ -35,11 +35,11 @@
 
 - job-template:
     defaults: udd
-    name: '{name}_jessie_multiarch_versionskew'
+    name: '{name}_stretch_multiarch_versionskew'
 
 - job-template:
     defaults: udd
-    name: '{name}_stretch_multiarch_versionskew'
+    name: '{name}_buster_multiarch_versionskew'
 
 - job-template:
     defaults: udd
@@ -52,15 +52,15 @@
 - project:
     name: udd
     jobs:
-        - '{name}_jessie_multiarch_versionskew':
-           my_time: '1 8 1 * *'
-           my_params: 'multiarch_versionskew jessie'
-           my_description: 'Detect multi-arch versions skews in jessie.'
-           my_logparser: 'true'
         - '{name}_stretch_multiarch_versionskew':
-           my_time: '1 8 * * 1'
+           my_time: '1 8 1 * *'
            my_params: 'multiarch_versionskew stretch'
            my_description: 'Detect multi-arch versions skews in stretch.'
+           my_logparser: 'true'
+        - '{name}_buster_multiarch_versionskew':
+           my_time: '1 8 * * 1'
+           my_params: 'multiarch_versionskew buster'
+           my_description: 'Detect multi-arch versions skews in buster.'
            my_logparser: 'true'
         - '{name}_sid_multiarch_versionskew':
            my_time: '0 8 * * *'

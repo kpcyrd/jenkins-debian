@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -12,7 +12,7 @@ common_init "$@"
 
 # we only generate the meta pkg sets on amd64
 # (else this script would need a lot of changes for little gain)
-# but these are source package sets so there is a difference only very rarely anyway
+# but these are source package sets so differences happen only very rarely anyway
 ARCH=amd64
 
 # everything should be ok…

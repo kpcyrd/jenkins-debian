@@ -171,7 +171,12 @@ fi
 if [ -f debian/control ] ; then
 	cat debian/control
 	# install build-depends
-	mk-build-deps -ir
+	if [ -z "$BACKPORTS" ] ; then
+		mk-build-deps -ir
+	else
+		# use default mk-build-deps tool but configure it to use backports
+		mk-build-deps -ir -t "apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -t $DISTRO-backports"
+	fi
 fi
 EOF
 	fi

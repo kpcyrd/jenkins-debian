@@ -1,5 +1,5 @@
 - defaults:
-    name: piuparts
+    name: piuparts-tests
     project-type: freestyle
     properties:
       - sidebar:
@@ -25,145 +25,91 @@
           url: 'git://anonscm.debian.org/piuparts/piuparts.git'
           branches:
             - develop
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+      - trigger:
+          project: '{my_trigger}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- defaults:
+    name: piuparts-builds
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/qa.debian.org/
+          text: Jobs for Debian QA related packages
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/piuparts.yaml">piuparts.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 20
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    scm:
+      - git:
+          url: 'git://anonscm.debian.org/piuparts/piuparts.git'
+          branches:
+            - develop
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+      - archive:
+          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
+          latest-only: true
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+    builders:
+      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-tests
     name: '{name}_testsuite_jessie'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-tests
     name: '{name}_testsuite_stretch'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-tests
     name: '{name}_testsuite_buster'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-tests
     name: '{name}_testsuite_sid'
-    triggers:
-      - pollscm:
-          cron: '*/6 * * * *'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-builds
     name: '{name}_build_jessie'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - archive:
-          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest-only: true
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-builds
     name: '{name}_build_stretch'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - archive:
-          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest-only: true
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-builds
     name: '{name}_build_buster'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
-      - archive:
-          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest-only: true
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
-    defaults: piuparts
+    defaults: piuparts-builds
     name: '{name}_build_sid'
-    publishers:
-      - email:
-          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
-      - trigger:
-          project: '{my_trigger}'
-      - archive:
-          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
-          latest-only: true
-      - naginator:
-          progressive-delay-increment: 5
-          progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-    builders:
-      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - project:
     name: piuparts

@@ -337,6 +337,7 @@ update_pkg_set_specific() {
 				packages_list_to_deb822
 				convert_from_deb822_into_source_packages_only
 			else
+				rm $TMPFILE
 				MESSAGE="Warning: could not download grml's latest dpkg.selections file, skipping pkg set..."
 				irc_message debian-reproducible $MESSAGE
 				ABORT=true
@@ -351,6 +352,7 @@ update_pkg_set_specific() {
 				tails_build_manifest_to_deb822 "$TMPFILE" "$PACKAGES"
 				convert_from_deb822_into_source_packages_only
 			else
+				rm $TMPFILE
 				MESSAGE="Warning: could not download tail's latest packages file(s), skipping tails pkg set..."
 				irc_message debian-reproducible $MESSAGE
 				ABORT=true

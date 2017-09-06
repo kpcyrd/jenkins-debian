@@ -360,7 +360,7 @@ update_pkg_set_specific() {
 			;;
 		subgraph_OS)
 			# installed by Subgraph OS
-			# one day we will get a proper data provider from Subgraph OSA...
+			# one day we will get a proper data provider from Subgraph OS...
 			# (so far it was a manual "dpkg -l")
 			cat /srv/jenkins/bin/reproducible_installed_by_subgraphos > $TMPFILE
 			packages_list_to_deb822

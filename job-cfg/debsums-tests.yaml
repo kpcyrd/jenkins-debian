@@ -46,6 +46,20 @@
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org pkg-perl-maintainers@lists.alioth.debian.org'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+      - trigger:
+          project: '{my_trigger}'
+
+- job-template:
+    defaults: debsums-tests
+    name: '{name}_buster'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org pkg-perl-maintainers@lists.alioth.debian.org'
       - trigger:
           project: '{my_trigger}'
       - naginator:
@@ -78,6 +92,11 @@
             my_distro: 'sid'
             my_shell: 'timeout 5m prove -v'
             my_description: 'Debian/Debsums testsuite running on sid.'
+            my_trigger: 'debsums-tests_buster'
+        - '{name}_buster':
+            my_distro: 'buster'
+            my_shell: 'timeout 5m prove -v'
+            my_description: 'Debian/Debsums testsuite running on buster.'
             my_trigger: 'debsums-tests_stretch'
         - '{name}_stretch':
             my_distro: 'stretch'

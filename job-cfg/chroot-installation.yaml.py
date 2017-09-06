@@ -260,6 +260,7 @@ data.append(
                                           {   'email-ext': {   'attach-build-log': False,
                                                                'body': 'See $BUILD_URL/console or just $BUILD_URL for more information.',
                                                                'first-failure': True,
+                                                               'failure': False,
                                                                'fixed': True,
                                                                'recipients': '{my_recipients}',
                                                                'subject': '$BUILD_STATUS: $JOB_NAME/$BUILD_NUMBER'}},

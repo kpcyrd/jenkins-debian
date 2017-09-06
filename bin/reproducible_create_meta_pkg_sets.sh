@@ -481,6 +481,9 @@ for SUITE in $SUITES ; do
 	if [ "$SUITE" = "experimental" ] ; then
 		# no pkg sets in experimental
 		continue
+	elif [ "$SUITE" = "stretch" ] ; then
+		# let's not update the stretch pkg sets anymore
+		continue
 	fi
 	echo "============================================================================="
 	echo "$(date -u) - Creating meta package sets for $SUITE now."

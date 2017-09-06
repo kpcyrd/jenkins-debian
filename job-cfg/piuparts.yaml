@@ -28,7 +28,7 @@
 
 - job-template:
     defaults: piuparts
-    name: '{name}_testsuite_jessie'
+    name: '{name}_testsuite_stretch'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
@@ -44,7 +44,7 @@
 
 - job-template:
     defaults: piuparts
-    name: '{name}_testsuite_stretch'
+    name: '{name}_testsuite_buster'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
@@ -79,7 +79,7 @@
 
 - job-template:
     defaults: piuparts
-    name: '{name}_build_jessie'
+    name: '{name}_build_stretch'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
@@ -96,7 +96,7 @@
 
 - job-template:
     defaults: piuparts
-    name: '{name}_build_stretch'
+    name: '{name}_build_buster'
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
@@ -139,29 +139,29 @@
             my_distro: 'sid'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on sid.'
-            my_trigger: 'piuparts_testsuite_stretch, piuparts_build_sid'
+            my_trigger: 'piuparts_testsuite_buster, piuparts_build_sid'
+        - '{name}_testsuite_buster':
+            my_distro: 'buster'
+            my_shell: 'make check'
+            my_description: 'run testsuite from piuparts develop branch on buster.'
+            my_trigger: 'piuparts_testsuite_stretch'
         - '{name}_testsuite_stretch':
             my_distro: 'stretch'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on stretch.'
-            my_trigger: 'piuparts_testsuite_jessie'
-        - '{name}_testsuite_jessie':
-            my_distro: 'jessie'
-            my_shell: 'make check'
-            my_description: 'run testsuite from piuparts develop branch on jessie.'
             my_trigger: ''
         - '{name}_build_sid':
             my_distro: 'sid'
             my_shell: 'debuild -uc -us'
             my_description: 'build the piuparts develop branch on sid.'
+            my_trigger: 'piuparts_build_buster'
+        - '{name}_build_buster':
+            my_distro: 'buster'
+            my_shell: 'debuild -uc -us'
+            my_description: 'build the piuparts develop branch on buster.'
             my_trigger: 'piuparts_build_stretch'
         - '{name}_build_stretch':
             my_distro: 'stretch'
             my_shell: 'debuild -uc -us'
             my_description: 'build the piuparts develop branch on stretch.'
-            my_trigger: 'piuparts_build_jessie'
-        - '{name}_build_jessie':
-            my_distro: 'jessie'
-            my_shell: 'debuild -uc -us'
-            my_description: 'build the piuparts develop branch on jessie.'
 

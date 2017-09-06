@@ -28,6 +28,22 @@
 
 - job-template:
     defaults: piuparts
+    name: '{name}_testsuite_jessie'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+      - trigger:
+          project: '{my_trigger}'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+    builders:
+      - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: piuparts
     name: '{name}_testsuite_stretch'
     publishers:
       - email:
@@ -76,6 +92,23 @@
           regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     builders:
       - shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
+
+- job-template:
+    defaults: piuparts
+    name: '{name}_build_jessie'
+    publishers:
+      - email:
+          recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
+      - archive:
+          artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
+          latest-only: true
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+    builders:
+      - shell: 'export ARTIFACTS=true ; /srv/jenkins/bin/chroot-run.sh {my_distro} {my_shell}'
 
 - job-template:
     defaults: piuparts
@@ -149,6 +182,11 @@
             my_distro: 'stretch'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on stretch.'
+            my_trigger: 'piuparts_testsuite_jessie'
+        - '{name}_testsuite_jessie':
+            my_distro: 'jessie backports'
+            my_shell: 'make check'
+            my_description: 'run testsuite from piuparts develop branch on jessie with backports enabled.'
             my_trigger: ''
         - '{name}_build_sid':
             my_distro: 'sid'
@@ -164,4 +202,8 @@
             my_distro: 'stretch'
             my_shell: 'debuild -uc -us'
             my_description: 'build the piuparts develop branch on stretch.'
+        - '{name}_build_jessie':
+            my_distro: 'jessie backports'
+            my_shell: 'debuild -uc -us'
+            my_description: 'build the piuparts develop branch on jessie with backports enabled.'
 

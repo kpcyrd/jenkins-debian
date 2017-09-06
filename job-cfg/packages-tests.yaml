@@ -96,7 +96,8 @@
       - sid: *distro_defaults_sid
       - buster: *distro_defaults_buster
       - stretch: *distro_defaults_stretch
-      - "jessie backports": *distro_defaults_jessie
+      - jessie:
+          my_disabled: true
     jobs:
       - simple
 

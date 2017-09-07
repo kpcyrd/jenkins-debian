@@ -286,21 +286,22 @@ fi
 #
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
-	# ignore jadetex because #871021
-	# ignore dh-systemd because #871312
-	# ignore libpcap-dev because #872265
-	# ignore transfig because #872627
-	# ignore myspell-it because #872706
-	# ignore python-gobject because #872707
-	# ignore ttf-dejavu* because #872809
-	# ignore libav-tools because #873182
-	# ignnore netcat because #873184
-	# ignore gnupg2 because #873186
-	# ignore libkf5akonadicore-bin because #873932
-	# ignore qml-module-org-kde-extensionplugin because #873933
-	# ignore myspell-ca because #874556
-	# ignore myspell-en-gb because #874557
-	# ignore myspell-sv-se because #874558
+	# ignore 
+	# - jadetex because #871021
+	# - dh-systemd because #871312
+	# - libpcap-dev because #872265
+	# - transfig because #872627
+	# - myspell-it because #872706
+	# - python-gobject because #872707
+	# - ttf-dejavu* because #872809
+	# - libav-tools because #873182
+	# - netcat because #873184
+	# - gnupg2 because #873186
+	# - libkf5akonadicore-bin because #873932
+	# - qml-module-org-kde-extensionplugin because #873933
+	# - myspell-ca because #874556
+	# - myspell-en-gb because #874557
+	# - myspell-sv-se because #874558
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev	2.0.2-3

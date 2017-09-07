@@ -269,7 +269,7 @@ data.append(
                                           {   'naginator': {   'progressive-delay-increment': 5,
                                                                'progressive-delay-maximum': 15,
                                                                'max-failed-builds': 3,
-                                                               'regular-expression': '^E:     Couldn.t     download     .*/Packages'}}],
+                                                               'regular-expression': '^E: Couldn.t download .*/Packages'}}],
                         'triggers': [{   'timed': '{my_time}'}],
                         'wrappers': [{   'timeout': {   'timeout': 360}}]}})
 data.append(

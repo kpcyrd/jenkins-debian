@@ -298,6 +298,9 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore gnupg2 because #873186
 	# ignore libkf5akonadicore-bin because #873932
 	# ignore qml-module-org-kde-extensionplugin because #873933
+	# ignore myspell-ca because #874556
+	# ignore myspell-en-gb because #874557
+	# ignore myspell-sv-se because #874558
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev	2.0.2-3
@@ -308,7 +311,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - libgles2-mesa	17.2.0-2
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

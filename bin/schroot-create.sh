@@ -69,6 +69,7 @@ if [ -z "$SCHROOT_TARGET" ]; then
 	echo "Could not create a directory to create the chroot in, aborting."
 	exit 1
 fi
+sudo chmod +x $SCHROOT_TARGET	# workaround #844220 / #872812
 
 #
 # create script to add key for reproducible repo

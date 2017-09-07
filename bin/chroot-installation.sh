@@ -300,9 +300,9 @@ if [ "$DISTRO" = "sid" ] ; then
 	# ignore qml-module-org-kde-extensionplugin because #873933
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
-	# - libidn2-0-dev
-	# - texlive-htmlxml
-	# - gnome-user-guide
+	# - libidn2-0-dev	2.0.2-3
+	# - texlive-htmlxml	2017.20170818-1
+	# - gnome-user-guide	3.25.90-2
 	# - libegl1-mesa	17.2.0-2
 	# - libgl1-mesa-glx	17.2.0-2
 	# - libgles2-mesa	17.2.0-2

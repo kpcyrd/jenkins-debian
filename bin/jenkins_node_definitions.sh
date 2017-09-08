@@ -32,6 +32,7 @@ hb0-armhf-rb.debian.net
 jtk1b-armhf-rb.debian.net
 jtx1a-armhf-rb.debian.net
 jtx1b-armhf-rb.debian.net
+jtx1c-armhf-rb.debian.net
 odu3a-armhf-rb.debian.net
 odxu4-armhf-rb.debian.net
 odxu4b-armhf-rb.debian.net
@@ -135,6 +136,9 @@ get_node_ssh_port() {
 	    ;;
 	  jtx1b-armhf-rb.debian.net)
 	    PORT=2253
+	    ;;
+	  jtx1c-armhf-rb.debian.net)
+	    PORT=2254
 	    ;;
 	  p64b-armhf-rb.debian.net)
 	    PORT=2247

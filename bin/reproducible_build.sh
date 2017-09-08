@@ -66,9 +66,6 @@ handle_race_condition() {
 		SAVE_ARTIFACTS=0
 		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	fi
-	# cleanup
-	cd
-	rm -r $TMPDIR || true
 	exit 0
 }
 

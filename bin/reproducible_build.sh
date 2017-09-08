@@ -86,13 +86,16 @@ save_artifacts() {
 		echo "</p>" >> $HEADER
 		chmod 644 $HEADER
 		# irc message
-		#if [ ! -z "$NOTIFY" ] ; then
-		#	local MESSAGE="Artifacts for ${SRCPACKAGE}, $STATUS in ${SUITE}/${ARCH}: $URL"
-		#	if [ "$NOTIFY" = "diffoscope" ] ; then
-		#		MESSAGE="$MESSAGE (error running $DIFFOSCOPE)"
-		#	fi
-		#	irc_message debian-reproducible "$MESSAGE"
-		#fi
+		if [ ! -z "$NOTIFY" ] ; then
+			local MESSAGE="Artifacts for ${SRCPACKAGE}, $STATUS in ${SUITE}/${ARCH}: $URL"
+			if [ "$NOTIFY" = "diffoscope" ] ; then
+				irc_message debian-reproducible-changes "$MESSAGE (error running $DIFFOSCOPE)"
+				MESSAGE="$MESSAGE (error running $DIFFOSCOPE)"
+			else
+				# somebody explicitly asked for artifacts, so give them the artifacts
+				irc_message debian-reproducible "$MESSAGE"
+			fi
+		fi
 }
 
 cleanup_all() {

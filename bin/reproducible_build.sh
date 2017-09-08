@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
-#         © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
+#         © 2015-2017 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -69,7 +69,6 @@ handle_race_condition() {
 	# cleanup
 	cd
 	rm -r $TMPDIR || true
-	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
 
@@ -333,7 +332,6 @@ handle_env_changes() {
 	MESSAGE="$(date -u ) - ${BUILD_URL}console.log encountered a problem: $1"
 	echo -e "$MESSAGE" | tee -a /var/log/jenkins/reproducible-env-changes.log
 	# no need to slow down
-	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
 
@@ -343,7 +341,6 @@ handle_remote_error() {
 	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
 	echo "Sleeping 5m before aborting the job."
 	sleep 5m
-	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
 
@@ -354,7 +351,6 @@ handle_enospace() {
 	echo "$MESSAGE" | mail -s "$JOB on $1 ran into diskspace problems" qa-jenkins-scm@lists.alioth.debian.org
 	echo "Sleeping 60m before aborting the job."
 	sleep 60m
-	exec /srv/jenkins/bin/abort.sh
 	exit 0
 }
 
@@ -736,7 +732,6 @@ check_node_is_up() {
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		unregister_build
 		sleep ${SLEEPTIME}.1337m
-		exec /srv/jenkins/bin/abort.sh
 	fi
 	set -e
 }

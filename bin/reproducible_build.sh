@@ -101,17 +101,16 @@ save_artifacts() {
 cleanup_all() {
 	echo "Starting cleanup."
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
-		save_artifacts
-	elif [ "$NOTIFY" = "2" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
+		save_artifacts  # this will also notify IRC as needed
+	elif [ "$NOTIFY" = "2" ] ; then
 		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
-	elif [ "$NOTIFY" = "1" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
+	elif [ "$NOTIFY" = "1" ] ; then
 		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
-	elif [ ! -z "$NOTIFY" ] && [ "$SAVE_ARTIFACTS" = "0" ] ; then
-		if [ "$NOTIFY" = "diffoscope" ] ; then
+	elif [ "$NOTIFY" = "diffoscope" ] ; then
 			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
-		else
-			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
-		fi
+	elif [ ! -z "$NOTIFY" ] ; then
+		# a weird value of $NOTIFY that we don't know about
+		irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
 	fi
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "master" ] ; then

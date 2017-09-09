@@ -112,6 +112,9 @@ def is_target_in_distro(distro, target):
          # education-services is obsolete since buster…
          elif distro in ('sid', 'buster') and target == 'education-services':
              return False
+         # lxqt is only available since stretch
+         elif distro in ('jessie') and target == 'lxqt':
+             return False
          # education-lang-*, parl-desktop* and design-desktop* packages only exist since stretch
          elif distro in ('jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
              return False

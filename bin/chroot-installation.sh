@@ -217,7 +217,7 @@ esac
 bootstrap $DISTRO
 
 if [ "$2" != "" ] ; then
-	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs"
+	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde lxqt vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs"
 	case $2 in
 		none)		;;
 		gnome)		install_packages gnome gnome desktop-base
@@ -231,6 +231,8 @@ if [ "$2" != "" ] ; then
 		xfce)		install_packages xfce xfce4 desktop-base
 				;;
 		lxde)		install_packages lxde lxde desktop-base
+				;;
+		lxqt)		install_packages lxqt lxqt desktop-base
 				;;
 		qt4)		install_binary_packages qt4 qt4-x11 qtwebkit
 				;;

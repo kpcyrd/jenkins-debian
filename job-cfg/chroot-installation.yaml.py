@@ -108,6 +108,9 @@ def is_target_in_distro(distro, target):
          # education-thin-client-server is obsolete since stretch…
          elif distro in ('sid', 'buster', 'stretch') and target == 'education-thin-client-server':
              return False
+         # education-services is obsolete since buster…
+         elif distro in ('sid', 'buster') and target == 'education-services':
+             return False
          # education-lang-*, parl-desktop* and design-desktop* packages only exist since stretch
          elif distro in ('jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
              return False

@@ -294,6 +294,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - libpcap-dev because #872265
 	# - transfig because #872627
 	# - myspell-it because #872706
+	# - myspell-sl because #872706
 	# - python-gobject because #872707
 	# - ttf-dejavu* because #872809
 	# - libav-tools because #873182
@@ -315,7 +316,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - iceweasel
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

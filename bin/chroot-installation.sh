@@ -57,7 +57,7 @@ execute_ctmpfile() {
 	(sudo chroot $CHROOT_TARGET $TMPFILE 2>&1 | tee $TMPLOG) || true
 	RESULT=$(grep "xxxxxSUCCESSxxxxx" $TMPLOG || true)
 	if [ -z "$RESULT" ] ; then
-		RESULT=$(egrep "Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)" $TMPLOG || true)
+		RESULT=$(egrep "Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable|Hash Sum mismatch)" $TMPLOG || true)
 		if [ ! -z "$RESULT" ] ; then
 			echo
 			echo "$(date -u) - Warning: Network problem detected."

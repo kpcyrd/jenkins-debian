@@ -258,7 +258,7 @@ if [ "$2" != "" ] ; then
 					;;
 				esac
 				;;
-		education-lang-(da|he|ja|no|zh-tw))	install_packages "Debian Edu task" $2 $2-desktop
+		education-lang-da|education-lang-he|education-lang-ja|education-lang-no|education-lang-zh-tw)	install_packages "Debian Edu task" $2 $2-desktop
 				;;
 		education-lang-*)	install_packages "Debian Edu task" $2
 				;;

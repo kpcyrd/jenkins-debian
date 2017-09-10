@@ -318,10 +318,12 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - libgl1-mesa-glx	17.2.0-2
 	# - libgles2-mesa	17.2.0-2
 	# - iceweasel
+	# - iceowl-l10n-zh-tw
+	# - texlive-generic-recommended 	2017.20170818-1
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
 		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome)" \
-		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel)" \
+		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel|texlive-generic-recommended|iceowl-l10n-zh-tw)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE
 	if [ -s $TMPFILE ] ; then

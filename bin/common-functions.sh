@@ -52,6 +52,10 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	# abort certain jobs if we know they will fail due to certain bugs…
 	BLOCKER=848422
 	case $JOB_NAME in
+		chroot-installation_sid_install_design-desktop-graphics)
+			abort_if_bug_is_still_open 869155 ;;
+		chroot-installation_sid_install_parl-desktop-world)
+			abort_if_bug_is_still_open 864947 ;;
 		#lintian-tests_sid)
 		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#haskell-package-plan)

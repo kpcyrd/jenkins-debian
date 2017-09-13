@@ -179,9 +179,12 @@ diff_copy_buildlogs() {
 	if [ -f b1/build.log ] ; then
 		if [ -f b2/build.log ] ; then
 			printf "Diff of the two buildlogs:\n\n--\n" | tee -a $DIFF
-			diff -u b1/build.log b2/build.log | tee -a $DIFF
+			LOCALDIFFTIMEOUT="30m"
+			timeout $LOCALDIFFTIMEOUT diff -u b1/build.log b2/build.log | tee -a $DIFF
 			if [ ${PIPESTATUS[0]} -eq 0 ] ; then
 				echo "The two build logs are identical! \o/" | tee -a $DIFF
+			elif [ ${PIPESTATUS[0]} -eq 124 ] ; then
+				echo "Diffing the two build logs ran into timeout after $LOCALDIFFTIMEOUT, sorry." | tee -a $DIFF
 			fi
 			echo -e "\nCompressing the 2nd log..."
 			gzip -9vn $DIFF

@@ -25,6 +25,7 @@ ok /gbp:warning: Pristine-tar branch "pristine-tar" not found/
 ok /perl: warning: Please check that your locale settings:/
 ok /perl: warning: Falling back to the standard locale/
 ok /perl: warning: Setting locale failed./
+ok /W: .+: debian-news-entry-has-strange-distribution UNRELEASED/
 
 # suppress warnings from commit messages
 ok /HEAD is now at .+/

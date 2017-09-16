@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Copyright 2017 Holger Levsen
+# released under the GPLv=2
+#
+
+TMPFILE=`mktemp`
+cat >> $TMPFILE <<- EOF
+
+user jenkins.debian.org@packages.debian.org
+
+usercategory Tests
+ * Tests
+   + uncategorized [0:]
+   + general [1:tag=general]
+   + d-i [2:tag=d-i]
+   + reproducible [3:tag=reproducible]
+   + trigger-cycles [4:tag=trigger-cycles]
+   + multiarch [4:tag=multiarch]
+
+# tweak the default "status" category
+usercategory new-status [hidden]
+ * Status [pending=]
+   + Patch Available [0:pending+tag=patch]
+   + outstanding [1:pending]
+   + confirmed [2:pending+tag=confirmed]
+   + moreinfo [3:pending+tag=moreinfo]
+   + forwarded [4:pending+tag=forwarded]
+   + wontfix [5:pending+tag=wontfix]
+   + Fixed - Pending Upload [6:pending-fixed]
+   + Resolved [9:done]
+   + Unhandled pending state []
+
+# override the default view
+usercategory normal
+ * new-status
+ * severity
+ * tool
+
+# this is reachable adding ';odering=old-normal' to the bts url
+usercategory old-normal
+ * status
+ * severity
+ * classification
+
+EOF
+mutt -s "usercategories for jenkins.debian.org" -i $TMPFILE control@bugs.debian.org -c qa-jenkins-dev@lists.alioth.debian.org
+rm $TMPFILE

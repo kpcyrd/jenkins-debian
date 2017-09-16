@@ -259,7 +259,7 @@
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
                 - 'maintenance':
-                    my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+                    my_description: 'Do some maintenance: check for old files and directories, do backups, update pbuilder and schroots, etc.'
                     my_timed: '5 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
             my_shell: '/srv/jenkins/bin/reproducible_maintenance.sh'
             my_hname:
@@ -278,7 +278,7 @@
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
                 - 'maintenance':
-                    my_description: 'Do some maintenance: check for old directories laying around, do backups, update pbuilder and schroots, etc.'
+                    my_description: 'Do some maintenance: check for old files and directories, do backups, update pbuilder and schroots, etc.'
                     my_timed: '5 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
             my_hname:
                 - 'bbx15':          { my_arch: 'armhf' }

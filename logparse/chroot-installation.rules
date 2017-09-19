@@ -2,5 +2,7 @@
 
 ok /not really/
 
+warning /Warning: aborting the job because of bug because/
+
 warning /Warning: Transitional packages found:/
 warning /Warning: It seems .+ has been released.+/

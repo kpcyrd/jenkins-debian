@@ -25,7 +25,7 @@ abort_if_bug_is_still_open() {
 			echo "########################################################################"
 			echo
 			echo
-			echo
+			echo "Warning: aborting the job because of bug because #$1"
 			echo
 			exec /srv/jenkins/bin/abort.sh
 			exit 0

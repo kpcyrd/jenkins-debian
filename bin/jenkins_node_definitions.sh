@@ -28,6 +28,7 @@ codethink-sled16-arm64.debian.net
 ff2a-armhf-rb.debian.net
 ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
+ff64a-armhf-rb.debian.net
 hb0-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
 jtk1b-armhf-rb.debian.net

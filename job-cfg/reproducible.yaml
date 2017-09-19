@@ -290,6 +290,7 @@
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
+                - 'ff64a':          { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'jtk1a':          { my_arch: 'armhf' }
                 - 'jtk1b':          { my_arch: 'armhf' }
@@ -345,6 +346,7 @@
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
+                - 'ff64a':          { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'jtk1a':          { my_arch: 'armhf' }
                 - 'jtk1b':          { my_arch: 'armhf' }
@@ -421,6 +423,7 @@
                 - 'ff2a':           { my_arch: 'armhf' }
                 - 'ff2b':           { my_arch: 'armhf' }
                 - 'ff4a':           { my_arch: 'armhf' }
+                - 'ff64a':          { my_arch: 'armhf' }
                 - 'hb0':            { my_arch: 'armhf' }
                 - 'jtk1a':          { my_arch: 'armhf' }
                 - 'jtk1b':          { my_arch: 'armhf' }

@@ -116,7 +116,7 @@ choose_nodes() {
                 arm64_31)       NODE1=codethink-sled14-arm64	NODE2=codethink-sled11-arm64 ;;
                 arm64_32)       NODE1=codethink-sled13-arm64	NODE2=codethink-sled14-arm64 ;;
 		# to choose new armhf jobs:
-            #   for i in hb0 rpi2b rpi2c wbd0 bpi0 cb3a bbx15 cbxi4pro0 ff2a ff2b jtk1a jtk1b odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0 cbxi4a cbxi4b ff4a jtx1a jtx1b jtx1c; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
+            #   for i in hb0 rpi2b rpi2c wbd0 bpi0 cb3a bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a jtk1b odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0 cbxi4a cbxi4b ff4a jtx1a jtx1b jtx1c; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
 	        #       6 jobs for quad-cores with 4 gb ram
 	        #       4 jobs for octo-cores with 2 gb ram
 	        #       4 jobs for hexa-cores with 2 gb ram
@@ -171,7 +171,7 @@ choose_nodes() {
                 armhf_42)	NODE1=cbxi4a-armhf-rb		NODE2=rpi2c-armhf-rb ;;
                 armhf_43)	NODE1=cbxi4b-armhf-rb		NODE2=bbx15-armhf-rb ;;
                 armhf_44)	NODE1=cbxi4b-armhf-rb		NODE2=cb3a-armhf-rb ;;
-                armhf_45)	NODE1=cbxi4b-armhf-rb		NODE2=hb0-armhf-rb ;;
+                armhf_45)	NODE1=cbxi4b-armhf-rb		NODE2=ff64a-armhf-rb ;;
                 armhf_46)	NODE1=ff4a-armhf-rb		NODE2=jtk1a-armhf-rb ;;
                 armhf_47)	NODE1=ff4a-armhf-rb		NODE2=wbd0-armhf-rb ;;
                 armhf_48)	NODE1=ff4a-armhf-rb		NODE2=jtx1c-armhf-rb ;;
@@ -183,7 +183,9 @@ choose_nodes() {
                 armhf_54)	NODE1=jtx1c-armhf-rb		NODE2=cbxi4a-armhf-rb ;;
                 armhf_55)	NODE1=jtx1c-armhf-rb		NODE2=odu3a-armhf-rb ;;
                 armhf_56)	NODE1=jtk1a-armhf-rb		NODE2=wbq0-armhf-rb ;;
-                armhf_57)	NODE1=jtk1a-armhf-rb		NODE2=bpi0-armhf-rb ;;
+                armhf_57)	NODE1=jtk1a-armhf-rb		NODE2=ff64a-armhf-rb ;;
+                armhf_58)	NODE1=ff64a-armhf-rb		NODE2=hb0-armhf-rb ;;
+                armhf_59)	NODE1=ff64a-armhf-rb		NODE2=bpi0-armhf-rb ;;
 		*)		NODE1=undefined
 				;;
 	esac
@@ -198,7 +200,7 @@ startup_workers() {
 			amd64)	MAX=40 ;;
 			i386)	MAX=24 ;;
 			arm64)	MAX=32 ;;
-			armhf)	MAX=57 ;;
+			armhf)	MAX=59 ;;
 			*)	;;
 		esac
 		#

@@ -56,6 +56,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			abort_if_bug_is_still_open 869155 ;;
 		chroot-installation_sid_install_parl-desktop-world)
 			abort_if_bug_is_still_open 864947 ;;
+		dpkg_*_find_trigger_cycles)
+			abort_if_bug_is_still_open 874504 ;;
 		#lintian-tests_sid)
 		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#haskell-package-plan)

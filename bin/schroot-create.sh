@@ -275,7 +275,7 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	type=directory
 	root-users=jenkins
 	source-root-users=jenkins
-	union-type=aufs
+	union-type=overlay
 	__END__
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

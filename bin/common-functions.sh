@@ -52,10 +52,14 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	# abort certain jobs if we know they will fail due to certain bugs…
 	BLOCKER=848422
 	case $JOB_NAME in
-		chroot-installation_sid_install_design-desktop-graphics)
-			abort_if_bug_is_still_open 869155 ;;
-		chroot-installation_sid_install_parl-desktop-world)
-			abort_if_bug_is_still_open 864947 ;;
+		chroot-installation_*_install_design-desktop-*)
+			for BLOCKER in 869155 867695 ; do
+				abort_if_bug_is_still_open $BLOCKER
+			done ;;
+		chroot-installation_*_install_parl-desktop*)
+			for BLOCKER in 864947 872712 867658 ; do
+				abort_if_bug_is_still_open $BLOCKER
+			done ;;
 		dpkg_*_find_trigger_cycles)
 			abort_if_bug_is_still_open 874504 ;;
 		#lintian-tests_sid)

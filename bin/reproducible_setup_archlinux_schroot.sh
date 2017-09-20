@@ -43,7 +43,7 @@ bootstrap() {
 		type=directory
 		root-users=jenkins
 		source-root-users=jenkins
-		union-type=aufs
+		union-type=overlay
 	__END__
 	# mktemp creates directories with 700 perms
 	#chmod 755 $SCHROOT_BASE/$TARGET

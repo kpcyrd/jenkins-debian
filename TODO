@@ -469,15 +469,7 @@ correctly, Guix is ready for work.
 
 === g-i-installation_*
 
-Development of these tests has stopped. In future the 'lvc*' tests (see below) should replace them.
-
-These small changes are probably still worth doing anyway:
-
-* g-i: replace '--' with '---' as param delimiter. see #776763 / 5df5b95908 in d-e-c
-* download .isos once in central place
-** /var/lib/jenkins/jobs/g-i-installation_*/workspace/*iso needs 53GB currently, it could be 30 less
-* g-i_presentation: use preseeding files on jenkins.d.n and not hands.com
-* turn job-cfg/g-i.yaml into .yaml.py
+Development of these tests has stopped. In future we will use https://openqa.debian.net instead.
 
 === torbrowser-launcher_*
 
@@ -497,19 +489,6 @@ These small changes are probably still worth doing anyway:
 ** touch -d "$(date -u -d '25 hours ago' '+%Y-%m-%d %H:%M')" $FILE
 *** repeat test…
 * run upstream tests on stable and sid too: https://trac.torproject.org/projects/tor/wiki/doc/TorBrowser/Hacking#QAandTesting ?
-
-=== lvc, work in progress, just started
-
-
-* pick LANG from predefined list at random - if last build was not successful or unstable fall back to English
-** these jobs would not need to do an install, just booting them in rescue mode is probably enough
-* for edu mainservers running as servers for workstations etc: "d-i partman-auto/choose_recipe select atomic" to be able to use smaller disk images
-** same usecase:  -monitor none -nographic -serial stdio  
-* d-i page showing all characters, to be called from rescue mode in all alphabets and then do "rectangle detection" to spot bad/incomple fonts
-
-* put this on debian isos too?: config/chroot_local-includes/lib/live/config/9999-autotest
-* to debug cucumber: --verbose --backtrace --expand
-* search case-in-sensitive for tails+tor+amnesia
 
 
 == Further ideas...

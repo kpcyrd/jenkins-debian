@@ -40,6 +40,8 @@ There are over 900 jobs being run currently. If you can think of ways to improve
 
 === g-i-installation jobs
 
+These jobs are deprecated, in future we will use https://openqa.debian.net instead.
+
 Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
 * 'g-i-installation_debian_sid_daily-rescue'

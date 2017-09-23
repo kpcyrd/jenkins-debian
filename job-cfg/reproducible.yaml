@@ -478,7 +478,7 @@
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-buster-diffoscope buster diffoscope locales-all'
                 - 'unstable':
                     my_timed: '42 1 * * *'
-                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro} botch'
+                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro}'
                 - 'stretch':
                     my_timed: '42 1 * * *'
                 - 'buster':

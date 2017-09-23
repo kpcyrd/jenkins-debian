@@ -434,7 +434,8 @@ if [ -f /etc/debian_version ] ; then
 				apt-listchanges 
 				asciidoc
 				binfmt-support 
-				bison 
+				bison
+				botch
 				build-essential 
 				calamaris 
 				cmake 

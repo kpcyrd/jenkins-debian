@@ -64,11 +64,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * make live-build jobs work again or remove them
 * make sure the live-build jobs clean up /srv/live-build/results/*iso once they are done. thats 8gb wasted.
 
-=== To be done once jenkins.d.n runs stretch
-
-* install botch from stretch and remove botch from the reproducible-unstable schroot
-** botch now depends on a newer dose3, which depends on the ocaml from stretch. ocaml cannot be sensibly backported, so thats why this will have to wait for stretch
-
 ==== proper backup
 
 * postponed til we run on .debian.org

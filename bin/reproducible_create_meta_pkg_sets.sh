@@ -197,11 +197,11 @@ update_pkg_set_specific() {
 			# Since this is only the strong set, it is a minimal set. In reality
 			# more packages are needed to build build-essential
 			grep-dctrl --exact-match --field Package build-essential "$PACKAGES" \
-				| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-latest-version - - \
-				| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
-				| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-create-graph --deb-drop-b-d-indep --quiet --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
-				| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-buildgraph2packages - "$PACKAGES" \
-				| schroot --directory /tmp -c source:jenkins-reproducible-unstable -- botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+				| botch-latest-version - - \
+				| botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
+				| botch-create-graph --deb-drop-b-d-indep --quiet --deb-native-arch="$ARCH" --strongtype --bg "$SOURCES" "$PACKAGES" - \
+				| botch-buildgraph2packages - "$PACKAGES" \
+				| botch-bin2src --deb-native-arch="$ARCH" - "$SOURCES" \
 				| grep-dctrl --no-field-names --show-field=Package '' > $TMPFILE
 			;;
 		popcon_top1337-installed-sources)

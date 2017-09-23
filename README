@@ -22,7 +22,7 @@ Three persons have shell access (incl. root) to the machine: link:mailto:holger@
 
 == Getting involved
 
-jenkins.debian.net is intended to be a QA resource for the whole Debian project. Please contact us (via #debian-qa on IRC or via the debian-qa mailinglist) If you / your project is interested to run tests in this setup!
+jenkins.debian.net is a QA resource for the whole Debian project. Please contact us (via #debian-qa on IRC or via the debian-qa mailinglist) If you / your project is interested to run tests in this setup!
 
 If you notice some jobs has problems and you want to find out why, read <<debug,debug certain jobs>> to learn how to do debug jobs locally.
 

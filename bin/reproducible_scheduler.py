@@ -744,7 +744,7 @@ def scheduler(arch):
     message += ' in total.'
     log.info('Scheduling for architecture ' + arch + ' done.')
     log.info('--------------------------------------------------------------')
-    # only notifiy irc if there were packages scheduled in any suite
+    # only notifiy if there were packages scheduled in any suite
     for x in SUITES:
         if len(untested[x])+len(new[x])+len(old[x])+len(old_ftbfs[x])+len(old_depwait[x]) > 0:
             return message
@@ -774,8 +774,6 @@ if __name__ == '__main__':
         # build the kgb message text
         message = 'Scheduled in ' + '+'.join(SUITES) + ':\n' + message
         log.info(message)
-        # irc_msg(message, channel='debian-reproducible-changes')
-        # send mail instead of notifying via irc, less intrusive
         msg = MIMEText(message)
         mail_from = 'jenkins@jenkins.debian.net'
         mail_to = 'qa-jenkins-scm@lists.alioth.debian.org'

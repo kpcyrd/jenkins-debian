@@ -747,7 +747,7 @@ def scheduler(arch):
     # only notifiy if there were packages scheduled in any suite
     for x in SUITES:
         if len(untested[x])+len(new[x])+len(old[x])+len(old_ftbfs[x])+len(old_depwait[x]) > 0:
-            return message
+            return message + '\n'
     return ''
 
 if __name__ == '__main__':
@@ -768,7 +768,7 @@ if __name__ == '__main__':
             continue
         log.info('%s packages already scheduled for %s, probably scheduling some '
                  'more...', overall, arch)
-        message += scheduler(arch) + '\n'
+        message += scheduler(arch)
         log.info('Arch %s scheduled at %s.', arch, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     if message != '':
         # build the kgb message text

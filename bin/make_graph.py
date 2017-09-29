@@ -32,11 +32,11 @@ def main():
     # thanks to http://tango.freedesktop.org/Generic_Icon_Theme_Guidelines for those nice colors
     if int(colors) < 6:
         r('palette(c("#73d216", "#f57900", "#cc0000", "#2e3436", "#888a85"))')
-    elif int(colors) == 12:
-        r('palette(c("#4e9a06", "#73d216", "#8ae234", \
-                     "#ce5c00", "#f57900", "#fcaf3e", \
-                     "#a40000", "#cc0000", "#ef2929", \
-                     "#2e3436", "#555753", "#888a85" ))')
+    elif int(colors) == 16:
+        r('palette(c("#4e9a06", "#57a231", "#73d216", "#8ae234", \
+                     "#ce5c00", "#f57900", "#fcaf3e", "#fcda27", \
+                     "#a40000", "#cc0000", "#ef2929", "#fc2a1a", \
+                     "#2e3436", "#555753", "#888a85", "#b8bbb4" ))')
     elif int(colors) < 39:
         r('palette(c("#fce94f", "#c4a000", "#eeeeec", "#babdb6", \
                      "#fcaf3e", "#ce5c00", "#ad7fa8", "#5c3566", \

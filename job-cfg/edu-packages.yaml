@@ -36,8 +36,8 @@
       - naginator:
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
-          max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+          max-failed-builds: 3
+          regular-expression: '(Caused by: hudson.plugins.git.GitException: Command "git fetch|^ERROR: Error cloning remote repo)'
 
 
 - job-template:

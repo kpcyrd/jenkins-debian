@@ -26,9 +26,9 @@ distro_upgrades = {
 
 # deb.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = {
-    'jessie':  '30 16 1 * *',
-    'stretch':  '30 10 * * 5',
-    'buster': '30 10 */2 * *',
+    'jessie':  '30 16 1 */2 *',
+    'stretch':  '30 10 7,28 * *',
+    'buster': '30 10 */3 * *',
     'sid':     '30 4 * * *',
     }
 

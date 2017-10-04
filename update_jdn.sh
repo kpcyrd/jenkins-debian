@@ -388,8 +388,6 @@ if [ -f /etc/debian_version ] ; then
 			;;
 			*) ;;
 		esac
-			*) ;;
-		esac
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			# for phil only
 			DEBS="$DEBS postfix-pcre"

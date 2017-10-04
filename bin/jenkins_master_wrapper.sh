@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 #                2016 Phil Hands <phil@hands.com>
 # released under the GPLv=2
 # based on an idea by Peter Palfrader (see bin/jenkins_node_wrapper.sh)
@@ -10,13 +10,6 @@ set -e
 
 # don't try to run on test system
 if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-	case $JOB_NAME in
-		lvc_*)
-			exec /srv/jenkins/bin/lvc.sh "$@"
-		    echo "$(date -u) - running on $HOSTNAME, This should not happen."
-		    exit 1
-			;;
-	esac
 	echo "$(date -u) - running on $HOSTNAME, exiting successfully and cleanly immediatly."
 	exit 0
 fi

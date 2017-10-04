@@ -244,9 +244,6 @@ See link:https://jenkins.debian.net/userContent/thanks.html[THANKS].
 
 == License
 
-* everything except features and bin/libvirt_cucumber_tests:
 ** GPLv2, see link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/LICENSE[LICENSE].
-* features and bin/libvirt_cucumber_tests:
-** GPLv3+
 
 // vim: set filetype=asciidoc:

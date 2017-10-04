@@ -388,39 +388,6 @@ if [ -f /etc/debian_version ] ; then
 			;;
 			*) ;;
 		esac
-		# cucumber dependencies (for lvc jobs)
-		case $HOSTNAME in
-			profitbricks-build10-amd64|jenkins-test-vm) DEBS="$DEBS
-				cucumber
-				tesseract-ocr
-				i18nspector
-				imagemagick
-				libav-tools
-				libsikuli-script-java
-				libvirt-clients
-				libvirt-daemon
-				libvirt-daemon-system
-				ovmf
-				pry
-				python-jabberbot
-				python-potr
-				python3-yaml
-				redir
-				ruby-guestfs
-				ruby-json
-				ruby-libvirt
-				ruby-net-irc
-				ruby-packetfu
-				ruby-rb-inotify
-				ruby-rjb
-				ruby-test-unit
-				tcpdump
-				unclutter
-				virt-viewer
-				x264
-				xvfb
-				x11vnc"
-			   ;;
 			*) ;;
 		esac
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
@@ -622,7 +589,7 @@ explain "packages configured."
 #
 cd $BASEDIR
 [ -d /srv/jenkins/features ] && sudo rm -rf /srv/jenkins/features
-for dir in bin logparse cucumber live mustache-templates ; do
+for dir in bin logparse live mustache-templates ; do
 	sudo mkdir -p /srv/jenkins/$dir
 	sudo rsync -rpt --delete $dir/ /srv/jenkins/$dir/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
@@ -793,12 +760,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
 	if [ -s $TMPFILE ] ; then
 		echo
-		# only show cucumber FIXMEs when deploying on jenkins-test-vm
-		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-			cat $TMPFILE
-		else
-			cat $TMPFILE | grep -v cucumber
-		fi
+		cat $TMPFILE
 		echo
 	fi
 fi

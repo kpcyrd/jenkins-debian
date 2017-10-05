@@ -148,7 +148,7 @@ Installation tests inside chroot environments.
 ** To test 'armhf' we are using 29 small boards hosted by vagrant@d.o:
 *** six quad-cores (cbxi4a, cbxi4b, ff4a, jtx1a, jtx1b, jtx1c) with 4gb ram,
 *** one hexa-core (ff64a) with 2gb ram,
-*** three octo-cores (odxu4, odxu4b and odxu4c) with 2gb ram,
+*** three octo-cores (odxu4a, odxu4b and odxu4c) with 2gb ram,
 *** twelve quad-cores (wbq0, cbxi4pro0, ff2a, ff2b, odu3a, opi2a, opi2b, opi2c, jtk1a, jtk1b, p64b and p64c) with 2gb ram,
 *** two dual-core (bbx15 and cb3a) with 2gb ram and,
 *** two quad-cores (rpi2b and rpi2c) with 1gb ram and

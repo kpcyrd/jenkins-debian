@@ -57,7 +57,7 @@ worth a try.
 
 A small number of the names listed in cereal differ slightly from
 the names used natively... partly due to bugs in cereal. They should be
-fairly obvious (e.g. odxu4a vs. odxu4).
+fairly obvious (e.g. bpi0a vs. bpi0, hb0a vs. hb0).
 
 The serial console access is still read-only, not actually interacting
 with the console; think this is a limitation of the way "cereal"

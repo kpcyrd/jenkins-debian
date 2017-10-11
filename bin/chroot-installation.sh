@@ -309,6 +309,17 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - khelpcenter4 because #874757
 	# - libqca2-plugin-ossl because #874758
 	# - gambas3-gb-desktop-gnome because #874760
+	# - git-core because #878189
+	# - gperf-ace because #878198
+	# - libalberta2-dev because #878199
+	# - asterisk-prompt-it because #878200
+	# - kdemultimedia-kio-plugins because #878201
+	# - kdemultimedia-dev because #878201
+	# - autoconf-gl-macros because #878202
+	# - libatk-adaptor-data because #878204
+	# - autofs5 because #878205
+	# - autofs5-hesiod because #878205
+	# - autofs5-ldap because #878205
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev	2.0.2-3
@@ -322,7 +333,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - texlive-generic-recommended 	2017.20170818-1
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel|texlive-generic-recommended|iceowl-l10n-zh-tw)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

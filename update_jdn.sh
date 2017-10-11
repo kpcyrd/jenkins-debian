@@ -512,6 +512,7 @@ if [ -f /etc/debian_version ] ; then
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
 			$UP2DATE || sudo apt-get install ffmpeg libav-tools python3-popcon jenkins-job-builder dose-extra
 		fi
+		sudo apt-get clean
 		explain "packages installed."
 	else
 		explain "no new packages to be installed."

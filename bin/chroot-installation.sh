@@ -328,6 +328,27 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - bibledit because #878227
 	# - bibledit-data because #878227
 	# - baloo because #878226
+	# - conky because #878377
+	# - condor-doc because #878376
+	# - condor-dev and condor because #878376
+	# - condor-dbg because #878376
+	# - condor because #878376
+	# - migemo because #878375
+	# - otf-symbols-circos because #878374
+	# - libc-icap-mod-clamav because #878371
+	# - deluge-webui because #878385
+	# - deluge-torrent because #878385
+	# - python-decoratortools because #878383
+	# - dconf-tools because #878382
+	# - cweb-latex because #878381
+	# - cscope-el because #878380
+	# - libjs-flot because #878394
+	# - libefreet1 because #878393
+	# - drbd8-utils because #878392
+	# - django-xmlrpc because #878391
+	# - django-tables because #878390
+	# - django-filter because #878389
+	# - python-django-filter because #878389
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev	2.0.2-3
@@ -342,7 +363,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - texlive-generic-recommended 	2017.20170818-1
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5|librime-data|pmake|host|bibledit|baloo)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5|librime-data|pmake|host|bibledit|baloo|conky|condor-doc|condor-dev and condor|condor-dbg|condor|migemo|otf-symbols-circos|libc-icap-mod-clamav|deluge-webui|deluge-torrent|python-decoratortools|dconf-tools|cweb-latex|cscope-el|libjs-flot|libefreet1|drbd8-utils|django-xmlrpc|django-tables|django-filter|python-django-filter)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel|texlive-generic-recommended|iceowl-l10n-zh-tw|idle3)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

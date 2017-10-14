@@ -349,6 +349,23 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - django-tables because #878390
 	# - django-filter because #878389
 	# - python-django-filter because #878389
+	# - ttf-kacst because #878494
+	# - ttf-junicode because #878493
+	# - ttf-isabella because #878492
+	# - font-hosny-amiri because #878491
+	# - ttf-hanazono because #878490
+	# - ttf-georgewilliams because #878489
+	# - ttf-freefont because #878488
+	# - otf-freefont because #878488
+	# - ttf-freefarsi because #878486
+	# - libhdf5-serial-dev because #878535
+	# - graphviz-dev because #878534
+	# - git-bzr because #878533
+	# - libgd-gd2-noxpm-ocaml because #878532
+	# - libgd-gd2-noxpm-ocaml-dev because #878532
+	# - ganeti2 because #878531
+	# - ftgl-dev because #878529
+	# - ttf-liberation because #878536
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev	2.0.2-3
@@ -363,7 +380,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - texlive-generic-recommended 	2017.20170818-1
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5|librime-data|pmake|host|bibledit|baloo|conky|condor-doc|condor-dev and condor|condor-dbg|condor|migemo|otf-symbols-circos|libc-icap-mod-clamav|deluge-webui|deluge-torrent|python-decoratortools|dconf-tools|cweb-latex|cscope-el|libjs-flot|libefreet1|drbd8-utils|django-xmlrpc|django-tables|django-filter|python-django-filter)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5|librime-data|pmake|host|bibledit|baloo|conky|condor-doc|condor-dev and condor|condor-dbg|condor|migemo|otf-symbols-circos|libc-icap-mod-clamav|deluge-webui|deluge-torrent|python-decoratortools|dconf-tools|cweb-latex|cscope-el|libjs-flot|libefreet1|drbd8-utils|django-xmlrpc|django-tables|django-filter|python-django-filter|ttf-kacst|ttf-junicode|ttf-isabella|font-hosny-amiri|ttf-hanazono|ttf-georgewilliams|ttf-freefont|otf-freefont|ttf-freefarsi|libhdf5-serial-dev|graphviz-dev|git-bzr|libgd-gd2-noxpm-ocaml|libgd-gd2-noxpm-ocaml-dev|ganeti2|ftgl-dev|ttf-liberation" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel|texlive-generic-recommended|iceowl-l10n-zh-tw|idle3)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

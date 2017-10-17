@@ -62,6 +62,20 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			done ;;
 		dpkg_*_find_trigger_cycles)
 			abort_if_bug_is_still_open 874504 ;;
+		chroot-installation_stretch_install_full_desktop_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
+		chroot-installation_stretch_install_education-workstation_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
+		chroot-installation_stretch_install_education-standalone_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
+		chroot-installation_stretch_install_education-roaming-workstation_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
+		chroot-installation_stretch_install_education-ltsp-server_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
+		chroot-installation_stretch_install_education-desktop-other_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
+		chroot-installation_stretch_install_developer_upgrade_to_buster)
+			abort_if_bug_is_still_open 877970 ;;
 		#lintian-tests_sid)
 		#	abort_if_bug_is_still_open $BLOCKER ;;
 		#haskell-package-plan)

@@ -278,7 +278,7 @@ data.append(
                                           {   'naginator': {   'progressive-delay-increment': 5,
                                                                'progressive-delay-maximum': 15,
                                                                'max-failed-builds': 3,
-                                                               'regular-expression': '^E: (Couldn.t download .*/Packages|Unable to fetch some archives|Failed getting release file)'}}],
+                                                               'regular-expression': '^E: (Couldn.t download .*/Packages|Unable to fetch some archives|Failed getting release file|Failed getting release signature file)'}}],
                         'triggers': [{   'timed': '{my_time}'}],
                         'wrappers': [{   'timeout': {   'timeout': 360}}]}})
 data.append(

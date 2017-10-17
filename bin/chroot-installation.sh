@@ -424,6 +424,22 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - nagios-plugins-basic because #878769
 	# - nagios-plugins-common because #878769
 	# - nagios-plugins-standard because #878769
+	# - slurm-llnl because #878864
+	# - slurm-llnl-slurmdbd because #878864
+	# - python-scikits-learn because #878863
+	# - scanbuttond because #878862
+	# - bkhive because #878861
+	# - rxvt-unicode-ml because #878860
+	# - god because #878859
+	# - libfilesystem-ruby because #878858
+	# - libfilesystem-ruby1.8 because #878858
+	# - libfilesystem-ruby1.9.1 because #878858
+	# - ruby-color-tools because #878857
+	# - ffgtk because #878856
+	# - rcs-latex because #878855
+	# - libraspell-ruby because #878854
+	# - libraspell-ruby1.8 because #878854
+	# - libraspell-ruby1.9.1 because #878854
 	# ignore "dummy transitional library" because it really is what it says it is…
 	# ignore transitional packages introduced during busters lifecycle (so bugs should only be filed once we released buster)
 	# - libidn2-0-dev	2.0.2-3
@@ -438,7 +454,7 @@ if [ "$DISTRO" = "sid" ] ; then
 	# - texlive-generic-recommended 	2017.20170818-1
 	( sudo chroot $CHROOT_TARGET dpkg -l \
 		| grep -v multiarch-support \
-		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5|librime-data|pmake|host|bibledit|baloo|conky|condor-doc|condor-dev|and|condor|condor-dbg|condor|migemo|otf-symbols-circos|libc-icap-mod-clamav|deluge-webui|deluge-torrent|python-decoratortools|dconf-tools|cweb-latex|cscope-el|libjs-flot|libefreet1|drbd8-utils|django-xmlrpc|django-tables|django-filter|python-django-filter|ttf-kacst|ttf-junicode|ttf-isabella|font-hosny-amiri|ttf-hanazono|ttf-georgewilliams|ttf-freefont|otf-freefont|ttf-freefarsi|libhdf5-serial-dev|graphviz-dev|git-bzr|libgd-gd2-noxpm-ocaml|libgd-gd2-noxpm-ocaml-dev|ganeti2|ftgl-dev|ttf-liberation|kcron|kttsd|jfugue|verilog|iproute|iproute-doc|ifenslave-2.6|node-highlight|libjs-highlight|ssh-krb5|libparted0-dev|cgroup-bin|liblemonldap-ng-conf-perl|kdelirc|kbattleship|kdewallpapers|kde-icons-nuvola|kdebase-runtime|kdebase-bin|kdebase-apps|libtasn1-3-bin|libpqxx3-dev|libphp-swiftmailer|libixp|libgcrypt11-dev|libdmtx-utils|libconfig++8-dev|libconfig8-dev|monajat|minisat2|mingw-ocaml|m17n-contrib|lunch|qtpfsgui|liblua5.1-bitop0|liblua5.1-bitop-dev|libtime-modules-perl|libtest-yaml-meta-perl|scrollkeeper|scrobble-cli|libqjson0-dbg|python-clientform|python-gobject-dbg|python-pyatspi2|python-gobject-dev|python3-pyatspi2|gaim-extendedprefs|ptop|nowebm|node-finished|netsurf|mupen64plus|mpqc-openmpi|mono-dmcs||nagios-plugins|nagios-plugins-basic|nagios-plugins-common|nagios-plugins-standard)" \
+		| egrep -v "(jadetex|dh-systemd|libpcap-dev|transfig|myspell-it|myspell-sl|python-gobject|ttf-dejavu|libav-tools|netcat|gnupg2|libkf5akonadicore-bin|qml-module-org-kde-extensionplugin|myspell-ca|myspell-en-gb|myspell-sv-se|myspell-lt|khelpcenter4|libqca2-plugin-ossl|gambas3-gb-desktop-gnome|git-core|gperf-ace|libalberta2-dev|asterisk-prompt-it|kdemultimedia-kio-plugins|kdemultimedia-dev|autoconf-gl-macros|libatk-adaptor-data|autofs5|librime-data|pmake|host|bibledit|baloo|conky|condor-doc|condor-dev|and|condor|condor-dbg|condor|migemo|otf-symbols-circos|libc-icap-mod-clamav|deluge-webui|deluge-torrent|python-decoratortools|dconf-tools|cweb-latex|cscope-el|libjs-flot|libefreet1|drbd8-utils|django-xmlrpc|django-tables|django-filter|python-django-filter|ttf-kacst|ttf-junicode|ttf-isabella|font-hosny-amiri|ttf-hanazono|ttf-georgewilliams|ttf-freefont|otf-freefont|ttf-freefarsi|libhdf5-serial-dev|graphviz-dev|git-bzr|libgd-gd2-noxpm-ocaml|libgd-gd2-noxpm-ocaml-dev|ganeti2|ftgl-dev|ttf-liberation|kcron|kttsd|jfugue|verilog|iproute|iproute-doc|ifenslave-2.6|node-highlight|libjs-highlight|ssh-krb5|libparted0-dev|cgroup-bin|liblemonldap-ng-conf-perl|kdelirc|kbattleship|kdewallpapers|kde-icons-nuvola|kdebase-runtime|kdebase-bin|kdebase-apps|libtasn1-3-bin|libpqxx3-dev|libphp-swiftmailer|libixp|libgcrypt11-dev|libdmtx-utils|libconfig++8-dev|libconfig8-dev|monajat|minisat2|mingw-ocaml|m17n-contrib|lunch|qtpfsgui|liblua5.1-bitop0|liblua5.1-bitop-dev|libtime-modules-perl|libtest-yaml-meta-perl|scrollkeeper|scrobble-cli|libqjson0-dbg|python-clientform|python-gobject-dbg|python-pyatspi2|python-gobject-dev|python3-pyatspi2|gaim-extendedprefs|ptop|nowebm|node-finished|netsurf|mupen64plus|mpqc-openmpi|mono-dmcs||nagios-plugins|nagios-plugins-basic|nagios-plugins-common|nagios-plugins-standard|libraspell-ruby|libraspell-ruby1.8|libraspell-ruby1.9.1|rcs-latex|ffgtk|ruby-color-tools|libfilesystem-ruby|libfilesystem-ruby1.8|libfilesystem-ruby1.9|god|rxvt-unicode-ml|bkhive|scanbuttond|python-scikits-learn|slurm-llnl|slurm-llnl-slurmdbd)" \
 		| egrep -v "(libidn2-0-dev|texlive-htmlxml|gnome-user-guide|libegl1-mesa|libgl1-mesa-glx|libgles2-mesa|iceweasel|texlive-generic-recommended|iceowl-l10n-zh-tw|idle3)" \
 		| grep -v "dummy transitional library" \
 		| grep -i "Transitional" 2>/dev/null || true) > $TMPFILE

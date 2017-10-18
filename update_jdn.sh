@@ -461,7 +461,8 @@ if [ -f /etc/debian_version ] ; then
 				qemu-system-x86 
 				qemu-user-static 
 				radvd 
-				ruby-rspec 
+				ruby-rspec
+				rustc
 				seabios 
 				shorewall 
 				shorewall6 

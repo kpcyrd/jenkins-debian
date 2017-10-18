@@ -121,6 +121,7 @@ if [ "$(lsb_release -si)" = "Ubuntu" ] ; then
 		echo "Warning, more than one kernel in /boot:"
 		ls -lart /boot/vmlinuz-*
 		df -h /boot
+		echo "Running kernel: $(uname -r)"
 		DIRTY=true
 	fi
 fi

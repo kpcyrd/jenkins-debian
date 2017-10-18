@@ -51,7 +51,6 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	fi
 	# abort certain jobs if we know they will fail due to certain bugs…
 	BLOCKER=848422
-	set -x
 	case $JOB_NAME in
 		chroot-installation_*_install_design-desktop-*)
 			for BLOCKER in 869155 867695 ; do
@@ -93,7 +92,6 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		#	abort_if_bug_is_still_open $BLOCKER ;;
 		*) ;;
 	esac
-	set +x
 	# mktemp some place for us...
 	TTT=$(mktemp --tmpdir=/tmp jenkins-script-XXXXXXXX)
 	if [ -z "$TTT" ] ; then

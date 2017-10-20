@@ -26,6 +26,7 @@ ok /perl: warning: Please check that your locale settings:/
 ok /perl: warning: Falling back to the standard locale/
 ok /perl: warning: Setting locale failed./
 ok /W: .+: debian-news-entry-has-strange-distribution UNRELEASED/
+ok /W: .+ changes: orig-tarball-missing-upstream-signature/
 
 # suppress warnings from commit messages
 ok /HEAD is now at .+/

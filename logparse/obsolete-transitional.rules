@@ -1,0 +1,17 @@
+# see https://wiki.jenkins-ci.org/display/JENKINS/Log+Parser+Plugin
+
+ok /not really/
+
+# suppress warnings from commit messages
+ok /HEAD is now at .+/
+
+# match line starting with 'error ', case-insensitive
+error /(?i)^error /
+
+# list of warnings here...
+warning /[Ww]arning/
+warning /WARNING/
+
+# create a quick access link to lines in the report containing 'INFO'
+info /INFO/
+

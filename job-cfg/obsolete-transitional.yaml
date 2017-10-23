@@ -1,0 +1,73 @@
+- defaults:
+    name: obsolete-transitional
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: https://jenkins.debian.net/view/haskell/
+          text: Haskell packages metadata consistency
+          icon: /userContent/images/debian-jenkins-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: '{my_description}{do_not_edit}'
+    logrotate:
+      daysToKeep: 365
+      numToKeep: 365
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    builders:
+      - shell: '/srv/jenkins/bin/bin/find_obsolete_transitional_packages.sh {my_distro} "{my_suites}"'
+    publishers:
+      - logparser:
+          parse-rules: '/srv/jenkins/logparse/obsolete-transitional.rules'
+          unstable-on-warning: 'false'
+          fail-on-error: 'false'
+      - email:
+          recipients: '{my_recipients}'
+      #- plot:
+      #    - title: Stats
+      #      yaxis: Packages
+      #      group: PlotGroup
+      #      csv-file-name: package-plan-stats.csv
+      #      series:
+      #          - file: stats.csv
+      #            format: csv
+      #            # inclusion-flag: exclude-by-string
+      #            # exclude: total
+      #    - title: Totals
+      #      yaxis: Packages
+      #      group: PlotGroup
+      #      style: area
+      #      series:
+      #          - file: stats.csv
+      #            format: csv
+      #            # inclusion-flag: include-by-string
+      #            # exclude: total
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 5
+          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+
+- job-template:
+    defaults: obsolete-transitional
+    name: '{name}'
+    triggers:
+      - pollscm:
+          cron: '*/6 * * * *'
+      - timed: '0 16 * * *'    # every day at 16:00 UTC
+
+- project:
+    name: obsolete-transitional
+    do_not_edit: '<br>Find obsolete transitional packages.'
+    jobs:
+        - '{name}_buster':
+            my_distro: 'buster'
+            my_suites: 'jessie stretch sid'
+            my_description: 'Find obsolete transitional packages in buster.'
+            my_recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org'

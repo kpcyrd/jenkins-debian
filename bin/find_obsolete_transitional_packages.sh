@@ -4,11 +4,18 @@
 # released under the GPLv=2
 
 #
-# run with any parameter for interactive mode which will fire up mutt for 10 buggy packages
-# else automatic mode is assumed, which has more output
+# run with "bug" as first parameter for interactive mode which will fire up mutt for 10 buggy packages
+# 
 #
+if [ -z "$1" ] ; then
+	echo "Call $(basename $0) [bug] NEXT SUITE1 SUITE2 SUITE3"
+	echo "         bug to enter manual mode"
+	echo "         NEXT suite which is being developed, eg 'buster'"
+	echo "         SUITE1/2/3: suites to look at, eg. 'jessie stretch sid'"
+	exit 0
+fi
 
-DEBUG=true
+DEBUG=false
 if [ -f /srv/jenkins/bin/common-functions.sh ] ; then
 	. /srv/jenkins/bin/common-functions.sh
 	common_init "$@"
@@ -37,13 +44,6 @@ else
 	MANUAL_MODE=false
 fi
 
-if [ -z "$1" ] ; then
-	echo "Call $(basename $0) [bug] NEXT SUITE1 SUITE2 SUITE3"
-	echo "         bug to enter manual mode"
-	echo "         NEXT suite which is being developed, eg 'buster'"
-	echo "         SUITE1/2/3: suites to look at, eg. 'jessie stretch sid'"
-	exit 0
-fi
 
 LANG="en_EN.UTF-8"
 ARCH=amd64

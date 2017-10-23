@@ -21,7 +21,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '/srv/jenkins/bin/bin/find_obsolete_transitional_packages.sh {my_distro} "{my_suites}"'
+      - shell: '/srv/jenkins/bin/find_obsolete_transitional_packages.sh {my_distro} "{my_suites}"'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/obsolete-transitional.rules'

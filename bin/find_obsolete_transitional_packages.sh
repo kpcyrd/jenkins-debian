@@ -8,7 +8,7 @@
 # else automatic mode is assumed, which has more output
 #
 
-DEBUG=false
+DEBUG=true
 if [ -f /srv/jenkins/bin/common-functions.sh ] ; then
 	. /srv/jenkins/bin/common-functions.sh
 	common_init "$@"
@@ -38,10 +38,10 @@ else
 fi
 
 if [ -z "$1" ] ; then
-	echo "Call $(basename $0) with 2 or 3 params:"
-	echo "         1st: suite which is being developed, eg 'buster'"
-	echo "         2nd: suites to look at, eg. 'jenkins stretch sid'"
-	echo "         3rd: any third param will enable manual mode."
+	echo "Call $(basename $0) [bug] NEXT SUITE1 SUITE2 SUITE3"
+	echo "         bug to enter manual mode"
+	echo "         NEXT suite which is being developed, eg 'buster'"
+	echo "         SUITE1/2/3: suites to look at, eg. 'jessie stretch sid'"
 	exit 0
 fi
 

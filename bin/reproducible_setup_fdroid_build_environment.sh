@@ -14,6 +14,8 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
+GIT_REPO=https://gitlab.com/fdroid/fdroidserver
+
 # define and clean work space on the machine actually running the
 # build. jenkins.debian.net does not use Jenkins slaves.  Instead
 # /srv/jenkins/bin/jenkins_master_wrapper.sh runs this script on the
@@ -23,6 +25,7 @@ export WORKSPACE=$BASE/reproducible_setup_fdroid_build_environment
 if [ -e $WORKSPACE/.git ]; then
     # reuse the git repo if possible, to keep all the setup in fdroiddata/
     cd $WORKSPACE
+    git remote set-url origin $GIT_REPO
     git fetch --tags
     git clean -fdx
     git reset --hard
@@ -31,7 +34,7 @@ if [ -e $WORKSPACE/.git ]; then
     git clean -fdx
 else
     rm -rf $WORKSPACE
-    git clone https://gitlab.com/eighthave/fdroidserver-for-jenkins.debian.net $WORKSPACE
+    git clone $GIT_REPO $WORKSPACE
     cd $WORKSPACE
 fi
 

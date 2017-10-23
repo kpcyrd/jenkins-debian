@@ -105,11 +105,11 @@ for PKG in $(grep-dctrl -sPackage -n -FDescription "transitional.*package" --ign
 		echo "ignore $PKG because a bug has already been filed."
 		continue
 	fi
-	OLDSTABLE_HIT=$(grep-dctrl -sPackage -n -FDescription "transitional.*package" --ignore-case --regex ${PACKAGES[0]} |egrep "^$PKG$")
+	OLDSTABLE_HIT=$(grep-dctrl -sPackage -n -FDescription "transitional.*package" --ignore-case --regex ${PACKAGES[0]} |egrep "^$PKG$" || true)
 	if [ -z "$OLDSTABLE_HIT" ] ; then
 		echo "$PKG not in $OLDSTABLE, so new transitional package, so fine."
 	else
-		SID_HIT=$(grep-dctrl -sPackage -n -FDescription "transitional.*package" --ignore-case --regex ${PACKAGES[2]} |egrep "^$PKG$")
+		SID_HIT=$(grep-dctrl -sPackage -n -FDescription "transitional.*package" --ignore-case --regex ${PACKAGES[2]} |egrep "^$PKG$" || true)
 		if [ -z "$SID_HIT" ] ; then
 			echo "Transitional package $PKG in $OLDSTABLE and $STABLE, but not in sid, yay!"
 			let GOOD_COUNTER=$GOOD_COUNTER+1

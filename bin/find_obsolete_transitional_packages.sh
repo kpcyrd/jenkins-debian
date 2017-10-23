@@ -29,6 +29,14 @@ elif ! which grep-dctrl ; then
 	exit 1
 fi
 
+if [ "$1" = "bug" ] ; then
+	MANUAL_MODE=true
+	echo "Entering manual bug filing mode."
+	shift
+else
+	MANUAL_MODE=false
+fi
+
 if [ -z "$1" ] ; then
 	echo "Call $(basename $0) with 2 or 3 params:"
 	echo "         1st: suite which is being developed, eg 'buster'"
@@ -39,15 +47,17 @@ fi
 
 LANG="en_EN.UTF-8"
 ARCH=amd64
-SUITES="$2" 		# jessie stretch sid
+NEXT="$1"		# buster
+shift
+SUITES="$@" 		# jessie stretch sid
 OLDSTABLE="jessie"
 STABLE="stretch"
-NEXT="$1"		# buster
 if [ "$NEXT" != "buster" ] ; then
 	echo "This script needs more changes to work on other suites than buster…"
 	echo "Not many, but a very few."
 	exit 1
 fi
+echo "Looking at $SUITES for obsolete transitional packages in $NEXT."
 # transitional packages we know bugs have been filed about…
 BUGGED="multiarch-support jadetex dh-systemd libpcap-dev transfig myspell-it myspell-sl python-gobject ttf-dejavu ttf-dejavu-core ttf-dejavu-extra libav-tools netcat gnupg2 libkf5akonadicore-bin qml-module-org-kde-extensionplugin myspell-ca myspell-en-gb myspell-sv-se myspell-lt khelpcenter4 libqca2-plugin-ossl gambas3-gb-desktop-gnome git-core gperf-ace libalberta2-dev asterisk-prompt-it libatk-adaptor-data kdemultimedia-dev kdemultimedia-kio-plugins autoconf-gl-macros autofs5 autofs5-hesiod autofs5-ldap librime-data-stroke5 librime-data-stroke-simp librime-data-triungkox3p pmake host bibledit bibledit-data baloo libc-icap-mod-clamav otf-symbols-circos migemo condor condor-dbg condor-dev condor-doc cscope-el cweb-latex dconf-tools python-decoratortools deluge-torrent deluge-webui django-filter python-django-filter django-tables django-xmlrpc drbd8-utils libefreet1 libjs-flot conky ttf-kacst ttf-junicode ttf-isabella font-hosny-amiri ttf-hanazono ttf-georgewilliams otf-freefont ttf-freefont ttf-freefarsi ttf-liberation libhdf5-serial-dev graphviz-dev git-bzr libgd-gd2-noxpm-ocaml-dev libgd-gd2-noxpm-ocaml ganeti2 ftgl-dev kcron kttsd jfugue verilog iproute iproute-doc ifenslave-2.6  node-highlight libjs-highlight ssh-krb5 libparted0-dev cgroup-bin liblemonldap-ng-conf-perl kdelirc kbattleship kdewallpapers kde-icons-nuvola kdebase-runtime kdebase-bin kdebase-apps libconfig++8-dev libconfig8-dev libdmtx-utils libgcrypt11-dev libixp libphp-swiftmailer libpqxx3-dev libtasn1-3-bin monajat minisat2 mingw-ocaml m17n-contrib lunch qtpfsgui liblua5.1-bitop0 liblua5.1-bitop-dev libtime-modules-perl libtest-yaml-meta-perl scrollkeeper scrobble-cli libqjson0-dbg python-clientform python-gobject-dbg python-pyatspi2 python-gobject-dev python3-pyatspi2 gaim-extendedprefs ptop nowebm node-finished netsurf mupen64plus mpqc-openmpi mono-dmcs  nagios-plugins nagios-plugins-basic nagios-plugins-common nagios-plugins-standard libraspell-ruby libraspell-ruby1.8 libraspell-ruby1.9.1 rcs-latex ffgtk ruby-color-tools libfilesystem-ruby libfilesystem-ruby1.8 libfilesystem-ruby1.9 god rxvt-unicode-ml bkhive scanbuttond python-scikits-learn slurm-llnl slurm-llnl-slurmdbd python-sphinxcontrib-docbookrestapi python-sphinxcontrib-programoutput strongswan-ike strongswan-ikev1 strongswan-ikev2 sushi-plugins task tclcl-dev telepathy-sofiasip tesseract-ocr-dev trac-privateticketsplugin python-twisted-libravatar vdr-plugin-svdrpext qemulator python-weboob-core xfce4-screenshooter-plugin zeroinstall-injector libzookeeper2"
 
@@ -60,7 +70,7 @@ if [ -z "$BASEPATH" ] ; then
 	        # the "[arch=$ARCH]" is a workaround until #774685 is fixed
 	        chdist --data-dir=$BASEPATH/$SUITE --arch=$ARCH create $SUITE-$ARCH "[arch=$ARCH]" $MIRROR $SUITE main
 		# in interactive mode we don't care about sources
-		if [ -n "$3" ] ; then
+		if $MANUAL_MODE ; then
 			sed -i "s#deb-src#\#deb-src#g" $BASEPATH/$SUITE/$SUITE-$ARCH/etc/apt/sources.list
 		fi
 	        chdist --data-dir=$BASEPATH/$SUITE --arch=$ARCH apt-get $SUITE-$ARCH update
@@ -73,7 +83,7 @@ for SUITE in $SUITES ; do
 	PACKAGES[$NR]=$(ls $BASEPATH/$SUITE/$SUITE-$ARCH/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages)
        	echo "PACKAGES[$NR] = ${PACKAGES[$NR]}"
 	# only in interactive mode we care about sources
-	if [ -z "$3" ] ; then
+	if ! $MANUAL_MODE ; then
 		SOURCES[$NR]=$(ls $BASEPATH/$SUITE/$SUITE-$ARCH/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources)
 		echo "SOURCES[$NR] = ${SOURCES[$NR]}"
 	fi
@@ -113,7 +123,7 @@ done
 echo
 
 # interactive mode
-if [ -n "$3" ] ; then
+if $MANUAL_MODE ; then
 	MAX=20
 	NR=0
 	echo "Entering manual mode, filing $MAX bugs."

@@ -94,6 +94,17 @@ case $HOSTNAME in
 	*)	;;
 esac
 
+# ubuntu decided to change kernel perms in the middle of LTS…
+case $HOSTNAME in
+	codethink-sled*)
+		# fixup perms
+		sudo chmod +r /boot/vmlinuz-*
+		;;
+	*)	;;
+esac
+
+
+
 #
 # set up users and groups
 #

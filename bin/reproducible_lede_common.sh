@@ -323,8 +323,8 @@ openwrt_download() {
 	openwrt_create_signing_keys
 
 	# update feeds
-	#./scripts/feeds update
-	#./scripts/feeds install -a
+	./scripts/feeds update
+	./scripts/feeds install -a
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config $CONFIG

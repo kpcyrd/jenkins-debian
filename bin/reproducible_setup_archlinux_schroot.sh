@@ -30,12 +30,20 @@ bootstrap() {
 		curl -sSf "$BOOTSTRAP_BASE/latest/sha1sums.txt" | grep x86_64.tar.gz
 		exit 1
 	fi
-	BOOTSTRAP_TAR_GZ="$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
-	echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
-	curl -fO "$BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ"
-	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
-	mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
-	rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf
+
+    if [ ! -f "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz" ]; then
+        BOOTSTRAP_TAR_GZ="$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
+        echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
+
+        curl -fO "$BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ"
+        rm -rf --one-file-system "$SCHROOT_BASE/root.x86_64/"
+        tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
+
+        rm -rf --one-file-system "$SCHROOT_BASE/$TARGET"
+        mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
+        rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf
+    fi
+
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
 	sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__

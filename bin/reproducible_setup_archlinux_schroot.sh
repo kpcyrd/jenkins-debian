@@ -108,9 +108,7 @@ echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGE
 # (-0777 tells perl to read the whole file before processing it. then it just does a multi-line regex…)
 perl -0777 -i -pe 's/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/[multilib]\nInclude = \/etc\/pacman.d\/mirrorlist/igs' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
-$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools abs'
-# configure abs
-$ROOTCMD bash -l -c "abs $ARCHLINUX_REPOS"
+$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools'
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 

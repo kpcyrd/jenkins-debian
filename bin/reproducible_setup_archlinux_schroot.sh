@@ -43,7 +43,7 @@ bootstrap() {
         mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
         rm -rf --one-file-system "$SCHROOT_BASE/$TARGET.old"
 
-        rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf
+        rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
     fi
 
 	# write the schroot config

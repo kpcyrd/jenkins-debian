@@ -39,8 +39,10 @@ bootstrap() {
         rm -rf --one-file-system "$SCHROOT_BASE/root.x86_64/"
         tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
 
-        rm -rf --one-file-system "$SCHROOT_BASE/$TARGET"
+        mv "$SCHROOT_BASE/$TARGET" "$SCHROOT_BASE/$TARGET.old"
         mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
+        rm -rf --one-file-system "$SCHROOT_BASE/$TARGET.old"
+
         rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf
     fi
 

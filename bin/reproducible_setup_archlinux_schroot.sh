@@ -8,6 +8,8 @@
 # then configures pacman and abs
 #
 
+set -e
+
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
@@ -20,17 +22,17 @@ ARCHLINUX_MIRROR=http://mirror.one.com/archlinux/
 
 bootstrap() {
 	# define URL for bootstrap.tgz
-	BOOTSTRAP_BASE=$ARCHLINUX_MIRROR/iso/
+	BOOTSTRAP_BASE="$ARCHLINUX_MIRROR/iso/"
 	echo "$(date -u) - downloading Arch Linux latest/sha1sums.txt"
-	BOOTSTRAP_DATE=$(curl $BOOTSTRAP_BASE/latest/sha1sums.txt 2>/dev/null| grep x86_64.tar.gz| cut -d " " -f3|cut -d "-" -f3|egrep '[0-9.]{9}')
+	BOOTSTRAP_DATE=$(curl -sSf $BOOTSTRAP_BASE/latest/sha1sums.txt | grep x86_64.tar.gz | cut -d " " -f3 | cut -d "-" -f3 | egrep -o '[0-9.]{10}')
 	if [ -z $BOOTSTRAP_DATE ] ; then
 		echo "Cannot determine version of boostrap file, aborting."
-		curl $BOOTSTRAP_BASE/latest/sha1sums.txt | grep x86_64.tar.gz
+		curl -sSf "$BOOTSTRAP_BASE/latest/sha1sums.txt" | grep x86_64.tar.gz
 		exit 1
 	fi
-	BOOTSTRAP_TAR_GZ=$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
+	BOOTSTRAP_TAR_GZ="$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
 	echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
-	curl -O $BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ
+	curl -fO "$BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ"
 	tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
 	mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
 	rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -rf

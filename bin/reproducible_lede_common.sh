@@ -319,6 +319,10 @@ openwrt_download() {
 	git clone -b $OPENWRT_GIT_BRANCH $OPENWRT_GIT_REPO source
 	cd source
 
+	echo "================================================================================"
+	echo "$(date -u) - received git version $(git log -1 --pretty=oneline)"
+	echo "================================================================================"
+
 	# otherwise LEDE will generate new release keys every build
 	openwrt_create_signing_keys
 

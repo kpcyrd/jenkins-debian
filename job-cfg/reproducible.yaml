@@ -656,12 +656,11 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks3'
-                    my_disabled: false
                 - 'setup_schroot_archlinux_profitbricks4':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'profitbricks4'
-                    my_disabled: true
+                    my_disabled: false
                 - 'setup_mock_fedora-23_x86_64_jenkins':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'

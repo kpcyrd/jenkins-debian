@@ -61,8 +61,8 @@ esac
 DATE=$(date -u +'%Y-%m-%d')
 START=$(date +'%s')
 TMPBUILDDIR=$(mktemp --tmpdir=/srv/workspace/chroots/ -d -t rbuild-lede-build-${DATE}-XXXXXXXX)  # used to build on tmpfs
-TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-lede-results-XXXXXXXX)  # accessable in schroots, used to compare results
-BANNER_HTML=$(mktemp --tmpdir=$TMPDIR)
+RESULTSDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-lede-results-XXXXXXXX)  # accessable in schroots, used to compare results
+BANNER_HTML=$(mktemp --tmpdir=$RESULTSDIR)
 trap master_cleanup_tmpdirs INT TERM EXIT
 
 cd $TMPBUILDDIR
@@ -83,7 +83,7 @@ echo "$(date -u) - Creating Documentation HTML"
 echo "============================================================================="
 
 # created & copied by build_two_times()
-TOOLCHAIN_HTML=$TMPDIR/toolchain.html
+TOOLCHAIN_HTML=$RESULTSDIR/toolchain.html
 
 # clean up builddir to save space on tmpfs
 rm -rf $TMPBUILDDIR/lede
@@ -95,14 +95,14 @@ DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE
 echo "============================================================================="
 echo "$(date -u) - Running $DIFFOSCOPE on LEDE images and packages."
 echo "============================================================================="
-DBD_HTML=$(mktemp --tmpdir=$TMPDIR)
-DBD_GOOD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
-DBD_BAD_PKGS_HTML=$(mktemp --tmpdir=$TMPDIR)
+DBD_HTML=$(mktemp --tmpdir=$RESULTSDIR)
+DBD_GOOD_PKGS_HTML=$(mktemp --tmpdir=$RESULTSDIR)
+DBD_BAD_PKGS_HTML=$(mktemp --tmpdir=$RESULTSDIR)
 # run diffoscope on the images
 GOOD_IMAGES=0
 ALL_IMAGES=0
 SIZE=""
-cd $TMPDIR/b1/targets
+cd $RESULTSDIR/b1/targets
 tree .
 
 # iterate over all images (merge b1 and b2 images into one list)
@@ -114,29 +114,29 @@ for target in * ; do
 
 		# search images in both paths to find non-existing ones
 		IMGS1=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
-		pushd $TMPDIR/b2/targets/$target/$subtarget
+		pushd $RESULTSDIR/b2/targets/$target/$subtarget
 		IMGS2=$(find * -type f -name "*.bin" -o -name "*.squashfs" | sort -u )
 		popd
 
 		echo "       <table><tr><th>Images for <code>$target/$subtarget</code></th></tr>" >> $DBD_HTML
 		for image in $(printf "$IMGS1\n$IMGS2" | sort -u ) ; do
 			let ALL_IMAGES+=1
-			if [ ! -f $TMPDIR/b1/targets/$target/$subtarget/$image -o ! -f $TMPDIR/b2/targets/$target/$subtarget/$image ] ; then
+			if [ ! -f $RESULTSDIR/b1/targets/$target/$subtarget/$image -o ! -f $RESULTSDIR/b2/targets/$target/$subtarget/$image ] ; then
 				echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $image (${SIZE}) failed to build.</td></tr>" >> $DBD_HTML
 				rm -f $BASE/lede/dbd/targets/$target/$subtarget/$image.html # cleanup from previous (unreproducible) tests - if needed
 				continue
 			fi
 
-			if [ "$(sha256sum "$TMPDIR/b1/targets/$target/$subtarget/$image" "$TMPDIR/b2/targets/$target/$subtarget/$image" \
+			if [ "$(sha256sum "$RESULTSDIR/b1/targets/$target/$subtarget/$image" "$RESULTSDIR/b2/targets/$target/$subtarget/$image" \
 				| cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
 				call_diffoscope targets/$target/$subtarget $image
 			else
 				echo "$(date -u) - targets/$target/$subtarget/$image is reproducible, yip!"
 			fi
 			get_filesize $image
-			if [ -f $TMPDIR/targets/$target/$subtarget/$image.html ] ; then
+			if [ -f $RESULTSDIR/targets/$target/$subtarget/$image.html ] ; then
 				mkdir -p $BASE/lede/dbd/targets/$target/$subtarget
-				mv $TMPDIR/targets/$target/$subtarget/$image.html $BASE/lede/dbd/targets/$target/$subtarget/$image.html
+				mv $RESULTSDIR/targets/$target/$subtarget/$image.html $BASE/lede/dbd/targets/$target/$subtarget/$image.html
 				echo "         <tr><td><a href=\"dbd/targets/$target/$subtarget/$image.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $image</a> (${SIZE}) is unreproducible.</td></tr>" >> $DBD_HTML
 			else
 				SHASUM=$(sha256sum $image|cut -d " " -f1)
@@ -154,33 +154,33 @@ GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
 # run diffoscope on the packages
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
-cd $TMPDIR/b1
+cd $RESULTSDIR/b1
 for i in * ; do
 	cd $i
 
 	# search packages in both paths to find non-existing ones
 	PKGS1=$(find * -type f -name "*.ipk" | sort -u )
-	pushd $TMPDIR/b2/$i
+	pushd $RESULTSDIR/b2/$i
 	PKGS2=$(find * -type f -name "*.ipk" | sort -u )
 	popd
 
 	for j in $(printf "$PKGS1\n$PKGS2" | sort -u ) ; do
 		let ALL_PACKAGES+=1
-		if [ ! -f $TMPDIR/b1/$i/$j -o ! -f $TMPDIR/b2/$i/$j ] ; then
+		if [ ! -f $RESULTSDIR/b1/$i/$j -o ! -f $RESULTSDIR/b2/$i/$j ] ; then
 			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build.</td></tr>" >> $DBD_BAD_PKGS_HTML
 			rm -f $BASE/lede/dbd/$i/$j.html # cleanup from previous (unreproducible) tests - if needed
 			continue
 		fi
 
-		if [ "$(sha256sum $TMPDIR/b1/$i/$j $TMPDIR/b2/$i/$j | cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
+		if [ "$(sha256sum $RESULTSDIR/b1/$i/$j $RESULTSDIR/b2/$i/$j | cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
 			call_diffoscope $i $j
 		else
 			echo "$(date -u) - $i/$j is reproducible, yip!"
 		fi
 		get_filesize $j
-		if [ -f $TMPDIR/$i/$j.html ] ; then
+		if [ -f $RESULTSDIR/$i/$j.html ] ; then
 			mkdir -p $BASE/lede/dbd/$i/$(dirname $j)
-			mv $TMPDIR/$i/$j.html $BASE/lede/dbd/$i/$j.html
+			mv $RESULTSDIR/$i/$j.html $BASE/lede/dbd/$i/$j.html
 			echo "         <tr><td><a href=\"dbd/$i/$j.html\"><img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> $j</a> ($SIZE) is unreproducible.</td></tr>" >> $DBD_BAD_PKGS_HTML
 		else
 			SHASUM=$(sha256sum $j|cut -d " " -f1)
@@ -208,7 +208,7 @@ fi
 #
 #  finally create the webpage
 #
-cd $TMPDIR ; mkdir lede
+cd $RESULTSDIR ; mkdir lede
 PAGE=lede/lede_$LEDE_TARGET.html
 cat > $PAGE <<- EOF
 <!DOCTYPE html>

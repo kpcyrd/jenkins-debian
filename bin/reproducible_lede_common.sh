@@ -18,24 +18,24 @@ node_debug() {
 
 # only called direct on a remote build node
 node_cleanup_tmpdirs() {
-	export TMPDIR=$1
+	export TMPBUILDDIR=$1
 	cd
 	# (very simple) check we are deleting the right stuff
-	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] ; then
-		echo "Something very strange with \$TMPDIR=$TMPDIR exiting instead of doing cleanup."
+	if [ "${TMPBUILDDIR:0:23}" != "/srv/workspace/chroots/" ] || [ ${#TMPBUILDDIR} -le 23 ] ; then
+		echo "Something very strange with \$TMPBUILDDIR=$TMPBUILDDIR exiting instead of doing cleanup."
 		exit 1
 	fi
-	rm -rf $TMPDIR
+	rm -rf $TMPBUILDDIR
 }
 
 node_create_tmpdirs() {
-	export TMPDIR=$1
+	export TMPBUILDDIR=$1
 	# (very simple) check what we are creating
-	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] ; then
-		echo "Something very strange with \$TMPDIR=$TMPDIR exiting instead of doing create."
+	if [ "${TMPBUILDDIR:0:23}" != "/srv/workspace/chroots/" ] || [ ${#TMPBUILDDIR} -le 23 ] ; then
+		echo "Something very strange with \$TMPBUILDDIR=$TMPBUILDDIR exiting instead of doing create."
 		exit 1
 	fi
-	mkdir -p $TMPDIR/download
+	mkdir -p $TMPBUILDDIR/download
 }
 
 # called as trap handler and also to cleanup after a success build
@@ -44,25 +44,25 @@ master_cleanup_tmpdirs() {
 	# in a success build the logs are saved on a different function
 	if [ "$1" != "success" ] ; then
 		# job failed
-		ssh $GENERIC_NODE1 reproducible_$TYPE node node_save_logs $TMPDIR || true
-		ssh $GENERIC_NODE2 reproducible_$TYPE node node_save_logs $TMPDIR || true
+		ssh $GENERIC_NODE1 reproducible_$TYPE node node_save_logs $RESULTSDIR || true
+		ssh $GENERIC_NODE2 reproducible_$TYPE node node_save_logs $RESULTSDIR || true
 		# save failure logs
 		mkdir -p $WORKSPACE/results/
-		rsync -av $GENERIC_NODE1:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz || true
-		rsync -av $GENERIC_NODE2:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz || true
+		rsync -av $GENERIC_NODE1:$RESULTSDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz || true
+		rsync -av $GENERIC_NODE2:$RESULTSDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz || true
 	fi
 
-	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR || true
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $RESULTSDIR || true
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $RESULTSDIR || true
 
 	cd
 	# (very simple) check we are deleting the right stuff
-	if [ "${TMPDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#TMPDIR} -le 26 ] || \
+	if [ "${RESULTSDIR:0:26}" != "/srv/reproducible-results/" ] || [ ${#RESULTSDIR} -le 26 ] || \
 	   [ "${TMPBUILDDIR:0:23}" != "/srv/workspace/chroots/" ] || [ ${#TMPBUILDDIR} -le 23 ] ; then
-		echo "Something very strange with \$TMPDIR=$TMPDIR or \$TMPBUILDDIR=$TMPBUILDDIR, exiting instead of doing cleanup."
+		echo "Something very strange with \$RESULTSDIR=$RESULTSDIR or \$TMPBUILDDIR=$TMPBUILDDIR, exiting instead of doing cleanup."
 		exit 1
 	fi
-	rm -rf $TMPDIR
+	rm -rf $RESULTSDIR
 	rm -rf $TMPBUILDDIR
 	if [ -f $BANNER_HTML ] ; then
 		rm -f $BANNER_HTML
@@ -110,10 +110,11 @@ node_document_environment() {
 }
 
 # node_save_logs can be called over ssh OR called within openwrt_build
+# it's always only run on a remote host.
 node_save_logs() {
 	local tmpdir=$1
 
-	if [ "${tmpdir:0:26}" != "/srv/reproducible-results/" ] || [ ${#tmpdir} -le 26 ] ; then
+	if [ "${tmpdir:0:23}" != "/srv/workspace/chroots/" ] || [ ${#tmpdir} -le 23 ] ; then
 		echo "Something very strange with \$TMPDIR=$tmpdir exiting instead of doing node_save_logs."
 		exit 1
 	fi
@@ -129,7 +130,8 @@ node_save_logs() {
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
-# save the images and packages under $TMPDIR/$RUN
+# save the images and packages under $REULTSDIR/$RUN
+# run on the master
 save_lede_results() {
 	RUN=$1
 
@@ -141,17 +143,17 @@ save_lede_results() {
 			pushd $subtarget || continue
 
 			# save firmware images
-			mkdir -p $TMPDIR/$RUN/targets/$target/$subtarget/
+			mkdir -p $RESULTSDIR/$RUN/targets/$target/$subtarget/
 			for image in $(find * -name "*.bin" -o -name "*.squashfs") ; do
-				cp -p $image $TMPDIR/$RUN/targets/$target/$subtarget/
+				cp -p $image $RESULTSDIR/$RUN/targets/$target/$subtarget/
 			done
 
 			# save subtarget specific packages
 			if [ -d packages ] ; then
 				pushd packages
 				for package in $(find * -name "*.ipk") ; do
-					mkdir -p $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)
-					cp -p $package $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
+					mkdir -p $RESULTSDIR/$RUN/packages/$target/$subtarget/$(dirname $package)
+					cp -p $package $RESULTSDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
 				done
 				popd
 			fi
@@ -169,8 +171,8 @@ save_lede_results() {
 		for feed in * ; do
 			pushd $feed || continue
 			for package in $(find * -name "*.ipk") ; do
-				mkdir -p $TMPDIR/$RUN/packages/$arch/$feed/$(dirname $package)
-				cp -p $package $TMPDIR/$RUN/packages/$arch/$feed/$(dirname $package)/
+				mkdir -p $RESULTSDIR/$RUN/packages/$arch/$feed/$(dirname $package)
+				cp -p $package $RESULTSDIR/$RUN/packages/$arch/$feed/$(dirname $package)/
 			done
 			popd
 		done
@@ -180,22 +182,22 @@ save_lede_results() {
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
-# save the images and packages under $TMPDIR/$RUN
+# save the images and packages under $RESULTSDIR/$RUN
 save_openwrt_results() {
 	RUN=$1
 	cd bin
 	for i in * ; do
 		cd $i
 		# save images
-		mkdir -p $TMPDIR/$RUN/$i
+		mkdir -p $RESULTSDIR/$RUN/$i
 		for j in $(find * -name "*.bin" -o -name "*.squashfs") ; do
-			cp -p $j $TMPDIR/$RUN/$i/
+			cp -p $j $RESULTSDIR/$RUN/$i/
 		done
 		# save packages
 		cd packages
 		for j in $(find * -name "*.ipk") ; do
-			mkdir -p $TMPDIR/$RUN/$i/$(dirname $j)
-			cp -p $j $TMPDIR/$RUN/$i/$(dirname $j)/
+			mkdir -p $RESULTSDIR/$RUN/$i/$(dirname $j)
+			cp -p $j $RESULTSDIR/$RUN/$i/$(dirname $j)/
 		done
 		cd ../..
 	done
@@ -307,10 +309,10 @@ EOF
 openwrt_download() {
 	local TARGET=$1
 	local CONFIG=$2
-	local TMPDIR=$3
+	local TMPBUILDDIR=$3
 	local tries=5
 
-	cd $TMPDIR/download
+	cd $TMPBUILDDIR/download
 
 	# checkout the repo
 	echo "================================================================================"
@@ -398,46 +400,46 @@ build_two_times() {
 	CONFIG=$3
 
 	# create openwrt
-	ssh $GENERIC_NODE1 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_create_tmpdirs $TMPDIR
-	mkdir -p $TMPDIR/download/
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_create_tmpdirs $TMPBUILDDIR
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_create_tmpdirs $TMPBUILDDIR
+	mkdir -p $TMPBUILDDIR/download/
 
 	# create results directory saved by jenkins as artifacts
 	mkdir -p $WORKSPACE/results/
 
 	# download and prepare openwrt on node b1
-	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TARGET $CONFIG $TMPDIR
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TARGET $CONFIG $TMPBUILDDIR
 
 	echo "== master"
-	ls -la "$TMPDIR/download/" || true
+	ls -la "$TMPBUILDDIR/download/" || true
 	echo "== node1"
-	ssh $GENERIC_NODE1 reproducible_$TYPE node node_debug $TMPDIR
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_debug $TMPBUILDDIR
 	echo "== node2"
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPDIR
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_debug $TMPBUILDDIR
 
-	rsync -a $GENERIC_NODE1:$TMPDIR/download/ $TMPDIR/download/
-	rsync -a $TMPDIR/download/ $GENERIC_NODE2:$TMPDIR/download/
+	rsync -a $GENERIC_NODE1:$TMPBUILDDIR/download/ $TMPBUILDDIR/download/
+	rsync -a $TMPBUILDDIR/download/ $GENERIC_NODE2:$TMPBUILDDIR/download/
 
 	## first run
 	RUN=b1
-	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR
-	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_get_banner $TMPDIR $TYPE > $BANNER_HTML
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPBUILDDIR
+	ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_get_banner $TMPBUILDDIR $TYPE > $BANNER_HTML
 	# cut away everything before begin and after the end…
 	# (thats noise generated by the way we run this via reproducible_common.sh)
 	cat $BANNER_HTML | sed '/===bannerend===/,$d' | tac | sed '/===bannerbegin===/,$d' | tac > $BANNER_HTML
 
 	# rsync back logs and images
-	rsync -av $GENERIC_NODE1:$TMPDIR/$RUN/ $TMPDIR/$RUN/
-	rsync -av $GENERIC_NODE1:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz
-	rsync -av $GENERIC_NODE1:$TMPDIR/toolchain.html $TMPDIR/toolchain.html
-	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
+	rsync -av $GENERIC_NODE1:$TMPBUILDDIR/$RUN/ $RESULTSDIR/$RUN/
+	rsync -av $GENERIC_NODE1:$TMPBUILDDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz
+	rsync -av $GENERIC_NODE1:$TMPBUILDDIR/toolchain.html $RESULTSDIR/toolchain.html
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPBUILDDIR
 
 	## second run
 	RUN=b2
-	ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPDIR
+	ssh $GENERIC_NODE2 reproducible_$TYPE node openwrt_build $TYPE $RUN $TARGET $CONFIG $TMPBUILDDIR
 
 	# rsync back logs and images
-	rsync -av $GENERIC_NODE2:$TMPDIR/$RUN/ $TMPDIR/$RUN/
-	rsync -av $GENERIC_NODE2:$TMPDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPDIR
+	rsync -av $GENERIC_NODE2:$TMPBUILDDIR/$RUN/ $RESULTSDIR/$RUN/
+	rsync -av $GENERIC_NODE2:$TMPBUILDDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPBUILDDIR
 }

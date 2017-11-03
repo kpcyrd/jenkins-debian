@@ -344,8 +344,8 @@ openwrt_download() {
 }
 
 openwrt_get_banner() {
-	TMPDIR=$1
-	TYPE=$2
+	local TMPDIR=$1
+	local TYPE=$2
 	cd $TMPDIR/build/source
 	echo "===bannerbegin==="
 	find staging_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null

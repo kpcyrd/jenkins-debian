@@ -233,7 +233,8 @@ openwrt_config() {
 	CONFIG=$1
 
 	printf "$CONFIG\n" | grep '^[^ ]' > .config
-	printf "CONFIG_ALL=y\n" >> .config
+	# build all packages
+	# printf "CONFIG_ALL=y\n" >> .config
 	printf "CONFIG_AUTOREMOVE=y\n" >> .config
 	printf "CONFIG_CLEAN_IPKG=y\n" >> .config
 	printf "CONFIG_TARGET_ROOTFS_TARGZ=y\n" >> .config

@@ -130,7 +130,7 @@ node_save_logs() {
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
-# save the images and packages under $REULTSDIR/$RUN
+# save the images and packages under $TMPDIR/$RUN
 # run on the master
 save_lede_results() {
 	RUN=$1
@@ -143,17 +143,17 @@ save_lede_results() {
 			pushd $subtarget || continue
 
 			# save firmware images
-			mkdir -p $RESULTSDIR/$RUN/targets/$target/$subtarget/
+			mkdir -p $TMPDIR/$RUN/targets/$target/$subtarget/
 			for image in $(find * -name "*.bin" -o -name "*.squashfs") ; do
-				cp -p $image $RESULTSDIR/$RUN/targets/$target/$subtarget/
+				cp -p $image $TMPDIR/$RUN/targets/$target/$subtarget/
 			done
 
 			# save subtarget specific packages
 			if [ -d packages ] ; then
 				pushd packages
 				for package in $(find * -name "*.ipk") ; do
-					mkdir -p $RESULTSDIR/$RUN/packages/$target/$subtarget/$(dirname $package)
-					cp -p $package $RESULTSDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
+					mkdir -p $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)
+					cp -p $package $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
 				done
 				popd
 			fi
@@ -171,8 +171,8 @@ save_lede_results() {
 		for feed in * ; do
 			pushd $feed || continue
 			for package in $(find * -name "*.ipk") ; do
-				mkdir -p $RESULTSDIR/$RUN/packages/$arch/$feed/$(dirname $package)
-				cp -p $package $RESULTSDIR/$RUN/packages/$arch/$feed/$(dirname $package)/
+				mkdir -p $TMPDIR/$RUN/packages/$arch/$feed/$(dirname $package)
+				cp -p $package $TMPDIR/$RUN/packages/$arch/$feed/$(dirname $package)/
 			done
 			popd
 		done
@@ -182,22 +182,22 @@ save_lede_results() {
 }
 
 # RUN - is b1 or b2. b1 for first run, b2 for second
-# save the images and packages under $RESULTSDIR/$RUN
+# save the images and packages under $TMPDIR/$RUN
 save_openwrt_results() {
 	RUN=$1
 	cd bin
 	for i in * ; do
 		cd $i
 		# save images
-		mkdir -p $RESULTSDIR/$RUN/$i
+		mkdir -p $TMPDIR/$RUN/$i
 		for j in $(find * -name "*.bin" -o -name "*.squashfs") ; do
-			cp -p $j $RESULTSDIR/$RUN/$i/
+			cp -p $j $TMPDIR/$RUN/$i/
 		done
 		# save packages
 		cd packages
 		for j in $(find * -name "*.ipk") ; do
-			mkdir -p $RESULTSDIR/$RUN/$i/$(dirname $j)
-			cp -p $j $RESULTSDIR/$RUN/$i/$(dirname $j)/
+			mkdir -p $TMPDIR/$RUN/$i/$(dirname $j)
+			cp -p $j $TMPDIR/$RUN/$i/$(dirname $j)/
 		done
 		cd ../..
 	done

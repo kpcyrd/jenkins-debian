@@ -651,7 +651,6 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
-                    my_disabled: false
                 - 'setup_schroot_archlinux_profitbricks3':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
@@ -762,6 +761,8 @@
                     my_num: 1
                     op_descname: 'an Arch Linux'
                     my_disabled: false
+                    # remove the timer, this is still at a WIP stage so let's have it triggered manually for now.
+                    my_timed: ''
                 - 'archlinux':
                     my_num: 2
                     op_descname: 'an Arch Linux'

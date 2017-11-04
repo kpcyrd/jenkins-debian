@@ -84,7 +84,7 @@ choose_package() {
 			*)		MIN_AGE=365	# should never happen…
 					;;
 		esac
-		touch -d "$(date -d '$MIN_AGE days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
+		touch -d "$(date -d "$MIN_AGE days ago" '+%Y-%m-%d') 00:00 UTC" $DUMMY
 		for PKG in $(sort -R ${ARCHLINUX_PKGS}_$REPO) ; do
 			# build package if it has never build or at least $MIN_AGE days ago
 			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ $DUMMY -nt $BASE/archlinux/$REPO/$PKG ] ; then

@@ -126,6 +126,6 @@ $USERCMD bash <<-__END__
     wget -O PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git
     makepkg
 	__END__
-$ROOTCMD sh -c 'exec pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
+$ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

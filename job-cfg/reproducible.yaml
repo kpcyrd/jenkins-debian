@@ -762,6 +762,7 @@
                 - 'archlinux':
                     my_num: 1
                     op_descname: 'an Arch Linux'
+                    my_disabled: false
                 - 'archlinux':
                     my_num: 2
                     op_descname: 'an Arch Linux'

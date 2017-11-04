@@ -76,6 +76,8 @@ elif [ "$*" = "reproducible_html_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" "$6" ; croak "Exec failed";
+elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/workspace/chroots/.* ]] ; then
+	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/userContent/reproducible/.* ]] ; then

@@ -125,7 +125,7 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
     WGET_OPTS="--no-check-certificate"
 fi
 
-wget $WGET_OPTS -O "$SCHROOT_BASE/$TARGET/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
+wget $WGET_OPTS -O "/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
 
 $USERCMD bash <<-__END__
     set -e

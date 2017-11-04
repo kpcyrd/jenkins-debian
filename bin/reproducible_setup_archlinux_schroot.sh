@@ -105,7 +105,7 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
     sed -i 's/^SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
-$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc wget'
+$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc'
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 
@@ -120,10 +120,18 @@ echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/li
 # this is 2017-11-02 on the rws3 in berlin, this can be dropped after the next
 # pacman release.
 # The workaround with sh -c is needed to delay the shell expansion due to chroot
+WGET_OPTS=''
+if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+    WGET_OPTS="--no-check-certificate"
+fi
+
+wget $WGET_OPTS -O "$SCHROOT_BASE/$TARGET/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
+
 $USERCMD bash <<-__END__
+    set -e
     mkdir /pacman-git
     cd /pacman-git
-    wget -O PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git
+    mv /tmp/PKGBUILD .
     makepkg
 	__END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'

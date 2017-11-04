@@ -86,6 +86,9 @@ elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/jobs/.*/wor
 	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/d-i/isos/ ]] ; then
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";
+elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/workspace/chroots/.* ]] ; then
+	# LEDE is using this to share files between master node1 node2.
+	exec rsync --server "$3" . "$5" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
 	# allow to push files to /srv/reproducible-results/
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";

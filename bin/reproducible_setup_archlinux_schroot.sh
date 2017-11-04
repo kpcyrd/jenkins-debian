@@ -126,6 +126,8 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 fi
 
 wget $WGET_OPTS -O "/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
+# work around dependency weirdness: pacman-git is currently detected as 5.0.1, which is older than the released version
+echo 'provides=("pacman=5.0.2")' >> /tmp/PKGBUILD
 
 $USERCMD bash <<-__END__
     set -e

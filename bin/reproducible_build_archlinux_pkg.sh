@@ -56,6 +56,7 @@ update_archlinux_repositories() {
 		for REPO in $ARCHLINUX_REPOS ; do
 			if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
 				echo "$(date -u ) - updating list of available packages in repository '$REPO'."
+				schroot --run-session -c $SESSION --directory /var/tmp -- pacman -Syu --noconfirm
 				schroot --run-session -c $SESSION --directory /var/tmp -- pacman -Slq "$REPO" | xargs echo > ${ARCHLINUX_PKGS}_$REPO
 				echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
 				cat ${ARCHLINUX_PKGS}_$REPO

@@ -56,7 +56,7 @@ update_archlinux_repositories() {
 		for REPO in $ARCHLINUX_REPOS ; do
 			if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
 				echo "$(date -u ) - updating list of available packages in repository '$REPO'."
-				schroot --run-session -c $SESSION --directory /var/abs/$REPO -- ls -1|sort -u|xargs echo > ${ARCHLINUX_PKGS}_$REPO
+				schroot --run-session -c $SESSION --directory /var/tmp -- pacman -Slq "$REPO" | xargs echo > ${ARCHLINUX_PKGS}_$REPO
 				echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
 				cat ${ARCHLINUX_PKGS}_$REPO
 			fi
@@ -129,12 +129,12 @@ first_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/$REPOSITORY/$SRCPACKAGE $BUILDDIR/
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- asp checkout "$SRCPACKAGE"
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -l -c 'makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -180,7 +180,7 @@ second_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory /tmp -- cp -r /var/abs/$REPOSITORY/$SRCPACKAGE $BUILDDIR/
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- asp checkout "$SRCPACKAGE"
 	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
@@ -190,7 +190,7 @@ second_build() {
 	__END__
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory $BUILDDIR/$SRCPACKAGE -- bash -l -c 'makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG

@@ -44,16 +44,16 @@ master_cleanup_tmpdirs() {
 	# in a success build the logs are saved on a different function
 	if [ "$1" != "success" ] ; then
 		# job failed
-		ssh $GENERIC_NODE1 reproducible_$TYPE node node_save_logs $RESULTSDIR || true
-		ssh $GENERIC_NODE2 reproducible_$TYPE node node_save_logs $RESULTSDIR || true
+		ssh $GENERIC_NODE1 reproducible_$TYPE node node_save_logs $TMPBUILDDIR || true
+		ssh $GENERIC_NODE2 reproducible_$TYPE node node_save_logs $TMPBUILDDIR || true
 		# save failure logs
 		mkdir -p $WORKSPACE/results/
 		rsync -av $GENERIC_NODE1:$RESULTSDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b1.tar.xz || true
 		rsync -av $GENERIC_NODE2:$RESULTSDIR/build_logs.tar.xz $WORKSPACE/results/build_logs_b2.tar.xz || true
 	fi
 
-	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $RESULTSDIR || true
-	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $RESULTSDIR || true
+	ssh $GENERIC_NODE1 reproducible_$TYPE node node_cleanup_tmpdirs $TMPBUILDDIR || true
+	ssh $GENERIC_NODE2 reproducible_$TYPE node node_cleanup_tmpdirs $TMPBUILDDIR || true
 
 	cd
 	# (very simple) check we are deleting the right stuff

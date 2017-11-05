@@ -357,7 +357,11 @@ def rest(scheduling_args, requester, local, suite, arch):
     log.info(bcolors.GOOD + info_msg + bcolors.ENDC)
     if not (local and requester == "jenkins maintenance job") and len(ids) != 0:
         if not dry_run:
-            irc_msg(info_msg)
+            # Always announce on -changes
+            irc_msg(info_msg, 'debian-reproducible-changes')
+            # Announce some messages on main channel
+            if notify_on_start or artifacts:
+                irc_msg(info_msg)
 
     from reproducible_html_live_status import generate_schedule
     generate_schedule(arch)  # update the HTML page

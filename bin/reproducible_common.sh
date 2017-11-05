@@ -53,7 +53,7 @@ ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
 
 # common settings for testing rpm based distros
 RPM_BUILD_NODE=profitbricks-build3-amd64
-RPM_PKGS=/srv/reproducible-results/.rpm_pkgs
+RPM_PKGS=/srv/reproducible-results/rpm_pkgs
 
 # number of cores to be used
 NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)

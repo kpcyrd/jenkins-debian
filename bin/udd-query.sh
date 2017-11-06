@@ -46,7 +46,8 @@ multiarch_versionskew() {
 			ORDER BY source ;"
 
 	udd_query
-	if [ -s $UDD ] ; then
+	local PKGS=($(< "$UDD"))
+	if [ ${#PKGS[@]} -gt 0 ] ; then
 		if [ "$DISTRO" != "sid" ] ; then
 			echo "Warning: multi-arch version skew in $DISTRO detected."
 		else
@@ -55,9 +56,8 @@ multiarch_versionskew() {
 		fi
 		echo
 		printf  "         Package          |           Tracker\n"
-		# bash sucks: it's printf(1) implementation doesn't like leading dashes as-is...
 		printf -- "--------------------------------------------------------------------------\n"
-		for pkg in $(cat $UDD) ; do
+		for pkg in "${PKGS[@]}" ; do
 			printf "%25s | %s\n" "$pkg" "https://tracker.debian.org/$pkg"
 		# TODO: show versions (per arch) too
 		done

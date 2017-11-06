@@ -69,16 +69,16 @@ orphaned_without_o_bug() {
 	WNPPRM=$(mktemp)
 	SORTED_UDD=$(mktemp)
 
-	SQL_QUERY="SELECT DISTINCT u.source
-		FROM upload_history AS u
+	SQL_QUERY="
+		SELECT DISTINCT s.source
+		FROM sources AS s
 		JOIN (
-				SELECT s.source, max(u.date) AS date
-				FROM upload_history AS u
-				JOIN sources AS s ON s.source=u.source
-				WHERE s.release = 'sid' OR s.release = 'experimental'
-				GROUP BY s.source
-			) AS foo ON foo.source=u.source AND foo.date=u.date
-		WHERE maintainer like '%packages@qa.debian.org%';"
+				SELECT source, max(version) AS version
+				FROM sources
+				WHERE release IN ('sid','experimental')
+				GROUP BY source
+			) AS foo ON foo.source=s.source AND foo.version=s.version
+		WHERE s.maintainer_email = 'packages@qa.debian.org';"
 
 	udd_query
 	cat $UDD | tr -d ' ' | sort | uniq > "$SORTED_UDD"

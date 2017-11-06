@@ -62,7 +62,6 @@ multiarch_versionskew() {
 		# TODO: show versions (per arch) too
 		done
 	fi
-	rm $UDD
 }
 
 orphaned_without_o_bug() {
@@ -95,13 +94,15 @@ orphaned_without_o_bug() {
 		done
 	fi
 
-	rm -f "$UDD" "$WNPPRM" "$SORTED_UDD"
+	rm -f "$WNPPRM" "$SORTED_UDD"
 }
 
 #
 # main
 #
 UDD=$(mktemp)
+function rmtmpfile { rm -f "$UDD"; }
+trap rmtmpfile exit
 case $1 in
 	orphaned_without_o_bug)
 			orphaned_without_o_bug

@@ -15,9 +15,9 @@ udd_query() {
 	#
 	echo "$(date -u) - querying UDD using ${SQL_QUERY}"
 	echo
-	PGPASSWORD=public-udd-mirror \
-		psql -U public-udd-mirror \
-		-h public-udd-mirror.xvm.mit.edu -p 5432 \
+	PGPASSWORD=udd-mirror \
+		psql -U udd-mirror \
+		-h udd-mirror.debian.net -p 5432 \
 		-t \
 		udd -c"${SQL_QUERY}" > $UDD
 }

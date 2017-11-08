@@ -235,6 +235,7 @@ openwrt_config() {
 	printf "$CONFIG\n" | grep '^[^ ]' > .config
 	printf "CONFIG_ALL=y\n" >> .config
 	printf "CONFIG_AUTOREMOVE=y\n" >> .config
+	printf "CONFIG_BUILDBOT=y\n" >> .config
 	printf "CONFIG_CLEAN_IPKG=y\n" >> .config
 	printf "CONFIG_TARGET_ROOTFS_TARGZ=y\n" >> .config
 	printf 'CONFIG_KERNEL_BUILD_USER="lede"\n' >> .config

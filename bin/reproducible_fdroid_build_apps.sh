@@ -46,7 +46,7 @@ cleanup_all() {
 }
 trap cleanup_all INT TERM EXIT
 
-./jenkins-build
+./jenkins-build-all
 
 # remove trap
 trap - INT TERM EXIT

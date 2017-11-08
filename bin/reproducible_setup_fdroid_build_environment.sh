@@ -69,9 +69,8 @@ virsh --connect qemu:///system vol-delete --pool default /var/lib/libvirt/images
 # set up Android SDK to use the Debian packages in stretch
 export ANDROID_HOME=/usr/lib/android-sdk
 
-# this script is maintained upstream and is also run on Guardian
-# Project's jenkins box
-./jenkins-build-makebuildserver
+# this script is maintained upstream
+./jenkins-setup-build-environment
 
 # remove trap
 trap - INT TERM EXIT

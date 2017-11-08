@@ -360,12 +360,6 @@ notes on source and binary versions:
 *** or: "fdroid build -l org.fdroid.fdroid" to build the latest
 ** run diffopscope on the results
 
-* let froidserver.git trigger the setup job
-* make setup job fail, when a build job is running
-* make build job wait ("forever"), when a setup job is running
-* later, get a list of all available apps by listing fdroiddata/metadata/*.txt
-* later: switch reproducible_build_fdroid_apk.sh to F-Droid 'Verification Server'
-
 * also see https://f-droid.org/wiki/page/Build_Server_Setup
 
 * diskspace needs:

@@ -136,6 +136,8 @@ elif [[ "$*" =~ ^reproducible_setup_schroot_archlinux ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_fdroid_build_apps ]] ; then
 	exec /srv/jenkins/bin/reproducible_fdroid_build_apps.sh ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_fdroid_test ]] ; then
+	exec /srv/jenkins/bin/reproducible_fdroid_test.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_fdroid_build_environment ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_fdroid_build_environment.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_mock_fedora-23_x86_64 ]] ; then

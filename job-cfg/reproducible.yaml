@@ -701,6 +701,20 @@
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
 
+        - '{name}_{otherproject_git_blocked}':
+            otherproject_git_blocked:
+                - 'fdroid_test':
+                    my_description: 'Run tests on all the built APKs for F-Droid.'
+                    my_timed: '42 23 1 1 *'
+                    my_hname: 'profitbricks7'
+                    my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
+                    my_blocker: '^reproducible_fdroid.*'
+            my_gitbranches: 'master'
+            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+            my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
+            my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+
         - '{name}_{otherproject_git}':
             otherproject_git:
                 - 'reprotest_from_git_master':

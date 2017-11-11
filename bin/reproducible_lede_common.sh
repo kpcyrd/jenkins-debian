@@ -152,7 +152,7 @@ save_lede_results() {
 			if [ -d packages ] ; then
 				pushd packages
 				for package in $(find * -name "*.ipk") ; do
-					mkdir -p $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)
+					mkdir -p $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package) || ( echo $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package) ; continue )
 					cp -p $package $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
 				done
 				popd

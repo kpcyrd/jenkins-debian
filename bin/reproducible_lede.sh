@@ -105,6 +105,9 @@ SIZE=""
 cd $RESULTSDIR/b1/targets
 tree .
 
+# call_diffoscope requires TMPDIR
+TMPDIR=$RESULTSDIR
+
 # iterate over all images (merge b1 and b2 images into one list)
 # call diffoscope on the images
 for target in * ; do

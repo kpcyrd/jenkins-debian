@@ -139,7 +139,7 @@ $USERCMD bash <<-__END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
 
 # fix /etc/pacman.conf. pacman-git doesn't have any repos configured
-cat >> $SCHROOT_BASE/$TARGET/etc/pacman.conf <<-__END__
+sudo tee -a $SCHROOT_BASE/$TARGET/etc/pacman.conf <<-__END__
     #[testing]
     #Include = /etc/pacman.d/mirrorlist
 
@@ -167,7 +167,7 @@ cat >> $SCHROOT_BASE/$TARGET/etc/pacman.conf <<-__END__
 
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
     # disable signature verification so packages won't fail to install when setting the time to +$x years
-    sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+    sudo sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

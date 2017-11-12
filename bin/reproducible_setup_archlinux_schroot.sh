@@ -138,4 +138,36 @@ $USERCMD bash <<-__END__
 	__END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
 
+# fix /etc/pacman.conf. pacman-git doesn't have any repos configured
+cat >> $SCHROOT_BASE/$TARGET/etc/pacman.conf <<-__END__
+    #[testing]
+    #Include = /etc/pacman.d/mirrorlist
+
+    [core]
+    Include = /etc/pacman.d/mirrorlist
+
+    [extra]
+    Include = /etc/pacman.d/mirrorlist
+
+    #[community-testing]
+    #Include = /etc/pacman.d/mirrorlist
+
+    [community]
+    Include = /etc/pacman.d/mirrorlist
+
+    # If you want to run 32 bit applications on your x86_64 system,
+    # enable the multilib repositories as required here.
+
+    #[multilib-testing]
+    #Include = /etc/pacman.d/mirrorlist
+
+    [multilib]
+    Include = /etc/pacman.d/mirrorlist
+    __END__
+
+if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+    # disable signature verification so packages won't fail to install when setting the time to +$x years
+    sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+fi
+
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

@@ -789,7 +789,7 @@
                     my_shell: '/srv/jenkins/bin/reproducible_build_rpm.sh fedora-23 x86_64'
                 # when you add another fedora builder here
                 # the loop in bin/reproducible_setup_mock.sh needs to be increased too
-            my_description: 'Try to reproducibly build {op_descname} package.'
+            my_description: 'Build {op_descname} package twice and run diffoscope on it, if it is not reproducible.'
             my_shell: '/srv/jenkins/bin/reproducible_build_{otherproject}_pkg.sh'
             my_timed: '* * * * *'
             my_trigger: 'reproducible_html_{otherproject}'

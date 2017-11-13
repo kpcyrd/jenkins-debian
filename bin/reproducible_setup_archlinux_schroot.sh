@@ -130,40 +130,40 @@ wget $WGET_OPTS -O "/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain
 echo 'provides=("pacman=5.0.2")' >> /tmp/PKGBUILD
 
 $USERCMD bash <<-__END__
-    set -e
-    mkdir /pacman-git
-    cd /pacman-git
-    mv /tmp/PKGBUILD .
-    makepkg
-	__END__
+set -e
+mkdir /pacman-git
+cd /pacman-git
+mv /tmp/PKGBUILD .
+makepkg
+__END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
 
 # fix /etc/pacman.conf. pacman-git doesn't have any repos configured
 sudo tee -a $SCHROOT_BASE/$TARGET/etc/pacman.conf <<-__END__
-    #[testing]
-    #Include = /etc/pacman.d/mirrorlist
+#[testing]
+#Include = /etc/pacman.d/mirrorlist
 
-    [core]
-    Include = /etc/pacman.d/mirrorlist
+[core]
+Include = /etc/pacman.d/mirrorlist
 
-    [extra]
-    Include = /etc/pacman.d/mirrorlist
+[extra]
+Include = /etc/pacman.d/mirrorlist
 
-    #[community-testing]
-    #Include = /etc/pacman.d/mirrorlist
+#[community-testing]
+#Include = /etc/pacman.d/mirrorlist
 
-    [community]
-    Include = /etc/pacman.d/mirrorlist
+[community]
+Include = /etc/pacman.d/mirrorlist
 
-    # If you want to run 32 bit applications on your x86_64 system,
-    # enable the multilib repositories as required here.
+# If you want to run 32 bit applications on your x86_64 system,
+# enable the multilib repositories as required here.
 
-    #[multilib-testing]
-    #Include = /etc/pacman.d/mirrorlist
+#[multilib-testing]
+#Include = /etc/pacman.d/mirrorlist
 
-    [multilib]
-    Include = /etc/pacman.d/mirrorlist
-    __END__
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+__END__
 
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
     # disable signature verification so packages won't fail to install when setting the time to +$x years

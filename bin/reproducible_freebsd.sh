@@ -100,6 +100,8 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	RSCP="scp -r freebsd-jenkins.debian.net"
 	TMPBUILDDIR=/usr/src
 	$RSSH 'sudo rm -rf /usr/src ; sudo mkdir /usr/src ; sudo chown jenkins /usr/src'  ### this is tmpfs on linux, we should move this to tmpfs on FreeBSD too
+	# Ensure we start with the correct time on the target
+	$RSSH 'sudo service ntpd stop ; sudo ntpdate -b pool.ntp.org ; sudo service ntpd start ; sudo service ntpd status ; date -u'
 	TMPDIR=$($RSSH 'TMPDIR=/srv/reproducible-results mktemp -d -t rbuild-freebsd')  # used to compare results
 	DATE=$(date -u +'%Y-%m-%d')
 	START=$(date +'%s')

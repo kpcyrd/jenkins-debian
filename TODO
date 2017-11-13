@@ -275,9 +275,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** /etc/rc.conf
 *** /etc/resolv.conf
 *** /boot/loader.conf.local
-** pkg install screen git vim sudo denyhosts munin-node
+** pkg install screen git vim sudo denyhosts munin-node poudriere
 ** adduser holger
 ** adduser jenkins (with bash as default shell)
+** adduser mattia
 ** mkdir -p /srv/reproducible-results
 ** chown -R jenkins:jenkins /srv/
 
@@ -286,6 +287,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** done with: 'freebsd-update upgrade -r 10.2'
 *** and with:  'freebsd-update upgrade -r 10.3'
 *** and with:  'freebsd-update upgrade -r 11.0' in screen, followed by 'pkg-static install pkg ; pkg upgrade'
+
+* online disk resizing howto: https://www.freebsd.org/doc/handbook/disks-growing.html
 
 ==== reproducible Fedora
 

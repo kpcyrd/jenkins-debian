@@ -112,7 +112,8 @@ for FREEBSD_TARGET in ${FREEBSD_TARGETS} ;do
 	echo "============================================================================="
 	echo "$(date -u) - Cloning FreeBSD git repository."
 	echo "============================================================================="
-	$RSSH git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
+	# Disable SSL verification as we may be in the future, beyond GitHub's cert exipry.
+	$RSSH env GIT_SSL_NO_VERIFY=true git clone --depth 1 --branch $FREEBSD_TARGET https://github.com/freebsd/freebsd.git $TMPBUILDDIR
 	FREEBSD[$FREEBSD_TARGET]=$($RSSH "cd $TMPBUILDDIR ; git log -1")
 	FREEBSD_VERSION[$FREEBSD_TARGET]=$($RSSH "cd $TMPBUILDDIR ; git describe --always")
 	echo "This is FreeBSD branch $FREEBSD_TARGET at ${FREEBSD_VERSION[$FREEBSD_TARGET]}."

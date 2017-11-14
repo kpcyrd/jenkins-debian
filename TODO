@@ -276,6 +276,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** /etc/resolv.conf
 *** /boot/loader.conf.local
 ** pkg install screen git vim sudo denyhosts munin-node poudriere
+*** configure /usr/local/etc/munin/munin-node.conf to allow jenkins to access it
+*** configure /usr/local/etc/denyhosts.conf and /etc/hosts.allow and touch /etc/hosts.deniedssh
 ** adduser holger
 ** adduser jenkins (with bash as default shell)
 ** adduser mattia

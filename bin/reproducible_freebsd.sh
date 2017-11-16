@@ -62,7 +62,8 @@ run_diffoscope_on_results() {
 	fi
 	cd $TMPDIR/b1
 	tree .
-	for j in $(find * -type l -prune -o -type f -print |sort -u ) ; do
+	# maybe better remove that "freebsd_master_git?????????.tar.xz" from the tree first?
+	for j in $(find * -type l -prune -o -type f -print |sort -u | egrep -v "freebsd_master_git?????????.tar.xz" ) ; do
 		ALL_FILES[$FREEBSD_TARGET]=$(( ${ALL_FILES[$FREEBSD_TARGET]}+1 ))
 		call_diffoscope . $j
 		get_filesize $j

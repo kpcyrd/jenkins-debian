@@ -556,7 +556,7 @@ def strip_epoch(version):
 def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultarch):
     """
     if there is no version specified it will use the version listed in
-    reproducible.db
+    reproducible db
     """
     if not version:
         query = """SELECT r.version

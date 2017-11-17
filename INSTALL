@@ -150,10 +150,10 @@ Additional, give user jenkins write access to the root $JENKINSGIT directory and
 
 Get a recent copy of the database from:
 ----
-wget https://tests.reproducible-builds.org/reproducible.db
+wget https://tests.reproducible-builds.org/reproducible.sql.xz
 ----
 
-Keep the database (or a symlink of it) in /var/lib/jenkins/reproducible.db and give the user Jenkins write access.
+The database is kept using PostgreSQL and initialised by runing /srv/jenkins/bin/reproducible_db_maintenance.py manually as the jenkins user.
 
 ==== Websites scripts
 

@@ -27,6 +27,10 @@ abort_if_bug_is_still_open() {
 			echo
 			echo "Warning: aborting the job because of bug because #$1"
 			echo
+			echo "After having fixed the cause for #$1, remove the check from common_init()"
+			echo "in bin/common-functions.sh and re-run the job. Close #$1 after the"
+			echo "problem is indeed fixed."
+			echo
 			exec /srv/jenkins/bin/abort.sh
 			exit 0
 		fi

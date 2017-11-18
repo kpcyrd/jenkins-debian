@@ -135,7 +135,7 @@ first_build() {
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -191,7 +191,7 @@ second_build() {
 	__END__
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -232,7 +232,7 @@ remote_build() {
 		cleanup_all
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
+	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR} ${SOURCE_DATE_EPOCH}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
@@ -280,12 +280,14 @@ trap cleanup_all INT TERM EXIT
 if [ "$1" = "" ] ; then
 	MODE="master"
 	TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-archlinux-XXXXXXXX)  # where everything actually happens
+    SOURCE_DATE_EPOCH=$(date +%s)
 	cd $TMPDIR
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	REPOSITORY="$2"
 	SRCPACKAGE="$3"
 	TMPDIR="$4"
+    SOURCE_DATE_EPOCH="$5"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	mkdir -p b$MODE/$SRCPACKAGE

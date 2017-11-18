@@ -105,8 +105,8 @@ set -o pipefail
 set -e
 
 ARCH="amd64"
-DIST="$1"
-DIRECTORY="`pwd`/debian-$DIST-$ARCH"
+CODENAME="$1"
+DIRECTORY="`pwd`/debian-$CODENAME-$ARCH"
 
 APT_OPTS="-y"
 #APT_OPTS=$APT_OPTS" -o Acquire::Check-Valid-Until=false" # because we use snapshot
@@ -127,30 +127,58 @@ cp /etc/apt/trusted.gpg.d/* $DIRECTORY/etc/apt/trusted.gpg.d/
 
 touch $DIRECTORY/var/lib/dpkg/status
 
-echo deb $MIRROR $DIST main > $DIRECTORY/etc/apt/sources.list
+cat << END > $DIRECTORY/etc/apt/sources.list.d/default.sources
+Types: deb
+URIs: $MIRROR
+Suites: $CODENAME
+Components: main
+Architectures: $ARCH
+END
 
 cat << END > "$DIRECTORY/etc/apt/apt.conf"
 Apt::Architecture "$ARCH";
+Apt::Architectures "$ARCH";
 Dir::Etc::TrustedParts "$DIRECTORY/etc/apt/trusted.gpg.d";
 Dir::Etc::Trusted "$DIRECTORY/etc/apt/trusted.gpg";
 Dir "$DIRECTORY/";
 Dir::Etc "$DIRECTORY/etc/apt/";
 Dir::Etc::SourceList "$DIRECTORY/etc/apt/sources.list";
+Dir::Etc::SourceParts "$DIRECTORY/etc/apt/sources.list.d/";
 Dir::State "$DIRECTORY/var/lib/apt/";
 Dir::State::Status "$DIRECTORY/var/lib/dpkg/status";
 Dir::Cache "$DIRECTORY/var/cache/apt/";
+Acquire::IndexTargets {
+  deb::Contents-deb::DefaultEnabled "true";
+  deb::Contents-deb  {
+      MetaKey "\$(COMPONENT)/Contents-\$(ARCHITECTURE)";
+      ShortDescription "Contents-\$(ARCHITECTURE)";
+      Description "\$(RELEASE)/\$(COMPONENT) \$(ARCHITECTURE) Contents (deb)";
+      flatMetaKey "Contents-\$(ARCHITECTURE)";
+      flatDescription "\$(RELEASE) Contents (deb)";
+      PDiffs "true";
+      KeepCompressed "true";
+  };
+  deb::Packages::DefaultEnabled "true";
+  deb::Translations::DefaultEnabled "false";
+  deb-src::Contents-dsc::DefaultEnabled "false";
+  deb-src::Sources::DefaultEnabled "false";
+};
+apt-file::Index-Names "deb";
+#clear APT::Default-Release;
 END
 
+APT_FILE_OPTS="--architecture $ARCH --config-file $DIRECTORY/etc/apt/apt.conf"
 APT_CONFIG="$DIRECTORY/etc/apt/apt.conf"
 export APT_CONFIG
 
-apt-get $APT_OPTS update
+apt $APT_OPTS update
 
-APT_FILE_OPTS="--architecture $ARCH"
-APT_FILE_OPTS=$APT_FILE_OPTS" --cache $DIRECTORY/var/cache/apt/apt-file"
-APT_FILE_OPTS=$APT_FILE_OPTS" --sources-list $DIRECTORY/etc/apt/sources.list"
-
-apt-file $APT_FILE_OPTS update
+PACKAGES=$(apt-get indextargets \
+	| grep-dctrl --exact \( --field Created-By Packages \
+		--and --field Architecture $ARCH \
+		--and --field Codename $CODENAME \
+		--and --field Component main \) \
+		-s Filename -n)
 
 printf "" > $DIRECTORY/interested-file
 printf "" > $DIRECTORY/interested-explicit
@@ -170,7 +198,7 @@ trap finish EXIT
 # of the package names passed to it is not known by apt. This can easily
 # happen in unstable where binarycontrol.debian.net still knows about
 # a package which was already removed.
-curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&path=${DIST}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
+curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&path=${CODENAME}%2F[^%2F]%2B%2Ftriggers%24&format=pkglist" \
 	| xargs python3 -c "import apt,sys;c=apt.Cache();[print(n, c[n].candidate.uri) for n in sys.argv[1:] if n in c]" \
 	| sort -u \
 	| while read pkg url; do
@@ -229,8 +257,8 @@ cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 	#
 	# We ignore the implicit dependencies on Essential:yes packages because
 	# they do not create trigger cycles.
-	dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
-		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
+	/usr/lib/apt/apt-helper cat-file "$PACKAGES" \
+		| dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
 		| awk '/^package:/ { print $2 }' \
 		| apt-file $APT_FILE_OPTS show -F --from-file - \
 		| sed -ne "s ^\([^:]\+\):\s\+\(${ipath}\(\$\|/.*\)\) \1\t\2 p" \
@@ -250,8 +278,8 @@ cat $DIRECTORY/interested-file | while read pkg ttype ipath; do
 	#
 	# We ignore the implicit dependencies on Essential:yes packages because
 	# they do not create trigger cycles.
-	dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
-		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
+	/usr/lib/apt/apt-helper cat-file "$PACKAGES" \
+		| dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
 		| awk '/^package:/ { print $2 }' \
 		| while read dep; do
 			[ "$pkg" != "$dep" ] || continue
@@ -275,8 +303,8 @@ cat $DIRECTORY/interested-explicit | while read pkg ttype iname; do
 	#
 	# We ignore the implicit dependencies on Essential:yes packages because
 	# they do not create trigger cycles.
-	dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
-		$DIRECTORY/var/lib/apt/lists/*_dists_${DIST}_main_binary-${ARCH}_Packages \
+	/usr/lib/apt/apt-helper cat-file "$PACKAGES" \
+		| dose-ceve --deb-ignore-essential -c $pkg -T cudf -t deb \
 		| awk '/^package:/ { print $2 }' \
 		| while read dep; do
 			[ "$pkg" != "$dep" ] || continue

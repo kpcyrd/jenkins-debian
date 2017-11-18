@@ -165,6 +165,8 @@ Include = /etc/pacman.d/mirrorlist
 Include = /etc/pacman.d/mirrorlist
 __END__
 
+sudo sed -i "s/^PKGEXT='.pkg.tar.gz'/PKGEXT='.pkg.tar.xz'/" "$SCHROOT_BASE/$TARGET/etc/makepkg.conf"
+
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
     # disable signature verification so packages won't fail to install when setting the time to +$x years
     sudo sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"

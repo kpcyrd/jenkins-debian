@@ -333,6 +333,8 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 		fi
 	done
+else
+    echo "$(date -u) - build1 didn't create a package, skipping build2!"
 fi
 # publish logs
 cd $TMPDIR/b1/$SRCPACKAGE

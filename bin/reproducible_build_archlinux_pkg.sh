@@ -294,11 +294,16 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	else
 		second_build
 	fi
-	# preserve results and delete build directory
-	mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/ || ls /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/
-	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
-	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
-	exit 0
+
+    # preserve results and delete build directory
+    if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
+        echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
+        find /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/
+    fi
+
+    rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
+    echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
+    exit 0
 fi
 
 #

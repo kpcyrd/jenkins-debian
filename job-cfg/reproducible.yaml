@@ -779,6 +779,10 @@
                     my_num: 2
                     op_descname: 'an Arch Linux'
                     my_disabled: false
+                - 'archlinux':
+                    my_num: 3
+                    op_descname: 'an Arch Linux'
+                    my_disabled: false
                 - 'fedora-23_x86_64':
                     my_num: 1
                     op_descname: 'a Fedora 23'

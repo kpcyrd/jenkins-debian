@@ -131,11 +131,13 @@ first_build() {
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- asp checkout "$SRCPACKAGE"
+	# $SRCPACKAGE is actually the binary package
+	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c 'SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -182,6 +184,8 @@ second_build() {
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- asp checkout "$SRCPACKAGE"
+	# $SRCPACKAGE is actually the binary package
+	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
@@ -191,7 +195,7 @@ second_build() {
 	__END__
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$SRCPACKAGE/trunk" -- bash -l -c 'SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c 'SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' makepkg --syncdeps --noconfirm 2>&1' | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -298,9 +302,9 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	fi
 
     # preserve results and delete build directory
-    if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
+    if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
         echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
-        find /tmp/$SRCPACKAGE-$(basename $TMPDIR)/$SRCPACKAGE/
+        find /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
     fi
 
     rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/

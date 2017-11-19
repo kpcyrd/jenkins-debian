@@ -48,7 +48,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
 		if [ -z "$(cd $ARCHLINUX_PKG_PATH ; ls)" ] ; then
 			# directory exists but is empty: package is building…
-			echo "$(date -u ) - ignoring $PKG from '$REPOSITORY' which is building right now…"
+			echo "$(date -u ) - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH right now…"
 			continue
 		fi
 		let TESTED+=1

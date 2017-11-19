@@ -197,3 +197,5 @@ write_page "    </table>"
 write_page "</div></div>"
 write_page_footer 'Arch Linux'
 echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
+
+# vim: set sw=0 noet :

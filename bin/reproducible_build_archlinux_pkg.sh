@@ -284,14 +284,14 @@ trap cleanup_all INT TERM EXIT
 if [ "$1" = "" ] ; then
 	MODE="master"
 	TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-archlinux-XXXXXXXX)  # where everything actually happens
-    SOURCE_DATE_EPOCH=$(date +%s)
+	SOURCE_DATE_EPOCH=$(date +%s)
 	cd $TMPDIR
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
 	REPOSITORY="$2"
 	SRCPACKAGE="$3"
 	TMPDIR="$4"
-    SOURCE_DATE_EPOCH="$5"
+	SOURCE_DATE_EPOCH="$5"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	mkdir -p b$MODE/$SRCPACKAGE
@@ -301,15 +301,15 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 		second_build
 	fi
 
-    # preserve results and delete build directory
-    if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
-        echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
-        find /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
-    fi
+	# preserve results and delete build directory
+	if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
+		echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
+		find /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
+	fi
 
-    rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
-    echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
-    exit 0
+	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
+	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
+	exit 0
 fi
 
 #
@@ -340,7 +340,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 		fi
 	done
 else
-    echo "$(date -u) - build1 didn't create a package, skipping build2!"
+	echo "$(date -u) - build1 didn't create a package, skipping build2!"
 fi
 # publish logs
 cd $TMPDIR/b1/$SRCPACKAGE
@@ -352,3 +352,4 @@ cd
 cleanup_all
 trap - INT TERM EXIT
 
+# vim: set sw=0 noet :

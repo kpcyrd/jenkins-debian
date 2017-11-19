@@ -31,20 +31,20 @@ bootstrap() {
 		exit 1
 	fi
 
-    if [ ! -f "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz" ]; then
-        BOOTSTRAP_TAR_GZ="$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
-        echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
+	if [ ! -f "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz" ]; then
+		BOOTSTRAP_TAR_GZ="$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
+		echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
 
-        curl -fO "$BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ"
-        sudo rm -rf --one-file-system "$SCHROOT_BASE/root.x86_64/"
-        tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
+		curl -fO "$BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ"
+		sudo rm -rf --one-file-system "$SCHROOT_BASE/root.x86_64/"
+		tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
 
-        mv "$SCHROOT_BASE/$TARGET" "$SCHROOT_BASE/$TARGET.old"
-        mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
-        sudo rm -rf --one-file-system "$SCHROOT_BASE/$TARGET.old"
+		mv "$SCHROOT_BASE/$TARGET" "$SCHROOT_BASE/$TARGET.old"
+		mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
+		sudo rm -rf --one-file-system "$SCHROOT_BASE/$TARGET.old"
 
-        rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
-    fi
+		rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
+	fi
 
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
@@ -101,8 +101,8 @@ echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGE
 # (-0777 tells perl to read the whole file before processing it. then it just does a multi-line regex…)
 perl -0777 -i -pe 's/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/[multilib]\nInclude = \/etc\/pacman.d\/mirrorlist/igs' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
-    # disable signature verification so packages won't fail to install when setting the time to +$x years
-    sed -i 's/^SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	# disable signature verification so packages won't fail to install when setting the time to +$x years
+	sed -i 's/^SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
 $ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc asp'
@@ -122,7 +122,7 @@ echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/li
 # The workaround with sh -c is needed to delay the shell expansion due to chroot
 WGET_OPTS=''
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
-    WGET_OPTS="--no-check-certificate"
+	WGET_OPTS="--no-check-certificate"
 fi
 
 wget $WGET_OPTS -O "/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
@@ -168,8 +168,10 @@ __END__
 $ROOTCMD sed -i "s/^PKGEXT='.pkg.tar.gz'/PKGEXT='.pkg.tar.xz'/" /etc/makepkg.conf
 
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
-    # disable signature verification so packages won't fail to install when setting the time to +$x years
-    $ROOTCMD sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/' /etc/pacman.conf
+	# disable signature verification so packages won't fail to install when setting the time to +$x years
+	$ROOTCMD sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/' /etc/pacman.conf
 fi
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."
+
+# vim: set sw=0 noet :

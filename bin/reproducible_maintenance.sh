@@ -488,7 +488,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			PKG=$(basename $NOTE)
 			mv $NOTE $TMPFILE
-			cat $TMPFILE | mail -s "reproducible.debian.net status changes for $PKG" \
+			cat $TMPFILE | mail -s "tests.reproducible-builds.org/debian status changes for $PKG" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				 $PKG@packages.debian.org
 			rm -f $TMPFILE

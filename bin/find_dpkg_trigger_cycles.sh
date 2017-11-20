@@ -106,10 +106,15 @@ set -e
 
 ARCH="amd64"
 CODENAME="$1"
-DIRECTORY="`pwd`/debian-$CODENAME-$ARCH"
+DIRECTORY=$(mktemp --directory tmp.jenkins_find_dpkg_trigger_cycles_${ARCH}_${CODENAME}_XXXXXXXXXX)
 
 APT_OPTS="-y"
 #APT_OPTS=$APT_OPTS" -o Acquire::Check-Valid-Until=false" # because we use snapshot
+
+function finish {
+	rm -rf "$DIRECTORY"
+}
+trap finish EXIT
 
 mkdir -p $DIRECTORY
 mkdir -p $DIRECTORY/etc/apt/
@@ -185,12 +190,6 @@ printf "" > $DIRECTORY/interested-explicit
 printf "" > $DIRECTORY/activated-file
 printf "" > $DIRECTORY/activated-explicit
 
-scratch=$(mktemp -d -t tmp.dpkg_trigger_cycles.XXXXXXXXXX)
-function finish {
-	rm -rf "$scratch"
-}
-trap finish EXIT
-
 # find all binary packages with /triggers$
 #
 # We cannot use "apt-get --print-uris download" and use the python module
@@ -203,7 +202,7 @@ curl --retry 3 --retry-delay 10 --globoff "http://binarycontrol.debian.net/?q=&p
 	| sort -u \
 	| while read pkg url; do
 	echo "working on $pkg..." >&2
-	tmpdir=`mktemp -d --tmpdir="$scratch" -t dpkg-trigger-cycles-curl-XXXXXXXX`
+	tmpdir=$(mktemp -d --tmpdir="$DIRECTORY" dpkg-trigger-cycles-curl-XXXXXXXX)
 	# we use curl as part of a pipeline to dpkg-deb instead of first
 	# downloading to a temporary file and then using dpkg-deb on it,
 	# because we do not want to download the full .deb (which could be very

@@ -106,7 +106,7 @@ set -e
 
 ARCH="amd64"
 CODENAME="$1"
-DIRECTORY=$(mktemp --directory tmp.jenkins_find_dpkg_trigger_cycles_${ARCH}_${CODENAME}_XXXXXXXXXX)
+DIRECTORY=$(mktemp --directory --tmpdir tmp.jenkins_find_dpkg_trigger_cycles_${ARCH}_${CODENAME}_XXXXXXXXXX)
 
 APT_OPTS="-y"
 #APT_OPTS=$APT_OPTS" -o Acquire::Check-Valid-Until=false" # because we use snapshot

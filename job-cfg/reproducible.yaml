@@ -782,7 +782,7 @@
                 - 'archlinux':
                     my_num: 3
                     op_descname: 'an Arch Linux'
-                    my_disabled: false
+                    my_disabled: true   # FIXME: /tmp is poluted by Arch builds, disable this builder (and dont create more) until this has been fixed
                 - 'fedora-23_x86_64':
                     my_num: 1
                     op_descname: 'a Fedora 23'

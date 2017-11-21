@@ -333,10 +333,10 @@ else
 	NODE1=$N2
 	NODE2=$N1
 fi
-remote_build ${NODE1}
+remote_build 1 ${NODE1}
 # only do the 2nd build if the 1st produced results
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; then
-	remote_build ${NODE2}
+	remote_build 2 ${NODE2}
 	cd $TMPDIR/b1/$SRCPACKAGE
 	for ARTIFACT in *.pkg.tar.xz ; do
 		[ -f $ARTIFACT ] || continue

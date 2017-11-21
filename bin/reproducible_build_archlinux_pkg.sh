@@ -131,7 +131,7 @@ first_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- env GIT_SSL_NO_VERIFY=1 asp checkout "$SRCPACKAGE"
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- asp checkout "$SRCPACKAGE"
 	# $SRCPACKAGE is actually the binary package
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# just set timezone in the 1st build
@@ -184,7 +184,7 @@ second_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- env GIT_SSL_NO_VERIFY=1 asp checkout "$SRCPACKAGE"
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- asp checkout "$SRCPACKAGE"
 	# $SRCPACKAGE is actually the binary package
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask

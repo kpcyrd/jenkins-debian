@@ -327,7 +327,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * extract .BUILDINFO files and submit them to buildinfo.debian.net^wbuildinfo.reproducible-builds.org
 * < Foxboron> the multilib builds are failing because multilib-devel isn't installed. Thats the base-devel for multilib packages.
 ** -> enable multilib again, once this has been done
-** < eschwartz[m]> On the topic of replacing gcc with gcc-multilib, that is what `yes | pacman -S gcc-multilib` is for :pa
+** < eschwartz[m]> On the topic of replacing gcc with gcc-multilib, that is what `yes | pacman -S gcc-multilib` is for :p
 * only disable cert checking conditionally, in the future, but not today
 
 * https://bugs.archlinux.org/task/50086 - pacman doesnt create reproducible packages yet

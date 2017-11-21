@@ -326,18 +326,21 @@ remote_build 1
 # only do the 2nd build if the 1st produced results
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; then
 	remote_build 2
-	# run diffoscope on the results
-	TIMEOUT="30m"
-	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
-	echo "$(date -u) - Running $DIFFOSCOPE now..."
 	cd $TMPDIR/b1/$SRCPACKAGE
 	for ARTIFACT in *.pkg.tar.xz ; do
 		[ -f $ARTIFACT ] || continue
-		call_diffoscope $SRCPACKAGE $ARTIFACT
+		echo "$(date -u) - comparing results now."
 		if diff -q $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ; then
-			echo "YAY - $SRCPACKAGE/$ARTIFACT build reproducible in our test framework!"
+			echo "$(date -u) - YAY - $SRCPACKAGE/$ARTIFACT build reproducible in our test framework!"
+			mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
 			echo "$SRCPACKAGE/$ARTIFACT build reproducible in our test framework:" > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html
 			(cd $TMPDIR/b1/ ; sha256sum $SRCPACKAGE/$ARTIFACT >> $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html )
+		else
+			# run diffoscope on the results
+			TIMEOUT="30m"
+			DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+			echo "$(date -u) - Running $DIFFOSCOPE now..."
+			call_diffoscope $SRCPACKAGE $ARTIFACT
 		fi
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then

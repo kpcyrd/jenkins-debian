@@ -335,6 +335,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 		[ -f $ARTIFACT ] || continue
 		call_diffoscope $SRCPACKAGE $ARTIFACT
 		if diff -q $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ; then
+			echo "YAY - $SRCPACKAGE/$ARTIFACT build reproducible in our test framework!"
 			echo "$SRCPACKAGE/$ARTIFACT build reproducible in our test framework:" > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html
 			(cd $TMPDIR/b1/ ; sha256sum $SRCPACKAGE/$ARTIFACT >> $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html )
 		fi

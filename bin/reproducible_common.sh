@@ -47,7 +47,7 @@ BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL" # these also needs to be
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
 # common settings for testing Arch Linux
-ARCHLINUX_REPOS="core extra community"
+ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
 
 # common settings for testing rpm based distros

@@ -103,6 +103,7 @@ perl -0777 -i -pe 's/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/[mult
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	sed -i 's/^SigLevel\s*=.*/SigLevel = Never/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	sed -i 's/^#*XferCommand.*/XferCommand = curl --insecure -C - -f %u > %o/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
 $ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc asp'

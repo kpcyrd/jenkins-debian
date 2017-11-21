@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
+#                2017 kpcyrd <git@rxv.cc>
+#                2017 Mattia Rizzolo <mattia@debian.org>
+#                Juliana Oliveira Rodrigues <juliana.orod@gmail.com>
 # released under the GPLv=2
 
 #

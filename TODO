@@ -324,10 +324,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * cleanup below…
 * build in /srv/workspace instead of /tmp
-* do 2nd build on pb4
-* < Foxboron> the multilib builds are failing because multilib-devel isn't installed. Thats the base-devel for multilib packages.
-** -> disable multilib for now?
 * extract .BUILDINFO files and submit them to buildinfo.debian.net^wbuildinfo.reproducible-builds.org
+* < Foxboron> the multilib builds are failing because multilib-devel isn't installed. Thats the base-devel for multilib packages.
+** -> enable multilib again, once this has been done
 
 * https://bugs.archlinux.org/task/50086 - pacman doesnt create reproducible packages yet
 * describe archlinux setup…!

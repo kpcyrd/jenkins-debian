@@ -1,3 +1,9 @@
+== disclaimer ==
+
+We are happy to take *untested* patches. Patches are reviewed before merging
+but noone has a complete test environment for *this*, so please publish your
+well ment and untested patches as soon as they are ready!
+
 === Contributing code to this project
 
 It's helpful to track fixes or new features via wishlist bugs against the

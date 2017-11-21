@@ -109,7 +109,7 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	sed -i 's/^#*XferCommand.*/XferCommand = curl --insecure -C - -f %u > %o/' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
-$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc asp'
+$ROOTCMD bash -l -c 'yes | pacman -S --noconfirm multilib-devel base-devel devtools fakechroot asciidoc asp'
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 

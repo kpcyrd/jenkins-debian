@@ -348,7 +348,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 			echo "<html><body><p>$SRCPACKAGE/$ARTIFACT build reproducible in our test framework:<br />" > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html
 			(cd $TMPDIR/b1/ ; sha256sum $SRCPACKAGE/$ARTIFACT >> $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html )
 			echo "</p></body>" > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html
-		else
+		elif [ -f $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT ] && [ -f $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ] ; then
 			# run diffoscope on the results
 			TIMEOUT="30m"
 			DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"

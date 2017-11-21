@@ -119,10 +119,16 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				# or is it reproducible???
 			fi
 		else
-			HTML_TARGET=$HTML_FTBR
-			let NR_FTBR+=1
+			HTML_TARGET=$HTML_GOOD
 			for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
-				echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
+				if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT.html)" ] ; then
+					let NR_GOOD+=1
+					echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible<br />" >> $HTML_BUFFER
+				else
+					HTML_TARGET=$HTML_FTBR
+					let NR_FTBR+=1
+					echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
+				fi
 			done
 		fi
 		echo "      </td>" >> $HTML_BUFFER

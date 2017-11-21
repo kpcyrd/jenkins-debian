@@ -334,6 +334,10 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 	for ARTIFACT in *.pkg.tar.xz ; do
 		[ -f $ARTIFACT ] || continue
 		call_diffoscope $SRCPACKAGE $ARTIFACT
+		if diff -q $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ; then
+			echo "$SRCPACKAGE/$ARTIFACT build reproducible in our test framework:" > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html
+			(cd $TMPDIR/b1/ ; sha256sum $SRCPACKAGE/$ARTIFACT >> $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html )
+		fi
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
 			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/

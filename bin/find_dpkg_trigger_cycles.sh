@@ -176,7 +176,7 @@ APT_FILE_OPTS="--architecture $ARCH --config-file $DIRECTORY/etc/apt/apt.conf"
 APT_CONFIG="$DIRECTORY/etc/apt/apt.conf"
 export APT_CONFIG
 
-apt $APT_OPTS update
+apt-get $APT_OPTS update
 
 PACKAGES=$(apt-get indextargets \
 	| grep-dctrl --exact \( --field Created-By Packages \

@@ -222,7 +222,7 @@ second_build() {
 
 remote_build() {
 	local BUILDNR=$1
-	local NODE=$ARCHLINUX_BUILD_NODE
+	local NODE=$2
 	local FQDN=$NODE.debian.net
 	local PORT=22
 	set +e
@@ -322,10 +322,21 @@ SRCPACKAGE=""
 choose_package
 # build package twice
 mkdir b1 b2
-remote_build 1
+# currently there are two Arch Linux build nodes… let's keep things simple
+N1="profitbricks-build3-amd64"
+N2="profitbricks-build4-amd64"
+# if random number between 0 and 1 is greater than 1…
+if [ $(( ( $RANDOM % 2 ) )) -gt 0 ] ; then
+	NODE1=$N1
+	NODE2=$N2
+else
+	NODE1=$N2
+	NODE2=$N1
+fi
+remote_build $NODE1
 # only do the 2nd build if the 1st produced results
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; then
-	remote_build 2
+	remote_build $NODE2
 	cd $TMPDIR/b1/$SRCPACKAGE
 	for ARTIFACT in *.pkg.tar.xz ; do
 		[ -f $ARTIFACT ] || continue

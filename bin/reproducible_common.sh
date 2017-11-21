@@ -47,7 +47,6 @@ BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL" # these also needs to be
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
 # common settings for testing Arch Linux
-ARCHLINUX_BUILD_NODE=profitbricks-build3-amd64
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
 
@@ -464,7 +463,7 @@ write_variation_table() {
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
 		write_page "<tr><td>/bin/sh</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
-		if [ "$1" != "FreeBSD" ] ; then
+		if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] ; then
 			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 		else
 			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>398 days in the future ($FUTURE)</td></tr>"

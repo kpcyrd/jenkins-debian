@@ -121,7 +121,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		else
 			HTML_TARGET=$HTML_GOOD
 			for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
-				if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT.html)" ] ; then
+				if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 					let NR_GOOD+=1
 					echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible<br />" >> $HTML_BUFFER
 				else

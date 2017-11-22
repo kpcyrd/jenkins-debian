@@ -70,30 +70,30 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=${HTML_404[0]}
 				EXTRA_REASON=""
 				let NR_404+=1
-				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[6]}
 					EXTRA_REASON="to verify source with PGP due to unknown public key"
-				elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[3]}
 					EXTRA_REASON="with 404 - file not found"
-				elif [ ! -z "$(grep 'The requested URL returned error: 403' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				elif [ ! -z "$(grep 'The requested URL returned error: 403' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[2]}
 					EXTRA_REASON="with 403 - forbidden"
-				elif [ ! -z "$(grep 'The requested URL returned error: 500' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				elif [ ! -z "$(grep 'The requested URL returned error: 500' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[4]}
 					EXTRA_REASON="with 500 - internal server error"
-				elif [ ! -z "$(grep 'The requested URL returned error: 503' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				elif [ ! -z "$(grep 'The requested URL returned error: 503' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[5]}
 					EXTRA_REASON="with 503 - service unavailable"
-				elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[7]}
 					EXTRA_REASON="to verify source with PGP signatures"
-				elif [ ! -z "$(grep 'SSL certificate problem: unable to get local issuer certificate' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+				elif [ ! -z "$(grep 'SSL certificate problem: unable to get local issuer certificate' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 					HTML_TARGET=${HTML_404[1]}
 					EXTRA_REASON="with SSL certificate problem"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> download failed $EXTRA_REASON" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[0]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
@@ -101,15 +101,15 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=${HTML_FTBFS[1]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[2]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[3]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[4]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER

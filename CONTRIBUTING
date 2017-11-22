@@ -1,8 +1,8 @@
-== disclaimer ==
+== disclaimer
 
 We are happy to take *untested* patches. Patches are reviewed before merging
-but noone has a complete test environment for *this*, so please publish your
-well ment and untested patches as soon as they are ready!
+but noone has a complete test environment for all jobs, so please publish
+your well meant and untested patches as soon as they are ready!
 
 === Contributing code to this project
 

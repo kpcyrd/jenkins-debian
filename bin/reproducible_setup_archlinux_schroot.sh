@@ -175,6 +175,11 @@ __END__
 
 $ROOTCMD sed -i "s/^PKGEXT='.pkg.tar.gz'/PKGEXT='.pkg.tar.xz'/" /etc/makepkg.conf
 $ROOTCMD sed -i "s|/usr/bin/curl |/usr/bin/curl -k |" /etc/makepkg.conf
+$ROOTCMD sed -i 's/^#CPPFLAGS\s*=.*/CPPFLAGS="-D_FORTIFY_SOURCE=2"/' /etc/makepkg.conf
+$ROOTCMD sed -i 's/^#CFLAGS\s*=.*/CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt"/' /etc/makepkg.conf
+$ROOTCMD sed -i 's/^#CXXFLAGS\s*=.*/CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt"/' /etc/makepkg.conf
+$ROOTCMD sed -i 's/^#LDFLAGS\s*=.*/LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"/' /etc/makepkg.conf
+$ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
 
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years

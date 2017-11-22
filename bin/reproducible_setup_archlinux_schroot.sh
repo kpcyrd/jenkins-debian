@@ -171,7 +171,7 @@ Include = /etc/pacman.d/mirrorlist
 __END__
 
 $ROOTCMD sed -i "s/^PKGEXT='.pkg.tar.gz'/PKGEXT='.pkg.tar.xz'/" /etc/makepkg.conf
-$ROOTCMD sed -i "s|/usr/bin/curl -f|/usr/bin/curl -kf|" /etc/makepkg.conf
+$ROOTCMD sed -i "s|/usr/bin/curl |/usr/bin/curl -k |" /etc/makepkg.conf
 
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years

@@ -22,8 +22,10 @@ import logging
 import argparse
 import pystache
 import psycopg2
+import configparser
 import html as HTML
 from string import Template
+from urllib.parse import urljoin
 from traceback import print_exception
 from subprocess import call, check_call
 from tempfile import NamedTemporaryFile
@@ -38,36 +40,46 @@ QUIET = False
 if os.uname()[1] == 'jenkins-test-vm':
     sys.exit()
 
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+CONFIG = os.path.join(__location__, 'reproducible.ini')
+
+config = configparser.ConfigParser()
+config.read(CONFIG)
+conf_distro = config['debian']
+
 # tested suites
-SUITES = ['stretch', 'buster', 'unstable', 'experimental']
+SUITES = conf_distro['suites'].split()
 # tested architectures
-ARCHS = ['amd64', 'i386', 'arm64', 'armhf']
+ARCHS = conf_distro['archs'].split()
 # defaults
-defaultsuite = 'unstable'
-defaultarch = 'amd64'
+defaultsuite = conf_distro['defaultsuite']
+defaultarch = conf_distro['defaultarch']
 
-BIN_PATH = '/srv/jenkins/bin'
-BASE = '/var/lib/jenkins/userContent/reproducible'
-DEBIAN_BASE = '/var/lib/jenkins/userContent/reproducible/debian'
-TEMPLATE_PATH = '/srv/jenkins/mustache-templates/reproducible'
+BIN_PATH = __location__
+BASE = conf_distro['basedir']
+TEMPLATE_PATH = conf_distro['templates']
 PKGSET_DEF_PATH = '/srv/reproducible-results'
-TEMP_PATH="/tmp/reproducible"
+TEMP_PATH = conf_distro['tempdir']
 
-REPRODUCIBLE_JSON = BASE + '/reproducible.json'
-REPRODUCIBLE_TRACKER_JSON = BASE + '/reproducible-tracker.json'
-REPRODUCIBLE_STYLES = BASE +'/static/style.css'
+REPRODUCIBLE_JSON = os.path.join(BASE, conf_distro['json_out'])
+REPRODUCIBLE_TRACKER_JSON = os.path.join(BASE, conf_distro['tracker.json_out'])
+REPRODUCIBLE_STYLES = os.path.join(BASE, conf_distro['css'])
 
-DEBIAN_URI = '/debian'
-DBD_URI = '/debian/dbd'
-DBDTXT_URI = '/debian/dbdtxt'
-LOGS_URI = '/debian/logs'
-DIFFS_URI = '/debian/logdiffs'
-NOTES_URI = '/debian/notes'
-ISSUES_URI = '/debian/issues'
-RB_PKG_URI = '/debian/rb-pkg'
-RBUILD_URI = '/debian/rbuild'
-HISTORY_URI = '/debian/history'
-BUILDINFO_URI = '/debian/buildinfo'
+DEBIAN_URI = '/' + conf_distro['distro_root']
+DEBIAN_BASE = BASE + '/' + DEBIAN_URI
+DBD_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_html'])
+DBDTXT_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_txt'])
+LOGS_URI = os.path.join(DEBIAN_URI, conf_distro['buildlogs'])
+DIFFS_URI = os.path.join(DEBIAN_URI, conf_distro['logdiffs'])
+NOTES_URI = os.path.join(DEBIAN_URI, conf_distro['notes'])
+ISSUES_URI = os.path.join(DEBIAN_URI, conf_distro['issues'])
+RB_PKG_URI = os.path.join(DEBIAN_URI, conf_distro['packages'])
+RBUILD_URI = os.path.join(DEBIAN_URI, conf_distro['rbuild'])
+HISTORY_URI = os.path.join(DEBIAN_URI, conf_distro['pkghistory'])
+BUILDINFO_URI = os.path.join(DEBIAN_URI, conf_distro['buildinfo'])
 DBD_PATH = BASE + DBD_URI
 DBDTXT_PATH = BASE + DBDTXT_URI
 LOGS_PATH = BASE + LOGS_URI
@@ -79,10 +91,10 @@ RBUILD_PATH = BASE + RBUILD_URI
 HISTORY_PATH = BASE + HISTORY_URI
 BUILDINFO_PATH = BASE + BUILDINFO_URI
 
-REPRODUCIBLE_URL = 'https://tests.reproducible-builds.org'
-DEBIAN_URL = 'https://tests.reproducible-builds.org/debian'
-DEBIAN_DASHBOARD_URI = '/debian/reproducible.html'
-JENKINS_URL = 'https://jenkins.debian.net'
+REPRODUCIBLE_URL = conf_distro['base_url']
+DEBIAN_URL = urljoin(REPRODUCIBLE_URL, conf_distro['distro_root'])
+DEBIAN_DASHBOARD_URI = os.path.join(DEBIAN_URI, conf_distro['landing_page'])
+JENKINS_URL = conf_distro['jenkins_url']
 
 # global package set definitions
 # META_PKGSET[pkgset_id] = (pkgset_name, pkgset_group)
@@ -125,6 +137,8 @@ if not args.skip_database_connection:
     DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
     conn_db = DB_ENGINE.connect()      # the local postgres reproducible db
 
+for key, value in conf_distro.items():
+    log.debug('%-16s: %s', key, value)
 log.debug("BIN_PATH:\t" + BIN_PATH)
 log.debug("BASE:\t\t" + BASE)
 log.debug("DBD_URI:\t\t" + DBD_URI)

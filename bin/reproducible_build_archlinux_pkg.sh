@@ -332,9 +332,6 @@ N2="profitbricks-build4-amd64"
 if [ $(( ( $RANDOM % 2 ) )) -gt 0 ] ; then
 	NODE1=$N1
 	NODE2=$N2
-	# bogus for testing
-	NODE1=$N2
-	NODE2=$N1
 else
 	NODE1=$N2
 	NODE2=$N1

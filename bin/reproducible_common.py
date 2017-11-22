@@ -48,6 +48,8 @@ CONFIG = os.path.join(__location__, 'reproducible.ini')
 ## command line option parsing
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
+parser.add_argument('distro', help='name of the distribution to work on',
+                    default='debian', nargs='?')
 group.add_argument("-d", "--debug", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")
 parser.add_argument("--skip-database-connection", action="store_true",
@@ -55,6 +57,7 @@ parser.add_argument("--skip-database-connection", action="store_true",
 parser.add_argument("--ignore-missing-files", action="store_true",
                     help="useful for local testing, where you don't have all the build logs, etc..")
 args, unknown_args = parser.parse_known_args()
+DISTRO = args.distro
 log_level = logging.INFO
 if args.debug or DEBUG:
     DEBUG = True
@@ -74,7 +77,11 @@ log.info('Starting at %s', started_at)
 ## load configuration
 config = configparser.ConfigParser()
 config.read(CONFIG)
-conf_distro = config['debian']
+try:
+    conf_distro = config[DISTRO]
+except KeyError:
+    log.critical('Distribution %s is not known.', DISTRO)
+    sys.exit(1)
 
 # tested suites
 SUITES = conf_distro['suites'].split()

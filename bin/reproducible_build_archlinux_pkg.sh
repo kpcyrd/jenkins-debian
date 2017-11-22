@@ -54,15 +54,28 @@ update_archlinux_repositories() {
 	if $NEED_UPDATE ; then
 		local SESSION="archlinux-scheduler-$RANDOM"
 		schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
+		schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
+		# Get a list of unique package bases.  Non-split packages don't have a pkgbase set
+		# so we need to use the pkgname for them instead.
+		schroot --run-session -c $SESSION --directory /var/tmp -- expac -S '%r %e %n' | \
+			while read repo pkgbase pkgname; do
+				if [[ "$pkgbase" = "(null)" ]]; then
+					printf '%s %s\n' "$repo" "$pkgname"
+				else
+					printf '%s %s\n' "$repo" "$pkgbase"
+				fi
+			done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
+
 		for REPO in $ARCHLINUX_REPOS ; do
-			if [ ! -f ${ARCHLINUX_PKGS}_$REPO ] || [ $DUMMY -nt ${ARCHLINUX_PKGS}_$REPO ] ; then
-				echo "$(date -u ) - updating list of available packages in repository '$REPO'."
-				schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
-				schroot --run-session -c $SESSION --directory /var/tmp -- pacman -Slq "$REPO" | xargs echo > ${ARCHLINUX_PKGS}_$REPO
-				echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
-				cat ${ARCHLINUX_PKGS}_$REPO
-			fi
+			echo "$(date -u ) - updating list of available packages in repository '$REPO'."
+			grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
+				while read repo pkgbase; do
+					printf '%s\n' "$pkgbase"
+				done > "$ARCHLINUX_PKGS"_"$REPO"
+			echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
+			cat ${ARCHLINUX_PKGS}_$REPO
 		done
+		rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 		schroot --end-session -c $SESSION
 	else
 		echo "$(date -u ) - repositories recent enough, no update needed."

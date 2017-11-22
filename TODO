@@ -325,6 +325,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * cleanup below…
 * build in /srv/workspace instead of /tmp
 * extract .BUILDINFO files and submit them to buildinfo.debian.net^wbuildinfo.reproducible-builds.org
+* only disable cert checking on the node running in the future
 
 * this needs cleanup:
 * https://bugs.archlinux.org/task/50086 - pacman doesnt create reproducible packages yet

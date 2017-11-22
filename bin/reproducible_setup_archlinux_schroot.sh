@@ -132,15 +132,16 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	WGET_OPTS="--no-check-certificate"
 fi
 
-wget $WGET_OPTS -O "/tmp/PKGBUILD" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
+PKGBUILD_FILE="$(mktemp --tmpdir=$TEMPDIR PKGBUILD-XXXXXXXXXXXX)"
+wget $WGET_OPTS -O "$PKGBUILD_FILE" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
 # work around dependency weirdness: pacman-git is currently detected as 5.0.1, which is older than the released version
-echo 'provides=("pacman=5.0.2")' >> /tmp/PKGBUILD
+echo 'provides=("pacman=5.0.2")' >> $PKGBUILD_FILE
 
 $USERCMD bash <<-__END__
 set -e
 mkdir /pacman-git
 cd /pacman-git
-mv /tmp/PKGBUILD .
+mv $PKGBUILD_FILE ./PKGBUILD
 makepkg
 __END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'

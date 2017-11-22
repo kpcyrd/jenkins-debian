@@ -253,7 +253,7 @@ remote_build() {
 			# FIXME: atm this is never reached…
 			#cleanup_all
 			#handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
-			echo "remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
+			echo "Warning: remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY."
 		fi
 	fi
 	rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
@@ -264,7 +264,8 @@ remote_build() {
 		rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
-			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
+			#handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
+			echo "Warning: error rsyncing remote build #$BUILDNR results from $NODE."
 		fi
 	fi
 	ls -lR $TMPDIR

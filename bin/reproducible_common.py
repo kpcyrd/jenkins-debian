@@ -40,12 +40,38 @@ QUIET = False
 if os.uname()[1] == 'jenkins-test-vm':
     sys.exit()
 
-
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 CONFIG = os.path.join(__location__, 'reproducible.ini')
 
+## command line option parsing
+parser = argparse.ArgumentParser()
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-d", "--debug", action="store_true")
+group.add_argument("-q", "--quiet", action="store_true")
+parser.add_argument("--skip-database-connection", action="store_true",
+                   help="skip connecting to database")
+parser.add_argument("--ignore-missing-files", action="store_true",
+                    help="useful for local testing, where you don't have all the build logs, etc..")
+args, unknown_args = parser.parse_known_args()
+log_level = logging.INFO
+if args.debug or DEBUG:
+    DEBUG = True
+    log_level = logging.DEBUG
+if args.quiet or QUIET:
+    log_level = logging.ERROR
+log = logging.getLogger(__name__)
+log.setLevel(log_level)
+sh = logging.StreamHandler()
+sh.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
+log.addHandler(sh)
+
+started_at = datetime.now()
+log.info('Starting at %s', started_at)
+
+
+## load configuration
 config = configparser.ConfigParser()
 config.read(CONFIG)
 conf_distro = config['debian']
@@ -107,29 +133,7 @@ with open(os.path.join(BIN_PATH, './reproducible_pkgsets.csv'), newline='') as f
 # DATABSE CONSTANT
 PGDATABASE = 'reproducibledb'
 
-parser = argparse.ArgumentParser()
-group = parser.add_mutually_exclusive_group()
-group.add_argument("-d", "--debug", action="store_true")
-group.add_argument("-q", "--quiet", action="store_true")
-parser.add_argument("--skip-database-connection", action="store_true",
-                   help="skip connecting to database")
-parser.add_argument("--ignore-missing-files", action="store_true",
-                    help="useful for local testing, where you don't have all the build logs, etc..")
-args, unknown_args = parser.parse_known_args()
-log_level = logging.INFO
-if args.debug or DEBUG:
-    DEBUG = True
-    log_level = logging.DEBUG
-if args.quiet or QUIET:
-    log_level = logging.ERROR
-log = logging.getLogger(__name__)
-log.setLevel(log_level)
-sh = logging.StreamHandler()
-sh.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-log.addHandler(sh)
 
-started_at = datetime.now()
-log.info('Starting at %s', started_at)
 
 # init the database data and connection
 if not args.skip_database_connection:

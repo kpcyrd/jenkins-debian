@@ -102,7 +102,7 @@ REPRODUCIBLE_TRACKER_JSON = os.path.join(BASE, conf_distro['tracker.json_out'])
 REPRODUCIBLE_STYLES = os.path.join(BASE, conf_distro['css'])
 
 DEBIAN_URI = '/' + conf_distro['distro_root']
-DEBIAN_BASE = BASE + '/' + DEBIAN_URI
+DEBIAN_BASE = os.path.join(BASE, conf_distro['distro_root'])
 DBD_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_html'])
 DBDTXT_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_txt'])
 LOGS_URI = os.path.join(DEBIAN_URI, conf_distro['buildlogs'])
@@ -152,6 +152,7 @@ for key, value in conf_distro.items():
     log.debug('%-16s: %s', key, value)
 log.debug("BIN_PATH:\t" + BIN_PATH)
 log.debug("BASE:\t\t" + BASE)
+log.debug("DISTRO:\t\t" + DISTRO)
 log.debug("DBD_URI:\t\t" + DBD_URI)
 log.debug("DBD_PATH:\t" + DBD_PATH)
 log.debug("DBDTXT_URI:\t" + DBDTXT_URI)
@@ -295,7 +296,7 @@ def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
                                no_arch=None):
     # if a template is not passed in to navigate between suite and archs the
     # current page, we use the "default" suite/arch summary view.
-    default_nav_template = '/debian/{{suite}}/index_suite_{{arch}}_stats.html'
+    default_nav_template = '/{{distro}}/{{suite}}/index_suite_{{arch}}_stats.html'
     if not suite_arch_nav_template:
         suite_arch_nav_template = default_nav_template
 
@@ -309,7 +310,8 @@ def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
                 's': s,
                 'class': 'current' if s == suite else '',
                 'uri': renderer.render(suite_arch_nav_template,
-                                       {'suite': s, 'arch': arch})
+                                       {'distro': conf_distro['distro_root'],
+                                        'suite': s, 'arch': arch})
                 if include_suite else '',
             })
 
@@ -320,7 +322,8 @@ def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
                 'a': a,
                 'class': 'current' if a == arch else '',
                 'uri': renderer.render(suite_arch_nav_template,
-                                       {'suite': suite, 'arch': a}),
+                                       {'distro': conf_distro['distro_root'],
+                                        'suite': suite, 'arch': a}),
             })
     return (suite_list, arch_list)
 

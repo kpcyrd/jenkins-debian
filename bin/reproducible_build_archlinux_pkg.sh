@@ -348,9 +348,14 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 		if diff -q $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ; then
 			echo "$(date -u) - YAY - $SRCPACKAGE/$ARTIFACT build reproducible in our test framework!"
 			mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
+			tar xJvf $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT .BUILDINFO && mv .BUILDINFO $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT-b1.BUILDINFO
+			tar xJvf $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT .BUILDINFO && mv .BUILDINFO $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT-b2.BUILDINFO
 			(
 				echo "<html><body><p>$SRCPACKAGE/$ARTIFACT build reproducible in our test framework:<br />"
 				(cd $TMPDIR/b1/ ; sha256sum $SRCPACKAGE/$ARTIFACT)
+				echo "<br />"
+				echo "<a href=\"$ARTIFACT-b1.BUILDINFO\">$ARTIFACT-b1.BUILDINFO</a><br />"
+				echo "<a href=\"$ARTIFACT-b2.BUILDINFO\">$ARTIFACT-b2.BUILDINFO</a><br />"
 				echo "</p></body>"
 			) > "$BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html"
 		elif [ -f $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT ] && [ -f $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ] ; then

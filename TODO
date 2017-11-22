@@ -323,28 +323,14 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ==== reproducible Arch Linux
 
 * cleanup below…
-* build in /srv/workspace instead of /tmp
-* extract .BUILDINFO files and submit them to buildinfo.debian.net^wbuildinfo.reproducible-builds.org
+* things to be done before enabling more builders:
+** build in /srv/workspace instead of /tmp
+** use proxy for downloading packages. (using squid is probably better than using devtools as the former has a nice feature of limiting the maximal used diskspace quite easily…)
 * only disable cert checking on the node running in the future
-
-* this needs cleanup:
-* https://bugs.archlinux.org/task/50086 - pacman doesnt create reproducible packages yet
 * describe archlinux setup…!
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
-** properly clean schroot sessions, check on pb3…
-* setup_archlinux_schroot job:
-** needs to be made idempotent
-** needs to download bootstrap.tar.gz sig and verify
-** once this has been done, run it more often than once a year
-* arch build.sh:
-** introduce more variations: USER
-** confirm the others are really working
-** on SIGTERM, also ssh to remote host and cleanup there! (via ssh &)
-* put results in a db
-** graph results
-* idea: when a package has been updated reschedule reverse build depends too
-** (for that we need to detect updated packages first)
+** watch /tmp or rather where this will end up…
 
 ----
 notes on source and binary versions:

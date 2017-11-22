@@ -97,7 +97,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=${HTML_FTBFS[0]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '(==> ERROR: install file .* does not exist or is not a regular file|==> ERROR: The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
+			elif [ ! -z "$(egrep '(==> ERROR: install file .* does not exist or is not a regular file|==> ERROR: The download program wget is not installed|==> ERROR: \'pacman\' failed to install missing dependencies.)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[1]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER

@@ -330,7 +330,7 @@ mkdir b1 b2
 # currently there are two Arch Linux build nodes… let's keep things simple
 N1="profitbricks-build3-amd64"
 N2="profitbricks-build4-amd64"
-# if random number between 0 and 1 is greater than 1…
+# if random number between 0 and 1 is greater than 0…
 if [ $(( ( $RANDOM % 2 ) )) -gt 0 ] ; then
 	NODE1=$N1
 	NODE2=$N2

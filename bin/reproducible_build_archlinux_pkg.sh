@@ -308,7 +308,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	# preserve results and delete build directory
 	if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
 		echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
-		find /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
+		cp $TMPDIR/b$MODE/$SRCPACKAGE/build$MODE.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 	fi
 
 	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/

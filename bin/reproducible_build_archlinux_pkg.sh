@@ -251,7 +251,9 @@ remote_build() {
 			exec /srv/jenkins/bin/abort.sh
 		else
 			# FIXME: atm this is never reached…
-			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
+			#cleanup_all
+			#handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
+			echo "remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 		fi
 	fi
 	rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/

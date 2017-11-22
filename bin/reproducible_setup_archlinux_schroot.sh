@@ -80,6 +80,10 @@ trap - INT TERM EXIT
 ROOTCMD="schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root --"
 USERCMD="schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u jenkins --"
 
+echo "============================================================================="
+echo "Setting up schroot $TARGET on $HOSTNAME"...
+echo "============================================================================="
+
 # configure proxy everywhere
 tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export http_proxy=$http_proxy
@@ -187,6 +191,14 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl -C|XferCommand = /usr/bin/curl --insecure -C|" /etc/pacman.conf
 fi
 
+echo "============================================================================="
+echo "Final configuration values follow:"
+echo "============================================================================="
+$ROOTCMD cat /etc/pacman.conf
+echo "============================================================================="
+$ROOTCMD cat /etc/makepkg.conf
+echo "============================================================================="
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."
+echo "============================================================================="
 
 # vim: set sw=0 noet :

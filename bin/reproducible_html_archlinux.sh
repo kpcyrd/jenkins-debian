@@ -137,7 +137,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			done
 		fi
 		echo "      </td>" >> $HTML_BUFFER
-		echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
+		echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- ) UTC</td>" >> $HTML_BUFFER
 		for LOG in build1.log build2.log ; do
 			if [ -f $ARCHLINUX_PKG_PATH/$LOG ] ; then
 				get_filesize $ARCHLINUX_PKG_PATH/$LOG

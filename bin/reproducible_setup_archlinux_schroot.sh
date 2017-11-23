@@ -114,6 +114,15 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 	sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
+
+echo "============================================================================="
+echo "Current configuration values follow:"
+echo "============================================================================="
+$ROOTCMD cat /etc/pacman.conf
+echo "============================================================================="
+$ROOTCMD cat /etc/makepkg.conf
+echo "============================================================================="
+
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
 $ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc asp'
 $ROOTCMD bash -l -c 'yes | pacman -S gcc-multilib lib32-fakeroot lib32-libltdl'

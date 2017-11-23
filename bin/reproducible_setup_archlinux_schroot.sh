@@ -95,7 +95,7 @@ tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export no_proxy="localhost,127.0.0.1"
 	__END__
 chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
-sed -i "s|^#XferCommand = /usr/bin/curl -C|XferCommand = /usr/bin/curl -C --proxy $http_proxy|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 
 
 # configure root user to use this for shells and login shells…
@@ -112,7 +112,7 @@ perl -0777 -i -pe 's/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/[mult
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
-	sed -i "s|^XferCommand = /usr/bin/curl -C|XferCommand = /usr/bin/curl --insecure -C|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 $ROOTCMD bash -l -c 'pacman -Syu --noconfirm'
 $ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc asp'
@@ -188,7 +188,7 @@ $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	$ROOTCMD sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf
-	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl -C|XferCommand = /usr/bin/curl --insecure -C|" /etc/pacman.conf
+	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" /etc/pacman.conf
 fi
 
 echo "============================================================================="

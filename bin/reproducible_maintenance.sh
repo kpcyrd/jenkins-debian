@@ -160,9 +160,8 @@ case $HOSTNAME in
 		schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
-			# FIXME: this should be a warning, not a shrugs - but Arch Linux will soon be build differently…
-			echo "shrugs: failed to update Arch Linux schroot."
-			#DIRTY=true
+			echo "Warning: failed to update Arch Linux schroot."
+			DIRTY=true
 		else
 			echo "$(date -u) - updating Arch Linux schroot done."
 		fi

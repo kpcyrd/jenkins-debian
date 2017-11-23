@@ -111,7 +111,7 @@ echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGE
 perl -0777 -i -pe 's/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/[multilib]\nInclude = \/etc\/pacman.d\/mirrorlist/igs' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
-	sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	sed -i -r 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 	sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 
@@ -196,7 +196,7 @@ $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /
 
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
-	$ROOTCMD sed -i 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf
+	$ROOTCMD sed -i -r 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf
 	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" /etc/pacman.conf
 fi
 

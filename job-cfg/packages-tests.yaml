@@ -123,3 +123,18 @@
           my_trigger: '{name}_stretch'
     jobs:
       - junit
+
+- project:
+    name: debian-archive-keyring-tests
+    my_git_url: 'https://anonscm.debian.org/git/debian-release/debian-archive-keyring.git'
+    my_recipients: 'jenkins+debian-qa debian-release@lists.debian.org'
+    my_shell: 'timeout 6h dpkg-buildpackage -us -uc -tc'
+    my_description: 'Debhelper testsuite'
+    my_distro:
+      - sid: *distro_defaults_sid
+      - buster: *distro_defaults_buster
+      - stretch: *distro_defaults_stretch
+      - jessie:
+          my_disabled: true
+    jobs:
+      - simple

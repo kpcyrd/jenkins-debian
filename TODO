@@ -319,7 +319,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible Arch Linux
 
-* cleanup below…
+* setup_archlinux_schroot job:
+** needs to be made idempotent (currently it removes the schroot at the beginning of the job, instead of creating it elsewhere and replacing it on success at the job end…)
 * things to be done before enabling more builders:
 ** build in /srv/workspace instead of /tmp
 * only disable cert checking on the node running in the future

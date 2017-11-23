@@ -100,7 +100,7 @@ choose_package() {
 					;;
 		esac
 		touch -d "$(date -d "$MIN_AGE days ago" '+%Y-%m-%d') 00:00 UTC" $DUMMY
-		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | sed -s "s# #\n#g" | sort -R | xargs echo ) ; do
+		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | sort -R | xargs echo ) ; do
 			# build package if it has never build or at least $MIN_AGE days ago
 			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ $DUMMY -nt $BASE/archlinux/$REPO/$PKG ] ; then
 				REPOSITORY=$REPO

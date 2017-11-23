@@ -133,8 +133,6 @@
     my_distro:
       - sid: *distro_defaults_sid
       - buster: *distro_defaults_buster
-      - stretch: *distro_defaults_stretch
-      - jessie:
-          my_disabled: true
+      - stretch: {}
     jobs:
       - simple

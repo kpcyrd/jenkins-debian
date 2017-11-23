@@ -155,7 +155,7 @@ set -e
 mkdir /pacman-git
 cd /pacman-git
 mv $PKGBUILD_FILE ./PKGBUILD
-makepkg
+MAKEFLAGS="-j$NUM_CPU" makepkg
 __END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
 

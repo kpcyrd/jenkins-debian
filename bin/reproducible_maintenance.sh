@@ -154,18 +154,21 @@ set -e
 
 # for Arch Linux
 set +e
-if [ "$HOSTNAME" = "${ARCHLINUX_BUILD_NODE}" ] ; then
-	echo "$(date -u) - updating Arch Linux schroot now."
-	schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
-	RESULT=$?
-	if [ $RESULT -eq 1 ] ; then
-		# FIXME: this should be a warning, not a shrugs - but Arch Linux will soon be build differently…
-		echo "shrugs: failed to update Arch Linux schroot."
-		#DIRTY=true
-	else
-		echo "$(date -u) - updating Arch Linux schroot done."
-	fi
-fi
+case $HOSTNAME in
+	profitbricks-build3-amd64|profitbricks-build4-amd64|jenkins)
+		echo "$(date -u) - updating Arch Linux schroot now."
+		schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
+		RESULT=$?
+		if [ $RESULT -eq 1 ] ; then
+			# FIXME: this should be a warning, not a shrugs - but Arch Linux will soon be build differently…
+			echo "shrugs: failed to update Arch Linux schroot."
+			#DIRTY=true
+		else
+			echo "$(date -u) - updating Arch Linux schroot done."
+		fi
+		;;
+	*)	;;
+esac
 set -e
 
 # delete build services logfiles

@@ -130,14 +130,18 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			HTML_TARGET=$HTML_GOOD
 			for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
 				if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
-					let NR_GOOD+=1
 					echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible<br />" >> $HTML_BUFFER
 				else
 					HTML_TARGET=$HTML_FTBR
-					let NR_FTBR+=1
 					echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
 				fi
 			done
+			# we only count source packages for now…
+			if [ "$HTML_TARGET" = "$HTML_FTBR" ] ; then
+				let NR_FTBR+=1
+			else
+				let NR_GOOD+=1
+			fi
 		fi
 		echo "      </td>" >> $HTML_BUFFER
 		echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- ) UTC</td>" >> $HTML_BUFFER

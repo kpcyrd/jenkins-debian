@@ -52,7 +52,8 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "$(date -u ) - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH right now…"
 			continue
 		fi
-		let TESTED+=1
+		echo "$PKG has been tested, TESTED=$TESTED, NR_GOOD=$NR_GOOD, NR_FTBR=$NR_FTBR, NR_FTBFS=$NR_FTBFS, NR_DEPWAIT=$NR_DEPWAIT, NR_404=$NR_404, NR_UNKNOWN=$NR_UNKNOWN"
+
 		echo "     <tr>" >> $HTML_BUFFER
 		echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 		echo "      <td>$PKG</td>" >> $HTML_BUFFER

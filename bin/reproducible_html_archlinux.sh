@@ -52,10 +52,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "$(date -u ) - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH right now…"
 			continue
 		fi
-
-		echo "$PKG has been  tested, TESTED=$TESTED, NR_GOOD=$NR_GOOD, NR_FTBR=$NR_FTBR, NR_FTBFS=$NR_FTBFS, NR_DEPWAIT=$NR_DEPWAIT, NR_404=$NR_404, NR_UNKNOWN=$NR_UNKNOWN"
 		let TESTED+=1
-
 		echo "     <tr>" >> $HTML_BUFFER
 		echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 		echo "      <td>$PKG</td>" >> $HTML_BUFFER
@@ -156,7 +153,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		echo "     </tr>" >> $HTML_BUFFER
 		cat $HTML_BUFFER >> $HTML_TARGET
 		rm $HTML_BUFFER > /dev/null
-		echo "$PKG has been counted, TESTED=$TESTED, NR_GOOD=$NR_GOOD, NR_FTBR=$NR_FTBR, NR_FTBFS=$NR_FTBFS, NR_DEPWAIT=$NR_DEPWAIT, NR_404=$NR_404, NR_UNKNOWN=$NR_UNKNOWN"
 
 	done
 	# prepare stats per repository

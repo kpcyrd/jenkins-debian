@@ -159,6 +159,8 @@ first_build() {
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	# update before pulling new dependencies
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG
@@ -227,6 +229,8 @@ second_build() {
 	export LC_ALL="fr_CH.UTF-8"
 	umask 0002
 	__END__
+	# update before pulling new dependencies
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG

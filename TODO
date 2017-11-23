@@ -201,16 +201,13 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible non-Debian tests, new host for 398 day variation is unused
 
-* pb-build4 is not used yet
 * locations in the code which need to be changed
-** ARCHLINUX_BUILD_NODE=profitbricks-build3-amd64
 ** RPM_BUILD_NODE=profitbricks-build3-amd64
 ** grep for profitbricks-build3-amd64, there's more
 * IOW: these tests should use it:
 ** coreboot
 ** netbsd
 ** fedora
-** archlinux
 ** (fdroid)
 
 ==== reproducible coreboot
@@ -325,9 +322,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * cleanup below…
 * things to be done before enabling more builders:
 ** build in /srv/workspace instead of /tmp
-** use proxy for downloading packages. (using squid is probably better than using devtools as the former has a nice feature of limiting the maximal used diskspace quite easily…)
 * only disable cert checking on the node running in the future
 * describe archlinux setup…!
+* compare the just built pkg.tar.xz with the one available on the arch mirrors. *then* one can truely say "X% of the Arch Linux packages are reproducible and could bit by bit be reproduced in the real world."
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 ** watch /tmp or rather where this will end up…

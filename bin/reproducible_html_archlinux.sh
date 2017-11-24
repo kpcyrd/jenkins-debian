@@ -187,7 +187,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	done
 	echo "     </tr>" >> $HTML_REPOSTATS
 	# prepare ARCHLINUX totals
-	let ARCHLINUX_TOTAL+=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | sed -s "s# #\n#g" | wc -l) || true
+	let ARCHLINUX_TOTAL+=$TOTAL || true
 	let ARCHLINUX_TESTED+=$TESTED || true
 	let ARCHLINUX_NR_FTBFS+=$NR_FTBFS || true
 	let ARCHLINUX_NR_FTBR+=$NR_FTBR || true
@@ -204,7 +204,7 @@ else
 	NR_TESTED=$ARCHLINUX_TESTED
 fi
 echo "     <tr>" >> $HTML_REPOSTATS
-echo "      <td><i>totals</i></td><td>$ARCHLINUX_NR_TESTED</td>" >> $HTML_REPOSTATS
+echo "      <td><i>totals</i></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
 for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_UNKNOWN ; do
 	PERCENT_i=$(echo "scale=1 ; ($i*100/$ARCHLINUX_TESTED)" | bc)
 	if [ "$ARCHLINUX_PERCENT_i" != "0" ] ; then

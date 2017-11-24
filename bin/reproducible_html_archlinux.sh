@@ -130,7 +130,12 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible<br />" >> $HTML_BUFFER
 				else
 					HTML_TARGET=$HTML_FTBR
-					echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible<br />" >> $HTML_BUFFER
+					# this shouldnt happen, but (for now) it does, so lets at least mark them…
+					EXTRA_REASON=""
+					if [ ! -z "$(grep 'class="source">.BUILDINFO' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
+						EXTRA_REASON=" with variations in .BUILDINFO"
+					fi
+					echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
 				fi
 			done
 			# we only count source packages for now…

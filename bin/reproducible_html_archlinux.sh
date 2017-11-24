@@ -204,11 +204,11 @@ else
 	NR_TESTED=$ARCHLINUX_TESTED
 fi
 echo "     <tr>" >> $HTML_REPOSTATS
-echo "      <td><i>totals</i></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
+echo "      <td><b>all combined</b></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
 for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_UNKNOWN ; do
 	PERCENT_i=$(echo "scale=1 ; ($i*100/$ARCHLINUX_TESTED)" | bc)
-	if [ "$ARCHLINUX_PERCENT_i" != "0" ] ; then
-		echo "      <td>$i ($ARCHLINUX_PERCENT_i%)</td>" >> $HTML_REPOSTATS
+	if [ "$PERCENT_i" != "0" ] ; then
+		echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
 	else
 		echo "      <td>$i</td>" >> $HTML_REPOSTATS
 	fi

@@ -85,17 +85,17 @@ echo "Setting up schroot $TARGET on $HOSTNAME"...
 echo "============================================================================="
 
 # configure proxy everywhere
-tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
-	export http_proxy=$http_proxy
-	export https_proxy=$http_proxy
-	export ftp_proxy=$http_proxy
-	export HTTP_PROXY=$http_proxy
-	export HTTPS_PROXY=$http_proxy
-	export FTP_PROXY=$http_proxy
-	export no_proxy="localhost,127.0.0.1"
-	__END__
-chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
-sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+#tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
+	#export http_proxy=$http_proxy
+	#export https_proxy=$http_proxy
+	#export ftp_proxy=$http_proxy
+	#export HTTP_PROXY=$http_proxy
+	#export HTTPS_PROXY=$http_proxy
+	#export FTP_PROXY=$http_proxy
+	#export no_proxy="localhost,127.0.0.1"
+	#__END__
+#chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
+#sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 
 
 # configure root user to use this for shells and login shells…
@@ -132,7 +132,7 @@ echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 # configure jenkins user
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
-echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
+#echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
 $USERCMD bash -l -c 'gpg --check-trustdb' # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf
 
@@ -194,7 +194,7 @@ $ROOTCMD sed -i 's/^#CXXFLAGS\s*=.*/CXXFLAGS="-march=x86-64 -mtune=generic -O2 -
 $ROOTCMD sed -i 's/^#LDFLAGS\s*=.*/LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"/' /etc/makepkg.conf
 $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
 
-$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" /etc/pacman.conf
+#$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" /etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf

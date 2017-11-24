@@ -117,7 +117,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HTML_TARGET=${HTML_FTBFS[1]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package|prepare)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				HTML_TARGET=${HTML_FTBFS[2]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER

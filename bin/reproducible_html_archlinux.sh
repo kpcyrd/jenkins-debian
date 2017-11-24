@@ -35,6 +35,14 @@ HTML_BUFFER=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_TARGET=""
 HTML_REPOSTATS=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 SIZE=""
+ARCHLINUX_TOTAL=0
+ARCHLINUX_TESTED=0
+ARCHLINUX_NR_FTBFS=0
+ARCHLINUX_NR_FTBR=0
+ARCHLINUX_NR_DEPWAIT=0
+ARCHLINUX_NR_404=0
+ARCHLINUX_NR_GOOD=0
+ARCHLINUX_NR_UNKNOWN=0
 for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | sed -s "s# #\n#g" | wc -l)
@@ -178,7 +186,34 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		fi
 	done
 	echo "     </tr>" >> $HTML_REPOSTATS
+	# prepare ARCHLINUX totals
+	let ARCHLINUX_TOTAL+=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | sed -s "s# #\n#g" | wc -l)
+	let ARCHLINUX_TESTED+=$TESTED
+	let ARCHLINUX_NR_FTBFS+=$NR_FTBFS
+	let ARCHLINUX_NR_FTBR+=$NR_FTBR
+	let ARCHLINUX_NR_DEPWAIT+=$NR_DEPWAIT
+	let ARCHLINUX_NR_404+=$NR_404
+	let ARCHLINUX_NR_GOOD+=$NR_GOOD
+	let ARCHLINUX_NR_UNKNOWN+=$NR_UNKNOWN
 done
+# prepare stats per repository
+ARCHLINUX_PERCENT_TOTAL=$(echo "scale=1 ; ($ARCHLINUX_TESTED*100/$ARCHLINUX_TOTAL)" | bc)
+if [ $(echo $ARCHLINUX_PERCENT_TOTAL/1|bc) -lt 99 ] ; then
+	NR_TESTED="$ARCHLINUX_TESTED <span style=\"font-size:0.8em;\">($ARCHLINUX_PERCENT_TOTAL% of $ARCHLINUX_TOTAL tested)</span>"
+else
+	NR_TESTED=$ARCHLINUX_TESTED
+fi
+echo "     <tr>" >> $HTML_REPOSTATS
+echo "      <td><i>totals</i></td><td>$ARCHLINUX_NR_TESTED</td>" >> $HTML_REPOSTATS
+for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_UNKNOWN ; do
+	PERCENT_i=$(echo "scale=1 ; ($i*100/$ARCHLINUX_TESTED)" | bc)
+	if [ "$ARCHLINUX_PERCENT_i" != "0" ] ; then
+		echo "      <td>$i ($ARCHLINUX_PERCENT_i%)</td>" >> $HTML_REPOSTATS
+	else
+		echo "      <td>$i</td>" >> $HTML_REPOSTATS
+	fi
+done
+echo "     </tr>" >> $HTML_REPOSTATS
 #
 # write out the actual webpage
 #

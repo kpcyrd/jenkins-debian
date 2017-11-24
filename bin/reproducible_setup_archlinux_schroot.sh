@@ -194,6 +194,7 @@ $ROOTCMD sed -i 's/^#CXXFLAGS\s*=.*/CXXFLAGS="-march=x86-64 -mtune=generic -O2 -
 $ROOTCMD sed -i 's/^#LDFLAGS\s*=.*/LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"/' /etc/makepkg.conf
 $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
 
+$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" /etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf

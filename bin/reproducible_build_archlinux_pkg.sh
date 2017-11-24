@@ -171,6 +171,8 @@ first_build() {
 	# log installed packages and used mirrors
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- grep '^Server' /etc/pacman.d/mirrorlist 2>&1 | tee -a $LOG
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Q 2>&1 | tee -a $LOG
+	# TODO: debugging, remove me
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG
@@ -251,6 +253,8 @@ second_build() {
 	# log installed packages and used mirrors
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- grep '^Server' /etc/pacman.d/mirrorlist 2>&1 | tee -a $LOG
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Q 2>&1 | tee -a $LOG
+	# TODO: debugging, remove me
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG

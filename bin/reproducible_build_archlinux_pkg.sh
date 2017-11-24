@@ -167,7 +167,7 @@ first_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- cat /etc/makepkg.conf 2>&1 | tee -a $LOG
 	echo "============================================================================="
 	# update before pulling new dependencies
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syyu --noconfirm 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syyu --debug --noconfirm 2>&1 | tee -a $LOG
 	# log installed packages and used mirrors
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- grep '^Server' /etc/pacman.d/mirrorlist 2>&1 | tee -a $LOG
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Q 2>&1 | tee -a $LOG
@@ -247,7 +247,7 @@ second_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- cat /etc/makepkg.conf 2>&1 | tee -a $LOG
 	echo "============================================================================="
 	# update before pulling new dependencies
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syyu --noconfirm 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syyu --debug --noconfirm 2>&1 | tee -a $LOG
 	# log installed packages and used mirrors
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- grep '^Server' /etc/pacman.d/mirrorlist 2>&1 | tee -a $LOG
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Q 2>&1 | tee -a $LOG

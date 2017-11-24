@@ -337,7 +337,7 @@ remote_build() {
 #
 # below is what controls the world
 #
-TIMEOUT=8	# maximum time in hours for a single build
+TIMEOUT=12	# maximum time in hours for a single build
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 DUMMY=$(mktemp -t archlinux-dummy-XXXXXXXX)

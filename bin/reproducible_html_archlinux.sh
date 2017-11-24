@@ -16,9 +16,9 @@ ARCHBASE=$BASE/archlinux
 # analyse results to create the webpage
 #
 echo "$(date -u) - starting to analyse build results."
-MEMBERS_FTBFS="0 1 2 3 4"
+MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
-MEMBERS_404="0 1 2 3 4 5 6 7"
+MEMBERS_404="0 1 2 3 4 5 6 7 8"
 for i in $MEMBERS_FTBFS ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
@@ -80,6 +80,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				HTML_TARGET=${HTML_404[0]}
+				REASON="download failed"
 				EXTRA_REASON=""
 				let NR_404+=1
 				if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
@@ -103,26 +104,25 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				elif [ ! -z "$(grep 'SSL certificate problem: unable to get local issuer certificate' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_404[1]}
 					EXTRA_REASON="with SSL certificate problem"
+				elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+					HTML_TARGET=${HTML_404[8]}
+					REASON=" downloaded ok but failed to verify source"
 				fi
-				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> download failed $EXTRA_REASON" >> $HTML_BUFFER
-			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-				HTML_TARGET=${HTML_FTBFS[0]}
-				let NR_FTBFS+=1
-				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to verify source" >> $HTML_BUFFER
+				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
-				HTML_TARGET=${HTML_FTBFS[1]}
+				HTML_TARGET=${HTML_FTBFS[0]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-				HTML_TARGET=${HTML_FTBFS[2]}
+				HTML_TARGET=${HTML_FTBFS[1]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-				HTML_TARGET=${HTML_FTBFS[3]}
+				HTML_TARGET=${HTML_FTBFS[2]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-				HTML_TARGET=${HTML_FTBFS[4]}
+				HTML_TARGET=${HTML_FTBFS[3]}
 				let NR_FTBFS+=1
 				echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
 			else

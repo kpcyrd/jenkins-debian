@@ -31,8 +31,8 @@ channels = [
     {'name': 'debian-reproducible-changes', 'id': 'debian-reproducible-changes'},
     {'name': 'debian-ruby', 'id': 'pkg-ruby-extras'},
     {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
-    {'name': 'lede-dev', 'id': 'jenkins-lede-dev'},
-    {'name': 'archlinux-reproducible', 'id': 'jenkins-archlinux-reproducible'},
+    {'name': 'lede-dev', 'id': 'lede-dev'},
+    {'name': 'archlinux-reproducible', 'id': 'archlinux-reproducible'},
 ]
 
 template = """repo-id: '{repo_id}'

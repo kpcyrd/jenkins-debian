@@ -217,6 +217,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 
 	done
 	# prepare stats per repository
+	set +e
 	TESTED=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c ^)
 	NR_GOOD=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c GOOD)
 	NR_FTBR=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c FTBR)
@@ -224,6 +225,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	NR_DEPWAIT=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c DEPWAIT)
 	NR_404=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c 404)
 	NR_UNKNOWN=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c UNKNOWN)
+	set -e
 	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 		NR_TESTED="$TESTED <span style=\"font-size:0.8em;\">(tested $PERCENT_TOTAL% of $TOTAL)</span>"
@@ -242,14 +244,16 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	done
 	echo "     </tr>" >> $HTML_REPOSTATS
 	# prepare ARCHLINUX totals
-	let ARCHLINUX_TOTAL+=$TOTAL || true
-	let ARCHLINUX_TESTED+=$TESTED || true
-	let ARCHLINUX_NR_FTBFS+=$NR_FTBFS || true
-	let ARCHLINUX_NR_FTBR+=$NR_FTBR || true
-	let ARCHLINUX_NR_DEPWAIT+=$NR_DEPWAIT || true
-	let ARCHLINUX_NR_404+=$NR_404 || true
-	let ARCHLINUX_NR_GOOD+=$NR_GOOD || true
-	let ARCHLINUX_NR_UNKNOWN+=$NR_UNKNOWN || true
+	set +e
+	let ARCHLINUX_TOTAL+=$TOTAL
+	let ARCHLINUX_TESTED+=$TESTED
+	let ARCHLINUX_NR_FTBFS+=$NR_FTBFS
+	let ARCHLINUX_NR_FTBR+=$NR_FTBR
+	let ARCHLINUX_NR_DEPWAIT+=$NR_DEPWAIT
+	let ARCHLINUX_NR_404+=$NR_404
+	let ARCHLINUX_NR_GOOD+=$NR_GOOD
+	let ARCHLINUX_NR_UNKNOWN+=$NR_UNKNOWN
+	set -e
 done
 # prepare stats per repository
 ARCHLINUX_PERCENT_TOTAL=$(echo "scale=1 ; ($ARCHLINUX_TESTED*100/$ARCHLINUX_TOTAL)" | bc)

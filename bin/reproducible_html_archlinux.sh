@@ -18,7 +18,7 @@ ARCHBASE=$BASE/archlinux
 echo "$(date -u) - starting to analyse build results."
 MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
-MEMBERS_404="0 1 2 3 4 5 6 7 8"
+MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
 for i in $MEMBERS_FTBFS ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
@@ -106,7 +106,10 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					EXTRA_REASON="with SSL certificate problem"
 				elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_404[8]}
-					REASON=" downloaded ok but failed to verify source"
+					REASON="downloaded ok but failed to verify source"
+				elif [ ! -z "$(egrep '==> ERROR: Integrity checks \(.*\) differ in size from the source array' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+					HTML_TARGET=${HTML_404[9]}
+					REASON="Integrity checks differ in size from the source array"
 				fi
 				echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 			elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then

@@ -60,32 +60,27 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "$(date -u ) - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH right now…"
 			continue
 		fi
-		let TESTED+=1
 		if [ -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
 			STATE="$(cat $ARCHLINUX_PKG_PATH/pkg.state 2>&1)"
 			case $STATE in
-				GOOD)		let NR_GOOD+=1
-						HTML_TARGET=$HTML_GOOD
+				GOOD)		HTML_TARGET=$HTML_GOOD
 						;;
-				FTBR)		let NR_FTBR+=1
-						HTML_TARGET=$HTML_FTBR
+				FTBR)		HTML_TARGET=$HTML_FTBR
 						;;
-				FTBFS*)		let NR_FTBFS+=1
-						SUBSTATE=$(echo $STATE | cut -d "_" -f2)
+				FTBFS*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
 						HTML_TARGET=${HTML_FTBFS[$SUBSTATE]}
 						;;
-				404*)		let NR_404+=1
-						SUBSTATE=$(echo $STATE | cut -d "_" -f2)
+				404*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
 						HTML_TARGET=${HTML_404[$SUBSTATE]}
 						;;
-				DEPWAIT*)	let NR_DEPWAIT+=1
-						SUBSTATE=$(echo $STATE | cut -d "_" -f2)
+				DEPWAIT*)	SUBSTATE=$(echo $STATE | cut -d "_" -f2)
 						HTML_TARGET=${HTML_DEPWAIT[$SUBSTATE]}
 						;;
-				UNKNOWN)	let NR_UNKNOWN+=1
-						HTML_TARGET=$HTML_UNKNOWN
+				UNKNOWN)	HTML_TARGET=$HTML_UNKNOWN
 						;;
-				*)		exit 1 ;;
+				*)		echo "Unknown state for $ARCHLINUX_PKG_PATH: $STATE"
+						exit 1
+						;;
 			esac
 			cat $ARCHLINUX_PKG_PATH/pkg.html >> $HTML_TARGET
 		else
@@ -222,6 +217,13 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 
 	done
 	# prepare stats per repository
+	TESTED=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c ^)
+	NR_GOOD=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c GOOD)
+	NR_FTBR=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c FTBR)
+	NR_FTBFS=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c FTBFS)
+	NR_DEPWAIT=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c DEPWAIT)
+	NR_404=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c 404)
+	NR_UNKNOWN=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c UNKNOWN)
 	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 		NR_TESTED="$TESTED <span style=\"font-size:0.8em;\">(tested $PERCENT_TOTAL% of $TOTAL)</span>"

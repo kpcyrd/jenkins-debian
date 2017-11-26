@@ -325,6 +325,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** build in /srv/workspace instead of /tmp
 * only disable cert checking on the node running in the future
 * describe archlinux setup…!
+** we do hostname variation!
+** we should do kernel variation
 * compare the just built pkg.tar.xz with the one available on the arch mirrors. *then* one can truely say "X% of the Arch Linux packages are reproducible and could bit by bit be reproduced in the real world."
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.

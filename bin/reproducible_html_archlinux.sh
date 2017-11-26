@@ -61,7 +61,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			continue
 		fi
 		let TESTED+=1
-		if [ -n "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.state 2>/dev/null)" ] ; then
+		if [ -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
 			STATE="$(cat $ARCHLINUX_PKG_PATH/pkg.state 2>&1)"
 			case $STATE in
 				GOOD)		let NR_GOOD+=1

@@ -248,7 +248,9 @@ rm -f $DBD_HTML $DBD_GOOD_PKGS_HTML $DBD_BAD_PKGS_HTML $TOOLCHAIN_HTML $BANNER_H
 # the end
 calculate_build_duration
 print_out_duration
-irc_message reproducible-builds "$REPRODUCIBLE_URL/$PAGE has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% packages reproducible)"
+for CHANNEL in reproducible-builds lede-dev ; do
+	irc_message $CHANNEL "$REPRODUCIBLE_URL/$PAGE has been updated. ($GOOD_PERCENT_IMAGES% images and $GOOD_PERCENT_PACKAGES% packages reproducible in our current test framework.)"
+done
 echo "============================================================================="
 
 # remove everything, we don't need it anymore...

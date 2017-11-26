@@ -93,24 +93,20 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
 				if [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_DEPWAIT[0]}
-					let NR_DEPWAIT+=1
 					echo DEPWAIT_= > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_DEPWAIT[1]}
-					let NR_DEPWAIT+=1
 					echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_404[0]}
-					let NR_404+=1
 					echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified|One or more files did not pass the validity check|Integrity checks \(.*\) differ in size from the source array)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_404[0]}
 					REASON="download failed"
 					EXTRA_REASON=""
-					let NR_404+=1
 					echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 						HTML_TARGET=${HTML_404[6]}
@@ -152,28 +148,23 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
 					HTML_TARGET=${HTML_FTBFS[0]}
-					let NR_FTBFS+=1
 					echo FTBFS_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_FTBFS[1]}
-					let NR_FTBFS+=1
 					echo FTBFS_1 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package|prepare)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_FTBFS[2]}
-					let NR_FTBFS+=1
 					echo FTBFS_2 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					HTML_TARGET=${HTML_FTBFS[3]}
-					let NR_FTBFS+=1
 					echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
 				else
 					echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
 					HTML_TARGET=$HTML_UNKNOWN
-					let NR_UNKNOWN+=1
 					echo UNKNOWN > $ARCHLINUX_PKG_PATH/pkg.state
 				fi
 			else
@@ -193,10 +184,8 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				done
 				# we only count source packages for now…
 				if [ "$HTML_TARGET" = "$HTML_FTBR" ] ; then
-					let NR_FTBR+=1
 					echo FTBR > $ARCHLINUX_PKG_PATH/pkg.state
 				else
-					let NR_GOOD+=1
 					echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state
 				fi
 			fi

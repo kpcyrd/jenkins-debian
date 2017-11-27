@@ -137,7 +137,6 @@ first_build() {
 	echo "Repository:     $REPOSITORY"
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
-	set -x
 	local SESSION="archlinux-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
@@ -213,7 +212,6 @@ second_build() {
 	echo "Repository:     $REPOSITORY"
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
-	set -x
 	local SESSION="archlinux-$SRCPACKAGE-$(basename $TMPDIR)"
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log

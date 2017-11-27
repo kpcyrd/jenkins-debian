@@ -42,8 +42,8 @@ handle_remote_error() {
 }
 
 update_archlinux_repositories() {
-	# every 2 days we check for new archlinux packages in all tested repositories
-	touch -d "$(date -d '2 days ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
+	# every day we check for new archlinux packages in all tested repositories
+	touch -d "$(date -d '1 day ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
 	local NEED_UPDATE=false
 	local REPO
 	for REPO in $ARCHLINUX_REPOS ; do

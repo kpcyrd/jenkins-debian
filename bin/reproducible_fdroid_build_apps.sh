@@ -26,7 +26,7 @@ if [ -e $WORKSPACE/.git ]; then
     # reuse the git repo if possible, to keep all the setup in fdroiddata/
     cd $WORKSPACE
     git remote set-url origin $GIT_REPO
-    git fetch --tags
+    while ! git fetch origin --tags --prune; do sleep 10; done
     git clean -fdx
     git reset --hard
     git checkout master

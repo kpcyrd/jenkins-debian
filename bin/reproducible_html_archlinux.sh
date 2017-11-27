@@ -68,11 +68,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			case $STATE in
 				GOOD)		HTML_TARGET=$HTML_GOOD
 						;;
-				FTBR)		# temporary needed
-						HTML_TARGET=${HTML_FTBR[1]}
-						echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
-						;;
-				FTBR_*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
+				FTBR*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
 						HTML_TARGET=${HTML_FTBR[$SUBSTATE]}
 						;;
 				FTBFS*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)

@@ -282,7 +282,20 @@ write_page_header() {
 		write_page "   or <a href="mailto:reproducible-builds@lists.alioth.debian.org">email</a>,"
 		write_page "   and we care about free software in general,"
 		write_page "   so whether you are an upstream developer or working on another distribution, or have any other feedback - we'd love to hear from you!"
-		write_page "   Besides Debian we are also testing <li><a href=\"/coreboot/\">coreboot</a></li>, <li><a href=\"/openwrt/\">OpenWrt</a></li>, <li><a href=\"/netbsd/\">NetBSD</a></li>, <li><a href=\"/freebsd/\">FreeBSD</a></li>, <li><a href=\"/archlinux/\">Arch Linux</a></li> and <li><a href=\"/lede/\">LEDE</a></li>, though not as thoroughly as Debian (yet?) - and testing of <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> has just begun, and there are plans to test <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_fdroid\">F-Droid</a> and <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_guix\">GNU Guix</a> too, and more, if you contribute!"
+		write_page "   Besides Debian we are also testing "
+		write_page "   <li><a href=\"/coreboot/\">coreboot</a></li>,"
+		write_page "   <li><a href=\"/openwrt/\">OpenWrt</a></li>, "
+		write_page "   <li><a href=\"/netbsd/\">NetBSD</a></li>, "
+		write_page "   <li><a href=\"/freebsd/\">FreeBSD</a></li>, "
+		write_page "   <li><a href=\"/archlinux/\">Arch Linux</a></li> "
+		write_page "   and <li><a href=\"/lede/\">LEDE</a></li>, "
+		write_page "   though not as thoroughly as Debian (yet?) - and testing of "
+		write_page "   <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> "
+		write_page "   has just begun, and there are plans to test "
+		write_page "   <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_fdroid\">F-Droid</a> and "
+		write_page "   <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_guix\">GNU Guix</a> too, "
+		# link openSUSE here too
+		write_page "   and more, if you contribute!"
 		write_page "</ul>"
 	fi
 }

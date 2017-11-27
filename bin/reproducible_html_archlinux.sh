@@ -242,7 +242,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "      <td>$REPOSITORY</td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
 	for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_UNKNOWN ; do
 		PERCENT_i=$(echo "scale=1 ; ($i*100/$TESTED)" | bc)
-		if [ "$PERCENT_i" != "0" ] ; then
+		if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
 			echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
 		else
 			echo "      <td>$i</td>" >> $HTML_REPOSTATS
@@ -272,7 +272,7 @@ echo "     <tr>" >> $HTML_REPOSTATS
 echo "      <td><b>all combined</b></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
 for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_UNKNOWN ; do
 	PERCENT_i=$(echo "scale=1 ; ($i*100/$ARCHLINUX_TESTED)" | bc)
-	if [ "$PERCENT_i" != "0" ] ; then
+	if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
 		echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
 	else
 		echo "      <td>$i</td>" >> $HTML_REPOSTATS

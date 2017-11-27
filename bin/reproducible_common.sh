@@ -331,20 +331,9 @@ write_page_intro() {
 		local BRANCH="release/10.3.0"
 	elif [ "$1" = "Arch Linux" ] ; then
 		local PROJECTNAME="Arch Linux"
-		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>.<br /> Please note that this is still at an early stage. Also there are more variations expected to be seen in the wild.</p>"
-	elif [ "$1" = "fedora-23" ] ; then
-		local PROJECTNAME="Fedora 23"
-		write_page "        <p><em>Reproducible $PROJECTNAME</em> is a (currently somewhat stalled) effort to apply this to $PROJECTNAME, which is rather obvious with 23… <br/> $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
-	fi
-	if [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then
-		local SMALLPROJECTNAME="$(echo $PROJECTNAME|tr '[:upper:]' '[:lower:]')"
-		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$SMALLPROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. The jenkins job is running <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_$SMALLPROJECTNAME.sh\">reproducible_$SMALLPROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute."
-		write_page "       <br />Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
-	elif [ "$1" = "fedora-23" ] ; then
-		write_page "       <p><img src=\"/userContent/static/weather-storm.png\"> FIXME: explain $PROJECTNAME test setup here.</p>"
-	fi
-	if [ "$1" = "Arch Linux" ] ; then
-		write_page "<p>Missing bits for <em>testing</em> Arch Linux:<ul>"
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>."
+		write_page "   Please note that this is still at an early stage. Also there are more variations expected to be seen in the wild."
+		write_page "Missing bits for <em>testing</em> Arch Linux:<ul>"
 		write_page " <li>more variations, see below.</li>"
 		write_page " <li>cross references to <a href=\"https://tests.reproducible-builds.org/debian/index_issues.html\">Debian notes</a> - and having Arch Linux specific notes.</li>"
 		write_page "</ul></p>"
@@ -356,6 +345,16 @@ write_page_intro() {
 		write_page " </ul></li>"
 		write_page " <li>user tools, for users to verify all of this easily.</li>"
 		write_page "</ul></p>"
+	elif [ "$1" = "fedora-23" ] ; then
+		local PROJECTNAME="Fedora 23"
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is a (currently somewhat stalled) effort to apply this to $PROJECTNAME, which is rather obvious with 23… <br/> $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
+	fi
+	if [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then
+		local SMALLPROJECTNAME="$(echo $PROJECTNAME|tr '[:upper:]' '[:lower:]')"
+		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$SMALLPROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. The jenkins job is running <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_$SMALLPROJECTNAME.sh\">reproducible_$SMALLPROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute."
+		write_page "       <br />Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
+	elif [ "$1" = "fedora-23" ] ; then
+		write_page "       <p><img src=\"/userContent/static/weather-storm.png\"> FIXME: explain $PROJECTNAME test setup here.</p>"
 	fi
 }
 

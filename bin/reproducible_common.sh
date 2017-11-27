@@ -334,7 +334,7 @@ write_page_intro() {
 		write_page "<p><ul>Missing bits for <em>testing</em> Arch Linux:"
 		write_page " <li>more variations, see below.</li>"
 		write_page " <li>cross references to <a href=\"https://tests.reproducible-builds.org/debian/index_issues.html\">Debian - and having Arch Linux specific notes.</li>"
-		write_page "</ul></p>
+		write_page "</ul></p>"
 		write_page "<p><ul>Missing bits for Arch Linux:"
 		write_page " <li>pacman 5.0.2 needs an upload, so far the needed changes are only in git.</li>"
 		write_page " <li><ul>once the pacman upload has happened"

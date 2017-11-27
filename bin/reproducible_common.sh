@@ -488,7 +488,7 @@ write_variation_table() {
 			write_page "<tr><td>hour, minute</td><td>at least the minute will probably vary between two builds anyway...</td><td>on amd64, i386 and arm64 the \"future builds\" additionally run 6h and 23min ahead</td></tr>"
 		        write_page "<tr><td>filesystem</td><td>tmpfs</td><td><em>temporarily not</em> varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a> (<a href=\"https://sources.debian.net/src/disorderfs/sid/disorderfs.1.txt/\">manpage</a>)</td></tr>"
 		else
-			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>but this is not enforced systematically... (currently, work in progress)</td></tr>"
+			write_page "<tr><td>hour, minute</td><td>hour and minute will probably vary between two builds...</td><td>to ensure this the machine running in the future is actually running 398 days, 6 hours and 23 minutes ahead...</td></tr>"
 			write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>same for both builds (currently, this could be varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a>)</td></tr>"
 		fi
 	else

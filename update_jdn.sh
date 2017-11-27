@@ -391,6 +391,8 @@ if [ -f /etc/debian_version ] ; then
 				libvirt-daemon
 				libvirt-daemon-system
 				python3-libvirt
+				python3-qrcode
+				python3-ruamel.yaml
 				python3-vagrant
 				qemu-kvm
 				vagrant

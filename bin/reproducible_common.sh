@@ -318,7 +318,7 @@ write_page_intro() {
 		local BRANCH="release/10.3.0"
 	elif [ "$1" = "Arch Linux" ] ; then
 		local PROJECTNAME="Arch Linux"
-		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that this is still at an early stage, not all possible variations are applied yet and there are more variations expected to be seen in the wild.</p>"
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>.<br /> Please note that this is still at an early stage. Also there are more variations expected to be seen in the wild.</p>"
 	elif [ "$1" = "fedora-23" ] ; then
 		local PROJECTNAME="Fedora 23"
 		write_page "        <p><em>Reproducible $PROJECTNAME</em> is a (currently somewhat stalled) effort to apply this to $PROJECTNAME, which is rather obvious with 23… <br/> $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
@@ -331,8 +331,11 @@ write_page_intro() {
 		write_page "       <p><img src=\"/userContent/static/weather-storm.png\"> FIXME: explain $PROJECTNAME test setup here.</p>"
 	fi
 	if [ "$1" = "Arch Linux" ] ; then
+		write_page "<p><ul>Missing bits for <em>testing</em> Arch Linux:"
+		write_page " <li>more variations, see below.</li>"
+		write_page " <li>cross references to <a href=\"https://tests.reproducible-builds.org/debian/index_issues.html\">Debian - and having Arch Linux specific notes.</li>"
+		write_page "</ul></p>
 		write_page "<p><ul>Missing bits for Arch Linux:"
-		write_page " <li>more variations, see above.</li>"
 		write_page " <li>pacman 5.0.2 needs an upload, so far the needed changes are only in git.</li>"
 		write_page " <li><ul>once the pacman upload has happened"
 		write_page "  <li>we can compare our packages against the ones from the official Arch Linux repositories.</li>"

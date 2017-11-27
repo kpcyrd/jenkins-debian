@@ -19,7 +19,7 @@ echo "$(date -u) - starting to analyse build results."
 MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
 MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
-MEMBERS_FTBR="0 1"
+MEMBERS_FTBR="0 1 2"
 for i in $MEMBERS_FTBFS ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
@@ -173,8 +173,10 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				fi
 			else
 				HTML_TARGET=$HTML_GOOD
+				SOME_GOOD=false
 				for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
 					if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
+						SOME_GOOD=true
 						echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
 					else
 						# if we have HTML_FTBR[0] we want it to be on top…
@@ -194,7 +196,13 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				case $HTML_TARGET in
 					$HTML_GOOD)		echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state	;;
 					${HTML_FTBR[0]})	echo FTBR_0 > $ARCHLINUX_PKG_PATH/pkg.state	;;
-					${HTML_FTBR[1]})	echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state	;;
+					${HTML_FTBR[1]})	if $SOME_GOOD ; then
+									echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
+								else
+									HTML_TARGET=${HTML_FTBR[2]}
+									echo FTBR_2 > $ARCHLINUX_PKG_PATH/pkg.state
+								fi
+								;;
 					*)			;;
 				esac
 			fi

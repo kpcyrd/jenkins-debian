@@ -19,6 +19,7 @@ echo "$(date -u) - starting to analyse build results."
 MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
 MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
+MEMBERS_FTBR="0 1"
 for i in $MEMBERS_FTBFS ; do
 	HTML_FTBFS[$i]=$(mktemp)
 done
@@ -28,7 +29,9 @@ done
 for i in $MEMBERS_404 ; do
 	HTML_404[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 done
-HTML_FTBR=$(mktemp -t rhtml-archlinux-XXXXXXXX)
+for i in $MEMBERS_FTBR ; do
+	HTML_FTBR[$i]=$(mktemp)
+done
 HTML_GOOD=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_UNKNOWN=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_BUFFER=$(mktemp -t rhtml-archlinux-XXXXXXXX)
@@ -65,7 +68,12 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			case $STATE in
 				GOOD)		HTML_TARGET=$HTML_GOOD
 						;;
-				FTBR)		HTML_TARGET=$HTML_FTBR
+				FTBR)		# temporary needed
+						HTML_TARGET=${HTML_FTBR[1]}
+						echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
+						;;
+				FTBR_*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
+						HTML_TARGET=${HTML_FTBR[$SUBSTATE]}
 						;;
 				FTBFS*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
 						HTML_TARGET=${HTML_FTBFS[$SUBSTATE]}
@@ -173,21 +181,26 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 						echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
 					else
-						HTML_TARGET=$HTML_FTBR
+						# if we have HTML_FTBR[0] we want it to be on top…
+						if [ "$HTML_TARGET" != "${HTML_FTBR[0]}" ] ; then
+							 HTML_TARGET=${HTML_FTBR[1]}
+						fi
 						# this shouldnt happen, but (for now) it does, so lets at least mark them…
 						EXTRA_REASON=""
 						if [ ! -z "$(grep 'class="source">.BUILDINFO' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
+							HTML_TARGET=${HTML_FTBR[0]}
 							EXTRA_REASON=" with variations in .BUILDINFO"
 						fi
 						echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
 					fi
 				done
 				# we only count source packages for now…
-				if [ "$HTML_TARGET" = "$HTML_FTBR" ] ; then
-					echo FTBR > $ARCHLINUX_PKG_PATH/pkg.state
-				else
-					echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state
-				fi
+				case $HTML_TARGET in
+					$HTML_GOOD)		echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state	;;
+					${HTML_FTBR[0]})	echo FTBR_0 > $ARCHLINUX_PKG_PATH/pkg.state	;;
+					${HTML_FTBR[1]})	echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state	;;
+					*)			;;
+				esac
 			fi
 			echo "      </td>" >> $HTML_BUFFER
 			echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- ) UTC</td>" >> $HTML_BUFFER
@@ -293,7 +306,7 @@ cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $(for j in $MEMBERS_404 ; do echo ${HTML_404[$j]} ; done) $(for j in $MEMBERS_DEPWAIT ; do echo ${HTML_DEPWAIT[$j]} ; done) $(for j in $MEMBERS_FTBFS ; do echo ${HTML_FTBFS[$j]} ; done) $HTML_FTBR $HTML_GOOD ; do
+for i in $HTML_UNKNOWN $(for j in $MEMBERS_404 ; do echo ${HTML_404[$j]} ; done) $(for j in $MEMBERS_DEPWAIT ; do echo ${HTML_DEPWAIT[$j]} ; done) $(for j in $MEMBERS_FTBFS ; do echo ${HTML_FTBFS[$j]} ; done) $(for j in $MEMBERS_FTBR ; do echo ${HTML_FTBR[$j]} ; done) $HTML_GOOD ; do
 	cat $i >> $PAGE
 	rm $i > /dev/null
 done

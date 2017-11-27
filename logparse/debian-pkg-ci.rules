@@ -8,6 +8,8 @@ ok /Error while decoding stream/
 ok /warning\.png/
 # and python files
 ok /warnings.+pyc?$/
+# and in commit messages
+ok /^Commit message:/
 
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /

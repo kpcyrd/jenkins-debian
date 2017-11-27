@@ -327,7 +327,7 @@ write_page_intro() {
 		local SMALLPROJECTNAME="$(echo $PROJECTNAME|tr '[:upper:]' '[:lower:]')"
 		write_page "       <p>There is a weekly run <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_$SMALLPROJECTNAME/\">jenkins job</a> to test the <code>$BRANCH</code> branch of <a href=\"$PROJECTURL\">$PROJECTNAME.git</a>. The jenkins job is running <a href=\"https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_$SMALLPROJECTNAME.sh\">reproducible_$SMALLPROJECTNAME.sh</a>$BUILD_ENVIRONMENT and this script is solely responsible for creating this page. Feel invited to join <code>#debian-reproducible</code> (on irc.oftc.net) to request job runs whenever sensible. Patches and other <a href=\"mailto:reproducible-builds@lists.alioth.debian.org\">feedback</a> are very much appreciated - if you want to help, please start by looking at the <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_$(echo $1|tr '[:upper:]' '[:lower:]')\">ToDo list for $1</a>, you might find something easy to contribute."
 		write_page "       <br />Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!</p>"
-	else
+	elif [ "$1" = "fedora-23" ] ; then
 		write_page "       <p><img src=\"/userContent/static/weather-storm.png\"> FIXME: explain $PROJECTNAME test setup here.</p>"
 	fi
 	if [ "$1" = "Arch Linux" ] ; then

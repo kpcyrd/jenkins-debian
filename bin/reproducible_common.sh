@@ -397,7 +397,11 @@ write_variation_table() {
 		write_page "</td><td>i-capture-the-hostname</td></tr>"
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	else
-		write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+		if [ "$1" = "LEDE" ] || [ "$1" != "Arch Linux" ] || [ "$1" != "OpenWrt" ] ; then
+			write_page "<tr><td>hostname</td><td> profitbricks-build3-amd64 or profitbricks-build4-amd64</td><td>the other one</td></tr>"
+		else
+			write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+		fi
 		write_page "<tr><td>domainname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 	fi
 	if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] && [ "$1" != "fedora-23" ] ; then

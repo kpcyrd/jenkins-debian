@@ -330,6 +330,17 @@ write_page_intro() {
 	else
 		write_page "       <p><img src=\"/userContent/static/weather-storm.png\"> FIXME: explain $PROJECTNAME test setup here.</p>"
 	fi
+	if [ "$1" = "Arch Linux" ] ; then
+		write_page "<p><ul>Missing bits for Arch Linux:"
+		write_page " <li>more variations, see above.</li>"
+		write_page " <li>pacman 5.0.2 needs an upload, so far the needed changes are only in git.</li>"
+		write_page " <li><ul>once the pacman upload has happened"
+		write_page "  <li>we can compare our packages against the ones from the official Arch Linux repositories.</li>"
+		write_page "  <li>all packages need to be rebuild so that then they include .BUILDINFO files.</li>"
+		write_page " </ul></li>"
+		write_page " <li>user tools, for users to verify all of this easily.</li>"
+		write_page "</ul></p>"
+	fi
 }
 
 write_page_footer() {

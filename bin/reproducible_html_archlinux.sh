@@ -20,22 +20,7 @@ MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
 MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
 MEMBERS_FTBR="0 1 2"
-for i in $MEMBERS_FTBFS ; do
-	HTML_FTBFS[$i]=$(mktemp)
-done
-for i in $MEMBERS_DEPWAIT ; do
-	HTML_DEPWAIT[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-done
-for i in $MEMBERS_404 ; do
-	HTML_404[$i]=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-done
-for i in $MEMBERS_FTBR ; do
-	HTML_FTBR[$i]=$(mktemp)
-done
-HTML_GOOD=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-HTML_UNKNOWN=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 HTML_BUFFER=$(mktemp -t rhtml-archlinux-XXXXXXXX)
-HTML_TARGET=""
 HTML_REPOSTATS=$(mktemp -t rhtml-archlinux-XXXXXXXX)
 SIZE=""
 ARCHLINUX_TOTAL=0
@@ -63,31 +48,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(LANG=C TZ=UTC ls --full-time -d $ARCHLINUX_PKG_PATH | cut -d ':' -f1-2 | cut -d " " -f6-) UTC"
 			continue
 		fi
-		if [ -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
-			STATE="$(cat $ARCHLINUX_PKG_PATH/pkg.state 2>&1)"
-			case $STATE in
-				GOOD)		HTML_TARGET=$HTML_GOOD
-						;;
-				FTBR*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
-						HTML_TARGET=${HTML_FTBR[$SUBSTATE]}
-						;;
-				FTBFS*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
-						HTML_TARGET=${HTML_FTBFS[$SUBSTATE]}
-						;;
-				404*)		SUBSTATE=$(echo $STATE | cut -d "_" -f2)
-						HTML_TARGET=${HTML_404[$SUBSTATE]}
-						;;
-				DEPWAIT*)	SUBSTATE=$(echo $STATE | cut -d "_" -f2)
-						HTML_TARGET=${HTML_DEPWAIT[$SUBSTATE]}
-						;;
-				UNKNOWN)	HTML_TARGET=$HTML_UNKNOWN
-						;;
-				*)		echo "Unknown state for $ARCHLINUX_PKG_PATH: $STATE"
-						exit 1
-						;;
-			esac
-			cat $ARCHLINUX_PKG_PATH/pkg.html >> $HTML_TARGET
-		else
+		if [ ! -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
 			echo "     <tr>" >> $HTML_BUFFER
 			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 			echo "      <td>$PKG</td>" >> $HTML_BUFFER
@@ -96,114 +57,95 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			#
 			if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
 				if [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_DEPWAIT[0]}
 					echo DEPWAIT_= > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_DEPWAIT[1]}
 					echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_404[0]}
 					echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified|One or more files did not pass the validity check|Integrity checks \(.*\) differ in size from the source array)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_404[0]}
 					REASON="download failed"
 					EXTRA_REASON=""
 					echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[6]}
 						echo 404_6 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="to verify source with PGP due to unknown public key"
 					elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[3]}
 						echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with 404 - file not found"
 					elif [ ! -z "$(grep 'The requested URL returned error: 403' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[2]}
 						echo 404_2 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with 403 - forbidden"
 					elif [ ! -z "$(grep 'The requested URL returned error: 500' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[4]}
 						echo 404_4 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with 500 - internal server error"
 					elif [ ! -z "$(grep 'The requested URL returned error: 503' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[5]}
 						echo 404_5 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with 503 - service unavailable"
 					elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[7]}
 						echo 404_7 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="to verify source with PGP signatures"
 					elif [ ! -z "$(grep 'SSL certificate problem: unable to get local issuer certificate' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[1]}
 						echo 404_1 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with SSL certificate problem"
 					elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[8]}
 						echo 404_8 > $ARCHLINUX_PKG_PATH/pkg.state
 						REASON="downloaded ok but failed to verify source"
 					elif [ ! -z "$(egrep '==> ERROR: Integrity checks \(.*\) differ in size from the source array' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						HTML_TARGET=${HTML_404[9]}
 						echo 404_9 > $ARCHLINUX_PKG_PATH/pkg.state
 						REASON="Integrity checks differ in size from the source array"
 					fi
 					echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log)" ] ; then
-					HTML_TARGET=${HTML_FTBFS[0]}
 					echo FTBFS_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_FTBFS[1]}
 					echo FTBFS_1 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: A failure occurred in (build|package|prepare)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_FTBFS[2]}
 					echo FTBFS_2 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-					HTML_TARGET=${HTML_FTBFS[3]}
 					echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
 				else
 					echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
-					HTML_TARGET=$HTML_UNKNOWN
 					echo UNKNOWN > $ARCHLINUX_PKG_PATH/pkg.state
 				fi
 			else
-				HTML_TARGET=$HTML_GOOD
+				STATE=GOOD
 				SOME_GOOD=false
 				for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
 					if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 						SOME_GOOD=true
 						echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
 					else
-						# if we have HTML_FTBR[0] we want it to be on top…
-						if [ "$HTML_TARGET" != "${HTML_FTBR[0]}" ] ; then
-							 HTML_TARGET=${HTML_FTBR[1]}
+						# change $STATE unless we have found .buildinfo differences already...
+						if [ "$STATE" != "FTBR_0" ] ; then
+							STATE=FTBR_1
 						fi
-						# this shouldnt happen, but (for now) it does, so lets at least mark them…
+						# this shouldnt happen, but (for now) it does, so lets mark them…
 						EXTRA_REASON=""
 						if [ ! -z "$(grep 'class="source">.BUILDINFO' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
-							HTML_TARGET=${HTML_FTBR[0]}
+							STATE=FTBR_0
 							EXTRA_REASON=" with variations in .BUILDINFO"
 						fi
 						echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
 					fi
 				done
-				# we only count source packages for now…
-				case $HTML_TARGET in
-					$HTML_GOOD)		echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state	;;
-					${HTML_FTBR[0]})	echo FTBR_0 > $ARCHLINUX_PKG_PATH/pkg.state	;;
-					${HTML_FTBR[1]})	if $SOME_GOOD ; then
-									echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
-								else
-									HTML_TARGET=${HTML_FTBR[2]}
-									echo FTBR_2 > $ARCHLINUX_PKG_PATH/pkg.state
-								fi
-								;;
-					*)			;;
+				# we only count source packages…
+				case $STATE in
+					GOOD)		echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state	;;
+					FTBR_0)		echo FTBR_0 > $ARCHLINUX_PKG_PATH/pkg.state	;;
+					FTBR_1)		if $SOME_GOOD ; then
+								echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
+							else
+								echo FTBR_2 > $ARCHLINUX_PKG_PATH/pkg.state
+							fi
+							;;
+					*)		;;
 				esac
 			fi
 			echo "      </td>" >> $HTML_BUFFER
@@ -217,7 +159,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				fi
 			done
 			echo "     </tr>" >> $HTML_BUFFER
-			cat $HTML_BUFFER >> $HTML_TARGET
 			mv $HTML_BUFFER $ARCHLINUX_PKG_PATH/pkg.html
 		fi
 
@@ -310,9 +251,11 @@ cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
 write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>1st build log</th><th>2nd build log</th></tr>"
-for i in $HTML_UNKNOWN $(for j in $MEMBERS_404 ; do echo ${HTML_404[$j]} ; done) $(for j in $MEMBERS_DEPWAIT ; do echo ${HTML_DEPWAIT[$j]} ; done) $(for j in $MEMBERS_FTBFS ; do echo ${HTML_FTBFS[$j]} ; done) $(for j in $MEMBERS_FTBR ; do echo ${HTML_FTBR[$j]} ; done) $HTML_GOOD ; do
-	cat $i >> $PAGE
-	rm $i > /dev/null
+# output all HTML snipplets
+for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404[$j]} ; done) $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT[$j]} ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS[$j]} ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR[$j]} ; done) GOOD ; do
+	for REPOSITORY in $ARCHLINUX_REPOS ; do
+		grep -l $i $REPOSITORY/*/pkg.state | sort -u | sed -s 's#\.state$#.html#g' | xargs -r cat >> $PAGE
+	done
 done
 write_page "    </table>"
 write_page "</div></div>"

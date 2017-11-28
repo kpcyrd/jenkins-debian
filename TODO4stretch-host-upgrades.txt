@@ -54,4 +54,3 @@ to be done once all hosts run stretch: sshd_config
 --------------------------------------------------
 /etc/ssh/sshd_config - the currently running one is the one from jessie, we should update_jdn to the one from stretch
 
-

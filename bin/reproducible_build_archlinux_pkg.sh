@@ -438,9 +438,11 @@ else
 	echo "$(date -u) - build1 didn't create a package, skipping build2!"
 fi
 # publish logs
+calculate_build_duration
 cd $TMPDIR/b1/$SRCPACKAGE
 cp build1.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 [ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+echo $DURATION > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.build_duration || true
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 
 cd

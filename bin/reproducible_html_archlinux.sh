@@ -155,7 +155,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				HOUR=$(echo "$DURATION/3600"|bc)
 				MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
 				SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
-				BUILD_DURATION="$HOUR:$MIN:$SEC"
+				BUILD_DURATION="${HOUR}h:${MIN}m:${SEC}s"
 			else
 				BUILD_DURATION=" "
 			fi

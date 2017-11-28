@@ -402,7 +402,7 @@ def db_table(table_name):
         raise
 
 
-def query_db(query):
+def query_db(query, *args, **kwargs):
     """Excutes a raw SQL query. Return depends on query type.
 
     Returns:
@@ -414,7 +414,7 @@ def query_db(query):
             None
     """
     try:
-        result = conn_db.execute(query)
+        result = conn_db.execute(query, *args, **kwargs)
     except OperationalError as ex:
         print_critical_message('Error executing this query:\n' + query)
         raise

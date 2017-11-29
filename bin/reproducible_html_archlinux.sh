@@ -62,6 +62,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				VERSION="0.rb-unknown-1"
 			fi
 			echo "      <td>$VERSION</td>" >> $HTML_BUFFER
+			echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
 
 			echo "      <td>" >> $HTML_BUFFER
 			#

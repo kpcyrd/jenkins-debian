@@ -215,10 +215,14 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	done
 	echo "     </tr>" >> $HTML_REPOSTATS
 	#
-	# write csv file for $REPO
+	# write csv file for $REPOSITORY
 	#
-	if ! grep -q $DATE $ARCHBASE/$REPO.csv ; then
-		echo $DATE,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$NR_UNKNOWN >> $ARCHBASE/$REPO.csv
+	if [ ! -f $ARCHBASE/$REPOSITORY.csv ] ; then
+		echo "# date, reproducible, unreproducible, ftbfs, depwait, 404, untested" > $ARCHBASE/$REPOSITORY.csv
+	fi
+	if ! grep -q $DATE $ARCHBASE/$REPOSITORY.csv ; then
+		let REAL_UNKNOWN=$TOTAL-$NR_GOOD-$NR_FTBR-$NR_FTBFS-$NR_DEPWAIT-$NR_404
+		echo $DATE,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$REAL_UNKNOWN >> $ARCHBASE/$REPOSITORY.csv
 	fi
 	#
 	# prepare ARCHLINUX totals
@@ -256,8 +260,12 @@ echo "     </tr>" >> $HTML_REPOSTATS
 #
 # write csv file for totals
 #
+if [ ! -f $ARCHBASE/archlinux.csv ] ; then
+	echo "# date, reproducible, unreproducible, ftbfs, depwait, 404, untested" > $ARCHBASE/archlinux.csv
+fi
 if ! grep -q $DATE $ARCHBASE/archlinux.csv ; then
-	echo $DATE,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_NR_UNKNOWN >> $ARCHBASE/archlinux.csv
+	let ARCHLINUX_REAL_UNKNOWN=$ARCHLINUX_TOTAL-$ARCHLINUX_NR_GOOD-$ARCHLINUX_NR_FTBR-$ARCHLINUX_NR_FTBFS-$ARCHLINUX_NR_DEPWAIT-$ARCHLINUX_NR_404
+	echo $DATE,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_REAL_UNKNOWN >> $ARCHBASE/archlinux.csv
 fi
 
 #

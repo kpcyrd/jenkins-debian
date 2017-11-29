@@ -57,20 +57,20 @@ update_archlinux_repositories() {
 		schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
 		# Get a list of unique package bases.  Non-split packages don't have a pkgbase set
 		# so we need to use the pkgname for them instead.
-		schroot --run-session -c $SESSION --directory /var/tmp -- expac -S '%r %e %n' | \
-			while read repo pkgbase pkgname; do
+		schroot --run-session -c $SESSION --directory /var/tmp -- expac -S '%r %e %n %v' | \
+			while read repo pkgbase pkgname version; do
 				if [[ "$pkgbase" = "(null)" ]]; then
-					printf '%s %s\n' "$repo" "$pkgname"
+					printf '%s %s %s\n' "$repo" "$pkgname" "$version"
 				else
-					printf '%s %s\n' "$repo" "$pkgbase"
+					printf '%s %s %s\n' "$repo" "$pkgbase" "$version"
 				fi
 			done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
 
 		for REPO in $ARCHLINUX_REPOS ; do
 			echo "$(date -u ) - updating list of available packages in repository '$REPO'."
 			grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
-				while read repo pkgbase; do
-					printf '%s\n' "$pkgbase"
+				while read repo pkgbase version; do
+					printf '%s %s\n' "$pkgbase" "$version"
 				done > "$ARCHLINUX_PKGS"_"$REPO"
 			echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
 			cat ${ARCHLINUX_PKGS}_$REPO
@@ -100,7 +100,7 @@ choose_package() {
 					;;
 		esac
 		touch -d "$(date -d "$MIN_AGE days ago" '+%Y-%m-%d') 00:00 UTC" $DUMMY
-		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | sort -R | xargs echo ) ; do
+		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
 			# build package if it has never build or at least $MIN_AGE days ago
 			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ $DUMMY -nt $BASE/archlinux/$REPO/$PKG ] ; then
 				REPOSITORY=$REPO

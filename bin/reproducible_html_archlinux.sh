@@ -33,7 +33,7 @@ ARCHLINUX_NR_GOOD=0
 ARCHLINUX_NR_UNKNOWN=0
 for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
-	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | sed -s "s# #\n#g" | wc -l)
+	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | wc -l)
 	TESTED=0
 	NR_FTBFS=0
 	NR_FTBR=0

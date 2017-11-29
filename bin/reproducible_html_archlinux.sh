@@ -57,7 +57,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			# else it's too error prone and in future the version will
 			# be determined during build anyway...
 				ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
-				VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -s "s#-x86_64.pkg.tar.xz.html##" )
+				VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -E -s "s#-(x86_64|any).pkg.tar.xz.html##" )
 			else
 				VERSION="0.rb-unknown-1"
 			fi

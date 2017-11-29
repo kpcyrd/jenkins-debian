@@ -33,6 +33,8 @@ ARCHLINUX_NR_DEPWAIT=0
 ARCHLINUX_NR_404=0
 ARCHLINUX_NR_GOOD=0
 ARCHLINUX_NR_UNKNOWN=0
+WIDTH=1920
+HEIGHT=960
 for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | wc -l)
@@ -225,6 +227,11 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		let REAL_UNKNOWN=$TOTAL-$NR_GOOD-$NR_FTBR-$NR_FTBFS-$NR_DEPWAIT-$NR_404 || true
 		echo $YESTERDAY,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$REAL_UNKNOWN >> $ARCHBASE/$REPOSITORY.csv
 	fi
+	IMAGE=$ARCHBASE/$REPOSITORY.png
+	if [ ! -f $IMAGE ] || [ $ARCHBASE/$REPOSITORY.csv -nt $IMAGE ] ; then
+		echo "Updating $IMAGE..."
+		/srv/jenkins/bin/make_graph.py $ARCHBASE/$REPOSITORY.csv $IMAGE 6 "Reproducibility status for Arch Linux packages in $REPOSITORY" "Amount (total)" $WIDTH $HEIGHT
+	fi
 	#
 	# prepare ARCHLINUX totals
 	#
@@ -267,6 +274,11 @@ fi
 if ! grep -q $YESTERDAY $ARCHBASE/archlinux.csv ; then
 	let ARCHLINUX_REAL_UNKNOWN=$ARCHLINUX_TOTAL-$ARCHLINUX_NR_GOOD-$ARCHLINUX_NR_FTBR-$ARCHLINUX_NR_FTBFS-$ARCHLINUX_NR_DEPWAIT-$ARCHLINUX_NR_404 || true
 	echo $YESTERDAY,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_REAL_UNKNOWN >> $ARCHBASE/archlinux.csv
+fi
+IMAGE=$ARCHBASE/archlinux.png
+if [ ! -f $IMAGE ] || [ $ARCHBASE/archlinux.csv -nt $IMAGE ] ; then
+	echo "Updating $IMAGE..."
+	/srv/jenkins/bin/make_graph.py $ARCHBASE/archlinux.csv $IMAGE 6 "Reproducibility status for all tested Arch Linux packages" "Amount (total)" $WIDTH $HEIGHT
 fi
 
 #

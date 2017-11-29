@@ -17,6 +17,7 @@ ARCHBASE=$BASE/archlinux
 #
 echo "$(date -u) - starting to analyse build results."
 DATE=$(date -u +'%Y-%m-%d')
+YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
 MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
 MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
@@ -220,9 +221,9 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	if [ ! -f $ARCHBASE/$REPOSITORY.csv ] ; then
 		echo "# date, reproducible, unreproducible, ftbfs, depwait, 404, untested" > $ARCHBASE/$REPOSITORY.csv
 	fi
-	if ! grep -q $DATE $ARCHBASE/$REPOSITORY.csv ; then
+	if ! grep -q $YESTERDAY $ARCHBASE/$REPOSITORY.csv ; then
 		let REAL_UNKNOWN=$TOTAL-$NR_GOOD-$NR_FTBR-$NR_FTBFS-$NR_DEPWAIT-$NR_404 || true
-		echo $DATE,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$REAL_UNKNOWN >> $ARCHBASE/$REPOSITORY.csv
+		echo $YESTERDAY,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$REAL_UNKNOWN >> $ARCHBASE/$REPOSITORY.csv
 	fi
 	#
 	# prepare ARCHLINUX totals
@@ -263,9 +264,9 @@ echo "     </tr>" >> $HTML_REPOSTATS
 if [ ! -f $ARCHBASE/archlinux.csv ] ; then
 	echo "# date, reproducible, unreproducible, ftbfs, depwait, 404, untested" > $ARCHBASE/archlinux.csv
 fi
-if ! grep -q $DATE $ARCHBASE/archlinux.csv ; then
+if ! grep -q $YESTERDAY $ARCHBASE/archlinux.csv ; then
 	let ARCHLINUX_REAL_UNKNOWN=$ARCHLINUX_TOTAL-$ARCHLINUX_NR_GOOD-$ARCHLINUX_NR_FTBR-$ARCHLINUX_NR_FTBFS-$ARCHLINUX_NR_DEPWAIT-$ARCHLINUX_NR_404 || true
-	echo $DATE,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_REAL_UNKNOWN >> $ARCHBASE/archlinux.csv
+	echo $YESTERDAY,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_REAL_UNKNOWN >> $ARCHBASE/archlinux.csv
 fi
 
 #

@@ -174,7 +174,7 @@ first_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
 	# determine the version of the package being build
 	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
-	if [[ -n epoch ]] ; then
+	if [ -n "$epoch" ] ; then
 		epoch="$epoch:"
 	fi
 	VERSION="$epoch$pkgver-$pkgrel"
@@ -262,7 +262,7 @@ second_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
 	# determine the version of the package being build
 	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
-	if [[ -n epoch ]] ; then
+	if [ -n "$epoch" ] ; then
 		epoch="$epoch:"
 	fi
 	VERSION="$epoch$pkgver-$pkgrel"

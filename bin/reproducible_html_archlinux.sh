@@ -52,6 +52,17 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "     <tr>" >> $HTML_BUFFER
 			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 			echo "      <td>$PKG</td>" >> $HTML_BUFFER
+			if [ $(ls "$ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html" 2>/dev/null | wc -l) -eq 1 ] ; then
+			# only determine version if there is exactly one artifact...
+			# else it's too error prone and in future the version will
+			# be determined during build anyway...
+				ARTIFACT="$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)"
+				VERSION="$( echo $ARTIFACT | sed -s 's#bash-##' | sed -s 's#-x86_64.pkg.tar.xz.html##' )"
+			else
+				VERSION="0.rb-unknown-1"
+			fi
+			echo "      <td>$VERSION</td>" >> $HTML_BUFFER
+
 			echo "      <td>" >> $HTML_BUFFER
 			#
 			#
@@ -261,7 +272,7 @@ write_page "    <table><tr><th>repository</th><th>all source packages</th><th>re
 cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
-write_page "    <table><tr><th>repository</th><th>source package</th><th>test result</th><th>test date</th><th>test duration</th><th>1st build log</th><th>2nd build log</th></tr>"
+write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date</th><th>test duration</th><th>1st build log</th><th>2nd build log</th></tr>"
 # output all HTML snipplets
 for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do
 	for REPOSITORY in $ARCHLINUX_REPOS ; do

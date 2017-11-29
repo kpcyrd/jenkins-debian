@@ -173,7 +173,7 @@ first_build() {
 	# TODO: debugging, remove me
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
 	# determine the version of the package being build
-	source PKGBUILD
+	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
 	if [[ -n epoch ]] ; then
 		epoch="$epoch:"
 	fi
@@ -261,7 +261,7 @@ second_build() {
 	# TODO: debugging, remove me
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
 	# determine the version of the package being build
-	source PKGBUILD
+	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
 	if [[ -n epoch ]] ; then
 		epoch="$epoch:"
 	fi

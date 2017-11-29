@@ -217,7 +217,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	#
 	# write csv file for $REPO
 	#
-	if ! grep -q $DATE $ARCHBASE/$REPO.csv then
+	if ! grep -q $DATE $ARCHBASE/$REPO.csv ; then
 		echo $DATE,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$NR_UNKNOWN >> $ARCHBASE/$REPO.csv
 	fi
 	#
@@ -256,7 +256,7 @@ echo "     </tr>" >> $HTML_REPOSTATS
 #
 # write csv file for totals
 #
-if ! grep -q $DATE $ARCHBASE/archlinux.csv then
+if ! grep -q $DATE $ARCHBASE/archlinux.csv ; then
 	echo,$DATE,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_NR_UNKNOWN >> $ARCHBASE/archlinux.csv
 fi
 

@@ -56,8 +56,8 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			# only determine version if there is exactly one artifact...
 			# else it's too error prone and in future the version will
 			# be determined during build anyway...
-				ARTIFACT="$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)"
-				VERSION="$( echo $ARTIFACT | sed -s 's#bash-##' | sed -s 's#-x86_64.pkg.tar.xz.html##' )"
+				ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
+				VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -s "s#-x86_64.pkg.tar.xz.html##" )
 			else
 				VERSION="0.rb-unknown-1"
 			fi

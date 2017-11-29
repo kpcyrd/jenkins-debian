@@ -52,7 +52,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "     <tr>" >> $HTML_BUFFER
 			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 			echo "      <td>$PKG</td>" >> $HTML_BUFFER
-			if [ $(ls "$ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html" 2>/dev/null | wc -l) -eq 1 ] ; then
+			if [ $(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null | wc -l) -eq 1 ] ; then
 			# only determine version if there is exactly one artifact...
 			# else it's too error prone and in future the version will
 			# be determined during build anyway...

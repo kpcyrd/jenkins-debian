@@ -429,6 +429,7 @@ write_variation_table() {
 	elif [ "$1" = "Arch Linux" ]  ; then
 		write_page "<tr><td>env LANG</td><td><em>not set</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>the build path</td><td colspan=\"2\">is not yet varied between rebuilds of Arch Linux</td></tr>"
 	else
 		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
 		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"

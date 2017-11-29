@@ -221,7 +221,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	# write csv file for $REPOSITORY
 	#
 	if [ ! -f $ARCHBASE/$REPOSITORY.csv ] ; then
-		echo "# date, reproducible, unreproducible, ftbfs, depwait, 404, untested" > $ARCHBASE/$REPOSITORY.csv
+		echo '; date, reproducible, unreproducible, ftbfs, depwait, download problems, untested' > $ARCHBASE/$REPOSITORY.csv
 	fi
 	if ! grep -q $YESTERDAY $ARCHBASE/$REPOSITORY.csv ; then
 		let REAL_UNKNOWN=$TOTAL-$NR_GOOD-$NR_FTBR-$NR_FTBFS-$NR_DEPWAIT-$NR_404 || true
@@ -269,7 +269,7 @@ echo "     </tr>" >> $HTML_REPOSTATS
 # write csv file for totals
 #
 if [ ! -f $ARCHBASE/archlinux.csv ] ; then
-	echo "# date, reproducible, unreproducible, ftbfs, depwait, 404, untested" > $ARCHBASE/archlinux.csv
+	echo '; date, reproducible, unreproducible, ftbfs, depwait, download problems, untested' > $ARCHBASE/archlinux.csv
 fi
 if ! grep -q $YESTERDAY $ARCHBASE/archlinux.csv ; then
 	let ARCHLINUX_REAL_UNKNOWN=$ARCHLINUX_TOTAL-$ARCHLINUX_NR_GOOD-$ARCHLINUX_NR_FTBR-$ARCHLINUX_NR_FTBFS-$ARCHLINUX_NR_DEPWAIT-$ARCHLINUX_NR_404 || true
@@ -310,6 +310,14 @@ write_page "    <table><tr><th>repository</th><th>all source packages</th><th>re
 cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
+# include graphs
+write_page '<p style="clear:both;">'
+for REPOSITORY in $ARCHLINUX_REPOS ; do
+	write_page "<a href=\"/archlinux/$REPOSITORY.png\"><img src=\"/archlinux/$REPOSITORY.png\" class=\"overview\" alt=\"$REPOSITORY stats\"></a>"
+done
+write_page '</p><p style="clear:both;"><center>'
+write_page "<a href=\"/archlinux/archlinux.png\"><img src=\"/archlinux/archlinux.png\" alt=\"total Arch Linux stats\"></a></p>"
+# packages table header
 write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date</th><th>test duration</th><th>1st build log</th><th>2nd build log</th></tr>"
 # output all HTML snipplets
 for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do

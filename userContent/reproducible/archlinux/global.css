@@ -92,3 +92,18 @@ table tr td {
 #variation th:first-child {
   width: 23%;
 }
+
+img {
+	vertical-align: middle;
+	max-width: 100%;
+	height: auto;
+}
+
+img.halfview {
+	max-width: 49%;
+}
+
+img.overview {
+	max-width: 24%;
+}
+

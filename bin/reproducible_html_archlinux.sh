@@ -16,6 +16,7 @@ ARCHBASE=$BASE/archlinux
 # analyse results to create the webpage
 #
 echo "$(date -u) - starting to analyse build results."
+DATE=$(date -u +'%Y-%m-%d')
 MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
 MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
@@ -213,7 +214,15 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 		fi
 	done
 	echo "     </tr>" >> $HTML_REPOSTATS
+	#
+	# write csv file for $REPO
+	#
+	if ! grep -q $DATE $ARCHBASE/$REPO.csv then
+		echo $DATE,$NR_GOOD,$NR_FTBR,$NR_FTBFS,$NR_DEPWAIT,$NR_404,$NR_UNKNOWN >> $ARCHBASE/$REPO.csv
+	fi
+	#
 	# prepare ARCHLINUX totals
+	#
 	set +e
 	let ARCHLINUX_TOTAL+=$TOTAL
 	let ARCHLINUX_TESTED+=$TESTED
@@ -243,10 +252,17 @@ for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR
 	fi
 done
 echo "     </tr>" >> $HTML_REPOSTATS
+
+#
+# write csv file for totals
+#
+if ! grep -q $DATE $ARCHBASE/archlinux.csv then
+	echo,$DATE,$ARCHLINUX_NR_GOOD,$ARCHLINUX_NR_FTBR,$ARCHLINUX_NR_FTBFS,$ARCHLINUX_NR_DEPWAIT,$ARCHLINUX_NR_404,$ARCHLINUX_NR_UNKNOWN >> $ARCHBASE/archlinux.csv
+fi
+
 #
 # write out the actual webpage
 #
-DATE=$(date -u +'%Y-%m-%d')
 cd $ARCHBASE
 PAGE=archlinux.html
 echo "$(date -u) - starting to build $PAGE"

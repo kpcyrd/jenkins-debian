@@ -395,6 +395,7 @@ delay_start # randomize start times
 # first, we need to choose a package from a repository…
 REPOSITORY=""
 SRCPACKAGE=""
+VERSION=""
 choose_package
 # build package twice
 mkdir b1 b2

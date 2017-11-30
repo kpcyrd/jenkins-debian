@@ -89,20 +89,9 @@ choose_package() {
 	local REPO
 	local PKG
 	for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
-		case $REPO in
-			core)		MIN_AGE=7
-					;;
-			extra|multilib)	MIN_AGE=28
-					;;
-			community)	MIN_AGE=42
-					;;
-			*)		MIN_AGE=365	# should never happen…
-					;;
-		esac
-		touch -d "$(date -d "$MIN_AGE days ago" '+%Y-%m-%d') 00:00 UTC" $DUMMY
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
 			# build package if it has never build or at least $MIN_AGE days ago
-			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ $DUMMY -nt $BASE/archlinux/$REPO/$PKG ] ; then
+			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] ; then
 				REPOSITORY=$REPO
 				SRCPACKAGE=$PKG
 				echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
@@ -118,7 +107,6 @@ choose_package() {
 			break
 		fi
 	done
-	rm $DUMMY > /dev/null
 	if [ -z $SRCPACKAGE ] ; then
 		echo "$(date -u ) - no package found to be build, sleeping 6h."
 		for i in $(seq 1 12) ; do

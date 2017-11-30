@@ -166,6 +166,7 @@ first_build() {
 		epoch="$epoch:"
 	fi
 	VERSION="$epoch$pkgver-$pkgrel"
+	echo $VERSION > $TMPDIR/b1/$SRCPACKAGE/build1.version
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG
@@ -253,6 +254,7 @@ second_build() {
 		epoch="$epoch:"
 	fi
 	VERSION="$epoch$pkgver-$pkgrel"
+	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG
@@ -368,7 +370,8 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
 		echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
 		mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
-		cp $TMPDIR/b$MODE/$SRCPACKAGE/build$MODE.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+		# copy build$MODE.(log|version) though this is probably useless - FIXME: confirm or disprove
+		cp $TMPDIR/b$MODE/$SRCPACKAGE/build$MODE.* $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 	fi
 
 	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
@@ -444,6 +447,8 @@ cd $TMPDIR/b1/$SRCPACKAGE
 cp build1.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 [ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 echo $DURATION > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.build_duration || true
+cp build1.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/ || true
+[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.version ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 
 cd

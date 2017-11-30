@@ -451,6 +451,8 @@ echo $DURATION > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.build_duration || t
 cp build1.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/ || true
 [ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.version ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
+# force update of HTML snipplet in reproducible_html_archlinux.sh
+[ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state
 
 cd
 cleanup_all

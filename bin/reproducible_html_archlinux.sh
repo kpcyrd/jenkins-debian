@@ -57,11 +57,11 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 			echo "      <td>$PKG</td>" >> $HTML_BUFFER
 			if [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
-				VERSION=$($ARCHLINUX_PKG_PATH/build1.version)
+				VERSION=$(cat $ARCHLINUX_PKG_PATH/build1.version)
 				if [ -f $ARCHLINUX_PKG_PATH/build2.log ] ; then
 					if ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ; then
 						irc_message archlinux-reproducible "$ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
-						VERSION="$VERSION or $($ARCHLINUX_PKG_PATH/build2.version)"
+						VERSION="$VERSION or $(cat $ARCHLINUX_PKG_PATH/build2.version)"
 					fi
 				fi
 			elif [ $(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null | wc -l) -eq 1 ] ; then

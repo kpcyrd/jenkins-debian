@@ -98,6 +98,7 @@ choose_package() {
 				# very simple locking…
 				mkdir -p $BASE/archlinux/$REPOSITORY/$PKG
 				touch $BASE/archlinux/$REPOSITORY/$PKG
+				[ ! -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] || rm $BASE/archlinux/$REPO/$PKG/pkg.needs_build
 				# break out of the loop (and then out of the next loop too...)
 				break
 			fi

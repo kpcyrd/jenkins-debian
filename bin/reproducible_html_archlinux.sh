@@ -60,7 +60,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				VERSION=$(cat $ARCHLINUX_PKG_PATH/build1.version)
 				if [ -f $ARCHLINUX_PKG_PATH/build2.log ] ; then
 					if ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ; then
-						irc_message archlinux-reproducible "$ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
+						echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
 						VERSION="$VERSION or $(cat $ARCHLINUX_PKG_PATH/build2.version)"
 					fi
 				fi

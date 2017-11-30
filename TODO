@@ -349,6 +349,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** include link to debian note if it exists
 ** create page for untested packages?
 
+* build.sh
+** build2.log doesnt get deleted if build1 fails
 
 ==== reproducible fdroid
 

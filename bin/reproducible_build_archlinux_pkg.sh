@@ -89,21 +89,31 @@ choose_package() {
 	local REPO
 	local PKG
 	for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
+		# try to find packages which have been triggered
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
-			# build package if it has never build or at least $MIN_AGE days ago
-			if [ ! -d $BASE/archlinux/$REPO/$PKG ] || [ -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] ; then
+			# if triggered...
+			if [ -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] ; then
 				REPOSITORY=$REPO
 				SRCPACKAGE=$PKG
-				echo "$(date -u ) - building package $PKG from '$REPOSITORY' now..."
-				# very simple locking…
-				mkdir -p $BASE/archlinux/$REPOSITORY/$PKG
-				touch $BASE/archlinux/$REPOSITORY/$PKG
-				[ ! -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] || rm $BASE/archlinux/$REPO/$PKG/pkg.needs_build
 				# break out of the loop (and then out of the next loop too...)
 				break
 			fi
 		done
 		# if we broke out of the previous loop we have choosen a package
+		if [ ! -z "$SRCPACKAGE" ] ; then
+			break
+		fi
+		# trz to find packages which never been built before
+		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
+			# if new...
+			if [ ! -d $BASE/archlinux/$REPO/$PKG ] ; then
+				REPOSITORY=$REPO
+				SRCPACKAGE=$PKG
+				# break out of the loop (and then out of the next loop too...)
+				break
+			fi
+		done
+		# again, if we broke out of the previous loop we have choosen a package
 		if [ ! -z "$SRCPACKAGE" ] ; then
 			break
 		fi
@@ -117,6 +127,10 @@ choose_package() {
 		echo "$(date -u ) - exiting cleanly now."
 		exit 0
 	fi
+	echo "$(date -u ) - building package $SRCPACKAGE from '$REPOSITORY' now..."
+	# very simple locking…
+	mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
+	[ ! -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build ] || rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build
 }
 
 first_build() {

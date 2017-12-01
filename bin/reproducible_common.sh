@@ -339,7 +339,7 @@ write_page_intro() {
 		write_page "</ul></p>"
 		write_page "<p>Missing bits for Arch Linux:<ul>"
 		write_page " <li>pacman 5.0.2 needs an upload to the official Arch repository, so far the needed changes are only (used here and) in git. Once the pacman upload has happened:<ul>"
-		write_page "  <li>we can compare the packages built twice here against the ones from the official Arch Linux repositories.</li>"
+		write_page "  <li>we can compare the packages built twice here against the ones from the official Arch Linux repositories. Until then, <em>this is all theoretical</em>, we do not know whether the actual distributed (and used) Arch Linux packages are reproducible for real...)</li>"
 		write_page "  <li>all packages need to be rebuild so that then they include .BUILDINFO files.</li>"
 		write_page " </ul></li>"
 		write_page " <li>user tools, for users to verify all of this easily.</li>"

@@ -48,7 +48,9 @@ update_archlinux_repositories() {
 					if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 500 ] ; then
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 					fi
-				elif	VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null || echo 0.rb-unknown-1)
+				else
+					# if version isn't temporary pseudo version... 
+					VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null || echo 0.rb-unknown-1)
 					if [ "$VERSION" != "0.rb-unknown-1" ] && [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
 						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
 							# schedule packages where an updated version is availble

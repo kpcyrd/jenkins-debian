@@ -59,6 +59,7 @@ update_archlinux_repositories() {
 	if [ $NEW -ne 0 ] || [ $UPDATED -ne 0 ] ; then
 		irc_message archlinux-reproducible "scheduled $NEW entirely new packages and $UPDATED packages with newer versions."
 	fi
+	echo "$(date -u ) - scheduled $NEW/$UPDATED packages."
 }
 
 echo "$(date -u ) - Updating Arch Linux repositories."

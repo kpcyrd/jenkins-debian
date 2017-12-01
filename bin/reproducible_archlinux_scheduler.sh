@@ -36,17 +36,21 @@ update_archlinux_repositories() {
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do
 				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
+					# schedule (all) entirely new packages
 					echo $REPO/$pkgbase >> $NEW
 					echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 				elif [ -z "$(ls $BASE/archlinux/$REPO/$pkgbase/)" ] ; then
+					# schedule packages we already know about
+					# (but only until 500 packages are scheduled in total)
 					if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 500 ] ; then
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 					fi
 				elif	VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null || echo 0.rb-unknown-1)
 					if [ "$VERSION" != "0.rb-unknown-1" ] && [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
 						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
+							# schedule packages where an updated version is availble
 							echo $REPO/$pkgbase >> $UPDATED
 							echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
 							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build

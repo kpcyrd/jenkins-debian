@@ -28,7 +28,6 @@ cleanup_all() {
 		rm $TMPDIR -r
 		echo "$(date -u) - $TMPDIR deleted."
 	fi
-	rm -f $DUMMY > /dev/null || true
 }
 
 handle_remote_error() {
@@ -312,7 +311,6 @@ remote_build() {
 TIMEOUT=12	# maximum time in hours for a single build
 DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
-DUMMY=$(mktemp -t archlinux-dummy-XXXXXXXX)
 trap cleanup_all INT TERM EXIT
 
 #

@@ -14,6 +14,7 @@ set -e
 
 update_archlinux_repositories() {
 	# every day we check for new archlinux packages in all tested repositories
+	DUMMY=$(mktemp -t archlinux-dummy-XXXXXXXX)
 	touch -d "$(date -d '1 day ago' '+%Y-%m-%d') 00:00 UTC" $DUMMY
 	local NEED_UPDATE=false
 	local REPO

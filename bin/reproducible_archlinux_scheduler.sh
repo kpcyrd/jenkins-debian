@@ -32,7 +32,7 @@ update_archlinux_repositories() {
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do
 				printf '%s %s\n' "$pkgbase" "$version"
-				VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version)
+				VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null || echo 0.rb-unknown-1)
 				if [ "$VERSION" = "0.rb-unknown-1" ] ; then
 					echo "$(date -u ) - we know $REPO/$pkgbase has dummy $VERSION version, but c'est la vie."
 				elif [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then

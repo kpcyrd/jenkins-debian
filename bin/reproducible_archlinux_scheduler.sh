@@ -13,8 +13,6 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
-	UPDATED=0
-	NEW=0
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
@@ -49,10 +47,8 @@ update_archlinux_repositories() {
 						fi
 					fi
 				fi
-				printf '%s %s\n' "$pkgbase" "$version"
 			done > "$ARCHLINUX_PKGS"_"$REPO"
-		echo "$(date -u ) - these packages in repository '$REPO' are known to us:"
-		cat ${ARCHLINUX_PKGS}_$REPO
+		echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us:"
 	done
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	schroot --end-session -c $SESSION
@@ -63,6 +59,8 @@ update_archlinux_repositories() {
 }
 
 echo "$(date -u ) - Updating Arch Linux repositories."
+UPDATED=0
+NEW=0
 update_archlinux_repositories
 
 # vim: set sw=0 noet :

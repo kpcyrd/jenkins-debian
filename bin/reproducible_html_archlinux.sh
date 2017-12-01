@@ -175,7 +175,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				esac
 			fi
 			echo "      </td>" >> $HTML_BUFFER
-			echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- ) UTC</td>" >> $HTML_BUFFER
+			echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- ) UTC <br />" >> $HTML_BUFFER
 			DURATION=$(cat $ARCHLINUX_PKG_PATH/pkg.build_duration 2>/dev/null || true)
 			if [ -n "$DURATION" ]; then
 				HOUR=$(echo "$DURATION/3600"|bc)
@@ -185,16 +185,19 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			else
 				BUILD_DURATION=" "
 			fi
-			echo "      <td>$BUILD_DURATION</td>" >> $HTML_BUFFER
+			echo "       $BUILD_DURATION</td>" >> $HTML_BUFFER
 
+			echo "      <td>" >> $HTML_BUFFER
 			for LOG in build1.log build2.log ; do
 				if [ -f $ARCHLINUX_PKG_PATH/$LOG ] ; then
+					if [ "$LOG" = "build2.log" ] ; then
+						echo "       <br />" >> $HTML_BUFFER
+					fi
 					get_filesize $ARCHLINUX_PKG_PATH/$LOG
-					echo "      <td><a href=\"/archlinux/$REPOSITORY/$PKG/$LOG\">$LOG</a> ($SIZE)</td>" >> $HTML_BUFFER
-				else
-					echo "      <td>&nbsp;</td>" >> $HTML_BUFFER
+					echo "       <a href=\"/archlinux/$REPOSITORY/$PKG/$LOG\">$LOG</a> ($SIZE)" >> $HTML_BUFFER
 				fi
 			done
+			echo "      </td>" >> $HTML_BUFFER
 			echo "     </tr>" >> $HTML_BUFFER
 			mv $HTML_BUFFER $ARCHLINUX_PKG_PATH/pkg.html
 		fi
@@ -328,7 +331,7 @@ done
 write_page '</p><p style="clear:both;"><center>'
 write_page "<a href=\"/archlinux/archlinux.png\"><img src=\"/archlinux/archlinux.png\" alt=\"total Arch Linux stats\"></a></p>"
 # packages table header
-write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date</th><th>test duration</th><th>1st build log</th><th>2nd build log</th></tr>"
+write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 # output all HTML snipplets
 for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do
 	for REPOSITORY in $ARCHLINUX_REPOS ; do

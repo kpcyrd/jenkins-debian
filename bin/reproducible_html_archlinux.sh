@@ -61,7 +61,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				if [ -f $ARCHLINUX_PKG_PATH/build2.log ] ; then
 					if [ ! -f $ARCHLINUX_PKG_PATH/build2.version ] ; then
 						echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build2.version does not exist and should probably just be deleted. Please investigate."
-					elif [ ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ] ; then
+					elif ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ; then
 						echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
 						VERSION="$VERSION or $(cat $ARCHLINUX_PKG_PATH/build2.version)"
 					fi

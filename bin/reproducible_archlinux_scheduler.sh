@@ -13,6 +13,7 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
+	echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local SESSION="archlinux-scheduler-$RANDOM"
@@ -28,7 +29,7 @@ update_archlinux_repositories() {
 				printf '%s %s %s\n' "$repo" "$pkgbase" "$version"
 			fi
 		done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
-	echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l) Arch Linux packages are known in total to us:"
+	echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l) Arch Linux packages are known in total to us."
 
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)

@@ -35,6 +35,7 @@ update_archlinux_repositories() {
 				if [ "$VERSION" != "0.rb-unknown-1" ] || [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
 					if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
 						echo -n "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
+						mkdir -p $BASE/archlinux/$REPO/$pkgbase
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 					fi
 				fi

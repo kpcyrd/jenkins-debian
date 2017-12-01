@@ -321,7 +321,7 @@ trap cleanup_all INT TERM EXIT
 #
 if [ "$1" = "" ] ; then
 	MODE="master"
-	TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-archlinux-XXXXXXXX)  # where everything actually happens
+	TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t archlinuxrb-build-XXXXXXXX)  # where everything actually happens
 	SOURCE_DATE_EPOCH=$(date +%s)
 	cd $TMPDIR
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then

@@ -28,7 +28,7 @@ update_archlinux_repositories() {
 		done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
 
 	for REPO in $ARCHLINUX_REPOS ; do
-		TMPPKGLIST=$(mktemp -t archlinux-scheduler-XXXXXXXX)
+		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do

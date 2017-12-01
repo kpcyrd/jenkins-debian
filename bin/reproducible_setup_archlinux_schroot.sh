@@ -71,7 +71,7 @@ cleanup() {
 	rm -f $TMPLOG
 }
 
-#SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
+#SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ archlinuxrb-setup-$TARGET-XXXX)
 trap cleanup INT TERM EXIT
 TARGET=reproducible-archlinux
 bootstrap
@@ -145,7 +145,7 @@ if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	WGET_OPTS="--no-check-certificate"
 fi
 
-PKGBUILD_FILE="$(mktemp --tmpdir=$TEMPDIR PKGBUILD-XXXXXXXXXXXX)"
+PKGBUILD_FILE="$(mktemp --tmpdir=$TEMPDIR archlinuxrb-PKGBUILD-XXXXXXXXXXXX)"
 wget $WGET_OPTS -O "$PKGBUILD_FILE" "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacman-git"
 # work around dependency weirdness: pacman-git is currently detected as 5.0.1, which is older than the released version
 echo 'provides=("pacman=5.0.2")' >> $PKGBUILD_FILE

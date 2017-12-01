@@ -678,6 +678,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 		if [ ! -f $STAMP ] || \
 		 ( [ ! -f $config.py ] && [ $config -nt $STAMP ] ) || \
 		 ( [ -f $config.py ] && [ $config.py -nt $STAMP ] ) ; then
+			echo "$config has changed, executing updates."
 			$JJB update $config
 		else
 			echo "$config has not changed, nothing to do."

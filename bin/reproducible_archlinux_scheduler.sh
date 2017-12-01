@@ -76,4 +76,12 @@ echo "$(date -u ) - Updating Arch Linux repositories."
 update_archlinux_repositories
 echo "$(date -u ) - Done updating Arch Linux repositories."
 
+# crazy cleanup unknowns scheduler,
+# makes sure that 255 packages with version 0.rb-unknown-1 are scheduled...
+# (so can be removed when we cleared this backlog)
+cd $BASE/archlinux
+echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
+for i in $(grep -B 2  0.rb-unknown-1 archlinux.html | xargs echo | sed -s 's# -- #\n#g' | cut -d '>' -f2-|cut -d '<' -f1-3|sed -s 's#</td> <td>#/#g'|head -255) ; do touch $i/pkg.needs_build ; done
+echo "$(date -u) - After running the crazy scheduler, $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
+
 # vim: set sw=0 noet :

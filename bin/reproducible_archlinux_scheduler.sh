@@ -33,7 +33,7 @@ update_archlinux_repositories() {
 			while read repo pkgbase version; do
 				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
 					let NEW+=1
-					echo -n "$(date -u ) - scheduling new package $REPO/$pkgbase... "
+					echo -n "$(date -u ) - scheduling new package $REPO/$pkgbase... " >&2
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 				else
@@ -41,12 +41,13 @@ update_archlinux_repositories() {
 					if [ "$VERSION" != "0.rb-unknown-1" ] && [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
 						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
 							let UPDATED+=1
-							echo -n "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
+							echo -n "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... " >&2
 							mkdir -p $BASE/archlinux/$REPO/$pkgbase
 							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 						fi
 					fi
 				fi
+				printf '%s %s\n' "$pkgbase" "$version"
 			done > "$ARCHLINUX_PKGS"_"$REPO"
 		echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us:"
 	done

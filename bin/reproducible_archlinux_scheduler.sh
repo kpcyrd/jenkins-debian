@@ -26,6 +26,7 @@ update_archlinux_repositories() {
 				printf '%s %s %s\n' "$repo" "$pkgbase" "$version"
 			fi
 		done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
+	echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l) Arch Linux packages are known in total to us:"
 
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
@@ -34,7 +35,7 @@ update_archlinux_repositories() {
 			while read repo pkgbase version; do
 				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
 					let NEW+=1
-					echo -n "$(date -u ) - scheduling new package $REPO/$pkgbase... "
+					echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 				else
@@ -42,7 +43,7 @@ update_archlinux_repositories() {
 					if [ "$VERSION" != "0.rb-unknown-1" ] && [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
 						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
 							let UPDATED+=1
-							echo -n "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
+							echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
 							mkdir -p $BASE/archlinux/$REPO/$pkgbase
 							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 						fi
@@ -65,5 +66,6 @@ echo "$(date -u ) - Updating Arch Linux repositories."
 UPDATED=0
 NEW=0
 update_archlinux_repositories
+echo "$(date -u ) - Done updating Arch Linux repositories."
 
 # vim: set sw=0 noet :

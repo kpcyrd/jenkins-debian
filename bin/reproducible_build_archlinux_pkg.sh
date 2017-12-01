@@ -55,25 +55,28 @@ choose_package() {
 				break
 			fi
 		done
-		# if we broke out of the previous loop we have choosen a package
-		if [ ! -z "$SRCPACKAGE" ] ; then
-			break
-		fi
-		# trz to find packages which never been built before
-		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
-			# if new...
-			if [ ! -d $BASE/archlinux/$REPO/$PKG ] ; then
-				REPOSITORY=$REPO
-				SRCPACKAGE=$PKG
-				# break out of the loop (and then out of the next loop too...)
-				break
-			fi
-		done
-		# again, if we broke out of the previous loop we have choosen a package
 		if [ ! -z "$SRCPACKAGE" ] ; then
 			break
 		fi
 	done
+	if [ -z "$SRCPACKAGE" ] ; then
+		for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
+			# trz to find packages which never been built before
+			for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
+				# if new...
+				if [ ! -d $BASE/archlinux/$REPO/$PKG ] ; then
+					REPOSITORY=$REPO
+					SRCPACKAGE=$PKG
+					# break out of the loop (and then out of the next loop too...)
+					break
+				fi
+			done
+			# again, if we broke out of the previous loop we have choosen a package
+			if [ ! -z "$SRCPACKAGE" ] ; then
+				break
+			fi
+		done
+	fi
 	if [ -z $SRCPACKAGE ] ; then
 		echo "$(date -u ) - no package found to be build, sleeping 6h."
 		for i in $(seq 1 12) ; do

@@ -13,6 +13,8 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
+	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
@@ -34,7 +36,7 @@ update_archlinux_repositories() {
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do
 				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
-					let NEW+=1
+					echo $REPO/$pkgbase >> $NEW
 					echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
@@ -42,7 +44,7 @@ update_archlinux_repositories() {
 					VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null || echo 0.rb-unknown-1)
 					if [ "$VERSION" != "0.rb-unknown-1" ] && [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
 						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
-							let UPDATED+=1
+							echo $REPO/$pkgbase >> $UPDATED
 							echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
 							mkdir -p $BASE/archlinux/$REPO/$pkgbase
 							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
@@ -53,18 +55,22 @@ update_archlinux_repositories() {
 			done
 		mv $TMPPKGLIST "$ARCHLINUX_PKGS"_"$REPO"
 		echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us:"
+		new=$(grep -c ^$REPO $NEW || true)
+		updated=$(grep -c ^$REPO $UPDATED || true)
+		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	schroot --end-session -c $SESSION
-	if [ $NEW -ne 0 ] || [ $UPDATED -ne 0 ] ; then
-		irc_message archlinux-reproducible "scheduled $NEW entirely new packages and $UPDATED packages with newer versions."
+	new=$(cat $NEW | wc -l 2>/dev/null|| true)
+	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
+	if [ $new -ne 0 ] || [ $updated -ne 0 ] ; then
+		irc_message archlinux-reproducible "scheduled $new entirely new packages and $updated packages with newer versions."
 	fi
-	echo "$(date -u ) - scheduled $NEW/$UPDATED packages."
+	echo "$(date -u ) - scheduled $new/$updated packages."
+	rm $NEW $UPDATED > /dev/null
 }
 
 echo "$(date -u ) - Updating Arch Linux repositories."
-UPDATED=0
-NEW=0
 update_archlinux_repositories
 echo "$(date -u ) - Done updating Arch Linux repositories."
 

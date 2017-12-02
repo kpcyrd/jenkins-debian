@@ -98,6 +98,8 @@ elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/rbuild.* ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
+elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/archlinuxrb-build.* ]] ; then
+	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^rm\ -r\ /var/lib/jenkins/jobs/.*/workspace/results ]] ; then
 	exec rm -r "$3" ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_pbuilder_buster_.*_.* ]] ; then

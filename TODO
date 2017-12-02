@@ -351,6 +351,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * build.sh
 ** build2.log doesnt get deleted if build1 fails
+** blacklist syslinux
 
 ==== reproducible fdroid
 

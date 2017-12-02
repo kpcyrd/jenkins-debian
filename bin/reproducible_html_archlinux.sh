@@ -113,7 +113,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 						echo 404_7 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="to verify source with PGP signatures"
-					elif [ ! -z "$(egrep '(SSL certificate problem: unable to get local issuer certificate|bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+					elif [ ! -z "$(egrep '(SSL certificate problem: unable to get local issuer certificate|^bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 						echo 404_1 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with SSL problem"
 					elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then

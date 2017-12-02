@@ -93,7 +93,7 @@ echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc 
 for i in $(grep -B 2  0.rb-unknown-1 archlinux.html | xargs echo | sed -s 's# -- #\n#g' | cut -d '>' -f2-|cut -d '<' -f1-3|sed -s 's#</td> <td>#/#g'|head -100) ; do
 	#if [ -z "$(grep UNKNOWN $i/pkg.state)" ] ; then
 		touch $i/pkg.needs_build
-		rm $i/pkg.version
+		rm $i/pkg.version || true
 	#fi
 done
 echo "$(date -u) - After running the crazy scheduler, $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."

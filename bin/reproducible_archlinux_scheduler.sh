@@ -91,9 +91,10 @@ echo "$(date -u ) - Done updating Arch Linux repositories."
 cd $BASE/archlinux
 echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 for i in $(grep -B 2  0.rb-unknown-1 archlinux.html | xargs echo | sed -s 's# -- #\n#g' | cut -d '>' -f2-|cut -d '<' -f1-3|sed -s 's#</td> <td>#/#g'|head -255) ; do
-	if [ -z "$(grep UNKNOWN $i/pkg.state)" ] ; then
+	#if [ -z "$(grep UNKNOWN $i/pkg.state)" ] ; then
 		touch $i/pkg.needs_build
-	fi
+		rm $i/pkg.version
+	#fi
 done
 echo "$(date -u) - After running the crazy scheduler, $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 

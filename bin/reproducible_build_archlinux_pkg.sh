@@ -430,8 +430,17 @@ cd $TMPDIR/b1/$SRCPACKAGE
 cp build1.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 [ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 echo $DURATION > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.build_duration || true
-cp build1.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/ || true
-[ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.version ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+if [ -f $TMPDIR/b2/$SRCPACKAGE/build2.version ] ; then
+	cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+	cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.version
+elif [ -f build1.version ] ; then
+	cp build1.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+	cp $TMPDIR/b1/$SRCPACKAGE/build1.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.version
+else
+	# this should not happen but does, so deal with it
+	echo "$VERSION" > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.version
+fi
+
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_archlinux.sh
 [ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state

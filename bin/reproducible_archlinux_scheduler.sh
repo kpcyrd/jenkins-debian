@@ -16,7 +16,6 @@ update_archlinux_repositories() {
 	echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
@@ -30,6 +29,7 @@ update_archlinux_repositories() {
 				printf '%s %s %s\n' "$repo" "$pkgbase" "$version"
 			fi
 		done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
+	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are known in total to us."
 
 	for REPO in $ARCHLINUX_REPOS ; do

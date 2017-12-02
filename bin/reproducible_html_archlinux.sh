@@ -73,7 +73,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
 				VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -E -s "s#-(x86_64|any).pkg.tar.xz.html##" )
 			else
-				VERSION="0.rb-unknown-1"
+				VERSION="undetermined"
 			fi
 			echo "      <td>$VERSION</td>" >> $HTML_BUFFER
 			echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
@@ -175,13 +175,17 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				esac
 			fi
 			echo "      </td>" >> $HTML_BUFFER
-			echo "      <td>$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- ) UTC <br />" >> $HTML_BUFFER
+			BUILD_DATE="$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- )"
+			if [ ! -z "$BUILD_DATE" ] ; then
+				BUILD_DATE="$BUILD_DATE UTC"
+			fi
+			echo "      <td>$BUILD_DATE" >> $HTML_BUFFER
 			DURATION=$(cat $ARCHLINUX_PKG_PATH/pkg.build_duration 2>/dev/null || true)
 			if [ -n "$DURATION" ]; then
 				HOUR=$(echo "$DURATION/3600"|bc)
 				MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
 				SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
-				BUILD_DURATION="${HOUR}h:${MIN}m:${SEC}s"
+				BUILD_DURATION="<br />${HOUR}h:${MIN}m:${SEC}s"
 			else
 				BUILD_DURATION=" "
 			fi

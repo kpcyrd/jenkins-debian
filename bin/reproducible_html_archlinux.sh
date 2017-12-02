@@ -56,11 +56,13 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "     <tr>" >> $HTML_BUFFER
 			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 			echo "      <td>$PKG</td>" >> $HTML_BUFFER
-			if [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
+			if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
+				VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)
+			elif [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
 				VERSION=$(cat $ARCHLINUX_PKG_PATH/build1.version)
 				if [ -f $ARCHLINUX_PKG_PATH/build2.log ] ; then
 					if [ ! -f $ARCHLINUX_PKG_PATH/build2.version ] ; then
-						echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build2.version does not exist and should probably just be deleted. Please investigate."
+						echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build2.version does not exist, so the 2nd build fails. This happens."
 					elif ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ; then
 						echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
 						VERSION="$VERSION or $(cat $ARCHLINUX_PKG_PATH/build2.version)"

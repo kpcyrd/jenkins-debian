@@ -63,7 +63,7 @@ update_archlinux_repositories() {
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST
 			done
 		mv $TMPPKGLIST "$ARCHLINUX_PKGS"_"$REPO"
-		echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us:"
+		echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us."
 		new=$(grep -c ^$REPO $NEW || true)
 		updated=$(grep -c ^$REPO $UPDATED || true)
 		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."

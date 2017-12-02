@@ -47,6 +47,11 @@ choose_package() {
 	for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
 		# try to find packages which have been triggered
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
+			# ignore blacklisted packages (should be noted in the web pages later)
+			case $PKG in
+				syslinux)	continue ;;
+				*)		;;
+			esac
 			# if triggered...
 			if [ -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] ; then
 				REPOSITORY=$REPO
@@ -63,6 +68,11 @@ choose_package() {
 		for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
 			# trz to find packages which never been built before
 			for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
+				# ignore blacklisted packages (should be noted in the web pages later)
+				case $PKG in
+					syslinux)	continue ;;
+					*)		;;
+				esac
 				# if new...
 				if [ ! -d $BASE/archlinux/$REPO/$PKG ] ; then
 					REPOSITORY=$REPO

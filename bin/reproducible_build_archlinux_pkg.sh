@@ -100,6 +100,15 @@ choose_package() {
 	# very simple locking…
 	mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
 	[ ! -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build ] || rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build
+	# clear files from previous builds
+	# FIXME: while this is an improvement over the previous situation, where these files were kept forever
+	#        this is still bad, as now, during this build, some files are not accessable on the web anymore.
+	for file in build1.log build2.log build1.version build2.version ; do
+		[ ! -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.$file ] || rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.$file
+	done
+	for file in $BASE/archlinux/$REPO/$SRCPACKAGE/*BUILDINFO.txt $BASE/archlinux/$REPO/$SRCPACKAGE/*html ; do
+		rm $file || true
+	done
 }
 
 first_build() {

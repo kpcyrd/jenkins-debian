@@ -45,8 +45,8 @@ update_archlinux_repositories() {
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 				elif [ -z "$(ls $BASE/archlinux/$REPO/$pkgbase/)" ] ; then
 					# schedule packages we already know about
-					# (but only until 500 packages are scheduled in total)
-					if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 500 ] ; then
+					# (but only until 300 packages are scheduled in total)
+					if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 					fi
 				else

@@ -343,7 +343,7 @@ write_page "    <table><tr><th>repository</th><th>source package</th><th>version
 # output all HTML snipplets
 for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
-		grep -l $i $REPOSITORY/*/pkg.state | sort -u | sed -s 's#\.state$#.html#g' | xargs -r cat >> $PAGE
+		grep -l $i $REPOSITORY/*/pkg.state | sort -u | sed -s 's#\.state$#.html#g' | xargs -r cat >> $PAGE || true
 	done
 done
 write_page "    </table>"

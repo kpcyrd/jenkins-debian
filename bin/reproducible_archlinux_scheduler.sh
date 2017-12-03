@@ -28,7 +28,7 @@ update_archlinux_repositories() {
 			else
 				printf '%s %s %s\n' "$repo" "$pkgbase" "$version"
 			fi
-		done | sort -u > "$ARCHLINUX_PKGS"_full_pkgbase_list
+		done | sort -u -R > "$ARCHLINUX_PKGS"_full_pkgbase_list
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are known in total to us."
 

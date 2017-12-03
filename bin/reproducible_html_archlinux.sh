@@ -75,7 +75,9 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
 				VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -E -s "s#-(x86_64|any).pkg.tar.xz.html##" )
 			else
-				VERSION="undetermined"
+				echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
+				continue
+				#VERSION="undetermined"
 			fi
 			echo "      <td>$VERSION</td>" >> $HTML_BUFFER
 			echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version

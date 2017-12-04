@@ -102,9 +102,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 						echo 404_6 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="to verify source with PGP due to unknown public key"
-					elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-						echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
-						EXTRA_REASON="with 404 - file not found"
 					elif [ ! -z "$(grep 'The requested URL returned error: 403' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 						echo 404_2 > $ARCHLINUX_PKG_PATH/pkg.state
 						EXTRA_REASON="with 403 - forbidden"
@@ -126,6 +123,9 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 					elif [ ! -z "$(egrep '==> ERROR: Integrity checks \(.*\) differ in size from the source array' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 						echo 404_9 > $ARCHLINUX_PKG_PATH/pkg.state
 						REASON="Integrity checks differ in size from the source array"
+					elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+						echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
+						EXTRA_REASON="with 404 - file not found"
 					fi
 					echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log 2>/dev/null)" ] ; then

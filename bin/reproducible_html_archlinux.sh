@@ -86,6 +86,9 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			#
 			#
 			if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
+				# this horrible if elif elif elif elif...  monster is needed because
+				# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
+			        # has not yet been merged yet...
 				if [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					echo DEPWAIT_= > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER

@@ -386,15 +386,19 @@ if [ -f /etc/debian_version ] ; then
 		case $HOSTNAME in
 			profitbricks-build7-amd64) DEBS="$DEBS
 				android-sdk
+				bzr
+				git-svn
 				fdroidserver
 				libvirt-clients
 				libvirt-daemon
 				libvirt-daemon-system
+				mercurial
 				python3-libvirt
 				python3-qrcode
 				python3-ruamel.yaml
 				python3-vagrant
 				qemu-kvm
+				subversion
 				vagrant
 				vagrant-mutate
 				vagrant-libvirt"

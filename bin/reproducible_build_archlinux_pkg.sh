@@ -132,6 +132,7 @@ first_build() {
 	echo "makepkg env:       $MAKEPKG_ENV_VARS"
 	echo "============================================================================="
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
+	schroot --run-session -c $SESSION --directory /tmp -u root -- ln -sfT dash /usr/bin/sh
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
 	schroot --run-session -c $SESSION --directory /tmp -- mkdir $BUILDDIR
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- env GIT_SSL_NO_VERIFY=1 asp checkout "$SRCPACKAGE" 2>&1 | tee -a $LOG || echo "Error: failed to download PKGBUILD for $SRCPACKAGE from $REPOSITORY" tee -a $LOG

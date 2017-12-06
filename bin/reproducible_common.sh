@@ -491,7 +491,11 @@ write_variation_table() {
 		write_page "<tr><td>year, month, date</td><td>today ($DATE) or (on amd64, i386 and arm64 only) also: $FUTURE</td><td>on amd64, i386 and arm64: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
-		write_page "<tr><td>/bin/sh</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+		if [ "$1" = "Arch Linux" ]; then
+			write_page "<tr><td>/bin/sh</td><td>/bin/dash</td><td>/bin/bash</td></tr>"
+		else
+			write_page "<tr><td>/bin/sh</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+		fi
 		if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] ; then
 			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 		else

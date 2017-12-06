@@ -124,8 +124,8 @@ $ROOTCMD cat /etc/makepkg.conf
 echo "============================================================================="
 
 $ROOTCMD bash -l -c 'pacman -Syyu --noconfirm --debug'
-$ROOTCMD bash -l -c 'pacman -S --noconfirm base-devel devtools fakechroot asciidoc asp expac'
-$ROOTCMD bash -l -c 'yes | pacman -S gcc-multilib lib32-fakeroot lib32-libltdl'
+$ROOTCMD bash -l -c 'pacman -S --noconfirm --needed base-devel devtools fakechroot asciidoc asp expac dash'
+$ROOTCMD bash -l -c 'yes | pacman -S --needed gcc-multilib lib32-fakeroot lib32-libltdl'
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 

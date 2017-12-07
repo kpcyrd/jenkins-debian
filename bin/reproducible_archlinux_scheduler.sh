@@ -43,22 +43,19 @@ update_archlinux_repositories() {
 					echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-				elif [ -z "$(ls $BASE/archlinux/$REPO/$pkgbase/)" ] ; then
+				elif [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
+					VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null)
+					if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
+						# schedule packages where an updated version is availble
+						echo $REPO/$pkgbase >> $UPDATED
+						echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
+						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
+					fi
+				else
 					# schedule packages we already know about
 					# (but only until 300 packages are scheduled in total)
 					if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-					fi
-				else
-					# if version isn't temporary pseudo version... 
-					VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null || echo 0.rb-unknown-1)
-					if [ "$VERSION" != "0.rb-unknown-1" ] && [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
-						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
-							# schedule packages where an updated version is availble
-							echo $REPO/$pkgbase >> $UPDATED
-							echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
-							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-						fi
 					fi
 				fi
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST
@@ -84,18 +81,5 @@ update_archlinux_repositories() {
 echo "$(date -u ) - Updating Arch Linux repositories."
 update_archlinux_repositories
 echo "$(date -u ) - Done updating Arch Linux repositories."
-
-# crazy cleanup unknowns scheduler,
-# makes sure that 100 packages with version 0.rb-unknown-1 are scheduled...
-# (so can be removed when we cleared this backlog)
-cd $BASE/archlinux
-echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
-for i in $(grep -B 2  0.rb-unknown-1 archlinux.html | xargs echo | sed -s 's# -- #\n#g' | cut -d '>' -f2-|cut -d '<' -f1-3|sed -s 's#</td> <td>#/#g'|head -100) ; do
-	#if [ -z "$(grep UNKNOWN $i/pkg.state)" ] ; then
-		touch $i/pkg.needs_build
-		rm $i/pkg.version || true
-	#fi
-done
-echo "$(date -u) - After running the crazy scheduler, $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 
 # vim: set sw=0 noet :

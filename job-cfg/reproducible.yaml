@@ -274,31 +274,7 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
-        - '{name}_{my_task}_{my_arch}_{my_hname}':
-            my_task:
-                - 'maintenance':
-                    my_description: 'Do some maintenance: check for old files and directories, do backups, update pbuilder and schroots, etc.'
-                    my_timed: '5 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
-            my_hname:
-                - 'profitbricks1':  { my_arch: 'amd64' }
-                - 'profitbricks2':  { my_arch: 'i386'  }
-                - 'profitbricks3':  { my_arch: 'amd64' }
-                - 'profitbricks4':  { my_arch: 'amd64' }
-                - 'profitbricks5':  { my_arch: 'amd64' }
-                - 'profitbricks6':  { my_arch: 'i386'  }
-                - 'profitbricks7':  { my_arch: 'amd64' }
-                - 'profitbricks11': { my_arch: 'amd64' }
-                - 'profitbricks12': { my_arch: 'i386'  }
-                - 'profitbricks15': { my_arch: 'amd64' }
-                - 'profitbricks16': { my_arch: 'i386'  }
-                - 'codethink9':     { my_arch: 'arm64' }
-                - 'codethink10':    { my_arch: 'arm64' }
-                - 'codethink11':    { my_arch: 'arm64' }
-                - 'codethink12':    { my_arch: 'arm64' }
-                - 'codethink13':    { my_arch: 'arm64' }
-                - 'codethink14':    { my_arch: 'arm64' }
-                - 'codethink15':    { my_arch: 'arm64' }
-                - 'codethink16':    { my_arch: 'arm64' }
+
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
                 - 'maintenance':
@@ -334,8 +310,26 @@
                 - 'p64c':           { my_arch: 'armhf' }
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'wbq0':           { my_arch: 'armhf' }
+                - 'profitbricks1':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'i386'  }
+                - 'profitbricks3':  { my_arch: 'amd64' }
+                - 'profitbricks4':  { my_arch: 'amd64' }
+                - 'profitbricks5':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'i386'  }
+                - 'profitbricks7':  { my_arch: 'amd64' }
+                - 'profitbricks11': { my_arch: 'amd64' }
+                - 'profitbricks12': { my_arch: 'i386'  }
+                - 'profitbricks15': { my_arch: 'amd64' }
+                - 'profitbricks16': { my_arch: 'i386'  }
+                - 'codethink9':     { my_arch: 'arm64' }
+                - 'codethink10':    { my_arch: 'arm64' }
+                - 'codethink11':    { my_arch: 'arm64' }
+                - 'codethink12':    { my_arch: 'arm64' }
+                - 'codethink13':    { my_arch: 'arm64' }
+                - 'codethink14':    { my_arch: 'arm64' }
+                - 'codethink15':    { my_arch: 'arm64' }
+                - 'codethink16':    { my_arch: 'arm64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org, vagrant@debian.org'
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
                 - 'node_health_check':
@@ -420,51 +414,6 @@
                     my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
                     my_timed: '40 1 * * *'
             my_hname:
-                - 'profitbricks1':  { my_arch: 'amd64' }
-                - 'profitbricks2':  { my_arch: 'i386'  }
-                - 'profitbricks5':  { my_arch: 'amd64' }
-                - 'profitbricks6':  { my_arch: 'i386'  }
-                - 'profitbricks11': { my_arch: 'amd64' }
-                - 'profitbricks12': { my_arch: 'i386'  }
-                - 'profitbricks15': { my_arch: 'amd64' }
-                - 'profitbricks16': { my_arch: 'i386'  }
-                - 'codethink9':     { my_arch: 'arm64' }
-                - 'codethink10':    { my_arch: 'arm64' }
-                - 'codethink11':    { my_arch: 'arm64' }
-                - 'codethink12':    { my_arch: 'arm64' }
-                - 'codethink13':    { my_arch: 'arm64' }
-                - 'codethink14':    { my_arch: 'arm64' }
-                - 'codethink15':    { my_arch: 'arm64' }
-                - 'codethink16':    { my_arch: 'arm64' }
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_naginator_regex: '^E: Couldn.t download .*/Packages'
-        - '{name}_{my_task}_{my_arch}_{my_hname}':
-            my_task:
-                - 'setup_pbuilder_stretch':
-                    my_description: 'Setup pbuilder for reproducible builds of packages from stretch as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-                    my_timed: '23 7 * * *'
-                - 'setup_pbuilder_buster':
-                    my_description: 'Setup pbuilder for reproducible builds of packages from buster as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-                    my_timed: '23 8 * * *'
-                - 'setup_pbuilder_unstable':
-                    my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-                    my_timed: '42 7 * * *'
-                - 'setup_pbuilder_experimental':
-                    my_description: 'Setup pbuilder for reproducible builds of packages from experimental as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
-                    my_timed: '33 7 * * *'
-                - 'setup_schroot_unstable':
-                    my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
-                    my_timed: '20 1 * * *'
-                - 'setup_schroot_stretch':
-                    my_description: 'Setup stretch schroot for fetching source packages for the builder jobs.'
-                    my_timed: '0 1 * * *'
-                - 'setup_schroot_buster':
-                    my_description: 'Setup buster schroot for fetching source packages for the builder jobs.'
-                    my_timed: '0 2 * * *'
-                - 'setup_schroot_experimental':
-                    my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
-                    my_timed: '40 1 * * *'
-            my_hname:
                 - 'bbx15':          { my_arch: 'armhf' }
                 - 'bpi0':           { my_arch: 'armhf' }
                 - 'cbxi4a':         { my_arch: 'armhf' }
@@ -494,7 +443,22 @@
                 - 'p64c':           { my_arch: 'armhf' }
                 - 'wbd0':           { my_arch: 'armhf' }
                 - 'wbq0':           { my_arch: 'armhf' }
-            my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org, vagrant@debian.org'
+                - 'profitbricks1':  { my_arch: 'amd64' }
+                - 'profitbricks2':  { my_arch: 'i386'  }
+                - 'profitbricks5':  { my_arch: 'amd64' }
+                - 'profitbricks6':  { my_arch: 'i386'  }
+                - 'profitbricks11': { my_arch: 'amd64' }
+                - 'profitbricks12': { my_arch: 'i386'  }
+                - 'profitbricks15': { my_arch: 'amd64' }
+                - 'profitbricks16': { my_arch: 'i386'  }
+                - 'codethink9':     { my_arch: 'arm64' }
+                - 'codethink10':    { my_arch: 'arm64' }
+                - 'codethink11':    { my_arch: 'arm64' }
+                - 'codethink12':    { my_arch: 'arm64' }
+                - 'codethink13':    { my_arch: 'arm64' }
+                - 'codethink14':    { my_arch: 'arm64' }
+                - 'codethink15':    { my_arch: 'arm64' }
+                - 'codethink16':    { my_arch: 'arm64' }
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_naginator_regex: '^E: Couldn.t download .*/Packages'
 

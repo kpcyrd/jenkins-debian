@@ -3,7 +3,7 @@
 # Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 

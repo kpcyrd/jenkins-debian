@@ -50,12 +50,11 @@ update_archlinux_repositories() {
 						echo $REPO/$pkgbase >> $UPDATED
 						echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-					fi
-				else
-					# schedule packages we already know about
-					# (but only until 300 packages are scheduled in total)
-					if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
-						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
+						# schedule packages we already know about
+						# (but only until 300 packages are scheduled in total)
+						if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
+							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
+						fi
 					fi
 				fi
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST

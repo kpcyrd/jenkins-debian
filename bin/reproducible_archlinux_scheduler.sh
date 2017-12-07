@@ -44,17 +44,23 @@ update_archlinux_repositories() {
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 				elif [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
-					VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null)
-					if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
-						# schedule packages where an updated version is availble
-						echo $REPO/$pkgbase >> $UPDATED
-						echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
-						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-						# schedule packages we already know about
-						# (but only until 300 packages are scheduled in total)
-						if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
+					if [ -f $BASE/archlinux/$REPO/$pkgbase/pkg.version ] ; then
+						VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null)
+						if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
+							# schedule packages where an updated version is availble
+							echo $REPO/$pkgbase >> $UPDATED
+							echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
 							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
+						else
+							# schedule packages we already know about
+							# (but only until 300 packages are scheduled in total)
+							if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
+								touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
+							fi
 						fi
+					else
+						echo "$(date -u ) - scheduling new package $REPO/$pkgbase... though this is strange and should not really happen…"
+						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 					fi
 				fi
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST

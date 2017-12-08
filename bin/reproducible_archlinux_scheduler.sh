@@ -70,7 +70,10 @@ update_archlinux_repositories() {
 	# FIXME: this doesnt schedule packages without build1.log...
 	old=""
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
+		# reschedule
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | args -r touch
+		# explain, for debugging…
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort | xargs echo "Old packages rescheduled: "
 		old=", plus 250 old ones"
 	fi
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )

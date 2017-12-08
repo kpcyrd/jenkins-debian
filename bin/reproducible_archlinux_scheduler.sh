@@ -13,7 +13,7 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
-	echo "$(date -u) - currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
+	echo "$(date -u) - Updating Arch Linux repositories, currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local SESSION="archlinux-scheduler-$RANDOM"
@@ -86,10 +86,9 @@ update_archlinux_repositories() {
 	fi
 	echo "$(date -u ) - scheduled $new/$updated packages$old."
 	rm $NEW $UPDATED > /dev/null
+	echo "$(date -u) - Done updating Arch Linux repositories, currently $TOTAL packages scheduled."
 }
 
-echo "$(date -u ) - Updating Arch Linux repositories."
 update_archlinux_repositories
-echo "$(date -u ) - Done updating Arch Linux repositories."
 
 # vim: set sw=0 noet :

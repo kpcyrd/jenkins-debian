@@ -143,6 +143,8 @@ first_build() {
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	# remove possible lock in our local session (happens when root maintenance update running while session starts)
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo rm -f /var/lib/pacman/db.lck 2>&1 | tee -a $LOG
 	# update before pulling new dependencies
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# determine the version of the package being build
@@ -222,6 +224,8 @@ second_build() {
 	export LC_ALL="fr_CH.UTF-8"
 	umask 0002
 	__END__
+	# remove possible lock in our local session (happens when root maintenance update running while session starts)
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo rm -f /var/lib/pacman/db.lck 2>&1 | tee -a $LOG
 	# update before pulling new dependencies
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# determine the version of the package being build

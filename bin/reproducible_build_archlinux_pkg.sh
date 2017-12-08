@@ -123,13 +123,16 @@ first_build() {
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH'"
+	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
 	if [ "$(hostname -f)" = "profitbricks-build4-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
+		MAKEPKG_OPTIONS="$MAKEPKG_OPTIONS --skippgpcheck"
 	fi
 	echo "Future:            $FUTURE_STATE"
 	echo "SOURCE_DATE_EPOCH: $SOURCE_DATE_EPOCH"
 	echo "makepkg env:       $MAKEPKG_ENV_VARS"
+	echo "makepkg options:   $MAKEPKG_OPTIONS"
 	echo "============================================================================="
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /tmp -u root -- ln -sfT dash /usr/bin/sh
@@ -151,7 +154,7 @@ first_build() {
 	echo $VERSION > $TMPDIR/b1/$SRCPACKAGE/build1.version
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1" | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -195,13 +198,16 @@ second_build() {
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH'"
+	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
 	if [ "$(hostname -f)" = "profitbricks-build4-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
+		MAKEPKG_OPTIONS="$MAKEPKG_OPTIONS --skippgpcheck"
 	fi
 	echo "Future:            $FUTURE_STATE"
 	echo "SOURCE_DATE_EPOCH: $SOURCE_DATE_EPOCH"
 	echo "makepkg env:       $MAKEPKG_ENV_VARS"
+	echo "makepkg options:   $MAKEPKG_OPTIONS"
 	echo "============================================================================="
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/makepkg.conf
@@ -227,7 +233,7 @@ second_build() {
 	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg --syncdeps --noconfirm 2>&1" | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1" | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG

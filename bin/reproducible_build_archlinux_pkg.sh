@@ -140,20 +140,8 @@ first_build() {
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# just set timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	echo "============================================================================="
-	echo "Current configuration values follow:"
-	echo "============================================================================="
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- cat /etc/pacman.conf 2>&1 | tee -a $LOG
-	echo "============================================================================="
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- cat /etc/makepkg.conf 2>&1 | tee -a $LOG
-	echo "============================================================================="
 	# update before pulling new dependencies
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syyu --debug --noconfirm 2>&1 | tee -a $LOG
-	# log installed packages and used mirrors
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- grep '^Server' /etc/pacman.d/mirrorlist 2>&1 | tee -a $LOG
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Q 2>&1 | tee -a $LOG
-	# TODO: debugging, remove me
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# determine the version of the package being build
 	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
 	if [ -n "$epoch" ] ; then
@@ -228,20 +216,8 @@ second_build() {
 	export LC_ALL="fr_CH.UTF-8"
 	umask 0002
 	__END__
-	echo "============================================================================="
-	echo "Current configuration values follow:"
-	echo "============================================================================="
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- cat /etc/pacman.conf 2>&1 | tee -a $LOG
-	echo "============================================================================="
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- cat /etc/makepkg.conf 2>&1 | tee -a $LOG
-	echo "============================================================================="
 	# update before pulling new dependencies
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syyu --debug --noconfirm 2>&1 | tee -a $LOG
-	# log installed packages and used mirrors
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- grep '^Server' /etc/pacman.d/mirrorlist 2>&1 | tee -a $LOG
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Q 2>&1 | tee -a $LOG
-	# TODO: debugging, remove me
-	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- pacman -Si gnupg 2>&1 | tee -a $LOG
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- sudo pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# determine the version of the package being build
 	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
 	if [ -n "$epoch" ] ; then

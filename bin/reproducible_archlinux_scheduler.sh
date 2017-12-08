@@ -51,12 +51,6 @@ update_archlinux_repositories() {
 							echo $REPO/$pkgbase >> $UPDATED
 							echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
 							touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-						else
-							# schedule packages we already know about
-							# (but only until 300 packages are scheduled in total)
-							if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
-								touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-							fi
 						fi
 					else
 						echo "$(date -u ) - scheduling new package $REPO/$pkgbase... though this is strange and should not really happen…"
@@ -71,15 +65,23 @@ update_archlinux_repositories() {
 		updated=$(grep -c ^$REPO $UPDATED || true)
 		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
+	# schedule 250 packages we already know about
+	# (only if less than 300 packages are currently scheduled)
+	# FIXME: this doesnt schedule packages without build1.log...
+	old=""
+	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | args -r touch
+		old=", plus 250 old ones"
+	fi
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	schroot --end-session -c $SESSION
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	if [ $new -ne 0 ] || [ $updated -ne 0 ] ; then
-		irc_message archlinux-reproducible "scheduled $new entirely new packages and $updated packages with newer versions, for $total scheduled out of $TOTAL."
+		irc_message archlinux-reproducible "scheduled $new entirely new packages and $updated packages with newer versions$old, for $total scheduled out of $TOTAL."
 	fi
-	echo "$(date -u ) - scheduled $new/$updated packages."
+	echo "$(date -u ) - scheduled $new/$updated packages$old."
 	rm $NEW $UPDATED > /dev/null
 }
 

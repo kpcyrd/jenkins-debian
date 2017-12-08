@@ -53,9 +53,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			continue
 		fi
 		if [ ! -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
-			echo "     <tr>" >> $HTML_BUFFER
-			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
-			echo "      <td>$PKG</td>" >> $HTML_BUFFER
 			if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
 				VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)
 			elif [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
@@ -77,11 +74,15 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			else
 				echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
 				continue
-				#VERSION="undetermined"
+				VERSION="undetermined"
 			fi
+			if [ "$VERSION" != "undetermined" ] ; then
+				echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
+			fi
+			echo "     <tr>" >> $HTML_BUFFER
+			echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
+			echo "      <td>$PKG</td>" >> $HTML_BUFFER
 			echo "      <td>$VERSION</td>" >> $HTML_BUFFER
-			echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
-
 			echo "      <td>" >> $HTML_BUFFER
 			#
 			#

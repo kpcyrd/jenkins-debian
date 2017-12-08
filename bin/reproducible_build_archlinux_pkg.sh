@@ -49,8 +49,8 @@ choose_package() {
 		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
 			# ignore blacklisted packages (should be noted in the web pages later)
 			case $PKG in
-				syslinux)	continue ;;
-				*)		;;
+				syslinux|ltrace)	continue ;;
+				*)			;;
 			esac
 			# if triggered...
 			if [ -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] ; then
@@ -70,8 +70,8 @@ choose_package() {
 			for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
 				# ignore blacklisted packages (should be noted in the web pages later)
 				case $PKG in
-					syslinux)	continue ;;
-					*)		;;
+					syslinux|ltrace)	continue ;;
+					*)			;;
 				esac
 				# if new...
 				if [ ! -d $BASE/archlinux/$REPO/$PKG ] ; then

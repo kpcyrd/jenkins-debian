@@ -52,6 +52,13 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(LANG=C TZ=UTC ls --full-time -d $ARCHLINUX_PKG_PATH | cut -d ':' -f1-2 | cut -d " " -f6-) UTC"
 			continue
 		fi
+		# regenerate pkg.html if package has been rebuild
+		if [ -f $ARCHLINUX_PKG_PATH/pkg.state ] && [ -f $ARCHLINUX_PKG_PATH/build1.log ] ; then
+			if [ $ARCHLINUX_PKG_PATH/build1.log -nt $ARCHLINUX_PKG_PATH/pkg.state ] ; then
+				rm $ARCHLINUX_PKG_PATH/pkg.state
+				echo "$(date -u )   - $PKG from '$REPOSITORY' has been newly build, updating the html."
+			fi
+		fi
 		if [ ! -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
 			if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
 				VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)

@@ -32,6 +32,7 @@ ARCHLINUX_NR_FTBR=0
 ARCHLINUX_NR_DEPWAIT=0
 ARCHLINUX_NR_404=0
 ARCHLINUX_NR_GOOD=0
+ARCHLINUX_NR_BLACKLISTED=0
 ARCHLINUX_NR_UNKNOWN=0
 WIDTH=1920
 HEIGHT=960
@@ -44,6 +45,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	NR_DEPWAIT=0
 	NR_404=0
 	NR_GOOD=0
+	NR_BLACKLISTED=0
 	NR_UNKNOWN=0
 	for PKG in $(find $ARCHBASE/$REPOSITORY/* -maxdepth 1 -type d -exec basename {} \;|sort -u -f) ; do
 		ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
@@ -87,10 +89,19 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			#
 			#
 			if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
+				blacklisted=false
+				for i in $ARCHLINUX_BLACKLISTED ; do
+					if [ "$PKG" = "$i" ] ; then
+						blacklisted=true
+					fi
+				done
 				# this horrible if elif elif elif elif...  monster is needed because
 				# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
 			        # has not yet been merged yet...
-				if [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				if $blacklisted ; then
+						echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
+						echo "       <img src=\"/userContent/static/error.png\" alt=\"blacklisted icon\" /> blacklisted" >> $HTML_BUFFER
+				elif [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					echo DEPWAIT_= > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
 				elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
@@ -223,6 +234,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	NR_FTBFS=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c FTBFS)
 	NR_DEPWAIT=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c DEPWAIT)
 	NR_404=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c 404)
+	NR_BLACKLISTED=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c BLACKLISTED)
 	NR_UNKNOWN=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c UNKNOWN)
 	set -e
 	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
@@ -233,7 +245,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	fi
 	echo "     <tr>" >> $HTML_REPOSTATS
 	echo "      <td>$REPOSITORY</td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
-	for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_UNKNOWN ; do
+	for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_BLACKLISTED $NR_UNKNOWN ; do
 		PERCENT_i=$(echo "scale=1 ; ($i*100/$TESTED)" | bc)
 		if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
 			echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
@@ -268,6 +280,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 	let ARCHLINUX_NR_DEPWAIT+=$NR_DEPWAIT
 	let ARCHLINUX_NR_404+=$NR_404
 	let ARCHLINUX_NR_GOOD+=$NR_GOOD
+	let ARCHLINUX_NR_BLACKLISTED+=$NR_BLACKLISTED
 	let ARCHLINUX_NR_UNKNOWN+=$NR_UNKNOWN
 	set -e
 done
@@ -280,7 +293,7 @@ else
 fi
 echo "     <tr>" >> $HTML_REPOSTATS
 echo "      <td><b>all combined</b></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
-for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_UNKNOWN ; do
+for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_BLACKLISTED $ARCHLINUX_NR_UNKNOWN ; do
 	PERCENT_i=$(echo "scale=1 ; ($i*100/$ARCHLINUX_TESTED)" | bc)
 	if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
 		echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
@@ -332,7 +345,7 @@ cat > $PAGE <<- EOF
 EOF
 write_page_intro 'Arch Linux'
 write_variation_table 'Arch Linux'
-write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>unknown state</th></tr>"
+write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>blacklisted</th><th>unknown state</th></tr>"
 cat $HTML_REPOSTATS >> $PAGE
 rm $HTML_REPOSTATS > /dev/null
 write_page "    </table>"
@@ -346,7 +359,7 @@ write_page "<a href=\"/archlinux/archlinux.png\"><img src=\"/archlinux/archlinux
 # packages table header
 write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 # output all HTML snipplets
-for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do
+for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) BLACKLISTED $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
 		grep -l $i $REPOSITORY/*/pkg.state | sort -u | sed -s 's#\.state$#.html#g' | xargs -r cat >> $PAGE || true
 	done

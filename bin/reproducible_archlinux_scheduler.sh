@@ -74,15 +74,28 @@ update_archlinux_repositories() {
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
 		# explain, for debugging…
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort | xargs echo "Old packages rescheduled: "
-		old=", plus 250 old ones"
+		old="250 old ones"
 	fi
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	schroot --end-session -c $SESSION
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
-	if [ $new -ne 0 ] || [ $updated -ne 0 ] ; then
-		irc_message archlinux-reproducible "scheduled $new entirely new packages and $updated packages with newer versions$old, for $total scheduled out of $TOTAL."
+	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ -n "$old" ] ; then
+		message="scheduled"
+		if [ $new -ne 0 ] ; then
+			message="$message $new entirely new packages"
+		fi
+		if [ $new -ne 0 ] && [ $updated -ne 0 ] ; then
+			message="$message and"
+		fi
+		if [ $updated -ne 0 ] ; then
+			message="$message $updated packages with newer versions"
+		fi
+		if [ $new -ne 0 ] || [ $updated -ne 0 ] ; then
+			old=", plus $old"
+		fi
+		irc_message archlinux-reproducible "${message}$old, for $total scheduled out of $TOTAL."
 	fi
 	echo "$(date -u ) - scheduled $new/$updated packages$old."
 	rm $NEW $UPDATED > /dev/null

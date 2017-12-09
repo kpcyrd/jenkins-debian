@@ -76,6 +76,15 @@ update_archlinux_repositories() {
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort | xargs echo "Old packages rescheduled: "
 		old="250 old ones"
 	fi
+	# de-schedule blacklisted packages
+	# (so sometimes '250 old ones' is slightly inaccurate…)
+	for REPO in $ARCHLINUX_REPOS ; do
+		for i in $ARCHLINUX_BLACKLISTED ; do
+			if [ -f $BASE/archlinux/$REPO/$i/pkg.needs_build ] ; then
+				rm $BASE/archlinux/$REPO/$i/pkg.needs_build
+			fi
+		done
+	done
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	schroot --end-session -c $SESSION

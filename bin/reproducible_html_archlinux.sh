@@ -55,6 +55,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			continue
 		fi
 		if [ ! -f $ARCHLINUX_PKG_PATH/pkg.state ] ; then
+			blacklisted=false
 			if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
 				VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)
 			elif [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
@@ -74,11 +75,18 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
 				VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -E -s "s#-(x86_64|any).pkg.tar.xz.html##" )
 			else
-				echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
-				continue
-				VERSION="undetermined"
+				for i in $ARCHLINUX_BLACKLISTED ; do
+					if [ "$PKG" = "$i" ] ; then
+						blacklisted=true
+						VERSION="undetermined"
+					fi
+				done
+				if ! $blacklisted ; then
+					echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
+					continue
+				fi
 			fi
-			if [ "$VERSION" != "undetermined" ] ; then
+			if [ "$VERSION" != "undetermined" ] || $blacklisted ; then
 				echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
 			fi
 			echo "     <tr>" >> $HTML_BUFFER
@@ -89,7 +97,6 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 			#
 			#
 			if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-				blacklisted=false
 				for i in $ARCHLINUX_BLACKLISTED ; do
 					if [ "$PKG" = "$i" ] ; then
 						blacklisted=true

@@ -150,7 +150,7 @@ first_build() {
 	# update before pulling new dependencies
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# determine the version of the package being build
-	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
+	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD" || echo "Failed to source PKGBUILD from '$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD'" | tee -a $LOG
 	if [ -n "$epoch" ] ; then
 		epoch="$epoch:"
 	fi
@@ -231,7 +231,7 @@ second_build() {
 	# update before pulling new dependencies
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- pacman -Syu --noconfirm 2>&1 | tee -a $LOG
 	# determine the version of the package being build
-	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD"
+	source "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD" || echo "Failed to source PKGBUILD from '$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk/PKGBUILD'" | tee -a $LOG
 	if [ -n "$epoch" ] ; then
 		epoch="$epoch:"
 	fi

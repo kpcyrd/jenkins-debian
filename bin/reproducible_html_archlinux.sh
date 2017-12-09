@@ -117,7 +117,7 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 				elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 					echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
-				elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified|One or more files did not pass the validity check|Integrity checks \(.*\) differ in size from the source array|Failure while branching)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified|One or more files did not pass the validity check|Integrity checks \(.*\) differ in size from the source array|Failure while branching|Failure while creating working copy' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 					REASON="download failed"
 					EXTRA_REASON=""
 					echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state

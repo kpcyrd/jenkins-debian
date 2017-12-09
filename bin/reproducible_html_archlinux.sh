@@ -81,9 +81,11 @@ for REPOSITORY in $ARCHLINUX_REPOS ; do
 						VERSION="undetermined"
 					fi
 				done
-				if ! $blacklisted ; then
-					echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
+				if ! $blacklisted && [ -f $ARCHLINUX_PKG_PATH/pkg.needs_build ] ; then
+					echo "$(date -u )   - ok, $PKG from '$REPOSITORY' needs build, this should go away by itself."
 					continue
+				elif ! $blacklisted ; then
+					echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
 				fi
 			fi
 			if [ "$VERSION" != "undetermined" ] || $blacklisted ; then

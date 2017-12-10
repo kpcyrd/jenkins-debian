@@ -94,6 +94,7 @@ python setup.py install
 === adding new slaves to jenkins
 
 Process to follow to add a new node to jenkins:
+
 * Open link:[https://jenkins.debian.net/computer/new]
 * Use the FQDN of the new node, and select "Permanent Agent"
 * Configure it as follow:

@@ -416,7 +416,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then
 			cp $TMPDIR/$SRCPACKAGE/$ARTIFACT.html $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
-			irc_message archlinux-reproducible "$REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html - unreproducible"
+			#irc_message archlinux-reproducible "$REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html - unreproducible"
 		fi
 	done
 else

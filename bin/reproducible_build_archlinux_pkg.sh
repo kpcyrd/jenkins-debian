@@ -143,8 +143,10 @@ first_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- env GIT_SSL_NO_VERIFY=1 asp checkout "$SRCPACKAGE" 2>&1 | tee -a $LOG || echo "Error: failed to download PKGBUILD for $SRCPACKAGE from $REPOSITORY" | tee -a $LOG
 	# $SRCPACKAGE is actually the binary package
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
-	# just set timezone in the 1st build
+	# modify timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	# some more output for debugging
+	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- rm -f /var/lib/pacman/db.lck 2>&1 | tee -a $LOG
 	# update before pulling new dependencies
@@ -219,13 +221,15 @@ second_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- env GIT_SSL_NO_VERIFY=1 asp checkout "$SRCPACKAGE" 2>&1 | tee -a $LOG || echo "Error: failed to download PKGBUILD for $SRCPACKAGE from $REPOSITORY" | tee -a $LOG
 	# $SRCPACKAGE is actually the binary package
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
-	# add more variations in the 2nd build: TZ, LANG, LC_ALL, umask
+	# add more variations in the 2nd build: TZ (differently), LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 	export LANG="fr_CH.UTF-8"
 	export LC_ALL="fr_CH.UTF-8"
 	umask 0002
 	__END__
+	# some more output for debugging
+	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- rm -f /var/lib/pacman/db.lck 2>&1 | tee -a $LOG
 	# update before pulling new dependencies

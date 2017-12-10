@@ -331,11 +331,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** watch /tmp or rather where this will end up…
 
 * scheduler
-** hack something quickly in bash + jenkins job
+** could be improved with a queue in a directory:
 *** /scheduled/pkg(s) - mv || exit 0
 *** loop to schedule untested packages
 *** loop to schedule tested packages with higher versions (compare for = first)
-** or merge mapreri branch first?
+** or merge mapreri branch first!
 
 * move html to build.sh in a function
 
@@ -351,7 +351,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * build.sh
 ** build2.log doesnt get deleted if build1 fails
-** blacklist syslinux
 
 ==== reproducible fdroid
 

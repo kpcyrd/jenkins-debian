@@ -91,6 +91,28 @@ cd vncdotool/
 python setup.py install
 ----
 
+=== adding new slaves to jenkins
+
+Process to follow to add a new node to jenkins:
+* Open link:[https://jenkins.debian.net/computer/new]
+* Use the FQDN of the new node, and select "Permanent Agent"
+* Configure it as follow:
+  * '# of executors': the number of CPUs of the new node
+  * 'Remote root directory': `/srv/jenkins/pseudo-hosts/$hostname`
+  * 'Labels': `$arch $short_name` (with '$short_name' like ff64a if the hostname is ff64a-armhf-rb)
+  * 'Usage': select "Only build jobs with label expressions matching this node"
+  * 'Launch method': select "Launch slave agents via SSH"
+     * 'Host': `localhost`
+     * 'Credentials': select "jenkins" from the dropdown
+     * 'Prefix Start Slave Command': `/srv/jenkins/bin/start-slave.sh && exit && `
+  * 'Availability': select "Keep this agent online as much as possible"
+
+The slave setup is done so that the slave.jar program doesn't get run on the remote nodes,
+to avoid needing Java available in there.
+Jobs wanting to run entirely on a remote host will just execute `jenkins_master_wrapper.sh`
+which will do the needed ssh and execute `jenkins_node_wrapper.sh` on the remote host,
+which will need to know what to execute after to actually start the wanted program.
+
 === munin
 
 link://munin-monitoring[Munin] is installed, running with link:https://jenkins.debian.net/munin/[jenkins plugins] not yet published elsewhere.

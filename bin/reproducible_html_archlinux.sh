@@ -378,7 +378,7 @@ write_page "</div></div>"
 write_page_footer 'Arch Linux'
 echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
 
-echo "$(date -u) - Sleeping 3min now to prevent immediate restart of this job…"
-sleep 3m
+echo "$(date -u) - Sleeping 5min now to prevent immediate restart of this job…"
+sleep 5m
 
 # vim: set sw=0 noet :

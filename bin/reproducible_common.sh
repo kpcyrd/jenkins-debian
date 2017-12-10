@@ -21,9 +21,8 @@ query_to_csv() {
 }
 
 # common variables
+BASE="/var/lib/jenkins/userContent/reproducible"
 REPRODUCIBLE_URL=https://tests.reproducible-builds.org
-DEBIAN_URL=https://tests.reproducible-builds.org/debian
-DEBIAN_DASHBOARD_URI=/debian/reproducible.html
 REPRODUCIBLE_DOT_ORG_URL=https://reproducible-builds.org
 # shop trailing slash
 JENKINS_URL=${JENKINS_URL:0:-1}
@@ -43,6 +42,12 @@ MAINNODE="jenkins" # used by reproducible_maintenance.sh only
 # variables on the nodes we are interested in
 BUILD_ENV_VARS="ARCH NUM_CPU CPU_MODEL DATETIME KERNEL" # these also needs to be defined in bin/reproducible_info.sh
 
+# common settings for Debian
+DEBIAN_URL=https://tests.reproducible-builds.org/debian
+DEBIAN_DASHBOARD_URI=/debian/reproducible.html
+DEBIAN_BASE="/var/lib/jenkins/userContent/reproducible/debian"
+mkdir -p "$DEBIAN_BASE"
+
 # existing usertags in the Debian BTS
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
@@ -50,6 +55,7 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
 ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls zathura"
+ARCHBASE=$BASE/archlinux
 
 # common settings for testing rpm based distros
 RPM_BUILD_NODE=profitbricks-build3-amd64
@@ -63,10 +69,6 @@ DIFFOSCOPE_VIRT_LIMIT=$((10*1024*1024))
 
 # we only this array for html creation but we cannot declare them in a function
 declare -A SPOKENTARGET
-
-BASE="/var/lib/jenkins/userContent/reproducible"
-DEBIAN_BASE="/var/lib/jenkins/userContent/reproducible/debian"
-mkdir -p "$DEBIAN_BASE"
 
 # to hold reproducible temporary files/directories without polluting /tmp
 TEMPDIR="/tmp/reproducible"

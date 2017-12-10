@@ -11,7 +11,6 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
-ARCHBASE=$BASE/archlinux
 #
 # analyse results to create the webpage
 #

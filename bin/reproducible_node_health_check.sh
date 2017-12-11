@@ -102,10 +102,10 @@ fi
 #
 # (yes this is hardcoded but meh…)
 echo "$(date -u) - testing whether the time is right..."
-if [ "$(date +%Y)" = "2019" ] ; then
+if [ "$(date +%Y)" = "2020" ] ; then
 	echo "Warning, today is the wrong future: $(date -u)."
 	DIRTY=true
-elif [ "$(date +%Y)" = "2018" ] ; then
+elif [ "$(date +%Y)" = "2019" ] ; then
 	echo "Good, today is the right future: $(date -u)."
 else
 	echo "Cherrish today, $(date -u)."

@@ -47,7 +47,7 @@ update_archlinux_repositories() {
 					if [ -f $BASE/archlinux/$REPO/$pkgbase/pkg.version ] ; then
 						VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null)
 						if [ "$VERSION" != "$version" ] ; then
-							VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)
+							VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 							if [ "$VERCMP" = "1" ] ; then
 								# schedule packages where an updated version is availble
 								echo $REPO/$pkgbase >> $UPDATED
@@ -56,7 +56,7 @@ update_archlinux_repositories() {
 							elif [ "$VERCMP" = "-1" ] ; then
 								echo "We know about $pkgbase $VERSION, but repo has $version, but thats ok because we build from trunk."
 							else
-								echo "This should never happen: we know about $pkgbase $VERSION, but repo has $version."
+								echo "This should never happen, we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
 							fi
 						fi
 					else

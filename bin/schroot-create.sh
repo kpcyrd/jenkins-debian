@@ -169,7 +169,7 @@ bootstrap() {
 
 	robust_chroot_apt update
 	if [ -n "$1" ] ; then
-		for d in proc dev dev/pts ; do
+		for d in proc ; do
 			sudo mount --bind /$d $SCHROOT_TARGET/$d
 		done
 		set -x
@@ -203,8 +203,8 @@ bootstrap() {
 			sudo chroot $SCHROOT_TARGET dpkg -l diffoscope
 			echo
 		fi
-		# umount in reverse order
-		for d in dev/pts dev proc ; do
+		# umount in reverse order than how they were mounted earlier
+		for d in proc ; do
 			sudo umount -l $SCHROOT_TARGET/$d
 		done
 		# configure sudo inside just like outside

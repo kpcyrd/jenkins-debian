@@ -47,7 +47,7 @@ update_archlinux_repositories() {
 					if [ -f $BASE/archlinux/$REPO/$pkgbase/pkg.version ] ; then
 						VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null)
 						if [ "$VERSION" != "$version" ] ; then
-							echo "We know about $PKG $VERSION, but repo has $version."
+							echo "We know about $pkgbase $VERSION, but repo has $version."
 							if [ "$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION)" = "1" ] ; then
 								# schedule packages where an updated version is availble
 								echo $REPO/$pkgbase >> $UPDATED

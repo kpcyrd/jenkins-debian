@@ -98,10 +98,15 @@ choose_package() {
 		echo "$(date -u ) - exiting cleanly now."
 		exit 0
 	fi
-	echo "$(date -u ) - building package $SRCPACKAGE from '$REPOSITORY' now..."
-	# very simple locking…
 	mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
-	[ ! -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build ] || rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build
+	# very simple locking…
+	if [ -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build ] ; then
+		rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build
+	else
+		echo "$(date -u ) - $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build does not exist?!?"
+		exit 1
+	fi
+	echo "$(date -u ) - building package $SRCPACKAGE from '$REPOSITORY' now..."
 	# clear files from previous builds
 	# FIXME: while this is an improvement over the previous situation, where these files were kept forever
 	#        this is still bad, as now, during this build, some files are not accessable on the web anymore.

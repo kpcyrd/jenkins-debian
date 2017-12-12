@@ -54,7 +54,7 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 # common settings for testing Arch Linux
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
-ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls zathura"
+ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls"
 ARCHBASE=$BASE/archlinux
 
 # common settings for testing rpm based distros

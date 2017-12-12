@@ -297,9 +297,6 @@ remote_build() {
 			cleanup_all
 			exec /srv/jenkins/bin/abort.sh
 		else
-			# FIXME: atm this is never reached…
-			#cleanup_all
-			#handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY"
 			echo "Warning: remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY."
 		fi
 	fi
@@ -352,11 +349,13 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	fi
 
 	# preserve results and delete build directory
-	if ! mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/; then
+	if [ -n "$(ls /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz)" ] ; then
+		mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/
+	else
 		echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
-		mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
-		# copy build$MODE.(log|version) though this is probably useless - FIXME: confirm or disprove
-		cp $TMPDIR/b$MODE/$SRCPACKAGE/build$MODE.* $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
+		# debug
+		echo "ls $TMPDIR/b$MODE/$SRCPACKAGE/"
+		ls -Rl
 	fi
 
 	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/

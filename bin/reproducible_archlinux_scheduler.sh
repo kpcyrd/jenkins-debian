@@ -16,6 +16,7 @@ update_archlinux_repositories() {
 	echo "$(date -u) - Updating Arch Linux repositories, currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
 	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	OLDER=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
@@ -51,12 +52,12 @@ update_archlinux_repositories() {
 							if [ "$VERCMP" = "1" ] ; then
 								# schedule packages where an updated version is availble
 								echo $REPO/$pkgbase >> $UPDATED
-								echo "$(date -u ) - we know about $REPO/$pkgbase $VERSION, but the repo has $version, so rescheduling... "
+								echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
 								touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 							elif [ "$VERCMP" = "-1" ] ; then
-								echo "We know about $pkgbase $VERSION, but repo has $version, but thats ok because we build from trunk."
+								echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
 							else
-								echo "This should never happen, we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
+								echo "$(date -u ) - This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
 							fi
 						fi
 					else
@@ -72,6 +73,9 @@ update_archlinux_repositories() {
 		updated=$(grep -c ^$REPO $UPDATED || true)
 		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
+	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
+	cat $OLDER
+	rm $OLDER
 	# schedule 250 packages we already know about
 	# (only if less than 300 packages are currently scheduled)
 	# FIXME: this doesnt schedule packages without build1.log...

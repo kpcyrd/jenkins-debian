@@ -86,11 +86,13 @@ update_archlinux_repositories() {
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | egrep -v "$BLACKLIST" | head -n 250| cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
 		# explain, for debugging…
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | egrep -v "$BLACKLIST" | head -n 250| cut -d "/" -f8-9 | sort > $OLDER
-		old=" $(cat $OLD | wc -l) old ones"
-		echo "$(date -u) - Old, previously tested packages rescheduled: "
-		for REPO in $ARCHLINUX_REPOS ; do
-			grep ^$REPO $OLDER | sed "s#^#  #g"
-		done
+		if [ -s $OLDER ] ; then
+			old=" $(cat $OLDER | wc -l) old ones"
+			echo "$(date -u) - Old, previously tested packages rescheduled: "
+			for REPO in $ARCHLINUX_REPOS ; do
+				grep ^$REPO $OLDER | sed "s#^#  #g"
+			done
+		fi
 	fi
 	rm $OLDER
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )

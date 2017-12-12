@@ -83,9 +83,9 @@ update_archlinux_repositories() {
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
 		local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 		# reschedule
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | egrep -v "$BLACKLIST" | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | egrep -v "$BLACKLIST" | head -n 250| cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
 		# explain, for debugging…
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|egrep -v "$BLACKLIST" |cut -d "/" -f8-9 | sort > $OLDER
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | egrep -v "$BLACKLIST" | head -n 250| cut -d "/" -f8-9 | sort > $OLDER
 		old=" $(cat $OLD | wc -l) old ones"
 		echo "$(date -u) - Old, previously tested packages rescheduled: "
 		for REPO in $ARCHLINUX_REPOS ; do

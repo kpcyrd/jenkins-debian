@@ -81,7 +81,7 @@ update_archlinux_repositories() {
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
 		# explain, for debugging…
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort | xargs echo "Old packages rescheduled: "
-		old="250 old ones"
+		old=" 250 old ones"
 	fi
 	# de-schedule blacklisted packages
 	# (so sometimes '250 old ones' is slightly inaccurate…)
@@ -109,7 +109,7 @@ update_archlinux_repositories() {
 			message="$message $updated packages with newer versions"
 		fi
 		if [ $new -ne 0 ] || [ $updated -ne 0 ] ; then
-			old=", plus $old"
+			old=", plus$old"
 		fi
 		irc_message archlinux-reproducible "${message}$old, for $total scheduled out of $TOTAL."
 	fi

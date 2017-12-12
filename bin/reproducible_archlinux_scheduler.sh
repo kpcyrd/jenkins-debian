@@ -75,31 +75,24 @@ update_archlinux_repositories() {
 	done
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
 	cat $OLDER
-	# schedule 250 packages we already know about
+	# schedule up to 250 packages we already know about
 	# (only if less than 300 packages are currently scheduled)
-	# FIXME: this doesnt reschedule packages without build1.log...
+	# FIXME: this doesnt reschedule packages without build1.log, 
+	# though there shouldnt be any.
 	old=""
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
+		local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 		# reschedule
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
-		old=" 250 old ones"
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | egrep -v "$BLACKLIST" | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
 		# explain, for debugging…
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort > $OLDER
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|egrep -v "$BLACKLIST" |cut -d "/" -f8-9 | sort > $OLDER
+		old=" $(cat $OLD | wc -l) old ones"
 		echo "$(date -u) - Old, previously tested packages rescheduled: "
 		for REPO in $ARCHLINUX_REPOS ; do
 			grep ^$REPO $OLDER | sed "s#^#  #g"
 		done
 	fi
 	rm $OLDER
-	# de-schedule blacklisted packages
-	# (so sometimes '250 old ones' is slightly inaccurate…)
-	for REPO in $ARCHLINUX_REPOS ; do
-		for i in $ARCHLINUX_BLACKLISTED ; do
-			if [ -f $BASE/archlinux/$REPO/$i/pkg.needs_build ] ; then
-				rm $BASE/archlinux/$REPO/$i/pkg.needs_build
-			fi
-		done
-	done
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	schroot --end-session -c $SESSION

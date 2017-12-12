@@ -75,18 +75,22 @@ update_archlinux_repositories() {
 	done
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
 	cat $OLDER
-	rm $OLDER
 	# schedule 250 packages we already know about
 	# (only if less than 300 packages are currently scheduled)
-	# FIXME: this doesnt schedule packages without build1.log...
+	# FIXME: this doesnt reschedule packages without build1.log...
 	old=""
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le 300 ] ; then
 		# reschedule
 		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
-		# explain, for debugging…
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort | xargs echo "Old packages rescheduled: "
 		old=" 250 old ones"
+		# explain, for debugging…
+		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | head -n 250|cut -d "/" -f8-9 | sort > $OLDER
+		echo "$(date -u) - Old, previously tested packages rescheduled: "
+		for REPO in $ARCHLINUX_REPOS ; do
+			grep ^$REPO $OLDER | sed "s#^#  #g"
+		done
 	fi
+	rm $OLDER
 	# de-schedule blacklisted packages
 	# (so sometimes '250 old ones' is slightly inaccurate…)
 	for REPO in $ARCHLINUX_REPOS ; do

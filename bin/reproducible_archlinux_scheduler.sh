@@ -111,7 +111,7 @@ update_archlinux_repositories() {
 		if [ $updated -ne 0 ] ; then
 			message="$message $updated packages with newer versions"
 		fi
-		if [ $new -ne 0 ] || [ $updated -ne 0 ] ; then
+		if [ -n "$old" ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] ) ; then
 			old=", plus$old"
 		fi
 		irc_message archlinux-reproducible "${message}$old, for $total scheduled out of $TOTAL."

@@ -429,6 +429,8 @@ cd $TMPDIR/b1/$SRCPACKAGE
 cp build1.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 [ ! -f $TMPDIR/b2/$SRCPACKAGE/build2.log ] || cp $TMPDIR/b2/$SRCPACKAGE/build2.log $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 echo $DURATION > $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.build_duration || true
+# make pkg.build_duration the oldest of this build, so we can use it as reference later
+touch --date="@$START" $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.build_duration
 if [ -f $TMPDIR/b2/$SRCPACKAGE/build2.version ] ; then
 	cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/
 	cp $TMPDIR/b2/$SRCPACKAGE/build2.version $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.version

@@ -6,11 +6,14 @@ NAME=jenkins
 # location of java
 JAVA=/usr/bin/java
 
+# jenkins home location
+JENKINS_HOME=/var/lib/$NAME
+
 # arguments to pass to java
 #JAVA_ARGS="-Djava.awt.headless=true"  # Allow graphs etc. to work even when an X server is present
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
-JAVA_ARGS="-Djava.awt.headless=true -Xms4G -Xmx8G -server -XX:+AlwaysPreTouch -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/lib/jenkins/heapDumps/ -Xloggc:$JENKINS_HOME/gc-%t.log -XX:NumberOfGCLogFiles=5 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=20m -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
+JAVA_ARGS="-Djava.awt.headless=true -Xms4G -Xmx8G -server -XX:+AlwaysPreTouch -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$JENKINS_HOME/heapDumps/ -Xloggc:$JENKINS_HOME/javaGC/gc-%t.log -XX:NumberOfGCLogFiles=5 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=20m -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 
 PIDFILE=/var/run/$NAME/$NAME.pid
 
@@ -20,9 +23,6 @@ JENKINS_GROUP=$NAME
 
 # location of the jenkins war file
 JENKINS_WAR=/usr/share/$NAME/$NAME.war
-
-# jenkins home location
-JENKINS_HOME=/var/lib/$NAME
 
 # set this to false if you don't want Hudson to run by itself
 # in this set up, you are expected to provide a servlet container

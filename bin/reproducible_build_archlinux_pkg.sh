@@ -102,6 +102,8 @@ choose_package() {
 	# very simple locking…
 	if [ -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build ] ; then
 		rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build
+		# prevent the package from being scheduled again while its already building (which can take several hours...)
+		touch $BASE/archlinux/$REPO/$SRCPACKAGE/build1.log
 	else
 		echo "$(date -u ) - $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build does not exist?!?"
 		exit 1
@@ -111,7 +113,7 @@ choose_package() {
 	# FIXME: while this is an improvement over the previous situation, where these files were kept forever
 	#        this is still bad, as now, during this build, some files are not accessable on the web anymore.
 	for file in build1.log build2.log build1.version build2.version ; do
-		[ ! -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.$file ] || rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.$file
+		[ ! -f $BASE/archlinux/$REPO/$SRCPACKAGE/$file ] || rm $BASE/archlinux/$REPO/$SRCPACKAGE/$file
 	done
 	for file in $BASE/archlinux/$REPO/$SRCPACKAGE/*BUILDINFO.txt $BASE/archlinux/$REPO/$SRCPACKAGE/*html ; do
 		rm $file || true

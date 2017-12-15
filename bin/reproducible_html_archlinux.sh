@@ -202,6 +202,7 @@ create_pkg_state_and_html() {
 	echo "      </td>" >> $HTML_BUFFER
 	echo "     </tr>" >> $HTML_BUFFER
 	mv $HTML_BUFFER $ARCHLINUX_PKG_PATH/pkg.html
+	chmod 644 $ARCHLINUX_PKG_PATH/pkg.html
 
 	# clear files from previous builds
 	for file in build1.log build2.log build1.version build2.version ; do

@@ -413,6 +413,17 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 			DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 			echo "$(date -u) - Running $DIFFOSCOPE now..."
 			call_diffoscope $SRCPACKAGE $ARTIFACT
+		else
+			# some packages define the package version based on the build date
+			# so our two builds end up with different package versions…
+			echo "$(date -u) - something is fishy with $SRCPACKAGE/$ARTIFACT."
+			ls $TMPDIR/b1/$SRCPACKAGE
+			ls $TMPDIR/b2/$SRCPACKAGE
+			( echo "<html><body><p>$SRCPACKAGE/$ARTIFACT built in a strange unreproducible way:<br />"
+			ls $TMPDIR/b1/$SRCPACKAGE
+			ls $TMPDIR/b2/$SRCPACKAGE
+			echo "</p></body>"
+			) > "$BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html"
 		fi
 		# publish page
 		if [ -f $TMPDIR/$SRCPACKAGE/$ARTIFACT.html ] ; then

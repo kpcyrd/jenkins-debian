@@ -21,7 +21,7 @@ cleanup_all() {
 	fi
 	# delete makepkg build dir
 	if [ ! -z $SRCPACKAGE ] && [ -d /tmp/$SRCPACKAGE-$(basename $TMPDIR) ] ; then
-		rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)
+		sudo rm -rf --one-file-system /tmp/$SRCPACKAGE-$(basename $TMPDIR)
 	fi
 	# delete main work dir (only on master)
 	if [ "$MODE" = "master" ] ; then
@@ -356,7 +356,7 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 		ls -Rl
 	fi
 
-	rm -r /tmp/$SRCPACKAGE-$(basename $TMPDIR)/
+	sudo rm -rf --one-file-system /tmp/$SRCPACKAGE-$(basename $TMPDIR)
 	echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME done."
 	exit 0
 fi

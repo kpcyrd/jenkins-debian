@@ -8,6 +8,7 @@ jenkins ALL=  \
 	/usr/sbin/chroot /schroots/*, \
 	/bin/rm -rf --one-file-system /schroots/*, \
 	/bin/rm -rf --one-file-system /srv/live-build/*, \
+	/bin/rm -rf --one-file-system /tmp/*, \
 	/bin/mv /schroots/* /schroots/*, \
 	/bin/umount -l /schroots/*, \
 	/bin/mount --bind *, \

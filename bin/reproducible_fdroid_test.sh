@@ -39,7 +39,9 @@ else
 fi
 
 cleanup_all() {
-    # no long lived processes, nothing to be done
+    echo "$(date -u) - cleanup in progress..."
+    killall adb
+    killall gpg-agent
     echo "$(date -u) - cleanup done."
 }
 trap cleanup_all INT TERM EXIT

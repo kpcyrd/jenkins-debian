@@ -39,10 +39,10 @@ else
 fi
 
 cleanup_all() {
-	echo "$(date -u) - cleanup in progress..."
-	killall VBoxHeadless || true
-	sleep 10
-	echo "$(date -u) - cleanup done."
+    echo "$(date -u) - cleanup in progress..."
+    killall adb
+    killall gpg-agent
+    echo "$(date -u) - cleanup done."
 }
 trap cleanup_all INT TERM EXIT
 

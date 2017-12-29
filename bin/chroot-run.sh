@@ -17,7 +17,7 @@ if [ "$ARTIFACTS" != "true" ] ; then
 	ARTIFACTS=false
 fi
 
-# $1 = base distro
+# $1 = base distro (if the '-backports' is used, then it automatically bpo)
 # $2 $3 ... = command to run inside a clean chroot running the distro in $1
 
 if [ $# -lt 2 ]; then
@@ -25,13 +25,22 @@ if [ $# -lt 2 ]; then
 	exit 1
 fi
 
-DISTRO="$1"
+if [ -z "${1%%*-backports}" ]; then
+	DISTRO="${1%-backports}"
+	BACKPORTS=yes
+else
+	DISTRO="$1"
+fi
 shift
 
 if [ "$1" = "backports" ] ; then
+	BACKPORTS=yes
+	shift
+fi
+
+if [ "$BACKPORTS" = "yes" ]; then
 	BACKPORTS="deb $MIRROR ${DISTRO}-backports main"
 	BACKPORTSSRC="deb-src $MIRROR ${DISTRO}-backports main"
-	shift
 fi
 
 if [ "$1" = "minimal" ] ; then

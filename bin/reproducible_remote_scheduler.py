@@ -20,12 +20,11 @@ from reproducible_common import (
     # parsing the command line, & debugging the mystery via edit-compile-h01ger-run
     # detours is not practical.
     SUITES, ARCHS,
-    bcolors,
+    bcolors, log,
     query_db, db_table, sql, conn_db,
     datetime, timedelta,
-    irc_msg,
+    irc_msg, unknown_args
 )
-from reproducible_common import log
 
 def packages_matching_criteria(arch, suite, criteria):
     "Return a list of packages in (SUITE, ARCH) matching the given CRITERIA."
@@ -95,7 +94,9 @@ def parse_args():
                         help="Specify the suites to schedule in (space or comma separated). Default: 'unstable'.")
     parser.add_argument('packages', metavar='package', nargs='*',
                         help='Space seperated list of packages to reschedule.')
-    scheduling_args = parser.parse_known_args()[0]
+    # only consider "unknown_args", i.e. the arguments that the common.py script
+    # doesn't know about and therefor ignored.
+    scheduling_args = parser.parse_known_args(unknown_args)[0]
     if scheduling_args.null:
         scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))[0]
     scheduling_args.packages = [x for x in scheduling_args.packages if x]

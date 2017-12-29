@@ -73,8 +73,8 @@ def parse_args():
                        help='Save artifacts (for further offline study).')
     parser.add_argument('-n', '--notify', action='store_true',
                        help='Notify the channel when the build finishes.')
-    parser.add_argument('-d', '--noisy', action='store_true', help='Also notify when ' +
-                        'the build starts, linking to the build url.')
+    parser.add_argument('--notify-on-start', action='store_true', help='Also '
+                        'notify when the build starts, linking to the build url.')
     parser.add_argument('-m', '--message', default='',
                         help='A text to be sent to the IRC channel when notifying' +
                         ' about the scheduling.')
@@ -100,7 +100,7 @@ def parse_args():
     if scheduling_args.null:
         scheduling_args = parser.parse_known_args(sys.stdin.read().split('\0'))[0]
     scheduling_args.packages = [x for x in scheduling_args.packages if x]
-    if scheduling_args.noisy:
+    if scheduling_args.notify_on_start:
         scheduling_args.notify = True
 
     # this variable is expected to come from the remote host
@@ -131,7 +131,7 @@ def parse_args():
     packages = scheduling_args.packages
     artifacts = scheduling_args.keep_artifacts
     notify = scheduling_args.notify
-    notify_on_start = scheduling_args.noisy
+    notify_on_start = scheduling_args.notify_on_start
     dry_run = scheduling_args.dry_run
 
     log.debug('Requester: ' + requester)
@@ -208,7 +208,7 @@ def rest(scheduling_args, requester, local, suite, arch):
     packages = scheduling_args.packages
     artifacts = scheduling_args.keep_artifacts
     notify = scheduling_args.notify
-    notify_on_start = scheduling_args.noisy
+    notify_on_start = scheduling_args.notify_on_start
     dry_run = scheduling_args.dry_run
 
     log.info("Scheduling packages in %s/%s", arch, suite)

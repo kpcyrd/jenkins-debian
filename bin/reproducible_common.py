@@ -48,7 +48,7 @@ CONFIG = os.path.join(__location__, 'reproducible.ini')
 ## command line option parsing
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
-parser.add_argument('distro', help='name of the distribution to work on',
+parser.add_argument('--distro', help='name of the distribution to work on',
                     default='debian', nargs='?')
 group.add_argument("-d", "--debug", action="store_true")
 group.add_argument("-q", "--quiet", action="store_true")

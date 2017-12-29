@@ -86,10 +86,14 @@
     my_description: 'Debian/Lintian testsuite'
     my_distro:
       - sid: *distro_defaults_sid
-      - buster: *distro_defaults_buster
+      - buster:
+          <<: *distro_defaults_buster
+          my_trigger: '{name}_stretch-backports'
       - stretch:
           <<: *distro_defaults_stretch
-          my_backports: backports
+          my_disabled: true
+      - stretch-backports:
+          <<: *distro_defaults_stretch
       - jessie:
           my_disabled: true
     jobs:

@@ -125,9 +125,7 @@
     my_distro:
     # DAK tests cannot be run in sid/buster atm, but still create the jobs
       - sid:
-          my_disabled: false
       - buster:
-          my_disabled: false
           my_trigger: '{name}_sid'
       - stretch:
           my_trigger: '{name}_buster'

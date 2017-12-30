@@ -16,6 +16,7 @@ mono_architectures = """
     alpha
     hppa
     hurd-i386 musl-linux-i386
+    ia64
     m68k
     mips64 mips64r6el mipsr6el
     musl-linux-mips musl-linux-mipsel

@@ -124,7 +124,7 @@
     my_description: 'DAK testsuite'
     my_distro:
     # DAK tests cannot be run in sid/buster atm, but still create the jobs
-      - sid:
+      - sid: {}
       - buster:
           my_trigger: '{name}_sid'
       - stretch:

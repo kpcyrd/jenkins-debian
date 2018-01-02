@@ -132,6 +132,11 @@ echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
 echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
+if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+	# workaround for certificates that aren't valid in the future.
+	# we might need to replace this with a mitm proxy in the future
+	echo "insecure" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.curlrc
+fi
 $USERCMD bash -l -c 'gpg --check-trustdb' # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf
 

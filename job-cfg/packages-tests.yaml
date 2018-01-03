@@ -147,3 +147,16 @@
       - stretch: {}
     jobs:
       - simple
+
+- project:
+    name: debsums-tests
+    my_git_url: 'git://anonscm.debian.org/pkg-perl/packages/debsums.git'
+    my_recipients: 'jenkins+debian-qa pkg-perl-maintainers@lists.alioth.debian.org'
+    my_shell: 'timeout 5m prove -v'
+    my_description: 'Debian/Debsums testsuite'
+    my_distro:
+      - sid: *distro_defaults_sid
+      - buster: *distro_defaults_buster
+      - stretch: {}
+    jobs:
+      - simple

@@ -80,8 +80,8 @@ update_archlinux_repositories() {
 	# FIXME: this doesnt reschedule packages without build1.log, 
 	# though there shouldnt be any.
 	old=""
-	local MAX=250
-	local THRESHOLD=300
+	local MAX=350
+	local THRESHOLD=450
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le $THRESHOLD ] ; then
 		local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 		# reschedule

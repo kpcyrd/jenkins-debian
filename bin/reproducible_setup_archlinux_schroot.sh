@@ -152,12 +152,22 @@ fi
 PACMAN_GIT_SNAPSHOT="$(mktemp --tmpdir=$TEMPDIR archlinuxrb-PACMAN-GIT-XXXXXXXXXXXX)"
 wget $WGET_OPTS -O "$PACMAN_GIT_SNAPSHOT" "https://aur.archlinux.org/cgit/aur.git/snapshot/pacman-git.tar.gz"
 
-$USERCMD bash <<-__END__
-set -e
-tar -xzvf "$PACMAN_GIT_SNAPSHOT" -C /
-cd /pacman-git
-MAKEFLAGS="-j$NUM_CPU" makepkg
-__END__
+# unpack pacman-git snapshot
+$USERCMD tar -xzvf "$PACMAN_GIT_SNAPSHOT" -C /
+
+if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+	$USERCMD bash <<-__END__
+	set -e
+	cd /pacman-git
+	MAKEFLAGS="-j$NUM_CPU" makepkg
+	__END__
+else
+	$USERCMD bash <<-__END__
+	set -e
+	cd /pacman-git
+	MAKEFLAGS="-j$NUM_CPU" GIT_SSL_NO_VERIFY=1 makepkg
+	__END__
+fi
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
 
 # fix /etc/pacman.conf. pacman-git doesn't have any repos configured

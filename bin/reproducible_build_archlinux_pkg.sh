@@ -90,8 +90,8 @@ choose_package() {
 		done
 	fi
 	if [ -z $SRCPACKAGE ] ; then
-		echo "$(date -u ) - no package found to be build, sleeping 6h."
-		for i in $(seq 1 12) ; do
+		echo "$(date -u ) - no package found to be build, sleeping 3h."
+		for i in $(seq 1 6) ; do
 			sleep 30m
 			echo "$(date -u ) - still sleeping..."
 		done
